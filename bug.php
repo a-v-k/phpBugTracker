@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.62 2001/11/19 16:49:20 bcurtis Exp $
+// $Id: bug.php,v 1.63 2001/11/24 17:51:56 bcurtis Exp $
 
 include 'include.php';
 
@@ -655,7 +655,7 @@ function show_bug($bugid = 0, $error = array()) {
   } else {
 		$j = 0;
     while ($att = $q->grab()) {
-      if (is_readable(INSTALL_PATH.'/'.ATTACHMENT_PATH."/{$row['project_id']}/$bugid-{$att['file_name']}")) {
+      if (@is_readable(INSTALL_PATH.'/'.ATTACHMENT_PATH."/{$row['project_id']}/$bugid-{$att['file_name']}")) {
         $action = "<a href='attachment.php?attachid={$att['attachment_id']}'>View</a>";
         if ($perm->have_perm('Administrator')) {
           $action .= " | <a href='attachment.php?del={$att['attachment_id']}' onClick=\"return confirm('Are you sure you want to delete this attachment?');\">Delete</a>";
