@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.66 2001/10/29 22:59:55 javyer Exp $
+// $Id: include.php,v 1.67 2001/10/30 04:04:08 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -28,13 +28,13 @@ if (!defined('INCLUDE_PATH')) {
 }
 require (INSTALL_PATH.'/'.INCLUDE_PATH.'config.php');
 
-// Edit this class with your database information
 class dbclass extends DB_Sql {
   var $classname = 'dbclass';
   var $Host = DB_HOST;
   var $Database = DB_DATABASE;
   var $User = DB_USER;
   var $Password = DB_PASSWORD;
+	var $Seg_Table = TBL_DB_SEQUENCE;
 
   function grab($q_string = '') {
     if ($q_string) $this->query($q_string);
@@ -46,6 +46,16 @@ class dbclass extends DB_Sql {
     list($retval) = $this->grab($q_string);
     return $retval;
   }
+	
+	function nextid($seq_name) {
+		global $auth;
+		
+		if ($seq_name == TBL_SAVED_QUERY) {
+			return $q->grab_field("select max(saved_query_id)+1 where user_id = ".$auth->auth['uid']);
+		} else {
+			return DB_Sql::nextid($seqname);
+		}
+	}
 }
 
 $q = new dbclass;
@@ -93,7 +103,7 @@ $default_db_fields = array('bug_id', 'title', 'reporter', 'owner',
 
 class sqlclass extends CT_Sql {
   var $database_class = 'dbclass';
-  var $database_table = 'active_sessions';
+  var $database_table = TBL_ACTIVE_SESSIONS;
 }
 
 class usess extends Session {
@@ -219,22 +229,19 @@ class templateclass extends Template {
     $this->set_block('wrap', 'loginblock', 'liblock');
     $this->set_block('wrap', 'adminnavblock', 'anblock');
     if ($u && $u != 'nobody') {
-      list($owner_open, $owner_closed) =
-		$q->grab("SELECT sum(CASE WHEN status_name in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) ,"
+      list($owner_open, $owner_closed) = $q->grab("SELECT sum(CASE WHEN status_name in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) ,"
 				."sum(CASE WHEN status_name not in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END )"
 				."from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) where assigned_to = $u");
-				
-      list($reporter_open, $reporter_closed) =
-		$q->grab("SELECT sum(CASE WHEN status_name in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) ,"
+      list($reporter_open, $reporter_closed) = $q->grab("SELECT sum(CASE WHEN status_name in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) ,"
 				."sum(CASE WHEN status_name not in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END )"
 				."from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) where created_by = $u");
       $this->set_var(array(
         'loggedinas' => $auth->auth['uname'],
         'liblock' => '',
-        'owner_open' => $owner_open,
-        'owner_closed' => $owner_closed,
-        'reporter_open' => $reporter_open,
-        'reporter_closed' => $reporter_closed
+        'owner_open' => $owner_open ? $owner_open : 0,
+        'owner_closed' => $owner_closed ? $owner_closed : 0,
+        'reporter_open' => $reporter_open ? $reporter_open : 0,
+        'reporter_closed' => $reporter_closed ? $reporter_closed : 0
         ));
       $this->parse('loblock', 'logoutblock', true);
     } else {
