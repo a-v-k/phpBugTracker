@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.91 2002/11/05 20:43:46 bcurtis Exp $
+// $Id: query.php,v 1.92 2003/02/18 12:43:38 bcurtis Exp $
 
 include 'include.php';
 
@@ -85,29 +85,29 @@ function build_query($assignedto, $reportedby, $open) {
 		// Need to check $array[0] for Opera --
 		// it passes non-empty arrays for every multi-choice select box
 		if (!empty($status) and $status[0]) {
-			$flags[] = 'b.status_id in ('.delimit_list(',',$status).')';
+			$flags[] = 'b.status_id in ('.@join(',',$status).')';
 		}
 		if (!empty($resolution) and $resolution[0]) {
-			$flags[] = 'b.resolution_id in ('.delimit_list(',',$resolution).')';
+			$flags[] = 'b.resolution_id in ('.@join(',',$resolution).')';
 		}
 		if (!empty($os) and $os[0]) {
-			$flags[] = 'b.os_id in ('.delimit_list(',',$os).')';
+			$flags[] = 'b.os_id in ('.@join(',',$os).')';
 		}
 		if (!empty($priority) and $priority[0]) {
-			$flags[] = 'b.priority in ('.delimit_list(',',$priority).')';
+			$flags[] = 'b.priority in ('.@join(',',$priority).')';
 		}
 		if (!empty($severity) and $severity[0]) {
-			$flags[] = 'b.severity_id in ('.delimit_list(',',$severity).')';
+			$flags[] = 'b.severity_id in ('.@join(',',$severity).')';
 		}
 		if (!empty($database) and isset($database[0])) {
 		    // $database[0] can be 0, which stands for no database reported
-			$flags[] = 'b.database_id in ('.delimit_list(',',$database).')';
+			$flags[] = 'b.database_id in ('.@join(',',$database).')';
 		}
 		if (!empty($site) and $site[0]) {
-			$flags[] = 'b.site_id in ('.delimit_list(',',$site).')';
+			$flags[] = 'b.site_id in ('.@join(',',$site).')';
 		}
 		if (!empty($flags)) {
-			$query[] = '('.delimit_list(' or ',$flags).')';
+			$query[] = '('.@join(' or ',$flags).')';
 		}
 
 		// Email field(s)
@@ -119,7 +119,7 @@ function build_query($assignedto, $reportedby, $open) {
 				case '=' : $econd = "$emailtype1 '$email1'"; break;
 			}
 			foreach($emailfield1 as $field) $equery[] = "$field.$emailsearch1 $econd";
-			$query[] = '('.delimit_list(' or ',$equery).')';
+			$query[] = '('.@join(' or ',$equery).')';
 		}
 
 		// Text search field(s)
@@ -133,21 +133,21 @@ function build_query($assignedto, $reportedby, $open) {
 				$fields[] = "$searchfield $cond";
 			}
 		}
-		if (!empty($fields)) $query[] = '('.delimit_list(' or ',$fields).')';
+		if (!empty($fields)) $query[] = '('.@join(' or ',$fields).')';
 
 		// Project/Version/Component
 		if (!empty($projects)) {
 			$proj[] = "b.project_id = $projects";
 			if (!empty($versions) and $versions != 'All') $proj[] = "b.version_id = $versions";
 			if (!empty($components) and $components != 'All') $proj[] = "b.component_id = $components";
-			$query[] = '('.delimit_list(' and ',$proj).')';
+			$query[] = '('.@join(' and ',$proj).')';
 		} elseif (!$perm->have_perm('Admin')) { // Filter results from hidden projects
 			$query[] = "b.project_id not in ($restricted_projects)";
 		}
 	}
 
 	if (!empty($query)) {
-		return array(delimit_list(' and ',$query), $paramstr);
+		return array(@join(' and ',$query), $paramstr);
 	} else {
 		return array('', '');
 	}
