@@ -282,3 +282,12 @@ CREATE TABLE active_sessions (
   PRIMARY KEY (name,sid),
   KEY changed (changed)
 );
+
+CREATE TABLE `BugHistory` (
+  `BugID` int(10) unsigned NOT NULL default '0',
+  `ChangedField` char(20) NOT NULL default '',
+  `OldValue` char(255) NOT NULL default '',
+  `NewValue` char(255) NOT NULL default '',
+  `CreatedBy` int(10) unsigned NOT NULL default '0',
+  `CreatedDate` bigint(20) unsigned NOT NULL default '0'
+);
