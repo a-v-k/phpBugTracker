@@ -1,44 +1,80 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
     <title>Development Standards</title>
-    <meta name="GENERATOR" content="Modular DocBook HTML Stylesheet Version 1.64 ">
+    <meta name="GENERATOR" content="Modular DocBook HTML Stylesheet Version 1.72 " />
+    <link rel="STYLESHEET" type="text/css" href="bob.css" />
   </head>
 
-  <body class="ARTICLE">
+  <body class="ARTICLE" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
     <div class="ARTICLE">
       <div class="TITLEPAGE">
-        <h1 class="TITLE"><a name="AEN2">Development Standards</a></h1>
+        <h1 class="TITLE"><a id="AEN2" name="AEN2">Development Standards</a></h1>
 
         <div>
           <div class="ABSTRACT">
-            <a name="AEN4"></a>
+            <a id="AEN4" name="AEN4"></a>
 
             <p>This document will contain the coding and process standards to be followed by the developers working on phpBugTracker.</p>
           </div>
         </div>
-        <hr>
+        <hr />
+      </div>
+
+      <div class="TOC">
+        <dl>
+          <dt><b>Table of Contents</b></dt>
+
+          <dt>1. <a href="#DEVSTANDARDS-CODE">Coding Standards</a></dt>
+
+          <dd>
+            <dl>
+              <dt>1.1. <a href="#DEVSTANDARDS-INDENTING">Indenting</a></dt>
+
+              <dt>1.2. <a href="#DEVSTANDARDS-CONTROL">Control Structures</a></dt>
+
+              <dt>1.3. <a href="#DEVSTANDARDS-FUNCCALLS">Function Calls</a></dt>
+
+              <dt>1.4. <a href="#DEVSTANDARDS-FUNCDEFS">Function Definitions</a></dt>
+
+              <dt>1.5. <a href="#DEVSTANDARDS-COMMENTS">Comments</a></dt>
+
+              <dt>1.6. <a href="#DEVSTANDARDS-INCLUDING">Including Code</a></dt>
+
+              <dt>1.7. <a href="#DEVSTANDARDS-PHPTAGS">PHP Tags</a></dt>
+
+              <dt>1.8. <a href="#DEVSTANDARDS-CONSTANTS">Naming Constants</a></dt>
+            </dl>
+          </dd>
+
+          <dt>2. <a href="#OTHERCONVENTIONS">Other Conventions</a></dt>
+
+          <dd>
+            <dl>
+              <dt>2.1. <a href="#DEVSTANDARDS-FILENAMING">File Naming</a></dt>
+            </dl>
+          </dd>
+        </dl>
       </div>
 
       <div class="SECT1">
-        <hr>
+        <hr />
 
-        <h1 class="SECT1"><a name="DEVSTANDARDS-CODE">Coding Standards</a></h1>
+        <h1 class="SECT1"><a id="DEVSTANDARDS-CODE" name="DEVSTANDARDS-CODE">1. Coding Standards</a></h1>
 
         <div class="SECT2">
-          <h2 class="SECT2"><a name="DEVSTANDARDS-INDENTING">Indenting</a></h2>
+          <h2 class="SECT2"><a id="DEVSTANDARDS-INDENTING" name="DEVSTANDARDS-INDENTING">1.1. Indenting</a></h2>
 
           <p>Use an indent of one tab per indent.</p>
         </div>
 
         <div class="SECT2">
-          <hr>
+          <hr />
 
-          <h2 class="SECT2"><a name="DEVSTANDARDS-CONTROL">Control Structures</a></h2>
+          <h2 class="SECT2"><a id="DEVSTANDARDS-CONTROL" name="DEVSTANDARDS-CONTROL">1.2. Control Structures</a></h2>
 
           <p>These include if, for, while, switch, etc. Here is an example if statement, since it is the most complicated of them:</p>
 
-          <table border="0" bgcolor="#E0E0E0" width="100%">
+          <table border="0" bgcolor="#EEEEEE" width="100%">
             <tr>
               <td>
 <pre class="PROGRAMLISTING">
@@ -49,7 +85,7 @@
   } else {
     defaultaction;
   }
-     
+           
 </pre>
               </td>
             </tr>
@@ -61,18 +97,18 @@
         </div>
 
         <div class="SECT2">
-          <hr>
+          <hr />
 
-          <h2 class="SECT2"><a name="DEVSTANDARDS-FUNCCALLS">Function Calls</a></h2>
+          <h2 class="SECT2"><a id="DEVSTANDARDS-FUNCCALLS" name="DEVSTANDARDS-FUNCCALLS">1.3. Function Calls</a></h2>
 
-          <p>Functions should be called with no spaces between the function name, the opening parenthesis, and the first parameter; spaces between commas and each parameter, and no space between the last parameter, the closing parenthesis, and the semicolon. Here's an example:</p>
+          <p>Functions should be called with no spaces between the function name, the opening parenthesis, and the first parameter; spaces between commas and each parameter, and no space between the last parameter, the closing parenthesis, and the semicolon. Here&#39;s an example:</p>
 
-          <table border="0" bgcolor="#E0E0E0" width="100%">
+          <table border="0" bgcolor="#EEEEEE" width="100%">
             <tr>
               <td>
 <pre class="PROGRAMLISTING">
   $var = foo($bar, $baz, $quux);
-     
+           
 </pre>
               </td>
             </tr>
@@ -82,17 +118,17 @@
         </div>
 
         <div class="SECT2">
-          <hr>
+          <hr />
 
-          <h2 class="SECT2"><a name="DEVSTANDARDS-FUNCDEFS">Function Calls</a></h2>
+          <h2 class="SECT2"><a id="DEVSTANDARDS-FUNCDEFS" name="DEVSTANDARDS-FUNCDEFS">1.4. Function Definitions</a></h2>
 
           <p>Function definitions follow the format of function calls, with the opening brace at the end of the line of the function declaration. The global variable list (if used) should be placed on the line immediately following the opening brace, with a blank line between the variable list and the first line of function code. If the global variable list is not neccessary, include a blank line between the opening brace and the first line of function code.</p>
 
-          <table border="0" bgcolor="#E0E0E0" width="100%">
+          <table border="0" bgcolor="#EEEEEE" width="100%">
             <tr>
               <td>
 <pre class="PROGRAMLISTING">
-  function fooFunction($arg1, $arg2 = '') {
+  function fooFunction($arg1, $arg2 = &#39;&#39;) {
     global $foo1, $foo2;
 
     if (condition) {
@@ -100,7 +136,7 @@
     }
     return $val;
   }
-     
+           
 </pre>
               </td>
             </tr>
@@ -108,7 +144,7 @@
 
           <p>Arguments with default values go at the end of the argument list. Always attempt to return a meaningful value from a function if one is appropriate. Here is a slightly longer example:</p>
 
-          <table border="0" bgcolor="#E0E0E0" width="100%">
+          <table border="0" bgcolor="#EEEEEE" width="100%">
             <tr>
               <td>
 <pre class="PROGRAMLISTING">
@@ -120,13 +156,13 @@
       $dsninfo = DB::parseDSN($dsn);
     }
 
-    if (!$dsninfo || !$dsninfo['phptype']) {
+    if (!$dsninfo || !$dsninfo[&#39;phptype&#39;]) {
       return $this-&gt;raiseError();
     }
 
     return true;
   }
-     
+           
 </pre>
               </td>
             </tr>
@@ -134,45 +170,45 @@
         </div>
 
         <div class="SECT2">
-          <hr>
+          <hr />
 
-          <h2 class="SECT2"><a name="DEVSTANDARDS-COMMENTS">Comments</a></h2>
+          <h2 class="SECT2"><a id="DEVSTANDARDS-COMMENTS" name="DEVSTANDARDS-COMMENTS">1.5. Comments</a></h2>
 
-          <p>Non-documentation comments are strongly encouraged. A general rule of thumb is that if you look at a section of code and think "Wow, I don't want to try and describe that", you need to comment it before you forget how it works.</p>
+          <p>Non-documentation comments are strongly encouraged. A general rule of thumb is that if you look at a section of code and think &quot;Wow, I don&#39;t want to try and describe that&quot;, you need to comment it before you forget how it works.</p>
         </div>
 
         <div class="SECT2">
-          <hr>
+          <hr />
 
-          <h2 class="SECT2"><a name="DEVSTANDARDS-INCLUDING">Including Code</a></h2>
+          <h2 class="SECT2"><a id="DEVSTANDARDS-INCLUDING" name="DEVSTANDARDS-INCLUDING">1.6. Including Code</a></h2>
 
-          <p>Anywhere you are unconditionally including a class file, use <a href="http://php.net/manual/en/html/function.require-once.html" target="_top"><tt class="FUNCTION">require_once()</tt></a>. Anywhere you are conditionally including a class file (for example, factory methods), use <a href="http://php.net/manual/en/html/function.include-once.html" target="_top"><tt class="FUNCTION">include_once()</tt></a>. Either of these will ensure that class files are included only once. They share the same file list, so you don't need to worry about mixing them - a file included with <tt class="FUNCTION">require_once()</tt> will not be included again by <tt class="FUNCTION">include_once()</tt>.</p>
+          <p>Anywhere you are unconditionally including a class file, use <a href="http://php.net/manual/en/html/function.require-once.html" target="_top"><tt class="FUNCTION">require_once()</tt></a>. Anywhere you are conditionally including a class file (for example, factory methods), use <a href="http://php.net/manual/en/html/function.include-once.html" target="_top"><tt class="FUNCTION">include_once()</tt></a>. Either of these will ensure that class files are included only once. They share the same file list, so you don&#39;t need to worry about mixing them - a file included with <tt class="FUNCTION">require_once()</tt> will not be included again by <tt class="FUNCTION">include_once()</tt>.</p>
         </div>
 
         <div class="SECT2">
-          <hr>
+          <hr />
 
-          <h2 class="SECT2"><a name="DEVSTANDARDS-PHPTAGS">PHP Tags</a></h2>
+          <h2 class="SECT2"><a id="DEVSTANDARDS-PHPTAGS" name="DEVSTANDARDS-PHPTAGS">1.7. PHP Tags</a></h2>
 
           <p>Always use <tt class="COMPUTEROUTPUT">&lt;?php ?&gt;</tt> to delimit PHP code, not the <tt class="COMPUTEROUTPUT">&lt;? ?&gt;</tt> shorthand.</p>
         </div>
 
         <div class="SECT2">
-          <hr>
+          <hr />
 
-          <h2 class="SECT2"><a name="DEVSTANDARDS-CONSTANTS">Naming Constants</a></h2>
+          <h2 class="SECT2"><a id="DEVSTANDARDS-CONSTANTS" name="DEVSTANDARDS-CONSTANTS">1.8. Naming Constants</a></h2>
 
           <p>Constants should always be uppercase, with underscores to separate words.</p>
         </div>
       </div>
 
       <div class="SECT1">
-        <hr>
+        <hr />
 
-        <h1 class="SECT1"><a name="DEVSTARDS-OTHERCONVENTIONS">Other Conventions</a></h1>
+        <h1 class="SECT1"><a id="OTHERCONVENTIONS" name="OTHERCONVENTIONS">2. Other Conventions</a></h1>
 
         <div class="SECT2">
-          <h2 class="SECT2"><a name="DEVSTANDARDS-FILENAMING">File Naming</a></h2>
+          <h2 class="SECT2"><a id="DEVSTANDARDS-FILENAMING" name="DEVSTANDARDS-FILENAMING">2.1. File Naming</a></h2>
 
           <p>File names should be all lowercase and contain no spaces. HTML files should have <tt class="FILENAME">.html</tt> as the extension, and PHP files should have <tt class="FILENAME">.php</tt> as the extension. Where possible, template files should match the name of the PHP file that will be using it, e. g., <tt class="FILENAME">index.html</tt> would be the template file for <tt class="FILENAME">index.php</tt>. Where one PHP file uses more than one templates, the templates should be similarly named: <tt class="FILENAME">user.php</tt> could use <tt class="FILENAME">userlist.html</tt> and <tt class="FILENAME">userform.html</tt> for a list of users and editing a user, respectively.</p>
         </div>

@@ -75,7 +75,7 @@
 		</sect2>
 		
 		<sect2 id="devstandards-funcdefs" xreflabel="Function Definitions">
-			<title>Function Calls</title>
+			<title>Function Definitions</title>
 			<para>
 				Function definitions follow the format of function calls, with the 
 				opening brace at the end of the line of the function declaration. The 
