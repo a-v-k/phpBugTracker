@@ -2,7 +2,7 @@
 
 // configure.php - Interface for configuration options
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,81 +20,21 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: configure.php,v 1.5 2002/03/17 01:38:31 bcurtis Exp $
+// $Id: configure.php,v 1.6 2002/04/03 00:58:26 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
 
-function save_options() {
-	global $db, $HTTP_POST_VARS;
-	
-	foreach ($HTTP_POST_VARS as $k => $v) {
-		$db->query('update '.TBL_CONFIGURATION." set varvalue = '$v' where varname = '$k'");
-	}
-}
-
-function list_options() {
-	global $db, $t;
-	
-	$t->set_file('content', 'configure.html');
-	$t->set_block('content', 'row', 'rows');
-	$t->set_block('row', 'inputblock', 'input');
-	$t->set_block('row', 'selectblock', 'select');
-	$t->set_block('row', 'radioblock', 'radio');
-	
-	$i = 0;
-	$rs = $db->query('select * from '.TBL_CONFIGURATION);
-	while ($rs->fetchInto($row)) {
-		$t->set_var($row);
-		$t->set_var('trclass', ++$i % 2 ? '' : 'alt');
-		
-		switch ($row['vartype']) {
-			case 'multi' :
-				$t->set_var(array(
-					'options' => build_select($row['varname'], $row['varvalue']),
-					'input' => '',
-					'radio' => ''
-					));
-				$t->parse('select', 'selectblock', true);
-				break;
-			case 'bool' :
-				$t->set_var(array(
-					'yes' => $row['varvalue'] ? ' checked' : '',
-					'no' => $row['varvalue'] ? '' : ' checked',
-					'input' => '',
-					'select' => ''
-					));
-				$t->parse('radio', 'radioblock', true);
-				break;
-			default :
-				$t->set_var(array(
-					'input_type' => 'text',
-					'checked' => '',
-					'select' => '',
-					'radio' => ''
-					));
-				$t->parse('input', 'inputblock', true);
-				break;
-		}
-		$t->parse('rows', 'row', true);
-		$t->set_var(array(
-			'input' => '',
-			'select' => '',
-			'radio' => ''
-			));
-	}
-}
-
-$t->set_file('wrap','wrap.html');
-
 $perm->check('Admin');
 
 if (isset($_pv['submit'])) {
-	save_options();
+	foreach ($_pv as $k => $v) {
+		$db->query('update '.TBL_CONFIGURATION." set varvalue = '$v' where varname = '$k'");
+	}
 } 
-list_options();
 
-$t->pparse('main',array('content','wrap','main'));
+$t->assign('vars',  $db->getAll('select * from '.TBL_CONFIGURATION));
+$t->display('admin/configure.html');
 
 ?>
 

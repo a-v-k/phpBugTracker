@@ -2,7 +2,7 @@
 
 // status.php - Interface to the Status table
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: status.php,v 1.25 2002/03/30 19:12:30 bcurtis Exp $
+// $Id: status.php,v 1.26 2002/04/03 00:58:26 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -43,30 +43,34 @@ function del_item($statusid = 0) {
 }
 
 function do_form($statusid = 0) {
-	global $db, $me, $_pv, $STRING;
+	global $db, $me, $_pv, $STRING, $t;
 
 	extract($_pv);
 	$error = '';
 	// Validation
-	if (!$fname = trim($fname))
+	if (!$status_name = trim($status_name))
 		$error = $STRING['givename'];
-	elseif (!$fdescription = trim($fdescription))
+	elseif (!$status_desc = trim($status_desc))
 		$error = $STRING['givedesc'];
-	if ($error) { list_items($statusid, $error); return; }
+	if ($error) { show_form($statusid, $error); return; }
 
 	if (!$statusid) {
 		$db->query("insert into ".TBL_STATUS.
 			" (status_id, status_name, status_desc, sort_order) values (".
 			$db->nextId(TBL_STATUS).', '.
-			$db->quote(stripslashes($fname)).', '.
-			$db->quote(stripslashes($fdescription)).", '$fsortorder')");
+			$db->quote(stripslashes($status_name)).', '.
+			$db->quote(stripslashes($status_desc)).", '$sort_order')");
 	} else {
 		$db->query("update ".TBL_STATUS.
-			" set status_name = ".$db->quote(stripslashes($fname)).
-			', status_desc = '.$db->quote(stripslashes($fdescription)).
-			", sort_order = $fsortorder where status_id = $statusid");
+			" set status_name = ".$db->quote(stripslashes($status_name)).
+			', status_desc = '.$db->quote(stripslashes($status_desc)).
+			", sort_order = $sort_order where status_id = $statusid");
 	}
-	header("Location: $me?");
+	if ($use_js) {
+		$t->display('admin/edit-submit.html');
+	} else {
+		header("Location: $me?");
+	}
 }
 
 function show_form($statusid = 0, $error = '') {
@@ -74,32 +78,18 @@ function show_form($statusid = 0, $error = '') {
 
 	extract($_pv);
 	if ($statusid && !$error) {
-		$row = $db->getRow("select * from ".TBL_STATUS.
-			" where status_id = '$statusid'");
-		$t->set_var(array(
-			'action' => $STRING['edit'],
-			'fstatusid' => $row['status_id'],
-			'fname' => $row['status_name'],
-			'fdescription' => $row['status_desc'],
-			'fsortorder' => $row['sort_order']));
+		$t->assign($db->getRow("select * from ".TBL_STATUS.
+			" where status_id = '$statusid'"));
 	} else {
-		$t->set_var(array(
-			'action' => $statusid ? $STRING['edit'] : $STRING['addnew'],
-			'error' => $error,
-			'fstatusid' => $statusid,
-			'fname' => isset($fname) ? $fname : '',
-			'fdescription' => isset($fdescription) ? $fdescription : '',
-			'fsortorder' => isset($fsortorder) ? $fsortorder : 0));
+ 		$t->assign($_pv);
 	}
+	$t->assign('error', $error);
+	$t->display('admin/status-edit.html');
 }
 
 
 function list_items($statusid = 0, $error = '') {
 	global $me, $db, $t, $_gv, $STRING, $TITLE, $QUERY;
-
-	$t->set_file('content','statuslist.html');
-	$t->set_block('content','row','rows');
-	$t->set_block('row','deleteblock','deleteb');
 
 	if (empty($_gv['order'])) { 
 		$order = 'sort_order'; 
@@ -113,22 +103,10 @@ function list_items($statusid = 0, $error = '') {
 	
 	$nr = $db->getOne("select count(*) from ".TBL_STATUS);
 
-	list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
-		"order=$order&sort=$sort");
+	list($selrange, $llimit) = multipages($nr, $page, "order=$order&sort=$sort");
 
-	$t->set_var(array(
-		'pages' => '[ '.$pages.' ]',
-		'first' => $llimit+1,
-		'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
-		'records' => $nr));
-
-	$rs = $db->limitQuery(sprintf($QUERY['admin-list-statuses'], $order, $sort), 
-		$llimit, $selrange);
-
-	if (!$rs->numRows()) {
-		$t->set_var('rows',"<tr><td>{$STRING['nostatuses']}</td></tr>");
-		return;
-	}
+	$t->assign('statuses', $db->getAll($db->modifyLimitQuery(
+		sprintf($QUERY['admin-list-statuses'], $order, $sort), $llimit, $selrange)));
 
 	$headers = array(
 		'statusid' => 'status_id',
@@ -138,40 +116,17 @@ function list_items($statusid = 0, $error = '') {
 
 	sorting_headers($me, $headers, $order, $sort);
 
-	$i = 0;
-	while ($rs->fetchInto($row)) {
-		$t->set_var(array(
-			'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
-			'trclass' => $i % 2 ? '' : 'alt',
-			'statusid' => $row['status_id'],
-			'name' => $row['status_name'],
-			'description' => $row['status_desc'],
-			'sortorder' => $row['sort_order'],
-			));
-		if ($row['bug_count']) {
-			$t->set_var('deleteb', '&nbsp');
-		} else {
-			$t->parse('deleteb', 'deleteblock', false);
-		}
-		$t->parse('rows','row',true);
-	}
-
-	show_form($statusid, $error);
-	$t->set_var('TITLE',$TITLE['status']);
+	$t->display('admin/statuslist.html');
 }
-
-$t->set_file('wrap','wrap.html');
 
 $perm->check('Admin');
 
 if (isset($_gv['op'])) switch($_gv['op']) {
 	case 'add' : list_items(); break;
-	case 'edit' : list_items($_gv['id']); break;
-	case 'del' : del_item($_gv['id']); break;
+	case 'edit' : show_form($_gv['status_id']); break;
+	case 'del' : del_item($_gv['status_id']); break;
 } elseif(isset($_pv['submit'])) {
-	do_form($_pv['id']);
+	do_form($_pv['status_id']);
 } else list_items();
-
-$t->pparse('main',array('content','wrap','main'));
 
 ?>

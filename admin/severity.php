@@ -2,7 +2,7 @@
 
 // severity.php - Interface to the severity table
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: severity.php,v 1.21 2002/03/30 19:12:30 bcurtis Exp $
+// $Id: severity.php,v 1.22 2002/04/03 00:58:26 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -43,68 +43,54 @@ function del_item($severityid = 0) {
 }
 
 function do_form($severityid = 0) {
-	global $db, $me, $_pv, $STRING;
+	global $db, $me, $_pv, $STRING, $t;
 
 	extract($_pv);
 	$error = '';
 	// Validation
-	if (!$fname = trim($fname))
+	if (!$severity_name = trim($severity_name))
 		$error = $STRING['givename'];
-	elseif (!$fdescription = trim($fdescription))
+	elseif (!$severity_desc = trim($severity_desc))
 		$error = $STRING['givedesc'];
-	if ($error) { list_items($severityid, $error); return; }
+	if ($error) { show_form($severityid, $error); return; }
 
 	if (!$severityid) {
 		$db->query("insert into ".TBL_SEVERITY.
 			" (severity_id, severity_name, severity_desc, sort_order, severity_color) 
 			values (".$db->nextId(TBL_SEVERITY).', '.
-			$db->quote(stripslashes($fname)).', '.
-			$db->quote(stripslashes($fdescription)).", $fsortorder, ".
-			$db->quote(stripslashes($fcolor)).')');
+			$db->quote(stripslashes($severity_name)).', '.
+			$db->quote(stripslashes($severity_desc)).", $sort_order, ".
+			$db->quote(stripslashes($severity_color)).')');
 	} else {
 		$db->query("update ".TBL_SEVERITY.
-			" set severity_name = ".$db->quote(stripslashes($fname)).
-			', severity_desc = '.$db->quote(stripslashes($fdescription)).
-			", sort_order = $fsortorder, severity_color = ".
-			$db->quote(stripslashes($fcolor))." where severity_id = $severityid");
+			" set severity_name = ".$db->quote(stripslashes($severity_name)).
+			', severity_desc = '.$db->quote(stripslashes($severity_desc)).
+			", sort_order = $sort_order, severity_color = ".
+			$db->quote(stripslashes($severity_color))." where severity_id = $severity_id");
 	}
-	header("Location: $me?");
+	if ($use_js) {
+		$t->display('admin/edit-submit.html');
+	} else {
+		header("Location: $me?");
+	}
 }
 
 function show_form($severityid = 0, $error = '') {
 	global $db, $me, $t, $_pv, $STRING;
 
 	if ($severityid && !$error) {
-		$row = $db->getRow("select * from ".TBL_SEVERITY.
-			" where severity_id = '$severityid'");
-		$t->set_var(array(
-			'action' => $STRING['edit'],
-			'fseverityid' => $row['severity_id'],
-			'fname' => $row['severity_name'],
-			'fdescription' => $row['severity_desc'],
-			'fsortorder' => $row['sort_order'],
-			'fcolor' => $row['severity_color']));
+		$t->assign($db->getRow("select * from ".TBL_SEVERITY.
+			" where severity_id = '$severityid'"));
 	} else {
-		$t->set_var(array(
-			'action' => $severityid ? $STRING['edit'] : $STRING['addnew'],
-			'error' => $error,
-			'fseverityid' => $severityid,
-			'fname' => isset($_pv['fname']) ? stripslashes($_pv['fname']) : '',
-			'fdescription' => isset($_pv['fdescription']) ? 
-				stripslashes($_pv['fdescription']) : '',
-			'fsortorder' => isset($_pv['fsortorder']) ? $_pv['fsortorder'] : '',
-			'fcolor' => isset($_pv['fcolor']) ? $_pv['fcolor'] : ''
-			));
+ 		$t->assign($_pv);
 	}
+	$t->assign('error', $error);
+	$t->display('admin/severity-edit.html');
 }
 
 
 function list_items($severityid = 0, $error = '') {
 	global $me, $db, $t, $_gv, $STRING, $TITLE, $QUERY;
-
-	$t->set_file('content','severitylist.html');
-	$t->set_block('content','row','rows');
-	$t->set_block('row','deleteblock','deleteb');
 
 	if (empty($_gv['order'])) { 
 		$order = 'sort_order'; 
@@ -118,23 +104,11 @@ function list_items($severityid = 0, $error = '') {
 	
 	$nr = $db->getOne("select count(*) from ".TBL_SEVERITY);
 
-	list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
-		"order=$order&sort=$sort");
+	list($selrange, $llimit) = multipages($nr, $page, "order=$order&sort=$sort");
 
-	$t->set_var(array(
-		'pages' => '[ '.$pages.' ]',
-		'first' => $llimit+1,
-		'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
-		'records' => $nr));
+	$t->assign('severities', $db->getAll($db->modifyLimitQuery(
+		sprintf($QUERY['admin-list-severities'], $order, $sort), $llimit, $selrange)));
 
-	$rs = $db->limitQuery(sprintf($QUERY['admin-list-severities'], $order, $sort), 
-		$llimit, $selrange);
-
-
-	if (!$rs->numRows()) {
-		$t->set_var('rows',"<tr><td>{$STRING['noseverities']}</td></tr>");
-		return;
-	}
 
 	$headers = array(
 		'severityid' => 'severity_id',
@@ -145,40 +119,17 @@ function list_items($severityid = 0, $error = '') {
 
 	sorting_headers($me, $headers, $order, $sort);
 
-	$i = 0;
-	while ($rs->fetchInto($row)) {
-		$t->set_var(array(
-			'bgcolor' => USE_SEVERITY_COLOR ? $row['severity_color'] : 
-				((++$i % 2 == 0) ? '#dddddd' : ''),
-			'trclass' => USE_SEVERITY_COLOR ? '' : ($i % 2 ? '' : 'alt'),
-			'severityid' => $row['severity_id'],
-			'name' => $row['severity_name'],
-			'description' => $row['severity_desc'],
-			'sortorder' => $row['sort_order']));
-		if ($row['bug_count']) {
-			$t->set_var('deleteb', '&nbsp');
-		} else {
-			$t->parse('deleteb', 'deleteblock', false);
-		}
-		$t->parse('rows','row',true);
-	}
-
-	show_form($severityid, $error);
-	$t->set_var('TITLE',$TITLE['severity']);
+	$t->display('admin/severitylist.html');
 }
-
-$t->set_file('wrap','wrap.html');
 
 $perm->check('Admin');
 
 if (isset($_gv['op'])) switch($_gv['op']) {
 	case 'add' : list_items(); break;
-	case 'edit' : list_items($_gv['id']); break;
-	case 'del' : del_item($_gv['id']); break;
+	case 'edit' : show_form($_gv['severity_id']); break;
+	case 'del' : del_item($_gv['severity_id']); break;
 } elseif(isset($_pv['submit'])) {
-	do_form($_pv['id']);
+	do_form($_pv['severity_id']);
 } else list_items();
-
-$t->pparse('main',array('content','wrap','main'));
 
 ?>

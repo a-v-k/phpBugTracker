@@ -2,7 +2,7 @@
 
 // user.php - Create and update users
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,48 +20,48 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.45 2002/04/01 15:42:41 bcurtis Exp $
+// $Id: user.php,v 1.46 2002/04/03 00:58:26 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
 
 function do_form($userid = 0) {
-	global $db, $me, $_pv, $STRING, $now, $u, $QUERY;
+	global $db, $me, $_pv, $STRING, $now, $u, $QUERY, $t;
 
 	$error = '';
 	// Validation
-	if (!EMAIL_IS_LOGIN && !$_pv['flogin'] = trim($_pv['flogin'])) {
+	if (!EMAIL_IS_LOGIN && !$_pv['login'] = trim($_pv['login'])) {
 		$error = $STRING['givelogin'];
-	} elseif (!bt_valid_email($_pv['femail'])) {
+	} elseif (!bt_valid_email($_pv['email'])) {
 		$error = $STRING['giveemail'];
-	} elseif (!$_pv['fpassword'] = trim($_pv['fpassword'])) {
+	} elseif (!$_pv['password'] = trim($_pv['password'])) {
 		$error = $STRING['givepassword'];
 	}
 	if ($error) {
-		list_items($userid, $error);
+		show_form($userid, $error);
 		return;
 	}
-	if (!isset($_pv['factive'])) $_pv['factive'] = 0;
+	if (!isset($_pv['active'])) $_pv['active'] = 0;
 	if (!isset($_pv['fe_notice'])) $_pv['fe_notice'] = 0;
 
 	if (EMAIL_IS_LOGIN) {
-		$login = $_pv['femail'];
+		$login = $_pv['email'];
 	} else {
-		$login = $_pv['flogin'];
+		$login = $_pv['login'];
 	}
 
 	if (!$userid) {
-		if (ENCRYPT_PASS) $mpassword = $db->quote(md5($_pv['fpassword']));
-		else $mpassword = $db->quote(stripslashes($_pv['fpassword']));
+		if (ENCRYPT_PASS) $mpassword = $db->quote(md5($_pv['password']));
+		else $mpassword = $db->quote(stripslashes($_pv['password']));
 		$new_user_id = $db->nextId(TBL_AUTH_USER);
 		$db->query('insert into '.TBL_AUTH_USER
 			." (user_id, first_name, last_name, login, email, password, active,
 			created_by, created_date, last_modified_by, last_modified_date)
 			values (".join(', ', array($new_user_id, 
-				$db->quote(stripslashes($_pv['ffirstname'])), 
-				$db->quote(stripslashes($_pv['flastname'])),
-				$db->quote(stripslashes($login)), $_pv['femail'], $mpassword, 
-				$_pv['factive'], $u, $now, $u, $now)).')');
+				$db->quote(stripslashes($_pv['first_name'])), 
+				$db->quote(stripslashes($_pv['last_name'])),
+				$db->quote(stripslashes($login)), $_pv['email'], $mpassword, 
+				$_pv['active'], $u, $now, $u, $now)).')');
 		// Add to the selected groups
 		if (isset($_pv['fusergroup']) and is_array($_pv['fusergroup']) and
 			$_pv['fusergroup'][0]) {
@@ -84,19 +84,19 @@ function do_form($userid = 0) {
 		if (ENCRYPT_PASS) {
 			$oldpass = $db->getOne("select password from ".TBL_AUTH_USER
 				." where user_id = $userid");
-			if ($oldpass != $_pv['fpassword']) {
-				$pquery = "password = '".md5($_pv['fpassword'])."',";
+			if ($oldpass != $_pv['password']) {
+				$pquery = "password = '".md5($_pv['password'])."',";
 			} else {
 				$pquery = '';
 			}
 		} else {
-			$pquery = "password = ".$db->quote(stripslashes($_pv['fpassword'])).",";
+			$pquery = "password = ".$db->quote(stripslashes($_pv['password'])).",";
 		}
 		$db->query("update ".TBL_AUTH_USER.
-			" set first_name = ".$db->quote(stripslashes($_pv['ffirstname'])).
-			", last_name = ".$db->quote(stripslashes($_pv['flastname'])).
+			" set first_name = ".$db->quote(stripslashes($_pv['first_name'])).
+			", last_name = ".$db->quote(stripslashes($_pv['last_name'])).
 			", login = ".$db->quote(stripslashes($login)).
-			", email = '{$_pv['femail']}', $pquery active = {$_pv['factive']} ".
+			", email = '{$_pv['email']}', $pquery active = {$_pv['active']} ".
 			"where user_id = $userid");
 			
 		// Update preferences
@@ -133,7 +133,11 @@ function do_form($userid = 0) {
 			}
 		}
 	}
-	header("Location: $me?filter={$_pv['filter']}");
+	if ($_pv['use_js']) {
+		$t->display('admin/edit-submit.html');
+	} else {
+		header("Location: $me?filter={$_pv['filter']}");
+	}
 }
 
 function show_form($userid = 0, $error = '') {
@@ -141,69 +145,34 @@ function show_form($userid = 0, $error = '') {
 
 
 	if ($userid && !$error) {
-		$row = $db->getRow('select * from '.TBL_AUTH_USER." u, ".
-			TBL_USER_PREF." p where u.user_id = $userid and u.user_id = p.user_id");
+		$t->assign($db->getRow('select * from '.TBL_AUTH_USER." u, ".
+			TBL_USER_PREF." p where u.user_id = $userid and u.user_id = p.user_id"));
 
 		// Get user's groups
-		$user_groups = $db->getCol('select group_id from '.TBL_USER_GROUP.
-			" where user_id = {$row['user_id']}");
+		$t->assign('user_groups', $db->getCol('select group_id from '.TBL_USER_GROUP.
+			" where user_id = $userid"));
 
-		$t->set_var(array(
-			'action' => $STRING['edit'],
-			'fuserid' => $row['user_id'],
-			'flogin' => $row['login'],
-			'ffirstname' => stripslashes($row['first_name']),
-			'flastname' => stripslashes($row['last_name']),
-			'femail' => $row['email'],
-			'fpassword' => $row['password'],
-			'factive' => $row['active'] ? 'checked' : '',
-			'fe_notice' => $row['email_notices'] ? 'checked' : '',
-			'fusergroup' => build_select('group', $user_groups),
-			// Whether or not this user has admin rights
-			'hadadmin' => $db->getOne('select count(*) from '.TBL_USER_GROUP.
-				" where user_id = $userid and group_id = 1")
-			));
+		$t->assign('hadadmin', $db->getOne('select count(*) from '.TBL_USER_GROUP.
+				" where user_id = $userid and group_id = 1"));
 	} else {
-		$t->set_var(array(
-			'action' => $userid ? $STRING['edit'] : $STRING['addnew'],
+ 		$t->assign($_pv);
+		$t->assign(array(
 			'error' => $error,
-			'fuserid' => $userid,
-			'flogin' => isset($_pv['flogin']) ? $_pv['flogin'] : '',
-			'ffirstname' => isset($_pv['firstname']) ? 
-				stripslashes($_pv['firstname']) : '',
-			'flastname' => isset($_pv['flastname']) ? 
-				stripslashes($_pv['flastname']) : '',
-			'femail' => isset($_pv['femail']) ? $_pv['femail'] : '',
-			'fpassword' => isset($_pv['fpassword']) ? $_pv['fpassword'] : 
+			'password' => isset($_pv['password']) ? $_pv['password'] : 
 				genpassword(10),
-			'factive' => isset($_pv['factive']) ? ($_pv['factive'] ? 'checked' : '')
-				: 'checked',
-			'fe_notice' => isset($_pv['fe_notice']) ? ($_pv['fe_notice'] ? 'checked' : '')
-				: 'checked',
-			'fusergroup' => build_select('group', (isset($_pv['fusergroup']) ? 
-				$_pv['fusergroup'] : array())),
+			'user_groups' => isset($_pv['fusergroup']) ? $_pv['fusergroup'] : array(),
 			// Whether or not this user has admin rights
 			'hadadmin' => 0
 			));
 	}
 	// The number of admins in the system
-	$t->set_var('numadmins', $db->getOne('select count(*) from '.TBL_USER_GROUP.
+	$t->assign('numadmins', $db->getOne('select count(*) from '.TBL_USER_GROUP.
 		' where group_id = 1'));
-
-	// Show the login field only if login is not tied to email address
-	if (EMAIL_IS_LOGIN) {
-		$t->set_var('loginarea', '');
-	} else {
-		$t->parse('loginarea', 'loginentryarea', true);
-	}
+	$t->display('admin/user-edit.html');
 }
 
 function list_items($userid = 0, $error = '') {
 	global $me, $db, $t, $_gv, $STRING, $TITLE;
-
-	$t->set_file('content', 'userlist.html');
-	$t->set_block('content', 'row', 'rows');
-	$t->set_block('content', 'loginentryarea', 'loginarea');
 
 	if (empty($_gv['order'])) { 
 		$order = 'login'; 
@@ -224,18 +193,13 @@ function list_items($userid = 0, $error = '') {
 	}
 	$nr = $db->getOne("select count(*) from ".TBL_AUTH_USER.$filter_query);
 
-	list($selrange, $llimit, $npages, $pages) = multipages($nr, $page,
+	list($selrange, $llimit) = multipages($nr, $page, 
 		"order=$order&sort=$sort&filter=$user_filter");
 
-	$t->set_var(array(
-		'pages' => '[ '.$pages.' ]',
-		'first' => $llimit+1,
-		'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
-		'records' => $nr));
-
-	$rs = $db->limitQuery("select user_id, first_name, last_name,
-		email, login, created_date, active from ".TBL_AUTH_USER
-		."$filter_query order by $order $sort", $llimit, $selrange);
+	$t->assign('users', $db->getAll($db->modifyLimitQuery(
+		"select user_id, first_name, last_name,	email, login, created_date, active ".
+		"from ".TBL_AUTH_USER."$filter_query order by $order $sort", 
+		$llimit, $selrange)));
 
 	$headers = array(
 		'userid' => 'user_id',
@@ -248,42 +212,17 @@ function list_items($userid = 0, $error = '') {
 
 	sorting_headers($me, $headers, $order, $sort, "page=$page&filter=$user_filter");
 
-	if (!$rs->numRows()) {
-		$t->set_var('rows',"<tr><td>{$STRING['nousers']}</td></tr>");
-	} else {
-		$i = 0;
-		while ($rs->fetchInto($row)) {
-			$t->set_var(array(
-				'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
-				'trclass' => $i % 2 ? '' : 'alt',
-				'userid' => $row['user_id'],
-				'login' => $row['login'],
-				'name' => stripslashes("{$row['first_name']}&nbsp;{$row['last_name']}"),
-				'email' => $row['email'],
-				'active' => $row['active'] ? 'Yes' : 'No',
-				'date' => date(DATE_FORMAT, $row['created_date'])));
-			$t->parse('rows','row',true);
-		}
-	}
-	$t->set_var(array(
-		'filter_select' => build_select('user_filter', $user_filter),
-		'filter' => $user_filter));
-	
-	show_form($userid, $error);
-	$t->set_var('TITLE', $TITLE['user']);
+	$t->assign('filter', $user_filter);
+	$t->display('admin/userlist.html');
 }
-
-$t->set_file('wrap','wrap.html');
 
 $perm->check('Admin');
 
 if (isset($_gv['op'])) switch($_gv['op']) {
 	case 'add' : list_items(); break;
-	case 'edit' : list_items($_gv['id']); break;
+	case 'edit' : show_form($_gv['user_id']); break;
 } elseif(isset($_pv['submit'])) {
-	do_form($_pv['id']);
+	do_form($_pv['user_id']);
 } else list_items();
-
-$t->pparse('main',array('content', 'wrap', 'main'));
 
 ?>
