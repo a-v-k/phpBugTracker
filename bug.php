@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.79 2002/02/28 17:45:53 bcurtis Exp $
+// $Id: bug.php,v 1.80 2002/02/28 17:48:57 bcurtis Exp $
 
 include 'include.php';
 
@@ -737,6 +737,7 @@ function show_bug($bugid = 0, $error = array()) {
 		'pos' => isset($_gv['pos']) ? $_gv['pos'] : 0,
 		'already_voted' => $q->grab_field("select count(*) from ".TBL_BUG_VOTE.
 			" where bug_id = $bugid and user_id = $u"),
+		'already_voted_string' => $STRING['already_voted'],
 		'num_votes' => $q->grab_field("select count(*) from ".TBL_BUG_VOTE.
 			" where bug_id = $bugid")
 		));
