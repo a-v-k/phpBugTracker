@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.76 2001/11/14 14:28:06 bcurtis Exp $
+// $Id: include.php,v 1.77 2001/11/19 16:49:20 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -271,7 +271,7 @@ function build_select($box, $value = '', $project = 0) {
     case 'os' :
       $q->query("select {$box}_id, {$box}_name, regex from ".TBL_OS." order by sort_order");
       while ($row = $q->grab()) {
-        if ($value == '' and $row['Regex'] and
+        if ($value == '' and isset($row['Regex']) and
           preg_match($row['Regex'],$GLOBALS['HTTP_USER_AGENT'])) $sel = ' selected';
         elseif ($value == $row[$box.'_id']) $sel = ' selected';
         else $sel = '';

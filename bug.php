@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.61 2001/11/14 14:28:06 bcurtis Exp $
+// $Id: bug.php,v 1.62 2001/11/19 16:49:20 bcurtis Exp $
 
 include 'include.php';
 
@@ -427,23 +427,26 @@ function show_form($bugid = 0, $error = '') {
       'TITLE' => $TITLE['enterbug'],
       'error' => $error,
       'bugid' => $bugid,
-      'title' => stripslashes($title),
-      'description' => stripslashes($description),
-      'url' => $url ? $url : 'http://',
-      'urllabel' => $url ? "<a href='$url'>URL</a>" : 'URL',
-      'severity' => build_select('severity',$severity),
-      'priority' => build_select('priority',$priority),
-      'status' => build_select('status',$status),
-      'resolution' => build_select('resolution',$resolution),
-      'assignedto' => $assignedto,
-      'createdby' => $createdby,
-      'createddate' => $createddate,
-      'lastmodifieddate' => $lastmodifieddate,
+      'title' => isset($title) ? stripslashes($title) : '',
+      'description' => isset($description) ? stripslashes($description) : '',
+      'url' => isset($url) ? $url : 'http://',
+      'urllabel' => isset($url) ? "<a href='$url'>URL</a>" : 'URL',
+      'severity' => build_select('severity',(isset($severity) ? $severity : 0)),
+      'priority' => build_select('priority',(isset($priority) ? $priority : 0)),
+      'status' => build_select('status',(isset($status) ? $status : 0)),
+      'resolution' => build_select('resolution',
+				(isset($resolution) ? $resolution : 0)),
+      'assignedto' => isset($assignedto) ? $assignedto : '',
+      'createdby' => isset($createdby),
+      'createddate' => isset($createddate),
+      'lastmodifieddate' => isset($lastmodifieddate),
       'project' => $project,
       'projectname' => $projectname,
-      'version' => build_select('version',$version,$project),
-      'component' => build_select('component',$component,$project),
-      'os' => build_select('os',$os)));
+      'version' => build_select('version',
+				(isset($version) ? $version : 0),$project),
+      'component' => build_select('component',
+				(isset($component) ? $component : 0),$project),
+      'os' => build_select('os',(isset($os) ? $os : 0))));
   }
 }
 
@@ -586,7 +589,8 @@ function show_bug($bugid = 0, $error = array()) {
   $t->set_block('content','attrow','attrows');
   $t->set_unknowns('remove');
 	
-	list($prevlink, $nextlink) = prev_next_links($bugid, $_gv['pos']);
+	list($prevlink, $nextlink) = prev_next_links($bugid, 
+		isset($_gv['pos']) ? $_gv['pos'] : 0);
   $t->set_var(array(
     'statuserr' => isset($error['status']) ? $error['status'].'<br><br>' : '',
     'bugid' => $bugid,
@@ -599,7 +603,7 @@ function show_bug($bugid = 0, $error = array()) {
     'priority' => build_select('priority',$row['priority']),
     'status' => $row['status_name'],
     'resolution' => !empty($row['resolution_name']) ? $row['resolution_name'] : '',
-    'owner' => maskemail($row['owner']),
+    'owner' => isset($row['owner']) ? maskemail($row['owner']) : '',
     'reporter' => maskemail($row['reporter']),
     'createddate' => date(DATE_FORMAT,$row['created_date']),
     'createdtime' => date(TIME_FORMAT,$row['created_date']),
@@ -618,7 +622,7 @@ function show_bug($bugid = 0, $error = array()) {
 		'prevlink' => $prevlink,
 		'nextlink' => $nextlink,
 		'prevnextsep' => $prevlink && $nextlink ? ' | ' : '',
-		'pos' => $_gv['pos']
+		'pos' => isset($_gv['pos']) ? $_gv['pos'] : 0
     ));
   switch($row['status_name']) {
     case 'Unconfirmed' :
@@ -705,7 +709,7 @@ function show_bug($bugid = 0, $error = array()) {
 }
 
 function show_projects() {
-  global $me, $q, $t, $project, $STRING;
+  global $me, $q, $t, $project, $STRING, $TITLE;
 
   // Show only active projects with at least one component
   $q->query('select p.project_id, p.project_name, p.project_desc, p.created_date 
@@ -747,7 +751,7 @@ if ($op) {
     case 'history' : show_history($bugid); break;
     case 'add' :
       $perm->check('Editbug');
-      if ($project) show_form();
+      if (isset($_gv['project'])) show_form();
       else show_projects();
       break;
     case 'show' : show_bug($bugid); break;

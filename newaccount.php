@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.21 2001/11/13 03:53:04 bcurtis Exp $
+// $Id: newaccount.php,v 1.22 2001/11/19 16:49:20 bcurtis Exp $
 
 include 'include.php'; 
 
@@ -77,10 +77,12 @@ function show_form($error = '') {
 	$t->set_block('content', 'loginentryarea', 'loginarea');
 	$t->set_var(array(
 		'error' => $error,
-		'login' => stripslashes($_pv['login']),
-		'email' => $_pv['email'],
-		'firstname' => stripslashes($_pv['firstname']),
-		'lastname' => stripslashes($_pv['lastname'])
+		'login' => isset($_pv['login']) ? stripslashes($_pv['login']) : '',
+		'email' => isset($_pv['email']) ? $_pv['email'] : '',
+		'firstname' => isset($_pv['firstname']) ? stripslashes($_pv['firstname'])
+			: '',
+		'lastname' => isset($_pv['lastname']) ? stripslashes($_pv['lastname'])
+			: ''
 		));
 		
 	// Show the login field if necessary
@@ -94,7 +96,7 @@ function show_form($error = '') {
 $t->set_file('wrap','wrap.html');
 $t->set_var('TITLE',$TITLE['newaccount']);
 
-if ($_pv['createaccount']) do_form();
+if (isset($_pv['createaccount'])) do_form();
 else show_form();
 
 $t->pparse('main',array('content','wrap','main'));
