@@ -136,13 +136,13 @@ CREATE TABLE `status` (
 );
 insert into status select * from Status;
 
-CREATE TABLE `user` (
+CREATE TABLE `auth_user` (
   `user_id` int(10) unsigned NOT NULL default '0',
   `first_name` char(40) NOT NULL default '',
   `last_name` char(40) NOT NULL default '',
   `email` char(60) NOT NULL default '',
   `password` char(40) NOT NULL default '',
-  `user_level` tinyint(3) unsigned NOT NULL default '1',
+  `active` tinyint(3) unsigned NOT NULL default '1',
 	`bug_list_fields` char(255) NOT NULL default '',
   `created_by` int(10) unsigned NOT NULL default '0',
   `created_date` bigint(20) unsigned NOT NULL default '0',
@@ -150,7 +150,7 @@ CREATE TABLE `user` (
   `last_modified_date` bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (`user_id`)
 );
-insert into user select UserID, FirstName, LastName, Email, Password, UserLevel, '', 0, CreatedDate, 0, CreatedDate from User;
+insert into auth_user select UserID, FirstName, LastName, Email, Password, if (UserLevel > 0, 1, 0), '', 0, CreatedDate, 0, CreatedDate from User;
 
 CREATE TABLE `version` (
   `version_id` int(10) unsigned NOT NULL default '0',
