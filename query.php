@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.46 2001/12/08 14:28:16 bcurtis Exp $
+// $Id: query.php,v 1.47 2001/12/08 14:55:42 bcurtis Exp $
 
 include 'include.php';
 
@@ -33,7 +33,8 @@ function delete_saved_query($queryid) {
 }
 
 function show_query() {
-	global $q, $t, $status, $resolution, $os, $priority, $severity, $TITLE, $u;
+	global $q, $t, $status, $resolution, $os, $priority, $severity, $TITLE, $u,
+		$perm, $auth;
 	
 	$nq = new dbclass;
 	$js = '';
@@ -43,8 +44,16 @@ function show_query() {
 	$t->set_block('savequeryblock','row','rows');
 	 
 	// Build the javascript-powered select boxes
-	$q->query("select project_id, project_name from ".TBL_PROJECT.
-		" where active = 1 order by project_name");
+	if ($perm->have_perm('Admin')) {
+		$q->query("select project_id, project_name from ".TBL_PROJECT.
+			" where active = 1 order by project_name");
+	} else {
+		$q->query('select p.project_id, project_name from '.TBL_PROJECT.
+			' p left join '.TBL_PROJECT_GROUP.' pg using(project_id) 
+			where active = 1 and (pg.project_id is null or pg.group_id in ('.
+			delimit_list(',', $auth->auth['group_ids']).')) group by 
+			p.project_id, p.project_name order by project_name');
+	}
 	while (list($pid, $pname) = $q->grab()) {
 		// Version array
 		$js .= "versions['$pname'] = new Array(new Array('','All'),";
@@ -101,7 +110,7 @@ function show_query() {
 }
 
 function build_query($assignedto, $reportedby, $open) {
-	global $q, $auth, $_gv;
+	global $q, $auth, $_gv, $perm, $auth;
 
 	foreach ($_gv as $k => $v) { $$k = $v; }
 	
@@ -156,6 +165,13 @@ function build_query($assignedto, $reportedby, $open) {
 			if ($versions) $proj[] = "b.version_id = $versions";
 			if ($components) $proj[] = "component_id = $components";
 			$query[] = '('.delimit_list(' and ',$proj).')';
+		} elseif (!$perm->have_perm('Admin')) { // Filter results from hidden projects
+			$query[] = 'b.project_id in ('.
+				delimit_list(',', $q->grab_field_set('select p.project_id
+				from '.TBL_PROJECT.' p left join '.TBL_PROJECT_GROUP.' pg using(project_id) 
+				where active > 0 and (pg.project_id is null or pg.group_id in ('.
+				delimit_list(',', $auth->auth['group_ids']).')) group by p.project_id')).
+				')';
 		}
 	}
 	

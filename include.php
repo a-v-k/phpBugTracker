@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.80 2001/12/06 14:28:31 bcurtis Exp $
+// $Id: include.php,v 1.81 2001/12/08 14:55:42 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -236,7 +236,7 @@ $select['priority'] = array(
 ///
 /// Build a select box with the item matching $value selected
 function build_select($box, $value = '', $project = 0) {
-  global $q, $select;
+  global $q, $select, $perm, $auth;
 
   //create hash to map tablenames
   $cfgDatabase = array(
@@ -257,7 +257,13 @@ function build_select($box, $value = '', $project = 0) {
     	'severity' => $querystart.' where sort_order > 0 order by sort_order',
     	'status' => $querystart.' where sort_order > 0 order by sort_order',
     	'resolution' => $querystart.' where sort_order > 0 order by sort_order',
-    	'project' => $querystart." where active > 0 order by {$box}_name",
+    	'project' => $perm->have_perm('Admin') 
+				? $querystart." where active > 0 order by {$box}_name"
+				: "select p.{$box}_id, {$box}_name from $cfgDatabase[$box] p left join ".
+					TBL_PROJECT_GROUP.' pg using(project_id) where active > 0 
+					and (pg.project_id is null or pg.group_id in ('.
+					delimit_list(',', $auth->auth['group_ids']).')) group by 
+					p.project_id, p.project_name order by project_name',
     	'component' => $querystart." where project_id = $project order by {$box}_name",
     	'version' => $querystart." where project_id = $project order by {$box}_name"
     	);
