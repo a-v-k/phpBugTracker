@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: configure.php,v 1.6 2002/04/03 00:58:26 bcurtis Exp $
+// $Id: configure.php,v 1.7 2002/04/03 18:18:02 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -30,6 +30,11 @@ $perm->check('Admin');
 if (isset($_pv['submit'])) {
 	foreach ($_pv as $k => $v) {
 		$db->query('update '.TBL_CONFIGURATION." set varvalue = '$v' where varname = '$k'");
+		
+		// Refresh the template variable now instead of waiting for the next page load.
+		if ($k == 'STYLE') {
+			$t->assign('STYLE', $v);
+		}
 	}
 } 
 

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.20 2002/04/03 01:00:52 bcurtis Exp $
+// $Id: upgrade.php,v 1.21 2002/04/03 18:18:02 bcurtis Exp $
 
 define ('NO_AUTH', 1);
 include 'include.php';
@@ -75,6 +75,7 @@ function upgrade() {
 		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('RECALL_LOGIN','0','Enable use of cookies to store username between logins','bool')");
 		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('SHOW_PROJECT_SUMMARIES', '1', 'Itemize bug stats by project on the home page', 'bool')");
 		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('FORCE_LOGIN', '0', 'Force users to login before being able to use the bug tracker', 'bool')");
+		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('STYLE', 'default', 'The CSS file to use (color scheme)', 'multi')");
 	}
 	include 'templates/default/upgrade-finished.html';
 }

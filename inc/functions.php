@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.16 2002/04/03 01:01:04 bcurtis Exp $
+// $Id: functions.php,v 1.17 2002/04/03 18:18:02 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -171,6 +171,24 @@ function build_select($params) {
       while (false !== ($file = readdir($dir))) {
         if ($file != '.' && $file != '..' && $file != 'CVS') {
           $filelist[] = str_replace('.php', '', $file);
+				}
+			}
+			closedir($dir);
+			sort($filelist);
+			foreach ($filelist as $file) {
+        if ($file == $selected) {
+          $sel = ' selected';
+        } else {
+          $sel = '';
+        }
+        $text .= "<option value=\"$file\"$sel>$file</option>";
+      }
+      break;
+    case 'STYLE' :
+      $dir = opendir(INSTALL_PATH.'/styles');
+      while (false !== ($file = readdir($dir))) {
+        if ($file != '.' && $file != '..' && $file != 'CVS') {
+          $filelist[] = str_replace('.css', '', $file);
 				}
 			}
 			closedir($dir);
