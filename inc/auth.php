@@ -132,18 +132,18 @@ class uperm {
     global $HTTP_SESSION_VARS;
 
     // Administrators always pass
-    if (isset($HTTP_SESSION_VARS[$auth_var]['Admin'])) {
+    if (@isset($HTTP_SESSION_VARS[$auth_var]['Admin'])) {
       return true;
     }
 
     if (is_array($reqs)) {
       foreach ($reqs as $req) {
-        if (!isset($HTTP_SESSION_VARS[$auth_var][$req])) {
+        if (!@isset($HTTP_SESSION_VARS[$auth_var][$req])) {
           return false;
         }
       }
     } else {
-      if (!isset($HTTP_SESSION_VARS[$auth_var][$reqs])) {
+      if (!@isset($HTTP_SESSION_VARS[$auth_var][$reqs])) {
         return false;
       }
     }
