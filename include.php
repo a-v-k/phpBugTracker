@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.81 2001/12/08 14:55:42 bcurtis Exp $
+// $Id: include.php,v 1.82 2001/12/10 13:42:39 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -484,7 +484,7 @@ function valid_email($email) {
 function maskemail($email) {
   global $auth;
 
-  if (HIDE_EMAIL && !$auth->auth['uid']) {
+  if (HIDE_EMAIL && empty($auth->auth['uid'])) {
     return '******';
   } elseif (MASK_EMAIL) {
     return str_replace('@', ' at ', str_replace('.', ' dot ', $email));
