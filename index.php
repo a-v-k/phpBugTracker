@@ -131,7 +131,7 @@ if (SHOW_PROJECT_SUMMARIES) {
 	// Grab the resolutions from the database
 	$rs = $db->query($QUERY['index-projsummary-2'].
 		db_concat($QUERY['index-projsummary-3'], 'resolution_id', 
-			$QUERY['index-projsummary-4'], 'resolution_name' ,"'\"'").
+			$QUERY['index-projsummary-4'], 'resolution_name', "'\"' ").
 		$QUERY['index-projsummary-5']);
 	while (list($fieldname, $countquery) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 		$resfields[] = $fieldname;

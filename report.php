@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: report.php,v 1.22 2002/03/29 18:25:37 bcurtis Exp $  
+// $Id: report.php,v 1.23 2002/03/29 22:43:38 bcurtis Exp $  
 
 include 'include.php';
 
@@ -38,7 +38,7 @@ function resolution_by_engineer($projectid = 0) {
 	// Grab the resolutions from the database
 	$rs = $db->query($QUERY['report-resbyeng-2'].
 		db_concat($QUERY['report-resbyeng-3'], 'resolution_id', 
-			$QUERY['report-resbyeng-4'], 'resolution_name' ,"'\"'").
+			$QUERY['report-resbyeng-4'], 'resolution_name', "'\"' ").
 		$QUERY['report-resbyeng-5']);
 	while (list($fieldname, $countquery) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 		$resfields[] = $fieldname;
