@@ -120,8 +120,11 @@ class uperm extends Perm {
 ///
 /// Show text to the browser - escape hatch
 function show_text($text, $iserror = false) {
-  if (!$iserror) echo $text;
-  else echo "<font color=red>$text</font><br>\n";
+	global $t;
+	
+	$t->set_file('content','error.html');
+  if (!$iserror) $t->set_var('text',$text);
+  else $t->set_var('text',"<font color=red>$text</font>");
 }
 
 $select['priority'] = array(
