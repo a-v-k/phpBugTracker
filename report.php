@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: report.php,v 1.20 2002/03/17 01:42:40 bcurtis Exp $  
+// $Id: report.php,v 1.21 2002/03/27 18:01:33 bcurtis Exp $  
 
 include 'include.php';
 
@@ -69,6 +69,7 @@ function resolution_by_engineer($projectid = 0) {
 		$t->parse('rows', 'row', true);
 		$t->set_var('cols', '');
 		$i = 0;
+		$db->setOption('optimize', 'performance'); // For Oracle to do this loop
 		while ($rs->fetchInto($row)) {
 			foreach ($resfields as $col) {
 				if (!isset($row[$col]) || $row[$col] == '') {
@@ -91,6 +92,7 @@ function resolution_by_engineer($projectid = 0) {
 			//for header default
 			$t->set_var('trclass','alt');
 		}
+		$db->setOption('optimize', 'portability'); 
 	}
 }
 

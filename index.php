@@ -155,6 +155,7 @@ if (SHOW_PROJECT_SUMMARIES) {
 		$t->parse('prows', 'projectrow', true);
 		$t->set_var('cols', '');
 		$i = 0;
+		$db->setOption('optimize', 'performance'); // For Oracle to do this loop
 		while ($rs->fetchInto($row)) {
 			foreach ($resfields as $col) {
 				$t->set_var(array(
@@ -172,6 +173,7 @@ if (SHOW_PROJECT_SUMMARIES) {
 		}
 		$t->parse('projblock', 'projectsummaryblock', true);
 		$rs->free();
+		$db->setOption('optimize', 'portability'); 
 	}
 } else {
 	$t->set_var('projblock', '');
