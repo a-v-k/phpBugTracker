@@ -1,3 +1,6 @@
+Introduction
+------------
+
 Thanks for taking a look at phpBugTracker.  This project was started out of the
 frustation I experienced getting Bugzilla installed and operational for a web
 development project.  The goals of this project are to produce a web-based bug
@@ -13,3 +16,15 @@ said, I hope you enjoy using phpBugTracker, and that you find it useful.
 Comments and suggestions are always welcome, either at the SourceForge page at
 http://www.sourceforge.net/projects/phpbt or via email at
 bcurtis@users.sourceforge.net.
+
+Requirements
+------------
+
+Here is a list of the requirements to get this running on your server.
+1. A webserver
+2. PHP
+3. PHPlib (http://phplib.netuse.de) - This is used for the templates and the
+   database abstraction.
+4. A database - Currently the default database is MySQL (http://www.mysql.com/),
+   though the goal is to be database independent.  The query routine is a 
+	 notable exception to that goal at the moment. 
