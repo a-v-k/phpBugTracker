@@ -75,7 +75,7 @@ $QUERY = array(
 		'from '.TBL_BUG.' b '.
 		'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
 		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
-		'left join '.TBL_AUTH_USER.' lastmodifier on b.last_modified_by = lastmodifier.user_id, '.
+		'left join '.TBL_AUTH_USER.' lastmodifier on b.last_modified_by = lastmodifier.user_id '.
 		'left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_id, '.
 		TBL_SEVERITY.' severity, '.TBL_STATUS.' status, '.TBL_OS.' os, '.
 		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.
@@ -133,9 +133,9 @@ $QUERY = array(
 		'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
 		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
 		'left join '.TBL_AUTH_USER.' lastmodifier on b.last_modified_by = lastmodifier.user_id '.
-		'left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_id, '.
-		'left join '.TBL_DATABASE.' on b.database_id = '.TBL_DATABASE.'.database_id, '.
-		'left join '.TBL_VERSION.' on version2 b.to_be_closed_in_version_id = version2.version_id, '.
+		'left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_i, '.
+		'left join '.TBL_DATABASE.' on b.database_id = '.TBL_DATABASE.'.database_id '.
+		'left join '.TBL_VERSION.' on version2 b.to_be_closed_in_version_id = version2.version_id '.
 		'left join '.TBL_VERSION.' on version3 b.closed_id_version_id = version3.version_id, '.
 		TBL_SEVERITY.' severity, '.TBL_STATUS.' status, '.TBL_OS.' os, '.
 		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.TBL_PROJECT.' project '.
