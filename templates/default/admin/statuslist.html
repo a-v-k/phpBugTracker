@@ -27,7 +27,7 @@
 					<td>&nbsp;{$statuses[status].status_desc}</td>
 					<td align="center">{$statuses[status].sort_order}</td>
 					<td align="center">
-						{if not $statuses[status].bug_count}
+						{if not $statuses[status].bug_count and $statuses[status].status_id neq BUG_UNCONFIRMED}
 						<a href="{$smarty.server.PHP_SELF}?op=del&status_id={$statuses[status].status_id}" onClick="return confirm('Are you sure you want to delete this status?')">Delete</a>
 						{/if}
 					</td>
