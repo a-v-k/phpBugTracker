@@ -21,11 +21,15 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.8 2001/12/14 14:42:09 bcurtis Exp $
+// $Id: install.php,v 1.9 2002/01/21 08:10:05 mohni Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 
-include (INSTALL_PATH.'/inc/template.php');
+if (!defined('INCLUDE_PATH')) {
+  define('INCLUDE_PATH', '');
+}
+
+include (INSTALL_PATH.'/'.INCLUDE_PATH.'/inc/template.php');
 $t = new Template('templates/default', 'keep');
 $t->set_var('me', $HTTP_SERVER_VARS['PHP_SELF']);
 $_gv =& $HTTP_GET_VARS;
