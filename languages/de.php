@@ -23,7 +23,7 @@
 // Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 // MA 02111-1307, USA.
 // ------------------------------------------------------------------------- 
-// $Id: de.php,v 1.12 2002/03/18 17:42:24 bcurtis Exp $
+// $Id: de.php,v 1.13 2002/03/26 17:12:29 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -76,7 +76,8 @@ $STRING = array(
 		0 => 'All users',
 		1 => 'Active users',
 		2 => 'Inactive users'),
-	'dupe_dependency' => 'That bug dependency has already been added'
+	'dupe_dependency' => 'That bug dependency has already been added',
+	'image_path_not_writeable' => 'The subdirectory "jpgimages" is not writeable by the web process, so the summary image can not be rendered'
 	);
 	
 // Page titles

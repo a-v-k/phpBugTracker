@@ -94,7 +94,11 @@ function build_image($restricted_projects) {
 
 // Show the overall bug stats
 if (USE_JPGRAPH) {
-	$t->set_var('sblock', build_image($restricted_projects));
+	if (!is_writeable('jpgimages')) {
+		$t->set_var('sblock', $STRING['image_path_not_writeable']);
+	} else {
+		$t->set_var('sblock', build_image($restricted_projects));
+	}
 } else {
 	$stats = grab_data($restricted_projects);
 	$total = 0;

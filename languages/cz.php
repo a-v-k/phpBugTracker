@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz.php,v 1.2 2002/03/18 17:42:23 bcurtis Exp $
+// $Id: cz.php,v 1.3 2002/03/26 17:12:29 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'us-ascii',
@@ -73,7 +73,8 @@ $STRING = array(
 		0 => 'Všichni uživatelé',
 		1 => 'Aktivní uživatelé',
 		2 => 'Neaktivní uživatelé'),
-	'dupe_dependency' => 'That bug dependency has already been added'
+	'dupe_dependency' => 'That bug dependency has already been added',
+	'image_path_not_writeable' => 'The subdirectory "jpgimages" is not writeable by the web process, so the summary image can not be rendered'
 	);
 
 // Page titles

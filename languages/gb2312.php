@@ -76,7 +76,8 @@ $STRING = array(
 		0 => 'All users',
 		1 => 'Active users',
 		2 => 'Inactive users'),
-	'dupe_dependency' => 'That bug dependency has already been added'
+	'dupe_dependency' => 'That bug dependency has already been added',
+	'image_path_not_writeable' => 'The subdirectory "jpgimages" is not writeable by the web process, so the summary image can not be rendered'
 	);
 	
 // Page titles
