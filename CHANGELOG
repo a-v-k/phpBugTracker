@@ -4,6 +4,9 @@
 : Added on option for choosing whether bugs can be changed only by the bug
   reporter, bug owner, managers, or admins.
 : Added a printable view for bugs
+: Added an upgrade script to upgrade from the last major version
+: Added an option to disable newaccount.php, thus preventing users from
+  creating accounts for themselves.
 
 -- 0.4.0 -- 18 Oct 2001
 : Improved the CSS file to make choosing different color schemes easier.
