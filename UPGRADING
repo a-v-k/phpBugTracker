@@ -1,18 +1,16 @@
-Upgrading from 0.4.0 to 0.5.0
+Upgrading from 0.5.1 to 0.6.0
 -----------------------------
 
-The two support tables, active_sessions and db_sequence, now need to have
-the same prefix as the other tables (if you are using a table prefix).  Also,
-two new configuration options have been added.  
+A new table, project_group, has been added, and the auth_group table has been 
+altered.  
 
 Following the steps below will upgrade your installation of phpBT.
 
-1. Edit config-dist.php with the relevant details from your existing config.php.
-   Make sure the DB_* and the TBL_PREFIX definitions are correct.
-2. Save the file as config.php.
-3. With your web browser, load upgrade.php from the directory where you 
+1. If you put this set of files in a new directory separate from your current
+   installation of phpBT, then copy config.php from your installation here.
+2. With your web browser, load upgrade.php from the directory where you 
    installed the new set of files.
-4. After running that script your installation has been upgraded.
+3. After running that script your installation has been upgraded.
 
 See the CHANGELOG file for more information on changes made since the last
 version.
