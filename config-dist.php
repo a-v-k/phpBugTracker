@@ -1,7 +1,7 @@
 <?php
 // config.php - Set up configuration options
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -19,7 +19,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config-dist.php,v 1.11 2002/03/29 18:25:37 bcurtis Exp $
+// $Id: config-dist.php,v 1.12 2002/04/03 01:01:38 bcurtis Exp $
 
 // Database Config
 define ('DB_TYPE', '{db_type}');  // using PHPlib file naming (mysql | pgsql)
