@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.33 2001/08/30 13:49:08 bcurtis Exp $
+// $Id: bug.php,v 1.34 2001/08/31 04:25:07 bcurtis Exp $
 
 include 'include.php';
 
@@ -301,7 +301,7 @@ function show_form($bugid = 0, $error = '') {
 			'TITLE' => $TITLE['editbug'],
 			'title' => stripslashes($row['title']),
 			'description' => stripslashes($row['description']),
-			'url' => $row['URL'],
+			'url' => $row['url'],
 			'urllabel' => $row['url'] ? "<a href='{$row['url']}'>URL</a>" : 'URL',
 			'severity' => build_select('severity',$row['severity_id']),
 			'priority' => build_select('priority',$row['priority']),
@@ -472,7 +472,7 @@ function show_projects() {
 			return;
 		case 1 :
 			$row = $q->grab();
-			$project = $row['ProjectID'];
+			$project = $row['project_id'];
 			show_form();
 			break;
 		default :
@@ -482,8 +482,8 @@ function show_projects() {
 			while ($row = $q->grab()) {
 			$t->set_var(array(
 				'id' => $row['project_id'],
-				'name' => $row['name'],
-				'description' => $row['description'],
+				'name' => $row['project_name'],
+				'description' => $row['project_desc'],
 				'date' => date(DATEFORMAT,$row['created_date'])
 				));
 			$t->parse('rows','row',true);
