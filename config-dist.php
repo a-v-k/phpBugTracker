@@ -19,7 +19,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config-dist.php,v 1.4 2001/12/15 18:45:48 bcurtis Exp $
+// $Id: config-dist.php,v 1.5 2002/01/20 16:19:48 bcurtis Exp $
 
 // Database Config
 define ('DB_TYPE', '{db_type}');  // using PHPlib file naming (mysql | pgsql)
@@ -60,7 +60,6 @@ define ('TBL_PROJECT_GROUP',   TBL_PREFIX.'project_group');
 define ('ONEDAY', 86400);
 
 require_once (INSTALL_PATH.'/'.INCLUDE_PATH.'inc/db/'.DB_TYPE.'.php');
-require_once (INSTALL_PATH.'/'.INCLUDE_PATH.'inc/session.php');
 require_once (INSTALL_PATH.'/'.INCLUDE_PATH.'inc/auth.php');
 require_once (INSTALL_PATH.'/'.INCLUDE_PATH.'inc/template.php');
 
