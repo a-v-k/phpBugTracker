@@ -1,6 +1,9 @@
 -- 0.8.0 -- 
-: Switched database abstraction layer to PEAR::DB
-: Added bug dependencies
+: Switched database abstraction layer to PEAR::DB.
+: Added bug dependencies.
+: Added Oracle 8.1.x support.
+: Added "Remember me" functionality.
+: Fixed bug with losing login info when register_globals = off.
 
 -- 0.7.2 -- 14 Mar 2002
 : Bugs were fixed with project restrictions and front-page summary info.
