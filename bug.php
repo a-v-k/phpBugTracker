@@ -355,7 +355,7 @@ function show_bug($bugid = 0, $error = '') {
   global $q, $me, $t, $project, $STRING; 
   
   if (!ereg('^[0-9]+$',$bugid) or !$row = $q->grab("select BugID, Title, 
-    Reporter.Email as Reporter, Owner.Email as Owner, Project,
+    Reporter.Email as Reporter, Owner.Email as Owner, Project, Version, 
     Severity, Bug.CreatedDate, Bug.LastModifiedDate, Status.Name as Status, 
     Priority, Bug.Description, Resolution.Name as Resolution, URL, Component, OS 
     from Bug, Severity, Status left join User Owner on Bug.AssignedTo = Owner.UserID left join 
