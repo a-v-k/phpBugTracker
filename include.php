@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.113 2002/04/11 20:16:11 bcurtis Exp $
+// $Id: include.php,v 1.114 2002/04/14 23:47:37 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -46,6 +46,9 @@ $dsn = array(
 	'password' => DB_PASSWORD
 	);
 $db = DB::Connect($dsn);
+if (DB::isError($db)) {
+	die($db->message);
+}
 $db->setOption('optimize', 'portability');
 $db->setFetchMode(DB_FETCHMODE_ASSOC);
 $db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_db_error");
@@ -105,6 +108,7 @@ class extSmarty extends Smarty {
 		error_reporting(E_ALL ^ E_NOTICE); // Clobber Smarty warnings
 		return Smarty::fetch($_smarty_tpl_file, $_smarty_cache_id, $_smarty_compile_id, $_smarty_display);
 	}
+
 }
 
 $t = new extSmarty;
