@@ -20,16 +20,16 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.18 2001/11/30 06:07:27 bcurtis Exp $
+// $Id: config.php,v 1.19 2001/11/30 06:21:43 bcurtis Exp $
 
 define ('PHPLIB_PATH', ''); // If PHPlib is not in your include path
 
 // Database Config
 define ('DB_TYPE', 'mysql');  // using PHPlib file naming
-define ('DB_HOST', 'localhost');
+define ('DB_HOST', 'stinky');
 define ('DB_DATABASE', 'BugTracker');
 define ('DB_USER', 'root');
-define ('DB_PASSWORD', '');
+define ('DB_PASSWORD', 'howdy');
 
 // Database Table Config
 // you can change either the prefix of the table names or each table name individually
