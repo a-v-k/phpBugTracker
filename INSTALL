@@ -11,7 +11,7 @@ Ok, here's the quick and dirty install instructions:
 
 				-- or --
 				
-5. Edit include.php as follows: 
+5. Edit config.php as follows: 
    a. Change the INSTALLPATH and INSTALLURL variables to point the right 
 	    locations.
    b. Change the ADMINEMAIL constant to what you want
