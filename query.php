@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.60 2002/03/17 01:44:24 bcurtis Exp $
+// $Id: query.php,v 1.61 2002/03/20 20:02:51 bcurtis Exp $
 
 include 'include.php';
 
@@ -73,7 +73,7 @@ function show_query() {
 }
 
 function build_query($assignedto, $reportedby, $open) {
-	global $db, $auth, $_gv, $perm, $restricted_projects;
+	global $db, $_sv, $_gv, $perm, $restricted_projects;
 
 	foreach ($_gv as $k => $v) { $$k = $v; }
 	
@@ -84,9 +84,9 @@ function build_query($assignedto, $reportedby, $open) {
 			"in ('Unconfirmed', 'New', 'Assigned', 'Reopened')");
 		$query[] = 'b.status_id in ('.delimit_list(',',$status).')';
 		if ($assignedto) {
-			$query[] = "assigned_to = {$auth->auth['uid']}";
+			$query[] = "assigned_to = {$_sv['uid']}";
 		} else {
-			$query[] = "b.created_by = {$auth->auth['uid']}";
+			$query[] = "b.created_by = {$_sv['uid']}";
 		}
 	} else {
 		// Select boxes
@@ -150,7 +150,7 @@ function build_query($assignedto, $reportedby, $open) {
 }
 
 function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
-	global $me, $db, $t, $select, $TITLE, $STRING, $_gv, $u, $auth, 
+	global $me, $db, $t, $select, $TITLE, $STRING, $_gv, $u, 
 		$default_db_fields, $all_db_fields, $_sv, $HTTP_SERVER_VARS;
 
 	$t->set_file('content','buglist.html');
@@ -254,7 +254,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	}
 	
 	// Header row 
-	$db_fields = !empty($auth->auth['db_fields']) ? $auth->auth['db_fields'] :
+	$db_fields = !empty($_sv['db_fields']) ? $_sv['db_fields'] :
 		$default_db_fields;
 	foreach ($db_fields as $field) {
 		$t->set_var(array(

@@ -26,46 +26,48 @@
 class uauth {
 	var $lifetime = 0; // In minutes -- 0 for no expiration until browser closed
 	var $classname = 'uauth';
-	var $auth = array();
 	
 	function uauth() {
-		global $HTTP_SESSION_VARS;
+		global $_sv;
 		
-		if (!session_is_registered('auth')) {
-			session_register('auth');
-			$HTTP_SESSION_VARS['auth'] = array();
-		}
+		#if (!session_is_registered('auth')) {
+		#	session_register('auth');
+		#	$HTTP_SESSION_VARS['auth'] = array();
+		#}
 		
-		$a =& $HTTP_SESSION_VARS['auth'];
-		$this->auth =& $a->auth;
+		#$a =& $HTTP_SESSION_VARS['auth'];
+		#$this->auth =& $a->auth;
+		#$this->auth =& $HTTP_SESSION_VARS['auth'];
 
 		
-		if (!isset($this->auth['group_ids'])) {
-			$this->auth['group_ids'] = array(0);
+		if (!isset($_sv['group_ids'])) {
+			$_sv['group_ids'] = array(0);
 		}
 		
 		if ($this->is_authenticated()) {
-			if ($this->auth['uid']) {
-				$this->auth['exp'] = time() + (60 * $this->lifetime);
+			if ($_sv['uid']) {
+				$_sv['exp'] = time() + (60 * $this->lifetime);
 			}
 		}
 	}
 
 	function is_authenticated() {
-		if (isset($this->auth['uid']) && $this->auth['uid'] && 
-			($this->lifetime <= 0 || time() < $this->auth['exp'])) {
-			return $this->auth['uid'];
+		global $_sv;
+		
+		if (isset($_sv['uid']) && $_sv['uid'] && 
+			($this->lifetime <= 0 || time() < $_sv['exp'])) {
+			return $_sv['uid'];
 		} else {
 			return false;
 		}
 	}
 	
 	function auth_validatelogin() {
-    global $_pv, $db, $select, $emailpass, $emailsuccess, $STRING;
+    global $_pv, $db, $select, $emailpass, $emailsuccess, $STRING, $_sv;
 
 		extract($_pv);
     if (!$username) return 0;
-    $this->auth['uname'] = $username;
+    $_sv['uname'] = $username;
     if (ENCRYPT_PASS) {
       $password = md5($password);
     }
@@ -73,35 +75,37 @@ class uauth {
     if (!$u or DB::isError($u)) {
       return 0;
     } else {
-			$this->auth['db_fields'] = @unserialize($u['bug_list_fields']);
+			$_sv['db_fields'] = @unserialize($u['bug_list_fields']);
 
       // Grab group assignments and permissions based on groups
 			$rs = $db->query("select u.group_id, group_name from ".TBL_USER_GROUP.
 				" u, ".TBL_AUTH_GROUP." a where user_id = {$u['user_id']} ".
 				'and u.group_id = a.group_id');
 			while (list($groupid, $groupname) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
-				$this->auth['group_ids'][] = $groupid;
-				$this->auth['group'][$groupname] = true;
+				$_sv['group_ids'][] = $groupid;
+				$_sv['group'][$groupname] = true;
 			}
 			$perms = $db->getCol("select perm_name from ".TBL_AUTH_PERM." ap, ".
 				TBL_GROUP_PERM." gp where group_id in (".
-				delimit_list(',', $this->auth['group_ids']).") and gp.perm_id = ap.perm_id");
+				delimit_list(',', $_sv['group_ids']).") and gp.perm_id = ap.perm_id");
 			foreach ($perms as $perm) {				
-        $this->auth['perm'][$perm] = true;
+        $_sv['perm'][$perm] = true;
       }
-      $this->auth['uid'] = $u['user_id'];
+      $_sv['uid'] = $u['user_id'];
 
       return $u['user_id'];
     }
   }
 	
 	function unauth() {
-    $this->auth['uid'] = 0;
-		$this->auth['perm'] = array();
-		$this->auth['exp']   = 0;
-    $this->auth['group'] = array();
-    $this->auth['group_ids'] = array(0);
-    $this->auth['db_fields'] = array();
+		global $_sv;
+		
+    $_sv['uid'] = 0;
+		$_sv['perm'] = array();
+		$_sv['exp']   = 0;
+    $_sv['group'] = array();
+    $_sv['group_ids'] = array(0);
+    $_sv['db_fields'] = array();
   }
 }
 
@@ -110,33 +114,33 @@ class uperm {
   var $permissions = array ();
 
   function check($p) {
-    global $auth;
+    global $_sv;
 
     if (!$this->have_perm($p)) {    
-      if (!isset($auth->auth['perm']) ) {
-        $auth->auth['perm'] = '';
+      if (!isset($_sv['perm']) ) {
+        $_sv['perm'] = '';
       }
-      $this->perm_invalid($auth->auth['perm'], $p);
+      $this->perm_invalid($_sv['perm'], $p);
       exit();
     }
   }
 
   function check_auth($auth_var, $reqs) {
-    global $auth;
+    global $_sv;
 
     // Administrators always pass
-    if (isset($auth->auth[$auth_var]['Admin'])) {
+    if (isset($_sv[$auth_var]['Admin'])) {
       return true;
     }
 
     if (is_array($reqs)) {
       foreach ($reqs as $req) {
-        if (!isset($auth->auth[$auth_var][$req])) {
+        if (!isset($_sv[$auth_var][$req])) {
           return false;
         }
       }
     } else {
-      if (!isset($auth->auth[$auth_var][$reqs])) {
+      if (!isset($_sv[$auth_var][$reqs])) {
         return false;
       }
     }
@@ -157,7 +161,7 @@ class uperm {
 
 
   function perm_invalid() {
-    global $t, $auth;
+    global $t, $_sv;
 		
     $t->set_file('content','badperm.html');
     $t->pparse('main',array('content','wrap','main'));
