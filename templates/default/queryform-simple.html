@@ -111,7 +111,10 @@ function checkSavedQueries(frm) {
 	<?php if (!empty($_SESSION['uid'])) { ?>
 		<?php echo translate("Save this query as"); ?>: <input maxlength="40" type="text" name="savedqueryname">
 		<br><br>
-	<?php } ?>
+	<?php } else { ?>
+                <input type="hidden" name="savedqueryname" value="" />
+        <?php } ?>
+
 	<input type="hidden" name="op" value="doquery">
 	<input type="hidden" name="savedqueryoverride" value="0">
 	<input type="reset" value="<?php echo translate("Reset to default query"); ?>">
