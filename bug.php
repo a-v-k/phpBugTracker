@@ -20,26 +20,26 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.83 2002/03/11 18:28:35 bcurtis Exp $
+// $Id: bug.php,v 1.84 2002/03/17 01:44:24 bcurtis Exp $
 
 include 'include.php';
 
 ///
 /// View the votes for a bug
 function vote_view($bug_id) {
-	global $u, $q, $t, $STRING;
+	global $u, $db, $t, $STRING;
 	
 	$t->set_file('content', 'bugvotes.html');
 	$t->set_block('content', 'row', 'rows');
 	
-	$q->query('select login, v.created_date from '.TBL_AUTH_USER.' u, '.
+	$rs = $db->query('select login, v.created_date from '.TBL_AUTH_USER.' u, '.
 		TBL_BUG_VOTE." v where u.user_id = v.user_id and bug_id = $bug_id".
 		' order by v.created_date');
-	if (!$q->num_rows()) {
+	if (!$rs->numRows()) {
 		$t->set_var('rows', "<tr><td colspan=\"2\" align=\"center\">{$STRING['no_votes']}</td></tr>");
 	} else {
 		$i = 0;
-		while (list($login, $date) = $q->grab()) {
+		while (list($login, $date) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 			$t->set_var(array(
       	'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
 				'trclass' => $i % 2 ? '' : 'alt',
@@ -55,37 +55,37 @@ function vote_view($bug_id) {
 ///
 /// Add a vote to a bug to (possibly) promote it
 function vote_bug($bug_id) {
-	global $u, $q, $now, $_pv, $STRING;
+	global $u, $db, $now, $_pv, $STRING;
 	
 	// Check to see if the user already voted on this bug
-	if ($q->grab_field("select count(*) from ".TBL_BUG_VOTE.
+	if ($db->getOne("select count(*) from ".TBL_BUG_VOTE.
 		" where bug_id = $bug_id and user_id = $u")) {
 		show_bug($bug_id, array('vote' => $STRING['already_voted']));
 		return;
 	}
 	// Check whether the user has used his allotment of votes (if there is a max)
-	if (MAX_USER_VOTES and $q->grab_field("select count(*) from ".TBL_BUG_VOTE.
+	if (MAX_USER_VOTES and $db->getOne("select count(*) from ".TBL_BUG_VOTE.
 		" where user_id = $u") >= MAX_USER_VOTES) {
 		show_bug($bug_id, array('vote' => $STRING['too_many_votes']));
 		return;
 	}
 	
 	// Record the vote
-	$q->query("insert into ".TBL_BUG_VOTE." (user_id, bug_id, created_date) 
+	$db->query("insert into ".TBL_BUG_VOTE." (user_id, bug_id, created_date) 
 		values ($u, $bug_id, $now)");
 	
 	// Proceed only if promoting by votes is turned on
 	if (PROMOTE_VOTES) {
 		// Has this bug already been promoted?
-		$bug_is_new = $q->grab_field("select count(*) from ".TBL_BUG." b, ".
+		$bug_is_new = $db->getOne("select count(*) from ".TBL_BUG." b, ".
 			TBL_STATUS." s where bug_id = $bug_id and b.status_id = s.status_id and 
 			status_name = 'New'");
 
 		// If a number of votes are required to promote a bug, check for promotion
-		if (!$bug_is_new and $q->grab_field("select count(*) from ".
+		if (!$bug_is_new and $db->getOne("select count(*) from ".
 			TBL_BUG_VOTE." where bug_id = $bug_id") == PROMOTE_VOTES) {
-			$status_id = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = 'New'");
-  		$buginfo = $q->grab("select * from ".TBL_BUG." where bug_id = $bug_id");
+			$status_id = $db->getOne("select status_id from ".TBL_STATUS." where status_name = 'New'");
+  		$buginfo = $db->getOne("select * from ".TBL_BUG." where bug_id = $bug_id");
 			$changedfields = array('status_id' => $status_id);
     	do_changedfields($u, $buginfo, $changedfields);
 		}
@@ -121,16 +121,16 @@ function format_comments($comments) {
 ///
 /// Show the activity for a bug
 function show_history($bugid) {
-  global $q, $t, $STRING;
+  global $db, $t, $STRING;
 
   if (!is_numeric($bugid)) {
     show_text($STRING['nobughistory']);
     return;
   }
 
-  $q->query('select bh.*, login from '.TBL_BUG_HISTORY.' bh left join '.
+  $rs = $db->query('select bh.*, login from '.TBL_BUG_HISTORY.' bh left join '.
     TBL_AUTH_USER." on bh.created_by = user_id where bug_id = $bugid");
-  if (!$q->num_rows()) {
+  if (!$rs->numRows()) {
     show_text($STRING['nobughistory']);
     return;
   }
@@ -138,7 +138,7 @@ function show_history($bugid) {
   $t->set_file('content','bughistory.html');
   $t->set_block('content', 'row', 'rows');
   $t->set_var('bugid', $bugid);
-  while ($row = $q->grab()) {
+  while ($rs->fetchInto($row)) {
     $t->set_var(array(
       'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
 			'trclass' => $i % 2 ? '' : 'alt',
@@ -155,7 +155,7 @@ function show_history($bugid) {
 ///
 /// Send the email about changes to the bug and log the changes in the DB
 function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
-  global $q, $t, $u, $select, $now, $STRING;
+  global $db, $t, $u, $select, $now, $STRING;
 
 	// It's a new bug if the changedfields array is empty and there are no comments
 	$newbug = (!count($cf) and !$comments); 
@@ -164,7 +164,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
   $t->set_block('emailout','commentblock', 'cblock');
   foreach(array('title','url') as $field) {
     if (isset($cf[$field])) {
-      $q->query('insert into '.TBL_BUG_HISTORY
+      $db->query('insert into '.TBL_BUG_HISTORY
          .' (bug_id, changed_field, old_value, new_value, created_by, created_date)'
          ." values ({$buginfo['bug_id']}, '$field', '"
          .addslashes($buginfo[$field])."', '".addslashes($cf[$field])
@@ -193,12 +193,12 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
   );
 
   foreach($cfgDatabase as $field => $table) {
-    $oldvalue = $q->grab_field("select ${field}_name from $table"
+    $oldvalue = $db->getOne("select ${field}_name from $table"
       ." where ${field}_id = {$buginfo[$field.'_id']}");
     if (!empty($cf[$field.'_id'])) {
-      $newvalue = $q->grab_field("select ${field}_name from $table"
+      $newvalue = $db->getOne("select ${field}_name from $table"
         ." where ${field}_id = {$cf[$field.'_id']}");
-      $q->query('insert into '.TBL_BUG_HISTORY
+      $db->query('insert into '.TBL_BUG_HISTORY
         .' (bug_id, changed_field, old_value, new_value, created_by, created_date)'
         ." values ({$buginfo['bug_id']}, '$field', '".addslashes($oldvalue).
 				"', '".addslashes($newvalue)."', $u, $now)");
@@ -215,21 +215,21 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
   }
 
   // Reporter never changes;
-  $reporter = $q->grab_field('select email from '.TBL_AUTH_USER
+  $reporter = $db->getOne('select email from '.TBL_AUTH_USER
     ." where user_id = {$buginfo['created_by']}");
   $reporterstat = ' ';
-  $assignedto = $q->grab_field('select email from '.TBL_AUTH_USER
+  $assignedto = $db->getOne('select email from '.TBL_AUTH_USER
     .' where user_id = '
     .(!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to']));
   $assignedtostat = !empty($cf['assigned_to']) ? '!' : ' ';
 
   // If there are new comments grab the comments immediately before the latest
   if ($comments or $newbug) {
-    $q->query('select u.login, c.comment_text, c.created_date'
+    $rs = $db->query('select u.login, c.comment_text, c.created_date'
       .' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER.' u'
       ." where bug_id = {$buginfo['bug_id']} and c.created_by = u.user_id"
       .' order by created_date desc limit 2');
-    $row = $q->grab();
+    $rs->fetchInto($row);
     $t->set_var(array(
       'newpostedby' => $row['login'],
       'newpostedon' => date(TIME_FORMAT, $row['created_date']).' on '.
@@ -238,17 +238,18 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
       ));
     // If this comment is the first additional comment after the creation of the
     // bug then we need to grab the bug's description as the previous comment
-    if ($q->num_rows() < 2) {
-      list($by, $on, $comments) = $q->grab('select u.login, b.created_date, b.description'
+    if ($rs->numRows() < 2) {
+      list($by, $on, $comments) = $db->getRow('select u.login, b.created_date, b.description'
         .' from '.TBL_BUG.' b, '.TBL_AUTH_USER.' u'
-        ." where b.created_by = u.user_id and bug_id = {$buginfo['bug_id']}");
+        ." where b.created_by = u.user_id and bug_id = {$buginfo['bug_id']}",
+				null, DB_FETCHMODE_ORDERED);
       $t->set_var(array(
         'oldpostedby' => $by,
         'oldpostedon' => date(TIME_FORMAT,$on).' on '.date(DATE_FORMAT,$on),
         'oldcomments' => textwrap(format_comments($comments),72)
         ));
     } else {
-      $row = $q->grab();
+      $rs->fetchInto($row);
       $t->set_var(array(
         'oldpostedby' => $row['login'],
         'oldpostedon' => date(TIME_FORMAT,$row['created_date']).' on '.
@@ -269,11 +270,10 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
     $maillist[] = $assignedto;
 
   // Collect the CCs
-  $q->query('select email from '.TBL_BUG_CC.' left join '.TBL_AUTH_USER.
-    " using(user_id) where bug_id = {$buginfo['bug_id']}");
-  while ($cc_email = $q->grab_field()) {
-    $maillist[] = $cc_email;
-  }
+  if ($ccs = $db->getCol('select email from '.TBL_BUG_CC.' left join '.
+		TBL_AUTH_USER." using(user_id) where bug_id = {$buginfo['bug_id']}")) {
+		array_push($maillist, $ccs);
+	}
 
   // Later add a watcher (such as QA person) check here
   $toemail = delimit_list(', ',$maillist);
@@ -298,10 +298,10 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 }
 
 function update_bug($bugid = 0) {
-  global $q, $t, $u, $STRING, $perm, $now, $_pv;
+  global $db, $t, $u, $STRING, $perm, $now, $_pv;
 
   // Pull bug from database to determine changed fields and for user validation
-  $buginfo = $q->grab("select * from ".TBL_BUG." where bug_id = $bugid");
+  $buginfo = $db->getRow("select * from ".TBL_BUG." where bug_id = $bugid");
 	$changedfields = array();
 	
   if (isset($_pv)) {
@@ -331,7 +331,7 @@ function update_bug($bugid = 0) {
 		} else { // text box
 			$assign_user_query = " where login = '$reassignto'";
 		}
-    if (!$assignedto = $q->grab_field("select user_id from ".TBL_AUTH_USER.
+    if (!$assignedto = $db->getOne("select user_id from ".TBL_AUTH_USER.
 			$assign_user_query)) {
     	show_bug($bugid,array('status' => $STRING['nouser']));
     	return;
@@ -345,22 +345,22 @@ function update_bug($bugid = 0) {
 
   // Add CC if specified
   if ($add_cc) {
-    if (!$cc_uid = $q->grab_field("select user_id from ".TBL_AUTH_USER.
+    if (!$cc_uid = $db->getOne("select user_id from ".TBL_AUTH_USER.
       " where login = '$add_cc'")) {
       show_bug($bugid,array('status' => $STRING['nouser']));
       return;
     }
-    $cc_already = $q->grab_field('select user_id from '.TBL_BUG_CC.
+    $cc_already = $db->getOne('select user_id from '.TBL_BUG_CC.
       " where bug_id = $bugid and user_id = $cc_uid");
     if (!$cc_already && $cc_uid != $buginfo['created_by']) {
-      $q->query("insert into ".TBL_BUG_CC." (bug_id, user_id, created_by,
+      $db->query("insert into ".TBL_BUG_CC." (bug_id, user_id, created_by,
         created_date)  values ($bugid, $cc_uid, $u, $now)");
     }
   }
 
   // Remove CCs if requested
   if (isset($remove_cc) and count($remove_cc)) {
-    $q->query('delete from '.TBL_BUG_CC." where bug_id = $bugid
+    $db->query('delete from '.TBL_BUG_CC." where bug_id = $bugid
       and user_id in (".delimit_list(',', $remove_cc).')');
   }
 
@@ -369,7 +369,7 @@ function update_bug($bugid = 0) {
     case 'unchanged' : break;
     case 'assign' : $assignedto = $u; $statusfield = 'Assigned'; break;
     case 'reassign' :
-      if (!$assignedto = $q->grab_field("select user_id from ".TBL_AUTH_USER.
+      if (!$assignedto = $db->getOne("select user_id from ".TBL_AUTH_USER.
 				$assign_user_query)) {
         show_bug($bugid,array('status' => $STRING['nouser']));
         return;
@@ -379,23 +379,23 @@ function update_bug($bugid = 0) {
         break;
       }
     case 'reassigntocomponent' :
-      $assignedto = $q->grab_field("select owner from ".TBL_COMPONENT." where component_id = $component_id");
+      $assignedto = $db->getOne("select owner from ".TBL_COMPONENT." where component_id = $component_id");
       $statusfield = 'Assigned'; break;
     case 'dupe' :
       $changeresolution = true;
       if ($dupenum == $bugid) {
         show_bug($bugid,array('status' => $STRING['dupeofself']));
         return;
-      } elseif (!$q->grab_field("select bug_id from ".TBL_BUG." where bug_id = $dupenum")) {
+      } elseif (!$db->getOne("select bug_id from ".TBL_BUG." where bug_id = $dupenum")) {
         show_bug($bugid,array('status' => $STRING['nobug']));
         return;
       }
-      $q->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
-      	." values (".$q->nextid(TBL_COMMENT).", $dupenum, 'Bug #$bugid has been marked a duplicate of this bug', $u, $now)");
-      $q->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
-      	." values (".$q->nextid(TBL_COMMENT).", $bugid, 'This bug is a duplicate of bug #$dupenum', $u, $now)");
+      $db->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
+      	." values (".$db->nextId(TBL_COMMENT).", $dupenum, 'Bug #$bugid has been marked a duplicate of this bug', $u, $now)");
+      $db->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
+      	." values (".$db->nextId(TBL_COMMENT).", $bugid, 'This bug is a duplicate of bug #$dupenum', $u, $now)");
       $statusfield = 'Duplicate';
-      $resolution_id = $q->grab_field("select resolution_id from ".TBL_RESOLUTION." where resolution_name = 'Duplicate'");
+      $resolution_id = $db->getOne("select resolution_id from ".TBL_RESOLUTION." where resolution_name = 'Duplicate'");
       $statusfield = 'Resolved';
       break;
     case 'resolve' :
@@ -415,7 +415,7 @@ function update_bug($bugid = 0) {
       break;
   }
   if (isset($statusfield)) {
-    $status_id = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = '$statusfield'");
+    $status_id = $db->getOne("select status_id from ".TBL_STATUS." where status_name = '$statusfield'");
     $changedfields['status_id'] = $status_id;
   }
   if ($changeresolution) {
@@ -423,8 +423,8 @@ function update_bug($bugid = 0) {
   }
   if ($comments) {
     //$comments = strip_tags($comments); -- Uncomment this if you want no <> content in the comments
-    $q->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
-    	." values (".$q->nextid(TBL_COMMENT).", $bugid, '$comments', $u, $now)");
+    $db->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
+    	." values (".$db->nextId(TBL_COMMENT).", $bugid, '$comments', $u, $now)");
   }
 
 	// Allow for removing of some items from the bug page
@@ -432,7 +432,7 @@ function update_bug($bugid = 0) {
 	$os_id = $os_id ? $os_id : 0;
 	$severity_id = $severity_id ? $severity_id : 0;
 	
-  $q->query("update ".TBL_BUG." set title = '$title', url = '$url', severity_id = $severity_id, priority = $priority, ".(isset($status_id) ? "status_id = $status_id, " : ''). ($changeresolution ? "resolution_id = $resolution_id, " : ''). (isset($assignedto) ? "assigned_to = $assignedto, " : '')." project_id = $project_id, version_id = $version_id, component_id = $component_id, os_id = $os_id, last_modified_by = $u, last_modified_date = $now where bug_id = $bugid");
+  $db->query("update ".TBL_BUG." set title = '$title', url = '$url', severity_id = $severity_id, priority = $priority, ".(isset($status_id) ? "status_id = $status_id, " : ''). ($changeresolution ? "resolution_id = $resolution_id, " : ''). (isset($assignedto) ? "assigned_to = $assignedto, " : '')." project_id = $project_id, version_id = $version_id, component_id = $component_id, os_id = $os_id, last_modified_by = $u, last_modified_date = $now where bug_id = $bugid");
 
   if (count($changedfields) or !empty($comments)) {
     do_changedfields($u, $buginfo, $changedfields, $comments);
@@ -441,7 +441,7 @@ function update_bug($bugid = 0) {
 }
 
 function do_form($bugid = 0) {
-  global $q, $me, $u, $_pv, $STRING, $now, $HTTP_SERVER_VARS;
+  global $db, $me, $u, $_pv, $STRING, $now, $HTTP_SERVER_VARS;
 
 	$error = '';
   // Validation
@@ -461,12 +461,12 @@ function do_form($bugid = 0) {
 	$severity = $severity ? $severity : 0;
 	
   if (!$bugid) {
-		$bugid = $q->nextid(TBL_BUG);
+		$bugid = $db->nextId(TBL_BUG);
 
 		// Check to see if this bug's component has an owner and should be assigned
-		if ($owner = $q->grab_field("select owner from ".TBL_COMPONENT.
+		if ($owner = $db->getOne("select owner from ".TBL_COMPONENT.
 			" c where component_id = $component")) {
-			$status = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = 'Assigned'");
+			$status = $db->getOne("select status_id from ".TBL_STATUS." where status_name = 'Assigned'");
 		} else {
 			$owner = 0;
 			// If we aren't using voting to promote, then auto-promote to New
@@ -475,26 +475,26 @@ function do_form($bugid = 0) {
 			} else {
 				$stat_to_assign = 'New';
 			}
-    	$status = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = '$stat_to_assign'");
+    	$status = $db->getOne("select status_id from ".TBL_STATUS." where status_name = '$stat_to_assign'");
 		}
-    $q->query("insert into ".TBL_BUG." (bug_id, title, description, url, 
+    $db->query("insert into ".TBL_BUG." (bug_id, title, description, url, 
 			severity_id, priority, status_id, assigned_to, created_by, created_date, 
 			last_modified_by, last_modified_date, project_id, version_id, 
 			component_id, os_id, browser_string) values ($bugid, '$title', 
 			'$description', '$url', $severity, $priority, $status, $owner, $u, 
 			$now, $u, $now, $project, $version, $component, '$os', 
 			'{$HTTP_SERVER_VARS['HTTP_USER_AGENT']}')");
-		$buginfo = $q->grab('select * from '.TBL_BUG." where bug_id = $bugid");
+		$buginfo = $db->getRow('select * from '.TBL_BUG." where bug_id = $bugid");
 		do_changedfields($u, $buginfo);
   } else {
-    $q->query("update ".TBL_BUG." set title = '$title', description = '$description', url = '$url', severity_id = '$severity', priority = '$priority', status_id = $status, assigned_to = '$assignedto', project_id = $project, version_id = $version, component_id = $component, os_id = '$os', browser_string = '{$GLOBALS['HTTP_USER_AGENT']}' last_modified_by = $u, last_modified_date = $time where bug_id = '$bugid'");
+    $db->query("update ".TBL_BUG." set title = '$title', description = '$description', url = '$url', severity_id = '$severity', priority = '$priority', status_id = $status, assigned_to = '$assignedto', project_id = $project, version_id = $version, component_id = $component, os_id = '$os', browser_string = '{$GLOBALS['HTTP_USER_AGENT']}' last_modified_by = $u, last_modified_date = $time where bug_id = '$bugid'");
   }
   if (isset($another)) header("Location: $me?op=add&project=$project");
   else header("Location: query.php");
 }
 
 function show_form($bugid = 0, $error = '') {
-  global $q, $me, $t, $_gv, $_pv, $TITLE;
+  global $db, $me, $t, $_gv, $_pv, $TITLE;
 
 	if (isset($_gv['project'])) {
 		$project = $_gv['project'];
@@ -505,9 +505,9 @@ function show_form($bugid = 0, $error = '') {
 	}
 
   $t->set_file('content','bugform.html');
-  $projectname = $q->grab_field("select project_name from ".TBL_PROJECT." where project_id = $project");
+  $projectname = $db->getOne("select project_name from ".TBL_PROJECT." where project_id = $project");
   if ($bugid && !$error) {
-    $row = $q->grab("select * from ".TBL_BUG." where bug_id = '$bugid'");
+    $row = $db->getRow("select * from ".TBL_BUG." where bug_id = '$bugid'");
     $t->set_var(array(
       'bugid' => $bugid,
       'TITLE' => $TITLE['editbug'],
@@ -558,10 +558,10 @@ function show_form($bugid = 0, $error = '') {
 }
 
 function show_bug_printable($bugid) {
-	global $q, $t, $select, $TITLE;
+	global $db, $t, $select, $TITLE;
 	
 	if (!is_numeric($bugid) or
-    !$row = $q->grab('select b.*, reporter.login as reporter, 
+    !$row = $db->getRow('select b.*, reporter.login as reporter, 
 			owner.login as owner, project_name, component_name, version_name, 
 			severity_name, os_name, status_name, resolution_name  
       from '.TBL_BUG.' b 
@@ -603,13 +603,13 @@ function show_bug_printable($bugid) {
     ));
 
 	// Show the comments
-  $q->query('select comment_text, c.created_date, login'
+  $rs = $db->query('select comment_text, c.created_date, login'
     .' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER
     ." where bug_id = $bugid and c.created_by = user_id order by c.created_date");
-  if (!$q->num_rows()) {
+  if (!$rs->numRows()) {
     $t->set_var('rows','');
   } else {
-    while ($row = $q->grab()) {
+    while ($rs->fetchInto($row)) {
       $t->set_var(array(
         'rdescription' => nl2br(format_comments(
 					htmlspecialchars($row['comment_text']))),
@@ -625,7 +625,7 @@ function show_bug_printable($bugid) {
 ///
 /// Grab the links for the previous and next bugs in the list
 function prev_next_links($bugid, $pos) {
-	global $q, $_sv, $STRING;
+	global $db, $_sv, $STRING;
 	
 	if (!isset($_sv['queryinfo']['query']) || !$_sv['queryinfo']['query']) {
 		return array('', '');
@@ -639,7 +639,7 @@ function prev_next_links($bugid, $pos) {
 		$offset = $pos;
 		$limit = 1;
 	}
-	$q->limit_query('select bug_id, reporter.login as reporter, owner.login as owner 
+	$rs = $db->limitQuery('select bug_id, reporter.login as reporter, owner.login as owner 
 		from '.TBL_BUG.' b
 		left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id
 		left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id 
@@ -651,10 +651,10 @@ function prev_next_links($bugid, $pos) {
 		and b.os_id = os.os_id and b.version_id = version.version_id 
 		and b.component_id = component.component_id and b.project_id = project.project_id '.
 		"and {$_sv['queryinfo']['query']} and bug_id <> $bugid 
-		order by {$_sv['queryinfo']['order']} {$_sv['queryinfo']['sort']}, bug_id asc", $limit, $offset);
+		order by {$_sv['queryinfo']['order']} {$_sv['queryinfo']['sort']}, bug_id asc", $offset, $limit);
 		
-	$firstid = $q->grab_field();
-	$secondid = $q->grab_field();
+	$firstid = $db->getOne();
+	$secondid = $db->getOne();
 	
 	if ($pos) {
 		if ($firstid) {
@@ -676,10 +676,10 @@ function prev_next_links($bugid, $pos) {
 }
 
 function show_bug($bugid = 0, $error = array()) {
-  global $q, $me, $t, $STRING, $TITLE, $u, $perm, $_gv;
+  global $db, $me, $t, $STRING, $TITLE, $u, $perm, $_gv;
 
   if (!ereg('^[0-9]+$',$bugid) or
-    !$row = $q->grab('select b.*, reporter.login as reporter, owner.login as owner, status_name, resolution_name 
+    !$row = $db->getRow('select b.*, reporter.login as reporter, owner.login as owner, status_name, resolution_name 
       from '.TBL_BUG.' b 
 			left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id 
       left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id 
@@ -735,10 +735,10 @@ function show_bug($bugid = 0, $error = array()) {
 		'nextlink' => $nextlink,
 		'prevnextsep' => $prevlink && $nextlink ? ' | ' : '',
 		'pos' => isset($_gv['pos']) ? $_gv['pos'] : 0,
-		'already_voted' => $q->grab_field("select count(*) from ".TBL_BUG_VOTE.
+		'already_voted' => $db->getOne("select count(*) from ".TBL_BUG_VOTE.
 			" where bug_id = $bugid and user_id = $u"),
 		'already_voted_string' => $STRING['already_voted'],
-		'num_votes' => $q->grab_field("select count(*) from ".TBL_BUG_VOTE.
+		'num_votes' => $db->getOne("select count(*) from ".TBL_BUG_VOTE.
 			" where bug_id = $bugid")
 		));
   switch($row['status_name']) {
@@ -767,12 +767,12 @@ function show_bug($bugid = 0, $error = array()) {
 	$t->set_var('js', build_project_js());
 
   // Show the attachments
-  $q->query("select * from ".TBL_ATTACHMENT." where bug_id = $bugid");
-  if (!$q->num_rows()) {
+  $rs = $db->query("select * from ".TBL_ATTACHMENT." where bug_id = $bugid");
+  if (!$rs->numRows()) {
     $t->set_var('attrows', '<tr><td colspan="5" align="center">No attachments</td></tr>');
   } else {
 		$j = 0;
-    while ($att = $q->grab()) {
+    while ($rs->fetchInto($att)) {
       if (@is_readable(INSTALL_PATH.'/'.ATTACHMENT_PATH."/{$row['project_id']}/$bugid-{$att['file_name']}")) {
         $action = "<a href='attachment.php?attachid={$att['attachment_id']}'>View</a>";
         if ($perm->have_perm('Administrator')) {
@@ -804,14 +804,14 @@ function show_bug($bugid = 0, $error = array()) {
   }
 
 	// Show the comments
-  $q->query('select comment_text, c.created_date, login'
+  $rs = $db->query('select comment_text, c.created_date, login'
     .' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER
     ." where bug_id = $bugid and c.created_by = user_id order by c.created_date");
-  if (!$q->num_rows()) {
+  if (!$rs->numRows()) {
     $t->set_var('rows','');
   } else {
 		$i = 1;
-    while ($row = $q->grab()) {
+    while ($rs->fetchInto($row)) {
       $t->set_var(array(
         'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
 				'trclass' => $i % 2 ? '' : 'alt',
@@ -827,7 +827,7 @@ function show_bug($bugid = 0, $error = array()) {
 }
 
 function show_projects() {
-  global $me, $q, $t, $STRING, $TITLE, $perm, $auth, $restricted_projects, $_gv;
+  global $me, $db, $t, $STRING, $TITLE, $perm, $auth, $restricted_projects, $_gv;
 
   // Show only active projects with at least one component
 	if ($perm->have_perm('Admin')) { // Show admins all projects
@@ -835,18 +835,18 @@ function show_projects() {
 	} else { // Filter out projects that can't be seen by this user
 		$p_query = " and p.project_id not in ($restricted_projects)";
 	}
-	$q->query('select p.project_id, p.project_name, p.project_desc, p.created_date 
+	$rs = $db->query('select p.project_id, p.project_name, p.project_desc, p.created_date 
 		from '.TBL_PROJECT.' p, '.TBL_COMPONENT.
 		' c where p.active = 1 and p.project_id = c.project_id'.$p_query.
 		' group by p.project_id, p.project_name, p.project_desc, p.created_date'.
 		' order by project_name');
 	
-  switch ($q->num_rows()) {
+  switch ($rs->numRows()) {
     case 0 :
       $t->set_var('content',"<div class=\"error\">{$STRING['noprojects']}</div>");
       return;
     case 1 :
-      $row = $q->grab();
+      $rs->fetchInto($row);
       $_gv['project'] = $row['project_id'];
       show_form();
       break;
@@ -854,7 +854,7 @@ function show_projects() {
       $t->set_file('content','projectlist.html');
       $t->set_block('content','row','rows');
 
-      while ($row = $q->grab()) {
+      while ($rs->fetchInto($row)) {
       $t->set_var(array(
         'id' => $row['project_id'],
         'name' => $row['project_name'],

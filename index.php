@@ -34,18 +34,18 @@ $t->set_block('content', 'closerow', 'closerows');
 $t->set_var('TITLE',$TITLE['home']);
 
 function grab_data($restricted_projects) {
-	global $q;
+	global $db;
 	
 	// Grab the legend
-	$q->query("select status_id, status_name from ".TBL_STATUS." order by sort_order");
-	while ($row = $q->grab()) {
+	$rs = $db->query("select status_id, status_name from ".TBL_STATUS." order by sort_order");
+	while ($rs->fetchInto($row)) {
 		$stats[$row['status_id']]['name'] = $row['status_name'];
 	}
 	
 	// Grab the data
-	$q->query("select status_id, count(status_id) as count from ".TBL_BUG.
+	$rs = $db->query("select status_id, count(status_id) as count from ".TBL_BUG.
 		" where project_id not in ($restricted_projects) group by status_id");
-	while ($row = $q->grab()) {
+	while ($rs->fetchInto($row)) {
 		$stats[$row['status_id']]['count'] = $row['count'];
 	}
 	
@@ -117,13 +117,13 @@ if (USE_JPGRAPH) {
 }
 
 // Show the recently added and closed bugs
-$q->query("select bug_id, title from ".TBL_BUG.
+$rs = $db->query("select bug_id, title from ".TBL_BUG.
 	" where project_id not in ($restricted_projects)".
 	' order by created_date desc limit 5');
-if (!$q->num_rows()) {
+if (!$rs->numRows()) {
 	$t->set_var('recentrows', $STRING['nobugs']);
 } else {
-	while (list($bugid, $title) = $q->grab()) {
+	while (list($bugid, $title) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 		$t->set_var(array(
 			'title' => stripslashes($title),
 			'bugid' => $bugid
@@ -131,14 +131,14 @@ if (!$q->num_rows()) {
 		$t->parse('recentrows', 'recentrow', true);
 	}
 }
-$q->query('select b.bug_id, title from '.TBL_BUG.' b, '.TBL_BUG_HISTORY.
+$rs = $db->query('select b.bug_id, title from '.TBL_BUG.' b, '.TBL_BUG_HISTORY.
 	" h where project_id not in ($restricted_projects) and b.bug_id = h.bug_id".
 	" and changed_field = 'status' and new_value = 'Closed'".
 	' order by h.created_date desc limit 5');
-if (!$q->num_rows()) {
+if (!$rs->numRows()) {
 	$t->set_var('closerows', $STRING['nobugs']);
 } else {
-	while (list($bugid, $title) = $q->grab()) {
+	while (list($bugid, $title) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 		$t->set_var(array(
 			'title' => stripslashes($title),
 			'bugid' => $bugid

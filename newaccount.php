@@ -20,12 +20,12 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.23 2001/12/13 14:00:35 bcurtis Exp $
+// $Id: newaccount.php,v 1.24 2002/03/17 01:44:24 bcurtis Exp $
 
 include 'include.php'; 
 
 function do_form() {
-	global $q, $t, $_pv, $STRING, $now, $u;
+	global $db, $t, $_pv, $STRING, $now, $u;
 	
 	if (NEW_ACCOUNTS_DISABLED) {
 		$t->set_file('content', 'newaccount-disabled');
@@ -36,7 +36,7 @@ function do_form() {
 		$error = $STRING['givelogin'];
 	elseif (!$_pv['email'] or !valid_email($_pv['email'])) 
 		$error = $STRING['giveemail'];
-	elseif ($q->grab_field("select user_id from ".TBL_AUTH_USER.
+	elseif ($db->getOne("select user_id from ".TBL_AUTH_USER.
 		" where email = '{$_pv['email']}' ".
 		(!empty($_pv['login']) ? "or login = '{$_pv['login']}'" : '')))
 		$error = $STRING['loginused'];
@@ -57,10 +57,10 @@ function do_form() {
 	} else {
 		$login = $_pv['login'];
 	}
-	$user_id = $q->nextid(TBL_AUTH_USER);
-	$q->query("insert into ".TBL_AUTH_USER." (user_id, login, first_name, last_name, email, password, active, created_date, last_modified_date)"
+	$user_id = $db->nextId(TBL_AUTH_USER);
+	$db->query("insert into ".TBL_AUTH_USER." (user_id, login, first_name, last_name, email, password, active, created_date, last_modified_date)"
 	         ." values ($user_id, '$login', '$firstname', '$lastname', '{$_pv['email']}', '$mpassword', 1, $now, $now)");
-	$q->query("insert into ".TBL_USER_GROUP.
+	$db->query("insert into ".TBL_USER_GROUP.
 		" (user_id, group_id, created_by, created_date)
 	  select $user_id, group_id, 0, $now from ".TBL_AUTH_GROUP.
 		" where group_name = 'User'"); 
@@ -70,7 +70,7 @@ function do_form() {
 }
 
 function show_form($error = '') {
-	global $q, $t, $_pv;
+	global $t, $_pv;
 	
 	if (NEW_ACCOUNTS_DISABLED) {
 		$t->set_file('content', 'newaccount-disabled.html');

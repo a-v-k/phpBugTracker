@@ -20,31 +20,31 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.12 2002/01/19 15:11:26 bcurtis Exp $
+// $Id: attachment.php,v 1.13 2002/03/17 01:44:24 bcurtis Exp $
 
 include 'include.php';
 
 function del_attachment($attachid) {
-	global $q;
+	global $db;
 	
 	if (list($filename, $mimetype) = grab_attachment($attachid)) {
-		$q->query("delete from ".TBL_ATTACHMENT." where attachment_id = $attachid");
+		$db->query("delete from ".TBL_ATTACHMENT." where attachment_id = $attachid");
 		unlink($filename);
 		header("Location: bug.php?op=show&bugid=$attachid");
 	}
 }
 
 function grab_attachment($attachid) {
-	global $q, $STRING;
+	global $db, $STRING;
 	
 	if (!is_numeric($attachid)) {
 		show_text($STRING['bad_attachment'], true);
 		return false;
 	}
-	$ainfo = $q->grab("select a.bug_id, file_name, mime_type, project_id"
-	                 ." from ".TBL_ATTACHMENT." a, ".TBL_BUG." b"
-			 ." where attachment_id = $attachid and a.bug_id = b.bug_id");
-	if ($q->num_rows() != 1) {
+	$ainfo = $db->getRow("select a.bug_id, file_name, mime_type, project_id"
+		." from ".TBL_ATTACHMENT." a, ".TBL_BUG." b"
+		." where attachment_id = $attachid and a.bug_id = b.bug_id");
+	if (empty($ainfo)) {
 		show_text($STRING['bad_attachment'], true);
 		return false;
 	}
@@ -58,7 +58,7 @@ function grab_attachment($attachid) {
 }
 
 function add_attachment($bugid, $description) {
-	global $q, $HTTP_POST_FILES, $now, $u, $STRING, $t;
+	global $db, $HTTP_POST_FILES, $now, $u, $STRING, $t;
 	
 	if (!isset($HTTP_POST_FILES['attachment']) || 
 		$HTTP_POST_FILES['attachment']['tmp_name'] == 'none') {
@@ -73,16 +73,17 @@ function add_attachment($bugid, $description) {
 		return;
 	}
 	
-	$projectid = $q->grab_field("select project_id from ".TBL_BUG." where bug_id = $bugid");
+	$projectid = $db->getOne("select project_id from ".TBL_BUG." where bug_id = $bugid");
 	if (!$projectid) {
 		show_text($STRING['nobug'], true);
 		return;
 	}
 
 	// Check for a previously-uploaded attachment with the same name, bug, and project
-	$q->query("select a.bug_id, project_id from ".TBL_ATTACHMENT." a, ".TBL_BUG." b"
-	         ." where file_name = '{$HTTP_POST_FILES['attachment']['name']}' and a.bug_id = b.bug_id");
-	while ($ainfo = $q->grab()) {
+	$rs = $db->query("select a.bug_id, project_id from ".TBL_ATTACHMENT." a, ".
+		TBL_BUG." b where file_name = '{$HTTP_POST_FILES['attachment']['name']}' ".
+		"and a.bug_id = b.bug_id");
+	while ($rs->fetchInto($ainfo)) {
 		if ($bugid == $ainfo['bug_id'] && $projectid == $ainfo['project_id']) {
 			show_attachment_form($bugid, $STRING['dupe_attachment']);
 			return;
@@ -114,13 +115,18 @@ function add_attachment($bugid, $description) {
 	}
 
 	@chmod("$filepath/$projectid/$filename", 0766);
-	$q->query("insert into ".TBL_ATTACHMENT." (attachment_id, bug_id, file_name, description, file_size, mime_type, created_by, created_date) values (".$q->nextid(TBL_ATTACHMENT).", $bugid, '{$HTTP_POST_FILES['attachment']['name']}', '$description', {$HTTP_POST_FILES['attachment']['size']}, '{$HTTP_POST_FILES['attachment']['type']}', $u, $now)");
+	$db->query("insert into ".TBL_ATTACHMENT." (attachment_id, bug_id, file_name, ".
+		"description, file_size, mime_type, created_by, created_date) values (".
+		$db->nextId(TBL_ATTACHMENT).", $bugid, ".
+		"'{$HTTP_POST_FILES['attachment']['name']}', '$description', ".
+		"{$HTTP_POST_FILES['attachment']['size']}, ".
+		"'{$HTTP_POST_FILES['attachment']['type']}', $u, $now)");
 	$t->set_file('content', 'bugattachmentsuccess.html');
 	$t->set_var('bugid', $bugid);
 }
 
 function show_attachment_form($bugid, $error = '') {
-	global $q, $t, $STRING;
+	global $db, $t, $STRING;
 	
 	$t->set_file('content', 'bugattachmentform.html');
 	if (!is_numeric($bugid)) { 
@@ -128,7 +134,7 @@ function show_attachment_form($bugid, $error = '') {
 		return;
 	}
 	
-	$bugexists = $q->grab_field("select count(*) from ".TBL_BUG." where bug_id = $bugid");
+	$bugexists = $db->getOne("select count(*) from ".TBL_BUG." where bug_id = $bugid");
 	if (!$bugexists) { 
 		show_text($STRING['nobug'], true);
 		return;

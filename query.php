@@ -20,20 +20,20 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.59 2002/03/05 23:04:21 bcurtis Exp $
+// $Id: query.php,v 1.60 2002/03/17 01:44:24 bcurtis Exp $
 
 include 'include.php';
 
 function delete_saved_query($queryid) {
-	global $q, $u, $me;
+	global $db, $u, $me;
 	
-	$q->query("delete from ".TBL_SAVED_QUERY." where user_id = $u 
+	$db->query("delete from ".TBL_SAVED_QUERY." where user_id = $u 
 		and saved_query_id = $queryid");
 	header("Location: $me?op=query");
 }
 
 function show_query() {
-	global $q, $t, $TITLE, $u;
+	global $db, $t, $TITLE, $u;
 	
 	$t->set_file('content','queryform.html');
 	$t->set_block('content', 'savequeryblock', 'sqblock');
@@ -41,11 +41,11 @@ function show_query() {
 	 
 	if ($u != 'nobody') {
 		// Grab the saved queries if there are any
-		$q->query("select * from ".TBL_SAVED_QUERY." where user_id = '$u'");
-		if (!$q->num_rows()) {
+		$rs = $db->query("select * from ".TBL_SAVED_QUERY." where user_id = '$u'");
+		if (!$rs->numRows()) {
 			$t->set_var('rows','');
 		} else {
-			while ($row = $q->grab()) {
+			while ($rs->fetchInto($row)) {
 				$t->set_var(array(
 					'savedquerystring' => $row['saved_query_string'],
 					'savedqueryname' => stripslashes($row['saved_query_name']),
@@ -73,15 +73,15 @@ function show_query() {
 }
 
 function build_query($assignedto, $reportedby, $open) {
-	global $q, $auth, $_gv, $perm, $restricted_projects;
+	global $db, $auth, $_gv, $perm, $restricted_projects;
 
 	foreach ($_gv as $k => $v) { $$k = $v; }
 	
 	// Open bugs assigned to the user -- a hit list
 	if ($assignedto || $reportedby) {
-		$q->query("select status_id from ".TBL_STATUS." where status_name ".
-			($open ? '' : 'not ')."in ('Unconfirmed', 'New', 'Assigned', 'Reopened')");
-		while ($statusid = $q->grab_field()) $status[] = $statusid;
+		$status = $db->getCol("select status_id from ".TBL_STATUS.
+			" where status_name ".($open ? '' : 'not ').
+			"in ('Unconfirmed', 'New', 'Assigned', 'Reopened')");
 		$query[] = 'b.status_id in ('.delimit_list(',',$status).')';
 		if ($assignedto) {
 			$query[] = "assigned_to = {$auth->auth['uid']}";
@@ -150,7 +150,7 @@ function build_query($assignedto, $reportedby, $open) {
 }
 
 function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
-	global $me, $q, $t, $select, $TITLE, $STRING, $_gv, $u, $auth, 
+	global $me, $db, $t, $select, $TITLE, $STRING, $_gv, $u, $auth, 
 		$default_db_fields, $all_db_fields, $_sv, $HTTP_SERVER_VARS;
 
 	$t->set_file('content','buglist.html');
@@ -164,9 +164,11 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	// Save the query if requested
 	if (!empty($savedqueryname)) {
 		$savedquerystring = ereg_replace('&savedqueryname=.*(&?)', '\\1', $HTTP_SERVER_VARS['QUERY_STRING']);
-		$q->query("insert into ".TBL_SAVED_QUERY.
+		$nextid = $db->getOne("select max(saved_query_id)+1 from ".TBL_SAVED_QUERY." where user_id = $u");
+		$nextid = $nextid ? $nextid : 1;
+		$db->query("insert into ".TBL_SAVED_QUERY.
 			" (saved_query_id, user_id, saved_query_name, saved_query_string) 
-			values (".$q->nextid(TBL_SAVED_QUERY).", $u, '$savedqueryname', '$savedquerystring')");
+			values ($nextid, $u, '$savedqueryname', '$savedquerystring')");
 	}
 	if (!isset($order)) { 
 		if (isset($_sv['queryinfo']['order'])) {
@@ -189,7 +191,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		$_sv['queryinfo'] = array();
 	}
 	
-	$nr = $q->grab_field('select count(*) from '.TBL_BUG.' b 
+	$nr = $db->getOne('select count(*) from '.TBL_BUG.' b 
 		left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id
 		left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
 		(!empty($_sv['queryinfo']['query']) ? "where {$_sv['queryinfo']['query']}": ''));
@@ -206,7 +208,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'project' => build_select('project'),
 		'TITLE' => $TITLE['buglist']));
 	
-	$q->limit_query('select b.*, reporter.login as reporter, owner.login as owner, 
+	$rs = $db->limitQuery('select b.*, reporter.login as reporter, owner.login as owner, 
 		lastmodifier.login as lastmodifier, project_name, severity_name, severity_color, status_name, 
 		os_name, version_name, component_name, resolution_name from '.TBL_BUG.' b 
 		left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id 
@@ -219,7 +221,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		and b.os_id = os.os_id and b.version_id = version.version_id 
 		and b.component_id = component.component_id and b.project_id = project.project_id '.
 		(!empty($_sv['queryinfo']['query']) ? "and {$_sv['queryinfo']['query']} " : '').
-		"order by $order $sort, bug_id asc", $selrange, $llimit);
+		"order by $order $sort, bug_id asc", $llimit, $selrange);
 				
 	$headers = array(
 		'bug_id' => 'bug_id',
@@ -244,7 +246,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 
 	sorting_headers($me, $headers, $order, $sort, "page=$page");
 				
-	if (!$q->num_rows()) {
+	if (!$rs->numRows()) {
 		$t->set_var(array(
 			'rows' => "<tr><td>{$STRING['nobugs']}</td></tr>",
 			'numcols' => "1"));
@@ -267,7 +269,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	
 	$pos = 0;
 	// Data rows 
-	while ($row = $q->grab()) {
+	while ($rs->fetchInto($row)) {
 		$bgcolor = USE_SEVERITY_COLOR ? $row['severity_color'] : 
 			((++$i % 2 == 0) ? '#dddddd' : '#ffffff');
 		$trclass = USE_SEVERITY_COLOR ? '' : ($i % 2 ? '' : 'alt');

@@ -20,29 +20,29 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.19 2002/02/28 18:23:31 bcurtis Exp $
+// $Id: user.php,v 1.20 2002/03/17 01:44:24 bcurtis Exp $
 
 include 'include.php';
 
 function delete_vote($bug_id) {
-	global $q, $u, $me, $now;
+	global $db, $u, $me, $now;
 	
-	$q->query("delete from ".TBL_BUG_VOTE." where user_id = $u and bug_id = $bug_id");
+	$db->query("delete from ".TBL_BUG_VOTE." where user_id = $u and bug_id = $bug_id");
 	header("Location: $me?r=$now");
 }
 
 function change_bug_list_columns($column_list) {
-	global $q, $u, $t, $auth;
+	global $db, $u, $t, $auth;
 	
 	$auth->auth['db_fields'] = $column_list;
 	$column_list = serialize($column_list);
-	$q->query("update ".TBL_AUTH_USER." set bug_list_fields = '$column_list' where user_id = $u");
+	$db->query("update ".TBL_AUTH_USER." set bug_list_fields = '$column_list' where user_id = $u");
 	//$t->set_file('content', 'columnlistchanged.html');
 	show_text('Your bug list column preferences have been saved');
 }
 
 function change_password($pass1, $pass2) {
-	global $t, $q, $u, $STRING;
+	global $t, $db, $u, $STRING;
 	
 	if (!$pass1 = trim($pass1)) $error = $STRING['givepassword'];
 	elseif ($pass1 != $pass2) $error = $STRING['passwordmatch'];
@@ -58,12 +58,12 @@ function change_password($pass1, $pass2) {
 		$mpassword = $pass1;
 	}
 	
-	$q->query("update ".TBL_AUTH_USER." set password = '$mpassword' where user_id = $u");
+	$db->query("update ".TBL_AUTH_USER." set password = '$mpassword' where user_id = $u");
 	$t->set_file('content', 'passwordchanged.html');
 }
 
 function show_preferences_form($error = '') {
-	global $t, $pass1, $pass2, $all_db_fields, $default_db_fields, $auth, $q, $u;
+	global $t, $pass1, $pass2, $all_db_fields, $default_db_fields, $auth, $db, $u;
 	
 	$t->set_file('content', 'user.html');
 	$t->set_block('content', 'column_list_row', 'list_rows');
@@ -91,12 +91,12 @@ function show_preferences_form($error = '') {
 	}
 	
 	// Display the votes (if any)
-	$q->query("select * from ".TBL_BUG_VOTE." where user_id = $u");
-	if (!$q->num_rows()) {
+	$rs = $db->query("select * from ".TBL_BUG_VOTE." where user_id = $u");
+	if (!$rs->numRows()) {
 		$t->set_var('votesb', '&nbsp;');
 	} else {
 		$i = 0;
-		while ($row = $q->grab()) {
+		while ($rs->fetchInto($row)) {
 			$t->set_var(array(
       	'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
 				'trclass' => $i % 2 ? '' : 'alt',
