@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.116 2002/09/14 19:06:30 bcurtis Exp $
+// $Id: bug.php,v 1.117 2002/09/14 19:31:22 bcurtis Exp $
 
 include 'include.php';
 
@@ -597,7 +597,7 @@ function prev_next_links($bugid, $pos) {
 }
 
 function show_bug($bugid = 0, $error = array()) {
-	global $db, $me, $t, $STRING, $TITLE, $u, $_gv, $QUERY, $restricted_projects;
+	global $db, $me, $t, $STRING, $TITLE, $u, $_gv, $_pv, $QUERY, $restricted_projects;
 
 	if (!ereg('^[0-9]+$',$bugid) or
 		!$row = $db->getRow(sprintf($QUERY['bug-show-bug'], $bugid,
@@ -607,7 +607,11 @@ function show_bug($bugid = 0, $error = array()) {
 	}
 
 	prev_next_links($bugid, isset($_gv['pos']) ? $_gv['pos'] : 0);
+
 	$t->assign($row);
+	// Override the database values with posted values if there were errors
+	if (count($error)) $t->assign($_pv);
+
 	$t->assign(array(
 		'error' => $error,
 		'already_voted' => $db->getOne("select count(*) from ".TBL_BUG_VOTE.
