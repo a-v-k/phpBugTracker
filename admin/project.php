@@ -1,9 +1,9 @@
 <?php
 
 include '../include.php';
-
+error_reporting(E_ALL);
 function do_form($projectid = 0) {
-	global $q, $me, $name, $description, $active, $version, $u, $STRING;
+	global $q, $me, $name, $description, $active, $version, $u, $STRING, $now;
 	
 	// Validation
 	if (!$name = htmlspecialchars(trim($name))) 
@@ -15,7 +15,6 @@ function do_form($projectid = 0) {
 	if ($error) { show_form($projectid, $error); return; }
 	
 	if (!$active) $active = 0;
-	$now = time();
 	if (!$projectid) {
 		$projectid = $q->nextid('Project');
 		$q->query("insert into Project (ProjectID, Name, Description, Active, CreatedBy, CreatedDate) values ($projectid , '$name', '$description', $active, $u, $now)");
@@ -122,13 +121,13 @@ function list_components($projectid) {
 }
 
 function list_items() {
-	global $me, $q, $t, $selrange, $order, $sort, $STRING;
+	global $me, $q, $t, $selrange, $order, $sort, $STRING, $TITLE, $page;
 				
 	$t->set_file('content','projectlist.html');
 	$t->set_block('content','row','rows');
 				
 	if (!$order) { $order = '1'; $sort = 'asc'; }
-	$nr = $q->query("select count(*) from Project where ProjectID = '$projectid' order by $order $sort");
+	$nr = $q->query("select count(*) from Project");
 
 	list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
 		"order=$order&sort=$sort");
@@ -138,7 +137,7 @@ function list_items() {
 		'first' => $llimit+1,
 		'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
 		'records' => $nr,
-		'TITLE' => 'List Projects'
+		'TITLE' => $TITLE['project']
 		));
 								
 	$q->query("select * from Project order by $order $sort limit $llimit, $selrange");
@@ -158,7 +157,7 @@ function list_items() {
 		);
 
 	sorting_headers($me, $headers, $order, $sort);
-				
+	$i = 0;			
 	while ($row = $q->grab()) {
 		$t->set_var(array(
 			'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
@@ -177,11 +176,11 @@ $t->set_file('wrap','wrap.html');
 
 $perm->check('Administrator');
 
-if ($op) switch($op) {
+if (isset($_gv['op'])) switch($_gv['op']) {
 	case 'add' : show_form(); break;
-	case 'edit' : show_form($id); break;
-} elseif($submit) {		 
-	do_form($id);
+	case 'edit' : show_form($_gv['id']); break;
+} elseif(isset($_pv['submit'])) {		 
+	do_form($_pv['id']);
 } else list_items();
 
 $t->pparse('main',array('content','wrap','main'));

@@ -47,6 +47,7 @@ $TITLE = array(
 	'editproject' => 'Edit Project',
 	'addversion' => 'Add Version',
 	'editversion' => 'Edit Version',
+	'project' => 'Projects',
 	'os' => 'Operating Systems',
 	'resolution' => 'Resolutions',
 	'status' => 'Statuses',

@@ -52,6 +52,9 @@ $me = $PHP_SELF;
 $me2 = $REQUEST_URI;
 $selrange = 30;
 $now = time();
+$_gv = $HTTP_GET_VARS;
+$_pv = $HTTP_POST_VARS;
+
 $select['authlevels'] = array(
 	0 => 'Inactive',
 	1 => 'User',
