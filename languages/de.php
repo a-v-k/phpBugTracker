@@ -24,7 +24,7 @@
 // Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 // MA 02111-1307, USA.
 // -------------------------------------------------------------------------
-// $Id: de.php,v 1.19 2002/10/28 22:06:00 bcurtis Exp $
+// $Id: de.php,v 1.20 2002/10/29 14:08:53 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -49,7 +49,7 @@ $STRING = array(
 	'giveversion' => 'Bitte geben Sie eine Version ein',
 	'noversions' => 'Keine Version gefunden',
 	'nocomponents' => 'Keine Komponenten gefunden',
-	'nostatuses' => 'Keine Stati gefunden',
+	'nostatuses' => 'Keine Status gefunden',
 	'noseverities' => 'Keine Schweregrade gefunden',
 	'givepassword' => 'Bitte geben Sie ein Passwort ein!',
 	'nousers' => 'Keinen Benutzer gefunden',
@@ -102,7 +102,7 @@ $STRING = array(
 		'Component' => 'Komponente',
 		'Status' => 'Status',
 		'Resolution' => 'Lösung',
-		'OpSys' => 'OpSys',
+		'OpSys' => 'Betriebssystem',
 		'Priority' => 'Priorität',
 		'Severity' => 'Schweregrad',
 		'Database' => 'Datenbank',
@@ -149,8 +149,8 @@ $STRING = array(
 		'BugsReported' => 'Bugs reported by me',
 		'PersonalPage' => 'Personal Page',
 		'Logout' => 'Logout',
-		'EmailPassword' => 'Email Password',
-		'RememberMe' => 'Remember me',
+		'EmailPassword' => 'Passwort per Email',
+		'RememberMe' => 'Merke mich',
 		),
     'BUGFORM' => array(
 		'Project' => 'Projekt',
@@ -214,7 +214,7 @@ $STRING = array(
 		'database' => 'Datenbank',
 		'os' => 'OS',
 		'chooseone' => 'Eines auswählen',
-		'suppressemail' => 'Suppress notification email'
+		'suppressemail' => 'Benachrichtigungsemail unterdrücken'
 	),
 	'USER_PREF' => array(
 		'ReceiveNotifications' => 'Änderungen an Bugs per E-Mail erhalten',
@@ -258,7 +258,7 @@ $TITLE = array(
 	'project' => 'Projekte',
 	'os' => 'Betriebssysteme',
 	'resolution' => 'Lösungen',
-	'status' => 'Stati',
+	'status' => 'Status',
 	'severity' => 'Schweregrad',
 	'user' => 'Benutzer',
 	'home' => 'Home',
