@@ -23,9 +23,7 @@
 // Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 // MA 02111-1307, USA.
 // ------------------------------------------------------------------------- 
-
-
-
+// $Id: de.php,v 1.5 2001/09/03 17:03:22 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -37,6 +35,7 @@ $STRING = array(
 	'noprojects' => 'Keine Projekte gefunden',
 	'totalbugs' => 'Total Bugs',
 	'giveemail' => 'Bitte geben Sie eine gültige E-mail Adresse ein.',
+	'givelogin' => 'Please enter a login',
 	'loginused' => 'Dieser Benutzername ist schon in Gebrauch',
 	'newacctsubject' => 'phpBugTracker Login',
 	'newacctmessage' => "Ihr phpBugTracker Passwort ist %s",

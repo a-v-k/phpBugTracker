@@ -21,6 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
+// $Id: no.php,v 1.3 2001/09/03 17:03:22 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -32,6 +33,7 @@ $STRING = array(
 	'noprojects' => 'Ingen prosjekter funnet',
 	'totalbugs' => 'Totalt antall feil',
 	'giveemail' => 'Vennligst skriv en gyldig email adresse',
+	'givelogin' => 'Please enter a login',
 	'loginused' => 'Det brukernavnet er allerede i bruk',
 	'newacctsubject' => 'phpBugTracker Innlogging',
 	'newacctmessage' => "Ditt phpBugTracker passord er %s",
