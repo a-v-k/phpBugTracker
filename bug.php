@@ -10,7 +10,7 @@ $u = $auth->auth[uid];
 
 ///
 /// Send the email about changes to the bug and (later) log the changes in the DB
-function do_changedfields($user, $buginfo, $cf, $comments) {
+function do_changedfields($userid, $buginfo, $cf, $comments) {
   global $q, $t, $u, $select;
   
   $t->set_file('emailout','bugemail.txt');
@@ -89,9 +89,9 @@ function do_changedfields($user, $buginfo, $cf, $comments) {
     
   // Don't email the person who just made the changes (later, make this 
   // behavior toggable by the user)
-  if ($user != $buginfo[CreatedBy]) 
+  if ($userid != $buginfo[CreatedBy]) 
     $maillist[] = $reporter;
-  if ($user != ($cf[AssignedTo] ? $cf[AssignedTo] : $buginfo[AssignedTo]))
+  if ($userid != ($cf[AssignedTo] ? $cf[AssignedTo] : $buginfo[AssignedTo]))
     $maillist[] = $assignedto;
   // Leter add a watcher (such as QA person) check here
   $toemail = join(', ',$maillist);
@@ -138,6 +138,12 @@ function update_bug($bugid = 0) {
     show_bug($bugid,array('status' => $STRING[nouser]));
     return;
   }
+  
+  if ($lastmodifieddate != $buginfo[LastModifiedDate]) {
+    show_bug($bugid, array('status' => $STRING[datecollision]));
+    return;
+  }
+  
   $now = time();
   if ($comments) {
     $comments = htmlspecialchars($comments);
@@ -206,7 +212,6 @@ function update_bug($bugid = 0) {
   if ($URL == 'http://') $URL = '';
   elseif ($URL and substr($URL,0,7) != 'http://') $URL = 'http://'.$URL;
   
-  // XXX - Need some change collision checking
   $q->query("Update Bug set Title = '$Title', URL = '$URL', Severity = $Severity,
     Priority = $Priority, ".($status ? "Status = $status, " : '').
     ($changeresolution ? "Resolution = $bugresolution, " : '').
@@ -270,6 +275,7 @@ function show_form($bugid = 0, $error = '') {
       'title' => stripslashes($row[Title]),
       'description' => stripslashes($row[Description]),
       'url' => $row[URL],
+      'urllabel' => $row[URL] ? "<a href='$row[URL]'>URL</a>" : 'URL',
       'severity' => build_select('Severity',$row[Severity]),
       'priority' => build_select('priority',$row[Priority]),
       'status' => build_select('Status',$row[Status]),
@@ -292,6 +298,7 @@ function show_form($bugid = 0, $error = '') {
       'title' => stripslashes($title),
       'description' => stripslashes($description),
       'url' => $url ? $url : 'http://',
+      'urllabel' => $url ? "<a href='$url'>URL</a>" : 'URL',
       'severity' => build_select('Severity',$severity),
       'priority' => build_select('priority',$priority),
       'status' => build_select('Status',$status),
@@ -337,6 +344,7 @@ function show_bug($bugid = 0, $error = '') {
     'title' => stripslashes($row[Title]),
     'description' => nl2br(stripslashes($row[Description])),
     'url' => $row[URL],
+    'urllabel' => $row[URL] ? "<a href='$row[URL]'>URL</a>" : 'URL',
     'severity' => build_select('Severity',$row[Severity]),
     'priority' => build_select('priority',$row[Priority]),
     'status' => $row[Status],

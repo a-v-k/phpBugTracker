@@ -27,7 +27,8 @@ $STRING = array(
   'givepassword' => 'Please enter a password',
   'nousers' => 'No users found',
   'bugbadperm' => 'You cannot change this bug',
-  'bugbadnum' => 'That bug does not exist'
+  'bugbadnum' => 'That bug does not exist',
+  'datecollision' => 'Someone has updated this bug since you viewed it.  The bug info has been reloaded with the latest changes.'
   );
   
 // Page titles
