@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.4 2001/08/23 02:28:52 bcurtis Exp $
+// $Id: config.php,v 1.5 2001/08/28 03:51:09 bcurtis Exp $
 
 define ('INSTALLPATH', '/home/bcurtis/public_html/phpbt');
 define ('INSTALLURL', 'http://localhost/~bcurtis/phpbt');
@@ -43,6 +43,7 @@ define ('MASK_EMAIL', 1); // Should email addresses be plainly visible?
 define ('HIDE_EMAIL', 1); // Should email addresses be hidden for those not logged in?
 // Should the query list use the severity colors as the row background color (like SourceForge)
 define ('USE_SEVERITY_COLOR', 1);
+define ('EMAIL_IS_LOGIN', 1); // Whether to use email addresses as logins
 
 // Sub-dir of the INSTALLPATH - Needs to be writeable by the web process
 define ('ATTACHMENT_PATH', 'attachments');
