@@ -62,8 +62,7 @@ function resolution_by_engineer($projectid = 0) {
 				if ($row[$col] == '') {
 					$coldata = 'Unassigned';
 				} elseif ($col == 'Assigned To') {
-					$coldata = sprintf("<a href='mailto:%s'>%s</a>", 
-						stripslashes($row[$col]), stripslashes($row[$col]));
+					$coldata = maskemail($row[$col]);
 				} else {
 					$coldata = stripslashes($row[$col]);
 				}
