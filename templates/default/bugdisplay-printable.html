@@ -116,11 +116,11 @@
 	<tr>
 		<td>
 			<div align="center">
-				<i>----- Posted by {$comments[comment].rreporter|maskemail} at {$comments[comment].created_date|date:TIME_FORMAT} on {$comments[comment].created_date|date:DATE_FORMAT}-----</i>
+				<i>----- Posted by {$comments[comment].login|maskemail} at {$comments[comment].created_date|date:TIME_FORMAT} on {$comments[comment].created_date|date:DATE_FORMAT}-----</i>
 				<br>
 				<br>
 			</div>
-			{$comments[comment].rdescription|stripslashes|format_comments|nl2br}
+			{$comments[comment].comment_text|stripslashes|format_comments|nl2br}
 			<br>
 			<br>
 			<br>
