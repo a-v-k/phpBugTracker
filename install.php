@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.12 2002/03/05 21:35:32 bcurtis Exp $
+// $Id: install.php,v 1.13 2002/03/13 16:34:50 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname(__FILE__));
 
@@ -44,6 +44,7 @@ if (!empty($_pv)) {
 		'/TBL_BUG_CC/' => $_pv['tbl_prefix'].'bug_cc',
 		'/TBL_BUG_GROUP/' => $_pv['tbl_prefix'].'bug_group',
 		'/TBL_BUG_HISTORY/' => $_pv['tbl_prefix'].'bug_history',
+		'/TBL_BUG_VOTE/' => $_pv['tbl_prefix'].'bug_vote',
 		'/TBL_BUG/' => $_pv['tbl_prefix'].'bug',
 		'/TBL_COMMENT/' => $_pv['tbl_prefix'].'comment',
 		'/TBL_COMPONENT/' => $_pv['tbl_prefix'].'component',
