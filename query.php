@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.87 2002/09/13 19:34:09 bcurtis Exp $
+// $Id: query.php,v 1.88 2002/09/14 16:54:33 bcurtis Exp $
 
 include 'include.php';
 
@@ -258,6 +258,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	// Save the query if requested
 	if (!empty($savedqueryname)) {
 		$savedquerystring = ereg_replace('&savedqueryname=.*(&?)', '\1', $HTTP_SERVER_VARS['QUERY_STRING']);
+		$savedquerystring .= '&op=doquery';
 		$nextid = $db->getOne("select max(saved_query_id)+1 from ".TBL_SAVED_QUERY." where user_id = $u");
 		$nextid = $nextid ? $nextid : 1;
 		$db->query("insert into ".TBL_SAVED_QUERY.
