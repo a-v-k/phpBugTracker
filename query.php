@@ -10,24 +10,24 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
 // (at your option) any later version.
-// 
+//
 // phpBugTracker is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.86 2002/09/03 19:43:48 bcurtis Exp $
+// $Id: query.php,v 1.87 2002/09/13 19:34:09 bcurtis Exp $
 
 include 'include.php';
 
 function delete_saved_query($queryid) {
 	global $db, $u, $me, $_gv;
-	
-	$db->query("delete from ".TBL_SAVED_QUERY." where user_id = $u 
+
+	$db->query("delete from ".TBL_SAVED_QUERY." where user_id = $u
 		and saved_query_id = $queryid");
 	if (!empty($_gv['form']) and $_gv['form'] == 'advanced') {
 		header("Location: $me?op=query&form=advanced");
@@ -38,10 +38,10 @@ function delete_saved_query($queryid) {
 
 function show_query() {
 	global $db, $t, $TITLE, $u, $_gv;
-	
+
 	if ($u != 'nobody') {
 		// Grab the saved queries if there are any
-		$t->assign('queries', 
+		$t->assign('queries',
 			$db->getAll("select * from ".TBL_SAVED_QUERY." where user_id = '$u'"));
 	}
 
@@ -69,7 +69,7 @@ function build_query($assignedto, $reportedby, $open) {
 			$paramstr .= "&$k=$v";
 		}
 	}
-	
+
 	// Open bugs assigned to the user -- a hit list
 	if ($assignedto || $reportedby) {
 		$query[] = 'b.status_id '.($open ? '' : 'not ').
@@ -82,7 +82,7 @@ function build_query($assignedto, $reportedby, $open) {
 	} else {
 		// Select boxes
 		$flags = array();
-		// Need to check $array[0] for Opera -- 
+		// Need to check $array[0] for Opera --
 		// it passes non-empty arrays for every multi-choice select box
 		if (!empty($status) and $status[0]) {
 			$flags[] = 'b.status_id in ('.delimit_list(',',$status).')';
@@ -114,8 +114,8 @@ function build_query($assignedto, $reportedby, $open) {
 		if (!empty($email1)) {
 			switch($emailtype1) {
 				case 'like' : $econd = "like '%$email1%'"; break;
-				case 'rlike' : 
-				case 'not rlike' : 
+				case 'rlike' :
+				case 'not rlike' :
 				case '=' : $econd = "$emailtype1 '$email1'"; break;
 			}
 			foreach($emailfield1 as $field) $equery[] = "$field.$emailsearch1 $econd";
@@ -145,7 +145,7 @@ function build_query($assignedto, $reportedby, $open) {
 			$query[] = "b.project_id not in ($restricted_projects)";
 		}
 	}
-	
+
 	if (!empty($query)) {
 		return array(delimit_list(' and ',$query), $paramstr);
 	} else {
@@ -156,9 +156,9 @@ function build_query($assignedto, $reportedby, $open) {
 // Handle the formatting for various types of bug info in the bug list
 function format_bug_col($colvalue, $coltype, $bugid, $pos) {
 	global $select;
-	
+
 	$pos--;
-	
+
 	switch ($coltype) {
 		case 'url' :
 			echo "<a href=\"$colvalue\" target=\"_new\">$colvalue</a>";
@@ -193,7 +193,7 @@ function format_bug_col($colvalue, $coltype, $bugid, $pos) {
 $t->register_modifier('modify_bug_col', 'format_bug_col');
 
 function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
-	global $me, $db, $t, $select, $TITLE, $STRING, $_gv, $u, 
+	global $me, $db, $t, $select, $TITLE, $STRING, $_gv, $u,
 		$default_db_fields, $all_db_fields, $HTTP_SESSION_VARS, $HTTP_SERVER_VARS,
 		$QUERY;
 
@@ -261,40 +261,42 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		$nextid = $db->getOne("select max(saved_query_id)+1 from ".TBL_SAVED_QUERY." where user_id = $u");
 		$nextid = $nextid ? $nextid : 1;
 		$db->query("insert into ".TBL_SAVED_QUERY.
-			" (saved_query_id, user_id, saved_query_name, saved_query_string) 
-			values (".join(', ', array($nextid, $u, 
-				$db->quote(stripslashes($savedqueryname)), 
+			" (saved_query_id, user_id, saved_query_name, saved_query_string)
+			values (".join(', ', array($nextid, $u,
+				$db->quote(stripslashes($savedqueryname)),
 				$db->quote(stripslashes($savedquerystring)))).")");
 	}
-	if (!isset($order)) { 
+	if (!isset($order)) {
 		if (isset($HTTP_SESSION_VARS['queryinfo']['order'])) {
 			$order = $HTTP_SESSION_VARS['queryinfo']['order'];
 			$sort = $HTTP_SESSION_VARS['queryinfo']['sort'];
 		} else {
-			$order = 'bug_id'; 
-			$sort = 'asc'; 
+			$order = 'bug_id';
+			$sort = 'asc';
 		}
 	}
 	if (!session_is_registered('queryinfo')) {
 		session_register('queryinfo');
 		$HTTP_SESSION_VARS['queryinfo'] = array();
 	}
-	
+
 	$HTTP_SESSION_VARS['queryinfo']['order'] = $order;
 	$HTTP_SESSION_VARS['queryinfo']['sort'] = $sort;
-	
+
 	if (empty($HTTP_SESSION_VARS['queryinfo']['query']) or isset($op)) {
-		list($HTTP_SESSION_VARS['queryinfo']['query'], $paramstr) = 
+		list($HTTP_SESSION_VARS['queryinfo']['query'], $paramstr) =
 			build_query($assignedto, $reportedby, $open);
 	}
 	$nr = $db->getOne($QUERY['query-list-bugs-count'].
-		(!empty($HTTP_SESSION_VARS['queryinfo']['query']) 
-			? $HTTP_SESSION_VARS['queryinfo']['query']: '1'));
+		(!empty($HTTP_SESSION_VARS['queryinfo']['query'])
+			? $QUERY['query-list-bugs-count-join'].
+				$HTTP_SESSION_VARS['queryinfo']['query']
+			: ''));
 
 	$HTTP_SESSION_VARS['queryinfo']['numrows'] = $nr;
 	list($selrange, $llimit) = multipages($nr, $page, "order=$order&sort=$sort");
-	
-	$desired_fields = !empty($HTTP_SESSION_VARS['db_fields']) ? 
+
+	$desired_fields = !empty($HTTP_SESSION_VARS['db_fields']) ?
 		$HTTP_SESSION_VARS['db_fields'] :	$default_db_fields;
 
 	$query_fields = array('bug_id as bug_link_id', 'severity.severity_color');
@@ -308,13 +310,13 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'db_fields' => $desired_fields,
 		'field_titles' => $field_titles
 		));
-		
+
 	$t->assign('bugs', $db->getAll($db->modifyLimitQuery(
-		sprintf($QUERY['query-list-bugs'], join(', ', $query_fields), 
-			(!empty($HTTP_SESSION_VARS['queryinfo']['query']) 
+		sprintf($QUERY['query-list-bugs'], join(', ', $query_fields),
+			(!empty($HTTP_SESSION_VARS['queryinfo']['query'])
 			? "and {$HTTP_SESSION_VARS['queryinfo']['query']} " : ''),
 		$order, $sort), $llimit, $selrange)));
-				
+
 	sorting_headers($me, $headers, $order, $sort, "page=$page".$paramstr);
 	$t->wrap('buglist.html', 'buglist');
 }

@@ -132,7 +132,8 @@ $QUERY = array(
 	'query-list-bugs-count' => 'select count(*) '.
 		'from '.TBL_BUG.' b, '.TBL_AUTH_USER.' owner, '.TBL_AUTH_USER.' reporter '.
 		'where b.assigned_to = owner.user_id(+) '.
-		'and b.created_by = reporter.user_id(+) and ',
+		'and b.created_by = reporter.user_id(+) ',
+	'query-list-bugs-count-join' => 'and ',
 	'query-list-bugs' => 'select %s '.
 		'from '.TBL_BUG.' b, '.TBL_AUTH_USER.' lastmodifier, '.
 		TBL_AUTH_USER.' owner, '.TBL_AUTH_USER.' reporter, '.
@@ -177,5 +178,5 @@ $QUERY = array(
 		'where v.project_id = %s and v.version_id = b.version_id(+) '.
 		'group by v.version_id, v.version_name, v.created_date, v.active',
 	);
-	
+
 ?>
