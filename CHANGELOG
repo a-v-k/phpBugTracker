@@ -8,6 +8,8 @@
   name as an old one.
 : Added client-side validation to admin pages.
 : Allow admins to delegate power to developers, on a per-project basis.
+: Added ability to disable all email sent from the system.
+: Fixed a bug with not being able to change the name of the 'Developer' group.
 
 -- 0.9.1 -- 4 Jan 2003
 : Fixed bugs with PostgreSQL
