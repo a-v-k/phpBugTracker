@@ -3,11 +3,11 @@ Upgrading from 0.8.x to 0.9.x
 
 Following the steps below will upgrade your installation of phpBT.
 
+Using the directory where you unpacked the new set of files...
 1. Edit config-dist.php, changing the database settings to match those from
    your old config.php (DB_*, SMARTY_PATH and TBL_PREFIX constants).  Save
    config-dist.php as config.php.
-2. With your web browser, load upgrade.php from the directory where you
-   installed the new set of files.
+2. Load upgrade.php with your web browser.
 3. After running that script your installation has been upgraded.
 4. Either copy the files from the new installation over the old one, or
    point your users to the new location.
