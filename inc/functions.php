@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.28 2002/05/19 12:24:42 firma Exp $
+// $Id: functions.php,v 1.29 2002/05/21 11:20:17 firma Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -58,17 +58,19 @@ function build_select($params) {
     'status' => TBL_STATUS,
     'resolution' => TBL_RESOLUTION,
     'severity' => TBL_SEVERITY,
-    'version' => TBL_VERSION
+    'version' => TBL_VERSION,
+    'database' => TBL_DATABASE,
   );
 
   $text = '';
   if (isset($cfgDatabase[$box])) {
     $querystart = "select {$box}_id, {$box}_name from $cfgDatabase[$box]";
+    $querymid = ' where sort_order > 0 order by sort_order';
     $queries = array(
       'group' => $querystart.' where group_name <> \'User\' order by group_name',
-      'severity' => $querystart.' where sort_order > 0 order by sort_order',
-      'status' => $querystart.' where sort_order > 0 order by sort_order',
-      'resolution' => $querystart.' where sort_order > 0 order by sort_order',
+      'severity' => $querystart.$querymid,
+      'status' => $querystart.$querymid,
+      'resolution' => $querystart.$querymid,
       'project' => $perm->have_perm('Admin')
         ? $querystart." where ".
 					($selected ? "(active > 0 or project_id in ($selected))" : 'active > 0').
@@ -78,7 +80,8 @@ function build_select($params) {
 					($selected ? " (active > 0 or project_id in ($selected))" : 'active > 0').
 					" order by {$box}_name",
       'component' => $querystart." where project_id = $project and active = 1 order by {$box}_name",
-      'version' => $querystart." where project_id = $project and active = 1 order by {$box}_id desc"
+      'version' => $querystart." where project_id = $project and active = 1 order by {$box}_id desc",
+      'database' => "select {$box}_id, {$box}_name, {$box}_version from $cfgDatabase[$box]".$querymid
       );
   }
 
@@ -120,6 +123,15 @@ function build_select($params) {
           $row[$box.'_id']."\"$sel>".$row[$box.'_name'].'</option>';
       }
       break;
+    case 'database' :
+	$rs = $db->query($queries[$box]);
+	while ($rs->fetchInto($row)) {
+        if ($selected == $row[$box.'_id'] and $selected != '') $sel = ' selected';
+        else $sel = '';
+        $text .= '<option value="'.
+          $row[$box.'_id'].'"'.$sel.'>'.$row[$box.'_name'].' '.$row[$box.'_version'].'</option>';
+	}
+	break;
     case 'os' :
       $rs = $db->query("select {$box}_id, {$box}_name, regex from ".TBL_OS." where sort_order > 0 order by sort_order");
       while ($rs->fetchInto($row)) {
