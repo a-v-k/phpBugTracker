@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.17 2001/09/11 12:58:46 bcurtis Exp $
+// $Id: project.php,v 1.18 2001/09/18 03:26:15 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -312,7 +312,7 @@ function list_projects() {
 
 $t->set_file('wrap','wrap.html');
 
-$perm->check('Administrator');
+$perm->check('Admin');
 
 if (isset($_gv['op'])) {
 	switch($_gv['op']) {

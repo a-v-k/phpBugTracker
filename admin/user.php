@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.26 2001/09/14 16:48:13 javyer Exp $
+// $Id: user.php,v 1.27 2001/09/18 03:26:15 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -221,7 +221,7 @@ function list_items($userid = 0, $error = '') {
 
 $t->set_file('wrap','wrap.html');
 
-$perm->check('Administrator');
+$perm->check('Admin');
 
 if ($op) switch($op) {
   case 'add' : list_items(); break;
