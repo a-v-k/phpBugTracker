@@ -60,7 +60,7 @@ class dbclass extends DB_Sql {
 	var $Host = 'localhost';
 	var $Database = 'BugTracker';
 	var $User = 'root';
-	var $Password = 'gr8val20';
+	var $Password = '';
 
 	function grab($q_string = '') {
 		if ($q_string) $this->query($q_string);
