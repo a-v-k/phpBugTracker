@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.71 2002/01/05 19:49:35 bcurtis Exp $
+// $Id: bug.php,v 1.72 2002/01/05 20:34:49 bcurtis Exp $
 
 include 'include.php';
 
@@ -223,14 +223,14 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 }
 
 function update_bug($bugid = 0) {
-  global $q, $t, $u, $STRING, $perm, $now;
+  global $q, $t, $u, $STRING, $perm, $now, $_pv;
 
   // Pull bug from database to determine changed fields and for user validation
   $buginfo = $q->grab("select * from ".TBL_BUG." where bug_id = $bugid");
 	$changedfields = array();
 	
-  if (isset($GLOBALS['HTTP_POST_VARS'])) {
-    foreach ($GLOBALS['HTTP_POST_VARS'] as $k => $v) {
+  if (isset($_pv)) {
+    foreach ($_pv as $k => $v) {
       $$k = $v;
       if ($k == 'url') {
         if ($v == 'http://') $v = '';
@@ -366,18 +366,17 @@ function update_bug($bugid = 0) {
 }
 
 function do_form($bugid = 0) {
-  global $q, $me, $title, $u, $another, $STRING, $now;
+  global $q, $me, $u, $_pv, $STRING, $now, $HTTP_SERVER_VARS;
 
-  $pv = $GLOBALS['HTTP_POST_VARS'];
 	$error = '';
   // Validation
-  if (!$pv['title'] = htmlspecialchars(trim($pv['title'])))
+  if (!$_pv['title'] = htmlspecialchars(trim($_pv['title'])))
     $error = $STRING['givesummary'];
-  elseif (!$pv['description'] = htmlspecialchars(trim($pv['description'])))
+  elseif (!$_pv['description'] = htmlspecialchars(trim($_pv['description'])))
     $error = $STRING['givedesc'];
   if ($error) { show_form($bugid, $error); return; }
 
-  while (list($k,$v) = each($pv)) $$k = $v;
+  while (list($k,$v) = each($_pv)) $$k = $v;
 
   if ($url == 'http://') $url = '';
 
@@ -403,18 +402,18 @@ function do_form($bugid = 0) {
 			component_id, os_id, browser_string) values ($bugid, '$title', 
 			'$description', '$url', $severity, $priority, $status, $owner, $u, 
 			$now, $u, $now, $project, $version, $component, '$os', 
-			'{$GLOBALS['HTTP_USER_AGENT']}')");
+			'{$HTTP_SERVER_VARS['HTTP_USER_AGENT']}')");
 		$buginfo = $q->grab('select * from '.TBL_BUG." where bug_id = $bugid");
 		do_changedfields($u, $buginfo);
   } else {
     $q->query("update ".TBL_BUG." set title = '$title', description = '$description', url = '$url', severity_id = '$severity', priority = '$priority', status_id = $status, assigned_to = '$assignedto', project_id = $project, version_id = $version, component_id = $component, os_id = '$os', browser_string = '{$GLOBALS['HTTP_USER_AGENT']}' last_modified_by = $u, last_modified_date = $time where bug_id = '$bugid'");
   }
-  if ($another) header("Location: $me?op=add&project=$project");
+  if (isset($another)) header("Location: $me?op=add&project=$project");
   else header("Location: query.php");
 }
 
 function show_form($bugid = 0, $error = '') {
-  global $q, $me, $t, $_gv, $TITLE;
+  global $q, $me, $t, $_gv, $_pv, $TITLE;
 
 	if (isset($_gv['project'])) {
 		$project = $_gv['project'];
@@ -596,7 +595,7 @@ function prev_next_links($bugid, $pos) {
 }
 
 function show_bug($bugid = 0, $error = array()) {
-  global $q, $me, $t, $project, $STRING, $TITLE, $u, $perm, $_gv;
+  global $q, $me, $t, $STRING, $TITLE, $u, $perm, $_gv;
 
   if (!ereg('^[0-9]+$',$bugid) or
     !$row = $q->grab('select b.*, reporter.login as reporter, owner.login as owner, status_name, resolution_name 
@@ -740,7 +739,7 @@ function show_bug($bugid = 0, $error = array()) {
 }
 
 function show_projects() {
-  global $me, $q, $t, $project, $STRING, $TITLE, $perm, $auth;
+  global $me, $q, $t, $STRING, $TITLE, $perm, $auth;
 
   // Show only active projects with at least one component
 	if ($perm->have_perm('Admin')) { // Show admins all projects
@@ -787,9 +786,8 @@ function show_projects() {
 
 $t->set_file('wrap','wrap.html');
 
-
-if (isset($_gv['op'])) {
-  switch($_gv['op']) {
+if ($op) {
+  switch($op) {
     case 'history' : show_history($bugid); break;
     case 'add' :
       $perm->check('Editbug');
@@ -797,8 +795,8 @@ if (isset($_gv['op'])) {
       else show_projects();
       break;
     case 'show' : show_bug($_gv['bugid']); break;
-    case 'update' : update_bug($_gv['bugid']); break;
-    case 'do' : do_form($_gv['bugid']); break;
+    case 'update' : update_bug($_pv['bugid']); break;
+    case 'do' : do_form($_pv['bugid']); break;
     case 'print' : show_bug_printable($_gv['bugid']); break;
   }
 } else header("Location: query.php");

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.88 2002/01/05 20:01:17 bcurtis Exp $
+// $Id: include.php,v 1.89 2002/01/05 20:34:50 bcurtis Exp $
 
 // Where are we?
 if (!empty($HTTP_SERVER_VARS['SCRIPT_FILENAME'])) {
@@ -530,5 +530,7 @@ if (isset($_pv['dologin'])) {
 		}
   }
 }
+
+$op = isset($_gv['op']) ? $_gv['op'] : (isset($_pv['op']) ? $_pv['op'] : '');
 
 ?>

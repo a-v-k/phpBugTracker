@@ -1,4 +1,6 @@
-<form action="bug.php?op=update&bugid={bugid}" method="post">
+<form action="bug.php" method="post">
+<input type="hidden" name="op" value="update">
+<input type="hidden" name="bugid" value="{bugid}">
 <input type="hidden" name="projectid" value="{projectid}">
 <input type="hidden" name="last_modified_date" value="{lastmodifieddate}">
 <input type="hidden" name="pos" value="{pos}">
