@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.33 2002/07/18 13:02:15 bcurtis Exp $
+// $Id: functions.php,v 1.34 2002/09/14 19:03:48 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -51,7 +51,7 @@ function build_select($params) {
 	if (!isset($selected)) {
 		$selected = '';
 	}
-	
+
     // create hash to map tablenames
 	$cfgDatabase = array(
 		'group' => TBL_AUTH_GROUP,
@@ -86,12 +86,12 @@ function build_select($params) {
 		    	" order by {$box}_name",
 	    	'component' => $querystart." where project_id = $project and active = 1 order by {$box}_name",
 	    	'version' => $querystart." where project_id = $project and active = 1 order by {$box}_id desc",
-	    	'database' => "select {$box}_id, {$box}_name, {$box}_version from $cfgDatabase[$box]".$querymid
+	    	'database' => $querystart.$querymid
 			);
     }
-    
+
     switch($box) {
-	case 'user_filter': 
+	case 'user_filter':
 	    foreach ($STRING['user_filter'] as $k => $v) {
 			$text .= sprintf("<option value=\"%d\"%s>%s</option>",
 			$k, ($k == $selected ? ' selected' : ''), $v);
@@ -117,6 +117,7 @@ function build_select($params) {
 			$row[$box.'_id']."\"$sel>".$row[$box.'_name'].'</option>';
 	    }
 		break;
+	case 'database': $text = '<option value="0">None</option>';
 	case 'severity':
 	case 'status':
 	case 'resolution':
@@ -133,19 +134,6 @@ function build_select($params) {
 			}
 			$text .= '<option value="'.
 			$row[$box.'_id']."\"$sel>".$row[$box.'_name'].'</option>';
-	    }
-		break;
-	case 'database':
-	    $text = '<option value="0">None</option>';
-	    $rs = $db->query($queries[$box]);
-	    while ($rs->fetchInto($row)) {
-			if ($selected == $row[$box.'_id'] and $selected != '') {
-		    	$sel = ' selected';
-			} else {
-		    	$sel = '';
-			}
-			$text .= '<option value="'.
-			$row[$box.'_id'].'"'.$sel.'>'.$row[$box.'_name'].' '.$row[$box.'_version'].'</option>';
 	    }
 		break;
 	case 'os':
@@ -244,14 +232,14 @@ function build_select($params) {
 	case 'BUG_ASSIGNED' :
 	case 'BUG_REOPENED' :
 		static $bug_status_list = array();
-		
+
 		if (empty($bug_status_list)) {
 			$bug_status_list = $db->getAssoc("select status_id, status_name".
 				" from ".TBL_STATUS." order by status_name");
 		}
 		foreach ($bug_status_list as $id => $name) {
 			$sel = $id == $selected ? ' selected' : '';
-			$text .= "<option value=\"$id\"$sel>$name</option>";			
+			$text .= "<option value=\"$id\"$sel>$name</option>";
 		}
 		break;
 	default :
@@ -400,16 +388,16 @@ function maskemail($email) {
 /// Build the javascript for the dynamic project -> component -> version select boxes
 function build_project_js($params) {
 	global $db, $u, $perm, $_sv, $QUERY;
-	
+
 	extract($params);
 	$js = ''; $js2 = '';
-	
+
 	// Build the javascript-powered select boxes
 	if ($perm->have_perm('Admin')) {
 		$rs = $db->query("select project_id, project_name from ".TBL_PROJECT.
 			" where active = 1 order by project_name");
 	} else {
-		$rs = $db->query(sprintf($QUERY['functions-project-js'], 
+		$rs = $db->query(sprintf($QUERY['functions-project-js'],
 			delimit_list(',', $_sv['group_ids'])));
 	}
 	while (list($pid, $pname) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
@@ -418,7 +406,7 @@ function build_project_js($params) {
 		$js .= "versions['$pname'] = new Array(".
 			((!isset($no_all) or !$no_all) ? "new Array('','All')," : '');
 		$js2 = "closedversions['$pname'] = new Array(".
-			((!isset($no_all) or !$no_all) ? "new Array('','All')," 
+			((!isset($no_all) or !$no_all) ? "new Array('','All'),"
 				: "new Array(0, 'Choose One'),");
 		$rs2 = $db->query("select version_name, version_id from ".TBL_VERSION.
 			" where project_id = $pid and active = 1");
@@ -432,7 +420,7 @@ function build_project_js($params) {
 		if (substr($js2,-1) == ',') $js2 = substr($js2,0,-1);
 		$js2 .= ");\n";
 		$js .= $js2;
-		
+
 		// Component array
 		$js .= "components['$pname'] = new Array(";
 		$js .= (!isset($no_all) || !$no_all) ? "new Array('','All')," : '';
@@ -452,7 +440,7 @@ function build_project_js($params) {
 /// Database concat
 function db_concat() {
 	$pieces = func_get_args();
-	
+
 	switch(DB_TYPE) {
 		case 'mysql' : $retstr = 'concat('. delimit_list(', ', $pieces).')'; break;
 		case 'pgsql' :
@@ -500,7 +488,7 @@ function qp_enc($input, $line_max = 76) {
     // Do "dos2unix" and split $input into $lines by end of line
     $lines = split("\n", str_replace("\r\n", "\n", $input));
     // Loop throught $lines
-    while( list(, $line) = each($lines) ) { 
+    while( list(, $line) = each($lines) ) {
 	// Trim each line from right side
 	$line = rtrim($line);
 	// Place line length to $linlen
@@ -549,7 +537,7 @@ function qp_mail($to, $subject = 'No subject', $body, $headers = '') {
         // There have to be no newline at the end of $headers
     }
     $headers .= "Content-Type: text/plain; charset=\"".$STRING['lang_charset']."\"\nContent-Transfer-Encoding: ";
-    
+
     // If configured to send MIME encoded emails
     if (SEND_MIME_EMAIL) {
 	$retval = mail ($to, $subject, qp_enc($body), $headers.

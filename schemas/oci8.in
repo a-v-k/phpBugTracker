@@ -2,7 +2,7 @@
 -- Oracle database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: oci8.in,v 1.17 2002/07/18 13:02:15 bcurtis Exp $
+-- $Id: oci8.in,v 1.18 2002/09/14 19:03:48 bcurtis Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id number(10)   default '0' NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE TBL_AUTH_USER (
   created_date number(20)   default '0' ,
   last_modified_by number(10)   default '0' ,
   last_modified_date number(20)   default '0' ,
-  PRIMARY KEY  (user_id) 
+  PRIMARY KEY  (user_id)
 ) ;
 
 CREATE TABLE TBL_BUG (
@@ -91,16 +91,16 @@ CREATE TABLE TBL_BUG_CC (
 CREATE TABLE TBL_BUG_DEPENDENCY (
   bug_id number(10)   default '0' NOT NULL,
   depends_on number(10)   default '0' NOT NULL,
-  PRIMARY KEY  (bug_id ,depends_on) 
+  PRIMARY KEY  (bug_id ,depends_on)
 ) ;
 
 CREATE TABLE TBL_BUG_GROUP (
   bug_id number(10)   default '0' NOT NULL,
   group_id number(10)   default '0' NOT NULL,
-  PRIMARY KEY  (bug_id ,group_id) 
+  PRIMARY KEY  (bug_id ,group_id)
 ) ;
 
-CREATE INDEX GROUPIDX ON TBL_BUG_GROUP ( group_id ); 
+CREATE INDEX GROUPIDX ON TBL_BUG_GROUP ( group_id );
 
 CREATE TABLE TBL_BUG_HISTORY (
   bug_id number(10)   default '0' NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE TBL_BUG_VOTE (
   user_id number(10)   default '0' NOT NULL,
   bug_id number(10)   default '0' NOT NULL,
   created_date number(20)   default '0' NOT NULL,
-  PRIMARY KEY  (user_id , bug_id) 
+  PRIMARY KEY  (user_id , bug_id)
 ) ;
 
 CREATE INDEX BUGIDX ON TBL_BUG_VOTE ( bug_id );
@@ -154,7 +154,7 @@ CREATE TABLE TBL_CONFIGURATION (
 CREATE TABLE TBL_GROUP_PERM (
   group_id number(10)   default '0' NOT NULL,
   perm_id number(10)   default '0' NOT NULL,
-  PRIMARY KEY  (group_id ,perm_id) 
+  PRIMARY KEY  (group_id ,perm_id)
 ) ;
 
 CREATE INDEX PERMIDX ON TBL_GROUP_PERM ( perm_id );
@@ -184,7 +184,7 @@ CREATE TABLE TBL_PROJECT_GROUP (
   group_id number(10)   default '0' NOT NULL,
   created_by number(10)   default '0' NOT NULL,
   created_date number(20)   default '0' NOT NULL,
-  PRIMARY KEY  (project_id ,group_id) 
+  PRIMARY KEY  (project_id ,group_id)
 ) ;
 
 CREATE INDEX GROUPPROJIDX ON TBL_PROJECT_GROUP ( group_id );
@@ -227,7 +227,7 @@ CREATE TABLE TBL_USER_GROUP (
   group_id number(10)   default '0' NOT NULL,
   created_by number(10)   default '0' NOT NULL,
   created_date number(20)   default '0' NOT NULL,
-  PRIMARY KEY  (user_id ,group_id) 
+  PRIMARY KEY  (user_id ,group_id)
 ) ;
 
 CREATE INDEX GROUPUSERIDX ON TBL_USER_GROUP ( group_id );
@@ -237,7 +237,7 @@ CREATE TABLE TBL_USER_PERM (
   perm_id number(10)   default '0' NOT NULL,
   created_by number(10)   default '0' NOT NULL,
   created_date number(20)   default '0' NOT NULL,
-  PRIMARY KEY  (user_id ,perm_id) 
+  PRIMARY KEY  (user_id ,perm_id)
 ) ;
 CREATE INDEX PERMUSERIDX ON TBL_USER_PERM ( perm_id );
 
@@ -262,8 +262,7 @@ CREATE TABLE TBL_VERSION (
 
 CREATE TABLE TBL_DATABASE (
     database_id number(3) default '0' NOT NULL,
-    database_name varchar2(30) default '' NOT NULL,
-    database_version varchar2(10) default '' NOT NULL,
+    database_name varchar2(40) default '' NOT NULL,
     sort_order number(3) default '0' NOT NULL,
     PRIMARY KEY (database_id)
 );
@@ -275,9 +274,9 @@ CREATE TABLE TBL_SITE (
     PRIMARY KEY (site_id)
 );
 
-INSERT INTO TBL_AUTH_USER 
+INSERT INTO TBL_AUTH_USER
 	(user_id, login, first_name, last_name, email, password)
-	values (1, 'OPTION_ADMIN_EMAIL', 'System', 'Admin', 'OPTION_ADMIN_EMAIL', 
+	values (1, 'OPTION_ADMIN_EMAIL', 'System', 'Admin', 'OPTION_ADMIN_EMAIL',
 		'OPTION_ADMIN_PASS');
 CREATE SEQUENCE TBL_AUTH_USER_seq START WITH 2 NOCACHE;
 
@@ -287,7 +286,7 @@ INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (2, 'User', 1);
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (3, 'Developer', 1);
 CREATE SEQUENCE TBL_AUTH_GROUP_seq START WITH 4 NOCACHE;
 
--- ... and only two permissions 
+-- ... and only two permissions
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (1, 'Admin');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (2, 'Editbug');
 
@@ -299,7 +298,7 @@ INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (2, 2);
 INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 1);
 INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 2);
 
--- Add user's prefs as default values for all users defined so far (only admin)   
+-- Add user's prefs as default values for all users defined so far (only admin)
 INSERT INTO TBL_USER_PREF (user_id) values (1);
 
 INSERT INTO TBL_CONFIGURATION VALUES ('INSTALL_URL','OPTION_INSTALL_URL','The base URL of the phpBugTracker installation','string');
@@ -391,9 +390,9 @@ INSERT INTO TBL_STATUS VALUES (6,'Verified','The resolution is confirmed by the 
 INSERT INTO TBL_STATUS VALUES (7,'Closed','The bug is officially squashed (QA)',7);
 CREATE SEQUENCE TBL_STATUS_seq START WITH 8 NOCACHE;
 
-INSERT INTO TBL_DATABASE VALUES (1,'Oracle','8.1.7',1);
-INSERT INTO TBL_DATABASE VALUES (2,'MySQL','3.23.49',2);
-INSERT INTO TBL_DATABASE VALUES (3,'PostgreSQL','7.1.3',3);
+INSERT INTO TBL_DATABASE VALUES (1,'Oracle 8.1.7',1);
+INSERT INTO TBL_DATABASE VALUES (2,'MySQL 3.23.49',2);
+INSERT INTO TBL_DATABASE VALUES (3,'PostgreSQL 7.1.3',3);
 CREATE SEQUENCE TBL_DATABASE_seq START WITH 4 NOCACHE;
 
 INSERT INTO TBL_SITE VALUES (0,'All',1);

@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.33 2002/07/18 13:02:15 bcurtis Exp $
+# $Id: mysql.in,v 1.34 2002/09/14 19:03:48 bcurtis Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id int(10) unsigned NOT NULL default '0',
@@ -257,8 +257,7 @@ CREATE TABLE TBL_VERSION (
 
 CREATE TABLE TBL_DATABASE (
   database_id tinyint(3) unsigned NOT NULL default '0',
-  database_name varchar(30) NOT NULL default '',
-  database_version varchar(10) NOT NULL default '',
+  database_name varchar(40) NOT NULL default '',
   sort_order tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY (database_id)
 ) TYPE=MyISAM;
@@ -274,9 +273,9 @@ CREATE TABLE TBL_SITE (
 # -- Insert initial data --
 #
 
-INSERT INTO TBL_AUTH_USER 
+INSERT INTO TBL_AUTH_USER
 	(user_id, login, first_name, last_name, email, password)
-	values (1, 'OPTION_ADMIN_EMAIL', 'System', 'Admin', 'OPTION_ADMIN_EMAIL', 
+	values (1, 'OPTION_ADMIN_EMAIL', 'System', 'Admin', 'OPTION_ADMIN_EMAIL',
 		'OPTION_ADMIN_PASS');
 create table TBL_AUTH_USER_seq (id int unsigned auto_increment not null primary key);
 insert into TBL_AUTH_USER_seq values (1);
@@ -288,7 +287,7 @@ INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (3, 'Developer'
 create table TBL_AUTH_GROUP_seq (id int unsigned auto_increment not null primary key);
 insert into TBL_AUTH_GROUP_seq values (3);
 
-# ... and only two permissions 
+# ... and only two permissions
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (1, 'Admin');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (2, 'Editbug');
 
@@ -396,9 +395,9 @@ INSERT INTO TBL_STATUS VALUES (7,'Closed','The bug is officially squashed (QA)',
 create table TBL_STATUS_seq (id int unsigned auto_increment not null primary key);
 insert into TBL_STATUS_seq values (7);
 
-INSERT INTO TBL_DATABASE VALUES (1,'Oracle','8.1.7',1);
-INSERT INTO TBL_DATABASE VALUES (2,'MySQL','3.23.49',2);
-INSERT INTO TBL_DATABASE VALUES (3,'PostgreSQL','7.1.3',3);
+INSERT INTO TBL_DATABASE VALUES (1,'Oracle 8.1.7',1);
+INSERT INTO TBL_DATABASE VALUES (2,'MySQL 3.23.49',2);
+INSERT INTO TBL_DATABASE VALUES (3,'PostgreSQL 7.1.3',3);
 create table TBL_DATABASE_seq (id int unsigned auto_increment not null primary key);
 insert into TBL_DATABASE_seq values (3);
 
