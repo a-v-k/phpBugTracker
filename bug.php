@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.129 2003/05/18 23:40:22 kennyt Exp $
+// $Id: bug.php,v 1.130 2003/06/01 18:18:46 kennyt Exp $
 
 include 'include.php';
 
@@ -464,14 +464,12 @@ function add_attachment($bugid, $description) {
 
 	if (!isset($HTTP_POST_FILES['attachment']) ||
 		$HTTP_POST_FILES['attachment']['tmp_name'] == 'none') {
-		show_attachment_form($bugid, $STRING['give_attachment']);
 		return;
 	}
 
 	// Check the upload size.  If the size was greater than the max in
 	// php.ini, the file won't even be set and will fail at the check above
 	if ($HTTP_POST_FILES['attachment']['size'] > ATTACHMENT_MAX_SIZE) {
-		show_attachment_form($bugid, $STRING['attachment_too_large']);
 		return;
 	}
 
@@ -487,7 +485,6 @@ function add_attachment($bugid, $description) {
 		"and a.bug_id = b.bug_id");
 	while ($rs->fetchInto($ainfo)) {
 		if ($bugid == $ainfo['bug_id'] && $projectid == $ainfo['project_id']) {
-			show_attachment_form($bugid, $STRING['dupe_attachment']);
 			return;
 		}
 	}
@@ -497,12 +494,10 @@ function add_attachment($bugid, $description) {
 	$filename = "$bugid-{$HTTP_POST_FILES['attachment']['name']}";
 
 	if (!is_dir($filepath)) {
-		show_attachment_form($bugid, $STRING['no_attachment_save_path']);
 		return;
 	}
 
 	if (!is_writeable($filepath)) {
-		show_attachment_form($bugid, $STRING['attachment_path_not_writeable']);
 		return;
 	}
 
@@ -512,7 +507,6 @@ function add_attachment($bugid, $description) {
 
 	if (!@move_uploaded_file($HTTP_POST_FILES['attachment']['tmp_name'],
 		"$filepath/$projectid/$filename")) {
-		show_attachment_form($bugid, $STRING['attachment_move_error']);
 		return;
 	}
 
