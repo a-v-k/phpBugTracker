@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.49 2001/12/21 14:19:45 bcurtis Exp $
+// $Id: query.php,v 1.50 2001/12/24 21:23:50 bcurtis Exp $
 
 include 'include.php';
 
@@ -127,12 +127,21 @@ function build_query($assignedto, $reportedby, $open) {
 		}
 	} else {
 		// Select boxes
-		if (!empty($status)) $flags[] = 'b.status_id in ('.delimit_list(',',$status).')';
-		if (!empty($resolution)) $flags[] = 'b.resolution_id in ('.delimit_list(',',$resolution).')';
-		if (!empty($os)) $flags[] = 'b.os_id in ('.delimit_list(',',$os).')';
-		if (!empty($priority)) $flags[] = 'b.priority in ('.delimit_list(',',$priority).')';
-		if (!empty($severity)) $flags[] = 'b.severity_id in ('.delimit_list(',',$severity).')';
-		if (!empty($flags)) $query[] = '('.delimit_list(' or ',$flags).')';
+		$flags = array();
+		// Need to check $array[0] for Opera -- 
+		// it passes non-empty arrays for every multi-choice select box
+		if (!empty($status) and $status[0])
+			$flags[] = 'b.status_id in ('.delimit_list(',',$status).')';
+		if (!empty($resolution) and $resolution[0]) 
+			$flags[] = 'b.resolution_id in ('.delimit_list(',',$resolution).')';
+		if (!empty($os) and $os[0]) 
+			$flags[] = 'b.os_id in ('.delimit_list(',',$os).')';
+		if (!empty($priority) and $priority[0]) 
+			$flags[] = 'b.priority in ('.delimit_list(',',$priority).')';
+		if (!empty($severity) and $severity[0]) 
+			$flags[] = 'b.severity_id in ('.delimit_list(',',$severity).')';
+		if (!empty($flags)) 
+			$query[] = '('.delimit_list(' or ',$flags).')';
 
 		// Email field(s)
 		if (!empty($email1)) {
@@ -281,7 +290,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	}
 	
 	// Header row 
-	$db_fields = $auth->auth['db_fields'] ? $auth->auth['db_fields'] :
+	$db_fields = !empty($auth->auth['db_fields']) ? $auth->auth['db_fields'] :
 		$default_db_fields;
 	foreach ($db_fields as $field) {
 		$t->set_var(array(
