@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.127 2003/04/04 13:07:12 bcurtis Exp $
+// $Id: bug.php,v 1.128 2003/05/12 22:26:26 kennyt Exp $
 
 include 'include.php';
 
@@ -462,6 +462,80 @@ function update_bug($bugid = 0) {
 	header("Location: bug.php?op=show&bugid=$bugid&pos=$pos");
 }
 
+function add_attachment($bugid, $description) {
+	global $db, $HTTP_POST_FILES, $now, $u, $STRING, $t, $_pv;
+
+	if (!isset($HTTP_POST_FILES['attachment']) ||
+		$HTTP_POST_FILES['attachment']['tmp_name'] == 'none') {
+		show_attachment_form($bugid, $STRING['give_attachment']);
+		return;
+	}
+
+	// Check the upload size.  If the size was greater than the max in
+	// php.ini, the file won't even be set and will fail at the check above
+	if ($HTTP_POST_FILES['attachment']['size'] > ATTACHMENT_MAX_SIZE) {
+		show_attachment_form($bugid, $STRING['attachment_too_large']);
+		return;
+	}
+
+	$projectid = $db->getOne("select project_id from ".TBL_BUG." where bug_id = $bugid");
+	if (!$projectid) {
+		show_text($STRING['nobug'], true);
+		return;
+	}
+
+	// Check for a previously-uploaded attachment with the same name, bug, and project
+	$rs = $db->query("select a.bug_id, project_id from ".TBL_ATTACHMENT." a, ".
+		TBL_BUG." b where file_name = '{$HTTP_POST_FILES['attachment']['name']}' ".
+		"and a.bug_id = b.bug_id");
+	while ($rs->fetchInto($ainfo)) {
+		if ($bugid == $ainfo['bug_id'] && $projectid == $ainfo['project_id']) {
+			show_attachment_form($bugid, $STRING['dupe_attachment']);
+			return;
+		}
+	}
+
+	$filepath = ATTACHMENT_PATH;
+	$tmpfilename = $HTTP_POST_FILES['attachment']['tmp_name'];
+	$filename = "$bugid-{$HTTP_POST_FILES['attachment']['name']}";
+
+	if (!is_dir($filepath)) {
+		show_attachment_form($bugid, $STRING['no_attachment_save_path']);
+		return;
+	}
+
+	if (!is_writeable($filepath)) {
+		show_attachment_form($bugid, $STRING['attachment_path_not_writeable']);
+		return;
+	}
+
+	if (!is_dir("$filepath/$projectid")) {
+		@mkdir("$filepath/$projectid", 0775);
+	}
+
+	if (!@move_uploaded_file($HTTP_POST_FILES['attachment']['tmp_name'],
+		"$filepath/$projectid/$filename")) {
+		show_attachment_form($bugid, $STRING['attachment_move_error']);
+		return;
+	}
+
+	@chmod("$filepath/$projectid/$filename", 0766);
+	$db->query("insert into ".TBL_ATTACHMENT." (attachment_id, bug_id, file_name, ".
+		"description, file_size, mime_type, created_by, created_date) values (".
+		join(', ', array($db->nextId(TBL_ATTACHMENT), $bugid,
+			$db->quote($HTTP_POST_FILES['attachment']['name']),
+			$db->quote(stripslashes($description)),
+			$HTTP_POST_FILES['attachment']['size'],
+			$db->quote($HTTP_POST_FILES['attachment']['type']), $u, $now)).")");
+
+	if ($_pv['use_js']) {
+		$t->display('admin/edit-submit.html');
+	} else {
+		header("Location: bug.php?op=show&bugid=$bugid");
+	}
+}
+
+
 ///
 /// Move attachments from one project directory to another
 function move_attachments($bug_id, $old_project, $new_project) {
@@ -549,6 +623,9 @@ function do_form($bugid = 0) {
 		    "last_modified_by = $u, last_modified_date = $time ".
 		    "where bug_id = '$bugid'");
 	}
+
+	if (isset($_pv['at_description']))
+		add_attachment($bugid, $_pv['at_description']); //attachment (initial)
 
 	if (isset($another)) {
 		header("Location: $me?op=add&project=$project");

@@ -1,4 +1,4 @@
-<form action="bug.php" method="post">
+<form action="bug.php" method="post" enctype="multipart/form-data">
     <input type="hidden" name="bugid" value="0">
     <input type="hidden" name="project" value="{$project}">
     <input type="hidden" name="op" value="do">
@@ -51,8 +51,37 @@
 	    <td><select name="os">{build_select box=os selected=$os}
 		</select></td>
 	</tr><tr>
-	    <td align="right" valign="top">{$STRING.BUGFORM.AddAnother}:</td>
-		<td valign="top"><input type="checkbox" name="another" value="1"></td>
+	    <td align="right">Attachment:</td>
+	    <td>
+<table border="0" align="center">
+        <tr>
+                <td colspan="2" align="center">
+                        Please choose a file to upload and enter a one-line description.
+                        <br>
+                        Maximum file size: {$max_size} bytes
+                        <br>
+                        <br>
+                </td>
+        </tr>
+        <tr>
+                <td>
+                        File:
+                </td>
+                <td>
+                        <input type="file" name="attachment">
+                </td>
+        </tr>
+        <tr>
+                <td>
+                        Description:
+                </td>
+                <td>
+                        <input type="text" name="at_description" maxlength="255" value="{$description}">
+                </td>
+        </tr>
+</table>
+
+	    </td>
 	</tr>
     </table>
     <input type="submit" name="submit" value="{$STRING.BUGFORM.Submit}">
