@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.3 2001/11/06 04:41:14 bcurtis Exp $
+// $Id: upgrade.php,v 1.4 2001/12/11 13:56:48 bcurtis Exp $
 
 define ('NO_AUTH', 1);
 include 'include.php';
@@ -28,35 +28,25 @@ include 'include.php';
 function upgrade() {
 	global $q;
 	
-	$upgraded = $q->grab_field("select count(*) from ". TBL_CONFIGURATION.
-		" where varname = 'STRICT_UPDATING'");
+	$upgraded = $q->grab_field("select nextid from ". TBL_DB_SEQUENCE.
+		' where seq_name = "'.TBL_AUTH_GROUP."'");
 	if (!$upgraded) {
-		// Move the support tables to use the table prefix
-		// (if the table prefix is non-empty)
-		if (strlen(TBL_PREFIX)) {
-			$q->Halt_On_Error = 'no'; // We're going to ignore errors 
-			$db_sess_table = ereg_replace(TBL_PREFIX, '', TBL_ACTIVE_SESSIONS);
-			$db_seq_table = ereg_replace(TBL_PREFIX, '', TBL_DB_SEQUENCE);
-			$q->query("alter table $db_sess_table rename to ". TBL_ACTIVE_SESSIONS);
-			$q->query("alter table $db_seq_table rename to ". TBL_DB_SEQUENCE);
-			$q->Halt_On_Error = 'yes'; // Stop ignoring errors
-		} 
-
-		// New configuration options
-		$q->query('insert into '. TBL_CONFIGURATION.
-			" (varname, varvalue, description, vartype) values ('STRICT_UPDATING', '0', 
-			'Only the bug reporter, bug owner, managers, and admins can change a bug', 
-			'bool')");
-		$q->query('insert into '. TBL_CONFIGURATION.
-			" (varname, varvalue, description, vartype) values 
-			('NEW_ACCOUNTS_DISABLED', '0', 
-			'Only admins can create new user accounts - newaccount.php is disabled', 
-			'bool')");
+		// Make changes to the auth_group table
+		$q->query('alter table '.TBL_AUTH_GROUP.' add locked tinyint(1) not null default 0 after group_name');
+		$q->query('update '.TBL_AUTH_GROUP.' set locked = 1');
+		$q->query("insert into db_sequence values('".TBL_AUTH_GROUP."', 3)");
+		
+		// New table
+		if (DB_TYPE == 'pgsql') {
+			$q->query("CREATE TABLE ".TBL_PROJECT_GROUP." ( project_id INT4  NOT NULL DEFAULT '0', group_id INT4  NOT NULL DEFAULT '0', created_by INT4  NOT NULL DEFAULT '0', created_date INT8  NOT NULL DEFAULT '0', PRIMARY KEY  (project_id,group_id) )"); 
+		} else {
+			$q->query("create table ".TBL_PROJECT_GROUP." ( project_id int(10) unsigned NOT NULL default '0', group_id int(10) unsigned NOT NULL default '0', created_by int(10) unsigned NOT NULL default '0', created_date bigint(20) unsigned NOT NULL default '0', PRIMARY KEY  (project_id,group_id), KEY group_id (group_id) )");
+		}
 	}
 	include 'templates/default/upgrade-finished.html';
 }
 
-if ($doit) {
+if (isset($_gv['doit'])) {
 	upgrade();
 } else {
 	include 'templates/default/upgrade.html';
