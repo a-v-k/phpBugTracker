@@ -22,12 +22,12 @@ function do_form($userid = 0) {
 		if (ENCRYPTPASS) {
 			$oldpass = $q->grab_field("select Password from User where UserID = $userid");
 			if ($oldpass != $fpassword) {
-				$pquery = ", Password = '".md5($fpassword)."'";
+				$pquery = "Password = '".md5($fpassword)."',";
 			} else {
 				$pquery = '';
 			}
 		} else {
-			$pquery = ", Password = '$fpassword'";
+			$pquery = "Password = '$fpassword',";
 		}
 		$q->query("update User set FirstName = '$ffirstname', LastName = '$flastname', Email = '$femail', $pquery UserLevel = $usertype where UserID = '$userid'");
 	}
