@@ -1,73 +1,75 @@
 <!--<a href="{me}?op=add">Add a new user</a>-->
 <br>
 <table border="0">
-	<tr>
-		<td valign="top">
-			<b>&nbsp;User List</b>
-			<hr size="1">
-			<table border="0">
-				<tr bgcolor="#eeeeee">
-					<th><a href="{loginurl}">Login</a></th>
-					<th><a href="{nameurl}">Name</a></th>
-					<th><a href="{dateurl}">Created</a></th>
-					<th><a href="{userlevelurl}">User Level</a></th>
-				</tr>
-				<!-- BEGIN row -->
-				<tr bgcolor="{bgcolor}">
-					<td><a href="{me}?op=edit&id={userid}">{email}</a></td>
-					<td align="center">{name}</td>
-					<td align="center">{date}</td>
-					<td align="center">{userlevel}</td>
-				</tr>
-				<!-- END row -->
-				<tr>
-					<td colspan="4" align="center">
-						<br>
-						{first} to {last} of {records}
-						<br>
-						{pages}
-			</table>
-		</td>
-		<td valign="top">
-			<div align="right"><b>{action} user&nbsp;</b></div>
-			<hr size="1">
-			<form action="user.php" method="post">
-			<input type="hidden" name="id" value="{fuserid}">
-			<table border='0'>
-			<tr>
-        			<td colspan="2" align="center" valign="top">
-								<font color="#ff0000">{error}</font>
-							</td>
-			</tr>
-			<tr>
-        			<td align="right" valign="top">FirstName:</td>
-        			<td><input type="text" size="20" maxlength="40" name="ffirstname" value="{ffirstname}"></td>
-			</tr>
-			<tr>
-        			<td align="right" valign="top">LastName:</td>
-        			<td><input type="text" size="20" maxlength="40" name="flastname" value="{flastname}"></td>
-			</tr>
-			<tr>
-        			<td align="right" valign="top">Email:</td>
-        			<td><input type="text" size="20" maxlength="40" name="femail" value="{femail}"></td>
-			</tr>
-			<tr>
-        			<td align="right" valign="top">Password:</td>
-        			<td><input type="text" size="20" maxlength="40" name="fpassword" value="{fpassword}"></td>
-			</tr>
+  <tr>
+    <td valign="top">
+      <b>&nbsp;User List</b>
+      <hr size="1">
+      <table border="0">
+        <tr bgcolor="#eeeeee">
+          <th><a href="{loginurl}">Login</a></th>
+          <th><a href="{nameurl}">Name</a></th>
+          <th><a href="{dateurl}">Created</a></th>
+        </tr>
+        <!-- BEGIN row -->
+        <tr bgcolor="{bgcolor}">
+          <td><a href="{me}?op=edit&id={userid}">{login}</a></td>
+          <td align="center">{name}</td>
+          <td align="center">{date}</td>
+        </tr>
+        <!-- END row -->
+        <tr>
+          <td colspan="4" align="center">
+            <br>
+            {first} to {last} of {records}
+            <br>
+            {pages}
+      </table>
+    </td>
+    <td valign="top">
+      <div align="right"><b>{action} user&nbsp;</b></div>
+      <hr size="1">
+      <form action="user.php" method="post">
+      <input type="hidden" name="id" value="{fuserid}">
+      <table border='0'>
+      <tr>
+              <td colspan="2" align="center" valign="top">
+                <font color="#ff0000">{error}</font>
+              </td>
+      </tr>
+      <tr>
+              <td align="right" valign="top">Login:</td>
+              <td><input type="text" size="20" maxlength="40" name="flogin" value="{flogin}"></td>
+      </tr>
+      <tr>
+              <td align="right" valign="top">FirstName:</td>
+              <td><input type="text" size="20" maxlength="40" name="ffirstname" value="{ffirstname}"></td>
+      </tr>
+      <tr>
+              <td align="right" valign="top">LastName:</td>
+              <td><input type="text" size="20" maxlength="40" name="flastname" value="{flastname}"></td>
+      </tr>
+      <tr>
+              <td align="right" valign="top">Email:</td>
+              <td><input type="text" size="20" maxlength="40" name="femail" value="{femail}"></td>
+      </tr>
+      <tr>
+              <td align="right" valign="top">Password:</td>
+              <td><input type="text" size="20" maxlength="40" name="fpassword" value="{fpassword}"></td>
+      </tr>
 
-			<tr>
-        			<td align="right" valign="top">UserType:</td>
-        			<td>
-                			<select name="usertype">
-                			{usertype}
-                			</select>
-        			</td>
-			</tr>
-			</table>
-			<div align="right">
-				<input type='submit' name='submit' value='Submit'>
-			</div>
-			</form>
-		</td>
+      <tr>
+              <td align="right" valign="top">User Group:</td>
+              <td>
+                      <select name="fusergroup">
+                      {fusergroup}
+                      </select>
+              </td>
+      </tr>
+      </table>
+      <div align="right">
+        <input type='submit' name='submit' value='Submit'>
+      </div>
+      </form>
+    </td>
 </table>
