@@ -1,8 +1,8 @@
 <?php
 
-// cz.php - Czech strings and titles
+// cz.php - Czech strings and titles encoded in Windows-1250 codepage
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz.php,v 1.5 2002/04/12 13:48:17 firma Exp $
+// $Id: cz.php,v 1.6 2002/05/07 13:43:38 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'Windows-1250',
@@ -32,16 +32,16 @@ $STRING = array(
 	'noprojects' => 'Projekt nebyl nalezen',
 	'totalbugs' => 'Celkovì chyb',
 	'giveemail' => 'Prosím vložte správnou e-mailovou adresu',
-	'givelogin' => 'prosím vložte login (uživatelské jméno)',
+	'givelogin' => 'Prosím vložte login (uživatelské jméno)',
 	'loginused' => 'Tento login již užívá nìkdo jiný',
 	'newacctsubject' => 'phpBugTracker Pøihlášení',
-	'newacctmessage' => "Váše phpBugTracker heslo je %s",
+	'newacctmessage' => "Vaše phpBugTracker heslo je %s",
 	'nobugs' => 'Nenalezeny žádné chyby',
 	'givename' => 'Prosím vložte jméno',
 	'edit' => 'Upravit',
 	'addnew' => 'Pøidat',
 	'nooses' => 'Nenalezen OS',
-	'giveinitversion' => 'Prosím vložte poèáteèní verzi projektu ',
+	'giveinitversion' => 'Prosím vložte poèáteèní verzi projektu',
 	'giveversion' => 'Prosím vložte verzi',
 	'noversions' => 'Verze nenalezena',
 	'nocomponents' => 'Komponenta nenalezena',
@@ -50,11 +50,11 @@ $STRING = array(
 	'givepassword' => 'Prosím vložte heslo',
 	'nousers' => 'Uživatel(é) nenalezen(i)',
 	'bugbadperm' => 'Nemùžete zmìnit BUG',
-	'bugbadnum' => 'Tenhle BUG neexistuje',
-	'datecollision' => 'Nìkdo aktualizoval BUG od Vaší poslední návštìvy.	Do informací o BUGu byli zaneseny nejnovìjší zmìny',
-	'passwordmatch' => 'Hesla nesouhlasí --prosím zadejte je znova',
+	'bugbadnum' => 'Tento BUG neexistuje',
+	'datecollision' => 'Nìkdo aktualizoval BUG od Vaší poslední návštìvy.	Do informací o BUGu byli zaneseny nejnovìjší zmìny.',
+	'passwordmatch' => 'Hesla nesouhlasí --prosím zadejte je znovu',
 	'nobughistory' => 'Tento BUG nemá hystorii',
-	'logintomodify' => 'Musíte být zalogován pro upravu tohoto BUGu',
+	'logintomodify' => 'Musíte být pøihlášen(a) pro upravu tohoto BUGu',
 	'dupe_attachment' => 'Pøíloha pro tento BUG je již nahrána',
 	'give_attachment' => 'Prosím vyberte soubor pro upload',
 	'no_attachment_save_path' => 'Cesta k uloženému souboru nenalezena',
@@ -62,19 +62,19 @@ $STRING = array(
 	'attachment_move_error' => 'Nastala chyba pøi pøesouvání nahraného souboru',
 	'bad_attachment' => 'Tato pøíloha neexistuje',
 	'attachment_too_large' => 'Vámi specifikovaný soubor je vìtší než '.number_format(ATTACHMENT_MAX_SIZE).' bytù',
-	'bad_permission' => 'Nemáte práva na požadovanou funkci',
-	'project_only_all_groups' => 'Nelze vybrat specifickou skupoinu když jsou vybrány všechny skupiny',
+	'bad_permission' => 'Nemáte potøebná práva na požadovanou funkci',
+	'project_only_all_groups' => 'Nelze vybrat specifickou skupinu když jsou vybrány všechny skupiny',
 	'previous_bug' => 'Pøedchozí',
 	'next_bug' => 'Následující',
-	'already_voted' => 'Již jste hlasoval k tomuto BUGu',
+	'already_voted' => 'Již jste hlasoval(a) k tomuto BUGu',
 	'too_many_votes' => 'Dosáhl jste maximálního poètu hlasù na jednoho uživatele',
 	'no_votes' => 'Nikdo ještì nehlasoval',
 	'user_filter' => array(
 		0 => 'Všichni uživatelé',
 		1 => 'Aktivní uživatelé',
 		2 => 'Neaktivní uživatelé'),
-	'dupe_dependency' => 'That bug dependency has already been added',
-	'image_path_not_writeable' => 'The subdirectory "jpgimages" is not writeable by the web process, so the summary image can not be rendered'
+	'dupe_dependency' => 'Tato závislost již byla pøidána',
+	'image_path_not_writeable' => 'Webprocess nemùže zapisovat do podadresáøe "jpgimages", pøehledový obrázek nemùže být vygenerován.'
 	);
 
 // Page titles
@@ -100,5 +100,4 @@ $TITLE = array(
 	'reporting' => 'Hlášení',
 	'group' => 'Skupiny'
 	);
-
 ?>
