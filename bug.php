@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.131 2003/06/11 12:44:38 bcurtis Exp $
+// $Id: bug.php,v 1.132 2003/06/20 01:10:20 kennyt Exp $
 
 include 'include.php';
 
@@ -736,20 +736,46 @@ function show_bug($bugid = 0, $error = array()) {
 	// Override the database values with posted values if there were errors
 	if (count($error)) $t->assign($_pv);
 
+	$bug_dependencies = $db->query('SELECT '.TBL_BUG.'.status_id, '.
+		TBL_BUG.'.bug_id FROM '.
+		TBL_BUG.', '.TBL_BUG_DEPENDENCY.' WHERE '.TBL_BUG.'.bug_id = '.
+		TBL_BUG_DEPENDENCY.'.depends_on AND '.TBL_BUG_DEPENDENCY.
+		'.bug_id = '.$bugid);
+
+	$bug_dependencies_display = array();
+ 	if ($bug_dependencies->numRows()) {
+		while ($bug_dependencies->fetchInto($dependency)) {
+			$bug_dependencies_display[] = 
+				'<a href="'.$me.'?op=show&bugid='.$dependency['bug_id'].
+				'">'.($dependency['status_id'] == 5 ? '<strike>':'').'#'.
+				$dependency['bug_id'].($dependency['status_id'] == 5 ? '</strike>':'').'</a>';
+		}
+	}
+
+	$bug_blocks = $db->query('SELECT '.TBL_BUG.'.status_id, '.
+		TBL_BUG.'.bug_id FROM '.
+		TBL_BUG.', '.TBL_BUG_DEPENDENCY.' WHERE '.TBL_BUG.'.bug_id = '.
+		TBL_BUG_DEPENDENCY.'.bug_id AND '.TBL_BUG_DEPENDENCY.
+		'.depends_on = '.$bugid);
+
+	$bug_blocks_display = array();
+	if ($bug_blocks->numRows()) {
+		while ($bug_blocks->fetchInto($block)) {
+			$bug_blocks_display[] =
+				'<a href="'.$me.'?op=show&bugid='.$block['bug_id'].
+				'">'.($block['status_id'] == 5 ? '<strike>':'').'#'.
+				$block['bug_id'].($block['status_id'] == 5 ? '</strike>':'').'</a>';
+		}
+	}
+
 	$t->assign(array(
 		'error' => $error,
 		'already_voted' => $db->getOne("select count(*) from ".TBL_BUG_VOTE.
 		    " where bug_id = $bugid and user_id = $u"),
 		'num_votes' => $db->getOne("select count(*) from ".TBL_BUG_VOTE.
 		    " where bug_id = $bugid"),
-		'bug_dependencies' => delimit_list(', ', $db->getCol('select '.
-			db_concat("'<a href=\"$me?op=show&bugid='", 'depends_on', '\'">#\'',
-			'depends_on', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY.
-			" where bug_id = $bugid")),
-		'rev_bug_dependencies' => delimit_list(', ', $db->getCol('select '.
-			db_concat("'<a href=\"$me?op=show&bugid='", 'bug_id', '\'">#\'',
-			'bug_id', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY.
-			" where depends_on = $bugid"))
+		'bug_dependencies' => implode(', ', $bug_dependencies_display),
+		'rev_bug_dependencies' => implode(', ', $bug_blocks_display)
 		));
 
 	// Show the attachments
