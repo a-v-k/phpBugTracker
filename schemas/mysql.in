@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.18 2002/03/20 20:10:09 bcurtis Exp $
+# $Id: mysql.in,v 1.19 2002/03/21 13:44:54 bcurtis Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id int(10) unsigned NOT NULL default '0',
@@ -231,6 +231,12 @@ CREATE TABLE TBL_USER_PERM (
   PRIMARY KEY  (user_id,perm_id),
   KEY perm_id (perm_id)
 ) TYPE=MyISAM;
+
+CREATE TABLE TBL_USER_PREF (
+  user_id int(11) NOT NULL default '0',
+  email_notices tinyint(1) NOT NULL default '1',
+  PRIMARY KEY  (user_id)
+) TYPE=MyISAM;  
 
 CREATE TABLE TBL_VERSION (
   version_id int(10) unsigned NOT NULL default '0',

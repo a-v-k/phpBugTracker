@@ -2,7 +2,7 @@
 -- PostgreSQL database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.20 2002/03/20 20:10:09 bcurtis Exp $
+-- $Id: pgsql.in,v 1.21 2002/03/21 13:44:54 bcurtis Exp $
 
 BEGIN;
 
@@ -228,6 +228,12 @@ CREATE TABLE TBL_USER_PERM (
   created_by INT4  NOT NULL DEFAULT '0',
   created_date INT8  NOT NULL DEFAULT '0',
   PRIMARY KEY  (user_id,perm_id)
+);
+
+CREATE TABLE TBL_USER_PREF (
+  user_id INT4  NOT NULL DEFAULT '0',
+  email_notices INT2  NOT NULL DEFAULT '1',
+  PRIMARY KEY  (user_id)
 );
 
 CREATE TABLE TBL_VERSION (

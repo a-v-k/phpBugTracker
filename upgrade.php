@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.14 2002/03/20 20:10:09 bcurtis Exp $
+// $Id: upgrade.php,v 1.15 2002/03/21 13:44:54 bcurtis Exp $
 
 define ('NO_AUTH', 1);
 include 'include.php';
@@ -38,11 +38,17 @@ function upgrade() {
 		}
 		$rs = $db->query("select * from ".TBL_DB_SEQUENCE);
 		if (DB_TYPE == 'pgsql') {
+			// Set up the user prefs table
+			$db->query("CREATE TABLE ".TBL_USER_PREF." ( user_id INT4  NOT NULL DEFAULT '0', email_notices INT2  NOT NULL DEFAULT '1', PRIMARY KEY  (user_id) )");
+			$db->query("insert into ".TBL_USER_PREF." (user_id) select user_id from ".TBL_AUTH_USER);
 			// Move the sequences
 			while ($rs->fetchInto($row)) {
 				$db->query("create sequence {$row['seq_name']}_seq start {$row['nextid']}");
 			}
 		} else {
+			// Set up the user prefs table
+			$db->query("CREATE TABLE ".TBL_USER_PREF." ( user_id int(11) NOT NULL default '0', email_notices tinyint(1) NOT NULL default '1', PRIMARY KEY  (user_id) )");
+			$db->query("insert into ".TBL_USER_PREF." (user_id) select user_id from ".TBL_AUTH_USER);
 			// Move the sequences
 			while ($rs->fetchInto($row)) {
 				$db->query("create table {$row['seq_name']}_seq (id int unsigned auto_increment not null primary key)");

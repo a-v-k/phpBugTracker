@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.86 2002/03/20 15:59:24 bcurtis Exp $
+// $Id: bug.php,v 1.87 2002/03/21 13:44:54 bcurtis Exp $
 
 include 'include.php';
 
@@ -216,11 +216,13 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 
   // Reporter never changes;
   $reporter = $db->getOne('select email from '.TBL_AUTH_USER
-    ." where user_id = {$buginfo['created_by']}");
+    ." u, ".TBL_USER_PREF." p where u.user_id = {$buginfo['created_by']} ".
+		"and u.user_id = p.user_id and email_notices = 1");
   $reporterstat = ' ';
-  $assignedto = $db->getOne('select email from '.TBL_AUTH_USER
-    .' where user_id = '
-    .(!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to']));
+  $assignedto = $db->getOne('select email from '.TBL_AUTH_USER." u, ".
+		TBL_USER_PREF.' p where u.user_id = '
+    .(!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to']).
+		" and u.user_id = p.user_id and email_notices = 1");
   $assignedtostat = !empty($cf['assigned_to']) ? '!' : ' ';
 
   // If there are new comments grab the comments immediately before the latest
@@ -262,39 +264,45 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
     $t->set_var('cblock', '');
   }
 
+	$maillist = array();
   // Don't email the person who just made the changes (later, make this
   // behavior toggable by the user)
-  if ($userid != $buginfo['created_by'])
+  if ($userid != $buginfo['created_by'] and !empty($reporter))
     $maillist[] = $reporter;
-  if ($userid != (!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to']))
+  if ($userid != (!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to'])
+		and !empty($assignedto))
     $maillist[] = $assignedto;
 
   // Collect the CCs
   if ($ccs = $db->getCol('select email from '.TBL_BUG_CC.' left join '.
-		TBL_AUTH_USER." using(user_id) where bug_id = {$buginfo['bug_id']}")) {
+		TBL_AUTH_USER." u using(user_id), ".TBL_USER_PREF." p ".
+		"where bug_id = {$buginfo['bug_id']} and u.user_id = p.user_id ".
+		"and email_notices = 1")) {
 		array_push($maillist, $ccs);
 	}
 
   // Later add a watcher (such as QA person) check here
-  $toemail = delimit_list(', ',$maillist);
+	if (count($maillist)) {
+  	if ($toemail = delimit_list(', ',$maillist)) {
 
-  $t->set_var(array(
-    'bugid' => $buginfo['bug_id'],
-    'bugurl' => INSTALL_URL."/bug.php?op=show&bugid={$buginfo['bug_id']}",
-    'priority' => $select['priority'][(!empty($cf['priority']) ? $cf['priority'] : $buginfo['priority'])],
-    'priority_stat' => !empty($cf['priority']) ? '!' : ' ',
-    'reporter' => $reporter,
-    'reporter_stat' => $reporterstat,
-    'assignedto' => $assignedto,
-    'assignedto_stat' => $assignedtostat
-    ));
-  if ($toemail) {
-    mail($toemail,"[Bug {$buginfo['bug_id']}] ".($newbug ? 'New' : 'Changed').
-			' - '.(!empty($cf['title']) ? $cf['title'] : $buginfo['title']), 
-			$t->parse('main','emailout'),
-      sprintf("From: %s\nReply-To: %s\nErrors-To: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n", ADMIN_EMAIL, ADMIN_EMAIL,
-        ADMIN_EMAIL, $STRING['lang_charset']));
-  }
+  		$t->set_var(array(
+    		'bugid' => $buginfo['bug_id'],
+    		'bugurl' => INSTALL_URL."/bug.php?op=show&bugid={$buginfo['bug_id']}",
+    		'priority' => $select['priority'][(!empty($cf['priority']) ? $cf['priority'] : $buginfo['priority'])],
+    		'priority_stat' => !empty($cf['priority']) ? '!' : ' ',
+    		'reporter' => $reporter,
+    		'reporter_stat' => $reporterstat,
+    		'assignedto' => $assignedto,
+    		'assignedto_stat' => $assignedtostat
+    		));
+
+    	mail($toemail,"[Bug {$buginfo['bug_id']}] ".($newbug ? 'New' : 'Changed').
+				' - '.(!empty($cf['title']) ? $cf['title'] : $buginfo['title']), 
+				$t->parse('main','emailout'),
+      	sprintf("From: %s\nReply-To: %s\nErrors-To: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n", ADMIN_EMAIL, ADMIN_EMAIL,
+        	ADMIN_EMAIL, $STRING['lang_charset']));
+  	}
+	}
 }
 
 function update_bug($bugid = 0) {
@@ -692,8 +700,8 @@ function prev_next_links($bugid, $pos) {
 		"and {$_sv['queryinfo']['query']} and bug_id <> $bugid 
 		order by {$_sv['queryinfo']['order']} {$_sv['queryinfo']['sort']}, bug_id asc", $offset, $limit);
 		
-	$firstid = $db->getOne();
-	$secondid = $db->getOne();
+	list($firstid, $chunks) = $rs->fetchRow(DB_FETCHMODE_ORDERED);
+	list($secondid, $chunks) = $rs->fetchRow(DB_FETCHMODE_ORDERED);
 	
 	if ($pos) {
 		if ($firstid) {

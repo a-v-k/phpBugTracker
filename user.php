@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.21 2002/03/20 20:04:04 bcurtis Exp $
+// $Id: user.php,v 1.22 2002/03/21 13:44:54 bcurtis Exp $
 
 include 'include.php';
 
@@ -62,11 +62,36 @@ function change_password($pass1, $pass2) {
 	$t->set_file('content', 'passwordchanged.html');
 }
 
+// Save changes to a user's preferences
+function change_preferences($prefs) {
+	global $db, $u, $t;
+	
+	$updates = array();
+	
+	$old_prefs = $db->getRow("select * from ".TBL_USER_PREF." where user_id = $u");
+	array_shift($old_prefs); // Drop the user_id field
+	$updates = array();
+	foreach ($old_prefs as $pref => $val) {
+		if (in_array($pref, $prefs) and !$val) {
+			$updates[] = "set $pref = 1";
+		} elseif (!in_array($pref, $prefs) and $val) {
+			$updates[] = "set $pref = 0";
+		}
+	}
+	if (count($updates)) {
+		$db->query("update ".TBL_USER_PREF.' '.@join(', ', $updates).
+			" where user_id = $u");
+	}
+	$t->set_file('content', 'preferenceschanged.html');
+}
+
+
 function show_preferences_form($error = '') {
 	global $t, $pass1, $pass2, $all_db_fields, $default_db_fields, $_sv, $db, $u;
 	
 	$t->set_file('content', 'user.html');
 	$t->set_block('content', 'column_list_row', 'list_rows');
+	$t->set_block('content', 'pref_row', 'pref_rows');
 	$t->set_block('content', 'votesblock', 'votesb');
 	$t->set_block('votesblock', 'vote_row', 'vote_rows');
 	
@@ -107,6 +132,22 @@ function show_preferences_form($error = '') {
 		}
 		$t->parse('votesb', 'votesblock', true);
 	}
+	
+	// Display current preference settings
+	$pref_labels = array(
+		'email_notices' => 'Receive notifications of bug changes via email'
+		);
+	$prefs = $db->getRow("select * from ".TBL_USER_PREF." where user_id = $u");
+	array_shift($prefs);
+	
+	foreach ($prefs as $pref => $val) {
+		$t->set_var(array(
+			'pref_label' => $pref_labels[$pref],
+			'pref' => $pref,
+			'checked' => $val ? 'checked' : ''
+			));
+		$t->parse('pref_rows', 'pref_row', true);
+	}
 }
 
 $t->set_file('wrap', 'wrap.html');
@@ -118,6 +159,7 @@ if (isset($_gv['op'])) switch ($_gv['op']) {
 elseif (isset($_pv['do'])) switch ($_pv['do']) {
 	case 'changepassword' : change_password($_pv['pass1'], $_pv['pass2']); break;
 	case 'changecolumnlist' : change_bug_list_columns($_pv['column_list']); break;
+	case 'changeprefs' : change_preferences(isset($_pv['preferences']) ? $_pv['preferences'] : array()); break;
 	default : show_preferences_form();
 }
 else show_preferences_form();
