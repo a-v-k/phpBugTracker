@@ -44,7 +44,7 @@ function change_password($pass1, $pass2) {
 		return;
 	}
 	
-	if (ENCRYPTPASS) {
+	if (ENCRYPT_PASS) {
 		$mpassword = md5($pass1);
 	} else {
 		$mpassword = $pass1;

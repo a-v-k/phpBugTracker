@@ -20,13 +20,13 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.60 2001/10/11 14:28:37 bcurtis Exp $
+// $Id: include.php,v 1.61 2001/10/12 04:19:31 bcurtis Exp $
 
-if (defined("INCLUDE_PATH")) {
-  require INCLUDE_PATH."config.php";
-} else {
-  require "config.php";
+define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
+if (!defined('INCLUDE_PATH')) {
+	define('INCLUDE_PATH', '');
 }
+require (INSTALL_PATH.'/'.INCLUDE_PATH.'config.php');
 
 // Edit this class with your database information
 class dbclass extends DB_Sql {
@@ -49,7 +49,16 @@ class dbclass extends DB_Sql {
 }
 
 $q = new dbclass;
-$cssfile = 'global.css';
+
+// Set up the configuration variables
+$q->query("select varname, varvalue from configuration");
+while (list($k, $v) = $q->grab()) {
+	define($k, $v);
+}
+
+// Localization - include the file with the desired language
+include INSTALL_PATH.'/'.INCLUDE_PATH.'languages/'.LANGUAGE.'.php';
+
 $me = $HTTP_SERVER_VARS['PHP_SELF'];
 $me2 = $HTTP_SERVER_VARS['REQUEST_URI'];
 $selrange = 30;
@@ -106,7 +115,7 @@ class uauth extends Auth {
   function auth_loginform() {
     global $sess;
 
-    include 'templates/'.THEME.'login.html';
+    include 'templates/'.THEME.'/login.html';
 
   }
 
@@ -115,7 +124,7 @@ class uauth extends Auth {
 
     if (!$username) return 'nobody';
     $this->auth['uname'] = $username;
-    if (ENCRYPTPASS) {
+    if (ENCRYPT_PASS) {
       $password = md5($password);
     }
     $u = $q->grab("select * from ".TBL_AUTH_USER." where login = '$username' and password = '$password' and active > 0");
@@ -245,10 +254,10 @@ class templateclass extends Template {
   }
 }
 
-if (defined('INCLUDE_PATH')) {
-	$t = new templateclass(INCLUDE_PATH.'templates/'.THEME.'admin', 'keep');
+if (INCLUDE_PATH == '../') {
+	$t = new templateclass(INCLUDE_PATH.'templates/'.THEME.'/admin', 'keep');
 } else {
-	$t = new templateclass('templates/'.THEME, 'keep');
+	$t = new templateclass('templates/'.THEME.'/', 'keep');
 }
 
 $t->set_var(array(
@@ -256,7 +265,6 @@ $t->set_var(array(
   'me' => $me,
   'me2' => $me2,
   'error' => '',
-  'cssfile' => $cssfile,
   'loginerror' => '',
 	'template_path' => INCLUDE_PATH.'templates/'.THEME));
 
@@ -512,13 +520,13 @@ if (isset($HTTP_POST_VARS['dologin'])) {
         'loginerror' => 'Invalid login<br>'
         ));
     } else {
-      if (ENCRYPTPASS) {
+      if (ENCRYPT_PASS) {
         $password = genpassword(10);
         $mpassword = md5($password);
         $q->query("update ".TBL_AUTH_USER." set password = '$mpassword' where login = '$username'");
       }
       mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'],
-        $password),  sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMINEMAIL, $STRING['lang_charset']));
+        $password),  sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMIN_EMAIL, $STRING['lang_charset']));
       $t->set_var(array(
         'loginerrorcolor' => '#0000ff',
         'loginerror' => 'Your password has been emailed to you<br>'

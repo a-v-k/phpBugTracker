@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.9 2001/09/18 03:36:33 bcurtis Exp $
+// $Id: attachment.php,v 1.10 2001/10/12 04:19:31 bcurtis Exp $
 
 include 'include.php';
 
@@ -48,7 +48,7 @@ function grab_attachment($attachid) {
 		show_text($STRING['bad_attachment'], true);
 		return false;
 	}
-	$filename = join('/',array(INSTALLPATH, ATTACHMENT_PATH, 
+	$filename = join('/',array(INSTALL_PATH, ATTACHMENT_PATH, 
 		$ainfo['project_id'], "{$ainfo['bug_id']}-{$ainfo['file_name']}"));
 	if (!is_readable($filename)) {
 		show_text($STRING['bad_attachment'], true);
@@ -89,7 +89,7 @@ function add_attachment($bugid, $description) {
 		}
 	}
 	
-	$filepath = INSTALLPATH.'/'.ATTACHMENT_PATH;
+	$filepath = INSTALL_PATH.'/'.ATTACHMENT_PATH;
 	$tmpfilename = $HTTP_POST_FILES['attachment']['tmp_name'];
 	$filename = "$bugid-{$HTTP_POST_FILES['attachment']['name']}";
 

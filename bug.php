@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.48 2001/10/05 04:22:45 bcurtis Exp $
+// $Id: bug.php,v 1.49 2001/10/12 04:19:31 bcurtis Exp $
 
 include 'include.php';
 
@@ -71,7 +71,7 @@ function show_history($bugid) {
       'oldvalue' => stripslashes($row['old_value']),
       'newvalue' => stripslashes($row['new_value']),
       'createdby' => stripslashes(maskemail($row['login'])),
-      'date' => date(DATEFORMAT.' '.TIMEFORMAT, $row['created_date'])
+      'date' => date(DATE_FORMAT.' '.TIME_FORMAT, $row['created_date'])
       ));
     $t->parse('rows', 'row', true);
   }
@@ -153,8 +153,8 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
     $row = $q->grab();
     $t->set_var(array(
       'newpostedby' => $row['login'],
-      'newpostedon' => date(TIMEFORMAT, $row['created_date']).' on '.
-        date(DATEFORMAT, $row['created_date']),
+      'newpostedon' => date(TIME_FORMAT, $row['created_date']).' on '.
+        date(DATE_FORMAT, $row['created_date']),
       'newcomments' => textwrap('+ '.format_comments($row['comment_text']),72,"\n+ ")
       ));
     // If this comment is the first additional comment after the creation of the
@@ -165,15 +165,15 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
         ." where b.created_by = u.user_id and bug_id = {$buginfo['bug_id']}");
       $t->set_var(array(
         'oldpostedby' => $by,
-        'oldpostedon' => date(TIMEFORMAT,$on).' on '.date(DATEFORMAT,$on),
+        'oldpostedon' => date(TIME_FORMAT,$on).' on '.date(DATE_FORMAT,$on),
         'oldcomments' => textwrap(format_comments($comments),72)
         ));
     } else {
       $row = $q->grab();
       $t->set_var(array(
         'oldpostedby' => $row['login'],
-        'oldpostedon' => date(TIMEFORMAT,$row['created_date']).' on '.
-          date(DATEFORMAT,$row['created_date']),
+        'oldpostedon' => date(TIME_FORMAT,$row['created_date']).' on '.
+          date(DATE_FORMAT,$row['created_date']),
         'oldcomments' => textwrap(format_comments($row['comment_text']),72)
         ));
     }
@@ -201,7 +201,7 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 
   $t->set_var(array(
     'bugid' => $buginfo['bug_id'],
-    'bugurl' => INSTALLURL."/bug.php?op=show&bugid={$buginfo['bug_id']}",
+    'bugurl' => INSTALL_URL."/bug.php?op=show&bugid={$buginfo['bug_id']}",
     'priority' => $select['priority'][($cf['priority'] ? $cf['priority'] : $buginfo['priority'])],
     'priority_stat' => $cf['priority'] ? '!' : ' ',
     'reporter' => $reporter,
@@ -212,8 +212,8 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
   if ($toemail) {
     mail($toemail,"[Bug {$buginfo['bug_id']}] Changed - ".
       ($cf['title'] ? $cf['title'] : $buginfo['title']), $t->parse('main','emailout'),
-      sprintf("From: %s\nReply-To: %s\nErrors-To: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n", ADMINEMAIL, ADMINEMAIL,
-        ADMINEMAIL, $STRING['lang_charset']));
+      sprintf("From: %s\nReply-To: %s\nErrors-To: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n", ADMIN_EMAIL, ADMIN_EMAIL,
+        ADMIN_EMAIL, $STRING['lang_charset']));
   }
 }
 
@@ -394,7 +394,7 @@ function show_form($bugid = 0, $error = '') {
       'resolution' => build_select('resolution',$row['resolution_id']),
       'assignedto' => $row['assigned_to'],
       'createdby' => $row['created_by'],
-      'createddate' => date(DATEFORMAT,$row['created_date']),
+      'createddate' => date(DATE_FORMAT,$row['created_date']),
       'lastmodifieddate' => $row['last_modified_date'],
       'project' => $row['project_id'],
       'projectname' => $projectname,
@@ -462,8 +462,8 @@ function show_bug($bugid = 0, $error = '') {
     'resolution' => $row['resolution_name'] ? $row['resolution_name'] : '',
     'owner' => maskemail($row['owner']),
     'reporter' => maskemail($row['reporter']),
-    'createddate' => date(DATEFORMAT,$row['created_date']),
-    'createdtime' => date(TIMEFORMAT,$row['created_date']),
+    'createddate' => date(DATE_FORMAT,$row['created_date']),
+    'createdtime' => date(TIME_FORMAT,$row['created_date']),
     'lastmodifieddate' => $row['last_modified_date'],
     'project' => build_select('project',$row['project_id']),
     'projectid' => $row['project_id'],
@@ -506,7 +506,7 @@ function show_bug($bugid = 0, $error = '') {
     $t->set_var('attrows', '<tr><td colspan="5" align="center">No attachments</td></tr>');
   } else {
     while ($att = $q->grab()) {
-      if (is_readable(INSTALLPATH.'/'.ATTACHMENT_PATH."/{$row['project_id']}/$bugid-{$att['file_name']}")) {
+      if (is_readable(INSTALL_PATH.'/'.ATTACHMENT_PATH."/{$row['project_id']}/$bugid-{$att['file_name']}")) {
         $action = "<a href='attachment.php?attachid={$att['attachment_id']}'>View</a>";
         if ($perm->have_perm('Administrator')) {
           $action .= " | <a href='attachment.php?del={$att['attachment_id']}' onClick=\"return confirm('Are you sure you want to delete this attachment?');\">Delete</a>";
@@ -524,7 +524,7 @@ function show_bug($bugid = 0, $error = '') {
           'attdesc' => stripslashes($att['description']),
           'attsize' => $attsize,
           'atttype' => $att['mime_type'],
-          'attdate' => date(DATEFORMAT, $att['created_date']),
+          'attdate' => date(DATE_FORMAT, $att['created_date']),
           'attaction' => $action
           ));
         $t->parse('attrows', 'attrow', true);
@@ -550,8 +550,8 @@ function show_bug($bugid = 0, $error = '') {
         'rdescription' => nl2br(format_comments(
 					htmlspecialchars($row['comment_text']))),
         'rreporter' => maskemail($row['login']),
-        'rcreateddate' => date(TIMEFORMAT,$row['created_date']).' on '.
-          date(DATEFORMAT,$row['created_date'])
+        'rcreateddate' => date(TIME_FORMAT,$row['created_date']).' on '.
+          date(DATE_FORMAT,$row['created_date'])
         ));
       $t->parse('rows','row',true);
     }
@@ -583,7 +583,7 @@ function show_projects() {
         'id' => $row['project_id'],
         'name' => $row['project_name'],
         'description' => $row['project_desc'],
-        'date' => date(DATEFORMAT,$row['created_date'])
+        'date' => date(DATE_FORMAT,$row['created_date'])
         ));
       $t->parse('rows','row',true);
     }

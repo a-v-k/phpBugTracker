@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.17 2001/10/02 23:19:42 bcurtis Exp $
+// $Id: newaccount.php,v 1.18 2001/10/12 04:19:31 bcurtis Exp $
 
 include 'include.php'; 
 
@@ -40,7 +40,7 @@ function do_form() {
 	$firstname = htmlspecialchars($firstname);
 	$lastname = htmlspecialchars($lastname);
 	$password = genpassword(10);
-	if (ENCRYPTPASS) {
+	if (ENCRYPT_PASS) {
 		$mpassword = md5($password);
 	} else {
 		$mpassword = $password;
@@ -52,7 +52,7 @@ function do_form() {
 	$q->query("insert into ".TBL_USER_GROUP." (user_id, group_id)"
 	         ." select $user_id, group_id from ".TBL_AUTH_GROUP." where group_name = 'user'"); 
 	mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
-		$password),	sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMINEMAIL, $STRING['lang_charset']));
+		$password),	sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMIN_EMAIL, $STRING['lang_charset']));
 	$t->set_file('content','newaccountsuccess.html');
 }
 

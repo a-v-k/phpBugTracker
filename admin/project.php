@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.22 2001/10/05 04:22:46 bcurtis Exp $
+// $Id: project.php,v 1.23 2001/10/12 04:19:31 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -87,7 +87,7 @@ function list_versions($projectid) {
 			'trclass' => $i % 2 ? '' : 'alt',
       'verid' => $row['version_id'],
       'vername' => $row['version_name'],
-      'verdate' => date(DATEFORMAT,$row['created_date']),
+      'verdate' => date(DATE_FORMAT,$row['created_date']),
       'veractive' => $row['active'] ? 'Y' : 'N'
       ));
     $t->parse('verrows','verrow',true);
@@ -170,9 +170,9 @@ function list_components($projectid) {
       'owner' => $row['Owner'],
       'compactive' => $row['active'] ? 'Y' : 'N',
       'createdby' => $row['created_by'],
-      'compdate' => date(DATEFORMAT,$row['created_date']),
+      'compdate' => date(DATE_FORMAT,$row['created_date']),
       'lastmodifiedby' => $row['last_modified_by'],
-      'lastmodifieddate' => date(DATEFORMAT,$row['last_modified_date'])
+      'lastmodifieddate' => date(DATE_FORMAT,$row['last_modified_date'])
       ));
     $t->parse('rows','row',true);
   }
@@ -307,7 +307,7 @@ function list_projects() {
       'description' => stripslashes($row['project_desc']),
       'active' => $row['active'] ? 'Y' : 'N',
       'createdby' => $row['created_by'],
-      'createddate' => date(DATEFORMAT,$row['created_date'])
+      'createddate' => date(DATE_FORMAT,$row['created_date'])
       ));
     $t->parse('rows','row',true);
   }

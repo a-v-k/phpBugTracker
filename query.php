@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.31 2001/10/06 03:56:33 bcurtis Exp $
+// $Id: query.php,v 1.32 2001/10/12 04:19:31 bcurtis Exp $
 
 include 'include.php';
 
@@ -263,7 +263,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 				case 'created_date' :
 				case 'last_modified_date' :
 				case 'close_date' : 
-					$coldata = $row[$field] ? date(DATEFORMAT, $row[$field]) : '&nbsp;';
+					$coldata = $row[$field] ? date(DATE_FORMAT, $row[$field]) : '&nbsp;';
 					$td_extra = 'class="center"';
 					break;
 				case 'bug_id' :

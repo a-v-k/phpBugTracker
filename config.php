@@ -20,42 +20,16 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.12 2001/09/29 14:50:26 bcurtis Exp $
+// $Id: config.php,v 1.13 2001/10/12 04:19:31 bcurtis Exp $
 
-define ('INSTALLPATH', '/home/bcurtis/public_html/phpbt');
-define ('INSTALLURL', 'http://localhost/~bcurtis/phpbt');
-
-define ('PHPLIBPATH', ''); // If not in the include path
-define ('JPGRAPH_PATH', ''); // If not in the include path
-
-// Location of your cvs web interface (see format_comments() in bug.php)
-define ('CVS_WEB', 'http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/phpbt/phpbt/');
+define ('PHPLIB_PATH', ''); // If PHPlib is not in your include path
 
 // Database Config
-define ('DB_TYPE', 'mysql');  //using PHPlib file naming
+define ('DB_TYPE', 'mysql');  // using PHPlib file naming
 define ('DB_HOST', 'localhost');
 define ('DB_DATABASE', 'BugTracker');
 define ('DB_USER', 'root');
 define ('DB_PASSWORD', '');
-
-define ('ADMINEMAIL', 'phpbt@bencurtis.com');
-define ('ENCRYPTPASS', 0);  // Whether to store passwords encrypted
-define ('THEME', 'default/'); // Which set of templates to use
-define ('USE_JPGRAPH', 0); // Whether to show images or not
-define ('MASK_EMAIL', 1); // Should email addresses be plainly visible?
-define ('HIDE_EMAIL', 1); // Should email addresses be hidden for those not logged in?
-// Should the query list use the severity colors as the row background color (like SourceForge)
-define ('USE_SEVERITY_COLOR', 1);
-define ('EMAIL_IS_LOGIN', 1); // Whether to use email addresses as logins
-
-// Sub-dir of the INSTALLPATH - Needs to be writeable by the web process
-define ('ATTACHMENT_PATH', 'attachments');
-// Maximum size (in bytes) of an attachment
-// This will not override the settings in php.ini if php.ini has a lower limit
-define ('ATTACHMENT_MAX_SIZE', 2097152);
-define ('ONEDAY', 86400);
-define ('DATEFORMAT', 'm-d-Y');
-define ('TIMEFORMAT', 'g:i A');
 
 // Database Table Config
 // you can change either the prefix of the table names or each table name individually
@@ -82,15 +56,14 @@ define ('TBL_USER_PERM',     TBL_PREFIX.'user_perm');
 define ('TBL_VERSION',       TBL_PREFIX.'version');
 define ('TBL_PROJECT_GROUP', TBL_PREFIX.'project_group');
 
-require_once (PHPLIBPATH.'db_'.DB_TYPE.'.inc');
-require_once (PHPLIBPATH.'ct_sql.inc');
-require_once (PHPLIBPATH.'session.inc');
-require_once (PHPLIBPATH.'auth.inc');
-require_once (PHPLIBPATH.'perm.inc');
-require_once (PHPLIBPATH.'page.inc');
-require_once (PHPLIBPATH.'template.inc');
+define ('ONEDAY', 86400);
 
-// Localization - include the file with the desired language
-include INSTALLPATH.'/languages/en.php';
+require_once (PHPLIB_PATH.'db_'.DB_TYPE.'.inc');
+require_once (PHPLIB_PATH.'ct_sql.inc');
+require_once (PHPLIB_PATH.'session.inc');
+require_once (PHPLIB_PATH.'auth.inc');
+require_once (PHPLIB_PATH.'perm.inc');
+require_once (PHPLIB_PATH.'page.inc');
+require_once (PHPLIB_PATH.'template.inc');
 
 ?>
