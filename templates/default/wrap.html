@@ -55,11 +55,14 @@
 				&nbsp;
 				<!-- BEGIN loginblock -->
 					{loginerror}
-					{loginlabel}: <input type="text" name="username" class="bottomnavinput"> 
+					{loginlabel}: <input type="text" name="username" class="bottomnavinput" value="{cookielogin}"> 
 					Password: <input type="password" name="password" class="bottomnavinput"> 
 					<input type="hidden" name="dologin" value="1">
 					<input type="submit" value="Login" class="bottomnavinput"> 
 					<input type="submit" name="sendpass" value="Email Password" class="bottomnavinput" title="Forgot your password?  Have it sent to you"> 
+          <!-- BEGIN cookieblock -->
+            <input type="checkbox" name="savecookie" value="1" {cookiechecked} class="bottomnavinput" title="Remember {loginlabel} for next time"> Remember me   				  
+    			<!-- END cookieblock -->
 				<!-- END loginblock -->
 				<!-- BEGIN logoutblock -->
 				[ Bugs assigned to me: <a href="query.php?op=mybugs&assignedto=1&open=1" title="Open">{owner_open}</a> / <a href="query.php?op=mybugs&assignedto=1&open=0" title="Closed">{owner_closed}</a> 
