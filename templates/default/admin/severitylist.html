@@ -2,22 +2,35 @@
 <table border="0" width="640">
 	<tr>
 		<td valign="top">
-			<b>&nbsp;Status List</b>
+			<b>&nbsp;Severity List</b>
 			<hr size="1">
 			<table border="0">
 				<tr>
 					<th><a href="{nameurl}">Name</a></th>
 					<th><a href="{descriptionurl}">Description</a></th>
 					<th><a href="{sortorderurl}">Sort Order</a></th>
+					<th>Delete</th>
 				</tr>
 				<!-- BEGIN row -->
 				<tr class="{trclass}" bgcolor="{bgcolor}">
 					<td><a href="{me}?op=edit&id={severityid}">{name}</a></td>
 					<td>&nbsp;{description}</td>
 					<td align="center">{sortorder}</td>
+					<td align="center">
+						<!-- BEGIN deleteblock -->
+						<a href="{me}?op=del&id={severityid}" onClick="return confirm('Are you sure you want to delete this severity?')">Delete</a>
+						<!-- END deleteblock -->
+					</td>
 				</tr>
 				<!-- END row -->
 			</table>
+			<center>
+				<font size="-1">
+					Severities with a Sort Order = 0 will not be selectable by users
+					<br>
+					Only those Severities that have no bugs referencing them can be deleted
+				</font>
+			</center>
 		</td>
 		<td valign="top">
 			<div align="right"><b>{action} severity&nbsp;</b></div>

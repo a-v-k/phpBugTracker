@@ -9,15 +9,28 @@
           <th><a href="{nameurl}">Name</a></th>
           <th><a href="{regexurl}">Regex</a></th>
           <th><a href="{sortorderurl}">Sort Order</a></th>
+					<th>Delete</th>
         </tr>
         <!-- BEGIN row -->
         <tr class="{trclass}">
           <td><a href="{me}?op=edit&id={osid}">{name}</a></td>
           <td>&nbsp;{regex}</td>
           <td align="center">{sortorder}</td>
+					<td align="center">
+						<!-- BEGIN deleteblock -->
+						<a href="{me}?op=del&id={osid}" onClick="return confirm('Are you sure you want to delete this OS?')">Delete</a>
+						<!-- END deleteblock -->
+					</td>
         </tr>
         <!-- END row -->
       </table>
+			<center>
+				<font size="-1">
+					OSes with a Sort Order = 0 will not be selectable by users
+					<br>
+					Only those OSes that have no bugs referencing them can be deleted
+				</font>
+			</center>
     </td>
     <td valign="top">
       <div align="right"><b>{action} OS&nbsp;</b></div>

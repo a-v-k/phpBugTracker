@@ -20,10 +20,27 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: severity.php,v 1.17 2002/01/26 16:46:52 bcurtis Exp $
+// $Id: severity.php,v 1.18 2002/03/05 23:54:15 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
+
+function del_item($severityid = 0) {
+	global $q, $me;
+	
+	if ($severityid) {
+		// Make sure we are going after a valid record
+		$itemexists = $q->grab_field('select count(*) from '.TBL_SEVERITY.
+			" where severity_id = $severityid");
+		// Are there any bugs tied to this one?
+		$bugcount = $q->grab_field('select count(*) from '.TBL_BUG.
+			" where severity_id = $severityid");
+		if ($itemexists and !$bugcount) {
+			$q->query('delete from '.TBL_SEVERITY." where severity_id = $severityid");
+		}
+	}
+	header("Location: $me?");
+}
 
 function do_form($severityid = 0) {
 	global $q, $me, $_pv, $STRING;
@@ -82,6 +99,7 @@ function list_items($severityid = 0, $error = '') {
 
 	$t->set_file('content','severitylist.html');
 	$t->set_block('content','row','rows');
+	$t->set_block('row','deleteblock','deleteb');
 
 	if (empty($_gv['order'])) { 
 		$order = 'sort_order'; 
@@ -104,8 +122,11 @@ function list_items($severityid = 0, $error = '') {
 		'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
 		'records' => $nr));
 
-	$q->limit_query("select * from ".TBL_SEVERITY." order by $order $sort", 
-		$selrange, $llimit);
+	$q->limit_query('select s.severity_id, severity_name, severity_desc,'.
+		' severity_color, sort_order, count(bug_id) as bug_count from '.TBL_SEVERITY.
+		' s left join '.TBL_BUG.' using (severity_id) group by s.severity_id,'.
+		' severity_name, severity_desc, severity_color, sort_order'.
+		" order by $order $sort", $selrange, $llimit);
 
 
 	if (!$q->num_rows()) {
@@ -132,6 +153,11 @@ function list_items($severityid = 0, $error = '') {
 			'name' => $row['severity_name'],
 			'description' => $row['severity_desc'],
 			'sortorder' => $row['sort_order']));
+		if ($row['bug_count']) {
+			$t->set_var('deleteb', '&nbsp');
+		} else {
+			$t->parse('deleteb', 'deleteblock', false);
+		}
 		$t->parse('rows','row',true);
 	}
 
@@ -146,6 +172,7 @@ $perm->check('Admin');
 if (isset($_gv['op'])) switch($_gv['op']) {
 	case 'add' : list_items(); break;
 	case 'edit' : list_items($_gv['id']); break;
+	case 'del' : del_item($_gv['id']); break;
 } elseif(isset($_pv['submit'])) {
 	do_form($_pv['id']);
 } else list_items();

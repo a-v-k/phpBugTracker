@@ -9,15 +9,28 @@
 					<th><a href="{nameurl}">Name</a></th>
 					<th><a href="{descriptionurl}">Description</a></th>
 					<th><a href="{sortorderurl}">Sort Order</a></th>
+					<th>Delete</th>
 				</tr>
 				<!-- BEGIN row -->
 				<tr class="{trclass}">
 					<td><a href="{me}?op=edit&id={resolutionid}">{name}</a></td>
 					<td>&nbsp;{description}</td>
 					<td align="center">{sortorder}</td>
+					<td align="center">
+						<!-- BEGIN deleteblock -->
+						<a href="{me}?op=del&id={resolutionid}" onClick="return confirm('Are you sure you want to delete this resolution?')">Delete</a>
+						<!-- END deleteblock -->
+					</td>
 				</tr>
 				<!-- END row -->
 			</table>
+			<center>
+				<font size="-1">
+					Resolutions with a Sort Order = 0 will not be selectable by users
+					<br>
+					Only those Resolutions that have no bugs referencing them can be deleted
+				</font>
+			</center>
 		</td>
 		<td valign="top">
 			<div align="right"><b>{action} resolution&nbsp;</b></div>
