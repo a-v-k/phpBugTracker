@@ -26,6 +26,15 @@ select {
 input {
 	font-size: 12px;
 	}
+
+input[type="file"] {
+  font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
+	font-size: 12px;
+	}
+	
+input[type="submit"] {
+  font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
+	}
 	
 textarea {
 	font-size: 12px;

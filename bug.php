@@ -163,7 +163,7 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 }
 
 function update_bug($bugid = 0) {
-	global $q, $t, $u, $STRING, $perm;
+	global $q, $t, $u, $STRING, $perm, $now;
 	
 	// Pull bug from database to determine changed fields and for user validation
 	$buginfo = $q->grab("select * from Bug where BugID = $bugid");
@@ -197,11 +197,6 @@ function update_bug($bugid = 0) {
 		return;
 	}
 	
-	$now = time();
-	if ($comments) {
-		$comments = htmlspecialchars($comments);
-		$q->query("insert into Comment (CommentID, BugID, Text, CreatedBy, CreatedDate) values (".$q->nextid('Comment').", $bugid, '$comments', $u, $now)");
-	}
 	switch($outcome) {
 		case 'unchanged' : break;
 		case 'assign' : $assignedto = $u; $statusfield = 'Assigned'; break;
@@ -253,6 +248,11 @@ function update_bug($bugid = 0) {
 		$changedfields['Status'] = $status; 
 	}
 	
+	if ($comments) {
+		$comments = htmlspecialchars($comments);
+		$q->query("insert into Comment (CommentID, BugID, Text, CreatedBy, CreatedDate) values (".$q->nextid('Comment').", $bugid, '$comments', $u, $now)");
+	}
+
 	$q->query("update Bug set Title = '$Title', URL = '$URL', Severity = $Severity, Priority = $Priority, ".($status ? "Status = $status, " : ''). ($changeresolution ? "Resolution = $bugresolution, " : ''). ($assignedto ? "AssignedTo = $assignedto, " : '')." Project = $Project, Version = $Version, Component = $Component, OS = $OS, LastModifiedBy = $u, LastModifiedDate = $now where BugID = $bugid");
 	
 	if ($changedfields or $comments) {
