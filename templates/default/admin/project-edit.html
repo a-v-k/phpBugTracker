@@ -1,4 +1,4 @@
-{include file="admin/header.html" page_title="$TITLE[editproject]"}
+{include file="admin/header.html" page_title="Edit Project"}
 
 <script language="JavaScript">
 <!--
@@ -7,6 +7,9 @@
 		
 	function popupComponent(id) {
 		window.open(me + '?op=edit_component&use_js=1&id='+id, 'ewin', 'dependent=yes, width=450, height=300, scrollbars=auto');
+	}
+	function popupNewComponent(id) {
+		window.open(me + '?op=edit_component&use_js=1&project_id='+id+'&id=0', 'ewin', 'dependent=yes, width=450, height=300, scrollbars=auto');
 	}
 	function popupVersion(id) {
 		window.open(me + '?op=edit_version&use_js=1&id='+id, 'ewin', 'dependent=yes, width=250, height=150, scrollbars=auto');
@@ -85,7 +88,7 @@
 		</td>
 		<td width="50%" valign="top">
 			<br>
-			&nbsp;<b>Components</b> - <a href="{$SCRIPT_NAME}?op=edit_component&id=0" onClick="popupComponent(0); return false;">{$STRING.addnew} Component</a>
+			&nbsp;<b>Components</b> - <a href="{$SCRIPT_NAME}?op=edit_component&project_id={$project_id}&id=0" onClick="popupNewComponent({$project_id}); return false;">{$STRING.addnew} Component</a>
 			<hr size="1">
 			<table border="0" cellpadding="2" width="100%">
 				<tr>
