@@ -1,4 +1,4 @@
-Upgrading from 0.6.x to 0.7.1
+Upgrading from 0.6.x to 0.7.2
 -----------------------------
 
 A new table, bug_vote, has been added, and new configuration variables have
