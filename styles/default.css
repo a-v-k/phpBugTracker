@@ -1,5 +1,5 @@
 body { 
-  font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
+	font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
 	font-size: 12px; 
 	color: #000000;
 	background: #ffffff;
@@ -11,8 +11,8 @@ a:active    { text-decoration: none }
 a:hover     { text-decoration: underline; }
 
 td { 
-  font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
-  font-size: 12px; 
+	font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
+	font-size: 12px; 
 	color: #000000;
 	}
 	
@@ -21,8 +21,8 @@ tr.alt {
 	}
 	
 th { 
-  font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
-  font-size: 12px;
+	font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
+	font-size: 12px;
 	color: #000000;
 	background-color: #eeeeee;
 	}
@@ -34,7 +34,7 @@ th.selected {
 	}
 
 select {
-  font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
+	font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
 	font-size: 12px;
 	}
 	
@@ -43,16 +43,16 @@ input {
 	}
 
 input[type="file"] {
-  font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
+	font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
 	font-size: 12px;
 	}
 	
 input[type="submit"] {
-  font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
+	font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
 	}
 	
 input[type="reset"] {
-  font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
+	font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
 	}
 	
 textarea {
@@ -60,8 +60,8 @@ textarea {
 	}
 	
 .navfont { 
-  font-family: "Verdana","Arial","Helvetica","MS Sans Serif","Sans-Serif";
-  font-size: 10px; 
+	font-family: "Verdana","Arial","Helvetica","MS Sans Serif","Sans-Serif";
+	font-size: 10px; 
 	}
 
 .login-box {
@@ -80,7 +80,7 @@ input[type="text"].login-box {
 	font-weight: bold;
 	padding: 1.5em;
 	font-size: 16px;
-}
+	}
 	
 .error {
 	text-align: center;
@@ -112,15 +112,15 @@ a.sidenavlink {
 
 .navtitlebar {
 	background: #99f;
-}
+	}
 
 .navborder {
 	background: #000;
-}
+	}
 	
 .navbotspacer {
 	background: #fff;
-}
+	}
 
 .navinput {
 	vertical-align: middle;
@@ -218,14 +218,18 @@ a.sidenavlink {
 	border-style: solid;
 	padding: 5px;
 	text-align: center;
-}
+	}
 
 .header-col { font-weight: bold; }
 .center-col { text-align: center; }
 
-.navlink {
+a.navlink, a.navlink:link, a.navlink:visited, a.navlink:active {
 	color: #FFFFFF;
 	text-decoration: none;
 	font-family: Arial, Helvetica, sans-serif;
 	font-weight: bold;
+	}
+
+a.navlink:hover {
+	text-decoration: underline;
 }

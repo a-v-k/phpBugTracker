@@ -26,22 +26,22 @@
 	  <td class="navtitlebar" colspan="2">
 	  <table border="0" cellspacing="0" cellpadding="4">
 			<tr>
-			  <td><a href="index.php"><font class="navlink">{$STRING.WRAP.Home}</font></a></td>
+			  <td><a href="index.php" class="navlink">{$STRING.WRAP.Home}</a></td>
 			  <td>|</td>
-			  <td><a href="bug.php?op=add"><font class="navlink">{$STRING.WRAP.AddNewBug}</font></a></td>
+			  <td><a href="bug.php?op=add" class="navlink">{$STRING.WRAP.AddNewBug}</a></td>
 			  <td>|</td>
-			  <td><a href="query.php?op=query"><font class="navlink">{$STRING.WRAP.QueryBugs}</font></a></td>
+			  <td><a href="query.php?op=query" class="navlink">{$STRING.WRAP.QueryBugs}</a></td>
 			  <td>|</td>
-			  <td><a href="report.php"><font class="navlink">{$STRING.WRAP.ViewReports}</font></a></td>
+			  <td><a href="report.php" class="navlink">{$STRING.WRAP.ViewReports}</a></td>
 				{if not NEW_ACCOUNTS_DISABLED and not $smarty.session.uid}
 			  <td>|</td>
-			  <td><a href="newaccount.php"><font class="navlink">{$STRING.WRAP.CreateNewAccount}</font></a></td>
+			  <td><a href="newaccount.php" class="navlink">{$STRING.WRAP.CreateNewAccount}</a></td>
 				{/if}
 			  <td>|</td>
-			  <td><a href="docs/html/userguide.html"><font class="navlink">{$STRING.WRAP.Documentation}</font></a></td>
+			  <td><a href="docs/html/userguide.html" class="navlink">{$STRING.WRAP.Documentation}</a></td>
 				{if isset($perm) and $perm->have_perm('Administrator')}
 			  <td>|</td>
-			  <td><a href="admin/project.php"><font class="navlink">{$STRING.WRAP.AdminTools}</font></a></td>
+			  <td><a href="admin/project.php" class="navlink">{$STRING.WRAP.AdminTools}</a></td>
 				{/if}
 			</tr>
 		</table>
