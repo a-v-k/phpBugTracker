@@ -5,7 +5,7 @@
 --
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.13 2001/12/06 14:28:31 bcurtis Exp $
+-- $Id: pgsql.in,v 1.14 2001/12/24 20:00:49 bcurtis Exp $
 
 BEGIN;
 
@@ -59,7 +59,7 @@ CREATE TABLE TBL_AUTH_USER (
   email varchar(60) NOT NULL DEFAULT '',
   password varchar(40) NOT NULL DEFAULT '',
   active INT2  NOT NULL DEFAULT '1',
-  bug_list_fields varchar(255) NOT NULL DEFAULT '',
+  bug_list_fields TEXT NOT NULL DEFAULT '',
   created_by INT4  NOT NULL DEFAULT '0',
   created_date INT8  NOT NULL DEFAULT '0',
   last_modified_by INT4  NOT NULL DEFAULT '0',
