@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.20 2001/09/03 17:10:31 javyer Exp $
+// $Id: user.php,v 1.21 2001/09/03 17:30:22 javyer Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -38,7 +38,7 @@ function do_form($userid = 0) {
   if (!$userid) {
     if (ENCRYPTPASS) $mpassword = md5($fpassword);
     else $mpassword = $fpassword;
-    $new_user_id = $q->nextid('user');
+    $new_user_id = $q->nextid('TBL_AUTH_USER');
     $q->query("insert into ".TBL_AUTH_USER." (user_id, login, first_name, last_name, email, password, created_date) values ($new_user_id, '$flogin','$ffirstname', '$flastname', '$femail', '$mpassword', $now)");
     $q->query("insert into ".TBL_USER_GROUP." (user_id, group_id) values ('$new_user_id' ,'$fusergroup')");
   } else {
