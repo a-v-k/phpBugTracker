@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.110 2002/04/08 17:04:12 bcurtis Exp $
+// $Id: include.php,v 1.111 2002/04/08 21:25:31 jpdw Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -97,7 +97,7 @@ $default_db_fields = array('bug_id', 'title', 'reporter', 'owner',
 
 
 // Template class
-if (!@include(SMARTY_PATH . 'Smarty.class.php')) {
+if (!@include((SMARTY_PATH==''?'':(INSTALL_PATH . '/')) . SMARTY_PATH . 'Smarty.class.php')) {
 	include('templates/default/base/smartymissing.html');
 	exit;
 }
