@@ -50,6 +50,13 @@ class uauth {
 			return false;
 		}
 	}
+	
+	function force_auth() {
+		if (!$this->is_authenticated()) {
+			show_text('You must be logged in to use this page');
+			exit;
+		}
+	}
 
 	function auth_validatelogin() {
 		global $db, $select, $emailpass, $emailsuccess, $uid;
@@ -178,7 +185,7 @@ class uperm {
 
 		if (!$this->check_auth('group', $group)) {
 			$t->assign('group', $group);
-			$t->wrap('badgroup.html');
+			$t->render('badgroup.html', 'Group Failure');
 			exit();
 		}
 	}

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.29 2004/10/25 12:06:58 bcurtis Exp $
+// $Id: user.php,v 1.30 2005/01/22 16:30:26 bcurtis Exp $
 
 include 'include.php';
 
@@ -132,7 +132,7 @@ function show_preferences_form($error = '') {
 	$t->render('user.html', translate("User preferences"));
 }
 
-$perm->check_group('User');
+$auth->force_auth();
 
 if (isset($_GET['op'])) {
 	switch ($_GET['op']) {
