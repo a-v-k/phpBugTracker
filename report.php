@@ -20,12 +20,12 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: report.php,v 1.18 2002/01/16 11:12:33 javyer Exp $  
+// $Id: report.php,v 1.19 2002/03/05 22:14:00 bcurtis Exp $  
 
 include 'include.php';
 
 function resolution_by_engineer($projectid = 0) {
-	global $q, $t;
+	global $q, $t, $restricted_projects, $perm;
 	
 	$t->set_block('content', 'row', 'rows');
 	$t->set_block('row', 'col', 'cols');
@@ -45,6 +45,8 @@ function resolution_by_engineer($projectid = 0) {
 	
 	if ($projectid && is_numeric($projectid)) {
 		$projectquery = "where project_id = $projectid";
+	} elseif (!$perm->have_perm('Admin')) {
+		$projectquery = "where project_id not in ($restricted_projects)";
 	} else {
 		$projectquery = '';
 	}

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.4 2002/03/01 00:41:30 bcurtis Exp $
+// $Id: functions.php,v 1.5 2002/03/05 22:14:00 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -43,7 +43,7 @@ $select['priority'] = array(
 ///
 /// Build a select box with the item matching $value selected
 function build_select($box, $value = '', $project = 0) {
-  global $q, $select, $perm, $auth, $STRING;
+  global $q, $select, $perm, $auth, $STRING, $restricted_projects;
 
   //create hash to map tablenames
   $cfgDatabase = array(
@@ -66,11 +66,8 @@ function build_select($box, $value = '', $project = 0) {
       'resolution' => $querystart.' where sort_order > 0 order by sort_order',
       'project' => $perm->have_perm('Admin')
         ? $querystart." where active > 0 order by {$box}_name"
-        : "select p.{$box}_id, {$box}_name from $cfgDatabase[$box] p left join ".
-          TBL_PROJECT_GROUP.' pg using(project_id) where active > 0
-          and (pg.project_id is null or pg.group_id in ('.
-          delimit_list(',', $auth->auth['group_ids']).')) group by
-          p.project_id, p.project_name order by project_name',
+        : $querystart." where project_id not in ($restricted_projects)".
+					" and active > 0 order by {$box}_name",
       'component' => $querystart." where project_id = $project order by {$box}_name",
       'version' => $querystart." where project_id = $project order by {$box}_id desc"
       );

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.57 2002/01/26 17:18:36 bcurtis Exp $
+// $Id: query.php,v 1.58 2002/03/05 22:14:00 bcurtis Exp $
 
 include 'include.php';
 
@@ -73,7 +73,7 @@ function show_query() {
 }
 
 function build_query($assignedto, $reportedby, $open) {
-	global $q, $auth, $_gv, $perm, $auth;
+	global $q, $auth, $_gv, $perm, $restricted_projects;
 
 	foreach ($_gv as $k => $v) { $$k = $v; }
 	
@@ -138,12 +138,7 @@ function build_query($assignedto, $reportedby, $open) {
 			if ($components) $proj[] = "b.component_id = $components";
 			$query[] = '('.delimit_list(' and ',$proj).')';
 		} elseif (!$perm->have_perm('Admin')) { // Filter results from hidden projects
-			$query[] = 'b.project_id in ('.
-				delimit_list(',', $q->grab_field_set('select p.project_id
-				from '.TBL_PROJECT.' p left join '.TBL_PROJECT_GROUP.' pg using(project_id) 
-				where active > 0 and (pg.project_id is null or pg.group_id in ('.
-				delimit_list(',', $auth->auth['group_ids']).')) group by p.project_id')).
-				')';
+			$query[] = "b.project_id not in ($restricted_projects)";
 		}
 	}
 	
