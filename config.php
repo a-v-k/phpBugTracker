@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.14 2001/10/12 13:43:29 bcurtis Exp $
+// $Id: config.php,v 1.15 2001/10/30 03:59:51 bcurtis Exp $
 
 define ('PHPLIB_PATH', ''); // If PHPlib is not in your include path
 
@@ -34,6 +34,8 @@ define ('DB_PASSWORD', '');
 // Database Table Config
 // you can change either the prefix of the table names or each table name individually
 define ('TBL_PREFIX', '');	// the prefix for all tables, leave empty to use the old style
+define ('TBL_ACTIVE_SESSIONS', TBL_PREFIX.'active_sessions');
+define ('TBL_DB_SEQUENCE',     TBL_PREFIX.'db_sequence');
 define ('TBL_ATTACHMENT',    TBL_PREFIX.'attachment');
 define ('TBL_AUTH_GROUP',    TBL_PREFIX.'auth_group');
 define ('TBL_AUTH_PERM',     TBL_PREFIX.'auth_perm');
