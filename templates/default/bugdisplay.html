@@ -234,14 +234,14 @@
 	<td>{$STRING.BUGDISPLAY.postedby}: {$reporter|maskemail} <br>
 	    {$STRING.BUGDISPLAY.date}: {$created_date|date:TIME_FORMAT} {$STRING.BUGDISPLAY.dateon} {$created_date|date:DATE_FORMAT}</td>
     </tr><tr>
-	<td>{$description|stripslashes|format_comments|nl2br} <br><br></td>
+	<td>{$description|stripslashes|htmlspecialchars|format_comments|nl2br} <br><br></td>
     </tr>
     {section name=comment loop=$comments}
     <tr class="alt">
 	<td>{$STRING.BUGDISPLAY.postedby}: {$comments[comment].login|maskemail} <br>
 	    {$STRING.BUGDISPLAY.date}: {$comments[comment].created_date|date:TIME_FORMAT} {$STRING.BUGDISPLAY.on} {$comments[comment].created_date|date:DATE_FORMAT}</td>
     </tr><tr>
-	<td>{$comments[comment].comment_text|stripslashes|format_comments|nl2br} <br><br></td>
+	<td>{$comments[comment].comment_text|stripslashes|htmlspecialchars|format_comments|nl2br} <br><br></td>
     </tr>
     {/section}
 </table>
