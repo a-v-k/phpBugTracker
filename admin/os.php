@@ -20,10 +20,10 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: os.php,v 1.9 2001/08/23 01:32:05 bcurtis Exp $
+// $Id: os.php,v 1.10 2001/08/23 01:39:03 bcurtis Exp $
 
-ini_set('include_path', '../'.ini_get('include_path'));
-include 'include.php';
+define('INCLUDE_PATH', '../');
+include INCLUDE_PATH.'include.php';
 
 function do_form($osid = 0) {
   global $q, $me, $fname, $fregex, $fsortorder, $STRING;
