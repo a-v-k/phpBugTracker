@@ -8,11 +8,10 @@ tracker with functionality similar to bugzilla that is abstracted from the
 database backend and uses templates for rendering the pages.  
 
 Currently phpBugTracker is nowhere near a drop-in replacement for Bugzilla, so
-don't expect it to be.  Maybe it will get to that point one day, maybe it won't.
-If it doesn't meet your needs, your development help is welcome, but your
-whining isn't!  Just remember that I do this in my very limited spare time for 
-fun, and I hope others can enjoy what little I have done/will do on it.  That
-said, I hope you enjoy using phpBugTracker, and that you find it useful. 
+don't expect it to be.  Maybe it will get to that point one day, maybe it won't,
+but either way I'm trying to make it a capable bug tracker.  I hope you enjoy 
+using phpBugTracker, and that you find it useful. 
+
 Comments and suggestions are always welcome, either at the SourceForge page at
 http://www.sourceforge.net/projects/phpbt or via email at
 bcurtis@users.sourceforge.net.
@@ -23,8 +22,6 @@ Requirements
 Here is a list of the requirements to get this running on your server.
 1. A webserver
 2. PHP
-3. PHPlib (http://phplib.netuse.de) - This is used for the templates and the
-   database abstraction.
-4. A database - Currently the default database is MySQL (http://www.mysql.com/),
+3. A database - Currently MySQL and PostgreSQL have been tested,
    though the goal is to be database independent.  The query routine is a 
 	 notable exception to that goal at the moment. 
