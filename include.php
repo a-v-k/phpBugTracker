@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.114 2002/04/14 23:47:37 bcurtis Exp $
+// $Id: include.php,v 1.115 2002/04/14 23:51:26 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -47,7 +47,7 @@ $dsn = array(
 	);
 $db = DB::Connect($dsn);
 if (DB::isError($db)) {
-	die($db->message);
+	die($db->message.'<br>'.$db->userinfo);
 }
 $db->setOption('optimize', 'portability');
 $db->setFetchMode(DB_FETCHMODE_ASSOC);
