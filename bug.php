@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.101 2002/05/06 13:17:29 firma Exp $
+// $Id: bug.php,v 1.102 2002/05/07 12:54:50 bcurtis Exp $
 
 include 'include.php';
 
@@ -239,7 +239,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 
   // Collect the CCs
   if ($ccs = $db->getCol(sprintf($QUERY['bug-cc-list'], $buginfo['bug_id']))) {
-		array_merge($maillist, $ccs);
+		$maillist = array_merge($maillist, $ccs);
 	}
 
   // Later add a watcher (such as QA person) check here
@@ -317,7 +317,7 @@ function update_bug($bugid = 0) {
   }
 
   // Remove CCs if requested
-  if (isset($remove_cc) and count($remove_cc)) {
+  if (isset($remove_cc) and $remove_cc[0]) {
     $db->query('delete from '.TBL_BUG_CC." where bug_id = $bugid
       and user_id in (".delimit_list(',', $remove_cc).')');
   }
