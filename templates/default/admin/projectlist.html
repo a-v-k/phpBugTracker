@@ -11,7 +11,7 @@
 				</tr>
 				{section name=project loop=$projects}
 					<tr{if $smarty.section.project.iteration is even} class="alt"{/if}>
-						<td><a href="{$smarty.server.PHP_SELF}?op=edit&id={$projects[project].project_id}">{$projects[project].project_name|stripslashes}</a></td>
+						<td>{if $perm->have_perm('Administrator') or $perm->have_perm_proj($projects[project].project_id)}<a href="{$smarty.server.PHP_SELF}?op=edit&id={$projects[project].project_id}">{$projects[project].project_name|stripslashes}</a>{else}{$projects[project].project_name|stripslashes}{/if}</td>
 						<td align="center">{$projects[project].created_date|date:DATE_FORMAT}</td>
 						<td align="center">{if $projects[project].active}Yes{else}No{/if}</td>
 					</tr>

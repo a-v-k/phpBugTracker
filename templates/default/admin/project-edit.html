@@ -70,6 +70,27 @@
 			<input type="checkbox" name="active" value="1" {if $active}checked{/if}>
 		</td>
 	</tr>
+{if isset($perm) and $perm->have_perm('Administrator')}
+	<tr>
+		<td>
+			These developers can administer this project:
+                        <br>
+                        <select name="useradmin[]" size="10" multiple>
+			  {build_select box=owner selected=$project_admins}
+		        </select>
+	       </td>
+	</tr>
+{else}
+	<tr>
+		<td>
+			These developers can administer this project:
+			<br>
+				{section name=admin loop=$project_admins}
+				{$project_developers[admin]}<br />
+				{/section}
+		</td>
+	</tr>
+{/if}
 </table>
 <input type='submit' name='submit' value='Submit'>
 </form>

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.43 2002/09/16 19:39:34 bcurtis Exp $
+// $Id: project.php,v 1.44 2003/04/07 18:55:37 kennyt Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -28,6 +28,8 @@ include 'include.php';
 
 function del_version($versionid, $projectid) {
 	global $db, $me;
+
+        $perm->check_proj($projectid);
 
 	if (!$db->getOne('select count(*) from '.TBL_BUG." where version_id = $versionid")) {
 		$db->query("delete from ".TBL_VERSION." where version_id = $versionid");
@@ -37,6 +39,8 @@ function del_version($versionid, $projectid) {
 
 function save_version($version_id = 0) {
 	global $db, $me, $_pv, $STRING, $now, $u, $t;
+
+        $perm->check_proj($projectid);
 
 	$error = '';
 	// Validation
@@ -82,7 +86,9 @@ function show_version($versionid = 0, $error = '') {
 }
 
 function del_component($componentid, $projectid) {
-	global $db, $me;
+	global $db, $me, $perm;
+
+        $perm->check_proj($projectid);
 
 	if (!$db->getOne('select count(*) from '.TBL_BUG." where component_id = $componentid")) {
 		$db->query("delete from ".TBL_COMPONENT." where component_id = $componentid");
@@ -91,7 +97,9 @@ function del_component($componentid, $projectid) {
 }
 
 function save_component($component_id = 0) {
-	global $db, $me, $_pv, $u, $STRING, $now, $t;
+	global $db, $me, $_pv, $u, $STRING, $now, $t, $perm;
+
+        $perm->check_proj($projectid);
 
 	$error = '';
 	// Validation
@@ -140,7 +148,9 @@ function show_component($componentid = 0, $error = '') {
 }
 
 function save_project($projectid = 0) {
-  global $db, $me, $u, $STRING, $now, $_pv;
+  global $db, $me, $u, $STRING, $now, $_pv, $perm;
+
+  $perm->check_proj($projectid);
 
 	$error = '';
   // Validation
@@ -190,6 +200,32 @@ function save_project($projectid = 0) {
 			", project_desc = ".$db->quote(stripslashes($project_desc)).
 			", active = $active where project_id = $projectid");
   }
+  // project -> user relationship
+  $old_useradmin = $db->getCol('select user_id from '.TBL_PROJECT_PERM.
+			       " where project_id = $projectid");
+  if (isset($useradmin) and is_array($useradmin) and count($useradmin)) {
+    // Compute differences between old and new
+    $remove_from = array_diff($old_useradmin, $useradmin);
+    $add_to = array_diff($useradmin, $old_useradmin);
+
+    if (count($remove_from)) {
+      foreach ($remove_from as $user) {
+	$db->query('delete from '.TBL_PROJECT_PERM." where project_id = $projectid
+                                         and user_id = $user");
+      }
+    }
+    if (count($add_to)) {
+      foreach ($add_to as $user) {
+	$db->query("insert into ".TBL_PROJECT_PERM
+                        ." (project_id, user_id)
+                        values ('$projectid', $user)");
+      }
+    }
+  } elseif (count($old_useradmin)) {
+    // user killed em all
+    $db->query('delete from '.TBL_PROJECT_PERM." where project_id = $projectid");
+  }
+
 
 	// Handle project -> group relationship
 	$old_usergroup = $db->getCol('select group_id from '.TBL_PROJECT_GROUP.
@@ -228,32 +264,39 @@ function save_project($projectid = 0) {
 }
 
 function show_project($projectid = 0, $error = null) {
-  global $db, $me, $t, $TITLE, $_gv, $_pv, $QUERY;
+  global $db, $me, $t, $TITLE, $_gv, $_pv, $QUERY, $perm;
 
 	if (is_array($error)) $t->assign($error);
 	else $t->assign('error', $error);
-  $t->assign('project_groups', $db->getCol('select group_id from '.
+	$t->assign('project_groups', $db->getCol('select group_id from '.
 		TBL_PROJECT_GROUP." where project_id = $projectid"));
+	if ($perm->have_perm('Administrator')) {
+	  $t->assign('project_admins', $db->getCol('select user_id from '.
+						   TBL_PROJECT_PERM." where project_id = $projectid"));
+	  
+	} else {
+	  $t->assign('project_admins', $db->getCol('select u.login from '.TBL_AUTH_USER.' as u, '.TBL_PROJECT_PERM.' as p where u.user_id = p.user_id and p.project_id = '.$projectid));
+	}
 
-  if ($projectid) {
-	$t->assign($db->getRow('select * from '.TBL_PROJECT
-			." where project_id = $projectid"));
-  	$t->assign(array(
-			'components' =>	$db->getAll(sprintf($QUERY['admin-list-components'],
-				$projectid)),
-  		'versions' =>	$db->getAll(sprintf($QUERY['admin-list-versions'],
-				$projectid))
-			));
-
-		$t->wrap('admin/project-edit.html', 'editproject');
-  } else {
-		if (!empty($_pv)) {
-		    $t->assign($_pv);
-		} else {
-		    $t->assign('active', 1);
-		}
-		$t->wrap('admin/project-add.html', 'addproject');
-  }
+	if ($projectid) {
+	  $t->assign($db->getRow('select * from '.TBL_PROJECT
+				 ." where project_id = $projectid"));
+	  $t->assign(array(
+			   'components' => $db->getAll(sprintf($QUERY['admin-list-components'],
+							       $projectid)),
+			   'versions' =>   $db->getAll(sprintf($QUERY['admin-list-versions'],
+							       $projectid))
+			   ));
+	  
+	  $t->wrap('admin/project-edit.html', 'editproject');
+	} else {
+	  if (!empty($_pv)) {
+	    $t->assign($_pv);
+	  } else {
+	    $t->assign('active', 1);
+	  }
+	  $t->wrap('admin/project-add.html', 'addproject');
+	}
 
 }
 
@@ -285,7 +328,7 @@ function list_projects() {
 	$t->wrap('admin/projectlist.html', 'project');
 }
 
-$perm->check('Admin');
+// $perm->check('Admin');
 
 if (isset($_gv['op'])) {
 	switch($_gv['op']) {

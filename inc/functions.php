@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.38 2003/03/02 15:28:54 bcurtis Exp $
+// $Id: functions.php,v 1.39 2003/04/07 18:55:38 kennyt Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -153,7 +153,8 @@ function build_select($params) {
 	case 'owner':
 	    $rs = $db->query("select u.user_id, login from ".TBL_AUTH_USER." u, ".TBL_USER_GROUP." ug where u.active > 0 and u.user_id = ug.user_id and ug.group_id = ".GROUP_ASSIGN_TO." order by login");
 	    while ($rs->fetchInto($row)) {
-			if ($selected == $row['user_id']) {
+			// either singular matches, or array matches are acceptable
+		if (($selected == $row['user_id']) || in_array($row['user_id'], $selected)) {
 		    	$sel = ' selected';
 			} else {
 		    	$sel = '';
