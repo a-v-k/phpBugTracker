@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.119 2002/09/23 20:16:30 bcurtis Exp $
+// $Id: bug.php,v 1.120 2002/10/18 17:38:19 bcurtis Exp $
 
 include 'include.php';
 
@@ -351,7 +351,7 @@ function update_bug($bugid = 0) {
 	// Add CC if specified
 	if ($add_cc) {
 		if (!$cc_uid = $db->getOne("select user_id from ".TBL_AUTH_USER.
-		    " where login = '$add_cc'")) {
+		    " where login = ".$db->quote(stripslashes($add_cc)))) {
 			show_bug($bugid,array('status' => $STRING['nouser']));
 			return;
 		}
