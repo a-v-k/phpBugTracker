@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.80 2002/02/28 17:48:57 bcurtis Exp $
+// $Id: bug.php,v 1.81 2002/02/28 18:21:30 bcurtis Exp $
 
 include 'include.php';
 
@@ -65,7 +65,7 @@ function vote_bug($bug_id) {
 	}
 	// Check whether the user has used his allotment of votes (if there is a max)
 	if (MAX_USER_VOTES and $q->grab_field("select count(*) from ".TBL_BUG_VOTE.
-		" where user_id = $u") > MAX_USER_VOTES) {
+		" where user_id = $u") >= MAX_USER_VOTES) {
 		show_bug($bug_id, array('vote' => $STRING['too_many_votes']));
 		return;
 	}
