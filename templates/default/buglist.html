@@ -18,7 +18,7 @@ Submit a bug for <select name="project">{project}</select>.
     <th bgcolor="{resolutioncolor}"><a href="{resolutionurl}">Resolution</a></th>
   </tr>
 	<!-- BEGIN row -->
-	<tr bgcolor="{bgcolor}">
+	<tr bgcolor="{bgcolor}" onClick="document.location.href='bug.php?op=show&bugid={bugid}'" onMouseOver="this.style.backgroundColor='#eeeeee'" onMouseOut="this.style.backgroundColor='{bgcolor}'" >
     <td><a href="bug.php?op=show&bugid={bugid}">{bugid}</a></td>
   	<td><a href="bug.php?op=show&bugid={bugid}">{title}</a></td>
   	<td align="center">{reporter}</td>
