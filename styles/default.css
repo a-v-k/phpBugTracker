@@ -21,6 +21,11 @@ tr.alt {
 	background: #dddddd;
 	}
 	
+tr.bugrow:hover {
+	background: #ccffcc;
+	cursor: pointer;
+}	
+	
 th { 
 	font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
 	font-size: 12px;

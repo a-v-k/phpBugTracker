@@ -1,3 +1,8 @@
+<script language='javascript'>
+   function viewbug(a,b) {
+	  self.location.href='bug.php?op=show&bugid='+a+'&pos='+b;
+   }
+</script>
 <table class="bordertable" align="center" style="width: 100%">
 	<tr>
 		<?php for ($i = 0, $colcount = count($db_fields); $i < $colcount; $i++) { 
@@ -10,12 +15,11 @@
 		</td>
 	<?php } else { ?>
 		<?php for ($i = 0; $i < $bugcount; $i++) { ?>
-			<tr<?php if ($i % 2 != 0) echo ' class="alt" bgcolor="#dddddd"'; ?>>
+			<tr class="bugrow<?php echo ($i % 2 != 0) ? ' alt' : ''; ?>"<?php echo  USE_SEVERITY_COLOR ? ' bgcolor="'.$bugs[$i]['severity_color'].'"' : ''; ?> onclick="<?php echo "viewbug({$bugs[$i]['bug_link_id']}, $i)"; ?>">
 				<?php 
 					foreach ($bugs[$i] as $var => $val) {
 						if ($var == 'bug_link_id') $bugid = $val;
-						elseif ($var == 'severity_color') $bgcolor = $val;
-						else echo '<td '.(USE_SEVERITY_COLOR ? "bgcolor='$bgcolor'" : '').'>'.format_bug_col($val, $var, $bugid, $i).'</td>';
+						elseif ($var != 'severity_color') echo '<td>'.format_bug_col($val, $var, $bugid, $i).'</td>';
 					}
 				?>
 			</tr>
