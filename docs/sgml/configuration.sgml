@@ -3,7 +3,7 @@
 <title>Configuration Options</title>
 
 <abstract>
-<para>Most of the options listed here can be configured via the Configuration page of the admin tools.  The <varname>DB_</varname> and <varname>PHPLIB_PATH</varname> options can be found in <filename>config.php</filename>.</para>
+<para>Most of the options listed here can be configured via the Configuration page of the admin tools.  The <varname>DB_</varname> options can be found in <filename>config.php</filename>.</para>
 </abstract>
 
 <variablelist>

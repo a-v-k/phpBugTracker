@@ -9,7 +9,7 @@
   <sect2 id="dep-phplib">
     <title>PHPlib</title>
 
-    <para>PHPlib can be found at <ulink url="http://phplib.sourceforge.net/">http://phplib.sourceforge.net</ulink>.  It provides the database abstraction layer, html templates, and session and authentication management.</para>
+    <para>As of version 0.6.0, &phpbt; includes the required portions of the PHPlib package in the <filename class="directory">inc</filename> sub-directory.  The PHPlib code provides the database abstraction layer, html templates, and session and authentication management.</para>
     <sect3>
       <title>Database Abstraction</title>
       <para>Instead of using PHP's database functions directly, interactions are done via database objects, which extend PHPlib's <classname>DB_Sql</classname> class.</para>
@@ -89,7 +89,7 @@
   </sect2>
   <sect2 id="dep-jpgraph">
     <title>JpGraph</title>
-    <para>This section will not cover the usage of JpGraph in any detail, since it is not an integral part of &phpbt;.  Developers who are interested in using this class for generating bug reports or charting activity can see <filename>images.php</filename> for an example and are encouraged to visit JpGraph's web site at <ulink url="http://www.aditus.nu/jpgraph/">http://www.aditus.nu/jpgraph</ulink>.</para>
+    <para>This section will not cover the usage of JpGraph in any detail, since it is not an integral part of &phpbt;.  Developers who are interested in using this class for generating bug reports or charting activity can see <filename>index.php</filename> for an example and are encouraged to visit JpGraph's web site at <ulink url="http://www.aditus.nu/jpgraph/">http://www.aditus.nu/jpgraph</ulink>.</para>
   </sect2>
 </sect1>
 

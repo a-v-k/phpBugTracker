@@ -4,8 +4,7 @@
 >Database Schema</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.73
-"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.74b"><LINK
 REL="HOME"
 TITLE="phpBugTracker"
 HREF="index.html"><LINK
@@ -75,7 +74,7 @@ NAME="SCHEMA"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN378"
+NAME="AEN377"
 ></A
 ><P
 ><B
@@ -188,7 +187,7 @@ CLASS="FUNCTION"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN410"
+NAME="AEN409"
 ></A
 ><P
 ><B
@@ -368,7 +367,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN460"
+NAME="AEN459"
 ></A
 ><P
 ><B
@@ -433,6 +432,24 @@ VALIGN="TOP"
 ALIGN="LEFT"
 VALIGN="TOP"
 >&nbsp;</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>locked</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>tinyint(1)</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>&nbsp;</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>Accepts values 1 or 0 for whether or not a group can be edited from the admin tools.</TD
 ></TR
 ><TR
 ><TD
@@ -514,7 +531,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN501"
+NAME="AEN505"
 ></A
 ><P
 ><B
@@ -663,7 +680,7 @@ CLASS="DATABASE"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN543"
+NAME="AEN547"
 ></A
 ><P
 ><B
@@ -915,7 +932,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN613"
+NAME="AEN617"
 ></A
 ><P
 ><B
@@ -1302,7 +1319,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN721"
+NAME="AEN725"
 ></A
 ><P
 ><B
@@ -1410,7 +1427,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN751"
+NAME="AEN755"
 ></A
 ><P
 ><B
@@ -1484,7 +1501,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN772"
+NAME="AEN776"
 ></A
 ><P
 ><B
@@ -1628,7 +1645,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN812"
+NAME="AEN816"
 ></A
 ><P
 ><B
@@ -1754,7 +1771,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN847"
+NAME="AEN851"
 ></A
 ><P
 ><B
@@ -1973,7 +1990,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN908"
+NAME="AEN912"
 ></A
 ><P
 ><B
@@ -2083,7 +2100,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN939"
+NAME="AEN943"
 ></A
 ><P
 ><B
@@ -2157,7 +2174,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN960"
+NAME="AEN964"
 ></A
 ><P
 ><B
@@ -2229,7 +2246,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN980"
+NAME="AEN984"
 ></A
 ><P
 ><B
@@ -2337,7 +2354,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1010"
+NAME="AEN1014"
 ></A
 ><P
 ><B
@@ -2517,11 +2534,119 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1060"
+NAME="AEN1064"
 ></A
 ><P
 ><B
->Table 3-17. Schema for table resolution</B
+>Table 3-17. Schema for table project_group</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><THEAD
+><TR
+><TH
+ALIGN="LEFT"
+VALIGN="TOP"
+>Field</TH
+><TH
+ALIGN="LEFT"
+VALIGN="TOP"
+>Type</TH
+><TH
+ALIGN="LEFT"
+VALIGN="TOP"
+>Key</TH
+><TH
+ALIGN="LEFT"
+VALIGN="TOP"
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>project_id</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>int(10) unsigned</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>Primary</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>&nbsp;</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>group_id</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>int(10) unsigned</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>Primary</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>&nbsp;</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>created_by</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>int(10) unsigned</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>&nbsp;</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>&nbsp;</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>created_date</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>bigint(20) unsigned</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>&nbsp;</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>&nbsp;</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN1094"
+></A
+><P
+><B
+>Table 3-18. Schema for table resolution</B
 ></P
 ><TABLE
 BORDER="1"
@@ -2625,11 +2750,11 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1090"
+NAME="AEN1124"
 ></A
 ><P
 ><B
->Table 3-18. Schema for table saved_query</B
+>Table 3-19. Schema for table saved_query</B
 ></P
 ><TABLE
 BORDER="1"
@@ -2738,11 +2863,11 @@ CLASS="DATABASE"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1122"
+NAME="AEN1156"
 ></A
 ><P
 ><B
->Table 3-19. Schema for table severity</B
+>Table 3-20. Schema for table severity</B
 ></P
 ><TABLE
 BORDER="1"
@@ -2867,11 +2992,11 @@ CLASS="VARNAME"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1158"
+NAME="AEN1192"
 ></A
 ><P
 ><B
->Table 3-20. Schema for table status</B
+>Table 3-21. Schema for table status</B
 ></P
 ><TABLE
 BORDER="1"
@@ -2975,11 +3100,11 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1188"
+NAME="AEN1222"
 ></A
 ><P
 ><B
->Table 3-21. Schema for table user_group</B
+>Table 3-22. Schema for table user_group</B
 ></P
 ><TABLE
 BORDER="1"
@@ -3083,11 +3208,11 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1218"
+NAME="AEN1252"
 ></A
 ><P
 ><B
->Table 3-22. Schema for table user_perm</B
+>Table 3-23. Schema for table user_perm</B
 ></P
 ><TABLE
 BORDER="1"
@@ -3155,11 +3280,11 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1238"
+NAME="AEN1272"
 ></A
 ><P
 ><B
->Table 3-23. Schema for table version</B
+>Table 3-24. Schema for table version</B
 ></P
 ><TABLE
 BORDER="1"

@@ -133,6 +133,12 @@
 <entry></entry>
 </row>
 <row>
+<entry>locked</entry>
+<entry>tinyint(1)</entry>
+<entry></entry>
+<entry>Accepts values 1 or 0 for whether or not a group can be edited from the admin tools.</entry>
+</row>
+<row>
 <entry>created_by</entry>
 <entry>int(10) unsigned</entry>
 <entry></entry>
@@ -869,6 +875,46 @@
 </row>
 <row>
 <entry>last_modified_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table project_group</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>project_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>group_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_date</entry>
 <entry>bigint(20) unsigned</entry>
 <entry></entry>
 <entry></entry>
