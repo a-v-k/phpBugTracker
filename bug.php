@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.55 2001/11/03 19:24:07 bcurtis Exp $
+// $Id: bug.php,v 1.56 2001/11/08 13:28:55 bcurtis Exp $
 
 include 'include.php';
 
@@ -338,6 +338,11 @@ function update_bug($bugid = 0) {
     	." values (".$q->nextid(TBL_COMMENT).", $bugid, '$comments', $u, $now)");
   }
 
+	// Allow for removing of some items from the bug page
+	$priority = $priority ? $priority : 0;
+	$os_id = $os_id ? $os_id : 0;
+	$severity_id = $severity_id ? $severity_id : 0;
+	
   $q->query("update ".TBL_BUG." set title = '$title', url = '$url', severity_id = $severity_id, priority = $priority, ".($status_id ? "status_id = $status_id, " : ''). ($changeresolution ? "resolution_id = $resolution_id, " : ''). ($assignedto ? "assigned_to = $assignedto, " : '')." project_id = $project_id, version_id = $version_id, component_id = $component_id, os_id = $os_id, last_modified_by = $u, last_modified_date = $now where bug_id = $bugid");
 
   if ($changedfields or $comments) {
@@ -361,6 +366,12 @@ function do_form($bugid = 0) {
 
   if ($url == 'http://') $url = '';
   $time = time();
+
+	// Allow for removing of some items from the bug page
+	$priority = $priority ? $priority : 0;
+	$os = $os ? $os : 0;
+	$severity = $severity ? $severity : 0;
+	
   if (!$bugid) {
     $status = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = 'Unconfirmed'");
     $q->query("insert into ".TBL_BUG." (bug_id, title, description, url, severity_id, priority, status_id, created_by, created_date, last_modified_by, last_modified_date, project_id, version_id, component_id, os_id, browser_string) values (".$q->nextid(TBL_BUG).", '$title', '$description', '$url', $severity, $priority, $status, $u, $time, $u, $time, $project, $version, $component, '$os', '{$GLOBALS['HTTP_USER_AGENT']}')");
