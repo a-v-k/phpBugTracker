@@ -53,6 +53,8 @@ CREATE TABLE Bug (
   AssignedTo int(10) unsigned DEFAULT '0' NOT NULL,
   CreatedBy int(10) unsigned DEFAULT '0' NOT NULL,
   CreatedDate bigint(20) unsigned DEFAULT '0' NOT NULL,
+  LastModifiedBy int(10) unsigned DEFAULT '0' NOT NULL,
+  LastModifiedDate bigint(20) unsigned DEFAULT '0' NOT NULL,
   Project int(10) unsigned DEFAULT '0' NOT NULL,
   Version varchar(5) DEFAULT '' NOT NULL,
   Component int(10) unsigned DEFAULT '0' NOT NULL,
@@ -247,7 +249,7 @@ DROP TABLE IF EXISTS Version;
 CREATE TABLE Version (
   VersionID int(10) unsigned DEFAULT '0' NOT NULL,
   ProjectID int(10) unsigned DEFAULT '0' NOT NULL,
-  Version char(10) DEFAULT '' NOT NULL,
+  Name char(10) DEFAULT '' NOT NULL,
   Active char(1) binary DEFAULT '' NOT NULL,
   CreatedBy int(10) unsigned DEFAULT '0' NOT NULL,
   CreatedDate bigint(20) unsigned DEFAULT '0' NOT NULL,
@@ -268,3 +270,6 @@ CREATE TABLE active_sessions (
   KEY changed (changed)
 );
 
+# Upgrading from 0.1.2 to 0.1.3
+# alter table Bug add LastModifiedBy int(10) unsigned DEFAULT '0' NOT NULL after CreatedDate, add LastModifiedDate bigint(20) unsigned DEFAULT '0' NOT NULL after LastModifiedBy;
+# alter table Version change Version Name char (10) DEFAULT '' NOT NULL;
