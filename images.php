@@ -57,7 +57,7 @@ function bug_cat_summary() {
 	// Set A title for the plot
 	$graph->title->Set(sprintf("Bug Summary (%d bug%s)",
 		$totalbugs, $totalbugs == 1 ? '' : 's'));
-	$graph->title->SetFont(FONT1,FS_BOLD);
+	$graph->title->SetFont(FF_FONT1,FS_BOLD);
 
 	$graph->legend->Pos(0.03, 0.5, 'right', 'center');
 	// Create
