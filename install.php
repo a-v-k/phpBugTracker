@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.2 2001/10/30 04:08:35 bcurtis Exp $
+// $Id: install.php,v 1.3 2001/11/03 14:38:17 bcurtis Exp $
 
 include_once('template.inc');
 $t = new Template('templates/default', 'keep');
@@ -78,6 +78,13 @@ function build_select($box, $value = '', $ary) {
 	return $text;
 }
 
+///
+/// Check the validity of an email address
+/// (From zend.com user russIndr)
+function valid_email($email) {
+  return eregi('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$', $email);
+}
+
 function grab_config_file() {
 	global $t, $_pv;
 
@@ -123,6 +130,8 @@ function check_vars() {
 		$error = 'Please enter the phpBT email address';
 	} elseif (!$_pv['admin_login'] = trim($_pv['admin_login'])) {
 		$error = 'Please enter the admin login';
+	} elseif (!valid_email($_pv['admin_login'])) {
+		$error = 'Please use a valid email address for the admin login';
 	} elseif (!$_pv['admin_pass'] = trim($_pv['admin_pass'])) {
 		$error = 'Please enter the admin password';
 	} elseif (!$_pv['admin_pass2'] = trim($_pv['admin_pass2'])) {
