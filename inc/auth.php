@@ -76,16 +76,18 @@ class uauth {
 			$this->auth['db_fields'] = @unserialize($u['bug_list_fields']);
 
       // Grab group assignments and permissions based on groups
-      $q->query("select gp.group_id, group_name, perm_name"
-      	." from ".TBL_AUTH_PERM." ap, ".TBL_GROUP_PERM." gp, ".TBL_AUTH_GROUP." ag, ".TBL_USER_GROUP." ug"
-      	." where ap.perm_id = gp.perm_id and gp.group_id = ag.group_id"
-      	."  and ag.group_id = ug.group_id and ug.user_id = {$u['user_id']}");
-      while (list($groupid, $group, $perm) = $q->grab()) {
+			$this->auth['group_ids'] = $q->grab_field_set("select group_id from ".
+				TBL_USER_GROUP." where user_id = {$u['user_id']}");
+			foreach ($this->auth['group_ids'] as $group) {
+				$this->auth['group'][$group] = true;
+			}
+			$q->query("select perm_name from ".TBL_AUTH_PERM." ap, ".
+				TBL_GROUP_PERM." gp where group_id in (".
+				delimit_list(',', $this->auth['group_ids']).") and gp.perm_id = ap.perm_id");
+			while ($perm = $q->grab_field()) {				
         $this->auth['perm'][$perm] = true;
-        $this->auth['uid'] = $u['user_id'];
-        $this->auth['group'][$group] = true;
-        $this->auth['group_ids'][] = $groupid;
       }
+      $this->auth['uid'] = $u['user_id'];
 
       return $u['user_id'];
     }
