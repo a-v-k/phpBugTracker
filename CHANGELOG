@@ -1,3 +1,8 @@
+-- 0.2.1 -- 14 Aug 2001
+: Bugfix to the configure script
+: Updated the installation instructions
+: Added stats on bugs reported by and assigned to the user on every page
+
 -- 0.2.0 -- 11 Aug 2001
 : Allow for browsing the bugs without logging in.
 : Started reporting.
