@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.73 2002/05/18 02:59:32 bcurtis Exp $
+// $Id: query.php,v 1.74 2002/05/18 16:21:12 bcurtis Exp $
 
 include 'include.php';
 
@@ -127,6 +127,8 @@ function build_query($assignedto, $reportedby, $open) {
 
 // Handle the formatting for various types of bug info in the bug list
 function format_bug_col($colvalue, $coltype, $bugid, $pos) {
+	global $select;
+	
 	$pos--;
 	
 	switch ($coltype) {
