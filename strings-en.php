@@ -28,7 +28,8 @@ $STRING = array(
   'nousers' => 'No users found',
   'bugbadperm' => 'You cannot change this bug',
   'bugbadnum' => 'That bug does not exist',
-  'datecollision' => 'Someone has updated this bug since you viewed it.  The bug info has been reloaded with the latest changes.'
+  'datecollision' => 'Someone has updated this bug since you viewed it.  The bug info has been reloaded with the latest changes.',
+  'passwordmatch' => 'Those passwords don\'t match -- please try again'
   );
   
 // Page titles
