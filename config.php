@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.33 2002/07/18 13:02:14 bcurtis Exp $
+// $Id: config.php,v 1.34 2003/02/06 13:33:03 bcurtis Exp $
 
 define ('PHPLIB_PATH', ''); // If PHPlib is not in your include path
 
@@ -71,6 +71,5 @@ define ('TBL_SITE',            TBL_PREFIX.'site');
 define ('ONEDAY', 86400);
 
 require_once ('inc/auth.php');
-require_once ('inc/template.php');
 
 ?>
