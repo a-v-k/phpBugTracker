@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.56 2001/09/22 16:55:33 bcurtis Exp $
+// $Id: include.php,v 1.57 2001/09/26 09:20:16 javyer Exp $
 
 if (defined("INCLUDE_PATH")) {
   require INCLUDE_PATH."config.php";
@@ -331,7 +331,7 @@ function build_select($box, $value = '', $project = 0) {
       while ($row = $q->grab()) {
         if ($value == '' and $row['Regex'] and
           preg_match($row['Regex'],$GLOBALS['HTTP_USER_AGENT'])) $sel = ' selected';
-        elseif ($value == $row[$box.'ID']) $sel = ' selected';
+        elseif ($value == $row[$box.'_id']) $sel = ' selected';
         else $sel = '';
         $text .= '<option value="'.
           $row[$box.'_id']."\"$sel>".$row[$box.'_name']."</option>";
