@@ -19,7 +19,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config-dist.php,v 1.7 2002/01/26 16:46:52 bcurtis Exp $
+// $Id: config-dist.php,v 1.8 2002/03/18 17:43:15 bcurtis Exp $
 
 // Database Config
 define ('DB_TYPE', '{db_type}');  // using PHPlib file naming (mysql | pgsql)
@@ -40,6 +40,7 @@ define ('TBL_AUTH_PERM',       TBL_PREFIX.'auth_perm');
 define ('TBL_AUTH_USER',       TBL_PREFIX.'auth_user');
 define ('TBL_BUG',             TBL_PREFIX.'bug');
 define ('TBL_BUG_CC',          TBL_PREFIX.'bug_cc');
+define ('TBL_BUG_DEPENDENCY',  TBL_PREFIX.'bug_dependency');
 define ('TBL_BUG_GROUP',       TBL_PREFIX.'bug_group');
 define ('TBL_BUG_HISTORY',     TBL_PREFIX.'bug_history');
 define ('TBL_BUG_VOTE',        TBL_PREFIX.'bug_vote');

@@ -75,7 +75,8 @@ $STRING = array(
 	'user_filter' => array(
 		0 => 'All users',
 		1 => 'Active users',
-		2 => 'Inactive users')
+		2 => 'Inactive users'),
+	'dupe_dependency' => 'That bug dependency has already been added'
 	);
 	
 // Page titles

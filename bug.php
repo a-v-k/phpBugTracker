@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.84 2002/03/17 01:44:24 bcurtis Exp $
+// $Id: bug.php,v 1.85 2002/03/18 17:43:15 bcurtis Exp $
 
 include 'include.php';
 
@@ -363,6 +363,41 @@ function update_bug($bugid = 0) {
     $db->query('delete from '.TBL_BUG_CC." where bug_id = $bugid
       and user_id in (".delimit_list(',', $remove_cc).')');
   }
+	
+	// Add dependency if requested
+	if (!empty($add_dependency)) {
+		$add_dependency = preg_replace('/\D/', '', $add_dependency);
+		// Validate the bug number
+		if (!is_numeric($add_dependency)) {
+			show_bug($bugid, array('add_dep' => $STRING['nobug']));
+			return;
+		}
+		if (!$db->getOne('select count(*) from '.TBL_BUG." where bug_id = $add_dependency")) {
+			show_bug($bugid, array('add_dep' => $STRING['nobug']));
+			return;
+		}
+		
+		// Check if the dependency has already been added
+		if ($db->getOne('select count(*) from '.TBL_BUG_DEPENDENCY.
+			" where bug_id = $bugid and depends_on = $add_dependency")) {
+			show_bug($bugid, array('add_dep' => $STRING['dupe_dependency']));
+			return;
+		}
+		
+		// Add it
+		$db->query("insert into ".TBL_BUG_DEPENDENCY.
+			" (bug_id, depends_on) values($bugid, $add_dependency)");
+	}
+	
+	// Remove dependency if requested
+	if (!empty($del_dependency)) {
+		$del_dependency = preg_replace('/\D/', '', $del_dependency);
+		if (is_numeric($del_dependency)) {
+			$db->query("delete from ".TBL_BUG_DEPENDENCY.
+				" where bug_id = $bugid and depends_on = $del_dependency");
+		}
+	}
+			
 
   $changeresolution = false;
   switch($outcome) {
@@ -558,7 +593,7 @@ function show_form($bugid = 0, $error = '') {
 }
 
 function show_bug_printable($bugid) {
-	global $db, $t, $select, $TITLE;
+	global $db, $me, $t, $select, $TITLE;
 	
 	if (!is_numeric($bugid) or
     !$row = $db->getRow('select b.*, reporter.login as reporter, 
@@ -599,7 +634,11 @@ function show_bug_printable($bugid) {
     'version' => $row['version_name'],
     'component' => $row['component_name'],
     'os' => $row['os_name'],
-    'browserstring' => $row['browser_string']
+    'browserstring' => $row['browser_string'],
+		'bug_dependencies' => delimit_list(', ', $db->getCol('select '.
+			db_concat("'<a href=\"$me?op=show&bugid='", 'depends_on', '\'">#\'', 
+				'depends_on', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY.
+				" where bug_id = $bugid"))
     ));
 
 	// Show the comments
@@ -739,7 +778,14 @@ function show_bug($bugid = 0, $error = array()) {
 			" where bug_id = $bugid and user_id = $u"),
 		'already_voted_string' => $STRING['already_voted'],
 		'num_votes' => $db->getOne("select count(*) from ".TBL_BUG_VOTE.
-			" where bug_id = $bugid")
+			" where bug_id = $bugid"),
+		'bug_dependencies' => delimit_list(', ', $db->getCol('select '.
+			db_concat("'<a href=\"$me?op=show&bugid='", 'depends_on', '\'">#\'', 
+				'depends_on', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY.
+				" where bug_id = $bugid")),
+		'dependency_error' => isset($error['add_dep']) 
+			? '<div class="error">'.$error['add_dep'].'</div>'
+			: ''
 		));
   switch($row['status_name']) {
     case 'Unconfirmed' :

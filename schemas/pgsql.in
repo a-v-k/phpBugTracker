@@ -2,7 +2,7 @@
 -- PostgreSQL database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.18 2002/03/17 01:36:10 bcurtis Exp $
+-- $Id: pgsql.in,v 1.19 2002/03/18 17:47:07 bcurtis Exp $
 
 BEGIN;
 
@@ -85,6 +85,12 @@ CREATE TABLE TBL_BUG_CC (
   created_by INT4  NOT NULL DEFAULT '0',
   created_date INT8  NOT NULL DEFAULT '0',
   PRIMARY KEY  (bug_id,user_id)
+);
+
+CREATE TABLE TBL_BUG_DEPENDENCY (
+  bug_id INT4  NOT NULL DEFAULT '0',
+  depends_on INT4  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (bug_id,depends_on)
 );
 
 CREATE TABLE TBL_BUG_GROUP (

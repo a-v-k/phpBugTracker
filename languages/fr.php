@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: fr.php,v 1.8 2002/03/01 00:41:31 bcurtis Exp $
+// $Id: fr.php,v 1.9 2002/03/18 17:42:24 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -73,7 +73,8 @@ $STRING = array(
 	'user_filter' => array(
 		0 => 'All users',
 		1 => 'Active users',
-		2 => 'Inactive users')
+		2 => 'Inactive users'),
+	'dupe_dependency' => 'That bug dependency has already been added'
 	);
 	
 // Page titles
