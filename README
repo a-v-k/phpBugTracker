@@ -21,7 +21,9 @@ Requirements
 
 Here is a list of the requirements to get this running on your server.
 1. A webserver
-2. PHP
-3. A database - Currently MySQL and PostgreSQL have been tested,
+2. PHP with support for your database and MagicQuotes. PHP by default
+   with MySQL support. *Without MagicQuotes, escaping in comments will
+   not work correctly.
+3. A database - Currently MySQL, Oracle and PostgreSQL have been tested,
    though the goal is to be database independent.  The query routine is a 
 	 notable exception to that goal at the moment. 
