@@ -113,6 +113,8 @@ CLASS="SECT1"
 NAME="INSTALLATION"
 >2.1. Installation Instructions</A
 ></H1
+><DIV
+CLASS="PROCEDURE"
 ><OL
 TYPE="1"
 ><LI
@@ -128,12 +130,35 @@ CLASS="FILENAME"
 ><TABLE
 BORDER="0"
 BGCOLOR="#EEEEEE"
-WIDTH="90%"
+WIDTH="100%"
 ><TR
 ><TD
 ><PRE
 CLASS="SCREEN"
->cat page.inc.patch | patch -p0 -b /path/to/phplib/page.inc</PRE
+><B
+CLASS="COMMAND"
+>cat</B
+> <TT
+CLASS="FILENAME"
+>page.inc.patch</TT
+> | <B
+CLASS="COMMAND"
+>patch</B
+> <TT
+CLASS="OPTION"
+>-p0</TT
+> <TT
+CLASS="OPTION"
+>-b</TT
+> <TT
+CLASS="FILENAME"
+><TT
+CLASS="REPLACEABLE"
+><I
+>/path/to/phplib/page.inc</I
+></TT
+></TT
+></PRE
 ></TD
 ></TR
 ></TABLE
@@ -151,6 +176,34 @@ CLASS="COMPUTEROUTPUT"
 CLASS="COMPUTEROUTPUT"
 >if (isset($user) &#38;&#38; $user) {</TT
 >.</P
+><DIV
+CLASS="NOTE"
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>Optional: Install JpGraph (<A
+HREF="http://www.aditus.nu/jpgraph/"
+TARGET="_top"
+>http://www.aditus.nu/jpgraph</A
+>) if you wish to use it for the summary bug display on the home page.</P
+></TD
+></TR
+></TABLE
+></DIV
 ></LI
 ><LI
 ><P
@@ -158,62 +211,19 @@ CLASS="COMPUTEROUTPUT"
 ></LI
 ><LI
 ><P
->Run the <TT
-CLASS="FILENAME"
->configure</TT
-> script.  This will change <TT
-CLASS="FILENAME"
->config.php</TT
-> (creating a backup) and will run <TT
-CLASS="FILENAME"
->configure_db</TT
+>Run <B
+CLASS="COMMAND"
+>configure_db</B
 >, which will create <TT
 CLASS="FILENAME"
 >createdb.sql</TT
->. </P
-><P
-><SPAN
-CLASS="emphasis"
-><I
-CLASS="EMPHASIS"
->-- or --</I
-></SPAN
-></P
-><P
->Configure manually:
-	<OL
-TYPE="a"
-><LI
-><P
->Edit the constants in <TT
-CLASS="FILENAME"
->config.php</TT
->.</P
-></LI
-><LI
-><P
->Run <TT
-CLASS="FILENAME"
->configure_db</TT
-> to get <TT
-CLASS="FILENAME"
->createdb.sql</TT
->.</P
-></LI
-></OL
->
-      </P
-></LI
-><LI
-><P
->If you want to use JpGraph (<A
-HREF="http://www.aditus.nu/jpgraph/"
-TARGET="_top"
->http://www.aditus.nu/jpgraph</A
->) to display the bug summary info, you will also need to edit <TT
-CLASS="FILENAME"
->jpgraph.php</TT
-> from the JpGraph disribution.</P
+>.  Use the <TT
+CLASS="OPTION"
+>-h</TT
+> option when running <B
+CLASS="COMMAND"
+>configure_db</B
+> to see the options.</P
 ></LI
 ><LI
 ><P
@@ -223,24 +233,53 @@ CLASS="FILENAME"
 >, changing the admin info in the database insert.  You can search on the text <TT
 CLASS="COMPUTEROUTPUT"
 >admin@example.com</TT
-> (around line 240).</P
+> (around line 240).  You can also edit the options being inserted into the configuration table or edit them later from the web interface.</P
 ></LI
 ><LI
 ><P
 >Use <TT
 CLASS="FILENAME"
 >createdb.sql</TT
-> to create your database.  With MySQL it can be done as follows:
-      </P
+> to create your database.  With MySQL it can be done as follows:</P
 ><TABLE
 BORDER="0"
 BGCOLOR="#EEEEEE"
-WIDTH="90%"
+WIDTH="100%"
 ><TR
 ><TD
 ><PRE
 CLASS="SCREEN"
->mysql -h &lt;db host&gt; -u &lt;username&gt; -p&lt;yourpassword&gt; &lt; createdb.sql</PRE
+><B
+CLASS="COMMAND"
+>mysql</B
+> <TT
+CLASS="OPTION"
+>-h</TT
+> <TT
+CLASS="REPLACEABLE"
+><I
+>db host</I
+></TT
+> <TT
+CLASS="OPTION"
+>-u</TT
+> <TT
+CLASS="REPLACEABLE"
+><I
+>username</I
+></TT
+> <TT
+CLASS="OPTION"
+>-p</TT
+><TT
+CLASS="REPLACEABLE"
+><I
+>yourpassword</I
+></TT
+> &lt; <TT
+CLASS="FILENAME"
+>createdb.sql</TT
+></PRE
 ></TD
 ></TR
 ></TABLE
@@ -254,6 +293,7 @@ CLASS="SCREEN"
 >Start reporting bugs.</P
 ></LI
 ></OL
+></DIV
 ></DIV
 ></DIV
 ><DIV

@@ -10,29 +10,24 @@ Ok, here's the quick and dirty install instructions:
 	 from 'if (isset($user)) {' to 'if (isset($user) && $user) {' (without the 
 	 quotes).
 	 
+	 Optional: Install JpGraph (http://www.aditus.nu/jpgraph/) if you wish to 
+	 use it.
+	 
 2. Copy the directory tree from the tarball to a location suitable for serving
    web pages.
 	 
-3. Run the configure script.  This will change config.php (creating a backup) 
-   and run configure_db which creates createdb.sql.
-
-        -- or --
-        
-3. Configure manually.
-   a. Edit the constants in config.php.
-   b. Edit the variables in configure_db and run it to get createdb.sql.
+3. Run configure_db, which creates createdb.sql.  Use the -h option when running
+   configure_db to see the options.  You can also edit the options being 
+	 inserted into the configuration table or edit them later from the web 
+	 interface.
 	 
-4. If you want to use jpgraph (http://www.aditus.nu/jpgraph/) 
-   to display the bug summary info, you will also need to edit 
-	 jpgraph.php from the jpgraph disribution.
-	 
-5. Edit createdb.sql, changing the admin info in the database insert.  You can 
+4. Edit createdb.sql, changing the admin info in the database insert.  You can 
    search on the text admin@example.com (around line 240).
 	 
-6. Use createdb.sql to create your database.  With MySQL it can be done like
+5. Use createdb.sql to create your database.  With MySQL it can be done like
      mysql -h <db host> -u <username> -p<yourpassword> < createdb.sql
 		 
-7. Browse on over to the installation, choose Admin tools, login with the info
+6. Browse on over to the installation, choose Admin tools, login with the info
    you put in the database creation script, and create your first project.
 	 
-8. Start reporting bugs
+7. Start reporting bugs
