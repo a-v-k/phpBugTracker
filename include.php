@@ -20,10 +20,11 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.125 2002/10/18 17:48:34 bcurtis Exp $
+// $Id: include.php,v 1.126 2003/07/05 22:57:33 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0);
 ini_set("magic_quotes_sybase", 0);
+@ini_set("session.save_handler", "files");
 
 if (!@include('config.php')) {
   header("Location: install.php");
