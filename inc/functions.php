@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.36 2002/10/19 20:10:13 bcurtis Exp $
+// $Id: functions.php,v 1.37 2003/02/19 14:07:40 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -537,7 +537,11 @@ function qp_mail($to, $subject = 'No subject', $body, $headers = '') {
         $headers .= "\n";
         // There have to be no newline at the end of $headers
     }
-    $headers .= "Content-Type: text/plain; charset=\"".$STRING['lang_charset']."\"\nContent-Transfer-Encoding: ";
+	if (false/*HTML_EMAIL*/) {
+		$headers .= "Content-Type: text/html; charset=\"".$STRING['lang_charset']."\"\nContent-Transfer-Encoding: ";
+	} else {
+		$headers .= "Content-Type: text/plain; charset=\"".$STRING['lang_charset']."\"\nContent-Transfer-Encoding: ";
+	}
 
     // If configured to send MIME encoded emails
     if (SEND_MIME_EMAIL) {
