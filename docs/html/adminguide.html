@@ -207,90 +207,15 @@ TARGET="_top"
 ></LI
 ><LI
 ><P
->Copy the directory tree from the tarball to a location suitable for serving web pages.</P
+>Copy the directory tree from the tarball (or zip archive) to a location suitable for serving web pages.</P
 ></LI
 ><LI
 ><P
->Run <B
-CLASS="COMMAND"
->configure_db</B
->, which will create <TT
-CLASS="FILENAME"
->createdb.sql</TT
->.  Use the <TT
-CLASS="OPTION"
->-h</TT
-> option when running <B
-CLASS="COMMAND"
->configure_db</B
-> to see the options.</P
+>With your web browser, go the location where you installed the package.  You will be presented with a web page that will help you configure and install the application.</P
 ></LI
 ><LI
 ><P
->Edit <TT
-CLASS="FILENAME"
->createdb.sql</TT
->, changing the admin info in the database insert.  You can search on the text <TT
-CLASS="COMPUTEROUTPUT"
->admin@example.com</TT
-> (around line 240).  You can also edit the options being inserted into the configuration table or edit them later from the web interface.</P
-></LI
-><LI
-><P
->Use <TT
-CLASS="FILENAME"
->createdb.sql</TT
-> to create your database.  With MySQL it can be done as follows:</P
-><TABLE
-BORDER="0"
-BGCOLOR="#EEEEEE"
-WIDTH="100%"
-><TR
-><TD
-><PRE
-CLASS="SCREEN"
-><B
-CLASS="COMMAND"
->mysql</B
-> <TT
-CLASS="OPTION"
->-h</TT
-> <TT
-CLASS="REPLACEABLE"
-><I
->db host</I
-></TT
-> <TT
-CLASS="OPTION"
->-u</TT
-> <TT
-CLASS="REPLACEABLE"
-><I
->username</I
-></TT
-> <TT
-CLASS="OPTION"
->-p</TT
-><TT
-CLASS="REPLACEABLE"
-><I
->yourpassword</I
-></TT
-> &lt; <TT
-CLASS="FILENAME"
->createdb.sql</TT
-></PRE
-></TD
-></TR
-></TABLE
-></LI
-><LI
-><P
->Browse on over to the installation, choose Admin tools, login with the info you put in the database creation script, and create your first project.</P
-></LI
-><LI
-><P
->Start reporting bugs.</P
+>After completing the installation, login and start reporting bugs.</P
 ></LI
 ></OL
 ></DIV

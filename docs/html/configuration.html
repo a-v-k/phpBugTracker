@@ -84,7 +84,7 @@ CLASS="ABSTRACT"
 ><DIV
 CLASS="ABSTRACT"
 ><A
-NAME="AEN174"
+NAME="AEN152"
 ></A
 ><P
 >Most of the options listed here can be configured via the Configuration page of the admin tools.  The <TT
@@ -235,6 +235,18 @@ CLASS="VARNAME"
 >If true, then users login with their email address, and the email address is shown for fields such as Assigned To and Reported By.  If false, the login is not tied to the user's email address.</P
 ></DD
 ><DT
+>STRICT_UPDATING</DT
+><DD
+><P
+>If set to true, the only people who can make changes to a bug are the reporter, the owner, and those with manager or admin permissions.</P
+></DD
+><DT
+>NEW_ACCOUNTS_DISABLED</DT
+><DD
+><P
+>If set to true, newaccount.php is disabled and only admins can create new accounts.</P
+></DD
+><DT
 >ATTACHMENT_PATH</DT
 ><DD
 ><P
@@ -277,6 +289,15 @@ CLASS="FUNCTION"
 >date()</TT
 ></A
 > function.</P
+></DD
+><DT
+>LANGUAGE</DT
+><DD
+><P
+>The language file (found in the <TT
+CLASS="FILENAME"
+>languages</TT
+> sub-directory to use for error and warning messages.</P
 ></DD
 ></DL
 ></DIV
