@@ -36,6 +36,10 @@ input[type="submit"] {
   font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
 	}
 	
+input[type="reset"] {
+  font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
+	}
+	
 textarea {
 	font-size: 12px;
 	}

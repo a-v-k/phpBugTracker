@@ -55,7 +55,9 @@
 		<!-- BEGIN logoutblock -->
 		<td>
 			<font class="navfont"><b>
-				[ <a href="user.php">Personal Page</a> 
+				[ Bugs assigned to me: <a href="../query.php?op=mybugs&assignedto=1&open=1" title="Open">{owner_open}</a> / <a href="query.php?op=mybugs&assignedto=1&open=0" title="Closed">{owner_closed}</a> 
+				| Bugs reported by me: <a href="../query.php?op=mybugs&reportedby=1&open=1" title="Open">{reporter_open}</a> / <a href="query.php?op=mybugs&reportedby=1&open=0" title="Closed">{reporter_closed}</a> 
+				| <a href="../user.php">Personal Page</a> 
 				| <a href="../logout.php">Logout {loggedinas}</a> 
 				]
 			</b></font>

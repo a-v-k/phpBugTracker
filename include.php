@@ -157,15 +157,24 @@ class uperm extends Perm {
 
 class templateclass extends Template {
 	function pparse($target, $handle, $append = false) {
-		global $auth, $perm;
+		global $auth, $perm, $q;
 		
+		$u = $auth->auth['uid'];
 		$this->set_block('wrap', 'logoutblock', 'loblock');
 		$this->set_block('wrap', 'loginblock', 'liblock');
 		$this->set_block('wrap', 'adminnavblock', 'anblock');
-		if ($auth->auth['uid'] && $auth->auth['uid'] != 'nobody') {
+		if ($u && $u != 'nobody') {
+			list($owner_open, $owner_closed) = 
+				$q->grab("select sum(if(s.Name in ('Unconfirmed','New','Assigned','Reopened'),1,0)) as Open, sum(if(s.Name not in ('Unconfirmed','New','Assigned','Reopened'),1,0)) as Closed from Bug b left join Status s on Status = StatusID where AssignedTo = $u");
+			list($reporter_open, $reporter_closed) = 
+					$q->grab("select sum(if(s.Name in ('Unconfirmed','New','Assigned','Reopened'),1,0)) as Open, sum(if(s.Name not in ('Unconfirmed','New','Assigned','Reopened'),1,0)) as Closed from Bug b left join Status s on Status = StatusID where CreatedBy = $u");
 			$this->set_var(array(
 				'loggedinas' => $auth->auth['email'],
-				'liblock' => ''
+				'liblock' => '',
+				'owner_open' => $owner_open,
+				'owner_closed' => $owner_closed,
+				'reporter_open' => $reporter_open,
+				'reporter_closed' => $reporter_closed
 				));
 			$this->parse('loblock', 'logoutblock', true);
 		} else {

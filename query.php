@@ -94,17 +94,21 @@ function show_query() {
 			
 }
 
-function build_query($showmybugs = false) {
+function build_query($assignedto, $reportedby, $open) {
 	global $q, $sess, $auth, $querystring, $status, $resolution, $os, $priority, 
 		$severity, $email1, $emailtype1, $emailfield1, $Title, $Description, $URL, 
 		$Title_type, $Description_type, $URL_type, $projects, $versions, $components;
 
 	// Open bugs assigned to the user -- a hit list
-	if ($showmybugs) {
-		$q->query("select StatusID from Status where Name in ('Unconfirmed', 'New', 'Assigned', 'Reopened')");
+	if ($assignedto || $reportedby) {
+		$q->query("select StatusID from Status where Name ".($open ? '' : 'not ')."in ('Unconfirmed', 'New', 'Assigned', 'Reopened')");
 		while ($statusid = $q->grab_field()) $status[] = $statusid;
 		$query[] = 'Status in ('.delimit_list(',',$status).')';
-		$query[] = "AssignedTo = {$auth->auth['uid']}";
+		if ($assignedto) {
+			$query[] = "AssignedTo = {$auth->auth['uid']}";
+		} else {
+			$query[] = "Bug.CreatedBy = {$auth->auth['uid']}";
+		}
 	} else {
 		// Select boxes
 		if ($status) $flags[] = 'Status in ('.delimit_list(',',$status).')';
@@ -152,7 +156,7 @@ function build_query($showmybugs = false) {
 	if (!$sess->is_registered('querystring')) $sess->register('querystring');
 }
 
-function list_items($showmybugs = false) {
+function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	global $querystring, $me, $q, $t, $selrange, $order, $sort, $query, 
 		$page, $op, $select, $TITLE, $STRING, $savedqueryname, $u;
 
@@ -165,7 +169,7 @@ function list_items($showmybugs = false) {
 		$q->query("insert into SavedQuery (UserID, SavedQueryName, SavedQueryString) values ($u, '$savedqueryname', '$savedquerystring')");
 	}
 	if (!$order) { $order = 'BugID'; $sort = 'asc'; }
-	if (!$querystring or $op) build_query($showmybugs);
+	if (!$querystring or $op) build_query($assignedto, $reportedby, $open);
 	$nr = $q->grab_field("select count(*) from Bug left join User Owner on Bug.AssignedTo = Owner.UserID left join User Reporter on Bug.CreatedBy = Reporter.UserID ".($querystring != '' ? "where $querystring": ''));
 
 	list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
@@ -234,10 +238,10 @@ if ($op) switch($op) {
 	case 'query' : show_query(); break;
 	case 'doquery' : list_items(); break;
 	case 'delquery' : delete_saved_query($queryid); break;
-	case 'mybugs' : list_items(true); break;
+	case 'mybugs' : list_items($assignedto, $reportedby, $open); break;
 	default : show_query(); break;
 }
-else list_items();
+else list_items($assignedto, $reportedby, $open);
 
 $t->pparse('main',array('content','wrap','main'));
 
