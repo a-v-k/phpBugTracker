@@ -1,3 +1,12 @@
+-- 0.8.2 -- 8 May 2002
+: Fixed bugs with ordering by dates in the bug list, self-referencing URLs
+  pointing to php.exe on windows, errors with the attachment list when not
+  logged in, forming the CC list when mailing bug changes, listing CCs on the
+  bug form, scrollbars on the popup pages, logging in from the account creation
+  page, and resetting the project id when editing a bug of an inactive project.
+: Fixed session problems with PHP 4.0.6.
+: Added some database connection error handling.
+
 -- 0.8.1 -- 13 Apr 2002
 : Fixed bugs with version and component creation.
 : Bug fixed with displaying both created date and last modified date in the bug
