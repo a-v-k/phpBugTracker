@@ -21,11 +21,16 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.21 2002/04/03 23:21:30 jpdw Exp $
+// $Id: install.php,v 1.22 2002/04/04 23:30:42 jpdw Exp $
 
 define ('INSTALL_PATH', dirname(__FILE__));
 
-if (!@include('Smarty.class.php')) { // Template class
+// Location of smarty templates class
+  define ('SMARTY_PATH','');
+  // Example if smarty is installed within the phpBugTracker tree.
+  //define ('SMARTY_PATH','./inc/smarty/');
+
+if (!@include(SMARTY_PATH . 'Smarty.class.php')) { // Template class
 	die('<br><br>
 	<div align="center">The Smarty templates class is not in your include path.
 	Without this class being available, phpBugTracker will not be able to work.
@@ -160,6 +165,18 @@ function create_tables() {
 		'password'  => $_pv['db_pass']
 		);
 	$db = DB::Connect($dsn);
+  // Simple error checking on returned DB object to check connection to db 
+  if(get_class($db)=='db_error') {
+    die('<br><br>
+    <div align="center">The installation script could not connect to the database (' . $_pv['db_database'] .
+    ') on the host (' . $_pv['db_host'] . ') using the specified username and password.
+    <br>
+    Please check these details are correct and that the database already exists then retry.
+    </div>
+    ');
+  }
+
+
 	$db->setOption('optimize', 'portability');
 
 	$q_temp_ary = file('schemas/'.$_pv['db_type'].'.in');
@@ -255,7 +272,5 @@ if (isset($_pv['op'])) {
 } else {
 	show_front();
 }
-
+// Any whitespace below the end tag will disrupt config.php
 ?>
-
-
