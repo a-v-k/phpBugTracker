@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.41 2001/11/14 04:58:06 bcurtis Exp $
+// $Id: query.php,v 1.42 2001/11/14 14:28:06 bcurtis Exp $
 
 include 'include.php';
 
@@ -194,7 +194,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	$queryinfo['order'] = $order;
 	$queryinfo['sort'] = $sort;
 	
-	if (!$queryinfo['query'] or $op) {
+	if (empty($queryinfo['query']) or $op) {
 		$queryinfo['query'] = build_query($assignedto, $reportedby, $open);
 	}
 	

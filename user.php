@@ -75,7 +75,7 @@ function show_preferences_form($error = '') {
 		$t->set_var(array(
 			'column_name' => $field,
 			'column_title' => $title,
-			'checked' => $checked[$field] ? 'checked' : ''
+			'checked' => !empty($checked[$field]) ? 'checked' : ''
 			));
 		$t->parse('list_rows', 'column_list_row', true);
 	}
@@ -84,7 +84,7 @@ function show_preferences_form($error = '') {
 $t->set_file('wrap', 'wrap.html');
 $perm->check_group('User');
 
-if ($do) switch ($do) {
+if (isset($_pv['do'])) switch ($_pv['do']) {
 	case 'changepassword' : change_password($_pv['pass1'], $_pv['pass2']); break;
 	case 'changecolumnlist' : change_bug_list_columns($_pv['column_list']); break;
 	default : show_preferences_form();

@@ -43,7 +43,7 @@ class uauth {
 	}
 
 	function is_authenticated() {
-		if ($this->auth['uid'] && 
+		if (isset($this->auth['uid']) && $this->auth['uid'] && 
 			($this->lifetime <= 0 || time() < $this->auth['exp'])) {
 			return $this->auth['uid'];
 		} else {
@@ -81,10 +81,10 @@ class uauth {
 	
 	function unauth() {
     $this->auth['uid'] = 0;
-		$this->auth['perm'] = '';
+		$this->auth['perm'] = array();
 		$this->auth['exp']   = 0;
-    $this->auth['group'] = '';
-    $this->auth['db_fields'] = '';
+    $this->auth['group'] = array();
+    $this->auth['db_fields'] = array();
   }
 }
 
@@ -108,18 +108,18 @@ class uperm {
     global $auth;
 
     // Administrators always pass
-    if ($auth->auth[$auth_var]['Admin']) {
+    if (isset($auth->auth[$auth_var]['Admin'])) {
       return true;
     }
 
     if (is_array($reqs)) {
       foreach ($reqs as $req) {
-        if (!$auth->auth[$auth_var][$req]) {
+        if (!isset($auth->auth[$auth_var][$req])) {
           return false;
         }
       }
     } else {
-      if (!$auth->auth[$auth_var][$reqs]) {
+      if (!isset($auth->auth[$auth_var][$reqs])) {
         return false;
       }
     }

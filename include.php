@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.75 2001/11/14 04:58:06 bcurtis Exp $
+// $Id: include.php,v 1.76 2001/11/14 14:28:06 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -143,7 +143,7 @@ class templateclass extends Template {
   function pparse($target, $handle, $append = false) {
     global $auth, $perm, $q;
 
-    $u = $auth->auth['uid'];
+    $u = isset($auth->auth['uid']) ? $auth->auth['uid'] : 0;
     $this->set_block('wrap', 'logoutblock', 'loblock');
     $this->set_block('wrap', 'loginblock', 'liblock');
     $this->set_block('wrap', 'adminnavblock', 'anblock');
@@ -435,8 +435,8 @@ function textwrap($text, $wrap=72, $break="\n"){
 /// Return a delimited list if there is more than one element in $ary, otherwise
 /// return the lone element as the list
 function delimit_list($delimiter, $ary) {
-  if ($ary[1]) return join($delimiter, $ary);
-  elseif ($ary[0]) return ($ary[0]);
+  if (isset($ary[1])) return join($delimiter, $ary);
+  elseif (isset($ary[0])) return ($ary[0]);
   else return '';
 }
 
@@ -464,7 +464,7 @@ function maskemail($email) {
 // Begin every page with a page_open
 if (!defined('NO_AUTH')) {
   page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
-  $u = $auth->auth['uid'];
+  $u = isset($auth->auth['uid']) ? $auth->auth['uid'] : 0;
 }
 
 // Check to see if the user is trying to login

@@ -20,14 +20,15 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.60 2001/11/14 04:39:23 bcurtis Exp $
+// $Id: bug.php,v 1.61 2001/11/14 14:28:06 bcurtis Exp $
 
 include 'include.php';
 
 ///
 /// Beautify the bug comments
 function format_comments($comments) {
-
+	global $me;
+	
 	// Set up the regex replacements
 	$patterns = array(
 		'/(bug)[[:space:]]*(#?)([0-9]+)/i', // matches bug #nn
@@ -447,7 +448,7 @@ function show_form($bugid = 0, $error = '') {
 }
 
 function show_bug_printable($bugid) {
-	global $q, $t, $select;
+	global $q, $t, $select, $TITLE;
 	
 	if (!is_numeric($bugid) or
     !$row = $q->grab('select b.*, reporter.login as reporter, 
@@ -478,7 +479,7 @@ function show_bug_printable($bugid) {
     'severity' => $row['severity_name'],
     'priority' => $select['priority'][$row['priority']],
     'status' => $row['status_name'],
-    'resolution' => $row['resolution_name'] ? $row['resolution_name'] : '',
+    'resolution' => !empty($row['resolution_name']) ? $row['resolution_name'] : '',
     'owner' => maskemail($row['owner']),
     'reporter' => maskemail($row['reporter']),
     'createddate' => date(DATE_FORMAT,$row['created_date']),
@@ -500,8 +501,6 @@ function show_bug_printable($bugid) {
   } else {
     while ($row = $q->grab()) {
       $t->set_var(array(
-        'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
-				'trclass' => $i % 2 ? '' : 'alt',
         'rdescription' => nl2br(format_comments(
 					htmlspecialchars($row['comment_text']))),
         'rreporter' => maskemail($row['login']),
@@ -562,8 +561,8 @@ function prev_next_links($bugid, $pos) {
 	return array($prevlink, $nextlink);
 }
 
-function show_bug($bugid = 0, $error = '') {
-  global $q, $me, $t, $project, $STRING, $u, $perm, $_gv;
+function show_bug($bugid = 0, $error = array()) {
+  global $q, $me, $t, $project, $STRING, $TITLE, $u, $perm, $_gv;
 
   if (!ereg('^[0-9]+$',$bugid) or
     !$row = $q->grab('select b.*, reporter.login as reporter, owner.login as owner, status_name, resolution_name 
@@ -589,7 +588,7 @@ function show_bug($bugid = 0, $error = '') {
 	
 	list($prevlink, $nextlink) = prev_next_links($bugid, $_gv['pos']);
   $t->set_var(array(
-    'statuserr' => $error['status'] ? $error['status'].'<br><br>' : '',
+    'statuserr' => isset($error['status']) ? $error['status'].'<br><br>' : '',
     'bugid' => $bugid,
     'TITLE' => "{$TITLE['editbug']} #$bugid",
     'title' => stripslashes($row['title']),
@@ -599,7 +598,7 @@ function show_bug($bugid = 0, $error = '') {
     'severity' => build_select('severity',$row['severity_id']),
     'priority' => build_select('priority',$row['priority']),
     'status' => $row['status_name'],
-    'resolution' => $row['resolution_name'] ? $row['resolution_name'] : '',
+    'resolution' => !empty($row['resolution_name']) ? $row['resolution_name'] : '',
     'owner' => maskemail($row['owner']),
     'reporter' => maskemail($row['reporter']),
     'createddate' => date(DATE_FORMAT,$row['created_date']),
@@ -650,6 +649,7 @@ function show_bug($bugid = 0, $error = '') {
   if (!$q->num_rows()) {
     $t->set_var('attrows', '<tr><td colspan="5" align="center">No attachments</td></tr>');
   } else {
+		$j = 0;
     while ($att = $q->grab()) {
       if (is_readable(INSTALL_PATH.'/'.ATTACHMENT_PATH."/{$row['project_id']}/$bugid-{$att['file_name']}")) {
         $action = "<a href='attachment.php?attachid={$att['attachment_id']}'>View</a>";
@@ -688,6 +688,7 @@ function show_bug($bugid = 0, $error = '') {
   if (!$q->num_rows()) {
     $t->set_var('rows','');
   } else {
+		$i = 1;
     while ($row = $q->grab()) {
       $t->set_var(array(
         'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
