@@ -18,7 +18,7 @@
 <form action="{$SCRIPT_NAME}" method="post">
 <input type="hidden" name="id" value="{$project_id}">
 <input type="hidden" name="do" value="project">
-<table border="0" cellpadding="2" cellspacing="2" width="640">
+<table border="0" cellpadding="2" cellspacing="2" width="100%">
 	{if $error}
   	<tr>
 			<td colspan="2" class="error">{$error}</td>
@@ -56,54 +56,58 @@
 <input type='submit' name='submit' value='Submit'>
 </form>
 <br>
-<table border="0">
+<table border="0" width="100%">
 	<tr>
-		<td width="320" valign="top">
+		<td width="50%" valign="top">
 			<br>
 			&nbsp;<b>Versions</b> - <a href="{$SCRIPT_NAME}?op=edit_version&id=0" onClick="popupVersion(0); return false;">{$STRING.addnew} Version</a>
-			<hr width="320" size="1" align="center">
-			<table border="0">
+			<hr size="1">
+			<table border="0" cellpadding="2" width="100%">
 				<tr>
-					<th width="160">Version</th>
-					<th width="100">Created</th>
-					<th width="60">Active</th>
+					<th>Version</th>
+					<th>Created</th>
+					<th>Active</th>
+					<th>Delete</th>
 				</tr>
 				{section name=version loop=$versions}
 				<tr{if $smarty.section.version.iteration is even} class="alt"{/if}>
 					<td><a href="{$SCRIPT_NAME}?op=edit_version&id={$versions[version].version_id}" onClick="popupVersion({$versions[version].version_id}); return false;">{$versions[version].version_name|stripslashes}</a></td>
 					<td align="center">{$versions[version].created_date|date:DATE_FORMAT}</td>
 					<td align="center">{if $versions[version].active}Yes{else}No{/if}</td>
+					<td align="center">{if not $versions[version].bug_count}<a href="{$SCRIPT_NAME}?op=del_version&id={$versions[version].version_id}&project_id={$project_id}">Delete</a>{/if}</td>
 				</tr>
 				{sectionelse}
 					<tr>
-						<td colspan="3" align="center">{$STRING.noversions}</td>
+						<td colspan="4" align="center">{$STRING.noversions}</td>
 					</tr>
 				{/section}
 			</table>
 		</td>
-		<td width="320" valign="top">
+		<td width="50%" valign="top">
 			<br>
 			&nbsp;<b>Components</b> - <a href="{$SCRIPT_NAME}?op=edit_component&id=0" onClick="popupComponent(0); return false;">{$STRING.addnew} Component</a>
-			<hr width="320" size="1" align="center">
-			<table border="0">
+			<hr size="1">
+			<table border="0" cellpadding="2" width="100%">
 				<tr>
-					<th width="160">Component</th>
-					<th width="100">Created</th>
-					<th width="60">Active</th>
+					<th>Component</th>
+					<th>Created</th>
+					<th>Active</th>
+					<th>Delete</th>
 				</tr>
 				{section name=component loop=$components}
 				<tr{if $smarty.section.component.iteration is even} class="alt"{/if}>
 					<td><a href="{$SCRIPT_NAME}?op=edit_component&id={$components[component].component_id}" onClick="popupComponent({$components[component].component_id}); return false;">{$components[component].component_name|stripslashes}</a></td>
 					<td align="center">{$components[component].created_date|date:DATE_FORMAT}</td>
 					<td align="center">{if $components[component].active}Yes{else}No{/if}</td>
+					<td align="center">{if not $components[component].bug_count}<a href="{$SCRIPT_NAME}?op=del_component&id={$components[component].component_id}&project_id={$project_id}">Delete</a>{/if}</td>
 				</tr>
 				{sectionelse}
 					<tr>
-						<td colspan="3" align="center">{$STRING.nocomponents}</td>
+						<td colspan="4" align="center">{$STRING.nocomponents}</td>
 					</tr>
 				{/section}
 			</table>
 		</td>
 	</tr>
 </table>
-{include file="footer.html"}
+{include file="admin/footer.html"}
