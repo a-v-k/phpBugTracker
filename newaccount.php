@@ -20,13 +20,18 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.19 2001/10/24 03:03:58 bcurtis Exp $
+// $Id: newaccount.php,v 1.20 2001/11/06 04:40:18 bcurtis Exp $
 
 include 'include.php'; 
 
 function do_form() {
 	global $q, $t, $_pv, $STRING, $now, $u;
 	
+	if (NEW_ACCOUNTS_DISABLED) {
+		$t->set_file('content', 'newaccount-disabled');
+		return;
+	}
+
 	if (!EMAIL_IS_LOGIN && !$_pv['login'] = trim($_pv['login'])) 
 		$error = $STRING['givelogin'];
 	elseif (!$_pv['email'] or !valid_email($_pv['email'])) 
@@ -63,6 +68,11 @@ function do_form() {
 function show_form($error = '') {
 	global $q, $t, $_pv;
 	
+	if (NEW_ACCOUNTS_DISABLED) {
+		$t->set_file('content', 'newaccount-disabled.html');
+		return;
+	}
+
 	$t->set_file('content','newaccount.html');
 	$t->set_block('content', 'loginentryarea', 'loginarea');
 	$t->set_var(array(

@@ -22,10 +22,15 @@ function upgrade() {
 			$q->Halt_On_Error = 'yes'; // Stop ignoring errors
 		} 
 
-		// New configuration option
+		// New configuration options
 		$q->query('insert into '. TBL_CONFIGURATION.
 			" (varname, varvalue, description, vartype) values ('STRICT_UPDATING', '0', 
 			'Only the bug reporter, bug owner, managers, and admins can change a bug', 
+			'bool')");
+		$q->query('insert into '. TBL_CONFIGURATION.
+			" (varname, varvalue, description, vartype) values 
+			('NEW_ACCOUNTS_DISABLED', '0', 
+			'Only admins can create new user accounts - newaccount.php is disabled', 
 			'bool')");
 	}
 	include 'templates/default/upgrade-finished.html';
