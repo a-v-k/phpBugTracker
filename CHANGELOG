@@ -1,6 +1,8 @@
--- 0.4.0 --
+-- 0.3.3 -- 2 Oct 2001
 : Added the ability to enter cvs:filename.ext or cvs:path/filename.ext:v.vv
   into the bug comments and have that linked to a CVS web interface.
+: Fixed bugs with project administration, account creation, and the initial 
+  database installation.
 
 -- 0.3.2 -- 28 Sep 2001
 : Added patch and patch instructions for page.inc (in PHPlib).
