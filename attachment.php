@@ -20,6 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
+// $Id: attachment.php,v 1.6 2001/08/23 02:03:16 bcurtis Exp $
 
 include 'include.php';
 
@@ -77,7 +78,7 @@ function add_attachment($bugid, $description) {
 	}
 
 	// Check for a previously-uploaded attachment with the same name, bug, and project
-	$q->query("select a.bug_id, project_id from attachment a, Bug b where file_name = '{$HTTP_POST_FILES['attachment']['name']}' and a.bug_id = b.bug_id");
+	$q->query("select a.bug_id, project_id from attachment a, bug b where file_name = '{$HTTP_POST_FILES['attachment']['name']}' and a.bug_id = b.bug_id");
 	while ($ainfo = $q->grab()) {
 		if ($bugid == $ainfo['bug_id'] && $projectid == $ainfo['project_id']) {
 			show_attachment_form($bugid, $STRING['dupe_attachment']);

@@ -20,6 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
+// $Id: bug.php,v 1.29 2001/08/23 02:03:16 bcurtis Exp $
 
 include 'include.php';
 
@@ -344,7 +345,7 @@ function show_form($bugid = 0, $error = '') {
 function show_bug($bugid = 0, $error = '') {
 	global $q, $me, $t, $project, $STRING, $u, $perm; 
 	
-	if (!ereg('^[0-9]+$',$bugid) or !$row = $q->grab("select bug_id, title, reporter.email as reporter, owner.email as owner, b.project_id, b.version_id, b.severity_id, b.created_date, b.last_modified_date, status_name as status, b.priority, b.description, resolution_name as resolution, url, b.component_id, b.os_id from bug b left join resolution r using(resolution_id), severity sv, status st left join user owner on b.assigned_to = owner.user_id left join user reporter on b.created_by = reporter.user_id where bug_id = '$bugid' and b.severity_id = sv.severity_id and b.status_id = st.status_id")) {
+	if (!ereg('^[0-9]+$',$bugid) or !$row = $q->grab("select b.*, reporter.email as reporter, owner.email as owner, status_name, resolution_name from bug b left join resolution r using(resolution_id), severity sv, status st left join user owner on b.assigned_to = owner.user_id left join user reporter on b.created_by = reporter.user_id where bug_id = '$bugid' and b.severity_id = sv.severity_id and b.status_id = st.status_id")) {
 		show_text($STRING['bugbadnum'],true);
 		return;
 	}
@@ -367,8 +368,8 @@ function show_bug($bugid = 0, $error = '') {
 		'urllabel' => $row['url'] ? "<a href='{$row['url']}'>URL</a>" : 'URL',
 		'severity' => build_select('severity',$row['severity_id']),
 		'priority' => build_select('priority',$row['priority']),
-		'status' => $row['status_id'],
-		'resolution' => $row['resolution_id'],
+		'status' => $row['status_name'],
+		'resolution' => $row['resolution_name'],
 		'owner' => maskemail($row['owner']),
 		'reporter' => maskemail($row['reporter']),
 		'createddate' => date(DATEFORMAT,$row['created_date']),
@@ -380,11 +381,11 @@ function show_bug($bugid = 0, $error = '') {
 		'component' => build_select('component',$row['component_id'],$row['project_id']),
 		'os' => build_select('os',$row['os_id']),
 		'browserstring' => $row['browser_string'],
-		'bugresolution' => build_select('resolution_id'),
+		'bugresolution' => build_select('resolution'),
 		'submit' => $u == 'nobody' ? $STRING['logintomodify'] : 
 			'<input type="submit" value="Submit">'
 		));
-	switch($row['Status']) {
+	switch($row['status_name']) {
 		case 'Unconfirmed' :
 		case 'New' :
 		case 'Reopened' :
