@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.70 2002/04/12 00:32:12 bcurtis Exp $
+// $Id: query.php,v 1.71 2002/04/13 12:32:17 firma Exp $
 
 include 'include.php';
 
@@ -178,9 +178,9 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
   	'resolution_name' => 'resolution_name',
   	'reporter' => 'reporter.login as reporter',
   	'owner' => 'owner.login as owner',
-  	'created_date' => 'created_date Date',
+  	'created_date' => 'b.created_date',
   	'lastmodifier' => 'lastmodifier.login as lastmodifier',
-  	'last_modified_date' => 'last_modified_date',
+  	'last_modified_date' => 'b.last_modified_date',
   	'project_name' => 'project.project_name',
   	'version_name' => 'version.version_name',
   	'component_name' => 'component.component_name',
