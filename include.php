@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.99 2002/03/17 01:47:04 bcurtis Exp $
+// $Id: include.php,v 1.100 2002/03/20 15:09:18 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -41,7 +41,15 @@ include (INSTALL_PATH.'/inc/functions.php');
 
 // PEAR::DB
 require_once('DB.php');
-$db = DB::Connect(DB_TYPE.'://'.DB_USER.':'.DB_PASSWORD.'@'.DB_HOST.'/'.DB_DATABASE);
+$dsn = array(
+	'phptype' => DB_TYPE,
+	'hostspec' => DB_HOST,
+	'database' => DB_DATABASE,
+	'username' => DB_USER,
+	'password' => DB_PASSWORD
+	);
+$db = DB::Connect($dsn);
+$db->setOption('optimize', 'portability');
 $db->setFetchMode(DB_FETCHMODE_ASSOC);
 
 

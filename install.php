@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.15 2002/03/17 01:39:31 bcurtis Exp $
+// $Id: install.php,v 1.16 2002/03/20 15:09:18 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname(__FILE__));
 
@@ -109,7 +109,15 @@ function create_tables() {
 	
 	// PEAR::DB
 	require_once('DB.php');
-	$db = DB::Connect($_pv['db_type'].'://'.$_pv['db_user'].':'.$_pv['db_pass'].'@'.$_pv['db_host'].'/'.$_pv['db_database']);
+	$dsn = array(
+		'phptype' => $_pv['db_type'],
+		'hostspec' => $_pv['db_host'],
+		'database'  => $_pv['db_database'],
+		'username'  => $_pv['db_user'],
+		'password'  => $_pv['db_pass']
+		);
+	$db = DB::Connect($dsn);
+	$db->setOption('optimize', 'portability');
 
 	$q_temp_ary = file('schemas/'.$_pv['db_type'].'.in');
 	$queries = preg_replace(array_keys($tables), array_values($tables), 
