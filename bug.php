@@ -40,11 +40,12 @@ function show_history($bugid) {
 }
 
 ///
-/// Send the email about changes to the bug and (later) log the changes in the DB
+/// Send the email about changes to the bug and log the changes in the DB
 function do_changedfields($userid, $buginfo, $cf, $comments) {
   global $q, $t, $u, $select, $now;
   
   $t->set_file('emailout','bugemail.txt');
+  $t->set_block('emailout','commentblock', 'cblock');
   foreach(array('Title','URL') as $field) {
     if (isset($cf[$field])) {
 			$q->query("insert into BugHistory (BugID, ChangedField, OldValue, NewValue, CreatedBy, CreatedDate) values ({$buginfo['BugID']}, '$field', '$buginfo[$field]', '$cf[$field]', $u, $now)");
@@ -118,7 +119,10 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
         'oldcomments' => textwrap(stripslashes($row['Text']),72)
         ));
     }
-  }
+		$t->parse('cblock', 'commentblock', true);
+  } else {
+		$t->set_var('cblock', '');
+	}
     
   // Don't email the person who just made the changes (later, make this 
   // behavior toggable by the user)
