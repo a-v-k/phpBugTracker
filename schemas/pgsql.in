@@ -5,7 +5,7 @@
 --
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.15 2002/01/26 16:10:04 bcurtis Exp $
+-- $Id: pgsql.in,v 1.16 2002/01/26 16:59:20 bcurtis Exp $
 
 BEGIN;
 
@@ -282,39 +282,24 @@ INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 1);
 INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 2);
 
 INSERT INTO TBL_CONFIGURATION VALUES ('INSTALL_URL','OPTION_INSTALL_URL','The base URL of the phpBugTracker installation','string');
-
 INSERT INTO TBL_CONFIGURATION VALUES ('JPGRAPH_PATH','','If not in the include path','string');
-
 INSERT INTO TBL_CONFIGURATION VALUES ('CVS_WEB','http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/phpbt/phpbt/','Location of your cvs web interface (see format_comments() in bug.php)','string');
-
 INSERT INTO TBL_CONFIGURATION VALUES ('ADMIN_EMAIL','OPTION_PHPBT_EMAIL','The email address used in correspondence from the bug tracker','string');
-
 INSERT INTO TBL_CONFIGURATION VALUES ('ENCRYPT_PASS','OPTION_ENCRYPT_PASS','Whether to store passwords encrypted.  <b>Warning:</b> Changing this after users have been created will result in their being unable to login.','bool');
-
 INSERT INTO TBL_CONFIGURATION VALUES ('USE_JPGRAPH','','Whether to show some reports as images','bool');
-
 INSERT INTO TBL_CONFIGURATION VALUES ('MASK_EMAIL','1','Should email addresses have . changed to \'dot\' and @ change to \'at\'?','bool');
-
 INSERT INTO TBL_CONFIGURATION VALUES ('HIDE_EMAIL','1','Should email addresses be hidden for those not logged in?','bool');
-
 INSERT INTO TBL_CONFIGURATION VALUES ('USE_SEVERITY_COLOR','1','Should the query list use the severity colors as the row background color (like SourceForge)','bool');
-
 INSERT INTO TBL_CONFIGURATION VALUES ('EMAIL_IS_LOGIN','1','Whether to use email addresses as logins','bool');
-
 INSERT INTO TBL_CONFIGURATION VALUES ('STRICT_UPDATING', '0', 'Only the bug reporter, bug owner, managers, and admins can change a bug', 'bool');
-
 INSERT INTO TBL_CONFIGURATION VALUES ('NEW_ACCOUNTS_DISABLED', '0', 'Only admins can create new user accounts - newaccount.php is disabled', 'bool');
-
+INSERT INTO TBL_CONFIGURATION VALUES ('PROMOTE_VOTES', 5, 'The number of votes required to promote a bug from Unconfirmed to New (Set to 0 to disable promotions by voting)', 'string');
+INSERT INTO TBL_CONFIGURATION VALUES ('MAX_USER_VOTES', 5, 'The maximum number of votes a user can cast across all bugs (Set to 0 to have no limit)', 'string');
 INSERT INTO TBL_CONFIGURATION VALUES ('ATTACHMENT_PATH','attachments','Sub-dir of the INSTALLPATH - Needs to be writeable by the web process','string');
-
 INSERT INTO TBL_CONFIGURATION VALUES ('THEME','default','Which set of templates to use','multi');
-
 INSERT INTO TBL_CONFIGURATION VALUES ('ATTACHMENT_MAX_SIZE','2097152','Maximum size (in bytes) of an attachment. This will not override the settings in php.ini if php.ini has a lower limit.','string');
-
 INSERT INTO TBL_CONFIGURATION VALUES ('DATE_FORMAT','m-d-Y','See the <a href="http://www.php.net/date" target="_new">date page</a> in the PHP manual for more info','string');
-
 INSERT INTO TBL_CONFIGURATION VALUES ('TIME_FORMAT','g:i A','See the <a href="http://www.php.net/date" target="_new">date page</a> in the PHP manual for more info','string');
-
 INSERT INTO TBL_CONFIGURATION VALUES ('LANGUAGE','en','The language file to use for warning and error messages','multi');
 
 
