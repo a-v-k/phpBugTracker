@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.21 2002/06/13 14:26:37 firma Exp $
+// $Id: en.php,v 1.22 2002/06/17 09:21:52 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'us-ascii',
@@ -90,42 +90,54 @@ $STRING = array(
 	'addnewsite' => 'Add new Site',
 	'sitelist' => 'Site list',
 	'sites' => 'Sites',
-	'_opt_All' => 'All',
-	'_Project' => 'Project',
-	'_Version' => 'Version',
-	'_Component' => 'Component',
-	'_Status' => 'Status',
-	'_Resolution' => 'Resolution',
-	'_OpSys' => 'OpSys',
-	'_Priority' => 'Priority',
-	'_Severity' => 'Severity',
-	'_Database' => 'Database',
-	'_ReportedOnSite' => 'Reported on Site',
-	'_Summary' => 'Summary',
-	'_DescriptionEntry' => 'A description entry',
-	'_SortBy' => 'Sort By',
-	    '_SortBy_BugNumber' => 'Bug Number',
-	    '_SortBy_Severity' => 'Severity',
-	    '_SortBy_Reporter' => 'Reporter',
-	    '_SortBy_Priority' => 'Priority',
-	    '_SortBy_Status' => 'Status',
-	    '_SortAsc' => 'Ascending',
-	    '_SortDesc' => 'Descending',
-	'_SaveThisQueryAs' => 'Save this query as',
-	'_ResetBackToDefaultQuery' => 'Reset back to default query',
-	'_SubmitQuery' => 'Submit query',
-	'_SavedQueries' => 'Saved Queries',
-	'_1GoToThe' => 'Go to the',
-	'_1AdvancedQueryPage' => 'advanced query page',
-	'_1SimpleQueryPage' => 'simple query page',
-	'_SureDeleteSavedQuery' => 'Are you sure to delete this saved query?',
-	'_MatchingAs' => 'matching as',
-	    '_MatchingAs_Regexp' => 'regexp',
-	    '_MatchingAs_NotRegexp' => 'not regexp',
-	    '_MatchingAs_Substring' => 'substring',
-	    '_MatchingAs_Exact' => 'exact',
-	'_eMail_Reporter' => 'Reporter',
-	'_eMail_AssignedTo' => 'Assigned To'
+	'QUERY' => array(
+	    'opt_All' => 'All',
+	    'Project' => 'Project',
+	    'Version' => 'Version',
+	    'Component' => 'Component',
+	    'Status' => 'Status',
+	    'Resolution' => 'Resolution',
+	    'OpSys' => 'OpSys',
+	    'Priority' => 'Priority',
+	    'Severity' => 'Severity',
+	    'Database' => 'Database',
+	    'ReportedOnSite' => 'Reported on Site',
+	    'Summary' => 'Summary',
+	    'DescriptionEntry' => 'A description entry',
+	    'SortBy' => 'Sort By',
+		'SortBy_BugNumber' => 'Bug Number',
+		'SortBy_Severity' => 'Severity',
+		'SortBy_Reporter' => 'Reporter',
+		'SortBy_Priority' => 'Priority',
+		'SortBy_Status' => 'Status',
+		'SortAsc' => 'Ascending',
+		'SortDesc' => 'Descending',
+	    'SaveThisQueryAs' => 'Save this query as',
+	    'ResetBackToDefaultQuery' => 'Reset back to default query',
+	    'SubmitQuery' => 'Submit query',
+	    'SavedQueries' => 'Saved Queries',
+	    'GoToThe' => 'Go to the',
+	    'AdvancedQueryPage' => 'advanced query page',
+	    'SimpleQueryPage' => 'simple query page',
+	    'SureDeleteSavedQuery' => 'Are you sure to delete this saved query?',
+	    'MatchingAs' => 'matching as',
+		'MatchingAs_Regexp' => 'regexp',
+		'MatchingAs_NotRegexp' => 'not regexp',
+		'MatchingAs_Substring' => 'substring',
+		'MatchingAs_Exact' => 'exact',
+	    'eMail_Reporter' => 'Reporter',
+	    'eMail_AssignedTo' => 'Assigned To'
+	),
+        'WRAP' => array(
+            'FindBug' => 'Find Bug',
+            'Home' => 'Home',
+            'AddNewBug' => 'Add a new Bug',
+            'QueryBugs' => 'Query Bugs',
+            'ViewReports' => 'View Reports',
+            'Documentation' => 'Read Documentation',
+            'AdminTools' => 'Admin Tools',
+	    'CreateNewAccount' => 'Create a new Account'
+        )
     );
 	
 // Page titles
@@ -180,3 +192,4 @@ $TITLE = array(
 	'documentation' => 'Read documentation'
     );
 ?>
+

@@ -28,13 +28,13 @@ function updateMenus(f) {
 <form method="get" action="query.php" name="query">
     <table>
 	<tr>
-	    <th align="left">{$STRING._Status}:</th>
-	    <th align="left">{$STRING._Resolution}:</th>
-	    <th align="left">{$STRING._OpSys}:</th>
-	    <th align="left">{$STRING._Priority}:</th>
-	    <th align="left">{$STRING._Severity}:</th>
-	    <th align="left">{$STRING._Database}:</th>
-	    <th align="left">{$STRING._ReportedOnSite}:</th>
+	    <th align="left">{$STRING.QUERY.Status}:</th>
+	    <th align="left">{$STRING.QUERY.Resolution}:</th>
+	    <th align="left">{$STRING.QUERY.OpSys}:</th>
+	    <th align="left">{$STRING.QUERY.Priority}:</th>
+	    <th align="left">{$STRING.QUERY.Severity}:</th>
+	    <th align="left">{$STRING.QUERY.Database}:</th>
+	    <th align="left">{$STRING.QUERY.ReportedOnSite}:</th>
 	</tr><tr>
 	    <td align="left" valign="top"><select name="status[]"
 		multiple size="7">{build_select box=status}</select></td>
@@ -64,19 +64,19 @@ function updateMenus(f) {
 					    <option value="email">Email</option>
 					    <option value="login">Login</option>
 					</select>: <input name="email1"
-					    size="30" value="">&nbsp;{$STRING._MatchingAs}&nbsp;
+					    size="30" value="">&nbsp;{$STRING.QUERY.MatchingAs}&nbsp;
 					<select name="emailtype1">
-					    <option value="rlike">{$STRING._MatchingAs_Regexp}</option>
-					    <option value="not rlike">{$STRING._MatchingAs_NotRegexp}</option>
-					    <option selected value="like">{$STRING._MatchingAs_Substring}</option>
-					    <option value="=">{$STRING._MatchingAs_Exact}</option>
+					    <option value="rlike">{$STRING.QUERY.MatchingAs_Regexp}</option>
+					    <option value="not rlike">{$STRING.QUERY.MatchingAs_NotRegexp}</option>
+					    <option selected value="like">{$STRING.QUERY.MatchingAs_Substring}</option>
+					    <option value="=">{$STRING.QUERY.MatchingAs_Exact}</option>
 					</select></td>
 				    <td><input type="checkbox"
 					name="emailfield1[]" value="owner"
-					checked>{$STRING._eMail_AssignedTo}</td>
+					checked>{$STRING.QUERY.eMail_AssignedTo}</td>
 				</tr><tr>
 				    <td><input type="checkbox" name="emailfield1[]"
-					value="reporter">{$STRING._eMail_Reporter}</td>
+					value="reporter">{$STRING.QUERY.eMail_Reporter}</td>
 				</tr>
 			    </table></td>
 		    </tr>
@@ -85,72 +85,72 @@ function updateMenus(f) {
     </table>
     <table border="0">
 	<tr>
-	    <td align="right">{$STRING._Summary}:</td>
+	    <td align="right">{$STRING.QUERY.Summary}:</td>
 	    <td><input name="title" size="30" value=""></td>
 	    <td><select name="title_type">
-		    <option value="like" selected>{$STRING._MatchingAs_Substring}</option>
-		    <option value="rlike">{$STRING._MatchingAs_Regexp}</option>
-		    <option value="not rlike">{$STRING._MatchingAs_NotRegexp}</option>
+		    <option value="like" selected>{$STRING.QUERY.MatchingAs_Substring}</option>
+		    <option value="rlike">{$STRING.QUERY.MatchingAs_Regexp}</option>
+		    <option value="not rlike">{$STRING.QUERY.MatchingAs_NotRegexp}</option>
 	    </select></td>
 	</tr><tr>
-	    <td align="right">{$STRING._DescriptionEntry}:</td>
+	    <td align="right">{$STRING.QUERY.DescriptionEntry}:</td>
 	    <td><input name="description" size="30" value=""></td>
 	    <td><select name="description_type">
-		    <option value="like" selected>{$STRING._MatchingAs_Substring}</option>
-		    <option value="rlike">{$STRING._MatchingAs_Regexp}</option>
-		    <option value="not rlike">{$STRING._MatchingAs_NotRegexp}</option>
+		    <option value="like" selected>{$STRING.QUERY.MatchingAs_Substring}</option>
+		    <option value="rlike">{$STRING.QUERY.MatchingAs_Regexp}</option>
+		    <option value="not rlike">{$STRING.QUERY.MatchingAs_NotRegexp}</option>
 	    </select></td>
 	</tr><tr>
 	    <td align="right">URL:</td>
 	    <td><input name="url" size="30" value=""></td>
 	    <td><select name="url_type">
-		    <option value="like" selected>{$STRING._MatchingAs_Substring}</option>
-		    <option value="rlike">{$STRING._MatchingAs_Regexp}</option>
-		    <option value="not rlike">{$STRING._MatchingAs_NotRegexp}</option>
+		    <option value="like" selected>{$STRING.QUERY.MatchingAs_Substring}</option>
+		    <option value="rlike">{$STRING.QUERY.MatchingAs_Regexp}</option>
+		    <option value="not rlike">{$STRING.QUERY.MatchingAs_NotRegexp}</option>
 	    </select></td>
 	</tr>
     </table>
     <hr align="left" width="100%">
     <table>
 	<tr>
-	    <td><b>{$STRING._Project}:</b></td>
+	    <td><b>{$STRING.QUERY.Project}:</b></td>
 	    <td><select name="projects" onChange="updateMenus(this.form)">
-		    <option value=''>{$STRING._opt_All}</option>{build_select box=project}</select></td>
+		    <option value=''>{$STRING.QUERY.opt_All}</option>{build_select box=project}</select></td>
 	</tr><tr>
-	    <td><b>{$STRING._Version}:</b></td>
-	    <td><select name="versions"><option value=''>{$STRING._opt_All}</option></select></td>
+	    <td><b>{$STRING.QUERY.Version}:</b></td>
+	    <td><select name="versions"><option value=''>{$STRING.QUERY.opt_All}</option></select></td>
 	</tr><tr>
-	    <td><b>{$STRING._Component}:</b></td>
-	    <td><select name="components"><option value=''>{$STRING._opt_All}</option></select></td>
+	    <td><b>{$STRING.QUERY.Component}:</b></td>
+	    <td><select name="components"><option value=''>{$STRING.QUERY.opt_All}</option></select></td>
 	</tr>
     </table>
     <hr align="left" width="100%">
     <input type="hidden" name="op" value="doquery">
-    <b>{$STRING._SortBy}:</b>
+    <b>{$STRING.QUERY.SortBy}:</b>
     <select name="order">
-	<option value="bug_id">{$STRING._SortBy_BugNumber}</option>
-        <option selected value="severity.sort_order">{$STRING._SortBy_Severity}</option>
-        <option value="reporter.login">{$STRING._SortBy_Reporter}</option>
-        <option value="status.sort_order">{$STRING._SortBy_Status}</option>
-        <option value="priority">{$STRING._SortBy_Priority}</option>
+	<option value="bug_id">{$STRING.QUERY.SortBy_BugNumber}</option>
+        <option selected value="severity.sort_order">{$STRING.QUERY.SortBy_Severity}</option>
+        <option value="reporter.login">{$STRING.QUERY.SortBy_Reporter}</option>
+        <option value="status.sort_order">{$STRING.QUERY.SortBy_Status}</option>
+        <option value="priority">{$STRING.QUERY.SortBy_Priority}</option>
     </select>
     <select name="sort">
-	<option selected value="asc">{$STRING._SortAsc}</option>
-	<option value="desc">{$STRING._SortDesc}</option>
+	<option selected value="asc">{$STRING.QUERY.SortAsc}</option>
+	<option value="desc">{$STRING.QUERY.SortDesc}</option>
     </select>
     </nobr>
     <br><br>
 {if $smarty.session.uid}
-    {$STRING._SaveThisQueryAs}: <input maxlength="40" type="text" name="savedqueryname">
+    {$STRING.QUERY.SaveThisQueryAs}: <input maxlength="40" type="text" name="savedqueryname">
     <br><br>
 {/if}
-    <input type="reset" value="{$STRING._ResetBackToDefaultQuery}">
-    <input type="submit" value="{$STRING._SubmitQuery}"> 
+    <input type="reset" value="{$STRING.QUERY.ResetBackToDefaultQuery}">
+    <input type="submit" value="{$STRING.QUERY.SubmitQuery}"> 
 {if count($queries)}
-    <br><br><b>{$STRING._SavedQueries}</b><br>
+    <br><br><b>{$STRING.QUERY.SavedQueries}</b><br>
     {section name=query loop=$queries}
     <a href="{$smarty.server.PHP_SELF}?{$queries[query].saved_query_string}">{$queries[query].saved_query_name}</a> (<a href="{$smarty.server.PHP_SELF}?op=delquery&queryid={$queries[query].saved_query_id}&form=advanced" onClick="return confirm('Are you sure you want to delete this saved query?');">Delete</a>)<br>
     {/section}
 {/if}
 </form>
-<br>{$STRING._1GoToThe} <a href="{$smarty.server.PHP_SELF}?op=query">{$STRING._1SimpleQueryPage}</a>
+<br>{$STRING.QUERY.GoToThe} <a href="{$smarty.server.PHP_SELF}?op=query">{$STRING.QUERY.SimpleQueryPage}</a>

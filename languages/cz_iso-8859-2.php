@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz_iso-8859-2.php,v 1.9 2002/06/13 14:26:37 firma Exp $
+// $Id: cz_iso-8859-2.php,v 1.10 2002/06/17 09:21:52 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'ISO-8859-2',
@@ -90,42 +90,54 @@ $STRING = array(
 	'addnewsite' => 'Pøidat nové prostøedí',
 	'sitelist' => 'Seznam prostøedí',
 	'sites' => 'Prostøedí',
-	'_opt_All' => 'V¹e',
-        '_Project' => 'Projekt',
-        '_Version' => 'Verze',
-        '_Component' => 'Komponenta',
-        '_Status' => 'Status',
-	'_Resolution' => 'Rozhodnutí',
-	'_OpSys' => 'Operaèní systém',
-	'_Priority' => 'Priorita',
-	'_Severity' => 'Dùle¾itost',
-	'_Database' => 'Databáze',
-	'_ReportedOnSite' => 'Prostøedí výskytu',
-	'_Summary' => 'Shrnutí',
-	'_DescriptionEntry' => 'Polo¾ka popisu',
-        '_SortBy' => 'Tøídit podle',
-	    '_SortBy_BugNumber' => 'Èísla BUGu',
-	    '_SortBy_Severity' => 'Dùle¾itosti',
-	    '_SortBy_Reporter' => 'Reportéra',
-	    '_SortBy_Status' => 'Statutu',
-	    '_SortBy_Priority' => 'Priority',
-	    '_SortAsc' => 'Vzestupnì',
-	    '_SortDesc' => 'Sestupnì',
-        '_SaveThisQueryAs' => 'Ulo¾t tento dotaz jako',
-        '_ResetBackToDefaultQuery' => 'Zpìt k pùvodnímu dotazu',
-        '_SubmitQuery' => 'Odeslat dotaz',
-        '_SavedQueries' => 'Ulo¾ené dotazy',
-	'_1GoToThe' => 'Pøejít na',
-	'_1AdvancedQueryPage' => 'stránku pokroèilého vyhledávání',
-	'_1SimpleQueryPage' => 'stránku jednoduchého vyhledávání',
-	'_SureDeleteSavedQuery' => 'Jste si jisti, ¾e chcete smazat tento ulo¾ený dotaz?',
-	'_MatchingAs' => 'odpovídá (vyhledat jako)',
-	    '_MatchingAs_Regexp' => 'regulárním výrazem',
-	    '_MatchingAs_NotRegexp' => 'není regulárním výrazem',
-	    '_MatchingAs_Substring' => 'podøetìzec',
-	    '_MatchingAs_Exact' => 'pøesnì',
-	'_eMail_Reporter' => 'reportér',
-	'_eMail_AssignedTo' => 'pøiøazeno'
+	'QUERY' => array(
+	    'opt_All' => 'V¹e',
+	    'Project' => 'Projekt',
+	    'Version' => 'Verze',
+	    'Component' => 'Komponenta',
+	    'Status' => 'Status',
+	    'Resolution' => 'Rozhodnutí',
+	    'OpSys' => 'Operaèní systém',
+	    'Priority' => 'Priorita',
+	    'Severity' => 'Dùle¾itost',
+	    'Database' => 'Databáze',
+	    'ReportedOnSite' => 'Prostøedí výskytu',
+	    'Summary' => 'Shrnutí',
+	    'DescriptionEntry' => 'Polo¾ka popisu',
+	    'SortBy' => 'Tøídit podle',
+		'SortBy_BugNumber' => 'Èísla BUGu',
+		'SortBy_Severity' => 'Dùle¾itosti',
+		'SortBy_Reporter' => 'Reportéra',
+		'SortBy_Priority' => 'Priority',
+		'SortBy_Status' => 'Statutu',
+		'SortAsc' => 'Vzestupnì',
+		'SortDesc' => 'Sestupnì',
+	    'SaveThisQueryAs' => 'Ulo¾it tento dotaz jako',
+	    'ResetBackToDefaultQuery' => 'Zpìt k pùvodnímu dotazu',
+	    'SubmitQuery' => 'Odeslat dotaz',
+	    'SavedQueries' => 'Ulo¾ené dotazy',
+	    'GoToThe' => 'Pøejít na',
+	    'AdvancedQueryPage' => 'stránku pokroèilého vyhledávání',
+	    'SimpleQueryPage' => 'stránku jednoduchého vyhledávání',
+	    'SureDeleteSavedQuery' => 'Jste si jisti, ¾e chcete odstranit tento ulo¾ený dotaz?',
+	    'MatchingAs' => 'odpovídá (vyhledat jako)',
+		'MatchingAs_Regexp' => 'regulárním výrazem',
+		'MatchingAs_NotRegexp' => 'není regulárním výrazem',
+		'MatchingAs_Substring' => 'podøetìzec',
+		'MatchingAs_Exact' => 'pøesnì',
+	    'eMail_Reporter' => 'reportér',
+	    'eMail_AssignedTo' => 'pøiøazeno'
+	),
+	'WRAP' => array(
+	    'FindBug' => 'Hledat BUG',
+	    'Home' => 'Domù',
+	    'AddNewBug' => 'Pøidat nový BUG',
+	    'QueryBugs' => 'Prohledávání',
+	    'ViewReports' => 'Hlá¹ení/Reporty',
+	    'Documentation' => 'Dokumentace',
+	    'AdminTools' => 'Administraèní nástroje',
+	    'CreateNewAccount' => 'Vytvoøit nový úèet'
+	)
     );
 
 // Page titles
@@ -176,7 +188,7 @@ $TITLE = array(
 	'adddatabase' => 'Pøidat databázi',
 	'editdatabase' => 'Upravit databázi',
 	'database' => 'Databáze',
-	'documentation' => 'Dokumentace',
 	'site' => 'Prostøedí'
     );
 ?>
+
