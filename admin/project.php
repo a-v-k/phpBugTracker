@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.28 2001/12/07 14:18:22 bcurtis Exp $
+// $Id: project.php,v 1.29 2002/01/23 14:26:07 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -208,7 +208,7 @@ function save_project($projectid = 0) {
 	if ($error) { show_project($projectid, $error); return; }
 
 	foreach ($_pv as $k => $v) $$k = $v;
-  if (!$active) $active = 0;
+  if (!isset($active)) $active = 0;
   if (!$projectid) {
     $projectid = $q->nextid(TBL_PROJECT);
     $q->query('insert into '.TBL_PROJECT
