@@ -194,7 +194,7 @@
 						<td align="center">{$attachments[attachment].created_date|date:DATE_FORMAT}</td>
 						<td align="center">
 							<a href='attachment.php?attachid={$attachments[attachment].attachment_id}'>View</a>
-							{if $perm->have_perm('Administrator')}
+							{if isset($perm) and $perm->have_perm('Administrator')}
 								| <a href='attachment.php?del={$attachments[attachment].attachment_id}' onClick="return confirm('Are you sure you want to delete this attachment?');">Delete</a>
 							{/if}
 						</td>
