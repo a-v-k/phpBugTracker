@@ -1,3 +1,6 @@
+-- 0.6.1 -- 20 Dec 2001
+: Fixed bugs with the admin tools and buq query.
+
 -- 0.6.0 -- 15 Dec 2001
 : Fixed a bug with old queries being retained when submitting a new query.
 : Moved session, auth, and database classes into the package.
