@@ -55,7 +55,7 @@
     <input type="hidden" name="pos" value="{$smarty.request.pos}">
     <table border="0" width="100%">
 	<tr>
-	    <td>Bug <b>#{$bug_id}</b> - {$STRING.BUGDISPLAY.ReturnTo} <a href="query.php">{$STRING.BUGDISPLAY.BugList}</a></td>
+	    <td>Bug <b>#{$bug_id}</b> - {$title|stripslashes} - {$STRING.BUGDISPLAY.ReturnTo} <a href="query.php">{$STRING.BUGDISPLAY.BugList}</a></td>
 		<td align="right">
 {if $prevbug}
 		    <b><a href="bug.php?op=show&bugid={$prevbug}&pos={$prevpos}">{$STRING.previous_bug}</a></b>
