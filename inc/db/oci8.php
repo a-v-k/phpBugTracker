@@ -77,13 +77,18 @@ $QUERY = array(
 		'owner.login as owner '.
 		'from '.TBL_BUG.' b, '.TBL_AUTH_USER.' owner, '.TBL_AUTH_USER.' reporter, '.
 		TBL_AUTH_USER.' lastmodifier, ' . TBL_RESOLUTION.' resolution, '.
-		TBL_SEVERITY.' severity, ' . TBL_STATUS.' status, '.TBL_OS.' os, '.
+		TBL_DATABASE.' database, '.TBL_VERSION.' version2, '.
+		TBL_VERSION.' version3, '.TBL_SEVERITY.' severity, '.
+		TBL_STATUS.' status, '.TBL_OS.' os, '.
 		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.
 		TBL_PROJECT.' project, '.TBL_SITE.' site '.
 		'where b.assigned_to = owner.user_id(+) '.
 		'and b.created_by = reporter.user_id(+) '.
 		'and b.last_modified_by = lastmodifier.user_id(+) '.
 		'and b.resolution_id = resolution.resolution_id(+) '.
+		'and b.database_id = database.database_id(+) '.
+		'and b.to_be_closed_in_version_id = version2.version_id(+) '.
+		'and b.closed_in_version_id = version3.version_id(+) '.
 		'and b.severity_id = severity.severity_id '.
 		'and b.status_id = status.status_id and b.os_id = os.os_id '.
 		'and b.version_id = version.version_id '.

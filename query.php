@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.95 2003/06/11 12:09:19 bcurtis Exp $
+// $Id: query.php,v 1.96 2003/06/21 13:36:30 bcurtis Exp $
 
 include 'include.php';
 
@@ -216,8 +216,8 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'last_modified_date' => 'b.last_modified_date',
 		'project_name' => 'project.project_name',
 		'version_name' => 'version.version_name',
-		'to_be_closed_in_version_name' => 'version2.version_name as v2',
-		'closed_in_version_name' => 'version3.version_name as v3',
+		'to_be_closed_in_version_name' => 'version2.version_name',
+		'closed_in_version_name' => 'version3.version_name',
 		'database_name' => TBL_DATABASE.'.database_name',
 		'site_name' => 'site.site_name',
 		'component_name' => 'component.component_name',
@@ -243,8 +243,8 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'component_name' => 'component_name',
 		'version_name' => 'version_name',
 		'os_name' => 'os_name',
-		'to_be_closed_in_version_name' => 'v2',
-		'closed_in_version_name' => 'v3',
+		'to_be_closed_in_version_name' => 'version2.version_name',
+		'closed_in_version_name' => 'version3.version_name',
 		'database_name' => TBL_DATABASE.'.database_name',
 		'site_name' => 'site.sort_order',
 		'browser_string' => 'browser_string',
