@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.34 2002/09/14 19:03:48 bcurtis Exp $
+// $Id: functions.php,v 1.35 2002/09/23 20:08:59 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -231,6 +231,7 @@ function build_select($params) {
 	case 'BUG_PROMOTED' :
 	case 'BUG_ASSIGNED' :
 	case 'BUG_REOPENED' :
+	case 'BUG_CLOSED' :
 		static $bug_status_list = array();
 
 		if (empty($bug_status_list)) {
