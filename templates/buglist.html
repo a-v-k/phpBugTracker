@@ -15,6 +15,7 @@ Submit a bug for <select name="project">{project}</select>.
     <th><a href="{priorityurl}">Priority</a></th>
     <th><a href="{createddateurl}">Date Created</a></th>
     <th><a href="{statusurl}">Status</a></th>
+    <th><a href="{resolutionurl}">Resolution</a></th>
   </tr>
 	<!-- BEGIN row -->
 	<tr bgcolor="{bgcolor}">
@@ -26,10 +27,11 @@ Submit a bug for <select name="project">{project}</select>.
     <td align="center">{priority}</td>
     <td align="center">{createddate}</td>
     <td align="center">{status}</td>
+    <td align="center">&nbsp;{resolution}</td>
   </tr>
 	<!-- END row -->
 	<tr>
-		<td colspan="8" align="center">
+		<td colspan="9" align="center">
 			<br>
   		{first} - {last} of {total}<br>[ {pages} ]<!-- <a href="bugs.php?page=all">Show all</a>-->
   		<br>
