@@ -53,15 +53,27 @@ function change_password($pass1, $pass2) {
 }
 
 function show_preferences_form($error = '') {
-	global $t, $pass1, $pass2;
+	global $t, $pass1, $pass2, $all_db_fields, $default_db_fields, $auth;
 	
 	$t->set_file('content', 'user.html');
+	$t->set_block('content', 'column_list_row', 'list_rows');
+	
 	$t->set_var(array(
 		'error' => $error ? $error.'<br><br>' : '',
 		'pass1' => $pass1,
 		'pass2' => $pass2
 		));
-	
+		
+	$my_fields = $auth->auth['db_fields'] ? $auth->auth['db_fields'] :
+		$default_db_fields;
+	foreach ($all_db_fields as $field => $title) {
+		$t->set_var(array(
+			'column_name' => $field,
+			'column_title' => $title,
+			'checked' => $my_fields[$field] ? 'checked' : ''
+			));
+		$t->parse('list_rows', 'column_list_row', true);
+	}
 }
 
 $t->set_file('wrap', 'wrap.html');
@@ -71,6 +83,7 @@ if ($do) switch ($op) {
 	case 'changepassword' : change_password($_gv['pass1'], $_gv['pass2']); break;
 	case 'changecolumnlist' : change_bug_list_columns($_gv['column_list']); break;
 	default : show_preferences_form();
+}
 else show_preferences_form();
 
 $t->pparse('main', array('content', 'wrap', 'main'));

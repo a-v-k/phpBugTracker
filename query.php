@@ -23,39 +23,6 @@
 
 include 'include.php';
 
-$dbfields = array(
-	'bug_id' => 'ID',
-	'title' => 'Title',
-	'description' => 'Description',
-	'url' => 'URL',
-	'severity_name' => 'Severity',
-	'priority' => 'Priority',
-	'status_name' => 'Status',
-	'resolution_name' => 'Resolution',
-	'assigned_to' => 'Assigned To',
-	'reporter' => 'Reporter',
-	'owner' => 'Owner',
-	'created_date' => 'Created',
-	'last_modified_by' => 'Last Modified',
-	'last_modified_date' => 'Last Modified By',
-	'project_name' => 'Project',
-	'version_name' => 'Version',
-	'component_name' => 'Component',
-	'os_name' => 'OS',
-	'browser_string' => 'Browser',
-	'close_date' => 'Closed'
-	);
-$mydbfields = array(
-	'bug_id' => 'ID',
-	'title' => 'Title',
-	'reporter' => 'Reporter',
-	'owner' => 'Owner',
-	'severity_name' => 'Severity',
-	'priority' => 'Priority',
-	'status_name' => 'Status',
-	'resolution_name' => 'Resolution'
-	);
-	
 function delete_saved_query($queryid) {
 	global $q, $u, $me;
 	
@@ -191,7 +158,7 @@ function build_query($assignedto, $reportedby, $open) {
 
 function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	global $querystring, $me, $q, $t, $selrange, $order, $sort, $query, 
-		$page, $op, $select, $TITLE, $STRING, $savedqueryname, $u, $mydbfields;
+		$page, $op, $select, $TITLE, $STRING, $savedqueryname, $u, $default_db_fields;
 
 	$t->set_file('content','buglist.html');
 	$t->set_block('content','row','rows');
@@ -247,7 +214,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	}
 	
 	// Header row 
-	foreach ($mydbfields as $field => $title) {
+	foreach ($default_db_fields as $field => $title) {
 		$t->set_var(array(
 			'coldata' => "<a href='{{$field}url}'>$title</a>",
 			'td-extra' => "class=\"header-col\" bgcolor=\"{{$field}color}\""
@@ -262,7 +229,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	while ($row = $q->grab()) {
 		$bgcolor = USE_SEVERITY_COLOR ? $row['severity_color'] : 
 			((++$i % 2 == 0) ? '#dddddd' : '#ffffff');
-		foreach ($mydbfields as $field => $title) {
+		foreach ($default_db_fields as $field => $title) {
 			switch ($field) {
 				case 'url' : 
 					$coldata = "<a href='{$row[$field]}'>{$row[$field]}</a>"; 
@@ -303,7 +270,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		$t->parse('rows','row',true);
 		$t->set_var('cols', '');
 	}
-	$t->set_var('numcols', count($mydbfields));
+	$t->set_var('numcols', count($default_db_fields));
 }
 
 $t->set_file('wrap','wrap.html');

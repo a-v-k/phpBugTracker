@@ -28,3 +28,28 @@
 		</tr>
 	</table>
 </form>
+<form action="{me}" method="post">
+<input type="hidden" name="do" value="changecolumnlist">
+	<table border="0" cellpadding="0" cellspacing="0" width="600">
+		<tr>
+			<td width="600"><b>Bug List Columns</b></td>
+		</tr>
+		<tr>
+			<td width="600">Choose the fields you want to see in the bug list</td>
+		</tr>
+		<!-- BEGIN column_list_row -->
+		<tr>
+			<td>
+				<input type="checkbox" name="column_list[]" value="{column_name}" {checked}>
+				{column_title}
+			</td>
+		</tr>
+		<!-- END column_list_row -->
+		<tr>
+			<td>
+				<input type="reset">
+				<input type="submit" value="Submit">
+			</td>
+		</tr>
+	</table>
+</form>

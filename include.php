@@ -91,6 +91,40 @@ $select['authlevels'] = array(
 	15 => 'Administrator'
 	);
 
+$all_db_fields = array(
+	'bug_id' => 'ID',
+	'title' => 'Title',
+	'description' => 'Description',
+	'url' => 'URL',
+	'severity_name' => 'Severity',
+	'priority' => 'Priority',
+	'status_name' => 'Status',
+	'resolution_name' => 'Resolution',
+	'assigned_to' => 'Assigned To',
+	'reporter' => 'Reporter',
+	'owner' => 'Owner',
+	'created_date' => 'Created',
+	'last_modified_by' => 'Last Modified',
+	'last_modified_date' => 'Last Modified By',
+	'project_name' => 'Project',
+	'version_name' => 'Version',
+	'component_name' => 'Component',
+	'os_name' => 'OS',
+	'browser_string' => 'Browser',
+	'close_date' => 'Closed'
+	);
+
+$default_db_fields = array(
+	'bug_id' => 'ID',
+	'title' => 'Title',
+	'reporter' => 'Reporter',
+	'owner' => 'Owner',
+	'severity_name' => 'Severity',
+	'priority' => 'Priority',
+	'status_name' => 'Status',
+	'resolution_name' => 'Resolution'
+	);
+	
 class sqlclass extends CT_Sql {
 	var $database_class = 'dbclass';
 	var $database_table = 'active_sessions';
