@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.22 2002/04/03 18:18:03 bcurtis Exp $
+# $Id: mysql.in,v 1.23 2002/04/03 23:16:58 jpdw Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id int(10) unsigned NOT NULL default '0',
@@ -279,6 +279,9 @@ INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (2, 2);
 # And user_id 1 is an admin and a user
 INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 1);
 INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 2);
+
+# Add user's prefs as default values for all users defined so far (only admin)
+INSERT INTO TBL_USER_PREF (user_id) SELECT USER_ID FROM TBL_AUTH_USER;
 
 INSERT INTO TBL_CONFIGURATION VALUES ('INSTALL_URL','OPTION_INSTALL_URL','The base URL of the phpBugTracker installation','string');
 INSERT INTO TBL_CONFIGURATION VALUES ('JPGRAPH_PATH','','If not in the include path','string');
