@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.125 2002/10/28 22:03:23 bcurtis Exp $
+// $Id: bug.php,v 1.126 2003/02/19 14:07:19 bcurtis Exp $
 
 include 'include.php';
 
@@ -124,7 +124,8 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 	// It's a new bug if the changedfields array is empty and there are no comments
 	$newbug = (!count($cf) and !$comments);
 
-	$template = $newbug ? 'bugemail-newbug.txt' : 'bugemail.txt';
+	$template_ext = false/*HTML_EMAIL*/ ? 'html' : 'txt';
+	$template = $newbug ? "bugemail-newbug.$template_ext" : "bugemail.$template_ext";
 	foreach(array('title','url') as $field) {
 		if (isset($cf[$field])) {
 		    $db->query('insert into '.TBL_BUG_HISTORY.
@@ -309,6 +310,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 		if ($toemail = delimit_list(', ',$maillist)) {
 			$t->assign(array(
 				'bugid' => $buginfo['bug_id'],
+				'siteroot' => INSTALL_URL,
 				'bugurl' => INSTALL_URL."/bug.php?op=show&bugid={$buginfo['bug_id']}",
 				'priority' => $select['priority'][(!empty($cf['priority']) ? $cf['priority'] : $buginfo['priority'])],
 				'priority_stat' => !empty($cf['priority']) ? '!' : ' ',
@@ -447,6 +449,11 @@ function update_bug($bugid = 0) {
 	    "project_id = $project_id, version_id = $version_id, ".
 	    "component_id = $component_id, os_id = $os_id, last_modified_by = $u, ".
 	    "last_modified_date = $now $closed_query where bug_id = $bugid");
+	
+	// If the project has changed, move any attachments	
+	if (!empty($changedfields['project_id'])) {
+		move_attachments($bugid, $buginfo['project_id'], $project_id);
+	}
 
 	if (count($changedfields) or !empty($comments)) {
 		do_changedfields($u, $buginfo, $changedfields, $comments);
@@ -454,6 +461,27 @@ function update_bug($bugid = 0) {
 
 	header("Location: bug.php?op=show&bugid=$bugid&pos=$pos");
 }
+
+///
+/// Move attachments from one project directory to another
+function move_attachments($bug_id, $old_project, $new_project) {
+	global $db;
+	
+	$filepath = ATTACHMENT_PATH;
+	if (!is_dir("$filepath/$new_project")) {
+		@mkdir("$filepath/$new_project", 0775);
+	}
+
+	$rs = $db->query("select attachment_id, file_name from ".TBL_ATTACHMENT.
+		" where bug_id = $bug_id");
+	while ($row = $rs->fetchRow()) {
+		@rename("$filepath/$old_project/$bug_id-{$row['file_name']}",
+			"$filepath/$new_project/$bug_id-{$row['file_name']}");
+	}
+}
+	
+	
+	
 
 function do_form($bugid = 0) {
 	global $db, $me, $u, $_pv, $_gv, $STRING, $now, $HTTP_SERVER_VARS;
