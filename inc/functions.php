@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.2 2002/01/26 16:46:52 bcurtis Exp $
+// $Id: functions.php,v 1.3 2002/01/26 16:53:17 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -145,28 +145,36 @@ function build_select($box, $value = '', $project = 0) {
       $dir = opendir(INSTALL_PATH.'/languages');
       while (false !== ($file = readdir($dir))) {
         if ($file != '.' && $file != '..' && $file != 'CVS') {
-          $file = str_replace('.php', '', $file);
-          if ($file == $value) {
-            $sel = ' selected';
-          } else {
-            $sel = '';
-          }
-          $text .= "<option value=\"$file\"$sel>$file</option>";
+          $filelist[] = str_replace('.php', '', $file);
+				}
+			}
+			closedir($dir);
+			sort($filelist);
+			foreach ($filelist as $file) {
+        if ($file == $value) {
+          $sel = ' selected';
+        } else {
+          $sel = '';
         }
+        $text .= "<option value=\"$file\"$sel>$file</option>";
       }
       break;
     case 'THEME' :
       $dir = opendir(INSTALL_PATH.'/templates');
       while (false !== ($file = readdir($dir))) {
         if ($file != '.' && $file != '..' && $file != 'CVS') {
-          $file = str_replace('.php', '', $file);
-          if ($file == $value) {
-            $sel = ' selected';
-          } else {
-            $sel = '';
-          }
-          $text .= "<option value=\"$file\"$sel>$file</option>";
+          $filelist[] = str_replace('.php', '', $file);
+				}
+			}
+			closedir($dir);
+			sort($filelist);
+			foreach ($filelist as $file) {
+        if ($file == $value) {
+          $sel = ' selected';
+        } else {
+          $sel = '';
         }
+        $text .= "<option value=\"$file\"$sel>$file</option>";
       }
       break;
     default :
