@@ -21,11 +21,13 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.19 2002/04/03 01:00:52 bcurtis Exp $
+// $Id: install.php,v 1.20 2002/04/03 23:08:43 jpdw Exp $
 
 define ('INSTALL_PATH', dirname(__FILE__));
 
-if (!@include('Smarty.class.php')) { // Template class
+define ('SMARTY_PATH','smarty/');
+
+if (!@include(SMARTY_PATH . 'Smarty.class.php')) { // Template class
 	die('<br><br>
 	<div align="center">The Smarty templates class is not in your include path.
 	Without this class being available, phpBugTracker will not be able to work.
