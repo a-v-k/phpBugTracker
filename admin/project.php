@@ -20,22 +20,44 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.16 2001/09/11 04:23:03 bcurtis Exp $
+// $Id: project.php,v 1.17 2001/09/11 12:58:46 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
+
+function save_version($versionid = 0) {
+  global $q, $me, $_pv, $STRING, $now, $u;
+
+  // Validation
+  if (!$_pv['vf_version'] = trim($_pv['vf_version']))
+    $error['version'] = $STRING['giveversion'];
+  if ($error) { show_project($_pv['projectid'], $error); return; }
+
+	foreach ($_pv as $k => $v) $$k = $v;
+  if (!$vf_active) $vf_active = 0;
+  if (!$versionid) {
+    $q->query('insert into '.TBL_VERSION
+			." (version_id, project_id, version_name, active, created_by, created_date) 
+			values (".$q->nextid(TBL_VERSION).", $projectid, '$vf_version', $vf_active, $u, $now)");
+  } else {
+    $q->query('update '.TBL_VERSION
+			." set project_id = $projectid, version_name = $vf_version, 
+			active = $vf_active where version_id = '$versionid'");
+  }
+  header("Location: project.php?op=edit&id=$projectid");
+}
 
 function show_version($versionid = 0, $error = '') {
   global $q, $t, $_pv, $STRING;
 
 	foreach ($_pv as $k => $v) $$k = $v;
 	
-  $t->set_file('content','versionform.html');
   if ($versionid && !$error) {
     $row = $q->grab("select v.*, p.project_name as project_name"
     	." from ".TBL_VERSION." v left join ".TBL_PROJECT." p using(project_id)"
 			." where version_id = '$versionid'");
     $t->set_var(array(
+      'vf_error' => '',
       'versionid' => $row['version_id'],
       'vf_version' => $row['version_name'],
       'vf_active' => $row['active'] ? 'checked' : '',
@@ -71,17 +93,45 @@ function list_versions($projectid) {
   }
 }
 
+function save_component($componentid = 0) {
+	global $q, $me, $_pv, $u, $STRING, $now;
+	
+	// Validation
+	if (!$_pv['cf_name'] = trim($_pv['cf_name'])) 
+		$error['component'] = $STRING['givename'];
+	elseif (!$_pv['cf_description'] = trim($_pv['cf_description']))
+		$error['component'] = $STRING['givedesc'];
+	if ($error) { show_project($_pv['projectid'], $error); return; }
+	
+	foreach ($_pv as $k => $v) $$k = $v;
+	if (!$cf_owner) $cf_owner = 0;
+	if (!$cf_active) $cf_active = 0;
+	if (!$componentid) {
+		$q->query('insert into '.TBL_COMPONENT
+			." (component_id, project_id, component_name, component_desc, owner, 
+			active, created_by, created_date, last_modified_by, last_modified_date) 
+			values (".$q->nextid(TBL_COMPONENT).", $projectid, '$cf_name', 
+			'$cf_description', $cf_owner, $cf_active, $u, $now, $u, $now)");
+	} else {
+		$q->query('update '.TBL_COMPONENT
+			." set component_name = '$cf_name', component_desc = '$cf_description', 
+			owner = $cf_owner, active = $cf_active, last_modified_by = $u, 
+			last_modified_date = $now where component_id = '$componentid'");
+	}
+	header("Location: project.php?op=edit&id=$projectid");
+}	
+
 function show_component($componentid = 0, $error = '') {
 	global $q, $t, $_pv, $STRING;
 	
 	foreach ($_pv as $k => $v) $$k = $v;
 	
-	$t->set_file('content','componentform.html');
 	if ($componentid && !$error) {
 		$row = $q->grab('select c.*, p.project_name as project_name
 			from '.TBL_COMPONENT.' c  left join '.TBL_PROJECT." p using (project_id)
 			where component_id = '$componentid'");
 		$t->set_var(array(
+			'cf_error' => '',
 			'componentid' => $row['component_id'],
 			'cf_name' => $row['component_name'],
 			'cf_description' => $row['component_desc'],
@@ -131,14 +181,22 @@ function save_project($projectid = 0) {
 
   // Validation
   if (!$_pv['name'] = htmlspecialchars(trim($_pv['name']))) {
-    $error = $STRING['givename'];
+    $error['project'] = $STRING['givename'];
   } elseif (!$_pv['description'] = htmlspecialchars(trim($_pv['description']))) {
-    $error = $STRING['givedesc'];
-  } elseif (!$_pv['projectid'] and 
-		!$_pv['version'] = htmlspecialchars(trim($_pv['version']))) {
-    $error = $STRING['giveversion'];
-  }
-	if ($error) { show_form($projectid, $error); return; }
+    $error['project'] = $STRING['givedesc'];
+  } 
+	if ($error) { show_project($projectid, $error); return; }
+	
+	if (!$_pv['projectid']) {
+		if (!$_pv['vf_version'] = htmlspecialchars(trim($_pv['vf_version']))) {
+    	$error['version'] = $STRING['giveversion'];
+  	} elseif (!$_pv['cf_name'] = trim($_pv['cf_name'])) {
+			$error['component'] = $STRING['givename'];
+		} elseif (!$_pv['cf_description'] = trim($_pv['cf_description'])) {
+			$error['component'] = $STRING['givedesc'];
+		}
+	}
+	if ($error) { show_project($projectid, $error); return; }
 
 	foreach ($_pv as $k => $v) $$k = $v;
   if (!$active) $active = 0;
@@ -148,8 +206,13 @@ function save_project($projectid = 0) {
 			." (project_id, project_name, project_desc, active, created_by, created_date)
       values ($projectid , '$name', '$description', $active, $u, $now)");
     $q->query('insert into '.TBL_VERSION
-			." (version_id, project_id, version_name, active, created_by, created_date)
-       values (".$q->nextid(TBL_VERSION).", $projectid, '$version', $active, $u, $now)");
+			." (version_id, project_id, version_name, active, created_by, created_date) 
+			values (".$q->nextid(TBL_VERSION).", $projectid, '$vf_version', 1, $u, $now)");
+		$q->query('insert into '.TBL_COMPONENT
+			." (component_id, project_id, component_name, component_desc, owner, 
+			active, created_by, created_date, last_modified_by, last_modified_date) 
+			values (".$q->nextid(TBL_COMPONENT).", $projectid, '$cf_name', 
+			'$cf_description', $cf_owner, 1, $u, $now, $u, $now)");
   } else {
     $q->query('update '.TBL_PROJECT
 			." set project_name = '$name', project_desc = '$description', 
@@ -158,8 +221,8 @@ function save_project($projectid = 0) {
   header("Location: $me?op=edit&id=$projectid");
 }
 
-function show_project($projectid = 0, $error = '') {
-  global $q, $me, $t, $name, $description, $active, $version, $TITLE, $_gv;
+function show_project($projectid = 0, $error = array()) {
+  global $q, $me, $t, $name, $description, $active, $TITLE, $_gv;
 
   if ($projectid && !$error) {
     $row = $q->grab('select * from '.TBL_PROJECT
@@ -173,18 +236,17 @@ function show_project($projectid = 0, $error = '') {
       ));
   } else {
     $t->set_var(array(
-      'error' => $error,
+      'error' => $error['project'],
       'projectid' => $projectid,
       'name' => stripslashes($name),
       'description' => stripslashes($description),
-			'version' => stripslashes($version),
       'active' => (isset($active) and !$active) ? '' : 'checked',
       'TITLE' => $projectid ? $TITLE['editproject'] : $TITLE['addproject']
       ));
   }
 	
   if ($projectid) {
-		$t->set_file('content','project-edit.html');
+		$t->set_file('content', 'project-edit.html');
 		$t->set_block('content', 'verrow', 'verrows');
 		$t->set_block('content', 'row', 'rows');
     list_components($projectid);
@@ -192,8 +254,8 @@ function show_project($projectid = 0, $error = '') {
   } else {
 		$t->set_file('content','project-add.html');
 	}
-	show_version($_gv['versionid']);
-	show_component($_gv['componentid']);
+	show_version($_gv['versionid'], $error['version']);
+	show_component($_gv['componentid'], $error['component']);
 }
 
 function list_projects() {
@@ -260,8 +322,8 @@ if (isset($_gv['op'])) {
 } elseif (isset($_pv['do'])) {
 	switch($_pv['do']) {
   	case 'project' : save_project($_pv['id']); break;
-		case 'version' : save_version(); break;
-		case 'component' : save_component(); break;
+		case 'version' : save_version($_pv['versionid']); break;
+		case 'component' : save_component($_pv['componentid']); break;
 	}
 } else list_projects();
 
