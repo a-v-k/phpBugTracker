@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.13 2002/03/29 18:25:38 bcurtis Exp $
+// $Id: functions.php,v 1.14 2002/03/29 23:55:14 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -322,7 +322,8 @@ function build_project_js() {
 		$rs = $db->query("select project_id, project_name from ".TBL_PROJECT.
 			" where active = 1 order by project_name");
 	} else {
-		$rs = $db->query(sprintf($QUERY['functions-project-js'], $_sv['group_ids']));
+		$rs = $db->query(sprintf($QUERY['functions-project-js'], 
+			delimit_list(',', $_sv['group_ids'])));
 	}
 	while (list($pid, $pname) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 		$pname = addslashes($pname);
