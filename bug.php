@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.53 2001/11/03 14:25:30 bcurtis Exp $
+// $Id: bug.php,v 1.54 2001/11/03 14:58:04 bcurtis Exp $
 
 include 'include.php';
 
@@ -238,8 +238,8 @@ function update_bug($bugid = 0) {
     }
   }
 
-  if (!($u == $buginfo['assigned_to'] or $u == $buginfo['created_by'] or
-    $perm->have_perm('Manager')) and STRICT_UPDATING) {
+  if (STRICT_UPDATING and !($u == $buginfo['assigned_to'] or 
+		$u == $buginfo['created_by'] or $perm->have_perm('Manager'))) {
       show_bug($bugid,array('status' => $STRING['bugbadperm']));
       return;
   }
