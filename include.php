@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.45 2001/09/01 15:44:20 mohni Exp $
+// $Id: include.php,v 1.46 2001/09/01 16:15:01 bcurtis Exp $
 
 if (defined("INCLUDE_PATH")) {
 	require INCLUDE_PATH."config.php";
@@ -269,22 +269,23 @@ function build_select($box, $value = '', $project = 0) {
 
   //create hash to map tablenames
   $cfgDatabase=array(
-    'project' =>	TBL_PROJECT,
-    'component' =>	TBL_COMPONENT,
-    'status' =>		TBL_STATUS,
-    'resolution' =>	TBL_RESOLUTION,
-    'severity' =>	TBL_SEVERITY,
-    'version' =>	TBL_VERSION
+    'project' => TBL_PROJECT,
+    'component' => TBL_COMPONENT,
+    'status' => TBL_STATUS,
+    'resolution' => TBL_RESOLUTION,
+    'severity' => TBL_SEVERITY,
+    'version' => TBL_VERSION
   );
 
   $text = '';
+	$querystart = "select {$box}_id, {$box}_name from $cfgDatabase[$box]";
   $queries = array(
-    'severity' => "select {$box}_id, {$box}_name from ".$cfgDatabase[$box]." where sort_order > 0 order by sort_order",
-    'status' => "select {$box}_id, {$box}_name from ".$cfgDatabase[$box]." where sort_order > 0 order by sort_order",
-    'resolution' => "select {$box}_id, {$box}_name from ".$cfgDatabase[$box]." where sort_order > 0 order by sort_order",
-    'project' => "select {$box}_id, {$box}_name from ".$cfgDatabase[$box]." where active = 0 order by {$box}_name",
-    'component' => "select {$box}_id, {$box}_name from ".$cfgDatabase[$box]." where project_id = $project order by {$box}_name",
-    'version' => "select {$box}_id, {$box}_name from ".$cfgDatabase[$box]." where project_id = $project order by {$box}_name"
+    'severity' => $querystart.' where sort_order > 0 order by sort_order',
+    'status' => $querystart.' where sort_order > 0 order by sort_order',
+    'resolution' => $querystart.' where sort_order > 0 order by sort_order',
+    'project' => $querystart." where active > 0 order by {$box}_name",
+    'component' => $querystart." where project_id = $project order by {$box}_name",
+    'version' => $querystart." where project_id = $project order by {$box}_name"
     );
 
   switch($box) {
@@ -299,7 +300,7 @@ function build_select($box, $value = '', $project = 0) {
         if ($value == $row[$box.'_id'] and $value != '') $sel = ' selected';
         else $sel = '';
         $text .= '<option value="'.
-          $row[$box.'_id']."\"$sel>".$row[$box.'_name']."</option>";
+          $row[$box.'_id']."\"$sel>".$row[$box.'_name'].'</option>';
       }
       break;
     case 'os' :
