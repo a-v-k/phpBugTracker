@@ -166,7 +166,7 @@ class uperm {
   function perm_invalid($actual_perms, $required_perms) {
     global $t;
 		
-    $t->display('badperm.html');
+    $t->wrap('badperm.html');
   }
 
 	function check_group($group) {
@@ -174,7 +174,7 @@ class uperm {
 
 		if (!$this->check_auth('group', $group)) {		
 			$t->assign('group', $group);
-			$t->display('badgroup.html');
+			$t->wrap('badgroup.html');
 			exit();
 		}
 	}
