@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.89 2002/09/23 20:31:24 bcurtis Exp $
+// $Id: query.php,v 1.90 2002/09/23 20:48:21 bcurtis Exp $
 
 include 'include.php';
 
@@ -215,8 +215,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'version_name' => 'version.version_name',
 		'to_be_closed_in_version_name' => 'version2.version_name as v2',
 		'closed_in_version_name' => 'version3.version_name as v3',
-		'database_provider' => TBL_DATABASE.'.database_name',
-		'database_version' => TBL_DATABASE.'.database_version',
+		'database_name' => TBL_DATABASE.'.database_name',
 		'site_name' => 'site.site_name',
 		'component_name' => 'component.component_name',
 		'os_name' => 'os.os_name',
@@ -243,8 +242,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'os_name' => 'os_name',
 		'to_be_closed_in_version_name' => 'v2',
 		'closed_in_version_name' => 'v3',
-		'database_provider' => TBL_DATABASE.'.database_name',
-		'database_version' => TBL_DATABASE.'.database_version',
+		'database_name' => TBL_DATABASE.'.database_name',
 		'site_name' => 'site.sort_order',
 		'browser_string' => 'browser_string',
 		'resolution_name' => 'resolution.sort_order',
@@ -318,7 +316,8 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 			? "and {$HTTP_SESSION_VARS['queryinfo']['query']} " : ''),
 		$order, $sort), $llimit, $selrange)));
 
-	sorting_headers($me, $headers, $order, $sort, "page=$page".$paramstr);
+	sorting_headers($me, $headers, $order, $sort, "page=$page".
+		(!empty($paramstr) ? $paramstr : ''));
 	$t->wrap('buglist.html', 'buglist');
 }
 
