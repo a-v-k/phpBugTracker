@@ -296,39 +296,53 @@ CLASS="CLASSNAME"
 >Session</TT
 > class.  </P
 ><DIV
-CLASS="SECT4"
-><H4
-CLASS="SECT4"
-><A
-NAME="AEN252"
->3.1.1.3.1. Session</A
-></H4
+CLASS="FORMALPARA"
 ><P
+><B
+>Session. </B
 >Session variables, or variables that should be retained from page to page, are set via the <TT
 CLASS="VARNAME"
 >$sess</TT
 > variable, which is an instantiation of the <TT
 CLASS="CLASSNAME"
 >usess</TT
-> class.  </P
+> class.  You can register a session variable with <TT
+CLASS="FUNCTION"
+>$sess-&#62;register('<TT
+CLASS="REPLACEABLE"
+><I
+>varname</I
+></TT
+>')</TT
+>.  When registering, make sure you don't include the $ with <TT
+CLASS="REPLACEABLE"
+><I
+>varname</I
+></TT
+>.  This variable will now be available in the global scope until the session is destroyed by the user closing the browser.</P
 ></DIV
 ><DIV
-CLASS="SECT4"
-><H4
-CLASS="SECT4"
-><A
-NAME="AEN257"
->3.1.1.3.2. Auth</A
-></H4
+CLASS="FORMALPARA"
+><P
+><B
+>Auth. </B
+>The login handler is located near the end of <TT
+CLASS="FILENAME"
+>include.php</TT
+>.  Via the <TT
+CLASS="CLASSNAME"
+>uath</TT
+> class, the global variable <TT
+CLASS="VARNAME"
+>$u</TT
+> is set to the user id of the user if logged in, or to 'nobody' if not logged in.  This variable should be used as the CreatedBy or LastModifiedBy value for database inserts and updates.</P
 ></DIV
 ><DIV
-CLASS="SECT4"
-><H4
-CLASS="SECT4"
-><A
-NAME="AEN259"
->3.1.1.3.3. Perm</A
-></H4
+CLASS="FORMALPARA"
+><P
+><B
+>Perm. </B
+></P
 ></DIV
 ></DIV
 ></DIV

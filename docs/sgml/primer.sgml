@@ -18,10 +18,10 @@
       <screeninfo>Project selection</screeninfo>
     <mediaobject>
       <imageobject>
-	<imagedata fileref="images/shots/user/enterbug-chooseproject.png" format="PNG" align="middle">
+	<imagedata fileref="images/shots/user/enterbug-chooseproject.png" format="PNG">
       </imageobject>
       <imageobject>
-	<imagedata fileref="images/shots/user/enterbug-chooseproject.jpg" format="JPG" align="center">
+	<imagedata fileref="images/shots/user/enterbug-chooseproject.jpg" format="JPG">
       </imageobject>
       <imageobject>
 	<imagedata fileref="images/shots/user/enterbug-chooseproject.eps" format="EPS" align="center">
@@ -41,10 +41,10 @@
       <screeninfo>Adding a bug</screeninfo>
     <mediaobject>
       <imageobject>
-	<imagedata fileref="images/shots/user/enterbug-detail.png" format="PNG" align="center">
+	<imagedata fileref="images/shots/user/enterbug-detail.png" format="PNG">
       </imageobject>
       <imageobject>
-	<imagedata fileref="images/shots/user/enterbug-detail.jpg" format="JPG" align="center">
+	<imagedata fileref="images/shots/user/enterbug-detail.jpg" format="JPG">
       </imageobject>
       <imageobject>
 	<imagedata fileref="images/shots/user/enterbug-detail.eps" format="EPS" align="center">
