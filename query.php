@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.33 2001/10/16 04:19:47 bcurtis Exp $
+// $Id: query.php,v 1.34 2001/10/30 03:57:43 bcurtis Exp $
 
 include 'include.php';
 
@@ -41,7 +41,7 @@ function show_query() {
 	$t->set_block('savequeryblock','row','rows');
 	 
 	// Build the javascript-powered select boxes
-	$q->query("select project_id, project_name from ".TBL_PROJECT." where active order by project_name");
+	$q->query("select project_id, project_name from ".TBL_PROJECT." where active = 1 order by project_name");
 	while (list($pid, $pname) = $q->grab()) {
 		// Version array
 		$js .= "versions['$pname'] = new Array(new Array('','All'),";
@@ -169,8 +169,8 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	// Save the query if requested
 	if ($savedqueryname) {
 		$savedquerystring = ereg_replace('&savedqueryname=.*(&?)', '\\1', $GLOBALS['QUERY_STRING']);
-		$q->query("insert into ".TBL_SAVED_QUERY." (user_id, saved_query_name, saved_query_string)"
-			." values ($u, '$savedqueryname', '$savedquerystring')");
+		$q->query("insert into ".TBL_SAVED_QUERY." (saved_query_id, user_id, saved_query_name, saved_query_string)"
+			." values (".$q->nextid(TBL_SAVED_QUERY).", $u, '$savedqueryname', '$savedquerystring')");
 	}
 	if (!$order) { 
 		$order = 'bug_id'; 
