@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.100 2002/05/05 16:24:46 bcurtis Exp $
+// $Id: bug.php,v 1.101 2002/05/06 13:17:29 firma Exp $
 
 include 'include.php';
 
@@ -383,15 +383,20 @@ function update_bug($bugid = 0) {
 }
 
 function do_form($bugid = 0) {
-  global $db, $me, $u, $_pv, $STRING, $now, $HTTP_SERVER_VARS;
+  global $db, $me, $u, $_pv, $_gv, $STRING, $now, $HTTP_SERVER_VARS;
 
 	$error = '';
   // Validation
-  if (!$_pv['title'] = htmlspecialchars(trim($_pv['title'])))
+  if (!$_pv['title'] = htmlspecialchars(trim($_pv['title']))) {
     $error = $STRING['givesummary'];
-  elseif (!$_pv['description'] = htmlspecialchars(trim($_pv['description'])))
+  } elseif (!$_pv['description'] = htmlspecialchars(trim($_pv['description']))) {
     $error = $STRING['givedesc'];
-  if ($error) { show_form($bugid, $error); return; }
+  }
+  if ($error) {
+    $_gv['project'] = $_pv['project'];
+    show_form($bugid, $error);
+    return;
+  }
 
   while (list($k,$v) = each($_pv)) $$k = $v;
 
