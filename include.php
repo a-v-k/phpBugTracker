@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.97 2002/03/13 17:44:02 bcurtis Exp $
+// $Id: include.php,v 1.98 2002/03/14 19:36:00 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -252,10 +252,13 @@ if (!defined('NO_AUTH')) {
 	// Check to see if we have projects that shouldn't be visible to the user
 	$restricted_projects = '0';
 	if (!$perm->have_perm('Admin')) {
+		$viewable_projects = delimit_list(',', 
+			$q->grab_field_set("select project_id from ".TBL_PROJECT_GROUP.
+				" where group_id in (".delimit_list(',', $auth->auth['group_ids']).")"));
+		$viewable_projects = $viewable_projects ? $viewable_projects : '0';
 		$matching_projects = delimit_list(',', 
 			$q->grab_field_set("select project_id from ".TBL_PROJECT_GROUP.
-				" where group_id not in (".delimit_list(',', $auth->auth['group_ids']).
-				") group by project_id"));
+				" where project_id not in ($viewable_projects) group by project_id"));
 		if ($matching_projects) {
 			$restricted_projects .= ",$matching_projects";
 		}
