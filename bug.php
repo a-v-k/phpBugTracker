@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.36 2001/09/01 16:14:29 bcurtis Exp $
+// $Id: bug.php,v 1.37 2001/09/03 15:09:46 bcurtis Exp $
 
 include 'include.php';
 
@@ -34,8 +34,9 @@ function show_history($bugid) {
 		return;
 	}
 	
-	$q->query("select bh.*, email from ".TBL_BUG_HISTORY." bh left join ".TBL_AUTH_USER." on created_by = user_id"
-	         ." where bug_id = $bugid");
+	$q->query('select bh.*, login from '.TBL_BUG_HISTORY.' bh left join '
+		.TBL_AUTH_USER.' on bh.created_by = user_id'
+		." where bug_id = $bugid");
 	if (!$q->num_rows()) {
 		show_text($STRING['nobughistory']);
 		return;
@@ -50,7 +51,7 @@ function show_history($bugid) {
 			'field' => stripslashes($row['changed_field']),
 			'oldvalue' => stripslashes($row['old_value']),
 			'newvalue' => stripslashes($row['new_value']),
-			'createdby' => stripslashes(maskemail($row['email'])),
+			'createdby' => stripslashes(maskemail($row['login'])),
 			'date' => date(DATEFORMAT.' '.TIMEFORMAT, $row['created_date'])
 			));
 		$t->parse('rows', 'row', true);
@@ -66,9 +67,11 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 	$t->set_block('emailout','commentblock', 'cblock');
 	foreach(array('title','url') as $field) {
 		if (isset($cf[$field])) {
-			$q->query("insert into ".TBL_BUG_HISTORY
-				 ." (bug_id, changed_field, old_value, new_value, created_by, created_date)"
-				 ." values ({$buginfo['bug_id']}, '$field', '$buginfo[$field]', '$cf[$field]', $u, $now)");
+			$q->query('insert into '.TBL_BUG_HISTORY
+				 .' (bug_id, changed_field, old_value, new_value, created_by, created_date)'
+				 ." values ({$buginfo['bug_id']}, '$field', '"
+				 .addslashes($buginfo[$field])."', '".addslashes($cf[$field])
+				 ."', $u, $now)");
 			$t->set_var(array(
 				$field => $cf[$field],
 				$field.'_stat' => '!'
@@ -81,8 +84,8 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 		}
 	}
 
-	//create array with tablenames for following loop
-	$cfgDatabase=array(
+	// create array with tablenames for following loop
+	$cfgDatabase = array(
 	  'project' => TBL_PROJECT,
 	  'component' => TBL_COMPONENT,
 	  'status' => TBL_STATUS,
@@ -92,16 +95,15 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 	  'version' => TBL_VERSION
 	);
 	
-	foreach(array('project','component','status','resolution','severity','os',
-		'version') as $field) {
-		$oldvalue = $q->grab_field("select ${field}_name from ".$cfgDatabase[$field]
-		                          ." where ${field}_id = {$buginfo[$field.'_id']}");
-		if ($cf[$field]) {
-			$newvalue = $q->grab_field("select ${field}_name from ".$cfgDatabase[$field]
-			                          ." where ${field}_id = $cf[$field]");
-			$q->query("insert into ".TBL_BUG_HISTORY
-			         ." (bug_id, changed_field, old_value, new_value, created_by, created_date)"
-				 ." values ({$buginfo['bug_id']}, '$field', '$oldvalue', '$newvalue', $u, $now)");
+	foreach($cfgDatabase as $field => $table) {
+		$oldvalue = $q->grab_field("select ${field}_name from $table"
+			." where ${field}_id = {$buginfo[$field.'_id']}");
+		if ($cf[$field.'_id']) {
+			$newvalue = $q->grab_field("select ${field}_name from $table"
+				." where ${field}_id = {$cf[$field.'_id']}");
+			$q->query('insert into '.TBL_BUG_HISTORY
+				.' (bug_id, changed_field, old_value, new_value, created_by, created_date)'
+				." values ({$buginfo['bug_id']}, '$field', '$oldvalue', '$newvalue', $u, $now)");
 			$t->set_var(array(
 				$field => stripslashes($newvalue),
 				$field.'Stat' => '!'
@@ -115,21 +117,23 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 	}
 	
 	// Reporter never changes;
-	$reporter = $q->grab_field("select email from ".TBL_AUTH_USER." where user_id = {$buginfo['created_by']}");
+	$reporter = $q->grab_field('select email from '.TBL_AUTH_USER
+		." where user_id = {$buginfo['created_by']}");
 	$reporterstat = ' ';
-	$assignedto = $q->grab_field("select email from ".TBL_AUTH_USER
-                      ." where user_id = ". ($cf['assigned_to'] ? $cf['assigned_to'] : $buginfo['assigned_to']));
+	$assignedto = $q->grab_field('select email from '.TBL_AUTH_USER
+  	.' where user_id = '
+		.($cf['assigned_to'] ? $cf['assigned_to'] : $buginfo['assigned_to']));
 	$assignedtostat = $cf['assigned_to'] ? '!' : ' ';
 	
 	// If there are new comments grab the comments immediately before the latest
 	if ($comments) {
-		$q->query("select u.email, c.comment_text, c.created_date"
-                         ." from ".TBL_COMMENT." c, ".TBL_AUTH_USER." u"
-                         ." where bug_id = {$buginfo['bug_id']} and c.created_by = u.user_id"
-                         ." order by created_date desc limit 2");
+		$q->query('select u.login, c.comment_text, c.created_date'
+			.' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER.' u'
+			." where bug_id = {$buginfo['bug_id']} and c.created_by = u.user_id"
+			.' order by created_date desc limit 2');
 		$row = $q->grab();
 		$t->set_var(array(
-			'newpostedby' => $row['email'],
+			'newpostedby' => $row['login'],
 			'newpostedon' => date(TIMEFORMAT, $row['created_date']).' on '.
 				date(DATEFORMAT, $row['created_date']),
 			'newcomments' => textwrap('+ '.stripslashes($row['comment_text']),72,"\n+ ")
@@ -137,9 +141,9 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 		// If this comment is the first additional comment after the creation of the
 		// bug then we need to grab the bug's description as the previous comment
 		if ($q->num_rows() < 2) {
-			list($by, $on, $comments) = $q->grab("select u.email, b.created_date, b.description"
-                          ." from ".TBL_BUG." b, ".TBL_AUTH_USER." u"
-                          ." where b.created_by = u.user_id and bug_id = {$buginfo['bug_id']}");
+			list($by, $on, $comments) = $q->grab('select u.login, b.created_date, b.description'
+      	.' from '.TBL_BUG.' b, '.TBL_AUTH_USER.' u'
+      	." where b.created_by = u.user_id and bug_id = {$buginfo['bug_id']}");
 			$t->set_var(array(
 				'oldpostedby' => $by,
 				'oldpostedon' => date(TIMEFORMAT,$on).' on '.date(DATEFORMAT,$on),
@@ -148,7 +152,7 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 		} else {
 			$row = $q->grab();
 			$t->set_var(array(
-				'oldpostedby' => $row['email'],
+				'oldpostedby' => $row['login'],
 				'oldpostedon' => date(TIMEFORMAT,$row['created_date']).' on '.
 					date(DATEFORMAT,$row['created_date']),
 				'oldcomments' => textwrap(stripslashes($row['comment_text']),72)
@@ -200,7 +204,9 @@ function update_bug($bugid = 0) {
 				elseif ($v and substr($v,0,7) != 'http://') $v = 'http://'.$v;
 				$url = $v;
 			}
-			if (stripslashes($buginfo[$k]) != stripslashes($v)) { $changedfields[$k] = $v; }
+			if (stripslashes($buginfo[$k]) != stripslashes($v)) { 
+				$changedfields[$k] = $v; 
+			}
 		}
 	}
 	
@@ -211,7 +217,7 @@ function update_bug($bugid = 0) {
 	}
 		
 	if ($outcome == 'reassign' and 
-		(!$assignedto = $q->grab_field("select user_id from ".TBL_AUTH_USER." where email = '$reassignto'"))) {
+		(!$assignedto = $q->grab_field("select user_id from ".TBL_AUTH_USER." where login = '$reassignto'"))) {
 		show_bug($bugid,array('status' => $STRING['nouser']));
 		return;
 	}
@@ -225,7 +231,7 @@ function update_bug($bugid = 0) {
 		case 'unchanged' : break;
 		case 'assign' : $assignedto = $u; $statusfield = 'Assigned'; break;
 		case 'reassign' : 
-			if (!$assignedto = $q->grab_field("select user_id from ".TBL_AUTH_USER." where email = '$reassignto'")) {
+			if (!$assignedto = $q->grab_field("select user_id from ".TBL_AUTH_USER." where login = '$reassignto'")) {
 				show_bug($bugid,array('status' => $STRING['nouser']));
 				return;
 			} else {				
@@ -372,12 +378,12 @@ function show_form($bugid = 0, $error = '') {
 function show_bug($bugid = 0, $error = '') {
 	global $q, $me, $t, $project, $STRING, $u, $perm;
 	
-	if (!ereg('^[0-9]+$',$bugid) or !$row = $q->grab("select b.*, reporter.email as reporter, owner.email as owner,"
-        	  ." status_name, resolution_name"
-        	  ." from ".TBL_BUG." b left join ".TBL_RESOLUTION." r using(resolution_id),"
-        	  .TBL_SEVERITY." sv, ".TBL_STATUS." st left join ".TBL_AUTH_USER." owner on b.assigned_to=owner.user_id"
-		  ." left join ".TBL_AUTH_USER." reporter on b.created_by = reporter.user_id"
-		  ." where bug_id = '$bugid' and b.severity_id = sv.severity_id and b.status_id = st.status_id")) {
+	if (!ereg('^[0-9]+$',$bugid) or 
+		!$row = $q->grab('select b.*, reporter.login as reporter, owner.login as owner, status_name, resolution_name'
+    	.' from '.TBL_BUG.' b left join '.TBL_RESOLUTION.' r using(resolution_id),'
+    	.TBL_SEVERITY.' sv, '.TBL_STATUS.' st left join '.TBL_AUTH_USER.' owner on b.assigned_to=owner.user_id'
+			.' left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id'
+			." where bug_id = '$bugid' and b.severity_id = sv.severity_id and b.status_id = st.status_id")) {
 		show_text($STRING['bugbadnum'],true);
 		return;
 	}
@@ -401,7 +407,7 @@ function show_bug($bugid = 0, $error = '') {
 		'severity' => build_select('severity',$row['severity_id']),
 		'priority' => build_select('priority',$row['priority']),
 		'status' => $row['status_name'],
-		'resolution' => $row['resolution_name'],
+		'resolution' => $row['resolution_name'] ? $row['resolution_name'] : '',
 		'owner' => maskemail($row['owner']),
 		'reporter' => maskemail($row['reporter']),
 		'createddate' => date(DATEFORMAT,$row['created_date']),
@@ -476,9 +482,9 @@ function show_bug($bugid = 0, $error = '') {
 		}
 	}
 			
-	$q->query("select comment_text, c.created_date, email"
-	         ." from ".TBL_COMMENT." c, ".TBL_AUTH_USER
-		 ." where bug_id = $bugid and c.created_by = user_id order by c.created_date");
+	$q->query('select comment_text, c.created_date, login'
+		.' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER
+		." where bug_id = $bugid and c.created_by = user_id order by c.created_date");
 	if (!$q->num_rows()) {
 		$t->set_var('rows','');
 	} else {
@@ -487,7 +493,7 @@ function show_bug($bugid = 0, $error = '') {
 				'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
 				'rdescription' => eregi_replace('(bug)[[:space:]]*(#?)([0-9]+)',
 					"\\1 <a href='$me?op=show&bugid=\\3'>\\2\\3</a>",nl2br($row['comment_text'])),
-				'rreporter' => maskemail($row['email']),
+				'rreporter' => maskemail($row['login']),
 				'rcreateddate' => date(TIMEFORMAT,$row['created_date']).' on '.
 					date(DATEFORMAT,$row['created_date'])
 				));
@@ -499,7 +505,7 @@ function show_bug($bugid = 0, $error = '') {
 function show_projects() {
 	global $me, $q, $t, $project, $STRING;
 	
-	$q->query("select * from ".TBL_PROJECT." where active order by project_name");
+	$q->query('select * from '.TBL_PROJECT.' where active order by project_name');
 	switch ($q->num_rows()) {
 		case 0 :
 			$t->set_var('rows',$STRING['noprojects']);
