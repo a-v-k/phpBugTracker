@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz.php,v 1.7 2002/05/18 15:40:19 firma Exp $
+// $Id: cz.php,v 1.8 2002/05/19 12:06:56 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'Windows-1250',
@@ -74,7 +74,7 @@ $STRING = array(
 		1 => 'Aktivní uživatelé',
 		2 => 'Neaktivní uživatelé'),
 	'dupe_dependency' => 'Tato závislost již byla pøidána',
-	'image_path_not_writeable' => 'Webprocess nemùže zapisovat do podadresáøe "jpgimages", pøehledový obrázek nemùže být vygenerován.'
+	'image_path_not_writeable' => 'Webprocess nemùže zapisovat do podadresáøe "jpgimages", pøehledový obrázek nemùže být vygenerován.',
 	'password_changed' => 'Vaše heslo bylo zmìnìno',
 	'prefs_changed' => 'Vaše nastavení byla zmìnìna',
 	);
@@ -100,7 +100,7 @@ $TITLE = array(
 	'user' => 'Uživatelé',
 	'home' => 'Domù',
 	'reporting' => 'Hlášení',
-	'group' => 'Skupiny'
+	'group' => 'Skupiny',
 	'bugvotes' => 'Volby bugù',
 	'bughistory' => 'Historie bugù',
 	'viewbug' => 'Prohlédnout bug',

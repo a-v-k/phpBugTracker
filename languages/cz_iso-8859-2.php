@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz_iso-8859-2.php,v 1.4 2002/05/19 11:00:17 firma Exp $
+// $Id: cz_iso-8859-2.php,v 1.5 2002/05/19 12:06:56 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'ISO-8859-2',
@@ -74,7 +74,7 @@ $STRING = array(
 		1 => 'Aktivní u¾ivatelé',
 		2 => 'Neaktivní u¾ivatelé'),
 	'dupe_dependency' => 'Tato závislost ji¾ byla pøidána',
-	'image_path_not_writeable' => 'Webprocess nemù¾e zapisovat do podadresáøe "jpgimages", pøehledový obrázek nemù¾e být vygenerován.'
+	'image_path_not_writeable' => 'Webprocess nemù¾e zapisovat do podadresáøe "jpgimages", pøehledový obrázek nemù¾e být vygenerován.',
 	'password_changed' => 'Va¹e heslo bylo zmìnìno',
 	'prefs_changed' => 'Va¹e nastavení byla zmìnìna',
 	);
@@ -100,7 +100,7 @@ $TITLE = array(
 	'user' => 'U¾ivatelé',
 	'home' => 'Domù',
 	'reporting' => 'Hlá¹ení',
-	'group' => 'Skupiny'
+	'group' => 'Skupiny',
 	'bugvotes' => 'Volby bugù',
 	'bughistory' => 'Historie bugù',
 	'viewbug' => 'Prohlédnout bug',
