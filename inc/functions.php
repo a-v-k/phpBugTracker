@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.41 2003/06/04 19:16:40 kennyt Exp $
+// $Id: functions.php,v 1.42 2003/07/05 22:54:26 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -159,7 +159,8 @@ function build_select($params) {
 			} else {
 		    	$sel = '';
 			}
-			$text .= "<option value=\"{$row['user_id']}\"$sel>{$row['login']}</option>";
+			$text .= "<option value=\"{$row['user_id']}\"$sel>".
+	    			maskemail($row['login'])."</option>";
 	    }
 		break;
 	case 'bug_cc':
