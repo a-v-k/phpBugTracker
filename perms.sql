@@ -7,12 +7,13 @@ create table bug_group (bug_id int unsigned not null, group_id int unsigned not 
 create table project_group (project_id int unsigned not null, group_id int unsigned not null, primary key (project_id, group_id), key (group_id));
 
 # Start off with two user levels...
-insert into auth_group (group_id, group_name) values (1, 'admin');
-insert into auth_group (group_id, group_name) values (2, 'user');
+insert into auth_group (group_id, group_name) values (1, 'Admin');
+insert into auth_group (group_id, group_name) values (2, 'User');
+insert into auth_group (group_id, group_name) values (3, 'Developer');
 
 # ... and only two permissions (how quaint)
-insert into auth_perm (perm_id, perm_name) values (1, 'admin');
-insert into auth_perm (perm_id, perm_name) values (2, 'editbug');
+insert into auth_perm (perm_id, perm_name) values (1, 'Admin');
+insert into auth_perm (perm_id, perm_name) values (2, 'Editbug');
 
 # Admins can do all the admin stuff and users can edit bugs
 insert into group_perm (group_id, perm_id) values (1, 1);
