@@ -20,13 +20,18 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.72 2001/11/02 13:38:16 bcurtis Exp $
+// $Id: include.php,v 1.73 2001/11/08 05:13:15 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
 	define('INCLUDE_PATH', '');
 }
-require (INSTALL_PATH.'/'.INCLUDE_PATH.'config.php');
+
+@require (INSTALL_PATH.'/'.INCLUDE_PATH.'config.php');
+if (!defined('DB_HOST')) { // Installation hasn't been completed
+	header("Location: install.php");
+	exit();
+}
 
 class dbclass extends DB_Sql {
   var $classname = 'dbclass';
