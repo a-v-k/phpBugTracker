@@ -42,7 +42,7 @@ function do_form() {
 	} else {
 		$mpassword = $password;
 	}
-	$q->query("insert into user (user_id, first_name, last_name, email, password, user_level, created_date, last_modified_date) values (".$q->nextid('User').", '$firstname', '$lastname', '$email', '$mpassword', 1, $now, $now)");
+	$q->query("insert into user (user_id, first_name, last_name, email, password, user_level, created_date, last_modified_date) values (".$q->nextid('user').", '$firstname', '$lastname', '$email', '$mpassword', 1, $now, $now)");
 	mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
 		$password),	'From: '.ADMINEMAIL);
 	$t->set_file('content','newaccountsuccess.html');
