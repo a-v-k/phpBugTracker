@@ -31,22 +31,22 @@ function bug_cat_summary() {
 	include_once JPGRAPH_PATH.'jpgraph_pie.php';
 	
 	// Grab the legend
-	$q->query("select StatusID, Name from Status order by SortOrder");
+	$q->query("select status_id, status_name from status order by sort_order");
 	while ($row = $q->grab()) {
-		$stats[$row['StatusID']]['Name'] = $row['Name'];
+		$stats[$row['status_id']]['name'] = $row['status_name'];
 	}
 	
 	// Grab the data
-	$q->query("select Status, count(Status) as Count from Bug group by Status");
+	$q->query("select status_id, count(status_id) as count from bug group by status_id");
 	while ($row = $q->grab()) {
-		$stats[$row['Status']]['Count'] = $row['Count'];
+		$stats[$row['status_id']]['count'] = $row['count'];
 	}
 	$totalbugs = 0;
 	foreach ($stats as $stat) {
-		if ($stat['Count']) {
-			$data[] = $stat['Count'];
-			$legend[] = "{$stat['Name']} ({$stat['Count']})";
-			$totalbugs += $stat['Count'];
+		if ($stat['count']) {
+			$data[] = $stat['count'];
+			$legend[] = "{$stat['name']} ({$stat['count']})";
+			$totalbugs += $stat['count'];
 		}
 	}
 	
