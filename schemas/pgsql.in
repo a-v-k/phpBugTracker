@@ -2,7 +2,7 @@
 -- PostgreSQL database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.45 2004/10/25 12:07:02 bcurtis Exp $
+-- $Id: pgsql.in,v 1.46 2004/10/25 12:27:57 bcurtis Exp $
 
 BEGIN;
 
@@ -242,10 +242,10 @@ CREATE TABLE TBL_USER_PERM (
 );
 
 CREATE TABLE TBL_USER_PREF (
-    user_id INT4 NOT NULL DEFAULT '0',
-    email_notices INT2 NOT NULL DEFAULT '1',
-    saved_queries INT2 NOT NULL DEFAULT '1',
-    def_results INT4 NOT NULL DEFAULT '20',
+	user_id INT4 NOT NULL DEFAULT '0',
+	email_notices INT2 NOT NULL DEFAULT '1',
+	saved_queries INT2 NOT NULL DEFAULT '1',
+	def_results INT4 NOT NULL DEFAULT '20',
 	PRIMARY KEY (user_id)
 );
 
@@ -262,17 +262,17 @@ CREATE TABLE TBL_VERSION (
 );
 
 CREATE TABLE TBL_DATABASE (
-    database_id INT2 NOT NULL DEFAULT '0',
-    database_name varchar(40) NOT NULL DEFAULT '',
-    sort_order INT2 NOT NULL DEFAULT '0',
-    PRIMARY KEY (database_id)
+	database_id INT2 NOT NULL DEFAULT '0',
+	database_name varchar(40) NOT NULL DEFAULT '',
+	sort_order INT2 NOT NULL DEFAULT '0',
+	PRIMARY KEY (database_id)
 );
 
 CREATE TABLE TBL_SITE (
-    site_id INT2 NOT NULL DEFAULT '0',
-    site_name varchar(50) NOT NULL DEFAULT '',
-    sort_order INT2 NOT NULL DEFAULT '0',
-    PRIMARY KEY (site_id)
+	site_id INT2 NOT NULL DEFAULT '0',
+	site_name varchar(50) NOT NULL DEFAULT '',
+	sort_order INT2 NOT NULL DEFAULT '0',
+	PRIMARY KEY (site_id)
 );
 
 --
@@ -432,6 +432,33 @@ CREATE INDEX perm_id_TBL_USER_PERM_index ON TBL_USER_PERM (perm_id);
 --
 
 CREATE INDEX group_id_TBL_BUG_GROUP_index ON TBL_BUG_GROUP (group_id);
+
+CREATE SEQUENCE phpbt_auth_user_seq;
+CREATE SEQUENCE phpbt_auth_group_seq;
+CREATE SEQUENCE phpbt_os_seq;
+CREATE SEQUENCE phpbt_resolution_seq;
+CREATE SEQUENCE phpbt_severity_seq;
+CREATE SEQUENCE phpbt_status_seq;
+CREATE SEQUENCE phpbt_database_server_seq;
+CREATE SEQUENCE phpbt_site_seq;
+CREATE SEQUENCE phpbt_version_seq;
+CREATE SEQUENCE phpbt_component_seq;
+CREATE SEQUENCE phpbt_bug_seq;
+CREATE SEQUENCE phpbt_attachment_seq;
+CREATE SEQUENCE phpbt_auth_perm_seq;
+CREATE SEQUENCE phpbt_bug_cc_seq;
+CREATE SEQUENCE phpbt_bug_dependency_seq;
+CREATE SEQUENCE phpbt_bug_group_seq;
+CREATE SEQUENCE phpbt_bug_history_seq;
+CREATE SEQUENCE phpbt_bug_vote_seq;
+CREATE SEQUENCE phpbt_comment_seq;
+CREATE SEQUENCE phpbt_group_perm_seq;
+CREATE SEQUENCE phpbt_project_seq;
+CREATE SEQUENCE phpbt_project_group_seq;
+CREATE SEQUENCE phpbt_saved_query_seq;
+CREATE SEQUENCE phpbt_user_group_seq;
+CREATE SEQUENCE phpbt_user_perm_seq;
+CREATE SEQUENCE phpbt_user_pref_seq;
 
 COMMIT;
 
