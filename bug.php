@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.97 2002/04/10 15:26:35 bcurtis Exp $
+// $Id: bug.php,v 1.98 2002/04/12 00:32:48 bcurtis Exp $
 
 include 'include.php';
 
@@ -493,8 +493,12 @@ function show_bug_printable($bugid) {
 ///
 /// Grab the links for the previous and next bugs in the list
 function prev_next_links($bugid, $pos) {
-	global $db, $_sv, $QUERY, $t;
+	global $dsn, $_sv, $QUERY, $t;
 	
+	// Create a new db connection because of the limit query affecting later queries
+	$db = DB::Connect($dsn); 
+	$db->setOption('optimize', 'portability');
+
 	if (!isset($_sv['queryinfo']['query']) || !$_sv['queryinfo']['query']) {
 		return array('', '');
 	}
@@ -510,8 +514,8 @@ function prev_next_links($bugid, $pos) {
 		$_sv['queryinfo']['query'], $bugid, $_sv['queryinfo']['order'], 
 		$_sv['queryinfo']['sort']), $offset, $limit);
 		
-	list($firstid, $chunks) = $rs->fetchRow(DB_FETCHMODE_ORDERED);
-	list($secondid, $chunks) = $rs->fetchRow(DB_FETCHMODE_ORDERED);
+	list($firstid, $chunks) = $rs->fetchRow();
+	list($secondid, $chunks) = $rs->fetchRow();
 	
 	if ($pos) {
 		if ($firstid) {
