@@ -2,14 +2,31 @@
 	<head>
 		<title>Compiled Templates Directory Not Writeable</title>
 		<link rel="stylesheet" href="styles/default.css" type="text/css">
+		<style>
+			tt { background: #eeeeee; }
+		</style>
 	</head>
 	<body>
 		<div class="error">An error has occurred</div>
-		<div align="center">
+		<div>
 			The "c_templates" subdirectory is not writeable by the 
 			web process.  This needs to be corrected before the installation can proceed 
 			so the templates can be compiled by smarty.  Please reload this page when 
 			this has been corrected.
+			<br>
+			<br>
+			On a unix system such as linux, this can either be accomplished by
+			making the directory writeable by everyone...
+			<br>
+			<tt>$ chmod a+w c_templates</tt>
+			<br>
+			<br>
+			... or by changing the ownership of the directory to the webserver.
+			For example, if your web server is running as the user www-data, you
+			can change the ownership as follows (you must become root first):
+			<br>
+			<tt>$ chown www-data c_templates</tt>
+			<br>
 		</div>
 	</body>
 </html>
