@@ -114,6 +114,7 @@ CREATE TABLE `severity` (
   `severity_name` varchar(30) NOT NULL default '',
   `severity_desc` text NOT NULL,
   `sort_order` tinyint(3) unsigned NOT NULL default '0',
+  `severity_color` varchar(6) NOT NULL default 'FFFFFF',
   PRIMARY KEY  (`severity_id`)
 );
 insert into severity select * from Severity;
@@ -134,7 +135,7 @@ CREATE TABLE `user` (
   `email` char(60) NOT NULL default '',
   `password` char(40) NOT NULL default '',
   `user_level` tinyint(3) unsigned NOT NULL default '1',
-	`created_by` int(10) unsigned NOT NULL default '0',
+  `created_by` int(10) unsigned NOT NULL default '0',
   `created_date` bigint(20) unsigned NOT NULL default '0',
   `last_modified_by` int(10) unsigned NOT NULL default '0',
   `last_modified_date` bigint(20) unsigned NOT NULL default '0',
