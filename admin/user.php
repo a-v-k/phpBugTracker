@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.25 2001/09/07 13:09:49 bcurtis Exp $
+// $Id: user.php,v 1.26 2001/09/14 16:48:13 javyer Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -145,12 +145,12 @@ function show_form($userid = 0, $error = '') {
       'action' => $userid ? $STRING['edit'] : $STRING['addnew'],
       'error' => $error,
       'fuserid' => $_pv['userid'],
-      'flogin' => $_pv['login'],
+      'flogin' => $_pv['flogin'],
       'ffirstname' => stripslashes($_pv['firstname']),
-      'flastname' => stripslashes($_pv['lastname']),
-      'femail' => $_pv['email'],
-      'fpassword' => $_pv['password'] ? $_pv['password'] : genpassword(10),
-      'factive' => isset($_pv['active']) ? ($_pv['active'] ? 'checked' : '')
+      'flastname' => stripslashes($_pv['flastname']),
+      'femail' => $_pv['femail'],
+      'fpassword' => $_pv['fpassword'] ? $_pv['fpassword'] : genpassword(10),
+      'factive' => isset($_pv['factive']) ? ($_pv['factive'] ? 'checked' : '')
         : 'checked',
       'fusergroup' => build_select('group', $_pv['fusergroup'])
       ));
