@@ -40,10 +40,10 @@ $select['authlevels'] = array(
 
 class dbclass extends DB_Sql {
 	var $classname = 'dbclass';
-	var $Host = 'stinky';
+	var $Host = 'localhost';
 	var $Database = 'BugTracker';
 	var $User = 'root';
-	var $Password = 'howdy';
+	var $Password = '';
 
 	function grab($q_string = '') {
 		if ($q_string) $this->query($q_string);
@@ -87,11 +87,19 @@ class uauth extends Auth {
 	}
 	
 	function auth_validatelogin() {
-		global $username, $password, $q, $select;
+		global $username, $password, $q, $select, $emailpass, $emailsuccess, $STRING;
 		
+		if (!$username) return false;
+		if ($emailpass) {
+			list($email, $password) = $q->grab("select Email, Password from User where Email = '$username' and UserLevel > 0");
+			if (!$q->num_rows()) {echo 'bob'; return false;}
+			mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
+				$password),	'From: '.ADMINEMAIL);
+			$emailsuccess = true;
+			return false;
+		}
 		$this->auth['uname'] = $username;
-		$u = $q->grab("select * from User where Email = '$username'
-			and Password = '$password' and UserLevel");
+		$u = $q->grab("select * from User where Email = '$username' and Password = '$password' and UserLevel > 0");
 		if (!$q->num_rows()) return false;
 		else {
 			$this->auth['fname'] = $u['FirstName'];

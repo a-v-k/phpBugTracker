@@ -28,15 +28,21 @@ if (!$formvars) {
 	<form action='<?php print $GLOBALS[REQUEST_URI] ?>' method='post'>
 	<input type="hidden" name="formvars" value="<?php echo $formvars ?>">
 	<table border="0">
-		<?php global $username; if ( isset($username) ): ?>
+		<?php global $username, $emailsuccess; if (isset($username)) { ?>
 		<tr>
 			<td align='center'>
-				<font color=red>
+				<?php if (!$emailsuccess) { ?>
+				<font color='#ff0000'>
 					<b>Invalid login and/or password</b>
 				</font>
+				<?php } else { ?>
+				<font color='#0000ff'>
+					<b>Your password has been mailed to you</b>
+				</font>
+				<?php } ?>
 			</td>
 		</tr>
-		<?php endif ?>
+		<?php } ?>
 		<tr>
 			<td>Login (Email):</td>
 		</tr>
@@ -50,7 +56,10 @@ if (!$formvars) {
 			<td><input size="30" type='password' name='password'></td>
 		</tr>
 		<tr>
-			<td align="right"><input type="submit" value="Go"></td>
+			<td align="right">
+				<input type="submit" name="emailpass" value="Email my password">
+				<input type="submit" value="Go">
+			</td>
 		</tr>
 		<tr>
 			<td align="center">
