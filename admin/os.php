@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: os.php,v 1.18 2001/11/29 00:29:51 bcurtis Exp $
+// $Id: os.php,v 1.19 2001/12/19 13:36:29 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -68,7 +68,7 @@ function show_form($osid = 0, $error = '') {
 
 
 function list_items($osid = 0, $error = '') {
-	global $me, $db, $t, $_gv, $STRING, $TITLE;
+	global $q, $me, $db, $t, $_gv, $STRING, $TITLE;
 
 	$t->set_file('content','oslist.html');
 	$t->set_block('content','row','rows');
@@ -84,7 +84,7 @@ function list_items($osid = 0, $error = '') {
 	$page = isset($_gv['page']) ? $_gv['page'] : 0;
 	
 	
-	$nr = $q->grab_field("select count(*) from ".TBL_OS." where os_id = '$osid' order by $order $sort");
+	$nr = $q->grab_field("select count(*) from ".TBL_OS);
 
 	list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
 		"order=$order&sort=$sort");
