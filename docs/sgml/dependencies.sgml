@@ -14,6 +14,8 @@
       <title>Database Abstraction</title>
       <para>Instead of using PHP's database functions directly, interactions are done via database objects, which extend PHPlib's <classname>DB_Sql</classname> class.</para>
       <para>The global variable <varname>$q</varname> is available as an instance of the class <classname>dbclass</classname>.  This class adds two functions to the <classname>DB_Sql</classname> class, <function>grab()</function> and <function>grab_field()</function>.  If they are called with an argument, the argument is passed as a query to the database and the results are returned from that query.  If no argument is passed, they return results from the previous call to <function>query()</function>.  Here are some examples:</para>
+      <example>
+	<title>Using the database class</title>
       <programlisting>
   // Grab one field from one record in the database
   $user_email = $q-&gt;grab_field(&quot;select email from &quot;.TBL_AUTH_USER.&quot; where user_id = 1&quot;);
@@ -29,10 +31,13 @@
     echo $row['email'].'&lt;br&gt;';
   }
       </programlisting>
+      </example>
     </sect3>
     <sect3>
       <title>Templates</title>
       <para>Instead of outputting HTML from the scripts, templates are used to separate the code from the HTML.  The templates contain tokens that are replaced by the scripts with values.  The general process for using templates is as follows:</para>
+      <example>
+	<title>Using the template class</title>
       <programlisting>
   // Set up the file to be used
   $t-&gt;set_file('content', 'bugdisplay.html');
@@ -47,6 +52,7 @@
   // Parse the template and print it out (inside a wrap template)
   $t-&gt;pparse('main', array('content', 'wrap', 'main'));
       </programlisting>
+      </example>
     </sect3>
     <sect3>
       <title>Session and Authentication</title>

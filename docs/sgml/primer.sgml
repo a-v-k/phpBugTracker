@@ -18,7 +18,7 @@
       <screeninfo>Project selection</screeninfo>
     <mediaobject>
       <imageobject>
-	<imagedata fileref="images/shots/user/enterbug-chooseproject.png" format="PNG" align="center">
+	<imagedata fileref="images/shots/user/enterbug-chooseproject.png" format="PNG" align="middle">
       </imageobject>
       <imageobject>
 	<imagedata fileref="images/shots/user/enterbug-chooseproject.jpg" format="JPG" align="center">
@@ -56,6 +56,7 @@
 	  <para>Entering a bug report.</para>
 	</caption>
     </mediaobject>
+    </screenshot>
 
     <para>That's it!  The bug has been entered, and it's ready to be reviewed and fixed by the developers.</para>
   </sect2>
