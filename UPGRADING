@@ -1,8 +1,8 @@
 Upgrading from 0.6.x to 0.7.0
 -----------------------------
 
-A new table, project_group, has been added, and the auth_group table has been 
-altered.  
+A new table, bug_vote, has been added, and new configuration variables have
+been added.  
 
 Following the steps below will upgrade your installation of phpBT.
 
