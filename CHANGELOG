@@ -1,3 +1,8 @@
+-- 0.2.0 --
+: Allow for browsing the bugs without logging in
+: Started reporting
+: Started using jpgraph (optional) for showing summary charts
+
 -- 0.1.7 -- 31 July 2001
 : Fixed bugs with valid_email() in admin/user.php
 : Added table definition for BugHistory table in createdb.sql
