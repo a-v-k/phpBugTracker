@@ -1,5 +1,5 @@
 <script type="text/JavaScript">
-<!-- 
+<!--
 versions = new Array();
 components = new Array();
 closedversions = new Array();
@@ -7,6 +7,9 @@ versions['All'] = new Array(new Array('','All'));
 components['All'] = new Array(new Array('','All'));
 closedversions['All'] = new Array(new Array('','All'));
 {project_js}
+
+// Saved queries
+savedQueries = new Array({section name=query loop=$queries}"{$queries[query].saved_query_name}"{if not $smarty.section.query.last},{/if}{/section});
 
 {literal}
 function updateMenus(f) {
@@ -22,10 +25,27 @@ function updateMenus(f) {
     f.components.options[x].text = components[sel][x][1];
   }
 }
+
+function checkSavedQueries(frm) {
+	if (frm.savedqueryname.value != '') {
+		for (i = 0; i < savedQueries.length; i++) {
+			if (frm.savedqueryname.value == savedQueries[i]) {
+				if (confirm('Are you sure you want to override the saved query named "' + frm.savedqueryname.value + '"?')) {
+					frm.savedqueryoverride.value = 1;
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
 {/literal}
 //-->
 </script>
-    <form method="get" action="query.php" name="query">
+    <form method="get" action="query.php" name="query" onSubmit="return checkSavedQueries(this)">
       <table>
 				<tr valign="baseline">
 					<td valign="top"><b>{$STRING.QUERY.Project}:</b></td>
@@ -87,9 +107,10 @@ function updateMenus(f) {
 				{$STRING.QUERY.SaveThisQueryAs}: <input maxlength="40" type="text" name="savedqueryname">
 				<br><br>
 			{/if}
-      <input type="hidden" name="op" value="doquery">
+			<input type="hidden" name="op" value="doquery">
+			<input type="hidden" name="savedqueryoverride" value="0">
 			<input type="reset" value="{$STRING.QUERY.ResetBackToDefaultQuery}">
-			<input type="submit" value="{$STRING.QUERY.SubmitQuery}"> 
+			<input type="submit" value="{$STRING.QUERY.SubmitQuery}">
 			{if count($queries)}
 				<br><br>
 				<b>{$STRING.QUERY.SavedQueries}</b>

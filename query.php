@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.90 2002/09/23 20:48:21 bcurtis Exp $
+// $Id: query.php,v 1.91 2002/11/05 20:43:46 bcurtis Exp $
 
 include 'include.php';
 
@@ -257,13 +257,20 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	if (!empty($savedqueryname)) {
 		$savedquerystring = ereg_replace('&savedqueryname=.*(&?)', '\1', $HTTP_SERVER_VARS['QUERY_STRING']);
 		$savedquerystring .= '&op=doquery';
-		$nextid = $db->getOne("select max(saved_query_id)+1 from ".TBL_SAVED_QUERY." where user_id = $u");
-		$nextid = $nextid ? $nextid : 1;
-		$db->query("insert into ".TBL_SAVED_QUERY.
-			" (saved_query_id, user_id, saved_query_name, saved_query_string)
-			values (".join(', ', array($nextid, $u,
-				$db->quote(stripslashes($savedqueryname)),
-				$db->quote(stripslashes($savedquerystring)))).")");
+		if ($savedqueryoverride) { // Updating an existing query
+			$db->query("update ".TBL_SAVED_QUERY." set saved_query_string = ".
+				$db->quote(stripslashes($savedquerystring)).
+				" where user_id = $u and saved_query_name = ".
+				$db->quote(stripslashes($savedqueryname)));
+		} else { // Adding a new saved query
+			$nextid = $db->getOne("select max(saved_query_id)+1 from ".TBL_SAVED_QUERY." where user_id = $u");
+			$nextid = $nextid ? $nextid : 1;
+			$db->query("insert into ".TBL_SAVED_QUERY.
+				" (saved_query_id, user_id, saved_query_name, saved_query_string)
+				values (".join(', ', array($nextid, $u,
+					$db->quote(stripslashes($savedqueryname)),
+					$db->quote(stripslashes($savedquerystring)))).")");
+		}
 	}
 	if (!isset($order)) {
 		if (isset($HTTP_SESSION_VARS['queryinfo']['order'])) {
