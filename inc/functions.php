@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.29 2002/05/21 11:20:17 firma Exp $
+// $Id: functions.php,v 1.30 2002/06/05 15:25:08 firma Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -124,6 +124,7 @@ function build_select($params) {
       }
       break;
     case 'database' :
+	$text = '<option value="0">None</option>';
 	$rs = $db->query($queries[$box]);
 	while ($rs->fetchInto($row)) {
         if ($selected == $row[$box.'_id'] and $selected != '') $sel = ' selected';
