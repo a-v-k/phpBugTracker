@@ -1,0 +1,24 @@
+============================================================================
+         Bug #: {bugid} ({url})
+{ReporterStat}  Reported By: {Reporter}
+----------------------------------------------------------------------------
+{TitleStat}      Summary: {Title}
+{URLStat}          URL: {URL}
+{ProjectStat}      Product: {Project}
+{VersionStat}      Version: {Version}
+{ComponentStat}    Component: {Component}
+{StatusStat}       Status: {Status}
+{ResolutionStat}   Resolution: {Resolution}
+{SeverityStat}     Severity: {Severity}
+{OSStat}   OS/Version: {OS}
+{PriorityStat}     Priority: {Priority}
+{AssignedToStat}  Assigned To: {AssignedTo}
+============================================================================
+                              COMMENTS                                   
+
+----- Posted by {oldpostedby} at {oldpostedon} -----
+{oldcomments}
+
+----- Posted by {newpostedby} at {newpostedon} -----
+{newcomments}
+
