@@ -12,6 +12,7 @@ function resolution_by_engineer() {
 	
 	$t->set_block('content', 'row', 'rows');
 	$t->set_block('row', 'col', 'cols');
+	$t->set_var('reporttitle', 'Status of Assigned bugs');
 	
 	// Start off our query
 	$querystring = 'select Email, sum(if(Resolution = "0",1,0)) as "Open"';
@@ -29,15 +30,21 @@ function resolution_by_engineer() {
 	} else {
 		foreach ($resfields as $col) {
 			$t->set_var('coldata', stripslashes($col));
+			$t->set_var('colclass', 'header-col');
 			$t->parse('cols', 'col', true);
 		}
+		$t->set_var('bgcolor', '#eeeeee');
 		$t->parse('rows', 'row', true);
 		$t->set_var('cols', '');
 		while ($row = $q->grab()) {
 			foreach ($resfields as $col) {
-				$t->set_var('coldata', stripslashes($row[$col]));
+				$t->set_var(array(
+					'coldata' => stripslashes($row[$col]),
+					'colclass' => $col == 'Email' ? '' : 'center-col'
+					));
 				$t->parse('cols', 'col', true);
 			}
+			$t->set_var('bgcolor', (++$i % 2 == 0) ? '#dddddd' : '#ffffff');
 			$t->parse('rows', 'row', true);
 			$t->set_var('cols', '');
 		}
