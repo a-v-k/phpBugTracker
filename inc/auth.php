@@ -96,6 +96,7 @@ class uauth {
 		$this->auth['perm'] = array();
 		$this->auth['exp']   = 0;
     $this->auth['group'] = array();
+    $this->auth['group_ids'] = array(0);
     $this->auth['db_fields'] = array();
   }
 }
