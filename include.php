@@ -92,21 +92,6 @@ class uauth extends Auth {
 		global $username, $password, $q, $select, $emailpass, $emailsuccess, $STRING;
 		
 		if (!$username) return 'nobody';
-		if ($emailpass) {
-			list($email, $password) = $q->grab("select Email, Password from User where Email = '$username' and UserLevel > 0");
-			if (!$q->num_rows()) { 
-				return false;
-			}
-			if (ENCRYPTPASS) {
-				$password = genpassword(10);
-				$mpassword = md5($password);
-				$q->query("update User set Password = '$mpassword' where Email = '$username'");
-			}
-			mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
-				$password),	'From: '.ADMINEMAIL);
-			$emailsuccess = true;
-			return false;
-		}
 		$this->auth['uname'] = $username;
 		if (ENCRYPTPASS) {
 			$password = md5($password);
@@ -404,9 +389,34 @@ if (!defined('NO_AUTH')) {
 
 // Check to see if the user is trying to login
 if (isset($HTTP_POST_VARS['login'])) {
-	$auth->auth['uid'] = $auth->auth_validatelogin();
-	if ($auth->auth['uid'] == 'nobody') {
-		$t->set_var('loginerror', 'Invalid login');
+	if (isset($HTTP_POST_VARS['sendpass'])) {
+		list($email, $password) = $q->grab("select Email, Password from User where Email = '$username' and UserLevel > 0");
+		if (!$q->num_rows()) { 
+			$t->set_var(array(
+				'loginerrorcolor' => '#ff0000',
+				'loginerror' => 'Invalid login<br>'
+				));
+		} else {
+			if (ENCRYPTPASS) {
+				$password = genpassword(10);
+				$mpassword = md5($password);
+				$q->query("update User set Password = '$mpassword' where Email = '$username'");
+			}
+			mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
+				$password),	'From: '.ADMINEMAIL);
+			$t->set_var(array(
+				'loginerrorcolor' => '#0000ff',
+				'loginerror' => 'Your password has been emailed to you<br>'
+				));
+		}
+	} else {
+		$auth->auth['uid'] = $auth->auth_validatelogin();
+		if ($auth->auth['uid'] == 'nobody') {
+			$t->set_var(array(
+				'loginerrorcolor' => '#ff0000',
+				'loginerror' => 'Invalid login<br>'
+				));
+		}
 	}
 }
 

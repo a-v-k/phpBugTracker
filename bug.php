@@ -324,7 +324,7 @@ function show_form($bugid = 0, $error = '') {
 }
 
 function show_bug($bugid = 0, $error = '') {
-	global $q, $me, $t, $project, $STRING; 
+	global $q, $me, $t, $project, $STRING, $u; 
 	
 	if (!ereg('^[0-9]+$',$bugid) or !$row = $q->grab("select BugID, Title, Reporter.Email as Reporter, Owner.Email as Owner, Project, Version, Severity, Bug.CreatedDate, Bug.LastModifiedDate, Status.Name as Status, Priority, Bug.Description, Resolution.Name as Resolution, URL, Component, OS from Bug, Severity, Status left join User Owner on Bug.AssignedTo = Owner.UserID left join User Reporter on Bug.CreatedBy = Reporter.UserID left join Resolution on Resolution = ResolutionID where BugID = '$bugid' and Severity = SeverityID and Status = StatusID")) {
 		show_text($STRING['bugbadnum'],true);
@@ -361,7 +361,9 @@ function show_bug($bugid = 0, $error = '') {
 		'component' => build_select('Component',$row['Component'],$row['Project']),
 		'os' => build_select('OS',$row['OS']),
 		'browserstring' => $row['BrowserString'],
-		'bugresolution' => build_select('Resolution')
+		'bugresolution' => build_select('Resolution'),
+		'submit' => $u == 'nobody' ? $STRING['logintomodify'] : 
+			'<input type="submit" value="Submit">'
 		));
 	switch($row['Status']) {
 		case 'Unconfirmed' :
@@ -442,6 +444,7 @@ if ($op) {
 	switch($op) {
 		case 'history' : show_history($bugid); break;
 		case 'add' : 
+			$perm->check('User');
 			if ($project) show_form(); 
 			else show_projects();
 			break;

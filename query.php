@@ -17,7 +17,8 @@ function show_query() {
 	$nq = new dbclass;
 	
 	$t->set_file('content','queryform.html');
-	$t->set_block('content','row','rows');
+	$t->set_block('content', 'savequeryblock', 'sqblock');
+	$t->set_block('savequeryblock','row','rows');
 	 
 	// Build the javascript-powered select boxes
 	$q->query("select ProjectID, Name from Project where Active order by Name");
@@ -41,19 +42,24 @@ function show_query() {
 		$js .= ");\n";
 	}
 	
-	// Grab the saved queries if there are any
-	$q->query("select * from SavedQuery where UserID = $u");
-	if (!$q->num_rows()) {
-		$t->set_var('rows','');
-	} else {
-		while ($row = $q->grab()) {
-			$t->set_var(array(
-				'savedquerystring' => $row['SavedQueryString'],
-				'savedqueryname' => stripslashes($row['SavedQueryName']),
-				'savedqueryid' => $row['SavedQueryID']
-				));
-			$t->parse('rows', 'row', true);
+	if ($u != 'nobody') {
+		// Grab the saved queries if there are any
+		$q->query("select * from SavedQuery where UserID = '$u'");
+		if (!$q->num_rows()) {
+			$t->set_var('rows','');
+		} else {
+			while ($row = $q->grab()) {
+				$t->set_var(array(
+					'savedquerystring' => $row['SavedQueryString'],
+					'savedqueryname' => stripslashes($row['SavedQueryName']),
+					'savedqueryid' => $row['SavedQueryID']
+					));
+				$t->parse('rows', 'row', true);
+			}
 		}
+		$t->parse('sqblock', 'savequeryblock', true);
+	} else {
+		$t->set_var('sqblock', '');
 	}
 	
 	$t->set_var(array(
