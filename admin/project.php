@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.40 2002/04/12 21:39:19 firma Exp $
+// $Id: project.php,v 1.41 2002/04/13 14:51:57 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -65,7 +65,7 @@ function save_version($versionid = 0) {
 }
 
 function show_version($versionid = 0, $error = '') {
-  global $db, $t, $_pv, $STRING, $QUERY;
+  global $db, $t, $_pv, $STRING, $QUERY, $_gv;
 
 	foreach ($_pv as $k => $v) $$k = $v;
 	
@@ -75,7 +75,10 @@ function show_version($versionid = 0, $error = '') {
 		if (!empty($_pv)) {
 		    $t->assign($_pv);
 		} else {
-		    $t->assign('active', 1);
+		    $t->assign(array(
+					'active' => 1,
+					'project_id' => $_gv['project_id']
+					));
 		}
 	}
 	$t->assign('error', $error);
@@ -128,7 +131,7 @@ function save_component($componentid = 0) {
 }	
 
 function show_component($componentid = 0, $error = '') {
-	global $db, $t, $_pv, $STRING, $QUERY;
+	global $db, $t, $_pv, $STRING, $QUERY, $_gv;
 	
 	if ($componentid) {
 		$t->assign($db->getRow(sprintf($QUERY['admin-show-component'], $componentid)));
@@ -136,7 +139,10 @@ function show_component($componentid = 0, $error = '') {
 		if (!empty($_pv)) {
 		    $t->assign($_pv);
 		} else {
-		    $t->assign('active', 1);
+		    $t->assign(array(
+					'active' => 1,
+					'project_id' => $_gv['project_id']
+					));
 		}
 	}
 	$t->assign('error', $error);
@@ -295,12 +301,7 @@ if (isset($_gv['op'])) {
 	switch($_gv['op']) {
   	case 'add' : show_project(); break;
   	case 'edit' : show_project($_gv['id']); break;
-  	case 'edit_component' :
-	    if (!$_gv['id']) {
-		$t->assign('project_id',$_gv['project_id']);
-	    }
-	    show_component($_gv['id']);
-	break;
+  	case 'edit_component' : show_component($_gv['id']);	break;
   	case 'edit_version' : show_version($_gv['id']); break;
   	case 'del_component' : del_component($_gv['id'], $_gv['project_id']); break;
   	case 'del_version' : del_version($_gv['id'], $_gv['project_id']); break;

@@ -3,16 +3,17 @@
 <script language="JavaScript">
 <!--
 	var me = '{$SCRIPT_NAME}';
+	var projectId = '{$project_id}';
 	{literal}
 		
 	function popupComponent(id) {
-		window.open(me + '?op=edit_component&use_js=1&id='+id, 'ewin', 'dependent=yes, width=450, height=300, scrollbars=auto');
+		window.open(me + '?op=edit_component&project_id='+projectId+'&use_js=1&id='+id, 'ewin', 'dependent=yes, width=450, height=300, scrollbars=auto');
+		return false;
 	}
-	function popupNewComponent(id) {
-		window.open(me + '?op=edit_component&use_js=1&project_id='+id+'&id=0', 'ewin', 'dependent=yes, width=450, height=300, scrollbars=auto');
-	}
+
 	function popupVersion(id) {
-		window.open(me + '?op=edit_version&use_js=1&id='+id, 'ewin', 'dependent=yes, width=250, height=150, scrollbars=auto');
+		window.open(me + '?op=edit_version&project_id='+projectId+'&use_js=1&id='+id, 'ewin', 'dependent=yes, width=250, height=150, scrollbars=auto');
+		return false;
 	}
 	{/literal}
 // -->
@@ -63,7 +64,7 @@
 	<tr>
 		<td width="50%" valign="top">
 			<br>
-			&nbsp;<b>Versions</b> - <a href="{$SCRIPT_NAME}?op=edit_version&id=0" onClick="popupVersion(0); return false;">{$STRING.addnew} Version</a>
+			&nbsp;<b>Versions</b> - <a href="{$SCRIPT_NAME}?op=edit_version&project_id={$project_id}&id=0" onClick="return popupVersion(0);">{$STRING.addnew} Version</a>
 			<hr size="1">
 			<table border="0" cellpadding="2" width="100%">
 				<tr>
@@ -88,7 +89,7 @@
 		</td>
 		<td width="50%" valign="top">
 			<br>
-			&nbsp;<b>Components</b> - <a href="{$SCRIPT_NAME}?op=edit_component&project_id={$project_id}&id=0" onClick="popupNewComponent({$project_id}); return false;">{$STRING.addnew} Component</a>
+			&nbsp;<b>Components</b> - <a href="{$SCRIPT_NAME}?op=edit_component&project_id={$project_id}&id=0" onClick="return popupComponent(0);">{$STRING.addnew} Component</a>
 			<hr size="1">
 			<table border="0" cellpadding="2" width="100%">
 				<tr>
