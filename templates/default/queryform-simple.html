@@ -81,9 +81,21 @@ function updateMenus(f) {
 			</table>
 			<br>
 			<br>
+			{if $smarty.session.uid}
+				Save this query as: <input maxlength="40" type="text" name="savedqueryname">
+				<br><br>
+			{/if}
       <input type="hidden" name="op" value="doquery">
 			<input type="reset" value="Reset back to the default query">
 			<input type="submit" value="Submit query"> 
+			{if count($queries)}
+				<br><br>
+				<b>Saved Queries</b>
+				<br>
+				{section name=query loop=$queries}
+					<a href="{$smarty.server.PHP_SELF}?{$queries[query].saved_query_string}">{$queries[query].saved_query_name}</a> (<a href="{$smarty.server.PHP_SELF}?op=delquery&queryid={$queries[query].saved_query_id}" onClick="return confirm('Are you sure you want to delete this saved query?');">Delete</a>)<br>
+				{/section}
+			{/if}
     </form>
 		<br>
 		Go to the <a href="{$smarty.server.PHP_SELF}?op=query&form=advanced">advanced query page</a>

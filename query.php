@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.74 2002/05/18 16:21:12 bcurtis Exp $
+// $Id: query.php,v 1.75 2002/06/08 20:13:03 bcurtis Exp $
 
 include 'include.php';
 
@@ -35,17 +35,19 @@ function delete_saved_query($queryid) {
 function show_query() {
 	global $db, $t, $TITLE, $u, $_gv;
 	
+	if ($u != 'nobody') {
+		// Grab the saved queries if there are any
+		$t->assign('queries', 
+			$db->getAll("select * from ".TBL_SAVED_QUERY." where user_id = '$u'"));
+	}
+
 	// Show the advanced query form
 	if (!empty($_gv['form']) and $_gv['form'] == 'advanced') {
-		if ($u != 'nobody') {
-			// Grab the saved queries if there are any
-			$t->assign('queries', 
-				$db->getAll("select * from ".TBL_SAVED_QUERY." where user_id = '$u'"));
-		}
 		$t->wrap('queryform.html', 'bugquery');
 	} else { // or show the simple one
 		$t->wrap('queryform-simple.html', 'bugquery');
 	}
+
 }
 
 function build_query($assignedto, $reportedby, $open) {
