@@ -63,16 +63,17 @@ class uauth {
     if (!$q->num_rows()) {
       return 0;
     } else {
-      $this->auth['db_fields'] = unserialize($u['bug_list_fields']);
+			$this->auth['db_fields'] = @unserialize($u['bug_list_fields']);
 
       // Grab group assignments and permissions based on groups
-      $q->query("select group_name, perm_name"
+      $q->query("select gp.group_id, group_name, perm_name"
       	." from ".TBL_AUTH_PERM." ap, ".TBL_GROUP_PERM." gp, ".TBL_AUTH_GROUP." ag, ".TBL_USER_GROUP." ug"
       	." where ap.perm_id = gp.perm_id and gp.group_id = ag.group_id"
       	."  and ag.group_id = ug.group_id and ug.user_id = {$u['user_id']}");
-      while (list($group, $perm) = $q->grab()) {
+      while (list($groupid, $group, $perm) = $q->grab()) {
         $this->auth['perm'][$perm] = true;
         $this->auth['group'][$group] = true;
+        $this->auth['group_ids'][] = $groupid;
       }
 
       return $u['user_id'];

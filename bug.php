@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.65 2001/12/07 14:01:26 bcurtis Exp $
+// $Id: bug.php,v 1.66 2001/12/07 14:36:23 bcurtis Exp $
 
 include 'include.php';
 
@@ -709,14 +709,25 @@ function show_bug($bugid = 0, $error = array()) {
 }
 
 function show_projects() {
-  global $me, $q, $t, $project, $STRING, $TITLE;
+  global $me, $q, $t, $project, $STRING, $TITLE, $perm, $auth;
 
   // Show only active projects with at least one component
-  $q->query('select p.project_id, p.project_name, p.project_desc, p.created_date 
-		from '.TBL_PROJECT.' p, '.TBL_COMPONENT.
-		' c where p.active = 1 and p.project_id = c.project_id group by 
-		p.project_id, p.project_name, p.project_desc, p.created_date 
-		order by project_name');
+	if ($perm->have_perm('Admin')) { // Show admins all projects
+		$q->query('select p.project_id, p.project_name, p.project_desc, p.created_date 
+			from '.TBL_PROJECT.' p, '.TBL_COMPONENT.
+			' c where p.active = 1 and p.project_id = c.project_id group by 
+			p.project_id, p.project_name, p.project_desc, p.created_date 
+			order by project_name');
+	} else { // Filter out projects that can't be seen by this user
+  	$q->query('select p.project_id, p.project_name, p.project_desc, p.created_date 
+			from '.TBL_PROJECT.' p left join '.TBL_PROJECT_GROUP.' pg 
+			using(project_id), '.TBL_COMPONENT.' c 
+			where p.active = 1 and p.project_id = c.project_id 
+			and (pg.project_id is null or pg.group_id in ('.
+			delimit_list(',', $auth->auth['group_ids']).')) group by 
+			p.project_id, p.project_name, p.project_desc, p.created_date 
+			order by project_name');
+	}
   switch ($q->num_rows()) {
     case 0 :
       $t->set_var('rows',$STRING['noprojects']);
