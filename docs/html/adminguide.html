@@ -90,6 +90,159 @@ NAME="AEN12"
 ></P
 ></DIV
 ></BLOCKQUOTE
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="INSTALLATION"
+>2.1. Installation Instructions</A
+></H1
+><P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>Install PHPlib (<A
+HREF="http://sourceforge.net/projects/phplib/"
+TARGET="_top"
+>http://sourceforge.net/projects/phplib</A
+>) if it's not already installed.  Note that with recent versions of PHP, PHPlib needs to be patched.  Please do the following with the patch file, <TT
+CLASS="FILENAME"
+>page.inc.patch</TT
+> in the distribution directory:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#EEEEEE"
+WIDTH="90%"
+><TR
+><TD
+><PRE
+CLASS="SCREEN"
+>cat page.inc.patch | patch -p0 -b /path/to/phplib/page.inc</PRE
+></TD
+></TR
+></TABLE
+><P
+>Make sure you replace <TT
+CLASS="FILENAME"
+>/path/to/phplib</TT
+> with the actual path to the installation of PHPlib.  On windows systems you can edit <TT
+CLASS="FILENAME"
+>page.inc</TT
+> and change line 67 from <TT
+CLASS="COMPUTEROUTPUT"
+>if (isset($user)) {</TT
+> to <TT
+CLASS="COMPUTEROUTPUT"
+>if (isset($user) &#38;&#38; $user) {</TT
+>.</P
+></LI
+><LI
+><P
+>Copy the directory tree from the tarball to a location suitable for serving web pages.</P
+></LI
+><LI
+><P
+>Run the <TT
+CLASS="FILENAME"
+>configure</TT
+> script.  This will change <TT
+CLASS="FILENAME"
+>config.php</TT
+> (creating a backup) and will run <TT
+CLASS="FILENAME"
+>configure_db</TT
+>, which will create <TT
+CLASS="FILENAME"
+>createdb.sql</TT
+>. </P
+><P
+><SPAN
+><I
+CLASS="EMPHASIS"
+>-- or --</I
+></SPAN
+></P
+><P
+>Configure manually:
+	<P
+></P
+><OL
+TYPE="a"
+><LI
+><P
+>Edit the constants in <TT
+CLASS="FILENAME"
+>config.php</TT
+>.</P
+></LI
+><LI
+><P
+>Run <TT
+CLASS="FILENAME"
+>configure_db</TT
+> to get <TT
+CLASS="FILENAME"
+>createdb.sql</TT
+>.</P
+></LI
+></OL
+>
+      </P
+></LI
+><LI
+><P
+>If you want to use JpGraph (<A
+HREF="http://www.aditus.nu/jpgraph/"
+TARGET="_top"
+>http://www.aditus.nu/jpgraph</A
+>) to display the bug summary info, you will also need to edit <TT
+CLASS="FILENAME"
+>jpgraph.php</TT
+> from the JpGraph disribution.</P
+></LI
+><LI
+><P
+>Edit <TT
+CLASS="FILENAME"
+>createdb.sql</TT
+>, changing the admin info in the database insert.  You can search on the text <TT
+CLASS="COMPUTEROUTPUT"
+>admin@example.com</TT
+> (around line 240).</P
+></LI
+><LI
+><P
+>Use <TT
+CLASS="FILENAME"
+>createdb.sql</TT
+> to create your database.  With MySQL it can be done as follows:
+      </P
+><TABLE
+BORDER="0"
+BGCOLOR="#EEEEEE"
+WIDTH="90%"
+><TR
+><TD
+><PRE
+CLASS="SCREEN"
+>mysql -h &lt;db host&gt; -u &lt;username&gt; -p&lt;yourpassword&gt; &lt; createdb.sql</PRE
+></TD
+></TR
+></TABLE
+></LI
+><LI
+><P
+>Browse on over to the installation, choose Admin tools, login with the info you put in the database creation script, and create your first project.</P
+></LI
+><LI
+><P
+>Start reporting bugs.</P
+></LI
+></OL
+></DIV
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"

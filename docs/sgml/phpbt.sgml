@@ -5,6 +5,9 @@
 <!-- Shortcuts -->
 <!ENTITY phpbt "phpBugTracker">
 
+<!-- Administrator's Guide -->
+<!ENTITY installation SYSTEM "installation.sgml">
+
 <!-- Developer's Guide -->
 <!ENTITY devstandards SYSTEM "devstandards.sgml">
 <!ENTITY dependencies SYSTEM "dependencies.sgml">
@@ -31,6 +34,9 @@
     <abstract>
       <para>One of the main design goals of &phpbt; is to make installation and administration easy.  In fact, the difficulty of installing bugzilla was a key motivator for &phpbt;'s existence.</para>
     </abstract>
+
+    &installation;
+
   </chapter>
 
   <chapter id="devguide">
