@@ -68,7 +68,7 @@
     <input type="hidden" name="pos" value="{$smarty.request.pos}">
     <table border="0" width="100%">
 	<tr>
-	    <td>Bug <b>#{$bug_id}</b> - {$title|stripslashes} - {$STRING.BUGDISPLAY.ReturnTo} <a href="query.php">{$STRING.BUGDISPLAY.BugList}</a></td>
+	    <td>Bug <b>#{$bug_id}</b> - {$title|stripslashes} - {$STRING.BUGDISPLAY.returnto} <a href="query.php">{$STRING.BUGDISPLAY.buglist}</a></td>
 		<td align="right">
 {if $prevbug}
 		    <b><a href="bug.php?op=show&bugid={$prevbug}&pos={$prevpos}">{$STRING.previous_bug}</a></b>
@@ -87,76 +87,76 @@
     </table>
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
 	<tr>
-	    <td>{$STRING.BUGDISPLAY.Reporter}:</td>
+	    <td>{$STRING.BUGDISPLAY.reporter}:</td>
 	    <td><b>{$reporter|maskemail}</b></td>
-	    <td>{$STRING.BUGDISPLAY.Created}:</td>
+	    <td>{$STRING.BUGDISPLAY.created}:</td>
 	    <td><b>{$created_date|date:DATE_FORMAT}</b></td>
 	</tr><tr>
-	    <td>{$STRING.BUGDISPLAY.Project}:</td>
+	    <td>{$STRING.BUGDISPLAY.project}:</td>
 	    <td><select name="project_id" onChange="updateMenus(this.form)" {$disabled}>{build_select box=project selected=$project_id}</select></td>
-	    <td>{$STRING.BUGDISPLAY.Priority}:</td>
+	    <td>{$STRING.BUGDISPLAY.priority}:</td>
 	    <td><select name="priority" {$disabled}>{build_select box=priority selected=$priority}</select></td>
 	</tr><tr>
-	    <td>{$STRING.BUGDISPLAY.Component}:</td>
+	    <td>{$STRING.BUGDISPLAY.component}:</td>
 	    <td><select name="component_id" {$disabled}>{build_select box=component selected=$component_id project=$project_id}</select></td>
-	    <td>{$STRING.BUGDISPLAY.Severity}:</td>
+	    <td>{$STRING.BUGDISPLAY.severity}:</td>
 	    <td><select name="severity_id" {$disabled}>{build_select box=severity selected=$severity_id}</select></td>
 	</tr><tr>
-	    <td>{$STRING.BUGDISPLAY.Version}:</td>
+	    <td>{$STRING.BUGDISPLAY.version}:</td>
 	    <td><select name="version_id" {$disabled}>{build_select box=version selected=$version_id project=$project_id}</select></td>
-	    <td>{$STRING.BUGDISPLAY.OS}:</td>
+	    <td>{$STRING.BUGDISPLAY.os}:</td>
 	    <td><select name="os_id" {$disabled}>{build_select box=os selected=$os_id}</select></td>
 	</tr><tr>
-	    <td>{$STRING.BUGDISPLAY.ToBeClosedInVersion}</td>
+	    <td>{$STRING.BUGDISPLAY.tobeclosedinversion}</td>
 	    <td><select name="to_be_closed_in_version_id" {$disabled}>
-		    <option value="0">{$STRING.BUGDISPLAY.ChooseOne}</option>
+		    <option value="0">{$STRING.BUGDISPLAY.chooseone}</option>
 		    {build_select box=version selected=$to_be_closed_in_version_id project=$project_id}
 		</select></td>
-	    <td>{$STRING.BUGDISPLAY.Database}:</td>
+	    <td>{$STRING.BUGDISPLAY.database}:</td>
 	    <td><select name="database_id" {$disabled}>{build_select box=database selected=$database_id}</select></td>
 	</tr><tr>
-	    <td>{$STRING.BUGDISPLAY.ClosedInVersion}</td>
+	    <td>{$STRING.BUGDISPLAY.closedinversion}</td>
 	    <td><select name="closed_in_version_id" {$disabled}>
-		    <option value="0">{$STRING.BUGDISPLAY.ChooseOne}</option>
+		    <option value="0">{$STRING.BUGDISPLAY.chooseone}</option>
 		    {build_select box=version selected=$closed_in_version_id project=$project_id}
 		</select></td>
-	    <td>{$STRING.BUGDISPLAY.Site}</td>
+	    <td>{$STRING.BUGDISPLAY.site}</td>
 	    <td><select name="site_id" {$disabled}>{build_select box=site selected=$site_id}</select></td>
 	</tr><tr>
-	    <td>{$STRING.BUGDISPLAY.Summary}:</td>
+	    <td>{$STRING.BUGDISPLAY.summary}:</td>
 	    <td><input type="text" size="30" maxlength="100" name="title" value="{$title|stripslashes|htmlspecialchars}" {$disabled}></td>
-	    <td>{$STRING.BUGDISPLAY.Status}:</td>
+	    <td>{$STRING.BUGDISPLAY.status}:</td>
 	    <td><select name="status_id" {$disabled}>{build_select box=status selected=$status_id}</select></td>
 	</tr><tr>
 	    <td>{if $url}<a href="{$url}">URL</a>{else}URL{/if}:</td>
 	    <td><input type="text" size="30" maxlength="255" name="url" value="{$url}" {$disabled}></td>
-	    <td>{$STRING.BUGDISPLAY.Resolution}:</td>
-	    <td><select name="resolution_id" {$disabled}><option value="0">{$STRING.BUGDISPLAY.ResolutionNone}</option>{build_select box=resolution selected=$resolution_id}</select></td>
+	    <td>{$STRING.BUGDISPLAY.resolution}:</td>
+	    <td><select name="resolution_id" {$disabled}><option value="0">{$STRING.BUGDISPLAY.resolutionnone}</option>{build_select box=resolution selected=$resolution_id}</select></td>
 	</tr><tr>
-	    <td>{$STRING.BUGDISPLAY.AssignedTo}:</td>
-	    <td><select name="assigned_to" {$disabled}><option value="0">{$STRING.BUGDISPLAY.AssignedToNobody}</option>{build_select box=owner selected=$assigned_to}</select></td>
-	    <td>{$STRING.BUGDISPLAY.AddCC}:</td>
+	    <td>{$STRING.BUGDISPLAY.assignedto}:</td>
+	    <td><select name="assigned_to" {$disabled}><option value="0">{$STRING.BUGDISPLAY.assignedtonobody}</option>{build_select box=owner selected=$assigned_to}</select></td>
+	    <td>{$STRING.BUGDISPLAY.addcc}:</td>
 	    <td><input type="text" name="add_cc" {$disabled}></td>
 	</tr><tr>
 	    <td colspan="2" valign="top">
 {if !empty($error.add_dep)}<div class="error">{$error.add_dep}</div>{/if}
-		{$STRING.BUGDISPLAY.BugDependency}: {$bug_dependencies}<br>
-		{$STRING.BUGDISPLAY.Blocks}: {$rev_bug_dependencies}<br>
-		{$STRING.BUGDISPLAY.AddDependency}: <input type="text" name="add_dependency" size="5" {$disabled}><br>
-		{$STRING.BUGDISPLAY.RemoveDependency}: <input type="text" name="del_dependency" size="5" {$disabled}><br><br></td>
+		{$STRING.BUGDISPLAY.bugdependency}: {$bug_dependencies}<br>
+		{$STRING.BUGDISPLAY.blocks}: {$rev_bug_dependencies}<br>
+		{$STRING.BUGDISPLAY.adddependency}: <input type="text" name="add_dependency" size="5" {$disabled}><br>
+		{$STRING.BUGDISPLAY.removedependency}: <input type="text" name="del_dependency" size="5" {$disabled}><br><br></td>
 	    <td colspan="2" valign="top">
-		{$STRING.BUGDISPLAY.RemoveSelectedCC}:<br>
+		{$STRING.BUGDISPLAY.removeselectedcc}:<br>
 		<select name="remove_cc[]" size="5" style="width: 15em" multiple {$disabled}>{build_select box=bug_cc selected=$bug_id}</select></td>
 	</tr>
     </table>
     <table border="0" cellpadding="2" cellspacing="0" width="100%">
 	<tr>
-	    <td valign="top">{$STRING.BUGDISPLAY.AdditionalComments}:<br><br>
+	    <td valign="top">{$STRING.BUGDISPLAY.additionalcomments}:<br><br>
 		<textarea name="comments" rows="6" cols="55" wrap="virtual" {$disabled}>{$smarty.post.comments}</textarea>
 		<br><br>
 		<div align="right">
 {if $smarty.session.uid}
-			{$STRING.BUGDISPLAY.SuppressEmail} <input type="checkbox" name="suppress_email" value="1">
+			{$STRING.BUGDISPLAY.suppressemail} <input type="checkbox" name="suppress_email" value="1">
 		    <input type="submit" value="Submit">
 {else}
 			{$STRING.logintomodify}
@@ -165,15 +165,15 @@
 	</tr><tr>
 	    <td><table border="0" cellpadding="0" width="100%">
 		    <tr>
-			<td colspan="2">{$STRING.BUGDISPLAY.Attachments}:</td>
-			<td colspan="3" align="right"><a href="attachment.php?bugid={$bug_id}" onClick="return popupAtt({$bug_id})">{$STRING.BUGDISPLAY.CreateAttachment}</a></td>
+			<td colspan="2">{$STRING.BUGDISPLAY.attachments}:</td>
+			<td colspan="3" align="right"><a href="attachment.php?bugid={$bug_id}" onClick="return popupAtt({$bug_id})">{$STRING.BUGDISPLAY.createattachment}</a></td>
 		    </tr><tr>
 			<td colspan="5" height="2" bgcolor="#ffffff"><spacer type="block" height="2" width="2"></td>
 		    </tr><tr>
-			<td bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.Name}</b></td>
-			<td width="60" bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.Size}</b></a></td>
-			<td width="150" bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.Type}</b></a></td>
-			<td width="80" bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.Created}</b></a></td>
+			<td bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.name}</b></td>
+			<td width="60" bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.size}</b></a></td>
+			<td width="150" bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.type}</b></a></td>
+			<td width="80" bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.created}</b></a></td>
 			<td width="80" bgcolor="#cccccc" align="center">&nbsp;</a></td>
 		    </tr><tr>
 			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
@@ -197,13 +197,13 @@
 			<td align="center">{$attachments[attachment].created_date|date:DATE_FORMAT}</td>
 			<td align="center"><a href='attachment.php?attachid={$attachments[attachment].attachment_id}'>View</a>
     {if isset($perm) and $perm->have_perm('Administrator')}
-			    | <a href='attachment.php?del={$attachments[attachment].attachment_id}' onClick="return confirm('{$STRING.BUGDISPLAY.SureDeleteAttachment}');">{$STRING.delete}</a>
+			    | <a href='attachment.php?del={$attachments[attachment].attachment_id}' onClick="return confirm('{$STRING.BUGDISPLAY.suredeleteattachment}');">{$STRING.delete}</a>
     {/if}
 			</td>
 		    </tr>
 {sectionelse}
 		    <tr>
-			<td colspan="5" align="center">{$STRING.BUGDISPLAY.NoAttachments}</td>
+			<td colspan="5" align="center">{$STRING.BUGDISPLAY.noattachments}</td>
 		    </tr>
 {/section}
 		    <tr>
@@ -221,25 +221,25 @@
 </form>
 <div align="center" class="bugdisplaylinks">
 {if !empty($error.vote)}<div class="error">{$error.vote}</div>{/if}
-    <b><a href="{$smarty.server.PHP_SELF}?op=vote&bugid={$bug_id}" onClick="if ({$already_voted}) {literal}{ alert ('{/literal}{$STRING.already_voted}{literal}'); return false; }{/literal}">{$STRING.BUGDISPLAY.VoteForThisBug}</a></b> |
-    <b><a href="{$smarty.server.PHP_SELF}?op=viewvotes&bugid={$bug_id}">{$STRING.BUGDISPLAY.ViewVotes} ({$num_votes}) {$STRING.BUGDISPLAY.ForThisBug}</a></b> |
-    <b><a href="{$smarty.server.PHP_SELF}?op=history&bugid={$bug_id}">{$STRING.BUGDISPLAY.ViewBugActivity}</a></b> |
-    <b><a href="{$smarty.server.PHP_SELF}?op=print&bugid={$bug_id}">{$STRING.BUGDISPLAY.PrintableView}</a></b>
+    <b><a href="{$smarty.server.PHP_SELF}?op=vote&bugid={$bug_id}" onClick="if ({$already_voted}) {literal}{ alert ('{/literal}{$STRING.already_voted}{literal}'); return false; }{/literal}">{$STRING.BUGDISPLAY.voteforthisbug}</a></b> |
+    <b><a href="{$smarty.server.PHP_SELF}?op=viewvotes&bugid={$bug_id}">{$STRING.BUGDISPLAY.viewvotes} ({$num_votes}) {$STRING.BUGDISPLAY.forthisbug}</a></b> |
+    <b><a href="{$smarty.server.PHP_SELF}?op=history&bugid={$bug_id}">{$STRING.BUGDISPLAY.viewbugactivity}</a></b> |
+    <b><a href="{$smarty.server.PHP_SELF}?op=print&bugid={$bug_id}">{$STRING.BUGDISPLAY.printableview}</a></b>
 </div>
 <br><br>
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
     <tr>
-	<td>{$STRING.BUGDISPLAY.Comments}:</td>
+	<td>{$STRING.BUGDISPLAY.comments}:</td>
     </tr><tr class="alt">
-	<td>{$STRING.BUGDISPLAY.PostedBy}: {$reporter|maskemail} <br>
-	    {$STRING.BUGDISPLAY.Date}: {$created_date|date:TIME_FORMAT} {$STRING.BUGDISPLAY.DateOn} {$created_date|date:DATE_FORMAT}</td>
+	<td>{$STRING.BUGDISPLAY.postedby}: {$reporter|maskemail} <br>
+	    {$STRING.BUGDISPLAY.date}: {$created_date|date:TIME_FORMAT} {$STRING.BUGDISPLAY.dateon} {$created_date|date:DATE_FORMAT}</td>
     </tr><tr>
 	<td>{$description|stripslashes|format_comments|nl2br} <br><br></td>
     </tr>
     {section name=comment loop=$comments}
     <tr class="alt">
-	<td>{$STRING.BUGDISPLAY.PostedBy}: {$comments[comment].login|maskemail} <br>
-	    {$STRING.BUGDISPLAY.Date}: {$comments[comment].created_date|date:TIME_FORMAT} {$STRING.BUGDISPLAY.On} {$comments[comment].created_date|date:DATE_FORMAT}</td>
+	<td>{$STRING.BUGDISPLAY.postedby}: {$comments[comment].login|maskemail} <br>
+	    {$STRING.BUGDISPLAY.date}: {$comments[comment].created_date|date:TIME_FORMAT} {$STRING.BUGDISPLAY.on} {$comments[comment].created_date|date:DATE_FORMAT}</td>
     </tr><tr>
 	<td>{$comments[comment].comment_text|stripslashes|format_comments|nl2br} <br><br></td>
     </tr>
