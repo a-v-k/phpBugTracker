@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.34 2001/12/13 14:06:45 bcurtis Exp $
+// $Id: user.php,v 1.35 2001/12/24 21:30:33 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -30,7 +30,7 @@ function do_form($userid = 0) {
 
 	$error = '';
   // Validation
-  if (!LOGIN_IS_EMAIL && !$_pv['flogin'] = trim($_pv['flogin'])) {
+  if (!EMAIL_IS_LOGIN && !$_pv['flogin'] = trim($_pv['flogin'])) {
     $error = $STRING['givelogin'];
   } elseif (!valid_email($_pv['femail'])) {
     $error = $STRING['giveemail'];
@@ -96,10 +96,10 @@ function do_form($userid = 0) {
       $user_groups[] = $group_id;
     }
     // Compute differences between old and new
-    if (!is_array($user_groups)) {
+    if (!isset($user_groups) or !is_array($user_groups)) {
       $user_groups = array();
     }
-    if (!is_array($_pv['fusergroup'])) {
+    if (!is_array($_pv['fusergroup']) or !$_pv['fusergroup'][0]) {
       $_pv['fusergroup'] = array();
     }
 
