@@ -3,6 +3,7 @@
 : Added dynamic select boxes to the bug form for changing component and version
   information when selecting a different project.
 : Added bug voting
+: Added a filter for active and inactive users in the admin user list
 
 -- 0.6.2 -- 27 Dec 2001
 : Improved compatibility with Opera and IIS.
