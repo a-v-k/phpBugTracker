@@ -183,7 +183,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'project' => build_select('project'),
 		'TITLE' => $TITLE['buglist']));
 	
-	$q->query("select bug_id, title, reporter.email as reporter, owner.email as owner, severity_name as severity, bug.created_date, status_name as status, priority_id, version_name as version, component_name as component, resolution_name as resolution from bug, resolution, severity, status, version, component left join user owner on bug.assigned_to = owner.user_id left join user reporter on bug.created_by = reporter.user_id where bug.resolution_id = resolution.resolution_id and bug.severity_id = severity.severity_id and bug.status_id = status.status_id and bug.version_id = version.version_id and bug.component_id = component.component_id ". ($querystring != '' ? "and $querystring " : ''). "order by $order $sort limit $llimit, $selrange");
+	$q->query("select bug_id, title, reporter.email as reporter, owner.email as owner, severity_name as severity, bug.created_date, status_name as status, priority_id, version_name as version, component_name as component, resolution_name as resolution, severity_color from bug left join resolution using (resolution_id), severity, status, version, component left join user owner on bug.assigned_to = owner.user_id left join user reporter on bug.created_by = reporter.user_id where bug.severity_id = severity.severity_id and bug.status_id = status.status_id and bug.version_id = version.version_id and bug.component_id = component.component_id ". ($querystring != '' ? "and $querystring " : ''). "order by $order $sort limit $llimit, $selrange");
 				
 	$headers = array(
 		'bugid' => 'bug_id',
@@ -211,7 +211,8 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 
 	while ($row = $q->grab()) {
 		$t->set_var(array(
-			'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
+			'bgcolor' => USE_SEVERITY_COLOR ? $row['severity_color'] : 
+				((++$i % 2 == 0) ? '#dddddd' : '#ffffff'),
 			'bugid' => $row['bug_id'],
 			'title' => $row['title'],
 			'description' => $row['description'],

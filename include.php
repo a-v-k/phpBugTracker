@@ -35,6 +35,8 @@ define ('USE_JPGRAPH',0); // Whether to show images or not
 define ('JPGRAPH_PATH', '/home/bcurtis/public_html/jp/'); // If it's not in the include path
 define ('MASK_EMAIL', 1); // Should email addresses be plainly visible?
 define ('HIDE_EMAIL', 1); // Should email addresses be hidden for those not logged in?
+// Should the query list use the severity colors as the row background color (like SourceForge)
+define ('USE_SEVERITY_COLOR', 1);
 // Sub-dir of the INSTALLPATH - Needs to be writeable by the web process
 define ('ATTACHMENT_PATH', 'attachments'); 
 // Maximum size (in bytes) of an attachment
