@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.85 2002/08/27 00:14:32 bcurtis Exp $
+// $Id: query.php,v 1.86 2002/09/03 19:43:48 bcurtis Exp $
 
 include 'include.php';
 
@@ -57,7 +57,18 @@ function show_query() {
 function build_query($assignedto, $reportedby, $open) {
 	global $db, $_sv, $_gv, $perm, $restricted_projects;
 
-	foreach ($_gv as $k => $v) { $$k = $v; }
+	$paramstr = '';
+	foreach ($_gv as $k => $v) {
+		$$k = $v;
+		if ($k == 'order' or $k == 'sort') continue;
+		if (is_array($v)) {
+			foreach ($v as $value) {
+				$paramstr .= "&{$k}[]=$value";
+			}
+		} else {
+			$paramstr .= "&$k=$v";
+		}
+	}
 	
 	// Open bugs assigned to the user -- a hit list
 	if ($assignedto || $reportedby) {
@@ -136,9 +147,9 @@ function build_query($assignedto, $reportedby, $open) {
 	}
 	
 	if (!empty($query)) {
-		return delimit_list(' and ',$query);
+		return array(delimit_list(' and ',$query), $paramstr);
 	} else {
-		return '';
+		return array('', '');
 	}
 }
 
@@ -273,12 +284,12 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	$HTTP_SESSION_VARS['queryinfo']['sort'] = $sort;
 	
 	if (empty($HTTP_SESSION_VARS['queryinfo']['query']) or isset($op)) {
-		$HTTP_SESSION_VARS['queryinfo']['query'] = build_query($assignedto, $reportedby, $open);
+		list($HTTP_SESSION_VARS['queryinfo']['query'], $paramstr) = 
+			build_query($assignedto, $reportedby, $open);
 	}
-	
 	$nr = $db->getOne($QUERY['query-list-bugs-count'].
 		(!empty($HTTP_SESSION_VARS['queryinfo']['query']) 
-			? "and {$HTTP_SESSION_VARS['queryinfo']['query']}": ''));
+			? $HTTP_SESSION_VARS['queryinfo']['query']: '1'));
 
 	$HTTP_SESSION_VARS['queryinfo']['numrows'] = $nr;
 	list($selrange, $llimit) = multipages($nr, $page, "order=$order&sort=$sort");
@@ -304,7 +315,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 			? "and {$HTTP_SESSION_VARS['queryinfo']['query']} " : ''),
 		$order, $sort), $llimit, $selrange)));
 				
-	sorting_headers($me, $headers, $order, $sort, "page=$page");
+	sorting_headers($me, $headers, $order, $sort, "page=$page".$paramstr);
 	$t->wrap('buglist.html', 'buglist');
 }
 
