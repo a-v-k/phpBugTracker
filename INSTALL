@@ -18,7 +18,8 @@ Ok, here's the quick and dirty install instructions:
       encrypted in the database.
    d. Change the USE_JPGRAPH constant to 1 if you want to use the jpgraph class
 	    (http://www.aditus.nu/jpgraph/) to display the bug summary info.  If you
-			enable this you'll also need to edit the JPGRAPH_PATH constant.
+			enable this you'll also need to edit the JPGRAPH_PATH constant, and 
+			you'll need to edit the jpgraph.php file from the jpgraph disribution.
 6. Browse on over to the installation, choose Admin tools, login with the info
    you put in the database creation script, and create your first project.
 7. Start reporting bugs
