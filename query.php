@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.61 2002/03/20 20:02:51 bcurtis Exp $
+// $Id: query.php,v 1.62 2002/03/27 17:52:00 bcurtis Exp $
 
 include 'include.php';
 
@@ -151,7 +151,7 @@ function build_query($assignedto, $reportedby, $open) {
 
 function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	global $me, $db, $t, $select, $TITLE, $STRING, $_gv, $u, 
-		$default_db_fields, $all_db_fields, $_sv, $HTTP_SERVER_VARS;
+		$default_db_fields, $all_db_fields, $HTTP_SESSION_VARS, $HTTP_SERVER_VARS;
 
 	$t->set_file('content','buglist.html');
 	$t->set_block('content','row','rows');
@@ -171,32 +171,32 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 			values ($nextid, $u, '$savedqueryname', '$savedquerystring')");
 	}
 	if (!isset($order)) { 
-		if (isset($_sv['queryinfo']['order'])) {
-			$order = $_sv['queryinfo']['order'];
-			$sort = $_sv['queryinfo']['sort'];
+		if (isset($HTTP_SESSION_VARS['queryinfo']['order'])) {
+			$order = $HTTP_SESSION_VARS['queryinfo']['order'];
+			$sort = $HTTP_SESSION_VARS['queryinfo']['sort'];
 		} else {
 			$order = 'bug_id'; 
 			$sort = 'asc'; 
 		}
 	}
-	$_sv['queryinfo']['order'] = $order;
-	$_sv['queryinfo']['sort'] = $sort;
+	$HTTP_SESSION_VARS['queryinfo']['order'] = $order;
+	$HTTP_SESSION_VARS['queryinfo']['sort'] = $sort;
 	
-	if (empty($_sv['queryinfo']['query']) or isset($op)) {
-		$_sv['queryinfo']['query'] = build_query($assignedto, $reportedby, $open);
+	if (empty($HTTP_SESSION_VARS['queryinfo']['query']) or isset($op)) {
+		$HTTP_SESSION_VARS['queryinfo']['query'] = build_query($assignedto, $reportedby, $open);
 	}
 	
 	if (!session_is_registered('queryinfo')) {
 		session_register('queryinfo');
-		$_sv['queryinfo'] = array();
+		$HTTP_SESSION_VARS['queryinfo'] = array();
 	}
 	
 	$nr = $db->getOne('select count(*) from '.TBL_BUG.' b 
 		left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id
 		left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
-		(!empty($_sv['queryinfo']['query']) ? "where {$_sv['queryinfo']['query']}": ''));
+		(!empty($HTTP_SESSION_VARS['queryinfo']['query']) ? "where {$HTTP_SESSION_VARS['queryinfo']['query']}": ''));
 
-	$_sv['queryinfo']['numrows'] = $nr;
+	$HTTP_SESSION_VARS['queryinfo']['numrows'] = $nr;
 	list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
 		"order=$order&sort=$sort");
 								
@@ -220,7 +220,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		where b.severity_id = severity.severity_id and b.status_id = status.status_id 
 		and b.os_id = os.os_id and b.version_id = version.version_id 
 		and b.component_id = component.component_id and b.project_id = project.project_id '.
-		(!empty($_sv['queryinfo']['query']) ? "and {$_sv['queryinfo']['query']} " : '').
+		(!empty($HTTP_SESSION_VARS['queryinfo']['query']) ? "and {$HTTP_SESSION_VARS['queryinfo']['query']} " : '').
 		"order by $order $sort, bug_id asc", $llimit, $selrange);
 				
 	$headers = array(
@@ -254,7 +254,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	}
 	
 	// Header row 
-	$db_fields = !empty($_sv['db_fields']) ? $_sv['db_fields'] :
+	$db_fields = !empty($HTTP_SESSION_VARS['db_fields']) ? $HTTP_SESSION_VARS['db_fields'] :
 		$default_db_fields;
 	foreach ($db_fields as $field) {
 		$t->set_var(array(

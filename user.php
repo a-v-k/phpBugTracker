@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.22 2002/03/21 13:44:54 bcurtis Exp $
+// $Id: user.php,v 1.23 2002/03/27 17:52:01 bcurtis Exp $
 
 include 'include.php';
 
@@ -32,9 +32,9 @@ function delete_vote($bug_id) {
 }
 
 function change_bug_list_columns($column_list) {
-	global $db, $u, $t, $_sv;
+	global $db, $u, $t, $HTTP_SESSION_VARS;
 	
-	$_sv['db_fields'] = $column_list;
+	$HTTP_SESSION_VARS['db_fields'] = $column_list;
 	$column_list = serialize($column_list);
 	$db->query("update ".TBL_AUTH_USER." set bug_list_fields = '$column_list' where user_id = $u");
 	//$t->set_file('content', 'columnlistchanged.html');
