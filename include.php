@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.95 2002/03/11 16:41:14 bcurtis Exp $
+// $Id: include.php,v 1.96 2002/03/11 18:22:17 bcurtis Exp $
 
 // Where are we?
 define ('INSTALL_PATH', dirname(__FILE__));
@@ -251,7 +251,8 @@ if (!defined('NO_AUTH')) {
 	if (!$perm->have_perm('Admin')) {
 		$matching_projects = delimit_list(',', 
 			$q->grab_field_set("select project_id from ".TBL_PROJECT_GROUP.
-				" where group_id not in (".delimit_list(',', $auth->auth['group_ids']).")"));
+				" where group_id not in (".delimit_list(',', $auth->auth['group_ids']).
+				") group by project_id"));
 		if ($matching_projects) {
 			$restricted_projects .= ",$matching_projects";
 		}
