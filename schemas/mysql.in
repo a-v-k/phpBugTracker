@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.8 2001/11/06 04:39:47 bcurtis Exp $
+# $Id: mysql.in,v 1.9 2001/11/06 16:42:05 bcurtis Exp $
 
 CREATE TABLE TBL_ACTIVE_SESSIONS (
   sid varchar(32) NOT NULL default '',
@@ -272,8 +272,8 @@ INSERT INTO TBL_CONFIGURATION VALUES ('MASK_EMAIL','1','Should email addresses h
 INSERT INTO TBL_CONFIGURATION VALUES ('HIDE_EMAIL','1','Should email addresses be hidden for those not logged in?','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('USE_SEVERITY_COLOR','1','Should the query list use the severity colors as the row background color (like SourceForge)','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('EMAIL_IS_LOGIN','1','Whether to use email addresses as logins','bool');
-INSERT INTO TBL_CONFIGURATION VALUES ('STRICT_UPDATING', '0', 'Only the bug reporter, bug owner, managers, and admins can change a bug', 'bool')
-INSERT INTO TBL_CONFIGURATION VALUES ('NEW_ACCOUNTS_DISABLED', '0', 'Only admins can create new user accounts - newaccount.php is disabled', 'bool')
+INSERT INTO TBL_CONFIGURATION VALUES ('STRICT_UPDATING', '0', 'Only the bug reporter, bug owner, managers, and admins can change a bug', 'bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('NEW_ACCOUNTS_DISABLED', '0', 'Only admins can create new user accounts - newaccount.php is disabled', 'bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('ATTACHMENT_PATH','attachments','Sub-dir of the INSTALLPATH - Needs to be writeable by the web process','string');
 INSERT INTO TBL_CONFIGURATION VALUES ('THEME','default','Which set of templates to use','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('ATTACHMENT_MAX_SIZE','2097152','Maximum size (in bytes) of an attachment. This will not override the settings in php.ini if php.ini has a lower limit.','string');
