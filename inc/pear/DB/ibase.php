@@ -16,13 +16,13 @@
 // | Author: Sterling Hughes <sterling@php.net>                           |
 // +----------------------------------------------------------------------+
 //
-// $Id: ibase.php,v 1.1 2002/09/13 18:07:51 bcurtis Exp $
+// $Id: ibase.php,v 1.2 2002/10/11 20:54:43 bcurtis Exp $
 //
 // Database independent query interface definition for PHP's Interbase
 // extension.
 //
 
-require_once 'DB/common.php';
+require_once PEAR_PATH.'DB/common.php';
 
 class DB_ibase extends DB_common
 {
@@ -573,7 +573,7 @@ class DB_ibase extends DB_common
             }
             $errmsg = $m[2] . ' ' . $m[3];
         }
-        
+
         return $this->raiseError($errno, null, null, $errmsg,
                         $this->last_query);
     }

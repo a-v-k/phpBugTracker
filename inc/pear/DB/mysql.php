@@ -16,7 +16,7 @@
 // | Author: Stig Bakken <ssb@fast.no>                                    |
 // +----------------------------------------------------------------------+
 //
-// $Id: mysql.php,v 1.1 2002/09/13 18:07:51 bcurtis Exp $
+// $Id: mysql.php,v 1.2 2002/10/11 20:54:43 bcurtis Exp $
 //
 // Database independent query interface definition for PHP's MySQL
 // extension.
@@ -29,7 +29,7 @@
 //               be registered here.
 //
 
-require_once "DB/common.php";
+require_once PEAR_PATH."DB/common.php";
 
 class DB_mysql extends DB_common
 {
@@ -843,5 +843,5 @@ class DB_mysql extends DB_common
     // longReadlen
     // binmode
 }
-
+//echo ':(';
 ?>

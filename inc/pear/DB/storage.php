@@ -16,14 +16,14 @@
 // | Author: Stig Bakken <stig@php.net>                                   |
 // +----------------------------------------------------------------------+
 //
-// $Id: storage.php,v 1.1 2002/09/13 18:07:51 bcurtis Exp $
+// $Id: storage.php,v 1.2 2002/10/11 20:54:43 bcurtis Exp $
 //
 // DB_storage: a class that lets you return SQL data as objects that
 // can be manipulated and that updates the database accordingly.
 //
 
-require_once "PEAR.php";
-require_once "DB.php";
+require_once PEAR_PATH."PEAR.php";
+require_once PEAR_PATH."DB.php";
 
 /**
  * DB_storage provides an object interface to a table row.  It lets

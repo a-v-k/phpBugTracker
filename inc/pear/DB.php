@@ -17,12 +17,12 @@
 // |          Tomas V.V.Cox <cox@idecnet.com>                             |
 // +----------------------------------------------------------------------+
 //
-// $Id: DB.php,v 1.1 2002/09/13 18:07:51 bcurtis Exp $
+// $Id: DB.php,v 1.2 2002/10/11 20:54:43 bcurtis Exp $
 //
 // Database independent query interface.
 //
 
-require_once "PEAR.php";
+require_once PEAR_PATH."PEAR.php";
 
 /*
  * The method mapErrorCode in each DB_dbtype implementation maps
@@ -200,7 +200,7 @@ class DB
 
     function &factory($type)
     {
-        @include_once("DB/${type}.php");
+        @include_once(PEAR_PATH."DB/${type}.php");
 
         $classname = "DB_${type}";
 
@@ -247,9 +247,9 @@ class DB
         if (is_array($options) && isset($options["debug"]) &&
             $options["debug"] >= 2) {
             // expose php errors with sufficient debug level
-            include_once "DB/${type}.php";
+            include_once PEAR_PATH."DB/${type}.php";
         } else {
-            @include_once "DB/${type}.php";
+            @include_once PEAR_PATH."DB/${type}.php";
         }
 
         $classname = "DB_${type}";
@@ -386,8 +386,8 @@ class DB
                 DB_WARNING_READ_ONLY        => 'read only',
                 DB_ERROR_NEED_MORE_DATA     => 'insufficient data supplied',
                 DB_ERROR_EXTENSION_NOT_FOUND=> 'extension not found',
-                DB_ERROR_NOSUCHDB           => 'no such database',                
-                DB_ERROR_ACCESS_VIOLATION   => 'insufficient permissions'                
+                DB_ERROR_NOSUCHDB           => 'no such database',
+                DB_ERROR_ACCESS_VIOLATION   => 'insufficient permissions'
             );
         }
 

@@ -16,7 +16,7 @@
 // | Author: Tomas V.V.Cox <cox@idecnet.com>                              |
 // +----------------------------------------------------------------------+
 //
-// $Id: dbase.php,v 1.1 2002/09/13 18:07:51 bcurtis Exp $
+// $Id: dbase.php,v 1.2 2002/10/11 20:54:43 bcurtis Exp $
 //
 // Database independent query interface definition for PHP's dbase
 // extension.
@@ -25,7 +25,7 @@
 //  You have to compile your PHP with the --enable-dbase option
 //
 
-require_once "DB/common.php";
+require_once PEAR_PATH."DB/common.php";
 
 class DB_dbase extends DB_common
 {

@@ -17,7 +17,7 @@
 // |          Stig Bakken <ssb@fast.no>                                   |
 // +----------------------------------------------------------------------+
 //
-// $Id: pgsql.php,v 1.2 2002/10/03 15:18:57 bcurtis Exp $
+// $Id: pgsql.php,v 1.3 2002/10/11 20:54:43 bcurtis Exp $
 //
 // Database independent query interface definition for PHP's PostgreSQL
 // extension.
@@ -30,7 +30,7 @@
 //               be registered here.
 //
 
-require_once 'DB/common.php';
+require_once PEAR_PATH.'DB/common.php';
 
 class DB_pgsql extends DB_common
 {
