@@ -1,37 +1,20 @@
-<!--
-<form method="post" action="{me}?op=add">
-Submit a bug for <select name="project">{project}</select>. 
-<input type="submit" name="Submit">
-</form>
--->
+<style>
+.header-col { font-weight: bold; text-align: center; }
+.center-col { text-align: center; }
+</style>
 <h2>Bug List</h2>
 <table cellpadding="2">
-	<tr>
-    <th bgcolor="{bugidcolor}"><a href="{bugidurl}">ID</th>
-  	<th bgcolor="{titlecolor}"><a href="{titleurl}">Title</a></th>
-    <th bgcolor="{createdbycolor}"><a href="{createdbyurl}">Reporter</a></th>
-		<th bgcolor="{ownercolor}"><a href="{ownerurl}">Assigned To</a></th>
-    <th bgcolor="{severitycolor}"><a href="{severityurl}">Severity</a></th>
-    <th bgcolor="{prioritycolor}"><a href="{priorityurl}">Priority</a></th>
-    <th bgcolor="{createddatecolor}"><a href="{createddateurl}">Date Created</a></th>
-    <th bgcolor="{statuscolor}"><a href="{statusurl}">Status</a></th>
-    <th bgcolor="{resolutioncolor}"><a href="{resolutionurl}">Resolution</a></th>
-  </tr>
 	<!-- BEGIN row -->
-	<tr bgcolor="{bgcolor}" onClick="document.location.href='bug.php?op=show&bugid={bugid}'" onMouseOver="this.style.backgroundColor='#eeeeee'" onMouseOut="this.style.backgroundColor='{bgcolor}'" >
-    <td><a href="bug.php?op=show&bugid={bugid}">{bugid}</a></td>
-  	<td><a href="bug.php?op=show&bugid={bugid}">{title}</a></td>
-  	<td align="center">{reporter}</td>
-    <td align="center">&nbsp;{owner}</td>
-    <td align="center">{severity}</td>
-    <td align="center">{priority}</td>
-    <td align="center">{createddate}</td>
-    <td align="center">{status}</td>
-    <td align="center">&nbsp;{resolution}</td>
+	<tr {tr-extra}>
+		<!-- BEGIN col -->
+		<td class="{colclass}" bgcolor="{bgcolor}">
+			{coldata}
+		</td>
+		<!-- END col -->
   </tr>
 	<!-- END row -->
 	<tr>
-		<td colspan="9" align="center">
+		<td colspan="{numcols}" align="center">
 			<br>
   		{first} - {last} of {total}<br>[ {pages} ]<!-- <a href="bugs.php?page=all">Show all</a>-->
   		<br>

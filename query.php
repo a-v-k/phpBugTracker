@@ -23,6 +23,39 @@
 
 include 'include.php';
 
+$dbfields = array(
+	'bug_id' => 'ID',
+	'title' => 'Title',
+	'description' => 'Description',
+	'url' => 'URL',
+	'severity_name' => 'Severity',
+	'priority' => 'Priority',
+	'status_name' => 'Status',
+	'resolution_name' => 'Resolution',
+	'assigned_to' => 'Assigned To',
+	'reporter' => 'Reporter',
+	'owner' => 'Owner',
+	'created_date' => 'Created',
+	'last_modified_by' => 'Last Modified',
+	'last_modified_date' => 'Last Modified By',
+	'project_name' => 'Project',
+	'version_name' => 'Version',
+	'component_name' => 'Component',
+	'os_name' => 'OS',
+	'browser_string' => 'Browser',
+	'close_date' => 'Closed'
+	);
+$mydbfields = array(
+	'bug_id' => 'ID',
+	'title' => 'Title',
+	'reporter' => 'Reporter',
+	'owner' => 'Owner',
+	'severity_name' => 'Severity',
+	'priority' => 'Priority',
+	'status_name' => 'Status',
+	'resolution_name' => 'Resolution'
+	);
+	
 function delete_saved_query($queryid) {
 	global $q, $u, $me;
 	
@@ -103,7 +136,7 @@ function build_query($assignedto, $reportedby, $open) {
 	if ($assignedto || $reportedby) {
 		$q->query("select status_id from status where status_name ".($open ? '' : 'not ')."in ('Unconfirmed', 'New', 'Assigned', 'Reopened')");
 		while ($statusid = $q->grab_field()) $status[] = $statusid;
-		$query[] = 'status_id in ('.delimit_list(',',$status).')';
+		$query[] = 'bug.status_id in ('.delimit_list(',',$status).')';
 		if ($assignedto) {
 			$query[] = "assigned_to = {$auth->auth['uid']}";
 		} else {
@@ -114,7 +147,7 @@ function build_query($assignedto, $reportedby, $open) {
 		if ($status) $flags[] = 'bug.status_id in ('.delimit_list(',',$status).')';
 		if ($resolution) $flags[] = 'bug.resolution_id in ('.delimit_list(',',$resolution).')';
 		if ($os) $flags[] = 'bug.os_id in ('.delimit_list(',',$os).')';
-		if ($priority) $flags[] = 'bug.priority_id in ('.delimit_list(',',$priority).')';
+		if ($priority) $flags[] = 'bug.priority in ('.delimit_list(',',$priority).')';
 		if ($severity) $flags[] = 'bug.severity_id in ('.delimit_list(',',$severity).')';
 		if ($flags) $query[] = '('.delimit_list(' or ',$flags).')';
 
@@ -158,10 +191,11 @@ function build_query($assignedto, $reportedby, $open) {
 
 function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	global $querystring, $me, $q, $t, $selrange, $order, $sort, $query, 
-		$page, $op, $select, $TITLE, $STRING, $savedqueryname, $u;
+		$page, $op, $select, $TITLE, $STRING, $savedqueryname, $u, $mydbfields;
 
 	$t->set_file('content','buglist.html');
 	$t->set_block('content','row','rows');
+	$t->set_block('row','col','cols');
 	
 	// Save the query if requested
 	if ($savedqueryname) {
@@ -183,54 +217,95 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'project' => build_select('project'),
 		'TITLE' => $TITLE['buglist']));
 	
-	$q->query("select bug_id, title, reporter.email as reporter, owner.email as owner, severity_name as severity, bug.created_date, status_name as status, priority_id, version_name as version, component_name as component, resolution_name as resolution, severity_color from bug left join resolution using (resolution_id), severity, status, version, component left join user owner on bug.assigned_to = owner.user_id left join user reporter on bug.created_by = reporter.user_id where bug.severity_id = severity.severity_id and bug.status_id = status.status_id and bug.version_id = version.version_id and bug.component_id = component.component_id ". ($querystring != '' ? "and $querystring " : ''). "order by $order $sort limit $llimit, $selrange");
+	$q->query("select bug.*, reporter.email as reporter, owner.email as owner, severity_name, status_name, version_name, component_name, resolution_name, severity_color from bug left join resolution using (resolution_id), severity, status, version, component left join user owner on bug.assigned_to = owner.user_id left join user reporter on bug.created_by = reporter.user_id where bug.severity_id = severity.severity_id and bug.status_id = status.status_id and bug.version_id = version.version_id and bug.component_id = component.component_id ". ($querystring != '' ? "and $querystring " : ''). "order by $order $sort limit $llimit, $selrange");
 				
 	$headers = array(
-		'bugid' => 'bug_id',
+		'bug_id' => 'bug_id',
 		'title' => 'title',
 		'description' => 'description',
 		'url' => 'url',
-		'severity' => 'severity.sort_order',
-		'priority' => 'bug.priority_id',
-		'status' => 'status.sort_order',
+		'severity_name' => 'severity.sort_order',
+		'priority' => 'bug.priority',
+		'status_name' => 'status.sort_order',
 		'owner' => 'owner',
-		'createdby' => 'reporter',
-		'createddate' => 'created_date',
-		'project' => 'project_id',
-		'component' => 'component',
-		'os' => 'os_id',
-		'browserstring' => 'browser_string',
-		'resolution' => 'resolution');
+		'reporter' => 'reporter',
+		'created_date' => 'created_date',
+		'project_name' => 'project_id',
+		'component_name' => 'component_name',
+		'os_name' => 'os_id',
+		'browser_string' => 'browser_string',
+		'resolution_name' => 'resolution.sort_order',
+		'close_date' => 'close_date');
 
 	sorting_headers($me, $headers, $order, $sort, "page=$page");
 				
 	if (!$q->num_rows()) {
-		$t->set_var('rows',"<tr><td>{$STRING['nobugs']}</td></tr>");
+		$t->set_var(array(
+			'rows' => "<tr><td>{$STRING['nobugs']}</td></tr>",
+			'numcols' => "1"));
 		return;
 	}
-
-	while ($row = $q->grab()) {
+	
+	// Header row 
+	foreach ($mydbfields as $field => $title) {
 		$t->set_var(array(
-			'bgcolor' => USE_SEVERITY_COLOR ? $row['severity_color'] : 
-				((++$i % 2 == 0) ? '#dddddd' : '#ffffff'),
-			'bugid' => $row['bug_id'],
-			'title' => $row['title'],
-			'description' => $row['description'],
-			'url' => $row['url'],
-			'severity' => $row['severity'],
-			'priority' => $select['priority'][$row['priority_id']],
-			'status' => $row['status'],
-			'assignedto' => $row['assigned_to'],
-			'reporter' => maskemail($row['reporter']),
-			'owner' => maskemail($row['owner']),
-			'createddate' => date(DATEFORMAT,$row['created_date']),
-			'project' => $row['project_id'],
-			'component' => $row['component'],
-			'os' => $row['os_id'],
-			'browserstring' => $row['browser_string'],
-			'resolution' => $row['resolution']));
-		$t->parse('rows','row',true);
+			'coldata' => "<a href='{{$field}url}'>$title</a>",
+			'colclass' => 'header-col',
+			'bgcolor' => "{{$field}color}"
+			));
+		$t->parse('cols', 'col', true);
 	}
+	$t->set_var('tr-extra', '');
+	$t->parse('rows', 'row', true);
+	$t->set_var('cols', '');
+	
+	// Data rows 
+	while ($row = $q->grab()) {
+		$bgcolor = USE_SEVERITY_COLOR ? $row['severity_color'] : 
+			((++$i % 2 == 0) ? '#dddddd' : '#ffffff');
+		foreach ($mydbfields as $field => $title) {
+			switch ($field) {
+				case 'url' : 
+					$coldata = "<a href='{$row[$field]}'>{$row[$field]}</a>"; 
+					$colclass = '';
+					break;
+				case 'created_date' :
+				case 'last_modified_date' :
+				case 'close_date' : 
+					$coldata = date(DATEFORMAT, $row[$field]); 
+					$colclass = 'center-col';
+					break;
+				case 'bug_id' :
+				case 'title' :
+					$coldata = "<a href='bug.php?op=show&bugid={$row['bug_id']}'>{$row[$field]}</a>"; 
+					$colclass = '';
+					break;
+				case 'reporter' :
+				case 'owner' : 
+					$coldata = maskemail($row[$field]);
+					$colclass = 'center-col';
+					break;
+				case 'priority' :
+					$coldata = $select['priority'][$row[$field]];
+					$colclass = 'center-col';
+					break;
+				default :
+					$coldata = $row[$field];
+					$colclass = 'center-col';
+					break;
+			}
+			$t->set_var(array(
+				'coldata' => "&nbsp;$coldata&nbsp;",
+				'colclass' => $colclass,
+				'bgcolor' => ''
+				));
+			$t->parse('cols', 'col', true);
+		}
+		$t->set_var('tr-extra', "bgcolor='$bgcolor' onClick=\"document.location.href='bug.php?op=show&bugid={$row['bug_id']}'\" onMouseOver=\"this.style.backgroundColor='#eeeeee'\" onMouseOut=\"this.style.backgroundColor='$bgcolor'\"");
+		$t->parse('rows','row',true);
+		$t->set_var('cols', '');
+	}
+	$t->set_var('numcols', count($mydbfields));
 }
 
 $t->set_file('wrap','wrap.html');
