@@ -1,3 +1,8 @@
+-- 0.3.0 --
+: Converted database schema to lower-case to ease DB portability.
+: Added the option to color rows in the bug list according to severity.
+: Changed the columns in the bug list to be dynamic and user-configurable.
+
 -- 0.2.1 -- 14 Aug 2001
 : Bugfix to the configure script
 : Updated the installation instructions
