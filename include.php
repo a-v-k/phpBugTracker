@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.65 2001/10/29 22:56:54 javyer Exp $
+// $Id: include.php,v 1.66 2001/10/29 22:59:55 javyer Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -213,7 +213,6 @@ class uperm extends Perm {
 class templateclass extends Template {
   function pparse($target, $handle, $append = false) {
     global $auth, $perm, $q;
-$q->Debug=true;
 
     $u = $auth->auth['uid'];
     $this->set_block('wrap', 'logoutblock', 'loblock');
