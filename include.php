@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.48 2001/09/03 17:00:27 javyer Exp $
+// $Id: include.php,v 1.49 2001/09/03 17:36:07 javyer Exp $
 
 if (defined("INCLUDE_PATH")) {
   require INCLUDE_PATH."config.php";
@@ -326,11 +326,11 @@ function build_select($box, $value = '', $project = 0) {
       }
       break;
     case 'owner' :
-      $q->query("select user_id, email from ".TBL_AUTH_USER." where user_level > 1 order by email");
+      $q->query("select user_id, login from ".TBL_AUTH_USER." where active > 0 order by login");
       while ($row = $q->grab()) {
         if ($value == $row['user_id']) $sel = ' selected';
         else $sel = '';
-        $text .= "<option value=\"{$row['user_id']}\"$sel>{$row['email']}</option>";
+        $text .= "<option value=\"{$row['user_id']}\"$sel>{$row['login']}</option>";
       }
       break;
     default :
