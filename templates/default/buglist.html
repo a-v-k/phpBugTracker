@@ -23,11 +23,13 @@
 			</td>
 		</tr>
 	{/section}
+	{if $smarty.section.bug.total}
 	<tr>
 		<td colspan="{$smarty.section.col.loop}" align="center">
 			<br>
-  		{$first} - {$last} of {$total}<br>[ {$pages} ]<!-- <a href="bugs.php?page=all">Show all</a>-->
-  		<br>
+			{$first} - {$last} of {$total}<br>[ {$pages} ]<!-- <a href="bugs.php?page=all">Show all</a>-->
+			<br>
 		</td>
 	</tr>
+	{/if}
 </table>
