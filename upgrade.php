@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.9 2002/03/11 16:41:14 bcurtis Exp $
+// $Id: upgrade.php,v 1.10 2002/03/13 16:36:28 bcurtis Exp $
 
 define ('NO_AUTH', 1);
 include 'include.php';
@@ -29,7 +29,7 @@ function upgrade() {
 	global $q;
 	
 	$upgraded = $q->grab_field('select varvalue from '.TBL_CONFIGURATION.
-		' where varname = "PROMOTE_VOTES"');
+		" where varname = 'PROMOTE_VOTES'");
 	if (!$upgraded) {
 		// Add the bug_vote table and insert the new configuration options
 		if (DB_TYPE == 'pgsql') {
