@@ -117,10 +117,10 @@ if (USE_JPGRAPH) {
 }
 
 // Show the recently added and closed bugs
-$rs = $db->query("select bug_id, title from ".TBL_BUG.
+$rs = $db->limitQuery("select bug_id, title from ".TBL_BUG.
 	" where project_id not in ($restricted_projects)".
-	' order by created_date desc limit 5');
-if (!$rs->numRows()) {
+	' order by created_date desc', 0, 5);
+if (DB::isError($rs) or !$rs->numRows()) {
 	$t->set_var('recentrows', $STRING['nobugs']);
 } else {
 	while (list($bugid, $title) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
@@ -131,11 +131,11 @@ if (!$rs->numRows()) {
 		$t->parse('recentrows', 'recentrow', true);
 	}
 }
-$rs = $db->query('select b.bug_id, title from '.TBL_BUG.' b, '.TBL_BUG_HISTORY.
+$rs = $db->limitQuery('select b.bug_id, title from '.TBL_BUG.' b, '.TBL_BUG_HISTORY.
 	" h where project_id not in ($restricted_projects) and b.bug_id = h.bug_id".
 	" and changed_field = 'status' and new_value = 'Closed'".
-	' order by h.created_date desc limit 5');
-if (!$rs->numRows()) {
+	' order by h.created_date desc', 0, 5);
+if (DB::isError($rs) or !$rs->numRows()) {
 	$t->set_var('closerows', $STRING['nobugs']);
 } else {
 	while (list($bugid, $title) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
