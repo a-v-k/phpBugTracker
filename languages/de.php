@@ -85,6 +85,7 @@ $TITLE = array(
 	'os' => 'Betriebssysteme',
 	'resolution' => 'Auflösungen',
 	'status' => 'Stati',
+	'severity' => 'Severity',
 	'user' => 'Benutzer',
 	'home' => 'Home',
 	'reporting' => 'Bericht'

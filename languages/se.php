@@ -80,6 +80,7 @@ $TITLE = array(
 	'os' => 'Operativsystem',
 	'resolution' => 'Uppföljning',
 	'status' => 'Status',
+	'severity' => 'Severity',
 	'user' => 'Användare',
 	'home' => 'Hem',
 	'reporting' => 'Rapportering'

@@ -79,6 +79,7 @@ $TITLE = array(
 	'os' => 'Operating Systems',
 	'resolution' => 'Resolutions',
 	'status' => 'Statuses',
+	'severity' => 'Severity',
 	'user' => 'Users',
 	'home' => 'Home',
 	'reporting' => 'Reporting'
