@@ -2,7 +2,7 @@
 -- Oracle database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: oci8.in,v 1.6 2002/03/26 18:43:25 bcurtis Exp $
+-- $Id: oci8.in,v 1.7 2002/03/29 17:40:07 bcurtis Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id number(10)   default '0' NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE TBL_BUG (
   bug_id number(10)   default '0' NOT NULL,
   title varchar2(100)  default '' NOT NULL,
   description varchar2(4000) NOT NULL ,
-  url varchar2(255)  default '' NOT NULL,
+  url varchar2(255)  default '',
   severity_id number(3)   default '0' NOT NULL,
   priority number(3)   default '0' NOT NULL,
   status_id number(3)   default '0' NOT NULL,
@@ -259,13 +259,13 @@ INSERT INTO TBL_AUTH_USER
 	(user_id, login, first_name, last_name, email, password)
 	values (1, 'OPTION_ADMIN_EMAIL', 'System', 'Admin', 'OPTION_ADMIN_EMAIL', 
 		'OPTION_ADMIN_PASS');
-INSERT INTO TBL_DB_SEQUENCE values ('TBL_AUTH_USER', 1);
+CREATE SEQUENCE TBL_AUTH_USER_seq START WITH 2 NOCACHE;
 
 -- Start off with three user levels...
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (1, 'Admin', 1);
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (2, 'User', 1);
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (3, 'Developer', 1);
-CREATE SEQUENCE TBL_AUTH_USER_seq START WITH 1;
+CREATE SEQUENCE TBL_AUTH_GROUP_seq START WITH 4 NOCACHE;
 
 -- ... and only two permissions 
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (1, 'Admin');
@@ -333,7 +333,7 @@ INSERT INTO TBL_OS VALUES (28,'OSF/1',28,'/Mozilla.*\\(.*;.*; OSF.*\\)/');
 INSERT INTO TBL_OS VALUES (29,'Solaris',29,'/Mozilla.*\\(.*;.*; SunOS 5.*\\)/');
 INSERT INTO TBL_OS VALUES (30,'SunOS',30,'/Mozilla.*\\(.*;.*; SunOS.*\\)/');
 INSERT INTO TBL_OS VALUES (31,'other',31,'');
-CREATE SEQUENCE TBL_OS_seq START WITH 31;
+CREATE SEQUENCE TBL_OS_seq START WITH 32 NOCACHE;
 
 INSERT INTO TBL_RESOLUTION VALUES (1,'Fixed','Bug was eliminated',1);
 INSERT INTO TBL_RESOLUTION VALUES (2,'Not a bug','It''s not a bug -- it''s a feature!',2);
@@ -341,7 +341,7 @@ INSERT INTO TBL_RESOLUTION VALUES (3,'Won''t Fix','This bug will stay',3);
 INSERT INTO TBL_RESOLUTION VALUES (4,'Deferred','We''ll get around to it later',4);
 INSERT INTO TBL_RESOLUTION VALUES (5,'Works for me','Can''t replicate the bug',5);
 INSERT INTO TBL_RESOLUTION VALUES (6,'Duplicate','',6);
-CREATE SEQUENCE TBL_RESOLUTION_seq START WITH 6;
+CREATE SEQUENCE TBL_RESOLUTION_seq START WITH 7 NOCACHE;
 
 INSERT INTO TBL_SEVERITY VALUES (1,'Unassigned','Default bug creation',1,'#dadada');
 INSERT INTO TBL_SEVERITY VALUES (2,'Idea','Ideas for further development',2,'#dad0d0');
@@ -350,7 +350,7 @@ INSERT INTO TBL_SEVERITY VALUES (4,'Annoyance','Cosmetic problems or bugs not af
 INSERT INTO TBL_SEVERITY VALUES (5,'Content','Non-functional related bugs, such as text content',5,'#dababa');
 INSERT INTO TBL_SEVERITY VALUES (6,'Significant','A bug affecting the intended performance of the product',6,'#dab0b0');
 INSERT INTO TBL_SEVERITY VALUES (7,'Critical','A bug severe enough to prevent the release of the product',7,'#daaaaa');
-CREATE SEQUENCE TBL_SEVERITY_seq START WITH 7;
+CREATE SEQUENCE TBL_SEVERITY_seq START WITH 8 NOCACHE;
 
 INSERT INTO TBL_STATUS VALUES (1,'Unconfirmed','Reported but not confirmed',1);
 INSERT INTO TBL_STATUS VALUES (2,'New','A new bug',2);
@@ -359,4 +359,4 @@ INSERT INTO TBL_STATUS VALUES (4,'Reopened','Closed but opened again for further
 INSERT INTO TBL_STATUS VALUES (5,'Resolved','Set by engineer with a resolution',5);
 INSERT INTO TBL_STATUS VALUES (6,'Verified','The resolution is confirmed by the reporter',6);
 INSERT INTO TBL_STATUS VALUES (7,'Closed','The bug is officially squashed (QA)',7);
-CREATE SEQUENCE TBL_STATUS_seq START WITH 7;
+CREATE SEQUENCE TBL_STATUS_seq START WITH 8 NOCACHE;
