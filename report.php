@@ -1,5 +1,56 @@
-<html>
-<body>
-<div align="center">Nothing here yet</div>
-</body>
-</html>
+<?php
+
+// report.php - Generate reports on various bug activities
+
+include 'include.php';
+
+page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
+$u = $auth->auth['uid'];
+
+function resolution_by_engineer() {
+	global $q, $t;
+	
+	$t->set_block('content', 'row', 'rows');
+	$t->set_block('row', 'col', 'cols');
+	
+	// Start off our query
+	$querystring = 'select Email, sum(if(Resolution = "0",1,0)) as "Open"';
+	$resfields = array('Email','Open');
+	// Grab the resolutions from the database
+	$q->query("select Name, concat(', sum(if(Resolution = \"',ResolutionID,'\",1,0)) as \"',Resolution.Name,'\"') from Resolution");
+	while (list($fieldname, $countquery) = $q->grab()) {
+		$resfields[] = $fieldname;
+		$querystring .= $countquery;
+	}
+	$resfields[] = 'Total';
+	$q->query("$querystring, count(BugID) as Total from Bug b, User u where AssignedTo = UserID group by AssignedTo");
+	if (!$q->num_rows()) {
+		$t->set_var('rows', 'No data to display');
+	} else {
+		foreach ($resfields as $col) {
+			$t->set_var('coldata', stripslashes($col));
+			$t->parse('cols', 'col', true);
+		}
+		$t->parse('rows', 'row', true);
+		$t->set_var('cols', '');
+		while ($row = $q->grab()) {
+			foreach ($resfields as $col) {
+				$t->set_var('coldata', stripslashes($row[$col]));
+				$t->parse('cols', 'col', true);
+			}
+			$t->parse('rows', 'row', true);
+			$t->set_var('cols', '');
+		}
+	}
+}
+
+$t->set_file('wrap','wrap.html');
+$t->set_file('content','report.html');
+
+resolution_by_engineer();
+
+$t->pparse('main',array('content','wrap','main'));
+
+page_close();
+
+?>
