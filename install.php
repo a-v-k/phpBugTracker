@@ -21,9 +21,9 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.9 2002/01/21 08:10:05 mohni Exp $
+// $Id: install.php,v 1.10 2002/01/26 14:48:29 bcurtis Exp $
 
-define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
+define ('INSTALL_PATH', dirname(__FILE__));
 
 if (!defined('INCLUDE_PATH')) {
   define('INCLUDE_PATH', '');

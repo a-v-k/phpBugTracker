@@ -20,14 +20,10 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.91 2002/01/23 14:22:06 bcurtis Exp $
+// $Id: include.php,v 1.92 2002/01/26 14:48:29 bcurtis Exp $
 
 // Where are we?
-if (!empty($HTTP_SERVER_VARS['SCRIPT_FILENAME'])) {
-  define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
-} else {
-  define ('INSTALL_PATH', '.');
-}
+define ('INSTALL_PATH', dirname(__FILE__));
 
 // Handle being included from admin files
 if (!defined('INCLUDE_PATH')) {
