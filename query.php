@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.97 2003/07/13 14:22:42 bcurtis Exp $
+// $Id: query.php,v 1.98 2003/07/23 01:22:12 kennyt Exp $
 
 include 'include.php';
 
@@ -123,8 +123,14 @@ function build_query($assignedto, $reportedby, $open) {
 			$query[] = '('.@join(' and ',$equery).')';
 		}
 
+		// Search for additional comments with 'description'
+		$bugs_with_comment = array();
+		foreach ($db->getAll('SELECT bug_id FROM '.TBL_COMMENT.' WHERE comment_text LIKE \'%'.$description.'%\'') as $row) {
+			$bugs_with_comment[] = $row['bug_id'];
+		}
+		
 		// Text search field(s)
-		foreach(array('title','description','url') as $searchfield) {
+		foreach(array('title','url') as $searchfield) {
 			if (!empty($$searchfield)) {
 				switch (${$searchfield."_type"}) {
 					case 'like' : $cond = "like '%".$$searchfield."%'"; break;
@@ -133,6 +139,14 @@ function build_query($assignedto, $reportedby, $open) {
 				}
 				$fields[] = "$searchfield $cond";
 			}
+		}
+		if (!empty($description)) {
+			switch($description_type) {
+				case 'like' : $cond = 'like \'%'.$description.'%\''; break;
+				case 'rlike' : $cond = 'rlike \''.$description.'\''; break;
+				case 'not rlike' : $cond = 'not rlike \''.$description.'\'';
+			}
+			$fields[] = '(description '.$cond.(count($bugs_with_comment) ? ' OR bug_id = '.join(' OR bug_id = ', $bugs_with_comment):'').')';
 		}
 		if (!empty($fields)) $query[] = '('.@join(' and ',$fields).')';
 
