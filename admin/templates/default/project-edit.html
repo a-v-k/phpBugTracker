@@ -1,0 +1,127 @@
+<form action="project.php" method="post">
+<input type="hidden" name="id" value="{projectid}">
+<input type="hidden" name="do" value="project">
+<table border='0'>
+<tr>
+	<td colspan="2"><font color="#ff0000">{error}</td>
+</tr>
+<tr>
+        <td align="right" valign="top">Name:</td>
+        <td><input type="text" size="30" maxlength="30" name="name" value="{name}"></td>
+</tr>
+<tr>
+        <td align="right" valign="top">Description:</td>
+        <td><textarea name="description" cols=40 rows=5 wrap=virtual>{description}</textarea></td>
+</tr>
+<tr>
+        <td align="right" valign="top">Active:</td>
+        <td align="left" valign="top"><input type="checkbox" name="active" value="1" {active}></td>
+</tr>
+</table>
+<input type='submit' name='submit' value='Submit'>
+</form>
+<br>
+<table border="0">
+	<tr>
+		<td width="320" valign="top">
+			&nbsp;<b>{vf_action} Version</b>
+			<hr width="320" size="1" align="center">
+			<table border="0">
+				<form action="{me}" method="post">
+				<input type="hidden" name="do" value="version">
+				<input type="hidden" name="versionid" value="{versionid}">
+				<input type="hidden" name="projectid" value="{projectid}">
+				<tr>
+					<td width="200">Version:</td>
+					<td width="120">Active:</td>
+				</tr>
+				<tr>
+					<td><input type="text" name="vf_version" value="{vf_version}"></td>
+					<td><input type="checkbox" name="vf_active" value="1" {vf_active}></td>
+				</tr>
+				</form>
+			</table>
+		</td>
+		<td width="320" valign="top">
+			&nbsp;<b>{cf_action} Component</b>
+			<hr width="320" size="1" align="center">
+			<table border="0">
+				<form action="{me}" method="post">
+				<input type="hidden" name="do" value="component">
+				<input type="hidden" name="componentid" value="{componentid}">
+				<input type="hidden" name="projectid" value="{projectid}">
+				<tr>
+					<td width="200">Component:</td>
+					<td width="120">Active:</td>
+				</tr>
+				<tr>
+					<td><input type="text" name="cf_name" value="{cf_name}"></td>
+					<td><input type="checkbox" name="cf_active" value="1" {cf_active}></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						Description:
+						<br>
+						<textarea name="cf_description" cols="40">{cf_description}</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						Owner:
+						<br>
+						<select name="cf_owner"><option value="0">None</option>{cf_owner}</select>
+					</td>
+				</tr>
+				</form>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td width="320" align="right">
+			<input type="submit" value="{vf_action} Version">
+		</td>
+		<td width="320" align="right">
+			<input type="submit" value="{cf_action} Component">
+		</td>
+	</tr>
+	<tr>
+		<td width="320" valign="top">
+			<br>
+			&nbsp;<b>Versions of {name}</b>
+			<hr width="320" size="1" align="center">
+			<table border="0">
+				<tr bgcolor="#eeeeee">
+					<th width="160">Version</th>
+					<th width="100">Created</th>
+					<th width="60">Active</th>
+				</tr>
+				<!-- BEGIN verrow -->
+				<tr bgcolor="{bgcolor}">
+					<td><a href="{me}?op=edit&id={projectid}&versionid={verid}">{vername}</a></td>
+					<td align="center">{verdate}</td>
+					<td align="center">{veractive}</td>
+				</tr>
+				<!-- END verrow -->
+			</table>
+		</td>
+		<td width="320" valign="top">
+			<br>
+			&nbsp;<b>Components of {name}</b>
+			<hr width="320" size="1" align="center">
+			<table border="0">
+				<tr bgcolor="#eeeeee">
+					<th width="160">Component</th>
+					<th width="100">Created</th>
+					<th width="60">Active</th>
+				</tr>
+				<!-- BEGIN row -->
+				<tr bgcolor="{bgcolor}">
+					<td><a href="{me}?op=edit&id={projectid}&componentid={compid}">{compname}</a></td>
+					<td align="center">{compdate}</td>
+					<td align="center">{compactive}</td>
+				</tr>
+				<!-- END row -->
+			</table>
+		</td>
+	</tr>
+</table>
