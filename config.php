@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.6 2001/09/01 15:44:20 mohni Exp $
+// $Id: config.php,v 1.7 2001/09/01 16:17:10 bcurtis Exp $
 
 define ('INSTALLPATH', '/home/bcurtis/public_html/phpbt');
 define ('INSTALLURL', 'http://localhost/~bcurtis/phpbt');
@@ -35,8 +35,27 @@ define ('DB_DATABASE', 'BugTracker');
 define ('DB_USER', 'root');
 define ('DB_PASSWORD', '');
 
+define ('ADMINEMAIL', 'phpbt@bencurtis.com');
+define ('ENCRYPTPASS', 0);  // Whether to store passwords encrypted
+define ('THEME', 'default/'); // Which set of templates to use
+define ('USE_JPGRAPH', 0); // Whether to show images or not
+define ('MASK_EMAIL', 1); // Should email addresses be plainly visible?
+define ('HIDE_EMAIL', 1); // Should email addresses be hidden for those not logged in?
+// Should the query list use the severity colors as the row background color (like SourceForge)
+define ('USE_SEVERITY_COLOR', 1);
+define ('EMAIL_IS_LOGIN', 1); // Whether to use email addresses as logins
+
+// Sub-dir of the INSTALLPATH - Needs to be writeable by the web process
+define ('ATTACHMENT_PATH', 'attachments');
+// Maximum size (in bytes) of an attachment
+// This will not override the settings in php.ini if php.ini has a lower limit
+define ('ATTACHMENT_MAX_SIZE', 2097152);
+define ('ONEDAY', 86400);
+define ('DATEFORMAT', 'm-d-Y');
+define ('TIMEFORMAT', 'g:i A');
+
 //Database Table Config
-//you can change either the prefix of the table names or each table name individualy
+//you can change either the prefix of the table names or each table name individually
 //define ('TBL_PREFIX', 'phpbt_');	//the prefix for all tables
 define ('TBL_PREFIX', '');	//the prefix for all tables, leave empty to use the old style
 define ('TBL_ATTACHMENT',    TBL_PREFIX.'attachment');
@@ -59,25 +78,6 @@ define ('TBL_USER_PERM',     TBL_PREFIX.'user_perm');
 define ('TBL_GROUP_PERM',    TBL_PREFIX.'group_perm');
 define ('TBL_BUG_GROUP',     TBL_PREFIX.'bug_group');
 define ('TBL_PROJECT_GROUP', TBL_PREFIX.'project_group');
-
-define ('ADMINEMAIL', 'phpbt@bencurtis.com');
-define ('ENCRYPTPASS', 0);  // Whether to store passwords encrypted
-define ('THEME', 'default/'); // Which set of templates to use
-define ('USE_JPGRAPH', 0); // Whether to show images or not
-define ('MASK_EMAIL', 1); // Should email addresses be plainly visible?
-define ('HIDE_EMAIL', 1); // Should email addresses be hidden for those not logged in?
-// Should the query list use the severity colors as the row background color (like SourceForge)
-define ('USE_SEVERITY_COLOR', 1);
-define ('EMAIL_IS_LOGIN', 1); // Whether to use email addresses as logins
-
-// Sub-dir of the INSTALLPATH - Needs to be writeable by the web process
-define ('ATTACHMENT_PATH', 'attachments');
-// Maximum size (in bytes) of an attachment
-// This will not override the settings in php.ini if php.ini has a lower limit
-define ('ATTACHMENT_MAX_SIZE', 2097152);
-define ('ONEDAY', 86400);
-define ('DATEFORMAT', 'm-d-Y');
-define ('TIMEFORMAT', 'g:i A');
 
 require PHPLIBPATH.'db_'.DB_TYPE.'.inc';
 require PHPLIBPATH.'ct_sql.inc';
