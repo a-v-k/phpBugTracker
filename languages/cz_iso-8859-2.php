@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz_iso-8859-2.php,v 1.15 2002/06/18 16:36:21 firma Exp $
+// $Id: cz_iso-8859-2.php,v 1.16 2002/06/19 13:45:36 firma Exp $
 
 $STRING = array(
     'lang_charset' => 'ISO-8859-2',
@@ -215,7 +215,16 @@ $STRING = array(
 	'Bug' => 'Bug',
 	'When' => 'Kdy',
 	'ColumnPreferencesSaved' => 'Vybraná pole byla ulo¾ena'
+    ),
+    'INDEX' => array(
+	'FiveRecentlySubmitted' => 'Pìt nejèersvìj¹ích bugù',
+	'FiveRecentlyClosed' => 'Pìt naposledy uzavøených bugù',
+	'QuickStats' => 'Rychlé statistiky',
+	'Status' => 'Status',
+	'NumberOfBugs' => '# bugù',
+	'SavedQueries' => 'Ulo¾né dotazy'
     )
+
 );
 
 // Page titles
@@ -270,3 +279,5 @@ $TITLE = array(
 );
 
 ?>
+
+

@@ -1,70 +1,66 @@
 <table border=0 width="100%">
-	<tr>
-		<td valign="top" width="250">
-			<b>Five most recently submitted bugs:</b>
-			<br>
-			{section name=bug loop=$recentbugs}
-				<a href="bug.php?op=show&bugid={$recentbugs[bug].bug_id}">{$recentbugs[bug].title|stripslashes}</a> &nbsp;&nbsp;(<i>{$recentbugs[bug].project_name|stripslashes}</i>)<br>
-			{sectionelse}
-				{$STRING.nobugs}
-			{/section}
-			<br>
-			<br>
-			<b>Five most recently closed bugs:</b>
-			<br>
-			{section name=bug loop=$closedbugs}
-				<a href="bug.php?op=show&bugid={$closedbugs[bug].bug_id}">{$closedbugs[bug].title|stripslashes}</a> &nbsp;&nbsp;(<i>{$closedbugs[bug].project_name|stripslashes}</i>)<br>
-			{sectionelse}
-				{$STRING.nobugs}
-			{/section}
-			{if count($queries)}
-				<br>
-				<br>
-				<b>Saved Queries</b>
-				<br>
-				{section name=query loop=$queries}
-					<a href="query.php?{$queries[query].saved_query_string}">{$queries[query].saved_query_name}</a><br>
-				{/section}
-			{/if}
-		</td>
-		<td valign="top"> 
-		{if USE_JPGRAPH}
-			{$summary_image}
-		{else}
-			<b>Quick stats</b>
-			<br>
-			<br>
-			<table border="1" cellspacing="0" cellpadding="2">
-				<tr>
-					<th>Status</th>
-					<th># bugs</th>
-				</tr>
-				{foreach name=outer key=key item=item from=$stats}
-				<tr>
-					<td><a href="query.php?op=doquery&status[]={$key}">{$item.name}</a></td>
-					<td align="center">{$item.count|default:0}</td>
-				</tr>
-				{/foreach}
-			</table>
-		{/if}
-		</td>
-	</tr>
+    <tr>
+	<td valign="top" width="250"><b>{$STRING.INDEX.FiveRecentlySubmitted}</b>
+	    <br>
+{section name=bug loop=$recentbugs}
+	    <a href="bug.php?op=show&bugid={$recentbugs[bug].bug_id}">{$recentbugs[bug].title|stripslashes}</a> &nbsp;&nbsp;(<i>{$recentbugs[bug].project_name|stripslashes}</i>)<br>
+{sectionelse}
+	    {$STRING.nobugs}
+{/section}
+	    <br><br>
+	    <b>{$STRING.INDEX.FiveRecentlyClosed}</b>
+	    <br>
+{section name=bug loop=$closedbugs}
+	    <a href="bug.php?op=show&bugid={$closedbugs[bug].bug_id}">{$closedbugs[bug].title|stripslashes}</a> &nbsp;&nbsp;(<i>{$closedbugs[bug].project_name|stripslashes}</i>)<br>
+{sectionelse}
+	    {$STRING.nobugs}
+{/section}
+{if count($queries)}
+	    <br><br>
+	    <b>{$STRING.INDEX.SavedQueries}</b>
+	    <br>
+    {section name=query loop=$queries}
+	    <a href="query.php?{$queries[query].saved_query_string}">{$queries[query].saved_query_name}</a><br>
+    {/section}
+{/if}
+	</td>
+	<td valign="top"> 
+{if USE_JPGRAPH}
+	    {$summary_image}
+{else}
+	    <b>{$STRING.INDEX.QuickStats}</b>
+	    <br><br>
+	    <table border="1" cellspacing="0" cellpadding="2">
+		<tr>
+		    <th>{$STRING.INDEX.Status}</th>
+		    <th>{$STRING.INDEX.NumberOfBugs}</th>
+		</tr>
+    {foreach name=outer key=key item=item from=$stats}
+		<tr>
+		    <td><a href="query.php?op=doquery&status[]={$key}">{$item.name}</a></td>
+		    <td align="center">{$item.count|default:0}</td>
+		</tr>
+    {/foreach}
+	    </table>
+{/if}
+	</td>
+    </tr>
 </table>
 <br>
 <br>
 {if SHOW_PROJECT_SUMMARIES}
 <table border="0" cellpadding="4">
-	<tr>
-		{section name=col loop=$resfields}
-			<th>{$resfields[col]}</th>
-		{/section}
-	</tr>
-	{section name=project loop=$projects}
-		<tr{if $smarty.section.project.iteration is even} class="alt"{/if}>
-			{foreach key=key item=item from=$projects[project]}
-				<td{if $key ne "Project"} align="center"{/if}>{$item|stripslashes}</td>
-			{/foreach}
-		</tr>
-	{/section}
+    <tr>
+    {section name=col loop=$resfields}
+	<th>{$resfields[col]}</th>
+    {/section}
+    </tr>
+    {section name=project loop=$projects}
+    <tr{if $smarty.section.project.iteration is even} class="alt"{/if}>
+	{foreach key=key item=item from=$projects[project]}
+	<td{if $key ne "Project"} align="center"{/if}>{$item|stripslashes}</td>
+	{/foreach}
+    </tr>
+    {/section}
 </table>
 {/if}

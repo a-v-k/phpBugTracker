@@ -138,9 +138,12 @@ $t->assign('closedbugs',
 		' and b.project_id = p.project_id order by h.created_date desc', 0, 5)));
 
 if ($u != 'nobody') {
-	// Grab the saved queries if there are any
+    $pref = $db->GetOne('select saved_queries from '.TBL_USER_PREF." where user_id='".$u."'");
+    if ((isset($pref['saved_queries'])) && ($pref['saved_queries'])) {
+	// Grab the saved queries if there are any and user wants them
 	$t->assign('queries', 
-		$db->getAll("select * from ".TBL_SAVED_QUERY." where user_id = '$u'"));
+	    $db->getAll("select * from ".TBL_SAVED_QUERY." where user_id = '$u'"));
+    }
 }
 
 $t->wrap('index.html', 'home');
