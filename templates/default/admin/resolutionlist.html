@@ -1,8 +1,20 @@
 {include file="admin/header.html" page_title="Resolutions"}
+
+<script language="JavaScript">
+<!--
+	var me = '{$SCRIPT_NAME}';
+	{literal}
+		
+	function popupResolution(id) {
+		window.open(me + '?op=edit&use_js=1&resolution_id='+id, 'ewin', 'dependent=yes, width=350, height=300, scrollbars=auto');
+	}
+	{/literal}
+// -->
+</script>
 <table border="0" width="640">
 	<tr>
 		<td valign="top">
-			<b>&nbsp;Resolution List</b>
+			<b>&nbsp;Resolution List</b> - <a href="{$SCRIPT_NAME}?op=edit&resolution_id=0" onClick="popupResolution(0); return false;">{$STRING.addnew} Resolution</a>
 			<hr size="1">
 			<table border="0" cellpadding="2" cellspacing="1">
 				<tr>
@@ -13,7 +25,7 @@
 				</tr>
 				{section name=resolution loop=$resolutions}
 				<tr{if $smarty.section.resolution.iteration is even} class="alt"{/if}>
-					<td><a href="{$SCRIPT_NAME}?op=edit&resolution_id={$resolutions[resolution].resolution_id}">{$resolutions[resolution].resolution_name|stripslashes}</a></td>
+					<td><a href="{$SCRIPT_NAME}?op=edit&resolution_id={$resolutions[resolution].resolution_id}" onClick="popupResolution({$resolutions[resolution].resolution_id}); return false;">{$resolutions[resolution].resolution_name|stripslashes}</a></td>
 					<td>&nbsp;{$resolutions[resolution].resolution_desc}</td>
 					<td align="center">{$resolutions[resolution].sort_order}</td>
 					<td align="center">
@@ -39,35 +51,6 @@
 					<br>
 					Only those Resolutions that have no bugs referencing them can be deleted
 			</div>
-		</td>
-		<td valign="top">
-			<b>{if $group_id}Edit{else}Add{/if} Resolution&nbsp;</b>
-			<hr size="1">
-			<form action="{$SCRIPT_NAME}" method="post">
-			<input type="hidden" name="resolution_id" value="{$resolution_id}">
-			<table border='0'>
-      {if $error}
-      	<tr>
-					<td colspan="2" class="error">{$error}</td>
-      	</tr>
-			{/if}
-			<tr>
-        <td align="right" valign="top">Name:</td>
-        <td><input type="text" size="20" maxlength="40" name="resolution_name" value="{$resolution_name|stripslashes|htmlentities}"></td>
-			</tr>
-			<tr>
-        <td align="right" valign="top">Description:</td>
-        <td><textarea name="resolution_desc" cols=20 rows=5 wrap=virtual>{$resolution_desc|stripslashes|htmlentities}</textarea></td>
-			</tr>
-			<tr>
-        <td align="right" valign="top">Sort Order:</td>
-        <td><input type="text" size="3" maxlength="3" name="sort_order" value="{$sort_order}"></td>
-			</tr>
-
-			</table>
-			<br>
-			<input type='submit' name='submit' value='Submit'>
-			</form>
 		</td>
 	</tr>
 </table>

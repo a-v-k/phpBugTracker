@@ -1,17 +1,17 @@
-{if $os_id}
+{if $resolution_id}
 	{assign var="action" value=$STRING.edit}
 {else}
 	{assign var="action" value=$STRING.addnew}
 {/if}
 {if $smarty.request.use_js}
-	{include file="admin/header-popup.html" page_title="$action OS"}
+	{include file="admin/header-popup.html" page_title="$action Resolution"}
 {else}
-	{include file="admin/header.html" page_title="$action OS"}
+	{include file="admin/header.html" page_title="$action Resolution"}
 {/if}	
-<b>{$action} OS&nbsp;</b>
+<b>{$action} Resolution&nbsp;</b>
 <hr size="1">
 <form action="{$SCRIPT_NAME}" method="post">
-<input type="hidden" name="os_id" value="{$os_id}">
+<input type="hidden" name="resolution_id" value="{$resolution_id}">
 <input type="hidden" name="use_js" value="{$smarty.request.use_js}">
 <table border='0'>
 {if $error}
@@ -21,11 +21,11 @@
 {/if}
 <tr>
   <td align="right" valign="top">Name:</td>
-  <td><input type="text" size="20" maxlength="40" name="os_name" value="{$os_name}"></td>
+  <td><input type="text" size="20" maxlength="40" name="resolution_name" value="{$resolution_name|stripslashes|htmlentities}"></td>
 </tr>
 <tr>
-  <td align="right" valign="top">Regex:</td>
-  <td><input type="text" size="20" maxlength="40" name="regex" value="{$regex}"></td>
+  <td align="right" valign="top">Description:</td>
+  <td><textarea name="resolution_desc" cols=20 rows=5 wrap=virtual>{$resolution_desc|stripslashes|htmlentities}</textarea></td>
 </tr>
 <tr>
   <td align="right" valign="top">Sort Order:</td>
@@ -36,7 +36,6 @@
 <br>
 <input type='submit' name='submit' value='Submit'>
 </form>
-</td>
 {if $smarty.request.use_js}
 	{include file="admin/footer-popup.html"}
 {else}

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: resolution.php,v 1.26 2002/04/03 00:58:26 bcurtis Exp $
+// $Id: resolution.php,v 1.27 2002/04/03 18:24:47 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -43,7 +43,7 @@ function del_item($resolutionid = 0) {
 }
 
 function do_form($resolutionid = 0) {
-	global $db, $me, $_pv, $STRING;
+	global $db, $me, $_pv, $STRING, $t;
 
 	extract($_pv);
 	$error = '';
@@ -52,7 +52,7 @@ function do_form($resolutionid = 0) {
 		$error = $STRING['givename'];
 	elseif (!$resolution_desc = trim($resolution_desc))
 		$error = $STRING['givedesc'];
-	if ($error) { list_items($resolutionid, $error); return; }
+	if ($error) { show_form($resolutionid, $error); return; }
 
 	if (!$resolutionid) {
 		$db->query("insert into ".TBL_RESOLUTION.
@@ -66,7 +66,11 @@ function do_form($resolutionid = 0) {
 			', resolution_desc = '.$db->quote(stripslashes($resolution_desc)).
 			", sort_order = $sort_order where resolution_id = $resolutionid");
 	}
-	header("Location: $me?");
+	if ($use_js) {
+		$t->display('admin/edit-submit.html');
+	} else {
+		header("Location: $me?");
+	}
 }
 
 function show_form($resolutionid = 0, $error = '') {
@@ -79,6 +83,8 @@ function show_form($resolutionid = 0, $error = '') {
 	} else {
  		$t->assign($_pv);
 	}
+	$t->assign('error', $error);
+	$t->display('admin/resolution-edit.html');
 }
 
 
@@ -110,16 +116,13 @@ function list_items($resolutionid = 0, $error = '') {
 
 	sorting_headers($me, $headers, $order, $sort, "page=$page");
 
- 	show_form($resolutionid, $error);
-	
 	$t->display('admin/resolutionlist.html');
 }
 
 $perm->check('Admin');
 
 if (isset($_gv['op'])) switch($_gv['op']) {
-	case 'add' : list_items(); break;
-	case 'edit' : list_items($_gv['resolution_id']); break;
+	case 'edit' : show_form($_gv['resolution_id']); break;
 	case 'del' : del_item($_gv['resolution_id']); break;
 } elseif(isset($_pv['submit'])) {
 	do_form($_pv['resolution_id']);
