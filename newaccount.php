@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.13 2001/08/28 04:15:15 bcurtis Exp $
+// $Id: newaccount.php,v 1.14 2001/08/29 08:05:39 mbravo Exp $
 
 include 'include.php'; 
 
@@ -50,7 +50,7 @@ function do_form() {
 	$q->query("insert into auth_user (user_id, login, first_name, last_name, email, password, active, created_date, last_modified_date) values ($user_id, '$login', '$firstname', '$lastname', '$email', '$mpassword', 1, $now, $now)");
 	$q->query("insert into user_group (user_id, group_id) select $user_id, group_id from auth_group where group_name = 'user'"); 
 	mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
-		$password),	'From: '.ADMINEMAIL);
+		$password),	sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMINEMAIL, $STRING['lang_charset']));
 	$t->set_file('content','newaccountsuccess.html');
 }
 

@@ -22,6 +22,7 @@
 // ------------------------------------------------------------------------
 
 $STRING = array(
+	'lang_charset' => 'us-ascii',
 	'nouser' => 'That user does not exist',
 	'dupeofself' => 'A bug can\'t be a duplicate of itself',
 	'nobug' => 'That bug does not exist',

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.43 2001/08/28 04:13:59 bcurtis Exp $
+// $Id: include.php,v 1.44 2001/08/29 08:05:39 mbravo Exp $
 
 if (defined("INCLUDE_PATH")) {
 	require INCLUDE_PATH."config.php";
@@ -455,7 +455,7 @@ if (isset($HTTP_POST_VARS['dologin'])) {
         $q->query("update auth_user set password = '$mpassword' where login = '$username'");
       }
       mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'],
-        $password),  'From: '.ADMINEMAIL);
+        $password),  sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMINEMAIL, $STRING['lang_charset']));
       $t->set_var(array(
         'loginerrorcolor' => '#0000ff',
         'loginerror' => 'Your password has been emailed to you<br>'

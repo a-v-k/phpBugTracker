@@ -28,6 +28,7 @@
 
 
 $STRING = array(
+	'lang_charset' => 'iso8859-1',
 	'nouser' => 'Dieser Benutzer extistiert nicht',
 	'dupeofself' => 'Ein Bug kann kein Duplikat von sich selbst sein',
 	'nobug' => 'Dieser Bug existiert nicht',

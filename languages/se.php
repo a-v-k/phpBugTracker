@@ -23,6 +23,7 @@
 // ------------------------------------------------------------------------
 
 $STRING = array(
+	'lang_charset' => 'iso8859-1',
 	'nouser' => 'Användaren finns ej',
 	'dupeofself' => 'Ett fel kan inte vara en kopia av sig själv',
 	'nobug' => 'Den buggen finns ej',

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.30 2001/08/25 18:39:11 bcurtis Exp $
+// $Id: bug.php,v 1.31 2001/08/29 08:05:39 mbravo Exp $
 
 include 'include.php';
 
@@ -158,8 +158,8 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 		));
 	mail($toemail,"[Bug {$buginfo['bug_id']}] Changed - ".
 		($cf['title'] ? $cf['title'] : $buginfo['title']), $t->parse('main','emailout'),
-		sprintf("From: %s\nReply-To: %s\nErrors-To: %s", ADMINEMAIL, ADMINEMAIL,
-			ADMINEMAIL));
+		sprintf("From: %s\nReply-To: %s\nErrors-To: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n", ADMINEMAIL, ADMINEMAIL,
+			ADMINEMAIL, $STRING['lang_charset']));
 }
 
 function update_bug($bugid = 0) {
