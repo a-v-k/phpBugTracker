@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: resolution.php,v 1.29 2002/05/18 03:00:00 bcurtis Exp $
+// $Id: resolution.php,v 1.30 2002/08/26 18:06:01 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -55,6 +55,7 @@ function do_form($resolutionid = 0) {
 		$error = $STRING['givedesc'];
 	if ($error) { show_form($resolutionid, $error); return; }
 
+	if (empty($sort_order)) $sort_order = 0;
 	if (!$resolutionid) {
 		$db->query("insert into ".TBL_RESOLUTION.
 			" (resolution_id, resolution_name, resolution_desc, sort_order)"
