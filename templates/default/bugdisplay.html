@@ -90,16 +90,25 @@
 	</tr>
 	<tr>
 		<td>
-			Version: 
+			{$STRING.version}:
 		</td>
 		<td>
-			<select name="version_id">{build_select box=version selected=$version_id project=$project_id}</select>
+			<select name="version_id">{build_select box=version selected=$version_id project=$project_id}</select> /
+			<select name="to_be_closed_in_version_id">{build_select box=version selected=$to_be_closed_in_version_id project=$project_id}</select>
 		</td>
-		<td>
+		<td rowspan="2">
 			OS: 
 		</td>
-		<td>
+		<td rowspan="2">
 			<select name="os_id">{build_select box=os selected=$os_id}</select>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			{$STRING.database}:
+		</td>
+		<td>
+			<select name="database_id">{build_select box=database selected=$database_id}</select>
 		</td>
 	</tr>
 	<tr>
