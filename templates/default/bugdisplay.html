@@ -102,7 +102,14 @@
 			<input type="radio" name="outcome" value="dupe"> 
 				Resolve bug, mark it as a duplicate of bug #<input type="text" name="dupenum" size="5"><br>
 			<input type="radio" name="outcome" value="reassign"> 
-				Reassign bug to <input type="text" name="reassignto"><br>
+				Reassign bug to 
+				<!-- 
+				Uncomment the text box and remove the select box if you want users
+				to type in the login for assignment (e.g., to hide developer email addresses)
+				<input type="text" name="reassignto">
+				-->
+				<select name="reassignto"><option value="0">Choose one</option>{developer_list}</select>
+				<br>
 			<input type="radio" name="outcome" value="reassigntocomponent"> 
 				Reassign bug to owner of selected component<br>
 			<!-- END rrow -->

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.56 2001/11/08 13:28:55 bcurtis Exp $
+// $Id: bug.php,v 1.57 2001/11/08 14:27:35 bcurtis Exp $
 
 include 'include.php';
 
@@ -244,10 +244,17 @@ function update_bug($bugid = 0) {
       return;
   }
 
-  if ($outcome == 'reassign' and
-    (!$assignedto = $q->grab_field("select user_id from ".TBL_AUTH_USER." where login = '$reassignto'"))) {
-    show_bug($bugid,array('status' => $STRING['nouser']));
-    return;
+  if ($outcome == 'reassign') {
+		if (is_numeric($reassignto)) { // select box
+			$assign_user_query = " where user_id = $reassignto";
+		} else { // text box
+			$assign_user_query = " where login = '$reassignto'";
+		}
+    if (!$assignedto = $q->grab_field("select user_id from ".TBL_AUTH_USER.
+			$assign_user_query)) {
+    	show_bug($bugid,array('status' => $STRING['nouser']));
+    	return;
+		}
   }
 
   if ($last_modified_date != $buginfo['last_modified_date']) {
@@ -281,7 +288,8 @@ function update_bug($bugid = 0) {
     case 'unchanged' : break;
     case 'assign' : $assignedto = $u; $statusfield = 'Assigned'; break;
     case 'reassign' :
-      if (!$assignedto = $q->grab_field("select user_id from ".TBL_AUTH_USER." where login = '$reassignto'")) {
+      if (!$assignedto = $q->grab_field("select user_id from ".TBL_AUTH_USER.
+				$assign_user_query)) {
         show_bug($bugid,array('status' => $STRING['nouser']));
         return;
       } else {
@@ -480,7 +488,7 @@ function show_bug_printable($bugid) {
     'version' => $row['version_name'],
     'component' => $row['component_name'],
     'os' => $row['os_name'],
-    'browserstring' => $row['browser_string'],
+    'browserstring' => $row['browser_string']
     ));
 
 	// Show the comments
@@ -556,7 +564,8 @@ function show_bug($bugid = 0, $error = '') {
     'bugresolution' => build_select('resolution'),
     'cclist' => build_select('bug_cc', $bugid),
     'submit' => $u == 'nobody' ? $STRING['logintomodify'] :
-      '<input type="submit" value="Submit">'
+      '<input type="submit" value="Submit">',
+		'developer_list' => build_select('owner')
     ));
   switch($row['status_name']) {
     case 'Unconfirmed' :
