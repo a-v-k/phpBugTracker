@@ -1,22 +1,38 @@
 <form action="project.php" method="post">
 <input type="hidden" name="id" value="{projectid}">
 <input type="hidden" name="do" value="project">
-<table border='0'>
-<tr>
-	<td colspan="2"><font color="#ff0000">{error}</td>
-</tr>
-<tr>
-        <td align="right" valign="top">Name:</td>
-        <td><input type="text" size="30" maxlength="30" name="name" value="{name}"></td>
-</tr>
-<tr>
-        <td align="right" valign="top">Description:</td>
-        <td><textarea name="description" cols=40 rows=5 wrap=virtual>{description}</textarea></td>
-</tr>
-<tr>
-        <td align="right" valign="top">Active:</td>
-        <td align="left" valign="top"><input type="checkbox" name="active" value="1" {active}></td>
-</tr>
+<table border="0" cellpadding="2" cellspacing="2" width="640">
+	<tr>
+		<td colspan="2"><div class="error">{error}</div></td>
+	</tr>
+	<tr>
+		<td valign="top" width="360">
+			Name:
+			<br>
+			<input type="text" size="30" maxlength="30" name="name" value="{name}">
+		</td>
+		<td valign="top" rowspan="3">
+			Only users in the following groups can see this project:
+			<br>
+			<select name="usergroup[]" size="10" multiple>
+      	{usergroup}
+      </select>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			Description:
+			<br>
+			<textarea name="description" cols=40 rows=5 wrap=virtual>{description}</textarea>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			Active:
+			<br>
+			<input type="checkbox" name="active" value="1" {active}>
+		</td>
+	</tr>
 </table>
 <input type='submit' name='submit' value='Submit'>
 </form>
@@ -26,7 +42,7 @@
 		<td width="320" valign="top">
 			&nbsp;<b>{vf_action} Version</b>
 			<hr width="320" size="1" align="center">
-			<font color="#ff0000">{vf_error}</font>
+			<div class="error">{vf_error}</div>
 			<table border="0">
 				<form action="{me}" method="post">
 				<input type="hidden" name="do" value="version">
@@ -52,7 +68,7 @@
 		<td width="320" valign="top">
 			&nbsp;<b>{cf_action} Component</b>
 			<hr width="320" size="1" align="center">
-			<font color="#ff0000">{cf_error}</font>
+			<div class="error">{cf_error}</div>
 			<table border="0">
 				<form action="{me}" method="post">
 				<input type="hidden" name="do" value="component">

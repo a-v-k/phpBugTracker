@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.26 2001/11/22 05:14:33 bcurtis Exp $
+// $Id: project.php,v 1.27 2001/12/06 14:28:31 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -184,12 +184,16 @@ function list_components($projectid) {
 function save_project($projectid = 0) {
   global $q, $me, $u, $STRING, $now, $_pv;
 
+	$error = '';
   // Validation
   if (!$_pv['name'] = htmlspecialchars(trim($_pv['name']))) {
     $error['project'] = $STRING['givename'];
   } elseif (!$_pv['description'] = htmlspecialchars(trim($_pv['description']))) {
     $error['project'] = $STRING['givedesc'];
-  } 
+  } elseif (is_array($_pv['usergroup']) and 
+		in_array('all', $_pv['usergroup']) and count($_pv['usergroup']) > 1) {
+		$error['project'] = $STRING['project_only_all_groups'];
+	}
 	if ($error) { show_project($projectid, $error); return; }
 	
 	if (!$projectid) {
@@ -223,12 +227,48 @@ function save_project($projectid = 0) {
 			." set project_name = '$name', project_desc = '$description', 
 			active = $active where project_id = $projectid");
   }
+	
+	// Handle project -> group relationship
+	$old_usergroup = $q->grab_field_set('select group_id from '.TBL_PROJECT_GROUP.
+		" where project_id = $projectid");
+	if (is_array($usergroup) and count($usergroup)) {
+		if (in_array('all', $usergroup)) {
+			// User selected 'All groups'
+			if (count($old_usergroup)) {
+				$q->query('delete from '.TBL_PROJECT_GROUP." where project_id = $projectid");
+			}
+		} else {
+			// Compute differences between old and new
+			$remove_from = array_diff($old_usergroup, $usergroup);
+    	$add_to = array_diff($usergroup, $old_usergroup);
+			
+			if (count($remove_from)) {
+				foreach ($remove_from as $group) {
+					$q->query('delete from '.TBL_PROJECT_GROUP." where project_id = $projectid
+					 and group_id = $group");
+				}
+			}
+			if (count($add_to)) {
+      	foreach ($add_to as $group) {
+        	$q->query("insert into ".TBL_PROJECT_GROUP
+          	." (project_id, group_id, created_by, created_date)
+          	values ('$projectid' ,'$group', $u, $now)");
+      	}
+    	}
+		}
+	} elseif (count($old_usergroup)) {
+		// User selected nothing, so consider it 'All groups'
+		$q->query('delete from '.TBL_PROJECT_GROUP." where project_id = $projectid");
+	}
+		
   header("Location: $me?op=edit&id=$projectid");
 }
 
 function show_project($projectid = 0, $error = array()) {
   global $q, $me, $t, $name, $description, $active, $TITLE, $_gv;
 
+	$proj_groups = $q->grab_field_set('select group_id from '.TBL_PROJECT_GROUP.
+		" where project_id = $projectid");
   if ($projectid && !$error) {
     $row = $q->grab('select * from '.TBL_PROJECT
 			." where project_id = $projectid");
@@ -237,15 +277,17 @@ function show_project($projectid = 0, $error = array()) {
       'name' => $row['project_name'],
       'description' => $row['project_desc'],
       'active' => $row['active'] ? 'checked' : '',
+      'usergroup' => build_select('group', $proj_groups, 1),
       'TITLE' => $TITLE['editproject']
       ));
   } else {
     $t->set_var(array(
-      'error' => $error['project'],
+      'error' => !empty($error['project']) ? $error['project'] : '',
       'projectid' => $projectid,
       'name' => stripslashes($name),
       'description' => stripslashes($description),
       'active' => (isset($active) and !$active) ? '' : 'checked',
+      'usergroup' => build_select('group', $proj_groups, 1),
       'TITLE' => $projectid ? $TITLE['editproject'] : $TITLE['addproject']
       ));
   }

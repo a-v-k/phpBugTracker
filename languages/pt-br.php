@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: pt-br.php,v 1.6 2001/12/04 14:32:24 bcurtis Exp $
+// $Id: pt-br.php,v 1.7 2001/12/06 14:28:21 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -63,7 +63,8 @@ $STRING = array(
 	'attachment_move_error' => 'Ocorreu um erro ao mover o arquivo transmitido',
 	'bad_attachment' => 'Este anexo não existe',
 	'attachment_too_large' => 'O arquivo escolhido é maior que '.number_format(ATTACHMENT_MAX_SIZE).' bytes',
-	'bad_permission' => 'Você não tem as permissões necessárias para essa função'
+	'bad_permission' => 'Você não tem as permissões necessárias para essa função',
+	'project_only_all_groups' => 'You cannot choose specific groups when "All Groups" is chosen'
 	);
 	
 // Page titles

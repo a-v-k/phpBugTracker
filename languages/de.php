@@ -23,7 +23,7 @@
 // Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 // MA 02111-1307, USA.
 // ------------------------------------------------------------------------- 
-// $Id: de.php,v 1.6 2001/12/04 14:32:23 bcurtis Exp $
+// $Id: de.php,v 1.7 2001/12/06 14:28:21 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -65,7 +65,8 @@ $STRING = array(
 	'attachment_move_error' => 'Es gab einen Fehler beim Bewegen der upzuloadenen Datei',
 	'bad_attachment' => 'Dieser Dateianhang existiert nicht',
 	'attachment_too_large' => 'Die angegebene Datei ist größer als '.number_format(ATTACHMENT_MAX_SIZE).' bytes',
-	'bad_permission' => 'Sie haben nicht die erforderlichen Rechte für diese Funktion'
+	'bad_permission' => 'Sie haben nicht die erforderlichen Rechte für diese Funktion',
+	'project_only_all_groups' => 'You cannot choose specific groups when "All Groups" is chosen'
 	);
 	
 // Page titles

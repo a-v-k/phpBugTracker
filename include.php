@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.79 2001/12/01 19:51:20 bcurtis Exp $
+// $Id: include.php,v 1.80 2001/12/06 14:28:31 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -77,6 +77,19 @@ class dbclass extends DB_Sql {
     return $retval;
   }
 	
+	function grab_set($q_string = '') {
+		$retary = array();
+		if ($q_string) $this->query($q_string);
+		while ($row = $this->grab()) { $retary[] = $row; }
+		return $retary;
+	}
+
+	function grab_field_set($q_string = '') {
+		$retary = array();
+		if ($q_string) $this->query($q_string);
+		while ($item = $this->grab_field()) { $retary[] = $item; }
+		return $retary;
+	}
 	function nextid($seq_name) {
 		global $auth;
 		
@@ -252,6 +265,14 @@ function build_select($box, $value = '', $project = 0) {
 
   switch($box) {
     case 'group' :
+			if ($project) { // If we are building for project admin page
+				if (!count($value) or (count($value) && in_array(0, $value))) {
+					$sel = ' selected';
+				} else {
+					$sel = '';
+				}
+				$text = "<option value=\"all\"$sel>All Groups</option>";
+			}
       $q->query($queries[$box]);
       while ($row = $q->grab()) {
         if (count($value) && in_array($row[$box.'_id'], $value)) $sel = ' selected';
