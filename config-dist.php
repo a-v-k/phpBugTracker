@@ -19,7 +19,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config-dist.php,v 1.23 2003/04/08 14:34:44 mohni Exp $
+// $Id: config-dist.php,v 1.24 2003/04/19 18:12:36 kennyt Exp $
 
 // Database Config
 define ('DB_TYPE', '{db_type}');  // using PEAR::DB naming (mysql, pgsql, etc.)
@@ -34,6 +34,7 @@ define ('SMARTY_PATH', '{smarty_path}');
 
 // Database Table Config
 // you can change either the prefix of the table names or each table name individually
+define ('DB_VERSION', 2); // the version of the database
 define ('TBL_PREFIX', '{tbl_prefix}');	// the prefix for all tables, leave empty to use the old style
 
 define ('TBL_ACTIVE_SESSIONS', TBL_PREFIX.'active_sessions');

@@ -31,6 +31,9 @@
 							<a href="{$smarty.server.PHP_SELF}?op=del&group_id={$groups[group].group_id}" onClick="return confirm('This will remove all user assignments to this group and the group itself.  Continue?')">Delete</a> | 
 							<a href="{$smarty.server.PHP_SELF}?op=purge&group_id={$groups[group].group_id}" onClick="return confirm('This will remove all user assignments to this group.  Continue?')">Purge</a>
 						{/if}
+						{if $groups[group].assignable}
+							| Assignable
+						{/if}
 					</td>
         </tr>
         {/section}

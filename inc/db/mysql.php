@@ -1,7 +1,7 @@
 <?php
 $QUERY = array(
 	'admin-list-groups' => 'select ag.group_id, group_name, locked, '.
-		'count(ug.group_id) as count '.
+		'count(ug.group_id) as count, assignable '.
 		'from '.TBL_AUTH_GROUP.' ag '.
 		'left join '.TBL_USER_GROUP.' ug using (group_id) '.
 		'left join '.TBL_AUTH_USER.' using (user_id) '.

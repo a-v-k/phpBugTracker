@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: group.php,v 1.10 2002/05/18 03:00:00 bcurtis Exp $
+// $Id: group.php,v 1.11 2003/04/19 18:12:38 kennyt Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -51,13 +51,13 @@ function do_form($groupid = 0) {
 
 	if (!$groupid) {
 		$db->query("insert into ".TBL_AUTH_GROUP.
-			" (group_id, group_name, created_by, created_date, last_modified_by, last_modified_date)"
+			" (group_id, group_name, created_by, created_date, last_modified_by, last_modified_date, assignable)"
 			." values (".$db->nextId(TBL_AUTH_GROUP).", ".
-			$db->quote(stripslashes($group_name)).", $u, $now, $u, $now)");
+			$db->quote(stripslashes($group_name)).", $u, $now, $u, $now, $assignable)");
 	} else {
 		$db->query("update ".TBL_AUTH_GROUP.
 			" set group_name = ".$db->quote(stripslashes($group_name)).
-			", last_modified_by = $u, last_modified_date = $now where group_id = '$groupid'");
+			", last_modified_by = $u, last_modified_date = $now, assignable = ".($assignable?1:0)." where group_id = '$groupid'");
 	}
 	if ($use_js) {
 		$t->display('admin/edit-submit.html');
@@ -90,7 +90,7 @@ function list_items($groupid = 0, $error = '') {
 		$order = $_gv['order']; 
 		$sort = $_gv['sort']; 
 	}
-	
+
 	$page = isset($_gv['page']) ? $_gv['page'] : 0;
 	
 	$nr = $db->getOne("select count(*) from ".TBL_AUTH_GROUP);

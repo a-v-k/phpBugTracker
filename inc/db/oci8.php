@@ -2,7 +2,7 @@
 
 $QUERY = array(
 	'admin-list-groups' => 'select ag.group_id, ag.group_name, ag.locked, '.
-		'count(ug.group_id) as count '.
+		'count(ug.group_id) as count, asssignable '.
 		'from '.TBL_AUTH_GROUP.' ag, '.TBL_USER_GROUP.' ug,'.TBL_AUTH_USER.' au '.
 		'where ag.group_id = ug.group_id(+) and ug.user_id = au.user_id(+) '.
 		'group by ag.group_id, ag.group_name, ag.locked '.

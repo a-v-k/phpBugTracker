@@ -27,6 +27,9 @@
   <td align="right" valign="top">Name:</td>
   <td><input type="text" size="20" maxlength="40" name="group_name" value="{$group_name|stripslashes|htmlspecialchars}"></td>
 </tr>
+<tr>
+  <td align="right" valign="top">Assignable:</td>
+  <td><input type="checkbox" name="assignable" value="1" {if $assignable > 0}checked="checked"{/if}></td>
 </table>
 <br>
 <input type='submit' name='submit' value='Submit'>
