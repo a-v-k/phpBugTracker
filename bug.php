@@ -68,12 +68,12 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
       $newvalue = $q->grab_field("select Name from $field where ${field}ID = $cf[$field]");
 			$q->query("insert into BugHistory (BugID, ChangedField, OldValue, NewValue, CreatedBy, CreatedDate) values ({$buginfo['BugID']}, '$field', '$oldvalue', '$newvalue', $u, $now)");
 			$t->set_var(array(
-        $field => $newvalue,
+        $field => stripslashes($newvalue),
         $field.'Stat' => '!'
         ));
     } else {
       $t->set_var(array(
-        $field => $oldvalue,
+        $field => stripslashes($oldvalue),
         $field.'Stat' => ' '
         ));
     }
