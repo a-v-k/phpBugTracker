@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.83 2001/12/14 14:41:06 bcurtis Exp $
+// $Id: include.php,v 1.84 2001/12/14 15:04:14 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -188,7 +188,8 @@ class templateclass extends Template {
     } else {
       $this->set_var(array(
         'loggedinas' => '',
-        'loblock' => ''
+        'loblock' => '',
+				'loginlabel' => EMAIL_IS_LOGIN ? 'Email' : 'Login'
         ));
       $this->parse('liblock', 'loginblock', true);
     }
