@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.25 2002/04/11 20:16:11 bcurtis Exp $
+// $Id: install.php,v 1.26 2002/04/11 21:58:06 bcurtis Exp $
 
 // Location of smarty templates class
 define ('SMARTY_PATH', '');
@@ -253,6 +253,7 @@ function show_front($error = '') {
 	global $t, $_pv, $select, $HTTP_SERVER_VARS;
 	
 	$t->assign($_pv);
+	$t->assign('error', $error);
 	$t->assign('default_email', 'phpbt@'.$HTTP_SERVER_VARS['SERVER_NAME']);
 	$t->display('install.html');
 }
