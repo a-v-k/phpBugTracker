@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.18 2002/04/04 18:35:30 bcurtis Exp $
+// $Id: functions.php,v 1.19 2002/04/09 23:26:39 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -149,7 +149,7 @@ function build_select($params) {
       $text .= '</option>';
       break;
     case 'LANGUAGE' :
-      $dir = opendir(INSTALL_PATH.'/languages');
+      $dir = opendir('languages');
       while (false !== ($file = readdir($dir))) {
         if ($file != '.' && $file != '..' && $file != 'CVS') {
           $filelist[] = str_replace('.php', '', $file);
@@ -167,7 +167,7 @@ function build_select($params) {
       }
       break;
     case 'THEME' :
-      $dir = opendir(INSTALL_PATH.'/templates');
+      $dir = opendir('templates');
       while (false !== ($file = readdir($dir))) {
         if ($file != '.' && $file != '..' && $file != 'CVS') {
           $filelist[] = str_replace('.php', '', $file);
@@ -185,7 +185,7 @@ function build_select($params) {
       }
       break;
     case 'STYLE' :
-      $dir = opendir(INSTALL_PATH.'/styles');
+      $dir = opendir('styles');
       while (false !== ($file = readdir($dir))) {
         if ($file != '.' && $file != '..' && $file != 'CVS') {
           $filelist[] = str_replace('.css', '', $file);
