@@ -3,8 +3,6 @@ DIALOG=${DIALOG=dialog}
 tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/test$$
 trap "rm -f $tempfile" 0 1 2 5 15
 
-menuitem='Administrivia'
-
 # Strings
 ADMINEMAIL=phpbt@`hostname -d`
 INSTALLPATH=`pwd`
@@ -71,7 +69,6 @@ that directory allow the web server to create and read files in it!\n\n" 0 0 $AT
 	fi
 	
 	PHPLIBPATH=`<$tempfile`
-	menuitem='Features'
 }
 
 change_features() {
@@ -145,13 +142,11 @@ change_features() {
 		fi
 	fi
 		
-	menuitem='Save'
 }
 
 show_menu() {
 	$DIALOG --clear --backtitle "phpBT Configuration" \
 		--title "Configuration Menu" \
-		--default-item $menuitem \
   	--menu "Choose from the options below to configure your phpBugTracker installation." 15 68 4 \
 			"Administrivia" "Parameters that must be configured" \
   		"Features"  "Optional features" \
