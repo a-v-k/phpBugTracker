@@ -60,7 +60,7 @@ class dbclass extends DB_Sql {
 	var $Host = 'localhost';
 	var $Database = 'BugTracker';
 	var $User = 'root';
-	var $Password = '';
+	var $Password = 'gr8val20';
 
 	function grab($q_string = '') {
 		if ($q_string) $this->query($q_string);
@@ -100,30 +100,21 @@ $all_db_fields = array(
 	'priority' => 'Priority',
 	'status_name' => 'Status',
 	'resolution_name' => 'Resolution',
-	'assigned_to' => 'Assigned To',
 	'reporter' => 'Reporter',
 	'owner' => 'Owner',
-	'created_date' => 'Created',
-	'last_modified_by' => 'Last Modified',
-	'last_modified_date' => 'Last Modified By',
+	'created_date' => 'Created Date',
+	'lastmodifier' => 'Last Modified By',
+	'last_modified_date' => 'Last Modified Date',
 	'project_name' => 'Project',
 	'version_name' => 'Version',
 	'component_name' => 'Component',
 	'os_name' => 'OS',
 	'browser_string' => 'Browser',
-	'close_date' => 'Closed'
+	'close_date' => 'Closed Date'
 	);
 
-$default_db_fields = array(
-	'bug_id' => 'ID',
-	'title' => 'Title',
-	'reporter' => 'Reporter',
-	'owner' => 'Owner',
-	'severity_name' => 'Severity',
-	'priority' => 'Priority',
-	'status_name' => 'Status',
-	'resolution_name' => 'Resolution'
-	);
+$default_db_fields = array('bug_id', 'title', 'reporter', 'owner', 
+	'severity_name', 'priority', 'status_name', 'resolution_name');
 	
 class sqlclass extends CT_Sql {
 	var $database_class = 'dbclass';
@@ -172,6 +163,11 @@ class uauth extends Auth {
 			$this->auth['db_fields'] = unserialize($u['bug_list_fields']);
 			return $u['user_id'];
 		}
+	}
+	
+	function unauth($nobody = false) {
+		Auth::unauth($nobody);
+		$this->auth['db_fields'] = '';
 	}
 }
 

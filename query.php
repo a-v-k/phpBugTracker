@@ -159,7 +159,7 @@ function build_query($assignedto, $reportedby, $open) {
 function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	global $querystring, $me, $q, $t, $selrange, $order, $sort, $query, 
 		$page, $op, $select, $TITLE, $STRING, $savedqueryname, $u, $auth, 
-		$default_db_fields;
+		$default_db_fields, $all_db_fields;
 
 	$t->set_file('content','buglist.html');
 	$t->set_block('content','row','rows');
@@ -185,7 +185,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'project' => build_select('project'),
 		'TITLE' => $TITLE['buglist']));
 	
-	$q->query("select bug.*, reporter.email as reporter, owner.email as owner, severity_name, status_name, version_name, component_name, resolution_name, severity_color from bug left join resolution using (resolution_id), severity, status, version, component left join user owner on bug.assigned_to = owner.user_id left join user reporter on bug.created_by = reporter.user_id where bug.severity_id = severity.severity_id and bug.status_id = status.status_id and bug.version_id = version.version_id and bug.component_id = component.component_id ". ($querystring != '' ? "and $querystring " : ''). "order by $order $sort limit $llimit, $selrange");
+	$q->query("select bug.*, reporter.email as reporter, owner.email as owner, lastmodifier.email as lastmodifier, project_name, severity_name, status_name, os_name, version_name, component_name, resolution_name, severity_color from bug left join resolution using (resolution_id), severity, status, os, version, component, project left join user owner on bug.assigned_to = owner.user_id left join user reporter on bug.created_by = reporter.user_id left join user lastmodifier on bug.last_modified_by = lastmodifier.user_id where bug.severity_id = severity.severity_id and bug.status_id = status.status_id and bug.os_id = os.os_id and bug.version_id = version.version_id and bug.component_id = component.component_id and bug.project_id = project.project_id ". ($querystring != '' ? "and $querystring " : ''). "order by $order $sort limit $llimit, $selrange");
 				
 	$headers = array(
 		'bug_id' => 'bug_id',
@@ -197,10 +197,13 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'status_name' => 'status.sort_order',
 		'owner' => 'owner',
 		'reporter' => 'reporter',
+		'lastmodifier' => 'last_modifier',
 		'created_date' => 'created_date',
-		'project_name' => 'project_id',
+		'last_modified_date' => 'last_modified_date',
+		'project_name' => 'project_name',
 		'component_name' => 'component_name',
-		'os_name' => 'os_id',
+		'version_name' => 'version_name',
+		'os_name' => 'os_name',
 		'browser_string' => 'browser_string',
 		'resolution_name' => 'resolution.sort_order',
 		'close_date' => 'close_date');
@@ -217,9 +220,9 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	// Header row 
 	$db_fields = $auth->auth['db_fields'] ? $auth->auth['db_fields'] :
 		$default_db_fields;
-	foreach ($db_fields as $field => $title) {
+	foreach ($db_fields as $field) {
 		$t->set_var(array(
-			'coldata' => "<a href='{{$field}url}'>$title</a>",
+			'coldata' => "<a href='{{$field}url}'>{$all_db_fields[$field]}</a>",
 			'td-extra' => "class=\"header-col\" bgcolor=\"{{$field}color}\""
 			));
 		$t->parse('cols', 'col', true);
@@ -232,7 +235,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	while ($row = $q->grab()) {
 		$bgcolor = USE_SEVERITY_COLOR ? $row['severity_color'] : 
 			((++$i % 2 == 0) ? '#dddddd' : '#ffffff');
-		foreach ($db_fields as $field => $title) {
+		foreach ($db_fields as $field) {
 			switch ($field) {
 				case 'url' : 
 					$coldata = "<a href='{$row[$field]}'>{$row[$field]}</a>"; 
@@ -241,7 +244,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 				case 'created_date' :
 				case 'last_modified_date' :
 				case 'close_date' : 
-					$coldata = date(DATEFORMAT, $row[$field]); 
+					$coldata = $row[$field] ? date(DATEFORMAT, $row[$field]) : '&nbsp;';
 					$td_extra = 'class="center-col"';
 					break;
 				case 'bug_id' :
@@ -251,6 +254,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 					break;
 				case 'reporter' :
 				case 'owner' : 
+				case 'lastmodifier' : 
 					$coldata = maskemail($row[$field]);
 					$td_extra = 'class="center-col"';
 					break;

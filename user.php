@@ -68,11 +68,14 @@ function show_preferences_form($error = '') {
 		
 	$my_fields = $auth->auth['db_fields'] ? $auth->auth['db_fields'] :
 		$default_db_fields;
+	foreach ($my_fields as $field) {
+		$checked[$field] = true;
+	}
 	foreach ($all_db_fields as $field => $title) {
 		$t->set_var(array(
 			'column_name' => $field,
 			'column_title' => $title,
-			'checked' => $my_fields[$field] ? 'checked' : ''
+			'checked' => $checked[$field] ? 'checked' : ''
 			));
 		$t->parse('list_rows', 'column_list_row', true);
 	}
