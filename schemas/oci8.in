@@ -1,0 +1,358 @@
+CREATE TABLE TBL_ACTIVE_SESSIONS (
+  sid varchar2(32)  default ''  NOT NULL,
+  name varchar2(32)  default '' NOT NULL,
+  val varchar2(4000) ,
+  changed varchar2(14)  default '' NOT NULL ,
+  PRIMARY KEY  (name, sid) 
+) ;
+
+CREATE INDEX CHANGEDIDX ON TBL_ACTIVE_SESSIONS ( changed ); 
+
+CREATE TABLE TBL_ATTACHMENT (
+  attachment_id number(10)   default '0' NOT NULL,
+  bug_id number(10)   default '0' NOT NULL,
+  file_name varchar2(255)  default '' NOT NULL,
+  description varchar2(255)  default '' NOT NULL,
+  file_size number(20)   default '0' NOT NULL,
+  mime_type varchar2(30)  default '' NOT NULL,
+  created_by number(10)   default '0' NOT NULL,
+  created_date number(20)   default '0' NOT NULL,
+  PRIMARY KEY  (attachment_id)
+) ;
+
+CREATE TABLE TBL_AUTH_GROUP (
+  group_id number(10)   default '0' NOT NULL,
+  group_name varchar2(80)  default '' NOT NULL,
+  locked number(1)   default '0' NOT NULL,
+  created_by number(10)   default '0' NOT NULL,
+  created_date number(20)   default '0' NOT NULL,
+  last_modified_by number(10)   default '0' NOT NULL,
+  last_modified_date number(20)   default '0' NOT NULL,
+  PRIMARY KEY  (group_id)
+) ;
+
+CREATE TABLE TBL_AUTH_PERM (
+  perm_id number(10)   default '0' NOT NULL,
+  perm_name varchar2(80)  default '' NOT NULL,
+  created_by number(10)   default '0' NOT NULL,
+  created_date number(20)   default '0' NOT NULL,
+  last_modified_by number(10)   default '0' NOT NULL,
+  last_modified_date number(20)   default '0' NOT NULL,
+  PRIMARY KEY  (perm_id)
+) ;
+
+CREATE TABLE TBL_AUTH_USER (
+  user_id number(10)   default '0' NOT NULL,
+  login varchar2(40)  default '' NOT NULL UNIQUE,
+  first_name varchar2(40)  default '' NOT NULL,
+  last_name varchar2(40)  default '' NOT NULL,
+  email varchar2(60)  default '' NOT NULL,
+  password varchar2(40)  default '' NOT NULL,
+  active number(3)   default '1' ,
+  bug_list_fields varchar2(4000)  default '' ,
+  created_by number(10)   default '0' ,
+  created_date number(20)   default '0' ,
+  last_modified_by number(10)   default '0' ,
+  last_modified_date number(20)   default '0' ,
+  PRIMARY KEY  (user_id) 
+) ;
+
+CREATE TABLE TBL_BUG (
+  bug_id number(10)   default '0' NOT NULL,
+  title varchar2(100)  default '' NOT NULL,
+  description varchar2(4000) NOT NULL ,
+  url varchar2(255)  default '' NOT NULL,
+  severity_id number(3)   default '0' NOT NULL,
+  priority number(3)   default '0' NOT NULL,
+  status_id number(3)   default '0' NOT NULL,
+  resolution_id number(3)   default '0' NOT NULL,
+  assigned_to number(10)   default '0' NOT NULL,
+  created_by number(10)   default '0' NOT NULL,
+  created_date number(20)   default '0' NOT NULL,
+  last_modified_by number(10)   default '0' NOT NULL,
+  last_modified_date number(20)   default '0' NOT NULL,
+  project_id number(10)   default '0' NOT NULL,
+  version_id number(10)   default '0' NOT NULL,
+  component_id number(10)   default '0' NOT NULL,
+  os_id number(3)   default '0' NOT NULL,
+  browser_string varchar2(255)  default '' NOT NULL,
+  close_date number(20)   default '0' NOT NULL,
+  PRIMARY KEY  (bug_id)
+) ;
+
+CREATE TABLE TBL_BUG_CC (
+  bug_id number(10)   default '0' NOT NULL,
+  user_id number(10)   default '0' NOT NULL,
+  created_by number(10)   default '0' NOT NULL,
+  created_date number(20)   default '0' NOT NULL,
+  PRIMARY KEY  (bug_id ,user_id)
+) ;
+
+CREATE TABLE TBL_BUG_GROUP (
+  bug_id number(10)   default '0' NOT NULL,
+  group_id number(10)   default '0' NOT NULL,
+  PRIMARY KEY  (bug_id ,group_id) 
+) ;
+
+CREATE INDEX GROUPIDX ON TBL_BUG_GROUP ( group_id ); 
+
+CREATE TABLE TBL_BUG_HISTORY (
+  bug_id number(10)   default '0' NOT NULL,
+  changed_field varchar2(20)  default '' NOT NULL,
+  old_value varchar2(255)  default '' NOT NULL,
+  new_value varchar2(255)  default '' NOT NULL,
+  created_by number(10)   default '0' NOT NULL,
+  created_date number(20)   default '0'
+) ;
+
+CREATE TABLE TBL_BUG_VOTE (
+  user_id number(10)   default '0' NOT NULL,
+  bug_id number(10)   default '0' NOT NULL,
+  created_date number(20)   default '0' NOT NULL,
+  PRIMARY KEY  (user_id , bug_id) 
+) ;
+
+CREATE INDEX BUGIDX ON TBL_BUG_VOTE ( bug_id );
+
+CREATE TABLE TBL_COMMENT (
+  comment_id number(10)   default '0' NOT NULL,
+  bug_id number(10)   default '0' NOT NULL,
+  comment_text varchar2(4000) NOT NULL,
+  created_by number(10)   default '0' NOT NULL,
+  created_date number(20)   default '0' NOT NULL,
+  PRIMARY KEY  (comment_id)
+) ;
+
+CREATE TABLE TBL_COMPONENT (
+  component_id number(10)   default '0' NOT NULL,
+  project_id number(10)   default '0' NOT NULL,
+  component_name varchar2(30)  default '' NOT NULL,
+  component_desc varchar2(4000) NOT NULL,
+  owner number(10)   default '0' NOT NULL,
+  active number(1)  default '1' NOT NULL,
+  created_by number(10)   default '0' NOT NULL,
+  created_date number(20)   default '0' NOT NULL,
+  last_modified_by number(10)   default '0' NOT NULL,
+  last_modified_date number(20)   default '0' NOT NULL,
+  PRIMARY KEY  (component_id)
+) ;
+
+CREATE TABLE TBL_CONFIGURATION (
+  varname varchar2(40)  default '' NOT NULL,
+  varvalue varchar2(255)  default '' ,
+  description varchar2(255)  default '' NOT NULL,
+  vartype varchar2(20)  default '' NOT NULL,
+  PRIMARY KEY  (varname)
+) ;
+
+CREATE TABLE TBL_DB_SEQUENCE (
+  seq_name varchar2(127)  default '' NOT NULL,
+  nextid number(10)   default '0' NOT NULL,
+  PRIMARY KEY  (seq_name)
+) ;
+
+CREATE TABLE TBL_GROUP_PERM (
+  group_id number(10)   default '0' NOT NULL,
+  perm_id number(10)   default '0' NOT NULL,
+  PRIMARY KEY  (group_id ,perm_id) 
+) ;
+
+CREATE INDEX PERMIDX ON TBL_GROUP_PERM ( perm_id );
+
+CREATE TABLE TBL_OS (
+  os_id number(10)   default '0' NOT NULL,
+  os_name varchar2(30)  default '' NOT NULL,
+  sort_order number(3)   default '0' NOT NULL,
+  regex varchar2(40)  default '' ,
+  PRIMARY KEY  (os_id)
+) ;
+
+CREATE TABLE TBL_PROJECT (
+  project_id number(10)   default '0' NOT NULL,
+  project_name varchar2(30)  default '' NOT NULL,
+  project_desc varchar2(4000) NOT NULL,
+  active number(1)  default '1' NOT NULL,
+  created_by number(10)   default '0' NOT NULL,
+  created_date number(20)   default '0' NOT NULL,
+  last_modified_by number(10)   default '0' NOT NULL,
+  last_modified_date number(20)   default '0' NOT NULL,
+  PRIMARY KEY  (project_id)
+) ;
+
+CREATE TABLE TBL_PROJECT_GROUP (
+  project_id number(10)   default '0' NOT NULL,
+  group_id number(10)   default '0' NOT NULL,
+  created_by number(10)   default '0' NOT NULL,
+  created_date number(20)   default '0' NOT NULL,
+  PRIMARY KEY  (project_id ,group_id) 
+) ;
+
+CREATE INDEX GROUPPROJIDX ON TBL_PROJECT_GROUP ( group_id );
+
+CREATE TABLE TBL_RESOLUTION (
+  resolution_id number(10)   default '0' NOT NULL,
+  resolution_name varchar2(30)  default '' NOT NULL,
+  resolution_desc varchar2(4000) ,
+  sort_order number(3)   default '0' NOT NULL,
+  PRIMARY KEY  (resolution_id)
+) ;
+
+CREATE TABLE TBL_SAVED_QUERY (
+  saved_query_id number(10)   default '0' NOT NULL,
+  user_id number(10)   default '0' NOT NULL,
+  saved_query_name varchar2(40)  default '' NOT NULL,
+  saved_query_string varchar2(4000) NOT NULL,
+  PRIMARY KEY  (saved_query_id ,user_id)
+) ;
+
+CREATE TABLE TBL_SEVERITY (
+  severity_id number(10)   default '0' NOT NULL,
+  severity_name varchar2(30)  default '' NOT NULL,
+  severity_desc varchar2(4000) NOT NULL,
+  sort_order number(3)   default '0' NOT NULL,
+  severity_color varchar2(10)  default '#FFFFFF' NOT NULL,
+  PRIMARY KEY  (severity_id)
+) ;
+
+CREATE TABLE TBL_STATUS (
+  status_id number(10)   default '0' NOT NULL,
+  status_name varchar2(30)  default '' NOT NULL,
+  status_desc varchar2(4000) NOT NULL ,
+  sort_order number(3)   default '0' NOT NULL,
+  PRIMARY KEY  (status_id)
+) ;
+
+CREATE TABLE TBL_USER_GROUP (
+  user_id number(10)   default '0' NOT NULL,
+  group_id number(10)   default '0' NOT NULL,
+  created_by number(10)   default '0' NOT NULL,
+  created_date number(20)   default '0' NOT NULL,
+  PRIMARY KEY  (user_id ,group_id) 
+) ;
+
+CREATE INDEX GROUPUSERIDX ON TBL_USER_GROUP ( group_id );
+
+CREATE TABLE TBL_USER_PERM (
+  user_id number(10)   default '0' NOT NULL,
+  perm_id number(10)   default '0' NOT NULL,
+  created_by number(10)   default '0' NOT NULL,
+  created_date number(20)   default '0' NOT NULL,
+  PRIMARY KEY  (user_id ,perm_id) 
+) ;
+CREATE INDEX PERMUSERIDX ON TBL_USER_PERM ( perm_id );
+
+CREATE TABLE TBL_VERSION (
+  version_id number(10)   default '0' NOT NULL,
+  project_id number(10)   default '0' NOT NULL,
+  version_name varchar2(10)  default '' NOT NULL,
+  active number(1)  default '1' NOT NULL,
+  created_by number(10)   default '0' NOT NULL,
+  created_date number(20)   default '0' NOT NULL,
+  last_modified_by number(10)   default '0' NOT NULL,
+  last_modified_date number(20)   default '0' NOT NULL,
+  PRIMARY KEY  (version_id)
+) ;
+
+INSERT INTO TBL_AUTH_USER 
+	(user_id, login, first_name, last_name, email, password)
+	values (1, 'OPTION_ADMIN_EMAIL', 'System', 'Admin', 'OPTION_ADMIN_EMAIL', 
+		'OPTION_ADMIN_PASS');
+INSERT INTO TBL_DB_SEQUENCE values ('TBL_AUTH_USER', 1);
+
+-- Start off with three user levels...
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (1, 'Admin', 1);
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (2, 'User', 1);
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (3, 'Developer', 1);
+INSERT INTO TBL_DB_SEQUENCE values ('TBL_AUTH_GROUP', 3);
+
+-- ... and only two permissions 
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (1, 'Admin');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (2, 'Editbug');
+
+-- Admins can do all the admin stuff and users can edit bugs
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (1, 1);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (2, 2);
+
+-- And user_id 1 is an admin and a user
+INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 1);
+INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 2);
+
+INSERT INTO TBL_CONFIGURATION VALUES ('INSTALL_URL','OPTION_INSTALL_URL','The base URL of the phpBugTracker installation','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('JPGRAPH_PATH','','If not in the include path','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('CVS_WEB','http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/phpbt/phpbt/','Location of your cvs web interface (see format_comments() in bug.php)','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('ADMIN_EMAIL','OPTION_PHPBT_EMAIL','The email address used in correspondence from the bug tracker','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('ENCRYPT_PASS','OPTION_ENCRYPT_PASS','Whether to store passwords encrypted.  <b>Warning:</b> Changing this after users have been created will result in their being unable to login.','bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('USE_JPGRAPH','','Whether to show some reports as images','bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('MASK_EMAIL','1','Should email addresses have . changed to dot and @ changed to at ?','bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('HIDE_EMAIL','1','Should email addresses be hidden for those not logged in?','bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('USE_SEVERITY_COLOR','1','Should the query list use the severity colors as the row background color (like SourceForge)','bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('EMAIL_IS_LOGIN','1','Whether to use email addresses as logins','bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('STRICT_UPDATING', '0', 'Only the bug reporter, bug owner, managers, and admins can change a bug', 'bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('NEW_ACCOUNTS_DISABLED', '0', 'Only admins can create new user accounts - newaccount.php is disabled', 'bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('PROMOTE_VOTES', 5, 'The number of votes required to promote a bug from Unconfirmed to New (Set to 0 to disable promotions by voting)', 'string');
+INSERT INTO TBL_CONFIGURATION VALUES ('MAX_USER_VOTES', 5, 'The maximum number of votes a user can cast across all bugs (Set to 0 to have no limit)', 'string');
+INSERT INTO TBL_CONFIGURATION VALUES ('ATTACHMENT_PATH','attachments','Sub-dir of the INSTALLPATH - Needs to be writeable by the web process','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('THEME','default','Which set of templates to use','multi');
+INSERT INTO TBL_CONFIGURATION VALUES ('ATTACHMENT_MAX_SIZE','2097152','Maximum size (in bytes) of an attachment. This will not override the settings in php.ini if php.ini has a lower limit.','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('DATE_FORMAT','m-d-Y','See the <a href="http://www.php.net/date" target="_new">date page</a> in the PHP manual for more info','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('TIME_FORMAT','g:i A','See the <a href="http://www.php.net/date" target="_new">date page</a> in the PHP manual for more info','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('LANGUAGE','en','The language file to use for warning and error messages','multi');
+
+INSERT INTO TBL_OS VALUES (1,'All',1,'');
+INSERT INTO TBL_OS VALUES (2,'Windows 3.1',2,'/Mozilla.*\\(Win16.*\\)/');
+INSERT INTO TBL_OS VALUES (3,'Windows 95',3,'/Mozilla.*\\(.*;.*; 32bit.*\\)/');
+INSERT INTO TBL_OS VALUES (4,'Windows 98',4,'/Mozilla.*\\(Win98.*\\)/');
+INSERT INTO TBL_OS VALUES (5,'Windows ME',5,'');
+INSERT INTO TBL_OS VALUES (6,'Windows 2000',6,'/Mozilla.*Windows NT 5.*\\)/');
+INSERT INTO TBL_OS VALUES (7,'Windows NT',7,'/Mozilla.*\\(Windows.*NT/');
+INSERT INTO TBL_OS VALUES (8,'Mac System 7',8,'');
+INSERT INTO TBL_OS VALUES (9,'Mac System 7.5',9,'');
+INSERT INTO TBL_OS VALUES (10,'Mac System 7.6.1',10,'');
+INSERT INTO TBL_OS VALUES (11,'Mac System 8.0',11,'');
+INSERT INTO TBL_OS VALUES (12,'Mac System 8.5',12,'/Mozilla.*\\(.*;.*; 68K.*\\)/');
+INSERT INTO TBL_OS VALUES (13,'Mac System 8.6',13,'/Mozilla.*\\(.*;.*; PPC.*\\)/');
+INSERT INTO TBL_OS VALUES (14,'Mac System 9.0',14,'');
+INSERT INTO TBL_OS VALUES (15,'Mac OS X',15,'');
+INSERT INTO TBL_OS VALUES (16,'Linux',16,'/Mozilla.*\\(.*;.*; Linux.*\\)/');
+INSERT INTO TBL_OS VALUES (17,'BSDI',17,'/Mozilla.*\\(.*;.*; BSD\\/OS.*\\)/');
+INSERT INTO TBL_OS VALUES (18,'FreeBSD',18,'/Mozilla.*\\(.*;.*; FreeBSD.*\\)/');
+INSERT INTO TBL_OS VALUES (19,'NetBSD',19,'');
+INSERT INTO TBL_OS VALUES (20,'OpenBSD',20,'');
+INSERT INTO TBL_OS VALUES (21,'AIX',21,'/Mozilla.*\\(.*;.*; AIX.*\\)/');
+INSERT INTO TBL_OS VALUES (22,'BeOS',22,'');
+INSERT INTO TBL_OS VALUES (23,'HP-UX',23,'/Mozilla.*\\(.*;.*; HP-UX.*\\)/');
+INSERT INTO TBL_OS VALUES (24,'IRIX',24,'/Mozilla.*\\(.*;.*; IRIX.*\\)/');
+INSERT INTO TBL_OS VALUES (25,'Neutrino',25,'');
+INSERT INTO TBL_OS VALUES (26,'OpenVMS',26,'');
+INSERT INTO TBL_OS VALUES (27,'OS/2',27,'');
+INSERT INTO TBL_OS VALUES (28,'OSF/1',28,'/Mozilla.*\\(.*;.*; OSF.*\\)/');
+INSERT INTO TBL_OS VALUES (29,'Solaris',29,'/Mozilla.*\\(.*;.*; SunOS 5.*\\)/');
+INSERT INTO TBL_OS VALUES (30,'SunOS',30,'/Mozilla.*\\(.*;.*; SunOS.*\\)/');
+INSERT INTO TBL_OS VALUES (31,'other',31,'');
+INSERT INTO TBL_DB_SEQUENCE values ('TBL_OS', 31);
+
+INSERT INTO TBL_RESOLUTION VALUES (1,'Fixed','Bug was eliminated',1);
+INSERT INTO TBL_RESOLUTION VALUES (2,'Not a bug','It''s not a bug -- it''s a feature!',2);
+INSERT INTO TBL_RESOLUTION VALUES (3,'Won''t Fix','This bug will stay',3);
+INSERT INTO TBL_RESOLUTION VALUES (4,'Deferred','We''ll get around to it later',4);
+INSERT INTO TBL_RESOLUTION VALUES (5,'Works for me','Can''t replicate the bug',5);
+INSERT INTO TBL_RESOLUTION VALUES (6,'Duplicate','',6);
+INSERT INTO TBL_DB_SEQUENCE values ('TBL_RESOLUTION', 6);
+
+INSERT INTO TBL_SEVERITY VALUES (1,'Unassigned','Default bug creation',1,'#dadada');
+INSERT INTO TBL_SEVERITY VALUES (2,'Idea','Ideas for further development',2,'#dad0d0');
+INSERT INTO TBL_SEVERITY VALUES (3,'Feature Request','Requests for specific features',3,'#dacaca');
+INSERT INTO TBL_SEVERITY VALUES (4,'Annoyance','Cosmetic problems or bugs not affecting performance',4,'#dac0c0');
+INSERT INTO TBL_SEVERITY VALUES (5,'Content','Non-functional related bugs, such as text content',5,'#dababa');
+INSERT INTO TBL_SEVERITY VALUES (6,'Significant','A bug affecting the intended performance of the product',6,'#dab0b0');
+INSERT INTO TBL_SEVERITY VALUES (7,'Critical','A bug severe enough to prevent the release of the product',7,'#daaaaa');
+INSERT INTO TBL_DB_SEQUENCE values ('TBL_SEVERITY', 7);
+
+INSERT INTO TBL_STATUS VALUES (1,'Unconfirmed','Reported but not confirmed',1);
+INSERT INTO TBL_STATUS VALUES (2,'New','A new bug',2);
+INSERT INTO TBL_STATUS VALUES (3,'Assigned','Assigned to a developer',3);
+INSERT INTO TBL_STATUS VALUES (4,'Reopened','Closed but opened again for further inspection',4);
+INSERT INTO TBL_STATUS VALUES (5,'Resolved','Set by engineer with a resolution',5);
+INSERT INTO TBL_STATUS VALUES (6,'Verified','The resolution is confirmed by the reporter',6);
+INSERT INTO TBL_STATUS VALUES (7,'Closed','The bug is officially squashed (QA)',7);
+INSERT INTO TBL_DB_SEQUENCE values ('TBL_STATUS', 7);
