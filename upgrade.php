@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.7 2002/03/07 00:30:28 bcurtis Exp $
+// $Id: upgrade.php,v 1.8 2002/03/07 00:35:38 bcurtis Exp $
 
 define ('NO_AUTH', 1);
 include 'include.php';
@@ -28,20 +28,17 @@ include 'include.php';
 function upgrade() {
 	global $q;
 	
-	$upgraded = $q->grab_field("select nextid from ". TBL_DB_SEQUENCE.
-		' where seq_name = "'.TBL_AUTH_GROUP.'"');
+	$upgraded = $q->grab_field('select varvalue from '.TBL_CONFIGURATION.
+		' where varname = "PROMOTE_VOTES"');
 	if (!$upgraded) {
-		// Make changes to the auth_group table
-		$q->query('alter table '.TBL_AUTH_GROUP.' add locked tinyint(1) not null default 0 after group_name');
-		$q->query('update '.TBL_AUTH_GROUP.' set locked = 1');
-		$q->query("insert into ".TBL_DB_SEQUENCE." values('".TBL_AUTH_GROUP."', 3)");
-		
-		// New table
+		// Add the bug_vote table and insert the new configuration options
 		if (DB_TYPE == 'pgsql') {
-			$q->query("CREATE TABLE ".TBL_PROJECT_GROUP." ( project_id INT4  NOT NULL DEFAULT '0', group_id INT4  NOT NULL DEFAULT '0', created_by INT4  NOT NULL DEFAULT '0', created_date INT8  NOT NULL DEFAULT '0', PRIMARY KEY  (project_id,group_id) )"); 
+			$q->query("CREATE TABLE ".TBL_BUG_VOTE." ( user_id INT4  NOT NULL DEFAULT '0', bug_id INT4  NOT NULL DEFAULT '0', created_date INT8  NOT NULL DEFAULT '0', PRIMARY KEY  (user_id,bug_id) );"); 
 		} else {
-			$q->query("create table ".TBL_PROJECT_GROUP." ( project_id int(10) unsigned NOT NULL default '0', group_id int(10) unsigned NOT NULL default '0', created_by int(10) unsigned NOT NULL default '0', created_date bigint(20) unsigned NOT NULL default '0', PRIMARY KEY  (project_id,group_id), KEY group_id (group_id) )");
+			$q->query("create table ".TBL_BUG_VOTE." ( user_id int(10) unsigned NOT NULL default '0', bug_id int(10) unsigned NOT NULL default '0', created_date bigint(20) unsigned NOT NULL default '0', PRIMARY KEY  (user_id, bug_id), KEY bug_id (bug_id) )");
 		}
+		$q->query("INSERT INTO TBL_CONFIGURATION VALUES ('PROMOTE_VOTES', 5, 'The number of votes required to promote a bug from Unconfirmed to New (Set to 0 to disable promotions by voting)', 'string')");
+		$q->query("INSERT INTO TBL_CONFIGURATION VALUES ('MAX_USER_VOTES', 5, 'The maximum number of votes a user can cast across all bugs (Set to 0 to have no limit)', 'string')");
 	}
 	include 'templates/default/upgrade-finished.html';
 }

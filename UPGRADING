@@ -1,4 +1,4 @@
-Upgrading from 0.5.1 to 0.6.0
+Upgrading from 0.6.x to 0.7.0
 -----------------------------
 
 A new table, project_group, has been added, and the auth_group table has been 
