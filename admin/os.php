@@ -20,14 +20,16 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: os.php,v 1.16 2001/11/13 03:53:04 bcurtis Exp $
+// $Id: os.php,v 1.17 2001/11/22 05:14:33 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
 
 function do_form($osid = 0) {
-  global $q, $me, $fname, $fregex, $fsortorder, $STRING;
+  global $q, $me, $_pv, $STRING;
 
+	extract($_pv);
+	$error = '';
   // Validation
   if (!$fname = trim($fname))
     $error = $STRING['givename'];
@@ -42,9 +44,9 @@ function do_form($osid = 0) {
 }
 
 function show_form($osid = 0, $error = '') {
-  global $q, $me, $t, $fname, $fregex, $fsortorder, $STRING;
+  global $q, $me, $t, $_pv, $STRING;
 
-  #$t->set_file('content','osform.html');
+	extract($_pv);
   if ($osid && !$error) {
     $row = $q->grab("select * from ".TBL_OS." where os_id = '$osid'");
     $t->set_var(array(
@@ -58,20 +60,29 @@ function show_form($osid = 0, $error = '') {
       'action' => $osid ? $STRING['edit'] : $STRING['addnew'],
       'error' => $error,
       'fosid' => $osid,
-      'fname' => $fname,
-      'fregex' => $fregex,
-      'fsortorder' => $fsortorder));
+      'fname' => isset($fname) ? $fname : '',
+      'fregex' => isset($fregex) ? $fregex : '',
+      'fsortorder' => isset($fsortorder) ? $fsortorder : ''));
   }
 }
 
 
 function list_items($osid = 0, $error = '') {
-  global $q, $t, $selrange, $order, $sort, $STRING, $TITLE;
+  global $me, $q, $t, $_gv, $STRING, $TITLE;
 
   $t->set_file('content','oslist.html');
   $t->set_block('content','row','rows');
 
-  if (!$order) { $order = 'sort_order'; $sort = 'asc'; }
+  if (empty($_gv['order'])) { 
+		$order = 'sort_order'; 
+		$sort = 'asc'; 
+	} else {
+		$order = $_gv['order']; 
+		$sort = $_gv['sort']; 
+	}
+	
+	$page = isset($_gv['page']) ? $_gv['page'] : 0;
+	
   $nr = $q->query("select count(*) from ".TBL_OS." where os_id = '$osid' order by $order $sort");
 
   list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
@@ -99,6 +110,7 @@ function list_items($osid = 0, $error = '') {
 
   sorting_headers($me, $headers, $order, $sort);
 
+	$i = 0;
   while ($row = $q->grab()) {
     $t->set_var(array(
       'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
@@ -118,11 +130,11 @@ $t->set_file('wrap','wrap.html');
 
 $perm->check('Admin');
 
-if ($op) switch($op) {
+if (isset($_gv['op'])) switch($_gv['op']) {
   case 'add' : list_items(); break;
-  case 'edit' : list_items($id); break;
-} elseif($submit) {
-  do_form($id);
+  case 'edit' : list_items($_gv['id']); break;
+} elseif(isset($_pv['submit'])) {
+  do_form($_pv['id']);
 } else list_items();
 
 $t->pparse('main',array('content','wrap','main'));

@@ -20,14 +20,16 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: severity.php,v 1.13 2001/11/13 03:53:04 bcurtis Exp $
+// $Id: severity.php,v 1.14 2001/11/22 05:14:33 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
 
 function do_form($severityid = 0) {
-  global $q, $me, $fname, $fdescription, $fsortorder, $fcolor, $STRING;
+  global $q, $me, $_pv, $STRING;
 
+	extract($_pv);
+	$error = '';
   // Validation
   if (!$fname = trim($fname))
     $error = $STRING['givename'];
@@ -65,23 +67,32 @@ function show_form($severityid = 0, $error = '') {
       'action' => $severityid ? $STRING['edit'] : $STRING['addnew'],
       'error' => $error,
       'fseverityid' => $severityid,
-      'fname' => $_pv['fname'] ? stripslashes($_pv['fname']) : '',
-      'fdescription' => $_pv['fdescription'] ? 
+      'fname' => isset($_pv['fname']) ? stripslashes($_pv['fname']) : '',
+      'fdescription' => isset($_pv['fdescription']) ? 
 				stripslashes($_pv['fdescription']) : '',
-      'fsortorder' => $_pv['fsortorder'] ? $_pv['fsortorder'] : '',
-      'fcolor' => $_pv['fcolor'] ? $_pv['fcolor'] : ''
+      'fsortorder' => isset($_pv['fsortorder']) ? $_pv['fsortorder'] : '',
+      'fcolor' => isset($_pv['fcolor']) ? $_pv['fcolor'] : ''
 			));
   }
 }
 
 
 function list_items($severityid = 0, $error = '') {
-  global $q, $t, $selrange, $order, $sort, $STRING, $TITLE, $me;
+  global $me, $q, $t, $_gv, $STRING, $TITLE;
 
   $t->set_file('content','severitylist.html');
   $t->set_block('content','row','rows');
 
-  if (!$order) { $order = 'sort_order'; $sort = 'asc'; }
+  if (empty($_gv['order'])) { 
+		$order = 'sort_order'; 
+		$sort = 'asc'; 
+	} else {
+		$order = $_gv['order']; 
+		$sort = $_gv['sort']; 
+	}
+	
+	$page = isset($_gv['page']) ? $_gv['page'] : 0;
+	
   $nr = $q->query("select count(*) from ".TBL_SEVERITY.
 		" where severity_id = '$severityid' order by $order $sort");
 
@@ -112,6 +123,7 @@ function list_items($severityid = 0, $error = '') {
 
   sorting_headers($me, $headers, $order, $sort);
 
+	$i = 0;
   while ($row = $q->grab()) {
     $t->set_var(array(
       'bgcolor' => USE_SEVERITY_COLOR ? $row['severity_color'] : 
@@ -132,11 +144,11 @@ $t->set_file('wrap','wrap.html');
 
 $perm->check('Admin');
 
-if ($op) switch($op) {
+if (isset($_gv['op'])) switch($_gv['op']) {
   case 'add' : list_items(); break;
-  case 'edit' : list_items($id); break;
-} elseif($submit) {
-  do_form($id);
+  case 'edit' : list_items($_gv['id']); break;
+} elseif(isset($_pv['submit'])) {
+  do_form($_pv['id']);
 } else list_items();
 
 $t->pparse('main',array('content','wrap','main'));

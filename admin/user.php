@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.32 2001/11/13 03:53:04 bcurtis Exp $
+// $Id: user.php,v 1.33 2001/11/22 05:14:33 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -28,6 +28,7 @@ include INCLUDE_PATH.'include.php';
 function do_form($userid = 0) {
   global $q, $me, $_pv, $STRING, $now, $u;
 
+	$error = '';
   // Validation
   if (!LOGIN_IS_EMAIL && !$_pv['flogin'] = trim($_pv['flogin'])) {
     $error = $STRING['givelogin'];
@@ -144,15 +145,19 @@ function show_form($userid = 0, $error = '') {
     $t->set_var(array(
       'action' => $userid ? $STRING['edit'] : $STRING['addnew'],
       'error' => $error,
-      'fuserid' => $_pv['userid'],
-      'flogin' => $_pv['flogin'],
-      'ffirstname' => stripslashes($_pv['firstname']),
-      'flastname' => stripslashes($_pv['flastname']),
-      'femail' => $_pv['femail'],
-      'fpassword' => $_pv['fpassword'] ? $_pv['fpassword'] : genpassword(10),
+      'fuserid' => $userid,
+      'flogin' => isset($_pv['flogin']) ? $_pv['flogin'] : '',
+      'ffirstname' => isset($_pv['firstname']) ? 
+				stripslashes($_pv['firstname']) : '',
+      'flastname' => isset($_pv['flastname']) ? 
+				stripslashes($_pv['flastname']) : '',
+      'femail' => isset($_pv['femail']) ? $_pv['femail'] : '',
+      'fpassword' => isset($_pv['fpassword']) ? $_pv['fpassword'] : 
+				genpassword(10),
       'factive' => isset($_pv['factive']) ? ($_pv['factive'] ? 'checked' : '')
         : 'checked',
-      'fusergroup' => build_select('group', $_pv['fusergroup'])
+      'fusergroup' => build_select('group', (isset($_pv['fusergroup']) ? 
+				$_pv['fusergroup'] : array()))
       ));
   }
 
@@ -165,13 +170,22 @@ function show_form($userid = 0, $error = '') {
 }
 
 function list_items($userid = 0, $error = '') {
-  global $me, $q, $t, $selrange, $order, $sort, $STRING, $TITLE, $page;
+  global $me, $q, $t, $_gv, $STRING, $TITLE;
 
   $t->set_file('content', 'userlist.html');
   $t->set_block('content', 'row', 'rows');
   $t->set_block('content', 'loginentryarea', 'loginarea');
 
-  if (!$order) { $order = 'login'; $sort = 'asc'; }
+  if (empty($_gv['order'])) { 
+		$order = 'login'; 
+		$sort = 'asc'; 
+	} else {
+		$order = $_gv['order']; 
+		$sort = $_gv['sort']; 
+	}
+	
+	$page = isset($_gv['page']) ? $_gv['page'] : 0;
+	
   $nr = $q->grab_field("select count(*) from ".TBL_AUTH_USER);
 
   list($selrange, $llimit, $npages, $pages) = multipages($nr, $page,
@@ -203,6 +217,7 @@ function list_items($userid = 0, $error = '') {
 
   sorting_headers($me, $headers, $order, $sort);
 
+	$i = 0;
   while ($row = $q->grab()) {
     $t->set_var(array(
       'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
@@ -224,11 +239,11 @@ $t->set_file('wrap','wrap.html');
 
 $perm->check('Admin');
 
-if ($op) switch($op) {
+if (isset($_gv['op'])) switch($_gv['op']) {
   case 'add' : list_items(); break;
-  case 'edit' : list_items($id); break;
-} elseif($submit) {
-  do_form($id);
+  case 'edit' : list_items($_gv['id']); break;
+} elseif(isset($_pv['submit'])) {
+  do_form($_pv['id']);
 } else list_items();
 
 $t->pparse('main',array('content', 'wrap', 'main'));

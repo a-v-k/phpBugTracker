@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.25 2001/11/13 03:53:04 bcurtis Exp $
+// $Id: project.php,v 1.26 2001/11/22 05:14:33 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -28,6 +28,7 @@ include INCLUDE_PATH.'include.php';
 function save_version($versionid = 0) {
   global $q, $me, $_pv, $STRING, $now, $u;
 
+	$error = '';
   // Validation
   if (!$_pv['vf_version'] = trim($_pv['vf_version']))
     $error['version'] = $STRING['giveversion'];
@@ -66,7 +67,7 @@ function show_version($versionid = 0, $error = '') {
     $t->set_var(array(
       'vf_error' => $error,
       'versionid' => $versionid,
-      'vf_version' => $vf_version,
+      'vf_version' => isset($vf_version) ? $vf_version : '',
       'vf_active' => isset($vf_active) && !$vf_active ? '' : ' checked',
       'vf_action' => $versionid ? $STRING['edit'] : $STRING['addnew']));
   }
@@ -81,6 +82,7 @@ function list_versions($projectid) {
     return;
   }
 
+	$i = 0;
   while ($row = $q->grab()) {
     $t->set_var(array(
       'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
@@ -97,6 +99,7 @@ function list_versions($projectid) {
 function save_component($componentid = 0) {
 	global $q, $me, $_pv, $u, $STRING, $now;
 	
+	$error = '';
 	// Validation
 	if (!$_pv['cf_name'] = trim($_pv['cf_name'])) 
 		$error['component'] = $STRING['givename'];
@@ -143,9 +146,9 @@ function show_component($componentid = 0, $error = '') {
 		$t->set_var(array(
 			'cf_error' => $error,
 			'componentid' => $componentid,
-			'cf_name' => $cf_name,
-			'cf_description' => $cf_description,
-			'cf_owner' => build_select('owner', $cf_owner),
+			'cf_name' => isset($cf_name) ? $cf_name : '',
+			'cf_description' => isset($cf_description) ? $cf_description : '',
+			'cf_owner' => build_select('owner', (isset($cf_owner) ? $cf_owner : '')),
 			'cf_active' => (isset($cf_active) and !$cf_active) ? '' : 'checked',
 			'cf_action' => $componentid ? $STRING['edit'] : $STRING['addnew']));
 	}
@@ -160,14 +163,14 @@ function list_components($projectid) {
     return;
   }
 
+	$i = 0;
   while ($row = $q->grab()) {
     $t->set_var(array(
       'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
 			'trclass' => $i % 2 ? '' : 'alt',
       'compid' => $row['component_id'],
       'compname' => $row['component_name'],
-      'compdesc' => stripslashes($row['project_desc']),
-      'owner' => $row['Owner'],
+      'compdesc' => stripslashes($row['component_desc']),
       'compactive' => $row['active'] ? 'Y' : 'N',
       'createdby' => $row['created_by'],
       'compdate' => date(DATE_FORMAT,$row['created_date']),
@@ -256,8 +259,10 @@ function show_project($projectid = 0, $error = array()) {
   } else {
 		$t->set_file('content','project-add.html');
 	}
-	show_version($_gv['versionid'], $error['version']);
-	show_component($_gv['componentid'], $error['component']);
+	show_version((isset($_gv['versionid']) ? $_gv['versionid'] : 0), 
+		(isset($error['version']) ? $error['version'] : ''));
+	show_component((isset($_gv['componentid']) ? $_gv['componentid'] : 0), 
+		(isset($error['component']) ? $error['component'] : ''));
 }
 
 function list_projects() {
