@@ -1,4 +1,4 @@
--- 0.3.0 --
+-- 0.3.0 -- 15 Sep 2001
 : Converted database schema to lower-case to ease DB portability.
 : Added postgres table creation schema.
 : Added the option to color rows in the bug list according to severity.
