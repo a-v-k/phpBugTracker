@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: resolution.php,v 1.18 2001/11/22 05:14:33 bcurtis Exp $
+// $Id: resolution.php,v 1.19 2001/12/19 14:05:14 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -90,8 +90,7 @@ function list_items($resolutionid = 0, $error = '') {
 	
 	$page = isset($_gv['page']) ? $_gv['page'] : 0;
 	
-  $nr = $q->query("select count(*) from ".TBL_RESOLUTION.
-		" where resolution_id = '$resolutionid' order by $order $sort");
+  $nr = $q->query("select count(*) from ".TBL_RESOLUTION);
 
   list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
     "order=$order&sort=$sort");
