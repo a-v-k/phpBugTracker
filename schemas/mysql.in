@@ -4,7 +4,7 @@
 #
 # TEMPLATE: This is a template for configure_db -- not for creating the database!
 #
-# $Id: mysql.in,v 1.4 2001/10/07 23:42:11 bcurtis Exp $
+# $Id: mysql.in,v 1.5 2001/10/12 13:43:59 bcurtis Exp $
 
 create database BugTracker;
 use BugTracker;
@@ -137,6 +137,14 @@ CREATE TABLE TBL_COMPONENT (
   PRIMARY KEY  (component_id)
 ) TYPE=MyISAM;
 
+CREATE TABLE TBL_CONFIGURATION (
+  varname char(40) NOT NULL default '',
+  varvalue char(255) NOT NULL default '',
+  description char(255) NOT NULL default '',
+  vartype char(20) NOT NULL default '',
+  PRIMARY KEY  (varname)
+) TYPE=MyISAM;
+
 CREATE TABLE db_sequence (
   seq_name varchar(127) NOT NULL default '',
   nextid int(10) unsigned NOT NULL default '0',
@@ -260,6 +268,22 @@ INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (2, 2);
 INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 1);
 INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 2);
 
+INSERT INTO TBL_CONFIGURATION VALUES ('INSTALL_URL','http://localhost/~bcurtis/phpbt','The base URL of the phpBugTracker installation','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('JPGRAPH_PATH','','If not in the include path','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('CVS_WEB','http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/phpbt/phpbt/','Location of your cvs web interface (see format_comments() in bug.php)','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('ADMIN_EMAIL','phpbt@bencurtis.com','The email address used in correspondence from the bug tracker','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('ENCRYPT_PASS','','Whether to store passwords encrypted','bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('USE_JPGRAPH','','Whether to show some reports as images','bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('MASK_EMAIL','1','Should email addresses have . changed to \'dot\' and @ change to \'at\'?','bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('HIDE_EMAIL','1','Should email addresses be hidden for those not logged in?','bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('USE_SEVERITY_COLOR','1','Should the query list use the severity colors as the row background color (like SourceForge)','bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('EMAIL_IS_LOGIN','1','Whether to use email addresses as logins','bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('ATTACHMENT_PATH','attachments','Sub-dir of the INSTALLPATH - Needs to be writeable by the web process','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('THEME','default','Which set of templates to use','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('ATTACHMENT_MAX_SIZE','2097152','Maximum size (in bytes) of an attachment. This will not override the settings in php.ini if php.ini has a lower limit.','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('DATE_FORMAT','m-d-Y','See the <a href="http://www.php.net/date" target="_new">date page</a> in the PHP manual for more info','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('TIME_FORMAT','g:i A','See the <a href="http://www.php.net/date" target="_new">date page</a> in the PHP manual for more info','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('LANGUAGE','en','The language file to use for warning and error messages','multi');
 
 INSERT INTO TBL_OS VALUES (1,'All',1,'');
 INSERT INTO TBL_OS VALUES (2,'Windows 3.1',2,'/Mozilla.*\\(Win16.*\\)/');
@@ -319,47 +343,4 @@ INSERT INTO TBL_STATUS VALUES (5,'Resolved','Set by engineer with a resolution',
 INSERT INTO TBL_STATUS VALUES (6,'Verified','The resolution is confirmed by the reporter',6);
 INSERT INTO TBL_STATUS VALUES (7,'Closed','The bug is officially squashed (QA)',7);
 INSERT INTO db_sequence values ('TBL_STATUS', 7);
-
-#
-# -- Conversion from 0.2.x to 0.3.0 --
-#
-
-#INSERT INTO TBL_ATTACHMENT SELECT * FROM Attachment;
-#INSERT INTO TBL_AUTH_USER SELECT UserID, Email, FirstName, LastName, Email, Password, if (UserLevel > 0, 1, 0), '', 0, CreatedDate, 0, CreatedDate FROM User;
-#INSERT INTO TBL_BUG SELECT *, 0 FROM Bug;
-#INSERT INTO TBL_BUG_HISTORY SELECT * FROM BugHistory;
-#INSERT INTO TBL_COMMENT SELECT * FROM Comment;
-#INSERT INTO TBL_COMPONENT SELECT * FROM Component;
-#INSERT INTO TBL_OS SELECT * FROM OS;
-#INSERT INTO TBL_PROJECT SELECT *, CreatedBy, CreatedDate FROM Project;
-#INSERT INTO TBL_RESOLUTION SELECT * FROM Resolution;
-#INSERT INTO TBL_SAVED_QUERY SELECT * FROM SavedQuery;
-#INSERT INTO TBL_SEVERITY SELECT *, '' FROM Severity;
-#UPDATE TBL_SEVERITY SET severity_color = '#dadada' WHERE severity_id = '1';
-#UPDATE TBL_SEVERITY SET severity_color = '#dad0d0' WHERE severity_id = '2';
-#UPDATE TBL_SEVERITY SET severity_color = '#dacaca' WHERE severity_id = '3';
-#UPDATE TBL_SEVERITY SET severity_color = '#dac0c0' WHERE severity_id = '4';
-#UPDATE TBL_SEVERITY SET severity_color = '#dababa' WHERE severity_id = '5';
-#UPDATE TBL_SEVERITY SET severity_color = '#dab0b0' WHERE severity_id = '6';
-#UPDATE TBL_SEVERITY SET severity_color = '#daaaaa' WHERE severity_id = '7';
-#INSERT INTO TBL_STATUS SELECT * FROM Status;
-#INSERT INTO TBL_VERSION SELECT *, CreatedBy, CreatedDate FROM Version;
-
-# Start off with three user levels...
-#INSERT INTO TBL_AUTH_GROUP (group_id, group_name) VALUES (1, 'Admin');
-#INSERT INTO TBL_AUTH_GROUP (group_id, group_name) VALUES (2, 'User');
-#INSERT INTO TBL_AUTH_GROUP (group_id, group_name) VALUES (3, 'Developer');
-
-# ... and only two permissions 
-#INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (1, 'Admin');
-#INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (2, 'Editbug');
-
-# Admins can do all the admin stuff and users can edit bugs
-#INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (1, 1);
-#INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (2, 2);
-
-# Move users into the new tables
-#INSERT INTO TBL_USER_GROUP (user_id, group_id) SELECT UserID, group_id FROM User, TBL_AUTH_GROUP where UserLevel = 15 and group_name = 'Admin';
-#INSERT INTO TBL_USER_GROUP (user_id, group_id) SELECT UserID, group_id FROM User, TBL_AUTH_GROUP where UserLevel = 3 and group_name = 'Developer';
-#INSERT INTO TBL_USER_GROUP (user_id, group_id) SELECT UserID, 2 FROM User where UserLevel > 0;
 

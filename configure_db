@@ -1,16 +1,21 @@
 #!/bin/bash
 # Script to generate database-creation-scripts
-# $Id: configure_db,v 1.7 2001/09/24 08:07:59 mohni Exp $
+# $Id: configure_db,v 1.8 2001/10/12 13:43:59 bcurtis Exp $
 
 # prefix for tablenames
 #TBL_PREFIX="phpbt_"
 TBL_PREFIX=''
 DB_TYPE='mysql'
+VERSION='.0.3.x-0.4.0'
+UPGRADE=''
 
 #------------------------------------------------------------------------------
 help() {
   echo "usage	$0 -h|--help"
-  echo "	$0 [-t <db-type>] [-p <table-prefix>]"
+  echo "	$0 [-t <db-type>] [-p <table-prefix>] [-u]"
+	echo ""
+	echo "    -u: Used for upgrading from the previous major version (if applicable)"
+	echo ""
 } #end help()
 
 #------------------------------------------------------------------------------
@@ -27,6 +32,7 @@ generate_sql() {
     s/TBL_BUG/${TBL_PREFIX}bug/g
     s/TBL_COMMENT/${TBL_PREFIX}comment/g
     s/TBL_COMPONENT/${TBL_PREFIX}component/g
+    s/TBL_CONFIGURATION/${TBL_PREFIX}configuration/g
     s/TBL_PROJECT/${TBL_PREFIX}project/g
     s/TBL_RESOLUTION/${TBL_PREFIX}resolution/g
     s/TBL_SAVED_QUERY/${TBL_PREFIX}saved_query/g
@@ -48,6 +54,12 @@ generate_sql() {
 
 #------------------------------------------------------------------------------
 #parse commandline arguments
+
+if [ $# -eq 0 ]; 
+then
+	EXTRAHELP="  For help, run $0 -h"
+fi
+
 while [ $# -gt 0 ]; do
   case $1
   in
@@ -69,6 +81,10 @@ while [ $# -gt 0 ]; do
       fi
       shift;;
 
+    '-u')		#upgrading
+      UPGRADE=$VERSION
+			shift;;
+
     '-h'|'--help')
       help
       exit 0;;
@@ -80,4 +96,6 @@ done
 
 #------------------------------------------------------------------------------
 #generate SQL file
-generate_sql schemas/$DB_TYPE.in createdb.sql
+generate_sql schemas/$DB_TYPE$UPGRADE.in createdb.sql
+echo $EXTRAHELP
+echo "Created $DB_TYPE schema file createdb.sql."
