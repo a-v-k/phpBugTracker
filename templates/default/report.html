@@ -2,8 +2,18 @@
 .header-col { font-weight: bold; }
 .center-col { text-align: center; }
 </style>
+
+<form action="{me}">
+Bug statistics for 
+<select name="projectid" onChange="document.location.href='{me}?projectid='+this.options[this.selectedIndex].value">
+	<option value="0">All projects</option>
+	{projects}
+</select>
+<input type="submit" value="Go">
+</form>
+
 <h3>{reporttitle}</h3>
-<table border="0" cellspacing="0" cellpadding="4">
+<table border="0" cellpadding="4">
 	<!-- BEGIN row -->
 	<tr bgcolor="{bgcolor}">
 		<!-- BEGIN col -->
