@@ -8,6 +8,7 @@
 <!-- User's Guide -->
 <!ENTITY primer SYSTEM "primer.sgml">
 <!ENTITY bugsearch SYSTEM "bugsearch.sgml">
+<!ENTITY bugdetail SYSTEM "bugdetail.sgml">
 
 <!-- Administrator's Guide -->
 <!ENTITY installation SYSTEM "installation.sgml">
@@ -35,6 +36,7 @@
 
 &primer;
 &bugsearch;
+&bugdetail;
 
 </chapter>
 
