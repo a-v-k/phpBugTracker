@@ -3,7 +3,12 @@
 : Added bug dependencies.
 : Added Oracle 8.1.x support.
 : Added "Remember me" functionality.
-: Fixed bug with losing login info when register_globals = off.
+: Fixed bugs with losing login info.
+: Added detailed project stats to the home page.
+: Added Estonian translation (Alvar Soome) and Italian translation 
+  (Gaetano Giunta).
+: Added the ability for users to choose not to receive bug update emails.
+: Fixed other minor bugs.
 
 -- 0.7.2 -- 14 Mar 2002
 : Bugs were fixed with project restrictions and front-page summary info.
