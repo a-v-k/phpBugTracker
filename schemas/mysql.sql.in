@@ -4,7 +4,7 @@
 #
 # TEMPLATE: This is a template for configure_db -- not for creating the database!
 #
-# $Id: mysql.sql.in,v 1.1 2001/09/07 13:50:06 bcurtis Exp $
+# $Id: mysql.sql.in,v 1.2 2001/09/07 16:14:31 bcurtis Exp $
 
 create database BugTracker;
 use BugTracker;
@@ -288,13 +288,13 @@ INSERT INTO TBL_RESOLUTION VALUES (4,'Deferred','We\'ll get around to it later',
 INSERT INTO TBL_RESOLUTION VALUES (5,'Works for me','Can\'t replicate the bug',5);
 INSERT INTO TBL_RESOLUTION VALUES (6,'Duplicate','',6);
 
-INSERT INTO TBL_SEVERITY VALUES (1,'Unassigned','Default bug creation',1);
-INSERT INTO TBL_SEVERITY VALUES (2,'Idea','Ideas for further development',2);
-INSERT INTO TBL_SEVERITY VALUES (3,'Feature Request','Requests for specific features',3);
-INSERT INTO TBL_SEVERITY VALUES (4,'Annoyance','Cosmetic problems or bugs not affecting performance',4);
-INSERT INTO TBL_SEVERITY VALUES (5,'Content','Non-functional related bugs, such as text content',5);
-INSERT INTO TBL_SEVERITY VALUES (6,'Significant','A bug affecting the intended performance of the product',6);
-INSERT INTO TBL_SEVERITY VALUES (7,'Critical','A bug severe enough to prevent the release of the product',7);
+INSERT INTO TBL_SEVERITY VALUES (1,'Unassigned','Default bug creation',1,'#dadada');
+INSERT INTO TBL_SEVERITY VALUES (2,'Idea','Ideas for further development',2,'#dad0d0');
+INSERT INTO TBL_SEVERITY VALUES (3,'Feature Request','Requests for specific features',3,'#dacaca');
+INSERT INTO TBL_SEVERITY VALUES (4,'Annoyance','Cosmetic problems or bugs not affecting performance',4,'#dac0c0');
+INSERT INTO TBL_SEVERITY VALUES (5,'Content','Non-functional related bugs, such as text content',5,'#dababa');
+INSERT INTO TBL_SEVERITY VALUES (6,'Significant','A bug affecting the intended performance of the product',6,'#dab0b0');
+INSERT INTO TBL_SEVERITY VALUES (7,'Critical','A bug severe enough to prevent the release of the product',7,'#daaaaa');
 
 INSERT INTO TBL_STATUS VALUES (1,'Unconfirmed','Reported but not confirmed',1);
 INSERT INTO TBL_STATUS VALUES (2,'New','A new bug',2);
