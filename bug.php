@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.98 2002/04/12 00:32:48 bcurtis Exp $
+// $Id: bug.php,v 1.99 2002/04/26 12:02:13 bcurtis Exp $
 
 include 'include.php';
 
@@ -216,7 +216,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
         ));
     } else {
       $rs->fetchInto($row);
-      $t->set_var(array(
+      $t->assign(array(
         'oldpostedby' => $row['login'],
         'oldpostedon' => date(TIME_FORMAT,$row['created_date']).' on '.
           date(DATE_FORMAT,$row['created_date']),
