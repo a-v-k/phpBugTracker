@@ -83,7 +83,7 @@ function show_query() {
 	
 	$t->set_var(array(
 		'js' => $js,
-		'status' => build_select('status',$q->grab_field("select status_id from status where status_name = 'New'")),
+		'status' => build_select('status',$status),
 		'resolution' => build_select('resolution',$resolution),
 		'os' => build_select('os',-1), // Prevent the OS regex selection
 		'priority' => build_select('priority',$priority),
