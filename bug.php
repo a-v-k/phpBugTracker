@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.108 2002/06/13 15:20:21 firma Exp $
+// $Id: bug.php,v 1.109 2002/06/13 16:03:29 firma Exp $
 
 include 'include.php';
 
@@ -119,271 +119,281 @@ function show_history($bugid) {
 ///
 /// Send the email about changes to the bug and log the changes in the DB
 function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
-  global $db, $t, $u, $select, $now, $STRING, $QUERY;
+    global $db, $t, $u, $select, $now, $STRING, $QUERY;
 
-	// It's a new bug if the changedfields array is empty and there are no comments
-	$newbug = (!count($cf) and !$comments); 
+    // It's a new bug if the changedfields array is empty and there are no comments
+    $newbug = (!count($cf) and !$comments); 
 	
-  $template = $newbug ? 'bugemail-newbug.txt' : 'bugemail.txt';
-  foreach(array('title','url') as $field) {
-    if (isset($cf[$field])) {
-      $db->query('insert into '.TBL_BUG_HISTORY
-      	.' (bug_id, changed_field, old_value, new_value, created_by, created_date)'
-        ." values (". join(', ', array($buginfo['bug_id'], $db->quote($field), 
-					$db->quote(stripslashes($buginfo[$field])), 
-					$db->quote(stripslashes($cf[$field])), $u, $now)).")");
-      $t->assign(array(
-        $field => stripslashes($cf[$field]),
-        $field.'_stat' => '!'
-        ));
+    $template = $newbug ? 'bugemail-newbug.txt' : 'bugemail.txt';
+    foreach(array('title','url') as $field) {
+	if (isset($cf[$field])) {
+	    $db->query('insert into '.TBL_BUG_HISTORY.
+		' (bug_id, changed_field, old_value, new_value, created_by, created_date)'.
+		" values (". join(', ', array($buginfo['bug_id'], $db->quote($field), 
+		    $db->quote(stripslashes($buginfo[$field])), 
+		    $db->quote(stripslashes($cf[$field])), $u, $now)).")");
+	    $t->assign(array(
+		$field => stripslashes($cf[$field]),
+		$field.'_stat' => '!'
+	    ));
+	} else {
+	    $t->assign(array(
+		$field => stripslashes($buginfo[$field]),
+		$field.'_stat' => ' '
+	    ));
+	}
+    }
+
+    // create array with tablenames for following loop
+    $cfgDatabase = array(
+	'project' => TBL_PROJECT,
+	'component' => TBL_COMPONENT,
+	'status' => TBL_STATUS,
+	'resolution' => TBL_RESOLUTION,
+	'database' => TBL_DATABASE,
+	'severity' => TBL_SEVERITY,
+	'os' => TBL_OS,
+	'version' => TBL_VERSION,
+	'database' => TBL_DATABASE,
+	'site' => TBL_SITE
+    );
+
+    foreach($cfgDatabase as $field => $table) {
+	$oldvalue = $db->getOne("select ${field}_name from $table".
+	    " where ${field}_id = {$buginfo[$field.'_id']}");
+	if (!empty($cf[$field.'_id'])) {
+	    $newvalue = $db->getOne("select ${field}_name from $table".
+		" where ${field}_id = {$cf[$field.'_id']}");
+	    $db->query('insert into '.TBL_BUG_HISTORY.
+		' (bug_id, changed_field, old_value, new_value, created_by, created_date)'.
+		" values (". join(', ', array($buginfo['bug_id'], $db->quote($field), 
+		    $db->quote(stripslashes($oldvalue)), 
+		    $db->quote(stripslashes($newvalue)), $u, $now)).")");
+	    $t->assign(array(
+		$field.'_id' => stripslashes($newvalue),
+		$field.'_id_stat' => '!'
+	    ));
+	} else {
+	    $t->assign(array(
+		$field.'_id' => stripslashes($oldvalue),
+		$field.'_id_stat' => ' '
+	    ));
+	}
+    }
+
+    // Reporter never changes;
+    $reporter = $db->getOne('select email from '.TBL_AUTH_USER.
+	" u, ".TBL_USER_PREF." p where u.user_id = {$buginfo['created_by']} ".
+	"and u.user_id = p.user_id and email_notices = 1");
+    $reporterstat = ' ';
+    $assignedto = $db->getOne('select email from '.TBL_AUTH_USER." u, ".
+	TBL_USER_PREF.' p where u.user_id = '.
+	(!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to']).
+	" and u.user_id = p.user_id and email_notices = 1");
+    $assignedtostat = !empty($cf['assigned_to']) ? '!' : ' ';
+
+    // If there are new comments grab the comments immediately before the latest
+    if ($comments or $newbug) {
+	$rs = $db->limitQuery('select u.login, c.comment_text, c.created_date'.
+	    ' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER.' u'.
+	    " where bug_id = {$buginfo['bug_id']} and c.created_by = u.user_id".
+	    ' order by created_date desc', 0, 2);
+	$rs->fetchInto($row);
+	$t->assign(array(
+	    'newpostedby' => $row['login'],
+	    'newpostedon' => date(TIME_FORMAT, $row['created_date']).' on '.
+		date(DATE_FORMAT, $row['created_date']),
+	    'newcomments' => textwrap('+ '.format_comments($row['comment_text']),72,"\n+ ")
+	));
+
+	// If this comment is the first additional comment after the creation of the
+	// bug then we need to grab the bug's description as the previous comment
+	if ($rs->numRows() < 2) {
+	    list($by, $on, $comments) = $db->getRow('select u.login, b.created_date, b.description'.
+		' from '.TBL_BUG.' b, '.TBL_AUTH_USER.' u'.
+		" where b.created_by = u.user_id and bug_id = {$buginfo['bug_id']}",
+		null, DB_FETCHMODE_ORDERED);
+	    $t->assign(array(
+		'oldpostedby' => $by,
+		'oldpostedon' => date(TIME_FORMAT,$on).' on '.date(DATE_FORMAT,$on),
+		'oldcomments' => textwrap(format_comments($comments),72)
+	    ));
+	} else {
+	    $rs->fetchInto($row);
+	    $t->assign(array(
+		'oldpostedby' => $row['login'],
+		'oldpostedon' => date(TIME_FORMAT,$row['created_date']).' on '.
+		    date(DATE_FORMAT,$row['created_date']),
+		'oldcomments' => textwrap(format_comments($row['comment_text']),72)
+	    ));
+	}
+	$t->assign('showcomments', true);
     } else {
-      $t->assign(array(
-        $field => stripslashes($buginfo[$field]),
-        $field.'_stat' => ' '
-        ));
+	$t->assign('showcomments', false);
     }
-  }
 
-  // create array with tablenames for following loop
-  $cfgDatabase = array(
-    'project' => TBL_PROJECT,
-    'component' => TBL_COMPONENT,
-    'status' => TBL_STATUS,
-    'resolution' => TBL_RESOLUTION,
-    'database' => TBL_DATABASE,
-    'severity' => TBL_SEVERITY,
-    'os' => TBL_OS,
-    'version' => TBL_VERSION
-  );
+    $maillist = array();
 
-  foreach($cfgDatabase as $field => $table) {
-    $oldvalue = $db->getOne("select ${field}_name from $table"
-      ." where ${field}_id = {$buginfo[$field.'_id']}");
-    if (!empty($cf[$field.'_id'])) {
-      $newvalue = $db->getOne("select ${field}_name from $table"
-        ." where ${field}_id = {$cf[$field.'_id']}");
-      $db->query('insert into '.TBL_BUG_HISTORY
-        .' (bug_id, changed_field, old_value, new_value, created_by, created_date)'
-        ." values (". join(', ', array($buginfo['bug_id'], $db->quote($field), 
-					$db->quote(stripslashes($oldvalue)), 
-					$db->quote(stripslashes($newvalue)), $u, $now)).")");
-      $t->assign(array(
-        $field.'_id' => stripslashes($newvalue),
-        $field.'_id_stat' => '!'
-        ));
-    } else {
-      $t->assign(array(
-        $field.'_id' => stripslashes($oldvalue),
-        $field.'_id_stat' => ' '
-        ));
+    // Don't email the person who just made the changes (later, make this
+    // behavior toggable by the user)
+    if ($userid != $buginfo['created_by'] and !empty($reporter)) {
+	$maillist[] = $reporter;
     }
-  }
-
-  // Reporter never changes;
-  $reporter = $db->getOne('select email from '.TBL_AUTH_USER
-    ." u, ".TBL_USER_PREF." p where u.user_id = {$buginfo['created_by']} ".
-		"and u.user_id = p.user_id and email_notices = 1");
-  $reporterstat = ' ';
-  $assignedto = $db->getOne('select email from '.TBL_AUTH_USER." u, ".
-		TBL_USER_PREF.' p where u.user_id = '
-    .(!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to']).
-		" and u.user_id = p.user_id and email_notices = 1");
-  $assignedtostat = !empty($cf['assigned_to']) ? '!' : ' ';
-
-  // If there are new comments grab the comments immediately before the latest
-  if ($comments or $newbug) {
-    $rs = $db->limitQuery('select u.login, c.comment_text, c.created_date'
-      .' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER.' u'
-      ." where bug_id = {$buginfo['bug_id']} and c.created_by = u.user_id"
-      .' order by created_date desc', 0, 2);
-    $rs->fetchInto($row);
-    $t->assign(array(
-      'newpostedby' => $row['login'],
-      'newpostedon' => date(TIME_FORMAT, $row['created_date']).' on '.
-        date(DATE_FORMAT, $row['created_date']),
-      'newcomments' => textwrap('+ '.format_comments($row['comment_text']),72,"\n+ ")
-      ));
-    // If this comment is the first additional comment after the creation of the
-    // bug then we need to grab the bug's description as the previous comment
-    if ($rs->numRows() < 2) {
-      list($by, $on, $comments) = $db->getRow('select u.login, b.created_date, b.description'
-        .' from '.TBL_BUG.' b, '.TBL_AUTH_USER.' u'
-        ." where b.created_by = u.user_id and bug_id = {$buginfo['bug_id']}",
-				null, DB_FETCHMODE_ORDERED);
-      $t->assign(array(
-        'oldpostedby' => $by,
-        'oldpostedon' => date(TIME_FORMAT,$on).' on '.date(DATE_FORMAT,$on),
-        'oldcomments' => textwrap(format_comments($comments),72)
-        ));
-    } else {
-      $rs->fetchInto($row);
-      $t->assign(array(
-        'oldpostedby' => $row['login'],
-        'oldpostedon' => date(TIME_FORMAT,$row['created_date']).' on '.
-          date(DATE_FORMAT,$row['created_date']),
-        'oldcomments' => textwrap(format_comments($row['comment_text']),72)
-        ));
+    if ($userid != (!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to'])
+	and !empty($assignedto)) {
+	    $maillist[] = $assignedto;
     }
-    $t->assign('showcomments', true);
-  } else {
-    $t->assign('showcomments', false);
-  }
 
-	$maillist = array();
-  // Don't email the person who just made the changes (later, make this
-  // behavior toggable by the user)
-  if ($userid != $buginfo['created_by'] and !empty($reporter))
-    $maillist[] = $reporter;
-  if ($userid != (!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to'])
-		and !empty($assignedto))
-    $maillist[] = $assignedto;
-
-  // Collect the CCs
-  if ($ccs = $db->getCol(sprintf($QUERY['bug-cc-list'], $buginfo['bug_id']))) {
-    $maillist = array_merge($maillist, $ccs);
-  }
-
-  // Later add a watcher (such as QA person) check here
-  if (count($maillist)) {
-    if ($toemail = delimit_list(', ',$maillist)) {
-      $t->assign(array(
-	'bugid' => $buginfo['bug_id'],
-	'bugurl' => INSTALL_URL."/bug.php?op=show&bugid={$buginfo['bug_id']}",
-	'priority' => $select['priority'][(!empty($cf['priority']) ? $cf['priority'] : $buginfo['priority'])],
-	'priority_stat' => !empty($cf['priority']) ? '!' : ' ',
-	'reporter' => $reporter,
-	'reporter_stat' => $reporterstat,
-	'assignedto' => $assignedto,
-	'assignedto_stat' => $assignedtostat
-      ));
-      
-      qp_mail($toemail,"[Bug {$buginfo['bug_id']}] ".($newbug ? 'New' : 'Changed').' - '.
-	  stripslashes((!empty($cf['title']) ? $cf['title'] : $buginfo['title'])),
-	$t->fetch($template),
-      	sprintf("From: %s\nReply-To: %s\nErrors-To: %s", ADMIN_EMAIL, ADMIN_EMAIL, ADMIN_EMAIL));
+    // Collect the CCs
+    if ($ccs = $db->getCol(sprintf($QUERY['bug-cc-list'], $buginfo['bug_id']))) {
+	$maillist = array_merge($maillist, $ccs);
     }
-  }
+
+    // Later add a watcher (such as QA person) check here
+    if (count($maillist)) {
+	if ($toemail = delimit_list(', ',$maillist)) {
+	    $t->assign(array(
+		'bugid' => $buginfo['bug_id'],
+		'bugurl' => INSTALL_URL."/bug.php?op=show&bugid={$buginfo['bug_id']}",
+		'priority' => $select['priority'][(!empty($cf['priority']) ? $cf['priority'] : $buginfo['priority'])],
+		'priority_stat' => !empty($cf['priority']) ? '!' : ' ',
+		'reporter' => $reporter,
+		'reporter_stat' => $reporterstat,
+		'assignedto' => $assignedto,
+		'assignedto_stat' => $assignedtostat
+	    ));
+
+	    qp_mail($toemail,"[Bug {$buginfo['bug_id']}] ".($newbug ? 'New' : 'Changed').' - '.
+		stripslashes((!empty($cf['title']) ? $cf['title'] : $buginfo['title'])),
+		$t->fetch($template),
+		sprintf("From: %s\nReply-To: %s\nErrors-To: %s", ADMIN_EMAIL, ADMIN_EMAIL, ADMIN_EMAIL));
+	}
+    }
 }
 
 function update_bug($bugid = 0) {
-  global $db, $t, $u, $STRING, $perm, $now, $_pv;
+    global $db, $t, $u, $STRING, $perm, $now, $_pv;
 
-  // Pull bug from database to determine changed fields and for user validation
-  $buginfo = $db->getRow("select * from ".TBL_BUG." where bug_id = $bugid");
-	$changedfields = array();
-	
-  if (isset($_pv)) {
-    foreach ($_pv as $k => $v) {
-      $$k = $v;
-      if ($k == 'url') {
-
-        if (($v == 'http://') || ($v == 'https://')) {
-          $v = '';
-        } elseif (($v) && (strtolower(substr($v,0,7)) != 'http://') && (strtolower(substr($v,0,8)) != 'https://') && (strtolower(substr($v,0,6)) != 'ftp://')) {
-          $v = 'http://'.$v;
-        }
-        $url = $v;
-      }
-						
-      if (isset($buginfo[$k]) && stripslashes($buginfo[$k]) != stripslashes($v)) {
-        $changedfields[$k] = $v;
-      }
-    }
-  }
-
-	// Should we allow changes to be made to this bug by this user?
-  if (STRICT_UPDATING and !($u == $buginfo['assigned_to'] or 
-		$u == $buginfo['created_by'] or $perm->have_perm('Manager'))) {
-      show_bug($bugid,array('status' => $STRING['bugbadperm']));
-      return;
-  }
-
-	// Check for more than one person modifying the bug at the same time
-  if ($last_modified_date != $buginfo['last_modified_date']) {
-    show_bug($bugid, array('status' => $STRING['datecollision']));
-    return;
-  }
-
-  // Add CC if specified
-  if ($add_cc) {
-    if (!$cc_uid = $db->getOne("select user_id from ".TBL_AUTH_USER.
-      " where login = '$add_cc'")) {
-      show_bug($bugid,array('status' => $STRING['nouser']));
-      return;
-    }
-    $cc_already = $db->getOne('select user_id from '.TBL_BUG_CC.
-      " where bug_id = $bugid and user_id = $cc_uid");
-    if (!$cc_already && $cc_uid != $buginfo['created_by']) {
-      $db->query("insert into ".TBL_BUG_CC." (bug_id, user_id, created_by,
-        created_date)  values ($bugid, $cc_uid, $u, $now)");
-    }
-  }
-
-  // Remove CCs if requested
-  if (isset($remove_cc) and $remove_cc[0]) {
-    $db->query('delete from '.TBL_BUG_CC." where bug_id = $bugid
-      and user_id in (".delimit_list(',', $remove_cc).')');
-  }
-	
-	// Add dependency if requested
-	if (!empty($add_dependency)) {
-		$add_dependency = preg_replace('/\D/', '', $add_dependency);
-		// Validate the bug number
-		if (!is_numeric($add_dependency)) {
-			show_bug($bugid, array('add_dep' => $STRING['nobug']));
-			return;
+    // Pull bug from database to determine changed fields and for user validation
+    $buginfo = $db->getRow("select * from ".TBL_BUG." where bug_id = $bugid");
+    $changedfields = array();
+    
+    if (isset($_pv)) {
+	foreach ($_pv as $k => $v) {
+	    $$k = $v;
+	    if ($k == 'url') {
+		if (($v == 'http://') || ($v == 'https://')) {
+		    $v = '';
+		} elseif (($v) && (strtolower(substr($v,0,7)) != 'http://') && (strtolower(substr($v,0,8)) != 'https://') && (strtolower(substr($v,0,6)) != 'ftp://')) {
+		    $v = 'http://'.$v;
 		}
-		if (!$db->getOne('select count(*) from '.TBL_BUG." where bug_id = $add_dependency")) {
-			show_bug($bugid, array('add_dep' => $STRING['nobug']));
-			return;
-		}
-		
-		// Check if the dependency has already been added
-		if ($db->getOne('select count(*) from '.TBL_BUG_DEPENDENCY.
-			" where bug_id = $bugid and depends_on = $add_dependency")) {
-			show_bug($bugid, array('add_dep' => $STRING['dupe_dependency']));
-			return;
-		}
-		
-		// Add it
-		$db->query("insert into ".TBL_BUG_DEPENDENCY.
-			" (bug_id, depends_on) values($bugid, $add_dependency)");
+		$url = $v;
+	    }
+
+	    if (isset($buginfo[$k]) && stripslashes($buginfo[$k]) != stripslashes($v)) {
+		$changedfields[$k] = $v;
+	    }
 	}
-	
-	// Remove dependency if requested
-	if (!empty($del_dependency)) {
-		$del_dependency = preg_replace('/\D/', '', $del_dependency);
-		if (is_numeric($del_dependency)) {
-			$db->query("delete from ".TBL_BUG_DEPENDENCY.
-				" where bug_id = $bugid and depends_on = $del_dependency");
-		}
+    }
+
+    // Should we allow changes to be made to this bug by this user?
+    if (STRICT_UPDATING and !($u == $buginfo['assigned_to'] or 
+	$u == $buginfo['created_by'] or $perm->have_perm('Manager'))) {
+	    show_bug($bugid,array('status' => $STRING['bugbadperm']));
+	    return;
+    }
+
+    // Check for more than one person modifying the bug at the same time
+    if ($last_modified_date != $buginfo['last_modified_date']) {
+	show_bug($bugid, array('status' => $STRING['datecollision']));
+	return;
+    }
+
+    // Add CC if specified
+    if ($add_cc) {
+	if (!$cc_uid = $db->getOne("select user_id from ".TBL_AUTH_USER.
+	    " where login = '$add_cc'")) {
+		show_bug($bugid,array('status' => $STRING['nouser']));
+		return;
 	}
-			
-  if ($comments) {
-    //$comments = strip_tags($comments); -- Uncomment this if you want no <> content in the comments
-    $db->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
-    	." values (".$db->nextId(TBL_COMMENT).", $bugid, ".
-			$db->quote(stripslashes($comments)).", $u, $now)");
-  }
+	$cc_already = $db->getOne('select user_id from '.TBL_BUG_CC.
+	    " where bug_id = $bugid and user_id = $cc_uid");
+	if (!$cc_already && $cc_uid != $buginfo['created_by']) {
+	    $db->query("insert into ".TBL_BUG_CC." (bug_id, user_id, created_by, 
+		created_date)  values ($bugid, $cc_uid, $u, $now)");
+	}
+    }
 
-	// Allow for removing of some items from the bug page
-	$priority = $priority ? $priority : 0;
-	$os_id = $os_id ? $os_id : 0;
-	$severity_id = $severity_id ? $severity_id : 0;
+    // Remove CCs if requested
+    if (isset($remove_cc) and $remove_cc[0]) {
+	$db->query('delete from '.TBL_BUG_CC." where bug_id = $bugid and user_id in (".
+	    delimit_list(',', $remove_cc).')');
+    }
 	
-  $db->query("update ".TBL_BUG." set title = ".$db->quote(stripslashes($title)).
-		', url = '.$db->quote(stripslashes($url)).", severity_id = $severity_id, ".
-		"priority = $priority, status_id = $status_id, ".
-		"database_id = $database_id, to_be_closed_in_version_id = $to_be_closed_in_version_id, ".
-		"resolution_id = $resolution_id, assigned_to = $assigned_to, ".
-		"project_id = $project_id, version_id = $version_id, ".
-		"component_id = $component_id, os_id = $os_id, last_modified_by = $u, ".
-		"last_modified_date = $now where bug_id = $bugid");
+    // Add dependency if requested
+    if (!empty($add_dependency)) {
+	$add_dependency = preg_replace('/\D/', '', $add_dependency);
 
-  if (count($changedfields) or !empty($comments)) {
-    do_changedfields($u, $buginfo, $changedfields, $comments);
-  }
-  header("Location: bug.php?op=show&bugid=$bugid&pos=$pos");
+	// Validate the bug number
+	if (!is_numeric($add_dependency)) {
+	    show_bug($bugid, array('add_dep' => $STRING['nobug']));
+	    return;
+	}
+	if (!$db->getOne('select count(*) from '.TBL_BUG." where bug_id = $add_dependency")) {
+	    show_bug($bugid, array('add_dep' => $STRING['nobug']));
+	    return;
+	}
+
+	// Check if the dependency has already been added
+	if ($db->getOne('select count(*) from '.TBL_BUG_DEPENDENCY.
+	    " where bug_id = $bugid and depends_on = $add_dependency")) {
+		show_bug($bugid, array('add_dep' => $STRING['dupe_dependency']));
+		return;
+	}
+
+	// Add it
+	$db->query("insert into ".TBL_BUG_DEPENDENCY.
+	    " (bug_id, depends_on) values($bugid, $add_dependency)");
+    }
+	
+    // Remove dependency if requested
+    if (!empty($del_dependency)) {
+	$del_dependency = preg_replace('/\D/', '', $del_dependency);
+	if (is_numeric($del_dependency)) {
+	    $db->query("delete from ".TBL_BUG_DEPENDENCY.
+		" where bug_id = $bugid and depends_on = $del_dependency");
+	}
+    }
+
+    if ($comments) {
+	// $comments = strip_tags($comments); -- Uncomment this if you want no <> content in the comments
+	$db->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)".
+	    " values (".$db->nextId(TBL_COMMENT).", $bugid, ".
+	    $db->quote(stripslashes($comments)).", $u, $now)");
+    }
+
+    // Allow for removing of some items from the bug page
+    $priority = $priority ? $priority : 0;
+    $os_id = $os_id ? $os_id : 0;
+    $severity_id = $severity_id ? $severity_id : 0;
+    
+    $db->query("update ".TBL_BUG." set title = ".$db->quote(stripslashes($title)).
+	', url = '.$db->quote(stripslashes($url)).", severity_id = $severity_id, ".
+	    "priority = $priority, status_id = $status_id, ".
+	    "database_id = $database_id, to_be_closed_in_version_id = $to_be_closed_in_version_id, ".
+	    'closed_in_version_id = '.$closed_in_version_id.', '.
+	    // 'site_id ='.$site_id.', '.
+	    // -- uncomment this when bugdisplay template ready
+	    "resolution_id = $resolution_id, assigned_to = $assigned_to, ".
+	    "project_id = $project_id, version_id = $version_id, ".
+	    "component_id = $component_id, os_id = $os_id, last_modified_by = $u, ".
+	    "last_modified_date = $now where bug_id = $bugid");
+
+    if (count($changedfields) or !empty($comments)) {
+	do_changedfields($u, $buginfo, $changedfields, $comments);
+    }
+
+    header("Location: bug.php?op=show&bugid=$bugid&pos=$pos");
 }
 
 function do_form($bugid = 0) {
