@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.95 2002/04/06 23:47:29 bcurtis Exp $
+// $Id: bug.php,v 1.96 2002/04/09 23:25:25 bcurtis Exp $
 
 include 'include.php';
 
@@ -555,16 +555,19 @@ function show_bug($bugid = 0, $error = array()) {
   $rs = $db->query("select * from ".TBL_ATTACHMENT." where bug_id = $bugid");
   if ($rs->numRows()) {
     while ($rs->fetchInto($att)) {
-      if (@is_readable(INSTALL_PATH.'/'.ATTACHMENT_PATH."/{$row['project_id']}/$bugid-{$att['file_name']}")) {
+      if (@is_readable(ATTACHMENT_PATH."/{$row['project_id']}/$bugid-{$att['file_name']}")) {
         $attachments[] = $att;
       }
     }
   }
 
 	// Show the comments
-  $t->assign('comments', $db->getAll('select comment_text, c.created_date, login'
-    .' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER
-    ." where bug_id = $bugid and c.created_by = user_id order by c.created_date"));
+  $t->assign(array(
+		'attachments' => $attachments,
+		'comments' => $db->getAll('select comment_text, c.created_date, login'
+    	.' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER
+    	." where bug_id = $bugid and c.created_by = user_id order by c.created_date")
+		));
 	
 	$t->display('bugdisplay.html');
 }
