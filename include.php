@@ -74,8 +74,8 @@ class dbclass extends DB_Sql {
 
 $q = new dbclass;
 $cssfile = 'global.css';
-$me = $PHP_SELF;
-$me2 = $REQUEST_URI;
+$me = $HTTP_SERVER_VARS['PHP_SELF'];
+$me2 = $HTTP_SERVER_VARS['REQUEST_URI'];
 $selrange = 30;
 $now = time();
 $_gv = $HTTP_GET_VARS;
@@ -197,8 +197,8 @@ class templateclass extends Template {
 $t = new templateclass('templates/'.THEME,'keep');
 $t->set_var(array(
 	'TITLE' => '', 
-	'me' => $PHP_SELF,
-	'me2' => $REQUEST_URI,
+	'me' => $me,
+	'me2' => $me2,
 	'error' => '',
 	'cssfile' => $cssfile,
 	'loginerror' => ''));
@@ -296,20 +296,6 @@ function build_select($box, $value='',$project=0) {
 }
 
 ///
-/// Convert a date from from MM/DD/YYYY to epoch seconds
-function convert_date($date) {
-	$temp = explode('/',$date);
-	//return join('-',array($temp[2],$temp[0],$temp[1])); - MySQL format
-	return mktime(0,0,0,$temp[0],$temp[1],$temp[2]);
-}
-
-///
-/// Check the format of a date entered
-function bad_date($date) {
-	return !ereg('[0-9]{2}/[0-9]{2}/[0-9]{4,4}',$date);
-}
-
-///
 /// Divide the results of a database query into multiple pages
 function multipages($nr, $page, $urlstr) {
 	global $me, $selrange;
@@ -333,12 +319,6 @@ function multipages($nr, $page, $urlstr) {
 		}
 	}
 	return array($selrange, $llimit, $npages, $pages);
-}
-
-///
-/// Returns true if the HTTP method is POST
-function posted_form() {
-	return ($GLOBALS['REQUEST_METHOD'] == 'POST');
 }
 
 /// 
