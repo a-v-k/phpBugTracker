@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.85 2002/03/18 17:43:15 bcurtis Exp $
+// $Id: bug.php,v 1.86 2002/03/20 15:59:24 bcurtis Exp $
 
 include 'include.php';
 
@@ -225,10 +225,10 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 
   // If there are new comments grab the comments immediately before the latest
   if ($comments or $newbug) {
-    $rs = $db->query('select u.login, c.comment_text, c.created_date'
+    $rs = $db->limitQuery('select u.login, c.comment_text, c.created_date'
       .' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER.' u'
       ." where bug_id = {$buginfo['bug_id']} and c.created_by = u.user_id"
-      .' order by created_date desc limit 2');
+      .' order by created_date desc', 0, 2);
     $rs->fetchInto($row);
     $t->set_var(array(
       'newpostedby' => $row['login'],
