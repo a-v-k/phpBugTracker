@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.27 2002/10/19 19:02:10 bcurtis Exp $
+// $Id: upgrade.php,v 1.28 2002/11/05 18:07:03 bcurtis Exp $
 
 define ('NO_AUTH', 1);
 
@@ -55,12 +55,12 @@ function upgrade() {
 				$db->query("INSERT INTO ".TBL_SITE." VALUES (2,'Testing',3)");
 				$db->query("INSERT INTO ".TBL_SITE." VALUES (3,'Staging',4)");
 				$db->query("INSERT INTO ".TBL_SITE." VALUES (4,'Production',5)");
-				$db->query("CREATE SEQUENCE ".TBL_SITE."_seq START 4");
+				$db->query("CREATE SEQUENCE ".TBL_SITE."_seq START 5");
 				$db->query("create table ".TBL_DATABASE." ( database_id INT2 NOT NULL DEFAULT '0', database_name varchar(40) NOT NULL DEFAULT '', sort_order INT2 NOT NULL DEFAULT '0', PRIMARY KEY (database_id) )");
 				$db->query("INSERT INTO ".TBL_DATABASE." VALUES (1,'Oracle 8.1.7',1)");
 				$db->query("INSERT INTO ".TBL_DATABASE." VALUES (2,'MySQL 3.23.49',2)");
 				$db->query("INSERT INTO ".TBL_DATABASE." VALUES (3,'PostgreSQL 7.1.3',3)");
-				$db->query("CREATE SEQUENCE ".TBL_DATABASE."_seq START 3");
+				$db->query("CREATE SEQUENCE ".TBL_DATABASE."_seq START 4");
 				break;
 			case 'mysql' :
 				$db->query("alter table ".TBL_USER_PREF." add saved_queries tinyint(1) not null default '1' after email_notices");
