@@ -28,7 +28,7 @@
 					<td align="center">{$databases[database].sort_order}</td>
 					<td align="center">
 						{if not $databases[database].bug_count}
-							<a href="{$SCRIPT_NAME}?op=del&database_id={$databases[database].database_id}" onClick="return confirm('{$STRING.suredelete} {$STRING.database}?')">{$STRING.delete}</a>
+							<a href="{$SCRIPT_NAME}?op=del&database_id={$databases[database].database_id}" onClick="return confirm('{$STRING.suredeletedb}')">{$STRING.delete}</a>
 						{/if}
 					</td>
 				</tr>
