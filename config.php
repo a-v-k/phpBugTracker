@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.9 2001/09/07 13:49:14 bcurtis Exp $
+// $Id: config.php,v 1.10 2001/09/15 15:54:03 bcurtis Exp $
 
 define ('INSTALLPATH', '/home/bcurtis/public_html/phpbt');
 define ('INSTALLURL', 'http://localhost/~bcurtis/phpbt');
@@ -28,7 +28,7 @@ define ('INSTALLURL', 'http://localhost/~bcurtis/phpbt');
 define ('PHPLIBPATH', ''); // If not in the include path
 define ('JPGRAPH_PATH', ''); // If not in the include path
 
-//Database Config
+// Database Config
 define ('DB_TYPE', 'mysql');  //using PHPlib file naming
 define ('DB_HOST', 'localhost');
 define ('DB_DATABASE', 'BugTracker');
@@ -54,10 +54,9 @@ define ('ONEDAY', 86400);
 define ('DATEFORMAT', 'm-d-Y');
 define ('TIMEFORMAT', 'g:i A');
 
-//Database Table Config
-//you can change either the prefix of the table names or each table name individually
-//define ('TBL_PREFIX', 'phpbt_');	//the prefix for all tables
-define ('TBL_PREFIX', '');	//the prefix for all tables, leave empty to use the old style
+// Database Table Config
+// you can change either the prefix of the table names or each table name individually
+define ('TBL_PREFIX', '');	// the prefix for all tables, leave empty to use the old style
 define ('TBL_ATTACHMENT',    TBL_PREFIX.'attachment');
 define ('TBL_AUTH_GROUP',    TBL_PREFIX.'auth_group');
 define ('TBL_AUTH_PERM',     TBL_PREFIX.'auth_perm');
