@@ -1,0 +1,306 @@
+# MySQL database creation script template
+# If you change the database name, make sure you change the DB_DATABASE 
+# constant in config.php.  Make sure you edit the TBL_AUTH_USER insert below.
+#
+# TEMPLATE: This is a template for configure_db -- not for creating the database!
+#
+# $Id: mysql.sql.in,v 1.1 2001/09/07 13:50:06 bcurtis Exp $
+
+create database BugTracker;
+use BugTracker;
+
+CREATE TABLE active_sessions (
+  sid varchar(32) NOT NULL default '',
+  name varchar(32) NOT NULL default '',
+  val text,
+  changed varchar(14) NOT NULL default '',
+  PRIMARY KEY  (name,sid),
+  KEY changed (changed)
+) TYPE=ISAM PACK_KEYS=1;
+
+CREATE TABLE TBL_ATTACHMENT (
+  attachment_id int(10) unsigned NOT NULL default '0',
+  bug_id int(10) unsigned NOT NULL default '0',
+  file_name char(255) NOT NULL default '',
+  description char(255) NOT NULL default '',
+  file_size bigint(20) unsigned NOT NULL default '0',
+  mime_type char(30) NOT NULL default '',
+  created_by int(10) unsigned NOT NULL default '0',
+  created_date bigint(20) unsigned NOT NULL default '0',
+  PRIMARY KEY  (attachment_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_AUTH_GROUP (
+  group_id int(10) unsigned NOT NULL default '0',
+  group_name varchar(80) NOT NULL default '',
+  created_by int(10) unsigned NOT NULL default '0',
+  created_date bigint(20) unsigned NOT NULL default '0',
+  last_modified_by int(10) unsigned NOT NULL default '0',
+  last_modified_date bigint(20) unsigned NOT NULL default '0',
+  PRIMARY KEY  (group_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_AUTH_PERM (
+  perm_id int(10) unsigned NOT NULL default '0',
+  perm_name varchar(80) NOT NULL default '',
+  created_by int(10) unsigned NOT NULL default '0',
+  created_date bigint(20) unsigned NOT NULL default '0',
+  last_modified_by int(10) unsigned NOT NULL default '0',
+  last_modified_date bigint(20) unsigned NOT NULL default '0',
+  PRIMARY KEY  (perm_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_AUTH_USER (
+  user_id int(10) unsigned NOT NULL default '0',
+  login char(40) NOT NULL default '',
+  first_name char(40) NOT NULL default '',
+  last_name char(40) NOT NULL default '',
+  email char(60) NOT NULL default '',
+  password char(40) NOT NULL default '',
+  active tinyint(3) unsigned NOT NULL default '1',
+  bug_list_fields char(255) NOT NULL default '',
+  created_by int(10) unsigned NOT NULL default '0',
+  created_date bigint(20) unsigned NOT NULL default '0',
+  last_modified_by int(10) unsigned NOT NULL default '0',
+  last_modified_date bigint(20) unsigned NOT NULL default '0',
+  PRIMARY KEY  (user_id),
+  UNIQUE KEY login (login)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_BUG (
+  bug_id int(10) unsigned NOT NULL default '0',
+  title varchar(100) NOT NULL default '',
+  description text NOT NULL,
+  url varchar(255) NOT NULL default '',
+  severity_id tinyint(3) unsigned NOT NULL default '0',
+  priority tinyint(3) unsigned NOT NULL default '0',
+  status_id tinyint(3) unsigned NOT NULL default '0',
+  resolution_id tinyint(3) unsigned NOT NULL default '0',
+  assigned_to int(10) unsigned NOT NULL default '0',
+  created_by int(10) unsigned NOT NULL default '0',
+  created_date bigint(20) unsigned NOT NULL default '0',
+  last_modified_by int(10) unsigned NOT NULL default '0',
+  last_modified_date bigint(20) unsigned NOT NULL default '0',
+  project_id int(10) unsigned NOT NULL default '0',
+  version_id int(10) unsigned NOT NULL default '0',
+  component_id int(10) unsigned NOT NULL default '0',
+  os_id tinyint(3) unsigned NOT NULL default '0',
+  browser_string varchar(255) NOT NULL default '',
+  close_date bigint(20) unsigned NOT NULL default '0',
+  PRIMARY KEY  (bug_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_BUG_GROUP (
+  bug_id int(10) unsigned NOT NULL default '0',
+  group_id int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (bug_id,group_id),
+  KEY group_id (group_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_BUG_HISTORY (
+  bug_id int(10) unsigned NOT NULL default '0',
+  changed_field char(20) NOT NULL default '',
+  old_value char(255) NOT NULL default '',
+  new_value char(255) NOT NULL default '',
+  created_by int(10) unsigned NOT NULL default '0',
+  created_date bigint(20) unsigned NOT NULL default '0'
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_COMMENT (
+  comment_id int(10) unsigned NOT NULL default '0',
+  bug_id int(10) unsigned NOT NULL default '0',
+  comment_text text NOT NULL,
+  created_by int(10) unsigned NOT NULL default '0',
+  created_date bigint(20) unsigned NOT NULL default '0',
+  PRIMARY KEY  (comment_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_COMPONENT (
+  component_id int(10) unsigned NOT NULL default '0',
+  project_id int(10) unsigned NOT NULL default '0',
+  component_name varchar(30) NOT NULL default '',
+  component_desc text NOT NULL,
+  owner int(10) unsigned NOT NULL default '0',
+  active tinyint(1) NOT NULL default '1',
+  created_by int(10) unsigned NOT NULL default '0',
+  created_date bigint(20) unsigned NOT NULL default '0',
+  last_modified_by int(10) unsigned NOT NULL default '0',
+  last_modified_date bigint(20) unsigned NOT NULL default '0',
+  PRIMARY KEY  (component_id)
+) TYPE=MyISAM;
+
+CREATE TABLE db_sequence (
+  seq_name varchar(127) NOT NULL default '',
+  nextid int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (seq_name)
+) TYPE=ISAM PACK_KEYS=1;
+
+CREATE TABLE TBL_GROUP_PERM (
+  group_id int(10) unsigned NOT NULL default '0',
+  perm_id int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (group_id,perm_id),
+  KEY perm_id (perm_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_OS (
+  os_id int(10) unsigned NOT NULL default '0',
+  os_name char(30) NOT NULL default '',
+  sort_order tinyint(3) unsigned NOT NULL default '0',
+  regex char(40) NOT NULL default '',
+  PRIMARY KEY  (os_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_PROJECT (
+  project_id int(10) unsigned NOT NULL default '0',
+  project_name varchar(30) NOT NULL default '',
+  project_desc text NOT NULL,
+  active tinyint(1) NOT NULL default '1',
+  created_by int(10) unsigned NOT NULL default '0',
+  created_date bigint(20) unsigned NOT NULL default '0',
+  last_modified_by int(10) unsigned NOT NULL default '0',
+  last_modified_date bigint(20) unsigned NOT NULL default '0',
+  PRIMARY KEY  (project_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_RESOLUTION (
+  resolution_id int(10) unsigned NOT NULL default '0',
+  resolution_name varchar(30) NOT NULL default '',
+  resolution_desc text NOT NULL,
+  sort_order tinyint(3) unsigned NOT NULL default '0',
+  PRIMARY KEY  (resolution_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_SAVED_QUERY (
+  saved_query_id int(10) unsigned NOT NULL auto_increment,
+  user_id int(10) unsigned NOT NULL default '0',
+  saved_query_name varchar(40) NOT NULL default '',
+  saved_query_string text NOT NULL,
+  PRIMARY KEY  (saved_query_id,user_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_SEVERITY (
+  severity_id int(10) unsigned NOT NULL default '0',
+  severity_name varchar(30) NOT NULL default '',
+  severity_desc text NOT NULL,
+  sort_order tinyint(3) unsigned NOT NULL default '0',
+  severity_color varchar(10) NOT NULL default '#FFFFFF',
+  PRIMARY KEY  (severity_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_STATUS (
+  status_id int(10) unsigned NOT NULL default '0',
+  status_name varchar(30) NOT NULL default '',
+  status_desc text NOT NULL,
+  sort_order tinyint(3) unsigned NOT NULL default '0',
+  PRIMARY KEY  (status_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_USER_GROUP (
+  user_id int(10) unsigned NOT NULL default '0',
+  group_id int(10) unsigned NOT NULL default '0',
+  created_by int(10) unsigned NOT NULL default '0',
+  created_date bigint(20) unsigned NOT NULL default '0',
+  PRIMARY KEY  (user_id,group_id),
+  KEY group_id (group_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_USER_PERM (
+  user_id int(10) unsigned NOT NULL default '0',
+  perm_id int(10) unsigned NOT NULL default '0',
+  created_by int(10) unsigned NOT NULL default '0',
+  created_date bigint(20) unsigned NOT NULL default '0',
+  PRIMARY KEY  (user_id,perm_id),
+  KEY perm_id (perm_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_VERSION (
+  version_id int(10) unsigned NOT NULL default '0',
+  project_id int(10) unsigned NOT NULL default '0',
+  version_name char(10) NOT NULL default '',
+  active tinyint(1) NOT NULL default '1',
+  created_by int(10) unsigned NOT NULL default '0',
+  created_date bigint(20) unsigned NOT NULL default '0',
+  last_modified_by int(10) unsigned NOT NULL default '0',
+  last_modified_date bigint(20) unsigned NOT NULL default '0',
+  PRIMARY KEY  (version_id)
+) TYPE=MyISAM;
+
+# Populate database with some initial data
+INSERT INTO TBL_AUTH_USER 
+	(user_id, login, first_name, last_name, email, password)
+	values (1, 'admin@example.com', 'System', 'Admin', 'admin@example.com', 
+		'somepassword');
+
+# Start off with three user levels...
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name) VALUES (1, 'Admin');
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name) VALUES (2, 'User');
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name) VALUES (3, 'Developer');
+
+# ... and only two permissions 
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (1, 'Admin');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (2, 'Editbug');
+
+# Admins can do all the admin stuff and users can edit bugs
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (1, 1);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (2, 2);
+
+# And user_id 1 is an admin and a user
+INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 1);
+INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 2);
+
+
+INSERT INTO TBL_OS VALUES (1,'All',1,'');
+INSERT INTO TBL_OS VALUES (2,'Windows 3.1',2,'/Mozilla.*\\(Win16.*\\)/');
+INSERT INTO TBL_OS VALUES (3,'Windows 95',3,'/Mozilla.*\\(.*;.*; 32bit.*\\)/');
+INSERT INTO TBL_OS VALUES (4,'Windows 98',4,'/Mozilla.*\\(Win98.*\\)/');
+INSERT INTO TBL_OS VALUES (5,'Windows ME',5,'');
+INSERT INTO TBL_OS VALUES (6,'Windows 2000',6,'/Mozilla.*Windows NT 5.*\\)/');
+INSERT INTO TBL_OS VALUES (7,'Windows NT',7,'/Mozilla.*\\(Windows.*NT/');
+INSERT INTO TBL_OS VALUES (8,'Mac System 7',8,'');
+INSERT INTO TBL_OS VALUES (9,'Mac System 7.5',9,'');
+INSERT INTO TBL_OS VALUES (10,'Mac System 7.6.1',10,'');
+INSERT INTO TBL_OS VALUES (11,'Mac System 8.0',11,'');
+INSERT INTO TBL_OS VALUES (12,'Mac System 8.5',12,'/Mozilla.*\\(.*;.*; 68K.*\\)/');
+INSERT INTO TBL_OS VALUES (13,'Mac System 8.6',13,'/Mozilla.*\\(.*;.*; PPC.*\\)/');
+INSERT INTO TBL_OS VALUES (14,'Mac System 9.0',14,'');
+INSERT INTO TBL_OS VALUES (15,'Mac TBL_OS X',15,'');
+INSERT INTO TBL_OS VALUES (16,'Linux',16,'/Mozilla.*\\(.*;.*; Linux.*\\)/');
+INSERT INTO TBL_OS VALUES (17,'BSDI',17,'/Mozilla.*\\(.*;.*; BSD\\/OS.*\\)/');
+INSERT INTO TBL_OS VALUES (18,'FreeBSD',18,'/Mozilla.*\\(.*;.*; FreeBSD.*\\)/');
+INSERT INTO TBL_OS VALUES (19,'NetBSD',19,'');
+INSERT INTO TBL_OS VALUES (20,'OpenBSD',20,'');
+INSERT INTO TBL_OS VALUES (21,'AIX',21,'/Mozilla.*\\(.*;.*; AIX.*\\)/');
+INSERT INTO TBL_OS VALUES (22,'BeOS',22,'');
+INSERT INTO TBL_OS VALUES (23,'HP-UX',23,'/Mozilla.*\\(.*;.*; HP-UX.*\\)/');
+INSERT INTO TBL_OS VALUES (24,'IRIX',24,'/Mozilla.*\\(.*;.*; IRIX.*\\)/');
+INSERT INTO TBL_OS VALUES (25,'Neutrino',25,'');
+INSERT INTO TBL_OS VALUES (26,'OpenVMS',26,'');
+INSERT INTO TBL_OS VALUES (27,'OS/2',27,'');
+INSERT INTO TBL_OS VALUES (28,'OSF/1',28,'/Mozilla.*\\(.*;.*; OSF.*\\)/');
+INSERT INTO TBL_OS VALUES (29,'Solaris',29,'/Mozilla.*\\(.*;.*; SunOS 5.*\\)/');
+INSERT INTO TBL_OS VALUES (30,'SunOS',30,'/Mozilla.*\\(.*;.*; SunOS.*\\)/');
+INSERT INTO TBL_OS VALUES (31,'other',31,'');
+
+INSERT INTO TBL_RESOLUTION VALUES (1,'Fixed','Bug was eliminated',1);
+INSERT INTO TBL_RESOLUTION VALUES (2,'Not a bug','It\'s not a bug -- it\'s a feature!',2);
+INSERT INTO TBL_RESOLUTION VALUES (3,'Won\'t Fix','This bug will stay',3);
+INSERT INTO TBL_RESOLUTION VALUES (4,'Deferred','We\'ll get around to it later',4);
+INSERT INTO TBL_RESOLUTION VALUES (5,'Works for me','Can\'t replicate the bug',5);
+INSERT INTO TBL_RESOLUTION VALUES (6,'Duplicate','',6);
+
+INSERT INTO TBL_SEVERITY VALUES (1,'Unassigned','Default bug creation',1);
+INSERT INTO TBL_SEVERITY VALUES (2,'Idea','Ideas for further development',2);
+INSERT INTO TBL_SEVERITY VALUES (3,'Feature Request','Requests for specific features',3);
+INSERT INTO TBL_SEVERITY VALUES (4,'Annoyance','Cosmetic problems or bugs not affecting performance',4);
+INSERT INTO TBL_SEVERITY VALUES (5,'Content','Non-functional related bugs, such as text content',5);
+INSERT INTO TBL_SEVERITY VALUES (6,'Significant','A bug affecting the intended performance of the product',6);
+INSERT INTO TBL_SEVERITY VALUES (7,'Critical','A bug severe enough to prevent the release of the product',7);
+
+INSERT INTO TBL_STATUS VALUES (1,'Unconfirmed','Reported but not confirmed',1);
+INSERT INTO TBL_STATUS VALUES (2,'New','A new bug',2);
+INSERT INTO TBL_STATUS VALUES (3,'Assigned','Assigned to a developer',3);
+INSERT INTO TBL_STATUS VALUES (4,'Reopened','Closed but opened again for further inspection',4);
+INSERT INTO TBL_STATUS VALUES (5,'Resolved','Set by engineer with a resolution',5);
+INSERT INTO TBL_STATUS VALUES (6,'Verified','The resolution is confirmed by the reporter',6);
+INSERT INTO TBL_STATUS VALUES (7,'Closed','The bug is officially squashed (QA)',7);
+
