@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: ru_koi8-r.php,v 1.2 2001/09/03 17:03:22 bcurtis Exp $
+// $Id: ru_koi8-r.php,v 1.3 2001/09/03 17:33:40 mbravo Exp $
 
 $STRING = array(
 	'lang_charset' => 'koi8-r',
@@ -32,7 +32,7 @@ $STRING = array(
 	'noprojects' => 'Проектов не найдено',
 	'totalbugs' => 'Всего проблем',
 	'giveemail' => 'Пожалуйста, укажите работающий email-адрес',
-	'givelogin' => 'Please enter a login',
+	'givelogin' => 'Пожалуйста, укажите логин',
 	'loginused' => 'Такой логин уже занят',
 	'newacctsubject' => 'phpBugTracker Login',
 	'newacctmessage' => "Ваш пароль в phpBugTracker - %s",
