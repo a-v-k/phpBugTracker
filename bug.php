@@ -10,7 +10,7 @@ $u = $auth->auth['uid'];
 ///
 /// Show the activity for a bug
 function show_history($bugid) {
-	global $q, $t;
+	global $q, $t, $STRING;
 	
 	if (!is_numeric($bugid)) {
 		show_text($STRING['nobughistory']);
