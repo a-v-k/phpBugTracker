@@ -1,14 +1,6 @@
 <?php
 
 include '../include.php';
-
-function do_form($versionid = 0) {
-	global $q, $me, $projectid, $version, $active, $STRING, $now, $u;
-	
-	// Validation
-	if (!$version = trim($version)) 
-		$error = $STRING['giveversion'];
-	if ($error) { show_form($versionid, $error); return; }
 	
 	if (!$active) $active = 0;
 	if (!$versionid) {

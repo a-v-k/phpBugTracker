@@ -1,14 +1,6 @@
 <?php
 
 include '../include.php';
-
-function do_form($componentid = 0) {
-	global $q, $me, $projectid, $name, $description, $owner, $active, $u, $STRING;
-	
-	// Validation
-	if (!$name = trim($name)) 
-		$error = $STRING['givename'];
-	elseif (!$description = trim($description))
 		$error = $STRING['givedesc'];
 	if ($error) { show_form($componentid, $error); return; }
 	

@@ -1,14 +1,6 @@
 <?php
 
 include '../include.php';
-
-function do_form($projectid = 0) {
-	global $q, $me, $name, $description, $active, $version, $u, $STRING, $now;
-	
-	// Validation
-	if (!$name = htmlspecialchars(trim($name))) 
-		$error = $STRING['givename'];
-	elseif (!$description = htmlspecialchars(trim($description)))
 		$error = $STRING['givedesc'];
 	elseif (!projectid and !$version = htmlspecialchars(trim($version)))
 		$error = $STRING['giveversion'];

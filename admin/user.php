@@ -1,14 +1,6 @@
 <?php
 
 include '../include.php';
-
-function do_form($userid = 0) {
-	global $q, $me, $ffirstname, $flastname, $femail, $fpassword, $usertype, $STRING, $now;
-	
-	// Validation
-	if (!valid_email($femail))
-		$error = $STRING['giveemail'];
-	elseif (!$fpassword = trim($fpassword))
 		$error = $STRING['givepassword'];
 	if ($error) { list_items($userid, $error); return; }
 	
