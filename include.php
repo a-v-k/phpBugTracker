@@ -20,14 +20,14 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.111 2002/04/08 21:25:31 jpdw Exp $
+// $Id: include.php,v 1.112 2002/04/09 20:53:07 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
 // Where are we?
-define ('INSTALL_PATH', dirname(__FILE__));
+#define ('INSTALL_PATH', dirname(__FILE__));
 
-if (!@include (INSTALL_PATH.'/config.php')) {
+if (!@include('config.php')) {
   header("Location: install.php");
   exit();
 }
@@ -37,7 +37,7 @@ if (!defined('DB_HOST')) { // Installation hasn't been completed
 }
 
 // Grab the global functions
-include (INSTALL_PATH.'/inc/functions.php');
+include ('inc/functions.php');
 
 // PEAR::DB
 require_once('DB.php');
@@ -60,7 +60,7 @@ while (list($k, $v) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 }
 
 // Localization - include the file with the desired language
-include INSTALL_PATH.'/languages/'.LANGUAGE.'.php';
+include 'languages/'.LANGUAGE.'.php';
 
 $me = $HTTP_SERVER_VARS['PHP_SELF'];
 $me2 = !empty($HTTP_SERVER_VARS['REQUEST_URI']) ? $HTTP_SERVER_VARS['REQUEST_URI'] : 
@@ -97,7 +97,7 @@ $default_db_fields = array('bug_id', 'title', 'reporter', 'owner',
 
 
 // Template class
-if (!@include((SMARTY_PATH==''?'':(INSTALL_PATH . '/')) . SMARTY_PATH . 'Smarty.class.php')) {
+if (!@include(SMARTY_PATH . 'Smarty.class.php')) {
 	include('templates/default/base/smartymissing.html');
 	exit;
 }
@@ -111,8 +111,8 @@ class extSmarty extends Smarty {
 }
 
 $t = new extSmarty;
-$t->template_dir = INSTALL_PATH.'/templates/'.THEME.'/';
-$t->compile_dir = INSTALL_PATH.'/c_templates';
+$t->template_dir = 'templates/'.THEME.'/';
+$t->compile_dir = 'c_templates';
 $t->config_dir = '.';
 $t->register_function('build_select', 'build_select');
 $t->register_function('project_js', 'build_project_js');
@@ -194,7 +194,7 @@ if (!empty($u)) {
 }
 
 if (defined('FORCE_LOGIN') and FORCE_LOGIN and !$u and !defined('NO_AUTH')) {
-	include(INSTALL_PATH.'/templates/'.THEME.'/login.html');
+	include('templates/'.THEME.'/login.html');
 	exit;
 }
 
