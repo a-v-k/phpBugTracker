@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: fr.php,v 1.4 2001/12/06 14:28:21 bcurtis Exp $
+// $Id: fr.php,v 1.5 2001/12/10 13:42:04 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -64,7 +64,9 @@ $STRING = array(
 	'attachment_too_large' => 'Le fichier envoyé dépasse la limite des '.number_format(ATTACHMENT_MAX_SIZE).' octets',
 	'bad_permission' => 'Vous n\'avez pas les droits pour réaliser cette action',
 	'noseverities' => 'Pas de criticités trouvées',
-	'project_only_all_groups' => 'You cannot choose specific groups when "All Groups" is chosen'
+	'project_only_all_groups' => 'You cannot choose specific groups when "All Groups" is chosen',
+	'previous_bug' => 'Previous',
+	'next_bug' => 'Next'
 	);
 	
 // Page titles

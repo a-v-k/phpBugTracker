@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.66 2001/12/07 14:36:23 bcurtis Exp $
+// $Id: bug.php,v 1.67 2001/12/10 13:42:03 bcurtis Exp $
 
 include 'include.php';
 
@@ -518,7 +518,7 @@ function show_bug_printable($bugid) {
 ///
 /// Grab the links for the previous and next bugs in the list
 function prev_next_links($bugid, $pos) {
-	global $q, $queryinfo;
+	global $q, $queryinfo, $STRING;
 	
 	if (!isset($queryinfo['query']) || !$queryinfo['query']) {
 		return array('', '');
@@ -550,14 +550,17 @@ function prev_next_links($bugid, $pos) {
 	
 	if ($pos) {
 		if ($firstid) {
-			$prevlink = "<a href='bug.php?op=show&bugid=$firstid&pos=".($pos - 1).'\'>Previous</a>';
+			$prevlink = "<a href='bug.php?op=show&bugid=$firstid&pos=".($pos - 1).
+				'\'>'.$STRING['previous_bug'].'</a>';
 		}
 		if ($secondid) {
-			$nextlink = "<a href='bug.php?op=show&bugid=$secondid&pos=".($pos + 1).'\'>Next</a>';
+			$nextlink = "<a href='bug.php?op=show&bugid=$secondid&pos=".($pos + 1).
+				'\'>'.$STRING['next_bug'].'</a>';
 		}
 	} else {
 		if ($firstid) {
-			$nextlink = "<a href='bug.php?op=show&bugid=$firstid&pos=".($pos + 1).'\'>Next</a>';
+			$nextlink = "<a href='bug.php?op=show&bugid=$firstid&pos=".($pos + 1).
+				'\'>'.$STRING['next_bug'].'</a>';
 		}
 	}
 	

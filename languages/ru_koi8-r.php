@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: ru_koi8-r.php,v 1.5 2001/12/06 14:28:21 bcurtis Exp $
+// $Id: ru_koi8-r.php,v 1.6 2001/12/10 13:42:04 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'koi8-r',
@@ -63,7 +63,9 @@ $STRING = array(
 	'bad_attachment' => 'Такого приложения не существует',
 	'attachment_too_large' => 'Указанный файл имеет размер больше чем '.number_format(ATTACHMENT_MAX_SIZE).' байт',
 	'bad_permission' => 'У вас нет полномочий, необходимых дляданной функции',
-	'project_only_all_groups' => 'You cannot choose specific groups when "All Groups" is chosen'
+	'project_only_all_groups' => 'You cannot choose specific groups when "All Groups" is chosen',
+	'previous_bug' => 'Previous',
+	'next_bug' => 'Next'
 	);
 	
 // Page titles

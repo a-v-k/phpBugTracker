@@ -66,7 +66,9 @@ $STRING = array(
 	'bad_attachment' => '附件不存在',
 	'attachment_too_large' => '您上载的附件大于 '.number_format(ATTACHMENT_MAX_SIZE).' 字节',
 	'bad_permission' => '您没有使用这个功能的权限',
-	'project_only_all_groups' => 'You cannot choose specific groups when "All Groups" is chosen'
+	'project_only_all_groups' => 'You cannot choose specific groups when "All Groups" is chosen',
+	'previous_bug' => 'Previous',
+	'next_bug' => 'Next'
 	);
 	
 // Page titles
