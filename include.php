@@ -12,6 +12,7 @@ define ('TIMEFORMAT','g:i A');
 define ('ADMINEMAIL','phpbt@bencurtis.com');
 define ('ENCRYPTPASS',0);  // Whether to store passwords encrypted
 define ('THEME','default/'); // Which set of templates to use
+define ('USE_JPGRAPH',0); // Whether to show images or not
 
 require PHPLIBPATH.'db_mysql.inc';
 require PHPLIBPATH.'ct_sql.inc';
