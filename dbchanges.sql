@@ -138,6 +138,7 @@ insert into status select * from Status;
 
 CREATE TABLE `auth_user` (
   `user_id` int(10) unsigned NOT NULL default '0',
+	`login` char(40) NOT NULL default '',
   `first_name` char(40) NOT NULL default '',
   `last_name` char(40) NOT NULL default '',
   `email` char(60) NOT NULL default '',

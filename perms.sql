@@ -23,5 +23,6 @@ insert into user_group (user_id, group_id) values (1, 1);
 # You can use these queries to convert the post 0.2.x / pre 0.3.0 schema
 alter table user rename auth_user;
 alter table auth_user change user_level active tinyint unsigned not null;
+alter table auth_user add login char(40) not null after user_id;
 update auth_user set active = 1 where active > 0;
- 
+update auth_user set login = email;
