@@ -1,11 +1,18 @@
-Upgrading from 0.3.x to 0.4.0
+Upgrading from 0.4.0 to 0.5.0
 -----------------------------
 
-The admin templates have been moved from admin/templates/default to 
-templates/default/admin, so if you have customized your templates you'll
-want to move the admin templates to the new location.
+The two support tables, active_sessions and db_sequence, now need to have
+the same prefix as the other tables (if you are using a table prefix).  Also,
+two new configuration options have been added.  
 
-The configure_db script can be run with the -u option to create the file
-createdb.sql which will have the SQL commands necessary to update your database.
-This release includes the creation of a new table, called configuration by
-default, which stores the configuration information for the bug tracker.
+Following the steps below will upgrade your installation of phpBT.
+
+1. Edit config-dist.php with the relevant details from your existing config.php.
+   Make sure the DB_* and the TBL_PREFIX definitions are correct.
+2. Save the file as config.php.
+3. With your web browser, load upgrade.php from the directory where you 
+   installed the new set of files.
+4. After running that script your installation has been upgraded.
+
+See the CHANGELOG file for more information on changes made since the last
+version.
