@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.23 2002/05/16 10:37:37 firma Exp $
+// $Id: functions.php,v 1.24 2002/05/16 12:52:02 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -469,4 +469,6 @@ function qp_mail($to, $subject = 'No subject', $body, $headers = '') {
     $headers .= "Content-type: text/plain; charset=\"".$STRING['lang_charset']."\"\n";
     $headers .= "Content-Transfer-Encoding: quoted-printable\nMIME-Version: 1.0";
     mail ($to, $subject, qp_enc($body), $headers);
-} ?>    
+} 
+
+?>
