@@ -5,7 +5,7 @@
 --
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.8 2001/10/30 04:02:45 bcurtis Exp $
+-- $Id: pgsql.in,v 1.9 2001/11/06 04:04:02 bcurtis Exp $
 
 BEGIN;
 
@@ -21,10 +21,10 @@ CREATE TABLE TBL_ACTIVE_SESSIONS (
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id INT4  NOT NULL DEFAULT '0',
   bug_id INT4  NOT NULL DEFAULT '0',
-  file_name char(255) NOT NULL DEFAULT '',
-  description char(255) NOT NULL DEFAULT '',
+  file_name varchar(255) NOT NULL DEFAULT '',
+  description varchar(255) NOT NULL DEFAULT '',
   file_size INT8  NOT NULL DEFAULT '0',
-  mime_type char(30) NOT NULL DEFAULT '',
+  mime_type varchar(30) NOT NULL DEFAULT '',
   created_by INT4  NOT NULL DEFAULT '0',
   created_date INT8  NOT NULL DEFAULT '0',
   PRIMARY KEY  (attachment_id)
@@ -52,13 +52,13 @@ CREATE TABLE TBL_AUTH_PERM (
 
 CREATE TABLE TBL_AUTH_USER (
   user_id INT4  NOT NULL DEFAULT '0',
-  login char(40) NOT NULL DEFAULT '',
-  first_name char(40) NOT NULL DEFAULT '',
-  last_name char(40) NOT NULL DEFAULT '',
-  email char(60) NOT NULL DEFAULT '',
-  password char(40) NOT NULL DEFAULT '',
+  login varchar(40) NOT NULL DEFAULT '',
+  first_name varchar(40) NOT NULL DEFAULT '',
+  last_name varchar(40) NOT NULL DEFAULT '',
+  email varchar(60) NOT NULL DEFAULT '',
+  password varchar(40) NOT NULL DEFAULT '',
   active INT2  NOT NULL DEFAULT '1',
-  bug_list_fields char(255) NOT NULL DEFAULT '',
+  bug_list_fields varchar(255) NOT NULL DEFAULT '',
   created_by INT4  NOT NULL DEFAULT '0',
   created_date INT8  NOT NULL DEFAULT '0',
   last_modified_by INT4  NOT NULL DEFAULT '0',
@@ -105,9 +105,9 @@ CREATE TABLE TBL_BUG_GROUP (
 
 CREATE TABLE TBL_BUG_HISTORY (
   bug_id INT4  NOT NULL DEFAULT '0',
-  changed_field char(20) NOT NULL DEFAULT '',
-  old_value char(255) NOT NULL DEFAULT '',
-  new_value char(255) NOT NULL DEFAULT '',
+  changed_field varchar(20) NOT NULL DEFAULT '',
+  old_value varchar(255) NOT NULL DEFAULT '',
+  new_value varchar(255) NOT NULL DEFAULT '',
   created_by INT4  NOT NULL DEFAULT '0',
   created_date INT8  NOT NULL DEFAULT '0'
 );
@@ -139,7 +139,7 @@ CREATE TABLE TBL_CONFIGURATION (
   varname varchar(40) NOT NULL DEFAULT '',
   varvalue varchar(255) NOT NULL DEFAULT '',
   description varchar(255) NOT NULL DEFAULT '',
-  vartype char(20) NOT NULL DEFAULT '',
+  vartype varchar(20) NOT NULL DEFAULT '',
   PRIMARY KEY  (varname)
 );
 
@@ -157,9 +157,9 @@ CREATE TABLE TBL_GROUP_PERM (
 
 CREATE TABLE TBL_OS (
   os_id INT4  NOT NULL DEFAULT '0',
-  os_name char(30) NOT NULL DEFAULT '',
+  os_name varchar(30) NOT NULL DEFAULT '',
   sort_order INT2  NOT NULL DEFAULT '0',
-  regex char(40) NOT NULL DEFAULT '',
+  regex varchar(40) NOT NULL DEFAULT '',
   PRIMARY KEY  (os_id)
 );
 
@@ -228,7 +228,7 @@ CREATE TABLE TBL_USER_PERM (
 CREATE TABLE TBL_VERSION (
   version_id INT4  NOT NULL DEFAULT '0',
   project_id INT4  NOT NULL DEFAULT '0',
-  version_name char(10) NOT NULL DEFAULT '',
+  version_name varchar(10) NOT NULL DEFAULT '',
   active INT2 NOT NULL DEFAULT '1',
   created_by INT4  NOT NULL DEFAULT '0',
   created_date INT8  NOT NULL DEFAULT '0',
