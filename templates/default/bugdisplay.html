@@ -118,7 +118,7 @@
 		<td><select name="site_id" <?php echo $disabled ?>><?php build_select('site', $site_id) ?></select></td>
 	</tr><tr>
 		<td><?php echo translate("Summary"); ?>:</td>
-		<td><input type="text" size="30" maxlength="100" name="title" value="<?php echo stripslashes(get_htmlspecialchars($title)) ?>" <?php echo $disabled ?>></td>
+		<td><input type="text" size="30" maxlength="100" name="title" value="<?php echo stripslashes(htmlspecialchars($title)) ?>" <?php echo $disabled ?>></td>
 		<td><?php echo translate("Status"); ?>:</td>
 		<td><select name="status_id" <?php echo $disabled ?>><?php build_select('status', $status_id) ?></select></td>
 	</tr><tr>
