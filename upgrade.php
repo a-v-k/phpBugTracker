@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.4 2001/12/11 13:56:48 bcurtis Exp $
+// $Id: upgrade.php,v 1.5 2001/12/15 15:44:56 bcurtis Exp $
 
 define ('NO_AUTH', 1);
 include 'include.php';
@@ -29,12 +29,12 @@ function upgrade() {
 	global $q;
 	
 	$upgraded = $q->grab_field("select nextid from ". TBL_DB_SEQUENCE.
-		' where seq_name = "'.TBL_AUTH_GROUP."'");
+		' where seq_name = "'.TBL_AUTH_GROUP.'"');
 	if (!$upgraded) {
 		// Make changes to the auth_group table
 		$q->query('alter table '.TBL_AUTH_GROUP.' add locked tinyint(1) not null default 0 after group_name');
 		$q->query('update '.TBL_AUTH_GROUP.' set locked = 1');
-		$q->query("insert into db_sequence values('".TBL_AUTH_GROUP."', 3)");
+		$q->query("insert into ".TBL_DB_SEQUENCE." values('".TBL_AUTH_GROUP."', 3)");
 		
 		// New table
 		if (DB_TYPE == 'pgsql') {
