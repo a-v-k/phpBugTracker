@@ -1,10 +1,10 @@
--- 0.5.0 -- 
+-- 0.5.0 -- 9 Nov 2001
 : Fixed a bug with the bug history update.
 : Added web-based installation.
 : Added on option for choosing whether bugs can be changed by anyone or only by 
 	the bug reporter, bug owner, managers, or admins.
-: Added a printable view for bugs
-: Added an upgrade script to upgrade from the last major version
+: Added a printable view for bugs.
+: Added an upgrade script to upgrade from the last major version.
 : Added an option to disable newaccount.php, thus preventing users from
   creating accounts for themselves.
 
