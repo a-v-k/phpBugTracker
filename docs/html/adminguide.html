@@ -115,67 +115,22 @@ NAME="INSTALLATION"
 ></H1
 ><DIV
 CLASS="PROCEDURE"
+><A
+NAME="INSTALL-PROCEDURE"
+></A
 ><OL
 TYPE="1"
 ><LI
 ><P
->Install PHPlib (<A
-HREF="http://sourceforge.net/projects/phplib/"
-TARGET="_top"
->http://sourceforge.net/projects/phplib</A
->) if it's not already installed.  Note that with recent versions of PHP, PHPlib needs to be patched.  Please do the following with the patch file, <TT
-CLASS="FILENAME"
->page.inc.patch</TT
-> in the distribution directory:</P
-><TABLE
-BORDER="0"
-BGCOLOR="#EEEEEE"
-WIDTH="100%"
-><TR
-><TD
-><PRE
-CLASS="SCREEN"
-><B
-CLASS="COMMAND"
->cat</B
-> <TT
-CLASS="FILENAME"
->page.inc.patch</TT
-> | <B
-CLASS="COMMAND"
->patch</B
-> <TT
-CLASS="OPTION"
->-p0</TT
-> <TT
-CLASS="OPTION"
->-b</TT
-> <TT
-CLASS="FILENAME"
-><TT
-CLASS="REPLACEABLE"
-><I
->/path/to/phplib/page.inc</I
-></TT
-></TT
-></PRE
-></TD
-></TR
-></TABLE
+>Copy the directory tree from the tarball (or zip archive) to a location suitable for serving web pages.</P
+></LI
+><LI
 ><P
->Make sure you replace <TT
-CLASS="FILENAME"
->/path/to/phplib</TT
-> with the actual path to the installation of PHPlib.  On windows systems you can edit <TT
-CLASS="FILENAME"
->page.inc</TT
-> and change line 67 from <TT
-CLASS="COMPUTEROUTPUT"
->if (isset($user)) {</TT
-> to <TT
-CLASS="COMPUTEROUTPUT"
->if (isset($user) &#38;&#38; $user) {</TT
->.</P
+>With your web browser, go the location where you installed the package.  You will be presented with a web page that will help you configure and install the application.</P
+></LI
+><LI
+><P
+>After completing the installation, login and start reporting bugs.</P
 ><DIV
 CLASS="NOTE"
 ><TABLE
@@ -204,18 +159,6 @@ TARGET="_top"
 ></TR
 ></TABLE
 ></DIV
-></LI
-><LI
-><P
->Copy the directory tree from the tarball (or zip archive) to a location suitable for serving web pages.</P
-></LI
-><LI
-><P
->With your web browser, go the location where you installed the package.  You will be presented with a web page that will help you configure and install the application.</P
-></LI
-><LI
-><P
->After completing the installation, login and start reporting bugs.</P
 ></LI
 ></OL
 ></DIV
