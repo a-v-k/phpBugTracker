@@ -33,7 +33,8 @@ define ('ENCRYPTPASS',0);  // Whether to store passwords encrypted
 define ('THEME','default/'); // Which set of templates to use
 define ('USE_JPGRAPH',0); // Whether to show images or not
 define ('JPGRAPH_PATH', '/home/bcurtis/public_html/jp/'); // If it's not in the include path
-define ('MASKEMAIL', 1); // Should email addresses be plainly visible?
+define ('MASK_EMAIL', 1); // Should email addresses be plainly visible?
+define ('HIDE_EMAIL', 1); // Should email addresses be hidden for those not logged in?
 
 require PHPLIBPATH.'db_mysql.inc';
 require PHPLIBPATH.'ct_sql.inc';
@@ -407,7 +408,11 @@ function valid_email($email) {
 ///
 /// If the constant is set do a little email masking to make harvesting a little harder
 function maskemail($email) {
-	if (MASKEMAIL) {
+	global $auth;
+	
+	if (HIDE_EMAIL && $auth->auth['uid'] == 'nobody') {
+		return '******';
+	} elseif (MASK_EMAIL) {
 		return str_replace('@', ' at ', str_replace('.', ' dot ', $email));
 	} else {
 		return $email;
