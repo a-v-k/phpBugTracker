@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.76 2002/06/08 20:28:30 bcurtis Exp $
+// $Id: query.php,v 1.77 2002/06/12 11:39:11 firma Exp $
 
 include 'include.php';
 
@@ -176,47 +176,56 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		$QUERY;
 
 	$query_db_fields = array(
-		'bug_id' => 'bug_id',
-  	'title' => 'title',
-  	'description' => 'description',
-  	'url' => 'url',
-  	'severity_name' => 'severity.severity_name',
-  	'priority' => 'priority',
-  	'status_name' => 'status.status_name',
-  	'resolution_name' => 'resolution_name',
-  	'reporter' => 'reporter.login as reporter',
-  	'owner' => 'owner.login as owner',
-  	'created_date' => 'b.created_date',
-  	'lastmodifier' => 'lastmodifier.login as lastmodifier',
-  	'last_modified_date' => 'b.last_modified_date',
-  	'project_name' => 'project.project_name',
-  	'version_name' => 'version.version_name',
-  	'component_name' => 'component.component_name',
-  	'os_name' => 'os.os_name',
-  	'browser_string' => 'browser_string',
-  	'close_date' => 'close_date'
+	    'bug_id' => 'bug_id',
+  	    'title' => 'title',
+	    'description' => 'description',
+	    'url' => 'url',
+	    'severity_name' => 'severity.severity_name',
+	    'priority' => 'priority',
+	    'status_name' => 'status.status_name',
+	    'resolution_name' => 'resolution_name',
+	    'reporter' => 'reporter.login as reporter',
+	    'owner' => 'owner.login as owner',
+	    'created_date' => 'b.created_date',
+	    'lastmodifier' => 'lastmodifier.login as lastmodifier',
+	    'last_modified_date' => 'b.last_modified_date',
+	    'project_name' => 'project.project_name',
+	    'version_name' => 'version.version_name',
+	    'to_be_closed_in_version_name' => 'version2.version_name as v2',
+	    'closed_in_version_name' => 'version3.version_name as v3',
+	    'database_provider' => TBL_DATABASE.'.database_name',
+	    'database_version' => TBL_DATABASE.'.database_version',
+	    'component_name' => 'component.component_name',
+	    'os_name' => 'os.os_name',
+	    'browser_string' => 'browser_string',
+	    'close_date' => 'close_date'
   	);
 
 	$db_headers = array(
-		'bug_id' => 'bug_id',
-		'title' => 'title',
-		'description' => 'description',
-		'url' => 'url',
-		'severity_name' => 'severity.sort_order',
-		'priority' => 'b.priority',
-		'status_name' => 'status.sort_order',
-		'owner' => 'owner',
-		'reporter' => 'reporter',
-		'lastmodifier' => 'last_modifier',
-		'created_date' => 'b.created_date',
-		'last_modified_date' => 'b.last_modified_date',
-		'project_name' => 'project_name',
-		'component_name' => 'component_name',
-		'version_name' => 'version_name',
-		'os_name' => 'os_name',
-		'browser_string' => 'browser_string',
-		'resolution_name' => 'resolution.sort_order',
-		'close_date' => 'close_date');
+	    'bug_id' => 'bug_id',
+	    'title' => 'title',
+	    'description' => 'description',
+	    'url' => 'url',
+	    'severity_name' => 'severity.sort_order',
+	    'priority' => 'b.priority',
+	    'status_name' => 'status.sort_order',
+	    'owner' => 'owner',
+	    'reporter' => 'reporter',
+	    'lastmodifier' => 'last_modifier',
+	    'created_date' => 'b.created_date',
+	    'last_modified_date' => 'b.last_modified_date',
+	    'project_name' => 'project_name',
+	    'component_name' => 'component_name',
+	    'version_name' => 'version_name',
+	    'os_name' => 'os_name',
+	    'to_be_closed_in_version_name' => 'v2',
+	    'closed_in_version_name' => 'v3',
+	    'database_provider' => TBL_DATABASE.'.database_name',
+	    'database_version' => TBL_DATABASE.'.database_version',
+	    'browser_string' => 'browser_string',
+	    'resolution_name' => 'resolution.sort_order',
+	    'close_date' => 'close_date'
+	);
 
 	extract($_gv);
 	if (!isset($page)) {
