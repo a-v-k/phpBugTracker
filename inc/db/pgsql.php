@@ -31,6 +31,11 @@ $QUERY = array(
 		'group by s.severity_id, severity_name, severity_desc, severity_color, '.
 		'sort_order '.
 		'order by %s %s',
+	'admin-list-databases' => 'select d.database_id, database_name, '.
+		'database_version, sort_order, count(bug_id) as bug_count '.
+		'from '.TBL_DATABASE. ' d left join '.TBL_BUG.' using (database_id) '.
+		'group by d.database_id, database_name, database_version, sort_order '.
+		'order by %s %s',
 	'admin-list-statuses' => 'select s.status_id, status_name, status_desc, '.
 		'sort_order, count(bug_id) as bug_count '.
 		'from '.TBL_STATUS.' s left join '. TBL_BUG.' using (status_id) '.
