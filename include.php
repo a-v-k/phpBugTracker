@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.107 2002/04/03 18:45:50 bcurtis Exp $
+// $Id: include.php,v 1.108 2002/04/03 18:54:08 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -173,7 +173,7 @@ if (isset($_pv['dologin'])) {
 		
 }
 
-if ($u) {
+if (!empty($u)) {
   list($owner_open, $owner_closed) = 
 		$db->getRow(sprintf($QUERY['include-template-owner'], $u), 
 			DB_FETCHMODE_ORDERED);
