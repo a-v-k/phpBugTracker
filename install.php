@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.11 2002/01/26 16:46:52 bcurtis Exp $
+// $Id: install.php,v 1.12 2002/03/05 21:35:32 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname(__FILE__));
 
@@ -75,7 +75,7 @@ if (defined('DB_HOST')) { // Already configured
 	header("Location: index.php");
 }
 
-function build_select($box, $value = '', $ary) {
+function build_select($box, $value = '', &$ary) {
 	$text = '';
 	foreach ($ary as $val => $item) {
 		if ($value == $val and $value != '') $sel = ' selected';
@@ -203,7 +203,7 @@ function show_front($error = '') {
 	$t->set_block('content', 'unwriteableblock', 'unwriteable');
 	$t->set_var(array(
 		'error' => !empty($error) ? "<div class=\"error\">$error</div>" : '',
-		'db_type' => build_select('db', (isset($db_type) ? $db_type : ''), &$db_types),
+		'db_type' => build_select('db', (isset($db_type) ? $db_type : ''), $db_types),
 		'db_host' => !empty($db_host) ? $db_host : 'localhost',
 		'db_database' => !empty($db_database) ? $db_database : 'bug_tracker',
 		'db_user' => !empty($db_user) ? $db_user : 'root',
