@@ -1,5 +1,6 @@
 -- 0.8.0 -- 
 : Switched database abstraction layer to PEAR::DB
+: Added bug dependencies
 
 -- 0.7.2 -- 14 Mar 2002
 : Bugs were fixed with project restrictions and front-page summary info.
