@@ -1,4 +1,24 @@
 <!--<a href="{me}?op=add">Add a new user</a>-->
+<script language="JavaScript">
+<!--
+	function checkAdmin(slct) {
+		var hadAdmin = {hadadmin};
+		var numAdmins = {numadmins};
+		var adminSelected = false;
+		
+		if (hadAdmin && numAdmins == 1) {
+			for (current = 0; current < slct.options.length; current++ ) {
+				if (slct.options[current].selected && slct.options[current].value == 1) {
+					adminSelected = true;
+				}
+			}
+			if (!adminSelected) {
+				alert('This is the only admin user for the system.  Removing this user from the Admin group would be unwise.');
+			}
+		}
+	}
+// -->
+</script>
 <br>
 <table border="0">
 	<tr>
@@ -73,7 +93,7 @@
       <tr>
               <td align="right" valign="top">User Group:</td>
               <td>
-                      <select name="fusergroup[]" size="3" multiple>
+                      <select name="fusergroup[]" size="3" multiple onClick="checkAdmin(this)">
                       {fusergroup}
                       </select>
               </td>

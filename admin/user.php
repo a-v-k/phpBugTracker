@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.39 2002/03/01 00:41:31 bcurtis Exp $
+// $Id: user.php,v 1.40 2002/03/06 04:17:54 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -149,7 +149,10 @@ function show_form($userid = 0, $error = '') {
 			'femail' => $row['email'],
 			'fpassword' => $row['password'],
 			'factive' => $row['active'] ? 'checked' : '',
-			'fusergroup' => build_select('group', $user_groups)
+			'fusergroup' => build_select('group', $user_groups),
+			// Whether or not this user has admin rights
+			'hadadmin' => $q->grab_field('select count(*) from '.TBL_USER_GROUP.
+				" where user_id = {$row['user_id']} and group_id = 1")
 			));
 	} else {
 		$t->set_var(array(
@@ -167,9 +170,14 @@ function show_form($userid = 0, $error = '') {
 			'factive' => isset($_pv['factive']) ? ($_pv['factive'] ? 'checked' : '')
 				: 'checked',
 			'fusergroup' => build_select('group', (isset($_pv['fusergroup']) ? 
-				$_pv['fusergroup'] : array()))
+				$_pv['fusergroup'] : array())),
+			// Whether or not this user has admin rights
+			'hadadmin' => 0
 			));
 	}
+	// The number of admins in the system
+	$t->set_var('numadmins', $q->grab_field('select count(*) from '.TBL_USER_GROUP.
+		' where group_id = 1'));
 
 	// Show the login field only if login is not tied to email address
 	if (EMAIL_IS_LOGIN) {
