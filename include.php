@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.39 2001/08/23 01:39:40 bcurtis Exp $
+// $Id: include.php,v 1.40 2001/08/25 18:28:47 bcurtis Exp $
 
 if (defined("INCLUDE_PATH")) {
 	require INCLUDE_PATH."config.php";
@@ -56,14 +56,6 @@ $selrange = 30;
 $now = time();
 $_gv = $HTTP_GET_VARS;
 $_pv = $HTTP_POST_VARS;
-
-$select['authlevels'] = array(
-  0 => 'Inactive',
-  1 => 'User',
-  3 => 'Developer',
-  7 => 'Manager',
-  15 => 'Administrator'
-  );
 
 $all_db_fields = array(
   'bug_id' => 'ID',
@@ -126,15 +118,19 @@ class uauth extends Auth {
     if (ENCRYPTPASS) {
       $password = md5($password);
     }
-    $u = $q->grab("select * from user where email = '$username' and password = '$password' and user_level > 0");
+    $u = $q->grab("select * from auth_user where login = '$username' and password = '$password' and active > 0");
     if (!$q->num_rows()) {
       return 'nobody';
     } else {
-      $this->auth['fname'] = $u['first_name'];
-      $this->auth['lname'] = $u['last_name'];
-      $this->auth['email'] = $u['email'];
-      $this->auth['perm'] = $select['authlevels'][$u['user_level']];
       $this->auth['db_fields'] = unserialize($u['bug_list_fields']);
+			
+			// Grab group assignments and permissions based on groups
+			$q->query("select group_name, perm_name from auth_perm ap, group_perm gp, auth_group ag, user_group ug where ap.perm_id = gp.perm_id and gp.group_id = ag.group_id and ag.group_id = ug.group_id and ug.user_id = {$u['user_id']}");
+			while (list($group, $perm) = $q->grab()) {
+				$this->auth['perm'][$perm] = true;
+				$this->auth['group'][$group] = true;
+			}
+			
       return $u['user_id'];
     }
   }
@@ -147,14 +143,42 @@ class uauth extends Auth {
 
 class uperm extends Perm {
   var $classname = 'uperm';
-  var $permissions = array(
-    'Inactive' => 0,
-    'User' => 1,
-    'Developer' => 3,
-    'Manager' => 7,
-    'Administrator' => 15,
-    );
+	
+	function check_auth($auth_var, $reqs) {
+		global $auth;
+		
+		// Administrators always pass
+		if ($auth->auth[$auth_var]['admin']) {
+			return true;
+		}
+		
+		if (is_array($reqs)) {
+			foreach ($reqs as $req) {
+				if (!$auth->auth[$auth_var][$req]) {
+					return false;
+				}
+			}
+		} else {
+			if (!$auth->auth[$auth_var][$req]) {
+				return false;
+			}
+		}
+		
+		// Didn't fail on any requirements?  Then the user passes the check
+		return true;
+	}	
+		
+	
+	function in_group($req_groups) {
+		return $this->check_auth('group', $req_groups);
+	}
+		
 
+	function have_perm($req_perms) {
+		return $this->check_auth('perm', $req_perms);
+	}
+		
+		
   function perm_invalid() {
     global $t, $auth;
     $t->set_file('content','badperm.html');
@@ -176,7 +200,7 @@ class templateclass extends Template {
       list($reporter_open, $reporter_closed) =
           $q->grab("select sum(if(status_name in ('Unconfirmed','New','Assigned','Reopened'),1,0)), sum(if(status_name not in ('Unconfirmed','New','Assigned','Reopened'),1,0)) from bug b left join status s using(status_id) where created_by = $u");
       $this->set_var(array(
-        'loggedinas' => $auth->auth['email'],
+        'loggedinas' => $auth->auth['uname'],
         'liblock' => '',
         'owner_open' => $owner_open,
         'owner_closed' => $owner_closed,
