@@ -145,6 +145,16 @@ $QUERY = array(
 		'where b.assigned_to = u.user_id(+) %s '.
 		'group by assigned_to, u.email',
 	'join-where' => 'and',
+	'admin-list-components' => 'select c.component_id, component_name, '.
+		'c.created_date, active, count(bug_id) as bug_count '.
+		'from '.TBL_COMPONENT.' c, '.TBL_BUG.' b '.
+		'where c.project_id = %s and c.component_id = b.component_id(+) '.
+		'group by c.component_id, c.component_name, c.created_date, c.active',
+	'admin-list-versions' => 'select v.version_id, version_name, '.
+		'v.created_date, active, count(bug_id) as bug_count '.
+		'from '.TBL_VERSION.' v, '.TBL_BUG.' b '.
+		'where v.project_id = %s and v.version_id = b.version_id(+) '.
+		'group by v.version_id, v.version_name, v.created_date, v.active',
 	);
 	
 ?>

@@ -20,10 +20,19 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.37 2002/04/03 00:58:26 bcurtis Exp $
+// $Id: project.php,v 1.38 2002/04/04 13:30:17 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
+
+function del_version($versionid, $projectid) {
+	global $db, $me;
+	
+	if (!$db->getOne('select count(*) from '.TBL_BUG." where version_id = $versionid")) {
+		$db->query("delete from ".TBL_VERSION." where version_id = $versionid");
+	}
+	header("Location: $me?op=edit&id=$projectid&");
+}
 
 function save_version($versionid = 0) {
   global $db, $me, $_pv, $STRING, $now, $u, $t;
@@ -67,6 +76,15 @@ function show_version($versionid = 0, $error = '') {
 	}
 	$t->assign('error', $error);
 	$t->display('admin/version-edit.html');
+}
+
+function del_component($componentid, $projectid) {
+	global $db, $me;
+	
+	if (!$db->getOne('select count(*) from '.TBL_BUG." where component_id = $componentid")) {
+		$db->query("delete from ".TBL_COMPONENT." where component_id = $componentid");
+	}
+	header("Location: $me?op=edit&id=$projectid&");
 }
 
 function save_component($componentid = 0) {
@@ -207,7 +225,7 @@ function save_project($projectid = 0) {
 }
 
 function show_project($projectid = 0, $error = null) {
-  global $db, $me, $t, $name, $description, $active, $TITLE, $_gv, $_pv;
+  global $db, $me, $t, $TITLE, $_gv, $_pv, $QUERY;
 
 	if (is_array($error)) $t->assign($error);
 	else $t->assign('error', $error);
@@ -218,10 +236,10 @@ function show_project($projectid = 0, $error = null) {
     $t->assign($db->getRow('select * from '.TBL_PROJECT
 			." where project_id = $projectid"));
   	$t->assign(array(
-			'components' =>	$db->getAll("select * from ".TBL_COMPONENT.
-				" where project_id = $projectid"),
-  		'versions' =>	$db->getAll("select * from ".TBL_VERSION.
-				" where project_id = $projectid")
+			'components' =>	$db->getAll(sprintf($QUERY['admin-list-components'], 
+				$projectid)),
+  		'versions' =>	$db->getAll(sprintf($QUERY['admin-list-versions'], 
+				$projectid))
 			));
 
 		$t->display('admin/project-edit.html');
@@ -270,6 +288,8 @@ if (isset($_gv['op'])) {
   	case 'edit' : show_project($_gv['id']); break;
   	case 'edit_component' : show_component($_gv['id']); break;
   	case 'edit_version' : show_version($_gv['id']); break;
+  	case 'del_component' : del_component($_gv['id'], $_gv['project_id']); break;
+  	case 'del_version' : del_version($_gv['id'], $_gv['project_id']); break;
 	}
 } elseif (isset($_pv['do'])) {
 	switch($_pv['do']) {

@@ -141,6 +141,16 @@ $QUERY = array(
 		'left join '.TBL_AUTH_USER.' u on assigned_to = user_id %s '.
 		'group by assigned_to, u.email',
 	'join-where' => 'where',
+	'admin-list-components' => 'select c.component_id, component_name, '.
+		'c.created_date, active, count(bug_id) as bug_count '.
+		'from '.TBL_COMPONENT.' c left join '.TBL_BUG.' b using(component_id) '.
+		'where c.project_id = %s '.
+		'group by c.component_id, c.component_name, c.created_date, c.active',
+	'admin-list-versions' => 'select v.version_id, version_name, '.
+		'v.created_date, active, count(bug_id) as bug_count '.
+		'from '.TBL_VERSION.' v left join '.TBL_BUG.' b using(version_id) '.
+		'where v.project_id = %s '.
+		'group by v.version_id, v.version_name, v.created_date, v.active',
 	);
 
 ?>
