@@ -1,7 +1,16 @@
 -- 0.3.0 --
 : Converted database schema to lower-case to ease DB portability.
+: Added postgres table creation schema.
 : Added the option to color rows in the bug list according to severity.
 : Changed the columns in the bug list to be dynamic and user-configurable.
+: Improved the configure script and added the configure_db script.
+: Changed the user - group - permission scheme.
+: Improved project creation in the admin tools.
+: Added French, Russian, Norwegian, Swedish, German and Portuguese translations.
+: Added option for the login name to not be the email address.
+: Added the option to use a table name prefix (like phpbt_) in the database.
+: Charset was added to each language file, and that charset is included in mail
+  headers.
 
 -- 0.2.1 -- 14 Aug 2001
 : Bugfix to the configure script

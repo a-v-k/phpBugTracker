@@ -1,11 +1,9 @@
 Bugs:
 - Create bugs via email
-
-Personal Page:
-- Choose columns to display in bug list
+- Add CCs to bugs
 
 New Account:
-- Allow the admin to control whether uses can create new accounts
+- Allow the admin to control whether users can create new accounts
 
 Users:
 - User groups to be able to restrict user bug submissions to specific projects
