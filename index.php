@@ -137,6 +137,12 @@ $t->assign('closedbugs',
 		" and changed_field = 'status' and new_value = 'Closed'".
 		' and b.project_id = p.project_id order by h.created_date desc', 0, 5)));
 
+if ($u != 'nobody') {
+	// Grab the saved queries if there are any
+	$t->assign('queries', 
+		$db->getAll("select * from ".TBL_SAVED_QUERY." where user_id = '$u'"));
+}
+
 $t->wrap('index.html', 'home');
 
 ?>
