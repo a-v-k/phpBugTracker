@@ -51,11 +51,14 @@ $STRING = array(
 	'passwordmatch' => 'Those passwords don\'t match -- please try again',
 	'nobughistory' => 'There is no history for that bug',
 	'logintomodify' => 'You must be logged in to modify this bug',
+	'dupe_attachment' => 'That attachment already exists for this bug',
 	'give_attachment' => 'Please specify a file to upload',
 	'no_attachment_save_path' => 'Couldn\'t find where to save the file!',
 	'attachment_path_not_writeable' => 'Couldn\'t create a file in the save path',
 	'attachment_move_error' => 'There was an error moving the uploaded file',
-	'bad_attachment' => 'That attachment does not exist'
+	'bad_attachment' => 'That attachment does not exist',
+	'attachment_too_large' => 'The file you specified is larger than '.number_format(ATTACHMENT_MAX_SIZE).' bytes',
+	'bad_permission' => 'You do not have the permissions required for that function'
 	);
 	
 // Page titles

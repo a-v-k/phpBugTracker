@@ -23,30 +23,39 @@
 
 include 'include.php';
 
-function show_attachment($attachid) {
+function del_attachment($attachid) {
 	global $q;
+	
+	if (list($filename, $mimetype) = grab_attachment($attachid)) {
+		$q->query("delete from Attachment where AttachmentID = $attachid");
+		unlink($filename);
+		header("Location: bug.php?op=show&bugid=$attachid");
+	}
+}
+
+function grab_attachment($attachid) {
+	global $q, $STRING;
 	
 	if (!is_numeric($attachid)) {
 		show_text($STRING['bad_attachment'], true);
-		return;
+		return false;
 	}
 	$ainfo = $q->grab("select a.BugID, FileName, MimeType, Project from Attachment a, Bug b where AttachmentID = $attachid and a.BugID = b.BugID");
 	if ($q->num_rows() != 1) {
 		show_text($STRING['bad_attachment'], true);
-		return;
+		return false;
 	}
 	$filename = join('/',array(INSTALLPATH, ATTACHMENT_PATH, 
 		$ainfo['Project'], "{$ainfo['BugID']}-{$ainfo['FileName']}"));
 	if (!is_readable($filename)) {
 		show_text($STRING['bad_attachment'], true);
-		return;
+		return false;
 	}
-	header("Content-type: {$ainfo['MimeType']}");
-	@readfile($filename);
+	return array($filename, $ainfo['MimeType']);
 }
 
-function add_attachment($projectid, $bugid, $description) {
-	global $q, $HTTP_POST_FILES, $now, $u, $STRING;
+function add_attachment($bugid, $description) {
+	global $q, $HTTP_POST_FILES, $now, $u, $STRING, $t;
 	
 	if (!isset($HTTP_POST_FILES['attachment']) || 
 		$HTTP_POST_FILES['attachment']['tmp_name'] == 'none') {
@@ -54,6 +63,28 @@ function add_attachment($projectid, $bugid, $description) {
 		return;
 	}
 
+	// Check the upload size.  If the size was greater than the max in
+	// php.ini, the file won't even be set and will fail at the check above
+	if ($HTTP_POST_FILES['attachment']['size'] > ATTACHMENT_MAX_SIZE) {
+		show_attachment_form($bugid, $STRING['attachment_too_large']);
+		return;
+	}
+	
+	$projectid = $q->grab_field("select Project from Bug where BugID = $bugid");
+	if (!$projectid) {
+		show_text($STRING['nobug'], true);
+		return;
+	}
+
+	// Check for a previously-uploaded attachment with the same name, bug, and project
+	$q->query("select a.BugID, Project from Attachment a, Bug b where FileName = '{$HTTP_POST_FILES['attachment']['name']}' and a.BugID = b.BugID");
+	while ($ainfo = $q->grab()) {
+		if ($bugid == $ainfo['BugID'] && $projectid == $ainfo['Project']) {
+			show_attachment_form($bugid, $STRING['dupe_attachment']);
+			return;
+		}
+	}
+	
 	$filepath = INSTALLPATH.'/'.ATTACHMENT_PATH;
 	$tmpfilename = $HTTP_POST_FILES['attachment']['tmp_name'];
 	$filename = "$bugid-{$HTTP_POST_FILES['attachment']['name']}";
@@ -85,27 +116,50 @@ function add_attachment($projectid, $bugid, $description) {
 }
 
 function show_attachment_form($bugid, $error = '') {
-	global $q, $t;
+	global $q, $t, $STRING;
 	
 	$t->set_file('content', 'bugattachmentform.html');
-	if (!is_numeric($bugid) || !$projectid = $q->grab_field("select Project from Bug where BugID = $bugid")) {
+	if (!is_numeric($bugid)) { 
 		show_text($STRING['nobug'], true);
 		return;
 	}
+	
+	$bugexists = $q->grab_field("select count(*) from Bug where BugID = $bugid");
+	if (!$bugexists) { 
+		show_text($STRING['nobug'], true);
+		return;
+	}
+	
 	$t->set_var(array(
 		'error' => $error,
 		'bugid' => $bugid,
-		'projectid' => $projectid
-		'description' => stripslashes($description),
+		'projectid' => $projectid,
+		'description' => htmlspecialchars(stripslashes($description)),
+		'max_size' => ini_get('upload_max_filesize') < ATTACHMENT_MAX_SIZE 
+			? number_format(ini_get('upload_max_filesize'))
+			: number_format(ATTACHMENT_MAX_SIZE)
 		));
 }		
 
 $t->set_file('wrap','wrap.html');
-
-if (isset($HTTP_POST_FILES)) add_attachment($_pv['projectid'], $_pv['bugid'],
-	$_pv['description']);
-elseif (isset($_gv['attachid'])) show_attachment($_gv['attachid']);
-else function show_attachment_form($_gv['bugid']);
+if (isset($_gv['del'])) {
+	if (!$perm->have_perm('Administrator')) {
+		show_text($STRING['bad_permission']);
+	} else {
+		del_attachment($_gv['del']);
+	}
+} elseif (isset($HTTP_POST_FILES['attachment'])) {
+	$perm->check('User');
+	add_attachment($_pv['bugid'],	$_pv['description']);
+} elseif (isset($_gv['attachid'])) {
+	if (list($filename, $mimetype) = grab_attachment($_gv['attachid'])) {
+		header("Content-type: $mimetype");
+		@readfile($filename);
+	}
+} else {
+	$perm->check('User');
+	show_attachment_form($_gv['bugid']);
+}
 
 $t->pparse('main',array('content','wrap','main'));
 

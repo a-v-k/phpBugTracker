@@ -343,7 +343,7 @@ function show_form($bugid = 0, $error = '') {
 }
 
 function show_bug($bugid = 0, $error = '') {
-	global $q, $me, $t, $project, $STRING, $u; 
+	global $q, $me, $t, $project, $STRING, $u, $perm; 
 	
 	if (!ereg('^[0-9]+$',$bugid) or !$row = $q->grab("select BugID, Title, Reporter.Email as Reporter, Owner.Email as Owner, Project, Version, Severity, Bug.CreatedDate, Bug.LastModifiedDate, Status.Name as Status, Priority, Bug.Description, Resolution.Name as Resolution, URL, Component, OS from Bug, Severity, Status left join User Owner on Bug.AssignedTo = Owner.UserID left join User Reporter on Bug.CreatedBy = Reporter.UserID left join Resolution on Resolution = ResolutionID where BugID = '$bugid' and Severity = SeverityID and Status = StatusID")) {
 		show_text($STRING['bugbadnum'],true);
@@ -356,6 +356,7 @@ function show_bug($bugid = 0, $error = '') {
 	$t->set_block('content','rerow','reopenrow');
 	$t->set_block('content','vrow','verifyrow');
 	$t->set_block('content','crow','closerow');
+	$t->set_block('content','attrow','attrows');
 	$t->set_unknowns('remove');
 	$t->set_var(array(
 		'statuserr' => $error['status'] ? $error['status'].'<br><br>' : '',
@@ -406,6 +407,36 @@ function show_bug($bugid = 0, $error = '') {
 		case 'Closed' :
 			$t->parse('reopenrow','rerow',true);
 			break;
+	}
+	
+	// Show the attachments
+	$q->query("select * from Attachment where BugID = $bugid");
+	if (!$q->num_rows()) {
+		$t->set_var('attrows', '<tr><td colspan="5" align="center">No attachments</td></tr>');
+	} else {
+		while ($att = $q->grab()) {
+			if (is_readable(INSTALLPATH.'/'.ATTACHMENT_PATH."/{$row['Project']}/$bugid-{$att['FileName']}")) {
+				$action = "<a href='attachment.php?attachid={$att['AttachmentID']}'>View</a>";
+				if ($perm->have_perm('Administrator')) {
+					$action .= " | <a href='attachment.php?del={$att['AttachmentID']}'>Delete</a>";
+				}
+				$t->set_var(array(
+					'bgcolor' => (++$j % 2 == 0) ? '#dddddd' : '#ffffff',
+					'attid' => $att['AttachmentID'],
+					'attname' => stripslashes($att['FileName']),
+					'attdesc' => stripslashes($att['Description']),
+					'attsize' => number_format($att['FileSize']).'k',
+					'atttype' => $att['MimeType'],
+					'attdate' => date(DATEFORMAT, $att['CreatedDate']),
+					'attaction' => $action
+					));
+				$t->parse('attrows', 'attrow', true);
+			}
+		}
+		// If there were attachments in the db but not on disk...
+		if (!$j) {
+			$t->set_var('attrows', '<tr><td colspan="5" align="center">No attachments</td></tr>');
+		}
 	}
 			
 	$q->query("select Text, Comment.CreatedDate, Email from Comment, User where BugID = $bugid and CreatedBy = UserID order by CreatedDate");

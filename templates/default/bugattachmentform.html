@@ -1,0 +1,38 @@
+<form enctype="multipart/form-data" action="{me}" method="post">
+<input type="hidden" name="bugid" value="{bugid}">
+<input type="hidden" name="projectid" value="{projectid}">
+<table border="0" width="640">
+	<tr>
+		<td colspan="2">
+			Please choose a file to upload and enter a one-line description.  
+			Maximum file size: {max_size} bytes
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" align="center">
+			<font color="#ff0000">{error}</font>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			File:
+		</td>
+		<td>
+			<input type="file" name="attachment">
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Description:
+		</td>
+		<td>
+			<input type="text" name="description" maxlength="255" value="{description}">
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<input type="submit" value="Upload attachment">
+		</td>
+	</tr>
+</table>
+</form>			
