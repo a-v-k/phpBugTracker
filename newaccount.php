@@ -4,13 +4,6 @@
 
 include 'include.php'; 
 
-///
-/// Check the validity of an email address
-/// (From zend.com)
-function valid_email($email) {		 
-	return eregi('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$', $email); 
-}
-
 function do_form() {
 	global $q, $t, $email, $firstname, $lastname, $STRING;
 	
