@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.20 2002/10/28 22:03:21 bcurtis Exp $
+// $Id: attachment.php,v 1.21 2003/05/20 03:08:01 bcurtis Exp $
 
 include 'include.php';
 
@@ -164,10 +164,15 @@ if (isset($_gv['del'])) {
 	}
 } elseif (isset($_pv['submit'])) {
 	$perm->check('Editbug');
-	add_attachment($_pv['bugid'],	$_pv['description']);
+	add_attachment($_pv['bugid'], $_pv['description']);
 } elseif (isset($_gv['attachid'])) {
 	if (list($filename, $mimetype) = grab_attachment($_gv['attachid'])) {
-		header("Content-type: $mimetype");
+		$base = basename($filename);
+		header("Content-Disposition: attachment; filename=\"$base\"");
+		header("Content-Type: $mimetype");
+		header("Connection: close");
+		header("Pragma: nocache");
+		header("Expires: 0 ");
 		@readfile($filename);
 		exit;
 	}
