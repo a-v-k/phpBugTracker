@@ -1,3 +1,7 @@
+-- 0.4.0 --
+: Added the ability to enter cvs:filename.ext or cvs:path/filename.ext:v.vv
+  into the bug comments and have that linked to a CVS web interface.
+
 -- 0.3.2 -- 28 Sep 2001
 : Added patch and patch instructions for page.inc (in PHPlib).
 : Tried to make the configure script a little more portable.

@@ -20,13 +20,16 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.11 2001/09/22 16:55:33 bcurtis Exp $
+// $Id: config.php,v 1.12 2001/09/29 14:50:26 bcurtis Exp $
 
 define ('INSTALLPATH', '/home/bcurtis/public_html/phpbt');
 define ('INSTALLURL', 'http://localhost/~bcurtis/phpbt');
 
 define ('PHPLIBPATH', ''); // If not in the include path
 define ('JPGRAPH_PATH', ''); // If not in the include path
+
+// Location of your cvs web interface (see format_comments() in bug.php)
+define ('CVS_WEB', 'http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/phpbt/phpbt/');
 
 // Database Config
 define ('DB_TYPE', 'mysql');  //using PHPlib file naming

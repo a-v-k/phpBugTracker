@@ -20,9 +20,27 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.46 2001/09/24 12:57:03 javyer Exp $
+// $Id: bug.php,v 1.47 2001/09/29 14:50:26 bcurtis Exp $
 
 include 'include.php';
+
+///
+/// Beautify the bug comments
+function format_comments($comments) {
+
+	// Set up the regex replacements
+	$patterns = array(
+		'/(bug)[[:space:]]*(#?)([0-9]+)/i', // matches bug #nn
+		'/cvs:([^\.\s:,\?!]+(\.[^\.\s:,\?!]+)*)(:)?(\d\.[\d\.]+)?([\W\s])?/i' // matches cvs:filename.php or cvs:filename.php:n.nn 
+		);
+	$replacements = array(
+		"\1 <a href='$me?op=show&bugid=\3'>\2\3<\/a>", // internal link to bug
+		'<a href="'.CVS_WEB.'\1#rev\4" target="_new">\1</a>\5' // external link to cvs web interface
+		);
+	
+	return preg_replace($patterns, $replacements, 
+		stripslashes($comments));
+}	
 
 ///
 /// Show the activity for a bug
@@ -136,7 +154,7 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
       'newpostedby' => $row['login'],
       'newpostedon' => date(TIMEFORMAT, $row['created_date']).' on '.
         date(DATEFORMAT, $row['created_date']),
-      'newcomments' => textwrap('+ '.stripslashes($row['comment_text']),72,"\n+ ")
+      'newcomments' => textwrap('+ '.format_comments($row['comment_text']),72,"\n+ ")
       ));
     // If this comment is the first additional comment after the creation of the
     // bug then we need to grab the bug's description as the previous comment
@@ -147,7 +165,7 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
       $t->set_var(array(
         'oldpostedby' => $by,
         'oldpostedon' => date(TIMEFORMAT,$on).' on '.date(DATEFORMAT,$on),
-        'oldcomments' => textwrap(stripslashes($comments),72)
+        'oldcomments' => textwrap(format_comments($comments),72)
         ));
     } else {
       $row = $q->grab();
@@ -155,7 +173,7 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
         'oldpostedby' => $row['login'],
         'oldpostedon' => date(TIMEFORMAT,$row['created_date']).' on '.
           date(DATEFORMAT,$row['created_date']),
-        'oldcomments' => textwrap(stripslashes($row['comment_text']),72)
+        'oldcomments' => textwrap(format_comments($row['comment_text']),72)
         ));
     }
     $t->parse('cblock', 'commentblock', true);
@@ -314,7 +332,7 @@ function update_bug($bugid = 0) {
     $changedfields['resolution_id'] = $resolution_id;
   }
   if ($comments) {
-    $comments = htmlspecialchars($comments);
+    $comments = $comments;
     $q->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
              ." values (".$q->nextid(TBL_COMMENT).", $bugid, '$comments', $u, $now)");
   }
@@ -516,6 +534,7 @@ function show_bug($bugid = 0, $error = '') {
     }
   }
 
+	// Show the comments
   $q->query('select comment_text, c.created_date, login'
     .' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER
     ." where bug_id = $bugid and c.created_by = user_id order by c.created_date");
@@ -525,8 +544,8 @@ function show_bug($bugid = 0, $error = '') {
     while ($row = $q->grab()) {
       $t->set_var(array(
         'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
-        'rdescription' => eregi_replace('(bug)[[:space:]]*(#?)([0-9]+)',
-          "\\1 <a href='$me?op=show&bugid=\\3'>\\2\\3</a>",nl2br($row['comment_text'])),
+        'rdescription' => nl2br(format_comments(
+					htmlspecialchars($row['comment_text']))),
         'rreporter' => maskemail($row['login']),
         'rcreateddate' => date(TIMEFORMAT,$row['created_date']).' on '.
           date(DATEFORMAT,$row['created_date'])
