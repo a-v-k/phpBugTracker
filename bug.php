@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.104 2002/05/08 12:57:18 bcurtis Exp $
+// $Id: bug.php,v 1.105 2002/05/16 11:01:02 firma Exp $
 
 include 'include.php';
 
@@ -239,32 +239,29 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 
   // Collect the CCs
   if ($ccs = $db->getCol(sprintf($QUERY['bug-cc-list'], $buginfo['bug_id']))) {
-		$maillist = array_merge($maillist, $ccs);
-	}
+    $maillist = array_merge($maillist, $ccs);
+  }
 
   // Later add a watcher (such as QA person) check here
-	if (count($maillist)) {
-  	if ($toemail = delimit_list(', ',$maillist)) {
-
-  		$t->assign(array(
-    		'bugid' => $buginfo['bug_id'],
-    		'bugurl' => INSTALL_URL."/bug.php?op=show&bugid={$buginfo['bug_id']}",
-    		'priority' => $select['priority'][(!empty($cf['priority']) ? $cf['priority'] : $buginfo['priority'])],
-    		'priority_stat' => !empty($cf['priority']) ? '!' : ' ',
-    		'reporter' => $reporter,
-    		'reporter_stat' => $reporterstat,
-    		'assignedto' => $assignedto,
-    		'assignedto_stat' => $assignedtostat
-    		));
-
-    	mail($toemail,
-				"[Bug {$buginfo['bug_id']}] ".($newbug ? 'New' : 'Changed').' - '.
-					stripslashes((!empty($cf['title']) ? $cf['title'] : $buginfo['title'])), 
-				$t->fetch($template),
-      	sprintf("From: %s\nReply-To: %s\nErrors-To: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n", ADMIN_EMAIL, ADMIN_EMAIL,
-        	ADMIN_EMAIL, $STRING['lang_charset']));
-  	}
-	}
+  if (count($maillist)) {
+    if ($toemail = delimit_list(', ',$maillist)) {
+      $t->assign(array(
+	'bugid' => $buginfo['bug_id'],
+	'bugurl' => INSTALL_URL."/bug.php?op=show&bugid={$buginfo['bug_id']}",
+	'priority' => $select['priority'][(!empty($cf['priority']) ? $cf['priority'] : $buginfo['priority'])],
+	'priority_stat' => !empty($cf['priority']) ? '!' : ' ',
+	'reporter' => $reporter,
+	'reporter_stat' => $reporterstat,
+	'assignedto' => $assignedto,
+	'assignedto_stat' => $assignedtostat
+      ));
+      
+      qp_mail($toemail,"[Bug {$buginfo['bug_id']}] ".($newbug ? 'New' : 'Changed').' - '.
+	  stripslashes((!empty($cf['title']) ? $cf['title'] : $buginfo['title'])),
+	$t->fetch($template),
+      	sprintf("From: %s\nReply-To: %s\nErrors-To: %s", ADMIN_EMAIL, ADMIN_EMAIL, ADMIN_EMAIL));
+    }
+  }
 }
 
 function update_bug($bugid = 0) {
