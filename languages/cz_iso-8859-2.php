@@ -1,8 +1,8 @@
 <?php
 
-// cz.php - Czech strings and titles encoded in iso-8859-2 codepage
+// cz_iso-8859-2.php - Czech strings and titles encoded in iso-8859-2
 // ------------------------------------------------------------------------
-// Copyright (c) 2002 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,10 +20,10 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz_iso-8859-2.php,v 1.2 2002/05/07 13:43:38 firma Exp $
+// $Id: cz_iso-8859-2.php,v 1.3 2002/05/18 15:40:19 firma Exp $
 
 $STRING = array(
-	'lang_charset' => 'iso-8859-2',
+	'lang_charset' => 'Windows-1250',
 	'nouser' => 'Tento u¾ivatel neexistuje',
 	'dupeofself' => 'BUG nemù¾e být shodný se sám se sebou',
 	'nobug' => 'Tento BUG neexistuje',
@@ -75,6 +75,8 @@ $STRING = array(
 		2 => 'Neaktivní u¾ivatelé'),
 	'dupe_dependency' => 'Tato závislost ji¾ byla pøidána',
 	'image_path_not_writeable' => 'Webprocess nemù¾e zapisovat do podadresáøe "jpgimages", pøehledový obrázek nemù¾e být vygenerován.'
+	'password_changed' => 'Va¹e heslo bylo zmìnìno',
+	'prefs_changed' => 'Va¹e nastavení byla zmìnìna',
 	);
 
 // Page titles
@@ -92,12 +94,32 @@ $TITLE = array(
 	'editversion' => 'Upravit verzi',
 	'project' => 'Projekty',
 	'os' => 'Operaèní systémy',
-	'resolution' => 'Rozli¹ení',
+	'resolution' => 'Rozhodnutí',
 	'status' => 'Statusy',
 	'severity' => 'Dùle¾itosti',
 	'user' => 'U¾ivatelé',
 	'home' => 'Domù',
 	'reporting' => 'Hlá¹ení',
 	'group' => 'Skupiny'
+	'bugvotes' => 'Volby bugù',
+	'bughistory' => 'Historie bugù',
+	'viewbug' => 'Prohlédnout bug',
+	'addattachment' => 'Pøidat pøílohu',
+	'accountcreated' => 'Úèet vytvoøen',
+	'changessaved' => 'Zmìny ulo¾eny',
+	'preferences' => 'U¾ivatelská nastavení',
+	'edituser' => 'Zmìnit U¾ivatele',
+	'adduser' => 'Pøidat U¾ivatele',
+	'editstatus' => 'Zmìnit Status',
+	'addstatus' => 'Pøidat Status',
+	'editseverity' => 'Zmìnit Dùle¾itost',
+	'addseverity' => 'Pøidat Dùle¾itost',
+	'editresolution' => 'Zmìnit Rozhodnutí',
+	'addresolution' => 'Pøidat Rozhodnutí',
+	'editos' => 'Zmìnit Operaèní systém',
+	'addos' => 'Pøidat Operaèní systém',
+	'editgroup' => 'Zmìnit Skupinu',
+	'addgroup' => 'Pøidat Skupinu',
+	'configuration' => 'Nastavení',
 	);
 ?>

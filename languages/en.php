@@ -2,7 +2,7 @@
 
 // en.php - English strings and titles
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.16 2002/05/18 03:01:22 bcurtis Exp $
+// $Id: en.php,v 1.17 2002/05/18 15:40:19 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'us-ascii',

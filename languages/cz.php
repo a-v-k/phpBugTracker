@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz.php,v 1.6 2002/05/07 13:43:38 firma Exp $
+// $Id: cz.php,v 1.7 2002/05/18 15:40:19 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'Windows-1250',
@@ -75,6 +75,8 @@ $STRING = array(
 		2 => 'Neaktivní uživatelé'),
 	'dupe_dependency' => 'Tato závislost již byla pøidána',
 	'image_path_not_writeable' => 'Webprocess nemùže zapisovat do podadresáøe "jpgimages", pøehledový obrázek nemùže být vygenerován.'
+	'password_changed' => 'Vaše heslo bylo zmìnìno',
+	'prefs_changed' => 'Vaše nastavení byla zmìnìna',
 	);
 
 // Page titles
@@ -92,12 +94,32 @@ $TITLE = array(
 	'editversion' => 'Upravit verzi',
 	'project' => 'Projekty',
 	'os' => 'Operaèní systémy',
-	'resolution' => 'Rozlišení',
+	'resolution' => 'Rozhodnutí',
 	'status' => 'Statusy',
 	'severity' => 'Dùležitosti',
 	'user' => 'Uživatelé',
 	'home' => 'Domù',
 	'reporting' => 'Hlášení',
 	'group' => 'Skupiny'
+	'bugvotes' => 'Volby bugù',
+	'bughistory' => 'Historie bugù',
+	'viewbug' => 'Prohlédnout bug',
+	'addattachment' => 'Pøidat pøílohu',
+	'accountcreated' => 'Úèet vytvoøen',
+	'changessaved' => 'Zmìny uloženy',
+	'preferences' => 'Uživatelská nastavení',
+	'edituser' => 'Zmìnit Uživatele',
+	'adduser' => 'Pøidat Uživatele',
+	'editstatus' => 'Zmìnit Status',
+	'addstatus' => 'Pøidat Status',
+	'editseverity' => 'Zmìnit Dùležitost',
+	'addseverity' => 'Pøidat Dùležitost',
+	'editresolution' => 'Zmìnit Rozhodnutí',
+	'addresolution' => 'Pøidat Rozhodnutí',
+	'editos' => 'Zmìnit Operaèní systém',
+	'addos' => 'Pøidat Operaèní systém',
+	'editgroup' => 'Zmìnit Skupinu',
+	'addgroup' => 'Pøidat Skupinu',
+	'configuration' => 'Nastavení',
 	);
 ?>
