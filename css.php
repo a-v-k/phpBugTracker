@@ -20,13 +20,13 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: css.php,v 1.4 2002/01/05 20:01:17 bcurtis Exp $
+// $Id: css.php,v 1.5 2002/03/02 18:49:50 bcurtis Exp $
 
 $colors['default'] = array(
-	'link' => '',
-	'vlink' => '',
-	'body' => '',
-	'body-bg' => '',
+	'link' => '#006699',
+	'vlink' => '#006699',
+	'body' => '#000000',
+	'body-bg' => '#ffffff',
 	'td' => '',
 	'tr.alt-bg' => '#dddddd',
 	'td.head-bg' => '#eeeeee',
@@ -52,7 +52,6 @@ $color = $colors['default'];
 
 ?>
 body { 
-	margin: 4px; 
 	font-size: 12px; 
 	color: <?php echo $color['body'] ?>;
 	background-color: <?php echo $color['body-bg'] ?>;
@@ -157,4 +156,108 @@ input[type="text"].login-box {
 	font-weight: bold;
 	color: #0000ff;
 	padding-bottom: 0.1em;
+	}
+
+a.sidenavlink {
+	color: #000000;
+	text-decoration: none;
+	}
+	
+.nav {
+	vertical-align: middle;
+	background: #9999ff;
+	color: #ffffff;
+	font-family: "Arial", sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	border-width: 0px 0px 3px 0px;
+	border-color: #000000;
+	border-style: solid;
+	}
+	
+.navinput {
+	vertical-align: middle;
+	background: #ffffff;
+	color: #00000;
+	font-family: "Arial", sans-serif;
+	font-size: 12px;
+	}
+	
+.sidenav {
+	vertical-align: top;
+	background: #9999ff;
+	color: #ffffff;
+	font-family: "Verdana", "Tahoma", "Helvetica", sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	}
+	
+.bottomnav {
+	vertical-align: middle;
+	background: #ffffcc;
+	color: #000000;
+	font-family: "Arial", sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	}
+	
+.bottomnavinput {
+	vertical-align: middle;
+	color: #00000;
+	font-family: "Arial", sans-serif;
+	font-size: 10px;
+	}
+	
+.topnavbox {
+	vertical-align: middle;
+	background: #9999ff;
+	color: #ffffff;
+	font-family: "Arial", sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	border-width: 1px 0px 1px 0px;
+	border-color: #ffffff;
+	border-style: solid;
+	padding: 5px;
+	cursor: pointer;
+	cursor: hand;
+	}
+	
+.navbox {
+	vertical-align: middle;
+	background: #9999ff;
+	color: #ffffff;
+	font-family: "Arial", sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	border-width: 0px 0px 1px 0px;
+	border-color: #ffffff;
+	border-style: solid;
+	padding: 5px;
+	cursor: pointer;
+	cursor: hand;
+	}
+	
+.navboxselected {
+	vertical-align: middle;
+	background: #ffffcc;
+	color: #ffffff;
+	font-family: "Arial", sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	border-width: 0px 0px 1px 0px;
+	border-color: #ffffff;
+	border-style: solid;
+	padding: 5px;
+	cursor: pointer;
+	cursor: hand;
+	}
+	
+.maincontent {
+	vertical-align: top;
+	background: #ffffff;
+	color: #000000;
+	font-family: "Arial", sans-serif;
+	font-size: 12px;
+	padding: 5px;
 	}

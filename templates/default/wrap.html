@@ -1,72 +1,78 @@
 <html>
 <head>
-	<META HTTP-EQUIV="Expires" CONTENT="-1">
-  <title>phpBugTracker - {TITLE}</title>
+  <META HTTP-EQUIV="Expires" CONTENT="-1">
+	<title>phpBugTracker - {TITLE}</title>
 	<link rel="StyleSheet" href="css.php" type="text/css">
 </head>
-<body bgcolor="#ffffff" link="#006699" vlink="#006699" alink="#006699">
-<table border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td width="640" colspan="2"><hr size="1" width="640"></td>
-	</tr>
-	<tr>
-		<td width="540" valign="middle">
-			<font class="navfont"><b>&nbsp;&nbsp;
-				[
-				<a href="index.php">Home</a> | 
-				<a href="bug.php?op=add">Enter Bug</a> | 
-				<a href="query.php?op=query">Query Bugs</a> | 
-				<a href="report.php">Reporting</a> | 
-				<a href="docs/html/userguide.html">Documentation</a> 
-				]
-			</b></font>
-		</td>
-		<td width="100" align="right" valign="middle">
-			<font class="navfont"><b>
-				<!-- BEGIN adminnavblock -->
-				[
-				<a href="admin/project.php">Admin Tools</a>
-				]	
-				<!-- END adminnavblock -->
-				&nbsp;&nbsp;
-			</b></font>
-		</td>
-	</tr>
-	<tr>
-		<td width="640" colspan="2"><hr size="1" width="640"></td>
-	</tr>
-</table>
-{content}
-<table border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td width="640"><hr size="1" width="640"></td>
-	</tr>
-	<tr>
-		<!-- BEGIN loginblock -->
-		<td class="login-box" nowrap>
-			<form method="post" action="{me2}">
-				{loginerror}
-				{loginlabel}: <input type="text" name="username" class="login-box"> 
-				Password: <input type="password" name="password" class="login-box"> 
-				<input type="hidden" name="dologin" value="1">
-				<input type="submit" value="Login" class="login-box"> 
-				<input type="submit" name="sendpass" value="Email Password" class="login-box" title="Forgot your password?  Have it sent to you"> 
+<body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0">
+	<table width="100%" cellspacing="0" cellpadding="0" height="100%">
+		<tr>
+			<td width="150" height="30" class="nav">
+				&nbsp;&nbsp;phpBugTracker
+			</td>
+			<form action="bug.php">
+			<input type="hidden" name="op" value="show">
+			<td height="30" class="nav" align="right">
+				Find bug <input type="text" name="bugid" size="4" class="navinput">
+				&nbsp;
+			</td>
 			</form>
-		</td>
-		<!-- END loginblock -->
-		<!-- BEGIN logoutblock -->
-		<td>
-			<font class="navfont">&nbsp;<b>
+		</tr>
+		<tr>
+			<td width="150" class="sidenav">
+				<!-- Nav Links -->
+				<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='index.php'">
+					<a href="index.php" class="sidenavlink">Home</a>
+				</div>
+				<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='bug.php?op=add'">
+					<a href="bug.php?op=add" class="sidenavlink">Add a New Bug</a>
+				</div>
+				<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='query.php?op=query'">
+					<a href="query.php?op=query" class="sidenavlink">Query Bugs</a>
+				</div>
+				<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='report.php'">
+					<a href="report.php" class="sidenavlink">View Reports</a>
+				</div>
+				<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='docs/html/userguide.html'">
+					<a href="docs/html/userguide.html" class="sidenavlink">Read Documentation</a>
+				</div>
+				<!-- BEGIN adminnavblock -->
+				<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='admin/project.php'">
+					<a href="admin/project.php" class="sidenavlink">Admin Tools</a>
+				</div>
+				<!-- END adminnavblock -->
+			</td>
+			<td class="maincontent">
+				&nbsp; {content}
+			</td>
+		</tr>
+		<tr>
+			<td width="150" height="30" class="sidenav">
+				&nbsp
+			</td>
+			<form method="post" action="{me2}">
+			<td height="30" class="bottomnav">
+				&nbsp;
+				<!-- BEGIN loginblock -->
+					{loginerror}
+					{loginlabel}: <input type="text" name="username" class="bottomnavinput"> 
+					Password: <input type="password" name="password" class="bottomnavinput"> 
+					<input type="hidden" name="dologin" value="1">
+					<input type="submit" value="Login" class="bottomnavinput"> 
+					<input type="submit" name="sendpass" value="Email Password" class="bottomnavinput" title="Forgot your password?  Have it sent to you"> 
+				<!-- END loginblock -->
+				<!-- BEGIN logoutblock -->
 				[ Bugs assigned to me: <a href="query.php?op=mybugs&assignedto=1&open=1" title="Open">{owner_open}</a> / <a href="query.php?op=mybugs&assignedto=1&open=0" title="Closed">{owner_closed}</a> 
 				| Bugs reported by me: <a href="query.php?op=mybugs&reportedby=1&open=1" title="Open">{reporter_open}</a> / <a href="query.php?op=mybugs&reportedby=1&open=0" title="Closed">{reporter_closed}</a> 
 				| <a href="user.php">Personal Page</a> 
 				| <a href="logout.php">Logout {loggedinas}</a> 
 				]
-			</b></font>
-		</td>
-		<!-- END logoutblock -->
-	</tr>
-</table>
+				<!-- END logoutblock -->
+				&nbsp;
+			</td>
+			</form>
+		</tr>
+	</table>
 </body>
 </html>
 <head><meta HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE"></head>
