@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.21 2002/05/01 12:12:17 bcurtis Exp $
+// $Id: functions.php,v 1.22 2002/05/02 13:17:57 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -70,9 +70,13 @@ function build_select($params) {
       'status' => $querystart.' where sort_order > 0 order by sort_order',
       'resolution' => $querystart.' where sort_order > 0 order by sort_order',
       'project' => $perm->have_perm('Admin')
-        ? $querystart." where (active > 0 or project_id in ($selected)) order by {$box}_name"
+        ? $querystart." where ".
+					($selected ? "(active > 0 or project_id in ($selected))" : 'active > 0').
+					" order by {$box}_name"
         : $querystart." where project_id not in ($restricted_projects)".
-					" and (active > 0 or project_id in ($selected)) order by {$box}_name",
+					" and ".
+					($selected ? " (active > 0 or project_id in ($selected))" : 'active > 0').
+					" order by {$box}_name",
       'component' => $querystart." where project_id = $project and active = 1 order by {$box}_name",
       'version' => $querystart." where project_id = $project and active = 1 order by {$box}_id desc"
       );
