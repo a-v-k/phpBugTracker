@@ -19,7 +19,13 @@ function change_password($pass1, $pass2) {
 		return;
 	}
 	
-	$q->query("update User set Password = '$pass1' where UserID = $u");
+	if (ENCRYPTPASS) {
+		$mpassword = md5($pass1);
+	} else {
+		$mpassword = $pass1;
+	}
+	
+	$q->query("update User set Password = '$mpassword' where UserID = $u");
 	$t->set_file('content', 'passwordchanged.html');
 }
 
