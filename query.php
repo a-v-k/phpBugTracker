@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.81 2002/06/14 15:26:05 firma Exp $
+// $Id: query.php,v 1.82 2002/06/17 12:33:59 bcurtis Exp $
 
 include 'include.php';
 
@@ -129,8 +129,8 @@ function build_query($assignedto, $reportedby, $open) {
 		// Project/Version/Component
 		if (!empty($projects)) {
 			$proj[] = "b.project_id = $projects";
-			if (!empty($versions)) $proj[] = "b.version_id = $versions";
-			if (!empty($components)) $proj[] = "b.component_id = $components";
+			if (!empty($versions) and $versions != 'All') $proj[] = "b.version_id = $versions";
+			if (!empty($components) and $components != 'All') $proj[] = "b.component_id = $components";
 			$query[] = '('.delimit_list(' and ',$proj).')';
 		} elseif (!$perm->have_perm('Admin')) { // Filter results from hidden projects
 			$query[] = "b.project_id not in ($restricted_projects)";
