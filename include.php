@@ -48,7 +48,7 @@ class dbclass extends DB_Sql {
     return $this->Record;
   }
 
-  function grab_field($q_string) {
+  function grab_field($q_string = '') {
     list($retval) = $this->grab($q_string);
     return $retval;
   }
@@ -151,7 +151,7 @@ function build_select($box, $value='',$project=0) {
       }
       break;
     case 'Project' :
-      $q->query("Select {$box}ID, Name from $box order by Name");
+      $q->query("Select {$box}ID, Name from $box where Active order by Name");
       while ($row = $q->grab()) {
         if ($value == $row[$box.'ID'] and $value != '') $sel = ' selected';
         else $sel = '';

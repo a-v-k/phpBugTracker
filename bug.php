@@ -29,7 +29,7 @@ function update_bug($bugid = 0) {
 	switch($outcome) {
 		case 'unchanged' : break;
 		case 'assign' : $assignedto = $u; $statusfield = 'Assigned'; break;
-		case 'reassign' :$statusfield = 'Assigned'; break;
+		case 'reassign' : $statusfield = 'Assigned'; break;
 		case 'reassigntocomponent' : 
 			$assignedto = $q->grab_field("select Owner from Component where 
 				ComponentID = $component");

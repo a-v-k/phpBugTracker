@@ -1,4 +1,27 @@
-    <form method="get" action="query.php">
+<script language="JavaScript">
+<!-- 
+versions = new Array();
+components = new Array();
+versions['All'] = new Array(new Array('','All'));
+components['All'] = new Array(new Array('','All'));
+{js}
+
+function updateMenus(f) {
+  sel = f.projects[f.projects.selectedIndex].text;
+  f.versions.length = versions[sel].length;
+  for (var x = 0; x < versions[sel].length; x++) {
+    f.versions.options[x].value = versions[sel][x][0];
+    f.versions.options[x].text = versions[sel][x][1];
+  }
+  f.components.length = components[sel].length;
+  for (var x = 0; x < components[sel].length; x++) {
+    f.components.options[x].value = components[sel][x][0];
+    f.components.options[x].text = components[sel][x][1];
+  }
+}
+//-->
+</script>
+    <form method="get" action="query.php" name="query">
       <table>
         <tr>
           <th align="left">Status:</th>
@@ -134,7 +157,31 @@
         </tr>
       </table>
 
-      <hr>
+			<hr align="left" width="640">
+      <table>
+				<tr>
+					<td><b>Project:</b></td>
+					<td>
+						<select name="projects" onChange="updateMenus(this.form)">
+							<option value=''>All</option>
+							{projects}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td><b>Version:</b></td>
+					<td>
+						<select name="versions"><option value=''>All</option></select>
+					</td>
+				</tr>
+				<tr>
+					<td><b>Component:</b></td>
+					<td>
+						<select name="components"><option value=''>All</option></select>
+					</td>
+				</tr>
+			</table>
+			<hr align="left" width="640">
       <input type="hidden" name="op" value="doquery">
 			<nobr><b>Sort By:</b> 
 			<select name="order">

@@ -9,23 +9,51 @@ page_open(array('sess' => 'usess', 'auth' => 'uauth'));
 function show_query() {
 	global $q, $t, $status, $resolution, $os, $priority, $severity, $TITLE;
 	
+	$nq = new dbclass;
+	
 	$t->set_file('content','queryform.html');
+	
+	// Build the javascript-powered select boxes
+	$q->query("select ProjectID, Name from Project where Active order by Name");
+	while (list($pid, $pname) = $q->grab()) {
+		// Version array
+		$js .= "versions['$pname'] = new Array(new Array('','All'),";
+		$nq->query("select Version, VersionID from Version where ProjectID = $pid and Active");
+		while (list($version,$vid) = $nq->grab()) {
+			$js .= "new Array($vid,'$version'),";
+		}
+		if (substr($js,-1) == ',') $js = substr($js,0,-1);
+		$js .= ");\n";
+		
+		// Component array
+		$js .= "components['$pname'] = new Array(new Array('','All'),";
+		$nq->query("select Name, ComponentID from Component where ProjectID = $pid and Active");
+		while (list($comp,$cid) = $nq->grab()) {
+			$js .= "new Array($cid,'$comp'),";
+		}
+		if (substr($js,-1) == ',') $js = substr($js,0,-1);
+		$js .= ");\n";
+	}
+	
 	$t->set_var(array(
+		'js' => $js,
 		'status' => build_select('Status',$q->grab_field("select StatusID from Status
 			where Name = 'New'")),
 		'resolution' => build_select('Resolution',$resolution),
 		'os' => build_select('OS',-1), // Prevent the OS regex selection
 		'priority' => build_select('priority',$priority),
 		'severity' => build_select('Severity',$severity),
+		'projects' => build_select('Project'),
 		'TITLE' => $TITLE[bugquery]
 		));
+			
 }
 
 function build_query() {
 	global $q, $sess, $querystring, $status, $resolution, $os, $priority, 
 		$severity, $email1, $emailtype1, $emailfield1, $Title, $Description, $URL, 
-		$Title_type, $Description_type, $URL_type;
-	
+		$Title_type, $Description_type, $URL_type, $projects, $versions, $components;
+
 	// Select boxes
 	if ($status) $flags[] = 'Status in ('.join(',',$status).')';
 	if ($resolution) $flags[] = 'Resolution in ('.join(',',$resolution).')';
@@ -59,6 +87,14 @@ function build_query() {
 	}
 	if ($fields) $query[] = '('.join(' or ',$fields).')';
 	
+	// Project/Version/Component
+	if ($projects) {
+		$proj[] = "Bug.Project = $projects";
+		if ($versions) $proj[] = "Bug.Version = $versions";
+		if ($components) $proj[] = "Component = $components";
+		$query[] = '('.join(' and ',$proj).')';
+	}
+	
 	if ($query) $querystring = join (' and ',$query);
 	if (!$sess->is_registered('querystring')) $sess->register('querystring');
 }
@@ -66,8 +102,8 @@ function build_query() {
 function list_items() {
   global $querystring, $me, $q, $t, $selrange, $order, $sort, $query, 
 		$page, $op, $select, $TITLE, $STRING;
-        
-  $t->set_file('content','buglist.html');
+  
+	$t->set_file('content','buglist.html');
   $t->set_block('content','row','rows');
 	
 	if (!$order) { $order = 'BugID'; $sort = 'asc'; }
@@ -88,10 +124,14 @@ function list_items() {
 		'TITLE' => $TITLE[buglist]));
   
 	$q->query("select BugID, Title, Reporter.Email as Reporter, Owner.Email as Owner, 
-		Severity.Name as Severity, Bug.CreatedDate, Status.Name as Status, Priority from Bug, 
-		Severity, Status left join User Owner on Bug.AssignedTo = Owner.UserID 
-		left join User Reporter on Bug.CreatedBy = Reporter.UserID where 
-		Severity = SeverityID and Status = StatusID ".
+		Severity.Name as Severity, Bug.CreatedDate, Status.Name as Status, 
+		Priority, Version.Version, Component.Name as Component, 
+		Resolution.Name as Resolution from Bug, Severity, Status, Version, 
+		Component left join User Owner on Bug.AssignedTo = Owner.UserID 
+		left join User Reporter on Bug.CreatedBy = Reporter.UserID 
+		left join Resolution on Bug.Resolution = ResolutionID 
+		where Severity = SeverityID and Status = StatusID and 
+		Bug.Version = VersionID and Component = ComponentID ".
 		($querystring != '' ? "and $querystring " : '').
 		"order by $order $sort limit $llimit, $selrange");
         
@@ -114,7 +154,8 @@ function list_items() {
     'project' => 'Project',
     'component' => 'Component',
     'os' => 'OS',
-    'browserstring' => 'BrowserString');
+    'browserstring' => 'BrowserString',
+		'resolution' => 'Resolution');
 
   sorting_headers($me, $headers, $order, $sort, "page=$page");
         
@@ -135,7 +176,8 @@ function list_items() {
       'project' => $row[Project],
       'component' => $row[Component],
       'os' => $row[OS],
-      'browserstring' => $row[BrowserString]));
+      'browserstring' => $row[BrowserString],
+			'resolution' => $row[Resolution]));
     $t->parse('rows','row',true);
   }
 }
