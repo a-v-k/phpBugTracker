@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.88 2002/09/14 16:54:33 bcurtis Exp $
+// $Id: query.php,v 1.89 2002/09/23 20:31:24 bcurtis Exp $
 
 include 'include.php';
 
@@ -167,7 +167,7 @@ function format_bug_col($colvalue, $coltype, $bugid, $pos) {
 		case 'last_modified_date' :
 		case 'close_date' :
 			echo '<div align="center">'.
-				$colvalue ? date(DATE_FORMAT, $colvalue) : '&nbsp;'.
+				($colvalue ? date(DATE_FORMAT, $colvalue) : '&nbsp;').
 				'</div>';
 			break;
 		case 'bug_id' :
