@@ -5,6 +5,9 @@
 <!-- Shortcuts -->
 <!ENTITY phpbt "phpBugTracker">
 
+<!-- User's Guide -->
+<!ENTITY primer SYSTEM "primer.sgml">
+
 <!-- Administrator's Guide -->
 <!ENTITY installation SYSTEM "installation.sgml">
 <!ENTITY configuration SYSTEM "configuration.sgml">
@@ -28,6 +31,9 @@
     <abstract>
       <para>Currently all interactions with &phpbt; are done via the web interface.  Users can submit bugs, communicate with developers and testers about bugs, and search through the bug database.</para>
     </abstract>
+		
+		&primer;
+		
   </chapter>
 
   <chapter id="adminguide">
