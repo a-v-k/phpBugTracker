@@ -1,138 +1,136 @@
 <!-- -*- sgml -*- -->
 <sect1 id="configuration">
-  <title>Configuration Options</title>
+<title>Configuration Options</title>
 
-  <abstract>
-    <para>The options listed in this section can be configured by the <filename>configure</filename> script and can be found in <filename>config.php</filename>.</para>
-  </abstract>
+<abstract>
+<para>Most of the options listed here can be configured via the Configuration page of the admin tools.  The <varname>DB_</varname> and <varname>PHPLIB_PATH</varname> options can be found in <filename>config.php</filename>.</para>
+</abstract>
 
-  <variablelist>
-    <varlistentry>
-      <term>INSTALLPATH</term>
-      <listitem>
-	<para>Location on disk of the &phpbt; installation.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>INSTALLURL</term>
-      <listitem>
-	<para>URL that is the home of the installation.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>CVS_WEB</term>
-      <listitem>
-	<para>Location of your cvs web interface (see <function>format_comments()</function> in <filename>bug.php</filename>).  This is for links to files in CVS generated from the comments attached to bugs.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>DB_TYPE</term>
-      <listitem>
-	<para>The type of database server you are using, according to PHPlib's naming convention.  Possible choices are msql, mssql, mysql, oci8, odbc, oracle, pgsql, and sybase.  Note that only MySQL and PostgreSQL have been tested with &phpbt;</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>DB_HOST</term>
-      <listitem>
-	<para>The hostname of the database server.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>DB_DATABASE</term>
-      <listitem>
-	<para>The name of the database to be used.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>DB_USER</term>
-      <listitem>
-	<para>Username to use for connecting to the database.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>DB_PASSWORD</term>
-      <listitem>
-	<para>The password to use for connecting to the database.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>ADMINEMAIL</term>
-      <listitem>
-	<para>The email address that will be used for all correspondence to and from the bug tracker.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>ENCRYPTPASS</term>
-      <listitem>
-	<para>When true, passwords will be stored as an <function>md5()</function> hash in the database.  When false, they will be stored as plaintext.</para>
-	<para>If this is set to true, a new password will be generated for users if they request their password to be emailed to them, as the encryption is not reversible.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>THEME</term>
-      <listitem>
-	<para>The directory below the <filename>templates</filename> directory (both in the top directory and the <filename>admin</filename> directory) where the <acronym>HTML</acronym> template files are located.  This makes it easy to wrap the bug tracker in a completely different look.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>USE_JPGRAPH</term>
-      <listitem>
-	<para>Whether to use the <ulink url="http://www.aditus.nu/jpgraph/">JpGraph</ulink> graphing class for some reports.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>MASK_EMAIL</term>
-      <listitem>
-	<para>If true, then email addresses will be shown as <computeroutput>example at example dot com</computeroutput>.  Otherwise, email addresses will be shown as <computeroutput>example@example.com</computeroutput>.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>HIDE_EMAIL</term>
-      <listitem>
-	<para>If true, email addresses will be shown as <computeroutput>******</computeroutput> to users who are not logged in (to help avoid spam bots on public bug trackers).  If false, email addresses will be shown according the setting of <varname>MASK_EMAIL</varname>, above.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>USE_SEVERITY_COLOR</term>
-      <listitem>
-	<para>Whether to color the rows of the bug list according to the severity of the bugs.  The severity colors can be set via the admin interface.  If this is false, the bugs will be listed with alternating background colors of white and gray.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>EMAIL_IS_LOGIN</term>
-      <listitem>
-	<para>If true, then users login with their email address, and the email address is shown for fields such as Assigned To and Reported By.  If false, the login is not tied to the user's email address.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>ATTACHMENT_PATH</term>
-      <listitem>
-	<para>The subdirectory in which to store bug attachments.  This directory needs to writeable by the web server.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>ATTACHMENT_MAX_SIZE</term>
-      <listitem>
-	<para>Maximum size (in bytes) of an attachment.  This will not override the settings in <filename>php.ini</filename> if <filename>php.ini</filename> has a lower limit.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>DATEFORMAT</term>
-      <listitem>
-	<para>The format for displaying the date, according to PHP's <ulink url="http://www.php.net/manual/function.date.php"><function>date()</function></ulink> function.</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>TIMEFORMAT</term>
-      <listitem>
-	<para>The format for displaying the date, according to PHP's <ulink url="http://www.php.net/manual/function.date.php"><function>date()</function></ulink> function.</para>
-      </listitem>
-    </varlistentry>
-  </variablelist>
+<variablelist>
+<varlistentry>
+<term>INSTALL_PATH</term>
+<listitem>
+<para>Location on disk of the &phpbt; installation.  This variable is obtained by getting the working directory of the scripts.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>INSTALL_URL</term>
+<listitem>
+<para>URL that is the home of the installation.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>CVS_WEB</term>
+<listitem>
+<para>Location of your cvs web interface (see <function>format_comments()</function> in <filename>bug.php</filename>).  This is for links to files in CVS generated from the comments attached to bugs.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>DB_TYPE</term>
+<listitem>
+<para>The type of database server you are using, according to PHPlib's naming convention.  Possible choices are msql, mssql, mysql, oci8, odbc, oracle, pgsql, and sybase.  Note that only MySQL and PostgreSQL have been tested with &phpbt;</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>DB_HOST</term>
+<listitem>
+<para>The hostname of the database server.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>DB_DATABASE</term>
+<listitem>
+<para>The name of the database to be used.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>DB_USER</term>
+<listitem>
+<para>Username to use for connecting to the database.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>DB_PASSWORD</term>
+<listitem>
+<para>The password to use for connecting to the database.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>ADMIN_EMAIL</term>
+<listitem>
+<para>The email address that will be used for all correspondence to and from the bug tracker.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>ENCRYPT_PASS</term>
+<listitem>
+<para>When true, passwords will be stored as an <function>md5()</function> hash in the database.  When false, they will be stored as plaintext.</para>
+<para>If this is set to true, a new password will be generated for users if they request their password to be emailed to them, as the encryption is not reversible.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>THEME</term>
+<listitem>
+<para>The directory below the <filename>templates</filename> directory (both in the top directory and the <filename>admin</filename> directory) where the <acronym>HTML</acronym> template files are located.  This makes it easy to wrap the bug tracker in a completely different look.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>USE_JPGRAPH</term>
+<listitem>
+<para>Whether to use the <ulink url="http://www.aditus.nu/jpgraph/">JpGraph</ulink> graphing class for some reports.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>MASK_EMAIL</term>
+<listitem>
+<para>If true, then email addresses will be shown as <computeroutput>example at example dot com</computeroutput>.  Otherwise, email addresses will be shown as <computeroutput>example@example.com</computeroutput>.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>HIDE_EMAIL</term>
+<listitem>
+<para>If true, email addresses will be shown as <computeroutput>******</computeroutput> to users who are not logged in (to help avoid spam bots on public bug trackers).  If false, email addresses will be shown according the setting of <varname>MASK_EMAIL</varname>, above.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>USE_SEVERITY_COLOR</term>
+<listitem>
+<para>Whether to color the rows of the bug list according to the severity of the bugs.  The severity colors can be set via the admin interface.  If this is false, the bugs will be listed with alternating background colors of white and gray.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>EMAIL_IS_LOGIN</term>
+<listitem>
+<para>If true, then users login with their email address, and the email address is shown for fields such as Assigned To and Reported By.  If false, the login is not tied to the user's email address.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>ATTACHMENT_PATH</term>
+<listitem>
+<para>The subdirectory in which to store bug attachments.  This directory needs to writeable by the web server.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>ATTACHMENT_MAX_SIZE</term>
+<listitem>
+<para>Maximum size (in bytes) of an attachment.  This will not override the settings in <filename>php.ini</filename> if <filename>php.ini</filename> has a lower limit.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>DATE_FORMAT</term>
+<listitem>
+<para>The format for displaying the date, according to PHP's <ulink url="http://www.php.net/manual/function.date.php"><function>date()</function></ulink> function.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>TIME_FORMAT</term>
+<listitem>
+<para>The format for displaying the date, according to PHP's <ulink url="http://www.php.net/manual/function.date.php"><function>date()</function></ulink> function.</para>
+</listitem>
+</varlistentry>
+</variablelist>
 </sect1>
 
 <!-- Local Variables: -->
-<!-- sgml-indent-step: 2 -->
-<!-- sgml-indent-data: 2 -->
 <!-- sgml-parent-document: "phpbt.sgml" -->
 <!-- End: -->

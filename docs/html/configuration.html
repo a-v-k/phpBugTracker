@@ -87,10 +87,13 @@ CLASS="ABSTRACT"
 NAME="AEN111"
 ></A
 ><P
->The options listed in this section can be configured by the <TT
-CLASS="FILENAME"
->configure</TT
-> script and can be found in <TT
+>Most of the options listed here can be configured via the Configuration page of the admin tools.  The <TT
+CLASS="VARNAME"
+>DB_</TT
+> and <TT
+CLASS="VARNAME"
+>PHPLIB_PATH</TT
+> options can be found in <TT
 CLASS="FILENAME"
 >config.php</TT
 >.</P
@@ -100,13 +103,13 @@ CLASS="FILENAME"
 CLASS="VARIABLELIST"
 ><DL
 ><DT
->INSTALLPATH</DT
+>INSTALL_PATH</DT
 ><DD
 ><P
->Location on disk of the phpBugTracker installation.</P
+>Location on disk of the phpBugTracker installation.  This variable is obtained by getting the working directory of the scripts.</P
 ></DD
 ><DT
->INSTALLURL</DT
+>INSTALL_URL</DT
 ><DD
 ><P
 >URL that is the home of the installation.</P
@@ -154,13 +157,13 @@ CLASS="FILENAME"
 >The password to use for connecting to the database.</P
 ></DD
 ><DT
->ADMINEMAIL</DT
+>ADMIN_EMAIL</DT
 ><DD
 ><P
 >The email address that will be used for all correspondence to and from the bug tracker.</P
 ></DD
 ><DT
->ENCRYPTPASS</DT
+>ENCRYPT_PASS</DT
 ><DD
 ><P
 >When true, passwords will be stored as an <TT
@@ -250,7 +253,7 @@ CLASS="FILENAME"
 > has a lower limit.</P
 ></DD
 ><DT
->DATEFORMAT</DT
+>DATE_FORMAT</DT
 ><DD
 ><P
 >The format for displaying the date, according to PHP's <A
@@ -263,7 +266,7 @@ CLASS="FUNCTION"
 > function.</P
 ></DD
 ><DT
->TIMEFORMAT</DT
+>TIME_FORMAT</DT
 ><DD
 ><P
 >The format for displaying the date, according to PHP's <A
