@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.123 2002/10/28 21:39:54 bcurtis Exp $
+// $Id: bug.php,v 1.124 2002/10/28 21:43:41 bcurtis Exp $
 
 include 'include.php';
 
@@ -188,8 +188,8 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 	}
 
 	// Handle versions other than version
-	$versions = array ('to_be_closed_in_version' => 'to be closed in version',
-		'closed_in_version' => 'closed in version');
+	$versions = array ('to_be_closed_in_version' => 'ToBeClosedInVersion',
+		'closed_in_version' => 'ClosedInVersion');
 
 	foreach($versions as $field => $field_name) {
 		if (isset($buginfo[$field.'_id'])) {
@@ -205,7 +205,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 
 		    $db->query('insert into '.TBL_BUG_HISTORY.
 				' (bug_id, changed_field, old_value, new_value, created_by, created_date)'.
-			    " values (". join(', ', array($buginfo['bug_id'], $db->quote($field_name),
+			    " values (". join(', ', array($buginfo['bug_id'], $db->quote($STRING['BUGDISPLAY'][$field_name]),
 				$db->quote(stripslashes($oldvalue)),
 				$db->quote(stripslashes($newvalue)), $u, $now)).")");
 		    $t->assign(array(
