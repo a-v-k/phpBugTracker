@@ -63,15 +63,20 @@
 </table>
 <table border="0" cellpadding="2" cellspacing="0" width="640">
 	<tr>
-  	<td align="right">Status:</td>
-  	<td><b>{status}</b> {owner}</td>
-  	<td align="right">Resolution:</td>
-  	<td><b>{resolution}</b></td>
+		<td>Assigned To:</td>
+		<td><b>{owner}</td>
+		<td colspan="2">&nbsp;</td>
 	</tr>
 	<tr>
-  	<td align="right">Summary:</td>
+  	<td>Status:</td>
+  	<td><b>{status}</b></td>
+  	<td>Summary:</td>
   	<td><input type="text" size="30" maxlength="30" name="Title" value="{title}"></td>
-  	<td align="right">{urllabel}:</td>
+	</tr>
+	<tr>
+  	<td>Resolution:</td>
+  	<td><b>{resolution}</b></td>
+  	<td>{urllabel}:</td>
   	<td><input type="text" size="30" maxlength="255" name="URL" value="{url}"></td>
 	</tr>
 	<tr>
@@ -79,16 +84,14 @@
 			&nbsp;
 		</td>
 	</tr>
-</table>
-<table border="0" cellpadding="2" cellspacing="0" width="640">
 	<tr>
-		<td valign="top">
+		<td valign="top" colspan="2">
 			Additional Comments:
 			<br>
 			<br>
 			<textarea name="comments" rows="10" cols="35" wrap="virtual"></textarea>
 		</td>
-		<td valign="top">
+		<td valign="top" colspan="2">
 			Update Bug Status:
 			<br>
 			<br>

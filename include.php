@@ -33,6 +33,7 @@ define ('ENCRYPTPASS',0);  // Whether to store passwords encrypted
 define ('THEME','default/'); // Which set of templates to use
 define ('USE_JPGRAPH',0); // Whether to show images or not
 define ('JPGRAPH_PATH', '/home/bcurtis/public_html/jp/'); // If it's not in the include path
+define ('MASKEMAIL', 1); // Should email addresses be plainly visible?
 
 require PHPLIBPATH.'db_mysql.inc';
 require PHPLIBPATH.'ct_sql.inc';
@@ -401,6 +402,16 @@ function delimit_list($delimiter, $ary) {
 /// (From zend.com user russIndr)
 function valid_email($email) {		 
 	return eregi('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$', $email); 
+}
+
+///
+/// If the constant is set do a little email masking to make harvesting a little harder
+function maskemail($email) {
+	if (MASKEMAIL) {
+		return str_replace('@', ' at ', str_replace('.', ' dot ', $email));
+	} else {
+		return $email;
+	}
 }
 
 // Begin every page with a page_open

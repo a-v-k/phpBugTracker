@@ -48,7 +48,7 @@ function show_history($bugid) {
 			'field' => stripslashes($row['ChangedField']),
 			'oldvalue' => stripslashes($row['OldValue']),
 			'newvalue' => stripslashes($row['NewValue']),
-			'createdby' => stripslashes($row['Email']),
+			'createdby' => stripslashes(maskemail($row['Email'])),
 			'date' => date(DATEFORMAT.' '.TIMEFORMAT, $row['CreatedDate'])
 			));
 		$t->parse('rows', 'row', true);
@@ -369,8 +369,8 @@ function show_bug($bugid = 0, $error = '') {
 		'priority' => build_select('priority',$row['Priority']),
 		'status' => $row['Status'],
 		'resolution' => $row['Resolution'],
-		'owner' => $row['Owner'] ? "to <a href='mailto:{$row['Owner']}'>{$row['Owner']}</a>" : '',
-		'reporter' => $row['Reporter'],
+		'owner' => maskemail($row['Owner']),
+		'reporter' => maskemail($row['Reporter']),
 		'createddate' => date(DATEFORMAT,$row['CreatedDate']),
 		'createdtime' => date(TIMEFORMAT,$row['CreatedDate']),
 		'lastmodifieddate' => $row['LastModifiedDate'],
@@ -417,7 +417,7 @@ function show_bug($bugid = 0, $error = '') {
 				'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
 				'rdescription' => eregi_replace('(bug)[[:space:]]*(#?)([0-9]+)',
 					"\\1 <a href='$me?op=show&bugid=\\3'>\\2\\3</a>",nl2br($row['Text'])),
-				'rreporter' => $row['Email'],
+				'rreporter' => maskemail($row['Email']),
 				'rcreateddate' => date(TIMEFORMAT,$row['CreatedDate']).' on '.
 					date(DATEFORMAT,$row['CreatedDate'])
 				));
