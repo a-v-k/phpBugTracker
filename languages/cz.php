@@ -1,6 +1,6 @@
 <?php
 
-// strings-cz.php - Czech strings and titles
+// cz.php - Czech strings and titles
 // ------------------------------------------------------------------------
 // Copyright (c) 2001 The phpBugTracker Group
 // ------------------------------------------------------------------------
@@ -20,10 +20,10 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz.php,v 1.3 2002/03/26 17:12:29 bcurtis Exp $
+// $Id: cz.php,v 1.4 2002/04/11 17:37:24 bcurtis Exp $
 
 $STRING = array(
-	'lang_charset' => 'us-ascii',
+	'lang_charset' => 'iso-8859-2',
 	'nouser' => 'Tento uživatel neexistuje',
 	'dupeofself' => 'BUG nemùže být shodný se sám se sebou',
 	'nobug' => 'Tento BUG neexistuje',
