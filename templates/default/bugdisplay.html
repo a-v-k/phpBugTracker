@@ -26,11 +26,11 @@ function updateMenus(f) {
 </script>
 <form action="bug.php" method="post">
 <input type="hidden" name="op" value="update">
-<input type="hidden" name="bug_id" value="{$bug_id}">
+<input type="hidden" name="bugid" value="{$bug_id}">
 <input type="hidden" name="projectid" value="{$project_id}">
-<input type="hidden" name="last_modified_date" value="{$lastmodifieddate}">
+<input type="hidden" name="last_modified_date" value="{$last_modified_date}">
 <input type="hidden" name="pos" value="{$smarty.request.pos}">
-<table border="0" width="640">
+<table border="0" width="100%">
 	<tr>
 		<td>Bug <b>#{$bug_id}</b> - Return to <a href="query.php">bug list</a></td>
 		<td align="right">
@@ -45,15 +45,16 @@ function updateMenus(f) {
 			{/if}
 		</td>
 	</tr>
+	{if $error.status}
+		<tr><td class="error">{$error.status}</td></tr>
+	{/if}
 </table>
-<table border="0" width="640">
+<table border="0" width="100%" cellspacing="0" cellpadding="2">
 	<tr>
-		<td width="420" colspan="4">
-			Reporter: <b>{$reporter|maskemail}</b>
-		</td>
-		<td width="210" colspan="2">
-			Created: <b>{$created_date|date:DATE_FORMAT}</b>
-		</td>
+		<td>Reporter:</td>
+		<td><b>{$reporter|maskemail}</b></td>
+		<td>Created:</td>
+		<td><b>{$created_date|date:DATE_FORMAT}</b></td>
 	</tr>
 	<tr>
 		<td>
@@ -63,30 +64,32 @@ function updateMenus(f) {
 			<select name="project_id" onChange="updateMenus(this.form)">{build_select box=project selected=$project_id}</select>
 		</td>
 		<td>
+			Priority: 
+		</td>
+		<td>
+			<select name="priority">{build_select box=priority selected=$priority}</select>
+		</td>
+	</tr>
+	<tr>
+		<td>
 			Component: 
 		</td>
 		<td>
 			<select name="component_id">{build_select box=component selected=$component_id project=$project_id}</select>
 		</td>
 		<td>
-			Version: 
-		</td>
-		<td>
-			<select name="version_id">{build_select box=version selected=$version_id project=$project_id}</select>
-		</td>
-	</tr>
-	<tr>
-		<td>
 			Severity: 
 		</td>
 		<td>
 			<select name="severity_id">{build_select box=severity selected=$severity_id}</select>
 		</td>
+	</tr>
+	<tr>
 		<td>
-			Priority: 
+			Version: 
 		</td>
 		<td>
-			<select name="priority">{build_select box=priority selected=$priority}</select>
+			<select name="version_id">{build_select box=version selected=$version_id project=$project_id}</select>
 		</td>
 		<td>
 			OS: 
@@ -96,95 +99,25 @@ function updateMenus(f) {
 		</td>
 	</tr>
 	<tr>
-		<td colspan="6">
-			<hr size="1">
-		</td>
-	</tr>
-</table>
-<table border="0" cellpadding="2" cellspacing="0" width="640">
-	<tr>
-		<td>Assigned To:</td>
-		<td><b>{$owner|maskemail}</td>
-		<td colspan="2">
-			&nbsp;
-		</td>
-	</tr>
-	<tr>
-  	<td>Status:</td>
-  	<td><b>{$status_name}</b></td>
   	<td>Summary:</td>
   	<td><input type="text" size="30" maxlength="100" name="title" value="{$title|stripslashes|htmlentities}"></td>
+  	<td>Status:</td>
+  	<td><select name="status_id">{build_select box=status selected=$status_id}</select></td>
 	</tr>
 	<tr>
-  	<td>Resolution:</td>
-  	<td><b>{$resolution_name}</b></td>
   	<td>{if $url}<a href="{$url}">URL</a>{else}URL{/if}:</td>
   	<td><input type="text" size="30" maxlength="255" name="url" value="{$url}"></td>
+  	<td>Resolution:</td>
+  	<td><select name="resolution_id"><option value="0">None</option>{build_select box=resolution selected=$resolution_id}</select></td>
 	</tr>
 	<tr>
-  	<td colspan="4">
-			&nbsp;
-		</td>
+		<td>Assigned To:</td>
+		<td><select name="assigned_to"><option value="0">None</option>{build_select box=owner selected=$assigned_to}</select></td>
+		<td>Add CC:</td>
+		<td><input type="text" name="add_cc"></td>
 	</tr>
 	<tr>
-		<td valign="top" colspan="2">
-			Update Bug Status:
-			<br>
-			<br>
-			{if !empty($error.status)}<div class="error">{$error.status}</div>{/if}
-			<input type="radio" name="outcome" value="unchanged" checked> 
-				Leave as <b>{$status_name} {$resolution_name}</b><br>
-			{if in_array($status_name, array('Unconfirmed', 'New', 'Reopened'))}
-				<input type="radio" name="outcome" value="assign"> 
-					Accept bug (change status to <b>Assigned</b>)<br>
-			{/if}
-			{if $status_name == 'Assigned'}
-				<input type="radio" name="outcome" value="resolve"> 
-					Resolve bug, changing resolution to <select name="resolution_id">{build_select box=resolution}</select><br>
-				<input type="radio" name="outcome" value="dupe"> 
-					Resolve bug, mark it as a duplicate of bug #<input type="text" name="dupenum" size="5"><br>
-				<input type="radio" name="outcome" value="reassign"> 
-					Reassign bug to 
-					<!-- 
-					Uncomment the text box and remove the select box if you want users
-					to type in the login for assignment (e.g., to hide developer email addresses)
-					<input type="text" name="reassignto">
-					-->
-					<select name="reassignto"><option value="0">Choose one</option>{build_select box=owner}</select>
-					<br>
-				<input type="radio" name="outcome" value="reassigntocomponent"> 
-					Reassign bug to owner of selected component<br>
-			{/if}
-			{if in_array($status_name, array('Resolved', 'Verified', 'Closed'))}
-				<input type="radio" name="outcome" value="reopen"> 
-					Reopen bug<br>
-			{/if}
-			{if $status_name == 'Verified'}
-				<input type="radio" name="outcome" value="verify"> 
-					Mark bug as verified<br>
-			{/if}
-			{if in_array($status_name, array('Resolved', 'Verified'))}
-				<input type="radio" name="outcome" value="close"> 
-					Mark bug as closed<br>
-			{/if}
-		</td>
-		<td valign="top" colspan="2">
-			Add CC:
-			<br>
-			<br>
-			<input type="text" name="add_cc">
-			<br>
-			<br>
-			Remove selected CCs:
-			<br>
-			<br>
-			<select name="remove_cc[]" size="5" multiple>{build_select box=cclist selected=$bug_id}</select>
-		</td>
-	</tr>
-</table>
-<table border="0" cellpadding="2" cellspacing="0" width="640">
-	<tr>
-		<td>
+		<td colspan="2" valign="top">
 			{if !empty($error.add_dep)}<div class="error">{$error.add_dep}</div>{/if}
 			Bug Dependencies: {$bug_dependencies}
 			<br>
@@ -194,7 +127,14 @@ function updateMenus(f) {
 			<br>
 			<br>
 		</td>
+		<td colspan="2" valign="top">
+			Remove selected CCs:
+			<br>
+			<select name="remove_cc[]" size="5" style="width: 15em" multiple>{build_select box=cclist selected=$bug_id}</select>
+		</td>
 	</tr>
+</table>
+<table border="0" cellpadding="2" cellspacing="0" width="640">
 	<tr>
 		<td valign="top">
 			Additional Comments:
@@ -272,44 +212,46 @@ function updateMenus(f) {
 	</tr>
 </table>
 </form>
+<div align="center">
 {if !empty($error.vote)}<div class="error">{$error.vote}</div>{/if}
 <b><a href="{$SCRIPT_NAME}?op=vote&bugid={$bug_id}" onClick="if ({$already_voted}) {literal}{ alert ('{/literal}{$STRING.already_voted}{literal}'); return false; }{/literal}">Vote for this bug</a></b> | 
 <b><a href="{$SCRIPT_NAME}?op=viewvotes&bugid={$bug_id}">View votes ({$num_votes}) for this bug</a></b> | 
 <b><a href="{$SCRIPT_NAME}?op=history&bugid={$bug_id}">View bug activity</a></b> | 
 <b><a href="{$SCRIPT_NAME}?op=print&bugid={$bug_id}">Printable view</a></b>
-
+</div>
 <br>
 <br>
 <table border="0" cellpadding="2" cellspacing="0" width="640">
 	<tr>
 		<td>
 			Comments:
-			<hr size="1">
+		</td>
+	</tr>
+	<tr class="alt">
+		<td>
+			Posted by: {$reporter|maskemail}
+			<br>
+			Date: {$created_date|date:TIME_FORMAT} on {$created_date|date:DATE_FORMAT}
 		</td>
 	</tr>
 	<tr>
 		<td>
-			<div align="center">
-				<i>----- Posted by {$reporter|maskemail} at {$created_date|date:TIME_FORMAT} on {$created_date|date:DATE_FORMAT} -----</i>
-				<br>
-				<br>
-			</div>
 			{$description|stripslashes|format_comments|nl2br}
-			<br>
 			<br>
 			<br>
 		</td>
 	</tr>
 	{section name=comment loop=$comments}
+	<tr class="alt">
+		<td>
+			Posted by: {$comments[comment].login|maskemail}
+			<br>
+			Date: {$comments[comment].created_date|date:TIME_FORMAT} on {$comments[comment].created_date|date:DATE_FORMAT}
+		</td>
+	</tr>
 	<tr>
 		<td>
-			<div align="center">
-				<i>----- Posted by {$comments[comment].rreporter|maskemail} at {$comments[comment].created_date|date:TIME_FORMAT} on {$comments[comment].created_date|date:DATE_FORMAT}-----</i>
-				<br>
-				<br>
-			</div>
-			{$comments[comment].rdescription|stripslashes|format_comments|nl2br}
-			<br>
+			{$comments[comment].comment_text|stripslashes|format_comments|nl2br}
 			<br>
 			<br>
 		</td>
