@@ -1,3 +1,9 @@
+-- 0.3.2 -- 28 Sep 2001
+: Added patch and patch instructions for page.inc (in PHPlib).
+: Tried to make the configure script a little more portable.
+: Users can now add CCs to bug change notifications.
+: Fixed some bugs with bug updating.
+
 -- 0.3.1 -- 17 Sep 2001
 : Fixed the perm and group checks.
 : Fixed a bug when selecting an OS in the bug query.
