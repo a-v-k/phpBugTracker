@@ -1,7 +1,7 @@
 <?php
 
 // no.php - Norwegian strings and titles
-// Translation by Sven-Erik Anderson
+// Translation by Sven-Erik Andersen
 // ------------------------------------------------------------------------
 // Copyright (c) 2001 The phpBugTracker Group
 // ------------------------------------------------------------------------
@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: no.php,v 1.3 2001/09/03 17:03:22 bcurtis Exp $
+// $Id: no.php,v 1.4 2001/09/15 14:49:16 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -33,7 +33,7 @@ $STRING = array(
 	'noprojects' => 'Ingen prosjekter funnet',
 	'totalbugs' => 'Totalt antall feil',
 	'giveemail' => 'Vennligst skriv en gyldig email adresse',
-	'givelogin' => 'Please enter a login',
+	'givelogin' => 'Vennligst skriv inn et brukernavn',
 	'loginused' => 'Det brukernavnet er allerede i bruk',
 	'newacctsubject' => 'phpBugTracker Innlogging',
 	'newacctmessage' => "Ditt phpBugTracker passord er %s",
@@ -51,7 +51,7 @@ $STRING = array(
 	'nousers' => 'Ingen brukere funnet',
 	'bugbadperm' => 'Du kan ikke endre denne feilen',
 	'bugbadnum' => 'Denne feilen eksisterer ikke',
-	'datecollision' => 'Noen har oppdatert feilen siden sist du så den.	Feil informasjonen har blitt lastet på nytt med de siste endringer.',
+	'datecollision' => 'Noen har oppdatert feilen siden sist du så den. Feil informasjonen har blitt lastet på nytt med de siste endringer.',
 	'passwordmatch' => 'Disse passordene er ikke like -- vennligst prøv igjen',
 	'nobughistory' => 'Det er ingen historie for denne feilen',
 	'logintomodify' => 'Du må være logget inn for å redigere denne feilen',
