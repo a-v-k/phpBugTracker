@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.37 2003/04/01 21:39:43 firma Exp $
+// $Id: en.php,v 1.38 2003/06/04 18:47:20 kennyt Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso-8859-1',
@@ -225,7 +225,8 @@ $STRING = array(
 		'Votes' => 'Votes',
 		'Bug' => 'Bug',
 		'When' => 'When',
-		'ColumnPreferencesSaved' => 'Your bug list column preferences have been saved'
+		'ColumnPreferencesSaved' => 'Your bug list column preferences have been saved',
+		'DefResults' => 'Number of results on query page:'
 	),
 	'INDEX' => array(
 		'FiveRecentlySubmitted' => 'Five most recently submitted bugs',

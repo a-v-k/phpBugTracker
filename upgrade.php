@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.33 2003/04/19 18:12:37 kennyt Exp $
+// $Id: upgrade.php,v 1.34 2003/06/04 18:47:19 kennyt Exp $
 
 define ('NO_AUTH', 1);
 
@@ -45,10 +45,15 @@ function upgrade() {
 				$db->query("create table if not exists ".TBL_PROJECT_PERM." ( project_id int(11) NOT NULL default '0', user_id int(11) NOT NULL default '0' )");
 				if ($thisvers < 2)
 					$db->query("alter table ".TBL_AUTH_GROUP." ADD assignable TINYINT DEFAULT 0 NOT NULL AFTER locked");
+				if ($thisvers < 3)
+					$db->query("ALTER TABLE ".TBL_USER_PREF." ADD def_results INT DEFAULT '20' NOT NULL");
 				break;
+			case 'pgsql' :
+				//! Missing Alter/Create's
 			case 'oci8' :
 				$db->query("create table ".TBL_PROJECT_PERM." ( project_id number(10) default '0' NOT NULL, user_id number(10) default '0' NOT NULL )");
 				//! TBL_AUTH_GROUP
+				//! TBL_USER_PERM.def_results (see mysql)
 				break;
 		}
 
@@ -58,10 +63,6 @@ function upgrade() {
 			$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('EMAIL_DISABLED', '0', 'Whether to disable all mail sent from the system', 'bool');");
 			/* add db-version attribute */
 			$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('DB_VERSION', '".DB_VERSION."', 'Database Version <b>Warning:</b> Changing this might make things go horribly wrong.', 'string')");
-		}
-
-		if ($thisvers < 3) {
-
 		}
 
 		/* update to current DB_VERSION */

@@ -40,6 +40,10 @@
 			<td><input type="checkbox" name="preferences[]" value="{$preferences[pref].pref}" {if $preferences[pref].checked}checked{/if}></td>
 		    </tr>
 {/section}
+			<tr>
+				<td>{$STRING.USER_PREF.DefResults}</td>
+				<td><input type="text" name="def_results" value="{$def_results}" size="4"></td>
+			</tr>
 		    <tr>
 			<td colspan="2" align="center"><br>
 			    <input type="reset"> <input type="submit" value="Submit"></td>

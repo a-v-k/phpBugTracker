@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.27 2002/06/18 16:36:21 firma Exp $
+// $Id: user.php,v 1.28 2003/06/04 18:47:19 kennyt Exp $
 
 include 'include.php';
 
@@ -77,14 +77,18 @@ function change_preferences($prefs) {
     array_shift($old_prefs); // Drop the user_id field
     $updates = array();
     foreach ($old_prefs as $pref => $val) {
+	if ($pref == 'def_results') continue;
 	if (in_array($pref, $prefs) and !$val) {
-	    $updates[] = "set $pref = 1";
+	    $updates[] = "$pref = 1";
 	} elseif (!in_array($pref, $prefs) and $val) {
-	    $updates[] = "set $pref = 0";
+	    $updates[] = "$pref = 0";
 	}
     }
+
+	$updates[] = 'def_results = '.(int)$prefs['def_results']; // override previous set
+	
     if (count($updates)) {
-	$db->query("update ".TBL_USER_PREF.' '.@join(', ', $updates).
+	$db->query("update ".TBL_USER_PREF.' set '.@join(', ', $updates).
 	    " where user_id = $u");
     }
 
@@ -104,7 +108,7 @@ function show_preferences_form($error = '') {
     $pref_labels = array(
 	'email_notices' => $STRING['USER_PREF']['ReceiveNotifications'],
 	'saved_queries' => $STRING['USER_PREF']['ShowSavedQueries']
-    );
+	);
     
     $prefs = $db->getRow("select * from ".TBL_USER_PREF." where user_id = $u");
     foreach ($pref_labels as $pref => $label) {
@@ -113,14 +117,17 @@ function show_preferences_form($error = '') {
 	    'label' => $label,
 	    'checked' => $prefs[$pref]
 	);
-    }
+	}
+	
+	$def_results = $prefs['def_results'];
 
     $t->assign(array(
 	'error' => $error,
 	'my_fields' => $_sv['db_fields'] ? $_sv['db_fields'] : $default_db_fields,
 	'field_titles' => $all_db_fields,
-	'preferences' => $preferences
-    ));
+	'preferences' => $preferences,
+    'def_results' => $def_results
+	));
 		
     $t->wrap('user.html', 'preferences');
 }
@@ -142,7 +149,7 @@ if (isset($_gv['op'])) {
 	    change_bug_list_columns($_pv['column_list']);
 	break;
 	case 'changeprefs':
-	    change_preferences(isset($_pv['preferences']) ? $_pv['preferences'] : array());
+	    change_preferences(isset($_pv['preferences']) ? array_merge($_pv['preferences'], array('def_results' => $_pv['def_results'])) : array());
 	break;
 	default:
 	    show_preferences_form();
