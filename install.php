@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.17 2002/03/26 17:30:20 bcurtis Exp $
+// $Id: install.php,v 1.18 2002/04/01 15:42:40 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname(__FILE__));
 
@@ -93,8 +93,8 @@ function build_select($box, $value = '', &$ary) {
 ///
 /// Check the validity of an email address
 /// (From zend.com user russIndr)
-function valid_email($email) {
-  return eregi('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$', $email);
+function bt_valid_email($email) {
+  return eregi('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$', $email);
 }
 
 function grab_config_file() {
@@ -151,7 +151,7 @@ function check_vars() {
 		$error = 'Please enter the phpBT email address';
 	} elseif (!$_pv['admin_login'] = trim($_pv['admin_login'])) {
 		$error = 'Please enter the admin login';
-	} elseif (!valid_email($_pv['admin_login'])) {
+	} elseif (!bt_valid_email($_pv['admin_login'])) {
 		$error = 'Please use a valid email address for the admin login';
 	} elseif (!$_pv['admin_pass'] = trim($_pv['admin_pass'])) {
 		$error = 'Please enter the admin password';

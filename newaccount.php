@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.27 2002/03/30 20:06:27 bcurtis Exp $
+// $Id: newaccount.php,v 1.28 2002/04/01 15:42:40 bcurtis Exp $
 
 define('NO_AUTH', 1);
 include 'include.php'; 
@@ -35,7 +35,7 @@ function do_form() {
 
 	if (!EMAIL_IS_LOGIN && !$_pv['login'] = trim($_pv['login'])) 
 		$error = $STRING['givelogin'];
-	elseif (!$_pv['email'] or !valid_email($_pv['email'])) 
+	elseif (!$_pv['email'] or !bt_valid_email($_pv['email'])) 
 		$error = $STRING['giveemail'];
 	elseif ($db->getOne("select user_id from ".TBL_AUTH_USER.
 		" where email = '{$_pv['email']}' ".

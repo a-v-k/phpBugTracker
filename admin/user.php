@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.44 2002/03/30 20:37:47 bcurtis Exp $
+// $Id: user.php,v 1.45 2002/04/01 15:42:41 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -32,7 +32,7 @@ function do_form($userid = 0) {
 	// Validation
 	if (!EMAIL_IS_LOGIN && !$_pv['flogin'] = trim($_pv['flogin'])) {
 		$error = $STRING['givelogin'];
-	} elseif (!valid_email($_pv['femail'])) {
+	} elseif (!bt_valid_email($_pv['femail'])) {
 		$error = $STRING['giveemail'];
 	} elseif (!$_pv['fpassword'] = trim($_pv['fpassword'])) {
 		$error = $STRING['givepassword'];

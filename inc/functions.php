@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.14 2002/03/29 23:55:14 bcurtis Exp $
+// $Id: functions.php,v 1.15 2002/04/01 15:42:41 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -292,8 +292,8 @@ function delimit_list($delimiter, $ary) {
 ///
 /// Check the validity of an email address
 /// (From zend.com user russIndr)
-function valid_email($email) {
-  return eregi('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$', $email);
+function bt_valid_email($email) {
+  return eregi('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$', $email);
 }
 
 ///
