@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.126 2003/02/19 14:07:19 bcurtis Exp $
+// $Id: bug.php,v 1.127 2003/04/04 13:07:12 bcurtis Exp $
 
 include 'include.php';
 
@@ -126,7 +126,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 
 	$template_ext = false/*HTML_EMAIL*/ ? 'html' : 'txt';
 	$template = $newbug ? "bugemail-newbug.$template_ext" : "bugemail.$template_ext";
-	foreach(array('title','url') as $field) {
+	foreach(array('title','url','priority') as $field) {
 		if (isset($cf[$field])) {
 		    $db->query('insert into '.TBL_BUG_HISTORY.
 			' (bug_id, changed_field, old_value, new_value, created_by, created_date)'.
