@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.74 2002/01/25 15:10:10 bcurtis Exp $
+// $Id: bug.php,v 1.75 2002/01/26 14:20:40 bcurtis Exp $
 
 include 'include.php';
 
@@ -30,25 +30,37 @@ function vote_bug($bug_id) {
 	global $u, $q, $now, $_pv, $STRING;
 	
 	// Check to see if the user already voted on this bug
-	if ($q->grab_field("select count(*) from ".TBL_BUG_VOTE." where bug_id = $bug_id and user_id = $u")) {
+	if ($q->grab_field("select count(*) from ".TBL_BUG_VOTE.
+		" where bug_id = $bug_id and user_id = $u")) {
 		show_bug($bug_id, array('vote' => $STRING['already_voted']));
 		return;
 	}
 	// Check whether the user has used his allotment of votes (if there is a max)
-	if (MAX_USER_VOTES and $q->grab_field("select count(*) from ".TBL_BUG_VOTE." where user_id = $u") > MAX_USER_VOTES) {
+	if (MAX_USER_VOTES and $q->grab_field("select count(*) from ".TBL_BUG_VOTE.
+		" where user_id = $u") > MAX_USER_VOTES) {
 		show_bug($bug_id, array('vote' => $STRING['too_many_votes']));
 		return;
 	}
 	
 	// Record the vote
-	$q->query("insert into ".TBL_BUG_VOTE." (user_id, bug_id, created_date) values ($u, $bug_id, $now)");
+	$q->query("insert into ".TBL_BUG_VOTE." (user_id, bug_id, created_date) 
+		values ($u, $bug_id, $now)");
 	
-	// If a number of votes are required to promote a bug, check for promotion
-	if (PROMOTE_VOTES and $q->grab_field("select count(*) from ".TBL_BUG_VOTE." where bug_id = $bug_id") > PROMOTE_VOTES) {
-		$status_id = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = 'New'");
-  	$buginfo = $q->grab("select * from ".TBL_BUG." where bug_id = $bug_id");
-		$changedfields = array('status_id' => $status_id);
-    do_changedfields($u, $buginfo, $changedfields);
+	// Proceed only if promoting by votes is turned on
+	if (PROMOTE_VOTES) {
+		// Has this bug already been promoted?
+		$bug_is_new = $q->grab_field("select count(*) from ".TBL_BUG." b, ".
+			TBL_STATUS." s where bug_id = $bug_id and b.status_id = s.status_id and 
+			status_name = 'New'");
+
+		// If a number of votes are required to promote a bug, check for promotion
+		if (!$bug_is_new and $q->grab_field("select count(*) from ".
+			TBL_BUG_VOTE." where bug_id = $bug_id") == PROMOTE_VOTES) {
+			$status_id = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = 'New'");
+  		$buginfo = $q->grab("select * from ".TBL_BUG." where bug_id = $bug_id");
+			$changedfields = array('status_id' => $status_id);
+    	do_changedfields($u, $buginfo, $changedfields);
+		}
 	}
   header("Location: bug.php?op=show&bugid=$bug_id&pos={$_pv['pos']}");
 	
