@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.70 2001/10/31 02:30:42 bcurtis Exp $
+// $Id: include.php,v 1.71 2001/11/02 04:21:41 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -49,6 +49,16 @@ class dbclass extends DB_Sql {
 		}
 	}		
 
+	// Handle the different types of concats
+	function concat() {
+		$pieces = func_get_args();
+		if (DB_TYPE == 'pgsql') {
+			return delimit_list(' || ', $pieces);
+		} else {
+			return 'concat('. delimit_list(', ', $pieces).')';
+		}
+	}
+	
   function grab($q_string = '') {
     if ($q_string) $this->query($q_string);
     $this->next_record();
