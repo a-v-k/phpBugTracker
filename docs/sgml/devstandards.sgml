@@ -4,7 +4,7 @@
 <!ENTITY phpbt "phpBugTracker">
 ]>
 
-<article id="devstandards" xreflabel="Development Standards">
+<article id="index" xreflabel="Development Standards">
 	<articleinfo>
 		<title>Development Standards</title>
 		<abstract>
@@ -167,7 +167,7 @@
 
 	</sect1>
 	
-	<sect1 id="devstards-otherconventions" xreflabel="Other Conventions">
+	<sect1 id="otherconventions" xreflabel="Other Conventions">
 		<title>Other Conventions</title>
 		
 		<sect2 id="devstandards-filenaming" xreflabel="File Naming">
