@@ -21,12 +21,10 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.32 2002/09/27 19:24:38 bcurtis Exp $
+// $Id: install.php,v 1.33 2002/10/02 18:43:46 bcurtis Exp $
 
 // Location of smarty templates class
-define ('SMARTY_PATH', '');
-// Example if smarty is installed within the phpBugTracker tree.
-//define ('SMARTY_PATH','./inc/smarty/');
+define ('SMARTY_PATH','./inc/smarty/');
 
 if (!@include(SMARTY_PATH . 'Smarty.class.php')) { // Template class
 	include('templates/default/base/smartymissing.html');
