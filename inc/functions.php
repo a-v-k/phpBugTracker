@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.5 2002/03/05 22:14:00 bcurtis Exp $
+// $Id: functions.php,v 1.6 2002/03/05 23:55:28 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -112,7 +112,7 @@ function build_select($box, $value = '', $project = 0) {
       }
       break;
     case 'os' :
-      $q->query("select {$box}_id, {$box}_name, regex from ".TBL_OS." order by sort_order");
+      $q->query("select {$box}_id, {$box}_name, regex from ".TBL_OS." where sort_order > 0 order by sort_order");
       while ($row = $q->grab()) {
         if ($value == '' and isset($row['Regex']) and
           preg_match($row['Regex'],$GLOBALS['HTTP_USER_AGENT'])) $sel = ' selected';
