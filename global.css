@@ -13,9 +13,26 @@ td {
   font-size: 12px; 
 	}
 	
+tr.alt {
+	background-color: #dddddd;
+	}
+	
+td.head {
+	font-weight: bold; 
+	text-align: center;
+	background-color: #eeeeee;
+	}
+	
+td.head-selected {
+	font-weight: bold; 
+	text-align: center;
+	background-color: #bbbbbb;
+	}
+	
 th { 
   font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
   font-size: 12px; 
+	background-color: #eeeeee;
 	}
 	
 select {

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.57 2001/09/26 09:20:16 javyer Exp $
+// $Id: include.php,v 1.58 2001/10/06 03:35:37 bcurtis Exp $
 
 if (defined("INCLUDE_PATH")) {
   require INCLUDE_PATH."config.php";
@@ -407,6 +407,7 @@ function sorting_headers($url, $headers, $order, $sort, $urlstr = '') {
       ($order == $v ? ($sort == 'asc' ? 'desc' : 'asc') : 'asc').
       ($urlstr ? '&'.$urlstr : ''));
     $t->set_var($k.'color', $order == $v ? '#bbbbbb' : '#eeeeee');
+    $t->set_var($k.'class', $order == $v ? 'head-selected' : 'head');
   }
 }
 

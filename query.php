@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.28 2001/09/15 23:13:48 bcurtis Exp $
+// $Id: query.php,v 1.29 2001/10/06 03:35:37 bcurtis Exp $
 
 include 'include.php';
 
@@ -241,7 +241,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	foreach ($db_fields as $field) {
 		$t->set_var(array(
 			'coldata' => "<a href='{{$field}url}'>{$all_db_fields[$field]}</a>",
-			'td-extra' => "class=\"header-col\" bgcolor=\"{{$field}color}\""
+			'td-extra' => "class=\"{{$field}class}\""
 			));
 		$t->parse('cols', 'col', true);
 	}
