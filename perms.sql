@@ -16,11 +16,12 @@ insert into auth_perm (perm_id, perm_name) values (1, 'Admin');
 insert into auth_perm (perm_id, perm_name) values (2, 'Editbug');
 
 # Admins can do all the admin stuff and users can edit bugs
-insert into group_perm (group_id, perm_id) values (1, 1, 0, 0);
-insert into group_perm (group_id, perm_id) values (2, 2, 0, 0);
+insert into group_perm (group_id, perm_id) values (1, 1);
+insert into group_perm (group_id, perm_id) values (2, 2);
+
 
 # And user_id 1 is the admin and a user
-insert into user_group (user_id, group_id) values (1, 1, 0, 0);
+insert into user_group (user_id, group_id) values (1,0);
 insert into user_group select user_id, 2, created_by, created_date from auth_user;
 
 # You can use these queries to convert the post 0.2.x / pre 0.3.0 schema
