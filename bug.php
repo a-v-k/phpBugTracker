@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.113 2002/07/18 13:02:12 bcurtis Exp $
+// $Id: bug.php,v 1.114 2002/07/29 12:07:46 bcurtis Exp $
 
 include 'include.php';
 
@@ -523,20 +523,20 @@ function do_form($bugid = 0) {
 }
 
 function show_form($bugid = 0, $error = '') {
-  global $db, $me, $t, $_gv, $_pv, $TITLE;
+	global $db, $me, $t, $_gv, $_pv, $TITLE;
 
-  $projectname = $db->getOne("select project_name from ".TBL_PROJECT." where project_id = {$_gv['project']}");
-  if ($bugid && !$error) {
-    $t->assign($db->getRow("select * from ".TBL_BUG." where bug_id = '$bugid'"));
-  } else {
+	$projectname = $db->getOne("select project_name from ".TBL_PROJECT." where project_id = {$_gv['project']}");
+	if ($bugid && !$error) {
+		$t->assign($db->getRow("select * from ".TBL_BUG." where bug_id = '$bugid'"));
+	} else {
 		$t->assign($_pv);
 		$t->assign(array(
 			'error' => $error,
 			'project' => $_gv['project'],
 			'projectname' => $projectname
 			));
-  }
-  $t->wrap('bugform.html', 'enterbug');
+	}
+	$t->wrap('bugform.html', 'enterbug');
 }
 
 function show_bug_printable($bugid) {
@@ -614,8 +614,8 @@ function show_bug($bugid = 0, $error = array()) {
     global $db, $me, $t, $STRING, $TITLE, $u, $_gv, $QUERY, $restricted_projects;
 
     if (!ereg('^[0-9]+$',$bugid) or
-	!$row = $db->getRow(sprintf($QUERY['bug-show-bug'], $bugid, 
-	    $restricted_projects))) {
+		!$row = $db->getRow(sprintf($QUERY['bug-show-bug'], $bugid, 
+	    	$restricted_projects))) {
 		show_text($STRING['bugbadnum'],true);
 		return;
     }
@@ -657,9 +657,9 @@ function show_bug($bugid = 0, $error = array()) {
 }
 
 function show_projects() {
-  global $db, $t, $STRING, $perm, $restricted_projects, $_gv;
+	global $db, $t, $STRING, $perm, $restricted_projects, $_gv;
 
-  // Show only active projects with at least one component
+	// Show only active projects with at least one component
 	if ($perm->have_perm('Admin')) { // Show admins all projects
 		$p_query = '';
 	} else { // Filter out projects that can't be seen by this user
@@ -672,15 +672,15 @@ function show_projects() {
 		' group by p.project_id, p.project_name, p.project_desc, p.created_date'.
 		' order by project_name');
 	
-  switch (count($projects)) {
-    case 0 :
-      show_text($STRING['noprojects'], true);
-      return;
-    case 1 :
-      $_gv['project'] = $projects[0]['project_id'];
-      show_form();
-      break;
-    default :
+	switch (count($projects)) {
+		case 0 :
+			show_text($STRING['noprojects'], true);
+			return;
+		case 1 :
+			$_gv['project'] = $projects[0]['project_id'];
+			show_form();
+			break;
+		default :
 			$t->assign('projects', $projects);
 			$t->wrap('projectlist.html', 'enterbug');
   }
@@ -688,35 +688,35 @@ function show_projects() {
 
 if ($op) {
     switch($op) {
-	case 'history':
-	    show_history($_gv['bugid']);
-	break;
-	case 'add':
-	    $perm->check('Editbug');
-	    if (isset($_gv['project'])) {
-		show_form();
-	    } else {
-		show_projects();
-	    }
-	break;
-	case 'show':
-	    show_bug($_gv['bugid']);
-	break;
-	case 'update':
-	    update_bug($_pv['bugid']);
-	break;
-	case 'do':
-	    do_form($_pv['bugid']);
-	break;
-	case 'print':
-	    show_bug_printable($_gv['bugid']);
-	break;
-	case 'vote':
-	    vote_bug($_gv['bugid']);
-	break;
-	case 'viewvotes':
-	    vote_view($_gv['bugid']);
-	break;
+		case 'history':
+			show_history($_gv['bugid']);
+			break;
+		case 'add':
+			$perm->check('Editbug');
+			if (isset($_gv['project'])) {
+				show_form();
+			} else {
+				show_projects();
+			}
+			break;
+		case 'show':
+			show_bug($_gv['bugid']);
+			break;
+		case 'update':
+			update_bug($_pv['bugid']);
+			break;
+		case 'do':
+			do_form($_pv['bugid']);
+			break;
+		case 'print':
+			show_bug_printable($_gv['bugid']);
+			break;
+		case 'vote':
+			vote_bug($_gv['bugid']);
+			break;
+		case 'viewvotes':
+			vote_view($_gv['bugid']);
+			break;
     }
 } else {
     header("Location: query.php");
