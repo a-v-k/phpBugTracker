@@ -63,7 +63,7 @@
 			{assign var="loginlabel" value="Email"}
 		    {else}
 			{assign var="loginlabel" value="Login"}
-		    {/if}{$smarty.server.SCRIPT_NAME}
+		    {/if}
 				{$loginerror}
 				{$loginlabel}: <input type="text" name="username" class="bottomnavinput" value="{$smarty.cookies.phpbt_user}">
 				Password: <input type="password" name="password" class="bottomnavinput">
