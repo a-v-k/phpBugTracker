@@ -20,6 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
+// $Id: index.php,v 1.38 2003/02/18 12:50:57 bcurtis Exp $
 
 include 'include.php';
 
