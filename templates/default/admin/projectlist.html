@@ -1,25 +1,34 @@
-<a href="{me}?op=add">Add a new project</a>
-<br>
-<br>
-<table border="0">
-	<tr bgcolor="#eeeeee">
-		<th><a href="{nameurl}">Project</a></th>
-		<th><a href="{createddateurl}">Created</a></th>
-		<th><a href="{activeurl}">Active</a></th>
-	</tr>
-	<!-- BEGIN row -->
-	<tr class='{trclass}'>
-		<td><a href="{me}?op=edit&id={projectid}">{name}</a></td>
-		<td align="center">{createddate}</td>
-		<td align="center">{active}</td>
-	</tr>
-	<!-- END row -->
-	<tr>
-		<td colspan="3" align="center">
-			<br>
-			{first} to {last} of {records}
-			<br>
-			{pages}
-		</td>
+{include file="admin/header.html" page_title="Projects"}
+
+<table border="0" width="100%">
+  <tr>
+    <td valign="top">
+      <b>&nbsp;Project List</b> - <a href="{$SCRIPT_NAME}?op=add">{$STRING.addnew} Project</a>
+      <hr size="1">
+			<table border="0" cellpadding="2" cellspacing="1" width="100%">
+				<tr>
+					<th class="{$headers.name.class}"><a href="{$headers.name.url}">Project</a></th>
+					<th class="{$headers.createddate.class}"><a href="{$headers.createddate.url}">Created</a></th>
+					<th class="{$headers.active.class}"><a href="{$headers.active.url}">Active</a></th>
+				</tr>
+				{section name=project loop=$projects}
+					<tr{if $smarty.section.project.iteration is even} class="alt"{/if}>
+						<td><a href="{$SCRIPT_NAME}?op=edit&id={$projects[project].project_id}">{$projects[project].project_name|stripslashes}</a></td>
+						<td align="center">{$projects[project].created_date|date:DATE_FORMAT}</td>
+						<td align="center">{if $projects[project].active}Yes{else}No{/if}</td>
+					</tr>
+				{/section}
+				<tr>
+					<td colspan="3" align="center">
+						<br>
+  					{$first} - {$last} of {$total}
+						<br>
+						{if $pages ne "1"}[ {$pages} ]{/if}
+  					<br>
+					</td>
+				</tr>
+			</table>
+    </td>
 	</tr>
 </table>
+{include file="footer.html"}

@@ -1,0 +1,43 @@
+{if $status_id}
+	{assign var="action" value=$STRING.edit}
+{else}
+	{assign var="action" value=$STRING.addnew}
+{/if}
+{if $smarty.request.use_js}
+	{include file="admin/header-popup.html" page_title="$action User"}
+{else}
+	{include file="admin/header.html" page_title="$action User"}
+{/if}	
+<b>{$action} Status&nbsp;</b>
+<hr size="1">
+<form action="{$SCRIPT_NAME}" method="post">
+<input type="hidden" name="status_id" value="{$status_id}">
+<input type="hidden" name="use_js" value="{$smarty.request.use_js}">
+<table border='0'>
+{if $error}
+  <tr>
+		<td colspan="2" class="error">{$error}</td>
+  </tr>
+{/if}
+<tr>
+  <td align="right" valign="top">Name:</td>
+  <td><input type="text" size="20" maxlength="40" name="status_name" value="{$status_name|stripslashes|htmlentities}"></td>
+</tr>
+<tr>
+  <td align="right" valign="top">Description:</td>
+  <td><textarea name="status_desc" cols=20 rows=5 wrap=virtual>{$status_desc|stripslashes|htmlentities}</textarea></td>
+</tr>
+<tr>
+  <td align="right" valign="top">Sort Order:</td>
+  <td><input type="text" size="3" maxlength="3" name="sort_order" value="{$sort_order}"></td>
+</tr>
+
+</table>
+<br>
+<input type='submit' name='submit' value='Submit'>
+</form>
+{if $smarty.request.use_js}
+	{include file="admin/footer-popup.html"}
+{else}
+	{include file="admin/footer.html"}
+{/if}	

@@ -1,5 +1,7 @@
+{include file="admin/header.html" page_title="$STRING[addnew] Project"}
+
 <form action="project.php" method="post">
-<input type="hidden" name="id" value="{projectid}">
+<input type="hidden" name="id" value="0">
 <input type="hidden" name="do" value="project">
 <table border="0">
 	<tr>
@@ -9,28 +11,28 @@
 					<td>
 						<b>Project Information</b>
 						<hr size="1">
-						<font color="#ff0000">{error}</font>
+						{if $error}<div class="error">{$error}</div>{/if}
 					</td>
 				</tr>
 				<tr>
         	<td valign="top">
 						Name:
 						<br>
-						<input type="text" size="30" maxlength="30" name="name" value="{name}">
+						<input type="text" size="30" maxlength="30" name="project_name" value="{$project_name|stripslashes|htmlentities}">
 					</td>
 				</tr>
 				<tr>
         	<td valign="top">
 						Description:
 						<br>
-        		<textarea name="description" cols=40 rows=5 wrap=virtual>{description}</textarea>
+        		<textarea name="project_desc" cols=40 rows=5 wrap=virtual>{$project_desc|stripslashes|htmlentities}</textarea>
 					</td>
 				</tr>
 				<tr>
         	<td valign="top">
 						Active:
 						<br>
-        		<input type="checkbox" name="active" value="1" {active}>
+        		<input type="checkbox" name="active" value="1" {if $active}checked{/if}>
 					</td>
 				</tr>
 			</table>
@@ -41,14 +43,14 @@
 					<td>
 						<b>Version Information</b>
 						<hr size="1">
-						<font color="#ff0000">{vf_error}</font>
+						{if $version_error}<div class="error">{$version_error}</div>{/if}
 					</td>
 				</tr>
 				<tr>
         	<td valign="top">
 						Initial Version:
 						<br>
-        		<input type="text" size="30" maxlength="30" name="vf_version" value="{vf_version}">
+        		<input type="text" size="30" maxlength="30" name="version_name" value="{$version_name|stripslashes|htmlentities}">
 					</td>
 				</tr>
 			</table>
@@ -61,28 +63,28 @@
 					<td>
 						<b>Component Information</b>
 						<hr size="1">
-						<font color="#ff0000">{cf_error}</font>
+						{if $component_error}<div class="error">{$component_error}</div>{/if}
 					</td>
 				</tr>
 				<tr>
         	<td valign="top">
 						Initial Component Name:
 						<br>
-        		<input type="text" size="30" maxlength="30" name="cf_name" value="{cf_name}">
+        		<input type="text" size="30" maxlength="30" name="component_name" value="{$component_name|stripslashes|htmlentities}">
 					</td>
 				</tr>
 				<tr>
         	<td valign="top">
 						Description:
 						<br>
-        		<textarea name="cf_description" cols="30">{cf_description}</textarea>
+        		<textarea name="component_desc" cols="30">{$component_desc|stripslashes|htmlentities}</textarea>
 					</td>
 				</tr>
 				<tr>
         	<td valign="top">
 						Owner:
 						<br>
-        		<select name="cf_owner"><option value="0">None</option>{cf_owner}</select>
+        		<select name="owner"><option value="0">None</option>{build_select box=owner selected=$owner}</select>
 					</td>
 				</tr>
 			</table>
@@ -91,3 +93,4 @@
 </table>
 <input type='submit' name='submit' value='Submit'>
 </form>
+{include file="admin/footer.html"}

@@ -1,0 +1,47 @@
+{if $version_id}
+	{assign var="action" value=$STRING.edit}
+{else}
+	{assign var="action" value="$STRING.addnew}
+{/if}
+{if $smarty.request.use_js}
+	{include file="admin/header-popup.html" page_title="$action Version"}
+{else}
+	{include file="admin/header.html" page_title="$action Version"}
+{/if}	
+		&nbsp;<b>{$action} Version</b>
+		<hr size="1">
+		{if $error}<div class="error">{$error}</div>{/if}
+		<form action="{$SCRIPT_NAME}" method="post">
+		<table border="0">
+			<input type="hidden" name="do" value="version">
+			<input type="hidden" name="versionid" value="{$version_id}">
+			<input type="hidden" name="projectid" value="{$project_id}">
+			<input type="hidden" name="use_js" value="{$smarty.request.use_js}">
+			<tr>
+				<td valign="top">
+					Name:
+				</td>
+				<td valign="top">
+					<input type="text" name="version_name" value="{$version_name|stripslashes|htmlentities}">
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					Active:
+				</td>
+				<td valign="top">
+					<input type="checkbox" name="active" value="1" {if $active}checked{/if}>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="submit" value="Submit">
+				</td>
+			</tr>
+		</table>
+		</form>
+{if $smarty.request.use_js}
+	{include file="admin/footer-popup.html"}
+{else}
+	{include file="admin/footer.html"}
+{/if}	

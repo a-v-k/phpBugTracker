@@ -1,0 +1,92 @@
+{if $user_id}
+	{assign var="action" value=$STRING.edit}
+{else}
+	{assign var="action" value=$STRING.addnew}
+{/if}
+{if $smarty.request.use_js}
+	{include file="admin/header-popup.html" page_title="$action User"}
+{else}
+	{include file="admin/header.html" page_title="$action User"}
+{/if}	
+<script language="JavaScript">
+<!--
+	var hadAdmin = {$hadadmin};
+	var numAdmins = {$numadmins};
+	
+	{literal}
+	function checkAdmin(slct) {
+		var adminSelected = false;
+		
+		if (hadAdmin && numAdmins == 1) {
+			for (current = 0; current < slct.options.length; current++ ) {
+				if (slct.options[current].selected && slct.options[current].value == 1) {
+					adminSelected = true;
+				}
+			}
+			if (!adminSelected) {
+				alert('This is the only admin user for the system.  Removing this user from the Admin group would be unwise.');
+			}
+		}
+	}
+	{/literal}
+// -->
+</script>
+<b>{$action} User&nbsp;</b>
+<hr size="1">
+<form action="user.php" method="post">
+<input type="hidden" name="user_id" value="{$user_id}">
+<input type="hidden" name="filter" value="{$filter}">
+<input type="hidden" name="use_js" value="{$smarty.request.use_js}">
+<table border='0'>
+{if $error}
+  <tr>
+		<td colspan="2" class="error">{$error}</td>
+  </tr>
+{/if}
+{if not EMAIL_IS_LOGIN}
+<tr>
+  <td align="right" valign="top">Login:</td>
+  <td><input type="text" size="20" maxlength="40" name="login" value="{$login|stripslashes}"></td>
+</tr>
+{/if}
+<tr>
+  <td align="right" valign="top">Email:</td>
+  <td><input type="text" size="20" maxlength="40" name="email" value="{$email}"></td>
+</tr>
+<tr>
+  <td align="right" valign="top">FirstName:</td>
+  <td><input type="text" size="20" maxlength="40" name="first_name" value="{$first_name|stripslashes|htmlentities}"></td>
+</tr>
+<tr>
+  <td align="right" valign="top">LastName:</td>
+  <td><input type="text" size="20" maxlength="40" name="last_name" value="{$last_name|stripslashes|htmlentities}"></td>
+</tr>
+<tr>
+  <td align="right" valign="top">Password:</td>
+  <td><input type="text" size="20" maxlength="40" name="password" value="{$password}"></td>
+</tr>
+<tr>
+  <td align="right" valign="top">User Groups:</td>
+  <td>
+    <select name="fusergroup[]" size="5" multiple onClick="checkAdmin(this)">
+    {build_select box=group selected=$user_groups}
+    </select>
+  </td>
+</tr>
+<tr>
+        <td align="right" valign="top">Active:</td>
+        <td><input type="checkbox" name="active" value="1" {if $active}checked{/if}></td>
+</tr>
+<tr>
+        <td align="right" valign="top">Email Notify:</td>
+        <td><input type="checkbox" name="fe_notice" value="1" {if $email_notices}checked{/if}></td>
+</tr>
+</table>
+<br>
+<input type='submit' name='submit' value='Submit'>
+</form>
+{if $smarty.request.use_js}
+	{include file="admin/footer-popup.html"}
+{else}
+	{include file="admin/footer.html"}
+{/if}	

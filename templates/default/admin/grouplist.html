@@ -1,56 +1,52 @@
-<br>
-<table border="0" width="640">
+{include file="admin/header.html" page_title="Groups"}
+
+<script language="JavaScript">
+<!--
+	var me = '{$SCRIPT_NAME}';
+	{literal}
+		
+	function popupGroup(id) {
+		window.open(me + '?op=edit&use_js=1&group_id='+id, 'ewin', 'dependent=yes, width=250, height=150, scrollbars=auto');
+	}
+	{/literal}
+// -->
+</script>
+<table border="0" width="100%">
   <tr>
     <td valign="top">
-      <b>&nbsp;Group List</b>
+      <b>&nbsp;Group List</b> - <a href="{$SCRIPT_NAME}?op=edit&group_id=0" onClick="popupGroup(0); return false;">{$STRING.addnew} Group</a>
       <hr size="1">
-      <table border="0">
-        <tr bgcolor="#eeeeee">
-          <th><a href="{nameurl}">Name</a></th>
-          <th><a href="{counturl}">Users</a></th>
+      <table border="0" width="100%">
+        <tr>
+          <th class="{$headers.name.class}"><a href="{$headers.name.url}">Name</a></th>
+          <th class="{$headers.count.class}"><a href="{$headers.count.url}">Users</a></th>
 					<th>&nbsp;</th>
         </tr>
-        <!-- BEGIN row -->
-				<!-- BEGIN unlockedblock -->
-        <tr class="{trclass}">
-          <td><a href="{me}?op=edit&id={groupid}">{name}</a></td>
-          <td align="center">{count}</td>
+        {section name=group loop=$groups}
+        <tr{if $smarty.section.group.iteration is even} class="alt"{/if}>
+          <td><a href="{$SCRIPT_NAME}?op=edit&group_id={$groups[group].group_id}" onClick="popupGroup({$groups[group].group_id}); return false;">{$groups[group].group_name|stripslashes}</a></td>
+          <td align="center">{$groups[group].count}</td>
 					<td align="center">
-						<a href="{me}?op=del&id={groupid}" onClick="return confirm('This will remove all user assignments to this group and the group itself.  Continue?')">Delete</a> | 
-						<a href="{me}?op=purge&id={groupid}" onClick="return confirm('This will remove all user assignments to this group.  Continue?')">Purge</a>
+						{if $groups[group].locked}
+							Locked
+						{else}
+							<a href="{$SCRIPT_NAME}?op=del&group_id={$groups[group].group_id}" onClick="return confirm('This will remove all user assignments to this group and the group itself.  Continue?')">Delete</a> | 
+							<a href="{$SCRIPT_NAME}?op=purge&group_id={$groups[group].group_id}" onClick="return confirm('This will remove all user assignments to this group.  Continue?')">Purge</a>
+						{/if}
 					</td>
         </tr>
-				<!-- END unlockedblock -->
-				<!-- BEGIN lockedblock -->
-        <tr class="{trclass}">
-          <td>{name}</td>
-          <td align="center">{count}</td>
-					<td align="center">Locked</td>
-        </tr>
-				<!-- END lockedblock -->
-        <!-- END row -->
+        {/section}
+				<tr>
+					<td colspan="3" align="center">
+						<br>
+  					{$first} - {$last} of {$total}
+						<br>
+						{if $pages ne "1"}[ {$pages} ]{/if}
+  					<br>
+					</td>
+				</tr>
       </table>
     </td>
-    <td valign="top">
-      <div align="right"><b>{action} Group&nbsp;</b></div>
-      <hr size="1">
-      <form action="{me}" method="post">
-      <input type="hidden" name="id" value="{fgroupid}">
-      <table border='0'>
-      <tr>
-              <td colspan="2" align="center" valign="top">
-                <font color="#ff0000">{error}</font>
-              </td>
-      </tr>
-      <tr>
-              <td align="right" valign="top">Name:</td>
-              <td><input type="text" size="20" maxlength="40" name="fname" value="{fname}"></td>
-      </tr>
-
-      </table>
-      <div align="right">
-        <input type='submit' name='submit' value='Submit'>
-      </div>
-      </form>
-    </td>
+	</tr>
 </table>
+{include file="admin/footer.html"}

@@ -1,21 +1,40 @@
-<form action="project.php" method="post">
-<input type="hidden" name="id" value="{projectid}">
+{include file="admin/header.html" page_title="Edit Project"}
+
+<script language="JavaScript">
+<!--
+	var me = '{$SCRIPT_NAME}';
+	{literal}
+		
+	function popupComponent(id) {
+		window.open(me + '?op=edit_component&use_js=1&id='+id, 'ewin', 'dependent=yes, width=450, height=300, scrollbars=auto');
+	}
+	function popupVersion(id) {
+		window.open(me + '?op=edit_version&use_js=1&id='+id, 'ewin', 'dependent=yes, width=250, height=150, scrollbars=auto');
+	}
+	{/literal}
+// -->
+</script>
+
+<form action="{$SCRIPT_NAME}" method="post">
+<input type="hidden" name="id" value="{$project_id}">
 <input type="hidden" name="do" value="project">
 <table border="0" cellpadding="2" cellspacing="2" width="640">
-	<tr>
-		<td colspan="2"><div class="error">{error}</div></td>
-	</tr>
+	{if $error}
+  	<tr>
+			<td colspan="2" class="error">{$error}</td>
+  	</tr>
+	{/if}
 	<tr>
 		<td valign="top" width="360">
 			Name:
 			<br>
-			<input type="text" size="30" maxlength="30" name="name" value="{name}">
+			<input type="text" size="30" maxlength="30" name="project_name" value="{$project_name|stripslashes|htmlentities}">
 		</td>
 		<td valign="top" rowspan="3">
 			Only users in the following groups can see this project:
 			<br>
 			<select name="usergroup[]" size="10" multiple>
-      	{usergroup}
+      	{build_select box=group selected=$project_groups project=1}
       </select>
 		</td>
 	</tr>
@@ -23,14 +42,14 @@
 		<td valign="top">
 			Description:
 			<br>
-			<textarea name="description" cols=40 rows=5 wrap=virtual>{description}</textarea>
+			<textarea name="project_desc" cols=40 rows=5 wrap=virtual>{$project_desc|stripslashes|htmlentities}</textarea>
 		</td>
 	</tr>
 	<tr>
 		<td valign="top">
 			Active:
 			<br>
-			<input type="checkbox" name="active" value="1" {active}>
+			<input type="checkbox" name="active" value="1" {if $active}checked{/if}>
 		</td>
 	</tr>
 </table>
@@ -40,110 +59,51 @@
 <table border="0">
 	<tr>
 		<td width="320" valign="top">
-			&nbsp;<b>{vf_action} Version</b>
-			<hr width="320" size="1" align="center">
-			<div class="error">{vf_error}</div>
-			<table border="0">
-				<form action="{me}" method="post">
-				<input type="hidden" name="do" value="version">
-				<input type="hidden" name="versionid" value="{versionid}">
-				<input type="hidden" name="projectid" value="{projectid}">
-				<tr>
-					<td width="200">Version:</td>
-					<td width="120">Active:</td>
-				</tr>
-				<tr>
-					<td><input type="text" name="vf_version" value="{vf_version}"></td>
-					<td><input type="checkbox" name="vf_active" value="1" {vf_active}></td>
-				</tr>
-				<tr>
-					<td colspan="2" align="right">
-						<input type="submit" value="{vf_action} Version">
-					</td>
-				</tr>
-				<tr>
-				</form>
-			</table>
-		</td>
-		<td width="320" valign="top">
-			&nbsp;<b>{cf_action} Component</b>
-			<hr width="320" size="1" align="center">
-			<div class="error">{cf_error}</div>
-			<table border="0">
-				<form action="{me}" method="post">
-				<input type="hidden" name="do" value="component">
-				<input type="hidden" name="componentid" value="{componentid}">
-				<input type="hidden" name="projectid" value="{projectid}">
-				<tr>
-					<td width="200">Name:</td>
-					<td width="120">Active:</td>
-				</tr>
-				<tr>
-					<td><input type="text" name="cf_name" value="{cf_name}"></td>
-					<td><input type="checkbox" name="cf_active" value="1" {cf_active}></td>
-				</tr>
-				<tr>
-					<td colspan="2">
-						Description:
-						<br>
-						<textarea name="cf_description" cols="40">{cf_description}</textarea>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2">
-						Owner:
-						<br>
-						<select name="cf_owner"><option value="0">None</option>{cf_owner}</select>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2" align="right">
-						<input type="submit" value="{cf_action} Component">
-					</td>
-				</tr>
-				<tr>
-				</form>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td width="320" valign="top">
 			<br>
-			&nbsp;<b>Versions of {name}</b>
+			&nbsp;<b>Versions</b> - <a href="{$SCRIPT_NAME}?op=edit_version&id=0" onClick="popupVersion(0); return false;">{$STRING.addnew} Version</a>
 			<hr width="320" size="1" align="center">
 			<table border="0">
-				<tr bgcolor="#eeeeee">
+				<tr>
 					<th width="160">Version</th>
 					<th width="100">Created</th>
 					<th width="60">Active</th>
 				</tr>
-				<!-- BEGIN verrow -->
-				<tr class="{trclass}">
-					<td><a href="{me}?op=edit&id={projectid}&versionid={verid}">{vername}</a></td>
-					<td align="center">{verdate}</td>
-					<td align="center">{veractive}</td>
+				{section name=version loop=$versions}
+				<tr{if $smarty.section.version.iteration is even} class="alt"{/if}>
+					<td><a href="{$SCRIPT_NAME}?op=edit_version&id={$versions[version].version_id}" onClick="popupVersion({$versions[version].version_id}); return false;">{$versions[version].version_name|stripslashes}</a></td>
+					<td align="center">{$versions[version].created_date|date:DATE_FORMAT}</td>
+					<td align="center">{if $versions[version].active}Yes{else}No{/if}</td>
 				</tr>
-				<!-- END verrow -->
+				{sectionelse}
+					<tr>
+						<td colspan="3" align="center">{$STRING.noversions}</td>
+					</tr>
+				{/section}
 			</table>
 		</td>
 		<td width="320" valign="top">
 			<br>
-			&nbsp;<b>Components of {name}</b>
+			&nbsp;<b>Components</b> - <a href="{$SCRIPT_NAME}?op=edit_component&id=0" onClick="popupComponent(0); return false;">{$STRING.addnew} Component</a>
 			<hr width="320" size="1" align="center">
 			<table border="0">
-				<tr bgcolor="#eeeeee">
+				<tr>
 					<th width="160">Component</th>
 					<th width="100">Created</th>
 					<th width="60">Active</th>
 				</tr>
-				<!-- BEGIN row -->
-				<tr class="{trclass}">
-					<td><a href="{me}?op=edit&id={projectid}&componentid={compid}">{compname}</a></td>
-					<td align="center">{compdate}</td>
-					<td align="center">{compactive}</td>
+				{section name=component loop=$components}
+				<tr{if $smarty.section.component.iteration is even} class="alt"{/if}>
+					<td><a href="{$SCRIPT_NAME}?op=edit_component&id={$components[component].component_id}" onClick="popupComponent({$components[component].component_id}); return false;">{$components[component].component_name|stripslashes}</a></td>
+					<td align="center">{$components[component].created_date|date:DATE_FORMAT}</td>
+					<td align="center">{if $components[component].active}Yes{else}No{/if}</td>
 				</tr>
-				<!-- END row -->
+				{sectionelse}
+					<tr>
+						<td colspan="3" align="center">{$STRING.nocomponents}</td>
+					</tr>
+				{/section}
 			</table>
 		</td>
 	</tr>
 </table>
+{include file="footer.html"}

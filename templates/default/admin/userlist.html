@@ -1,116 +1,54 @@
-<!--<a href="{me}?op=add">Add a new user</a>-->
+{include file="admin/header.html" page_title="Users"}
+
 <script language="JavaScript">
 <!--
-	function checkAdmin(slct) {
-		var hadAdmin = {hadadmin};
-		var numAdmins = {numadmins};
-		var adminSelected = false;
+	var me = '{$SCRIPT_NAME}';
+	{literal}
 		
-		if (hadAdmin && numAdmins == 1) {
-			for (current = 0; current < slct.options.length; current++ ) {
-				if (slct.options[current].selected && slct.options[current].value == 1) {
-					adminSelected = true;
-				}
-			}
-			if (!adminSelected) {
-				alert('This is the only admin user for the system.  Removing this user from the Admin group would be unwise.');
-			}
-		}
+	function popupUser(id) {
+		window.open(me + '?op=edit&use_js=1&user_id='+id, 'ewin', 'dependent=yes, width=350, height=300, scrollbars=auto');
 	}
+	{/literal}
 // -->
 </script>
-<br>
-<table border="0">
+<table border="0" width="100%">
 	<tr>
 		<td valign="top">
-			<b>&nbsp;User List</b>
+			<b>&nbsp;User List</b> - <a href="{$SCRIPT_NAME}?op=edit&user_id=0&filter={$filter}" onClick="popupUser(0); return false;">{$STRING.addnew} User</a>
 			<hr size="1">
 			<form>
 			<div align="center">
-				<select name="filter" onChange="document.location.href='{me}?filter=' + this.options[this.selectedIndex].value">{filter_select}</select> 
+				<select name="filter" onChange="document.location.href='{$SCRIPT_NAME}?filter=' + this.options[this.selectedIndex].value">{build_select box=user_filter selected=$filter}</select> 
 				<input type="submit" value="Filter">
 			</div>
 			</form>
-			<table border="0">
+			<table border="0" width="100%">
 				<tr>
-					<th bgcolor="{logincolor}"><a href="{loginurl}">Login</a></th>
-					<th bgcolor="{namecolor}"><a href="{nameurl}">Name</a></th>
-					<th bgcolor="{datecolor}"><a href="{dateurl}">Created</a></th>
-					<th bgcolor="{activecolor}"><a href="{activeurl}">Active</a></th>
+					<th class="{$headers.login.class}"><a href="{$headers.login.url}">Login</a></th>
+					<th class="{$headers.name.class}"><a href="{$headers.name.url}">Name</a></th>
+					<th class="{$headers.date.class}"><a href="{$headers.date.url}">Created</a></th>
+					<th class="{$headers.active.class}"><a href="{$headers.active.url}">Active</a></th>
 				</tr>
-				<!-- BEGIN row -->
-				<tr class="{trclass}">
-					<td><a href="{me}?op=edit&id={userid}&filter={filter}">{login}</a></td>
-					<td align="center">{name}</td>
-					<td align="center">{date}</td>
-					<td align="center">{active}</td>
+				{section name=user loop=$users}
+				<tr{if $smarty.section.user.iteration is even} class="alt"{/if}>
+					<td><a href="{$SCRIPT_NAME}?op=edit&user_id={$users[user].user_id}&filter={$filter}" onClick="popupUser({$users[user].user_id}); return false;">{$users[user].login|stripslashes}</a></td>
+					<td align="center">{$users[user].first_name|stripslashes} {$users[user].last_name|stripslashes}</td>
+					<td align="center">{$users[user].created_date|date:DATE_FORMAT}</td>
+					<td align="center">{if $users[user].active}Yes{else}No{/if}</td>
 				</tr>
-				<!-- END row -->
+				{/section}
 				<tr>
-					<td colspan="4" align="center">
+					<td colspan="3" align="center">
 						<br>
-						{first} to {last} of {records}
+  					{$first} - {$last} of {$total}
 						<br>
-						{pages}
+						{if $pages ne "1"}[ {$pages} ]{/if}
+  					<br>
 					</td>
 				</tr>
 			</table>
 		</td>
-		<td valign="top">
-			<div align="right"><b>{action} user&nbsp;</b></div>
-			<hr size="1">
-			<form action="user.php" method="post">
-			<input type="hidden" name="id" value="{fuserid}">
-			<input type="hidden" name="filter" value="{filter}">
-			<table border='0'>
-			<tr>
-        			<td colspan="2" align="center" valign="top">
-								<font color="#ff0000">{error}</font>
-							</td>
-			</tr>
-			<!-- BEGIN loginentryarea -->
-			<tr>
-        			<td align="right" valign="top">Login:</td>
-        			<td><input type="text" size="20" maxlength="40" name="flogin" value="{flogin}"></td>
-			</tr>
-			<!-- END loginentryarea -->
-			<tr>
-        			<td align="right" valign="top">Email:</td>
-        			<td><input type="text" size="20" maxlength="40" name="femail" value="{femail}"></td>
-			</tr>
-			<tr>
-        			<td align="right" valign="top">FirstName:</td>
-        			<td><input type="text" size="20" maxlength="40" name="ffirstname" value="{ffirstname}"></td>
-			</tr>
-			<tr>
-        			<td align="right" valign="top">LastName:</td>
-        			<td><input type="text" size="20" maxlength="40" name="flastname" value="{flastname}"></td>
-			</tr>
-			<tr>
-        			<td align="right" valign="top">Password:</td>
-        			<td><input type="text" size="20" maxlength="40" name="fpassword" value="{fpassword}"></td>
-			</tr>
-      <tr>
-              <td align="right" valign="top">User Group:</td>
-              <td>
-                      <select name="fusergroup[]" size="3" multiple onClick="checkAdmin(this)">
-                      {fusergroup}
-                      </select>
-              </td>
-      </tr>
-			<tr>
-        			<td align="right" valign="top">Active:</td>
-        			<td><input type="checkbox" name="factive" value="1" {factive}></td>
-			</tr>
-			<tr>
-        			<td align="right" valign="top">Email Notify:</td>
-        			<td><input type="checkbox" name="fe_notice" value="1" {fe_notice}></td>
-			</tr>
-			</table>
-			<div align="right">
-				<input type='submit' name='submit' value='Submit'>
-			</div>
-			</form>
-		</td>
 	</tr>
 </table>
+
+{include file="footer.html"}

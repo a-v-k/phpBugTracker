@@ -1,5 +1,5 @@
-<br>
-<form action="{me}" method="post">
+{include file="admin/header.html" page_title="Configuration"}
+<form action="{$SCRIPT_NAME}" method="post">
 <table border="0" width="640">
 	<tr>
 		<td valign="top">
@@ -11,24 +11,22 @@
 					<th>Value</th>
 					<th>Information</th>
 				</tr>
-				<!-- BEGIN row -->
-				<tr class="{trclass}">
-					<td>{varname}</td>
+				{section name=var loop=$vars}
+				<tr{if $smarty.section.var.iteration is even} class="alt"{/if}>
+					<td>{$vars[var].varname}</td>
 					<td>
-						<!-- BEGIN inputblock -->
-						<input type="{input_type}" name="{varname}" value="{varvalue}"{checked}>
-						<!-- END inputblock -->
-						<!-- BEGIN selectblock -->
-						<select name="{varname}">{options}</select>
-						<!-- END selectblock -->
-						<!-- BEGIN radioblock -->
-						<input type="radio" name="{varname}" value="1"{yes}> Yes 
-						<input type="radio" name="{varname}" value="0"{no}> No 
-						<!-- END radioblock -->
+						{if $vars[var].vartype eq "multi"}
+							<select name="{$vars[var].varname}">{build_select box=$vars[var].varname selected=$vars[var].varvalue}</select>
+						{elseif $vars[var].vartype eq "bool"}
+							<input type="radio" name="{$vars[var].varname}" value="1"{if $vars[var].varvalue} checked{/if}> Yes 
+							<input type="radio" name="{$vars[var].varname}" value="0"{if not $vars[var].varvalue} checked{/if}> No 
+						{else}
+							<input type="text" name="{$vars[var].varname}" value="{$vars[var].varvalue}">
+						{/if}
 					</td>
-					<td>{description}</td>
+					<td>{$vars[var].description}</td>
 				</tr>
-				<!-- END row -->
+				{/section}
 			</table>
 		</td>
 	</tr>
@@ -40,3 +38,4 @@
 	</tr>
 </table>
 </form>
+{include file="admin/footer.html"}
