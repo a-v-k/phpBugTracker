@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.6 2002/03/05 23:55:28 bcurtis Exp $
+// $Id: functions.php,v 1.7 2002/03/17 01:36:43 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -356,3 +356,22 @@ function build_project_js() {
 	}
 	return $js;
 }
+
+///
+/// Database concat
+function db_concat() {
+	$pieces = func_get_args();
+	
+	switch(DB_TYPE) {
+		case 'mysql' : $retstr = 'concat('. delimit_list(', ', $pieces).')'; break;
+		case 'pgsql' :
+		case 'oci8' :
+		case 'sybase' :
+		case 'ibase' : $retstr = delimit_list(' || ', $pieces); break;
+		case 'fbsql' : $retstr = 'CONCAT('. delimit_list(', ', $pieces).')'; break;
+		default : $retstr = delimit_list(' + ', $pieces); break;
+  }
+  return $retstr
+}
+
+?>
