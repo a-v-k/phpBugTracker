@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.64 2001/10/29 22:41:59 javyer Exp $
+// $Id: include.php,v 1.65 2001/10/29 22:56:54 javyer Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -213,6 +213,7 @@ class uperm extends Perm {
 class templateclass extends Template {
   function pparse($target, $handle, $append = false) {
     global $auth, $perm, $q;
+$q->Debug=true;
 
     $u = $auth->auth['uid'];
     $this->set_block('wrap', 'logoutblock', 'loblock');
@@ -220,14 +221,14 @@ class templateclass extends Template {
     $this->set_block('wrap', 'adminnavblock', 'anblock');
     if ($u && $u != 'nobody') {
       list($owner_open, $owner_closed) =
-        $q->grab("select sum(if(status_name in ('Unconfirmed','New','Assigned','Reopened'),1,0)),"
-        	."  sum(if(status_name not in ('Unconfirmed','New','Assigned','Reopened'),1,0))"
-    			." from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id)"
-    			." where assigned_to = $u where status_name in ");
+		$q->grab("SELECT sum(CASE WHEN status_name in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) ,"
+				."sum(CASE WHEN status_name not in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END )"
+				."from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) where assigned_to = $u");
+				
       list($reporter_open, $reporter_closed) =
- 				$q->grab("select sum(if(status_name in ('Unconfirmed','New','Assigned','Reopened'),1,0)),"
-    			."  sum(if(status_name not in ('Unconfirmed','New','Assigned','Reopened'),1,0))"
-    			." from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) where created_by = $u");
+		$q->grab("SELECT sum(CASE WHEN status_name in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) ,"
+				."sum(CASE WHEN status_name not in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END )"
+				."from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) where created_by = $u");
       $this->set_var(array(
         'loggedinas' => $auth->auth['uname'],
         'liblock' => '',
