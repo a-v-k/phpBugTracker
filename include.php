@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.55 2001/09/18 03:36:33 bcurtis Exp $
+// $Id: include.php,v 1.56 2001/09/22 16:55:33 bcurtis Exp $
 
 if (defined("INCLUDE_PATH")) {
   require INCLUDE_PATH."config.php";
@@ -345,6 +345,20 @@ function build_select($box, $value = '', $project = 0) {
         $text .= "<option value=\"{$row['user_id']}\"$sel>{$row['login']}</option>";
       }
       break;
+		case 'bug_cc' :
+			$q->query('select b.user_id, login from '.TBL_BUG_CC.' b left join '.
+				TBL_AUTH_USER." using(user_id) where bug_id = $value");
+			while (list($uid, $user) = $q->grab()) {
+				$text .= "<option value=\"$uid\">".maskemail($user).'</option>';
+			}
+			
+			// Pad the sucker
+			$text .= '<option value="" disabled>';
+			for ($i = 0; $i < 30; $i++) {
+				$text .= '&nbsp;';
+			}
+			$text .= '</option>';
+			break;
     default :
       $deadarray = $select[$box];
       while(list($val,$item) = each($deadarray)) {

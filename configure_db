@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script to generate database-creation-scripts
-# $Id: configure_db,v 1.4 2001/09/15 16:22:51 bcurtis Exp $
+# $Id: configure_db,v 1.5 2001/09/22 16:55:33 bcurtis Exp $
 
 # prefix for tablenames
 #TBL_PREFIX="phpbt_"
@@ -15,6 +15,7 @@ DB_TYPE='mysql'
 generate_sql() {
   cat $1 | sed "
     s/TBL_ATTACHMENT/${TBL_PREFIX}attachment/g
+    s/TBL_BUG_CC/${TBL_PREFIX}bug_cc/g
     s/TBL_BUG_GROUP/${TBL_PREFIX}bug_group/g
     s/TBL_BUG_HISTORY/${TBL_PREFIX}bug_history/g
     s/TBL_BUG/${TBL_PREFIX}bug/g

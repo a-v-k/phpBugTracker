@@ -8,7 +8,7 @@ BEGIN;
 --
 -- TEMPLATE: This is a template for configure_db -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.1 2001/09/15 16:22:13 bcurtis Exp $
+-- $Id: pgsql.in,v 1.2 2001/09/22 16:55:33 bcurtis Exp $
 
 create database BugTracker;
 use BugTracker;
@@ -90,6 +90,14 @@ CREATE TABLE TBL_BUG (
   browser_string varchar(255) NOT NULL DEFAULT '',
   close_date INT8  NOT NULL DEFAULT '0',
   PRIMARY KEY  (bug_id)
+);
+
+CREATE TABLE TBL_BUG_CC (
+  bug_id INT4  NOT NULL DEFAULT '0',
+  user_id INT4  NOT NULL DEFAULT '0',
+  created_by INT4  NOT NULL DEFAULT '0',
+  created_date INT8  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (bug_id,user_id)
 );
 
 CREATE TABLE TBL_BUG_GROUP (

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.10 2001/09/15 15:54:03 bcurtis Exp $
+// $Id: config.php,v 1.11 2001/09/22 16:55:33 bcurtis Exp $
 
 define ('INSTALLPATH', '/home/bcurtis/public_html/phpbt');
 define ('INSTALLURL', 'http://localhost/~bcurtis/phpbt');
@@ -62,6 +62,7 @@ define ('TBL_AUTH_GROUP',    TBL_PREFIX.'auth_group');
 define ('TBL_AUTH_PERM',     TBL_PREFIX.'auth_perm');
 define ('TBL_AUTH_USER',     TBL_PREFIX.'auth_user');
 define ('TBL_BUG',           TBL_PREFIX.'bug');
+define ('TBL_BUG_CC',        TBL_PREFIX.'bug_cc');
 define ('TBL_BUG_GROUP',     TBL_PREFIX.'bug_group');
 define ('TBL_BUG_HISTORY',   TBL_PREFIX.'bug_history');
 define ('TBL_COMMENT',       TBL_PREFIX.'comment');

@@ -4,7 +4,7 @@
 #
 # TEMPLATE: This is a template for configure_db -- not for creating the database!
 #
-# $Id: mysql.in,v 1.1 2001/09/15 16:22:13 bcurtis Exp $
+# $Id: mysql.in,v 1.2 2001/09/22 16:55:33 bcurtis Exp $
 
 create database BugTracker;
 use BugTracker;
@@ -88,6 +88,14 @@ CREATE TABLE TBL_BUG (
   browser_string varchar(255) NOT NULL default '',
   close_date bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (bug_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_BUG_CC (
+  bug_id int(10) unsigned NOT NULL default '0',
+  user_id int(10) unsigned NOT NULL default '0',
+  created_by int(10) unsigned NOT NULL default '0',
+  created_date bigint(20) unsigned NOT NULL default '0',
+  PRIMARY KEY  (bug_id,user_id)
 ) TYPE=MyISAM;
 
 CREATE TABLE TBL_BUG_GROUP (

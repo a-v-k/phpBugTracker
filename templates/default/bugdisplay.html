@@ -86,12 +86,6 @@
 	</tr>
 	<tr>
 		<td valign="top" colspan="2">
-			Additional Comments:
-			<br>
-			<br>
-			<textarea name="comments" rows="10" cols="35" wrap="virtual"></textarea>
-		</td>
-		<td valign="top" colspan="2">
 			Update Bug Status:
 			<br>
 			<br>
@@ -124,6 +118,28 @@
 			<input type="radio" name="outcome" value="close"> 
 				Mark bug as closed<br>
 			<!-- END crow -->
+		</td>
+		<td valign="top" colspan="2">
+			Add CC:
+			<br>
+			<br>
+			<input type="text" name="add_cc">
+			<br>
+			<br>
+			Remove selected CCs:
+			<br>
+			<br>
+			<select name="remove_cc[]" size="5" multiple>{cclist}</select>
+		</td>
+	</tr>
+</table>
+<table border="0" cellpadding="2" cellspacing="0" width="640">
+	<tr>
+		<td valign="top">
+			Additional Comments:
+			<br>
+			<br>
+			<textarea name="comments" rows="6" cols="55" wrap="virtual"></textarea>
 			<br>
 			<br>
 			<div align="right">
@@ -131,8 +147,6 @@
 			</div>
 		</td>
 	</tr>
-</table>
-<table border="0" cellpadding="2" cellspacing="0" width="640">
 	<tr>
 		<td>
 			Attachments:
