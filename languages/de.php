@@ -24,7 +24,7 @@
 // Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 // MA 02111-1307, USA.
 // -------------------------------------------------------------------------
-// $Id: de.php,v 1.17 2002/10/22 20:34:48 bcurtis Exp $
+// $Id: de.php,v 1.18 2002/10/22 21:13:22 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -213,7 +213,8 @@ $STRING = array(
 		'Site' => 'Berichtet an Standort',
 		'Database' => 'Datenbank',
 		'OS' => 'OS',
-		'ChooseOne' => 'Eines auswählen'
+		'ChooseOne' => 'Eines auswählen',
+		'SuppressEmail' => 'Suppress notification email'
 	),
 	'USER_PREF' => array(
 		'ReceiveNotifications' => 'Änderungen an Bugs per E-Mail erhalten',

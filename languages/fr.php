@@ -22,7 +22,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: fr.php,v 1.14 2002/10/22 20:34:48 bcurtis Exp $
+// $Id: fr.php,v 1.15 2002/10/22 21:13:22 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -212,7 +212,8 @@ $STRING = array(
 		'Site' => 'Découvert sur le site',
 		'Database' => 'Base de données',
 		'OS' => 'Système d\'exploitation',
-		'ChooseOne' => 'Choisissez'
+		'ChooseOne' => 'Choisissez',
+		'SuppressEmail' => 'Suppress notification email'
 	),
 	'USER_PREF' => array(
 		'ReceiveNotifications' => 'Recevoir les mises à jour de bogue par email',

@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: pt-br.php,v 1.18 2002/10/22 20:34:48 bcurtis Exp $
+// $Id: pt-br.php,v 1.19 2002/10/22 21:13:23 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -211,7 +211,8 @@ $STRING = array(
 		'Site' => 'Reported on Site',
 		'Database' => 'Database',
 		'OS' => 'OS',
-		'ChooseOne' => 'Choose One'
+		'ChooseOne' => 'Choose One',
+		'SuppressEmail' => 'Suppress notification email'
 	),
 	'USER_PREF' => array(
 		'ReceiveNotifications' => 'Receive notifications of bug changes via email',

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz.php,v 1.22 2002/10/22 20:34:48 bcurtis Exp $
+// $Id: cz.php,v 1.23 2002/10/22 21:13:20 bcurtis Exp $
 
 $STRING = array(
     'lang_charset' => 'Windows-1250',
@@ -208,7 +208,8 @@ $STRING = array(
         'Site' => 'Prostøedí',
 	'Database' => 'Databáze',
         'OS' => 'Operaèní systém',
-	'ChooseOne' => 'Vyberte'
+	'ChooseOne' => 'Vyberte',
+		'SuppressEmail' => 'Suppress notification email'
     ),
     'USER_PREF' => array(
 	'ReceiveNotifications' => 'Zasílat upozornìní o zmìnách bugù',

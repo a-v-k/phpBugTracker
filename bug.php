@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.121 2002/10/22 20:34:48 bcurtis Exp $
+// $Id: bug.php,v 1.122 2002/10/22 21:13:16 bcurtis Exp $
 
 include 'include.php';
 
@@ -119,7 +119,7 @@ function show_history($bugid) {
 ///
 /// Send the email about changes to the bug and log the changes in the DB
 function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
-	global $db, $t, $u, $select, $now, $STRING, $QUERY;
+	global $db, $t, $u, $select, $now, $STRING, $QUERY, $_pv;
 
 	// It's a new bug if the changedfields array is empty and there are no comments
 	$newbug = (!count($cf) and !$comments);
@@ -220,6 +220,8 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 		}
 	}
 
+	if (!empty($_pv['suppress_email'])) return; // Don't send email if silent update requested.
+
 	// Reporter never changes
 	$reporter = $db->getOne('select email from '.TBL_AUTH_USER.
 		" u, ".TBL_USER_PREF." p where u.user_id = {$buginfo['created_by']} ".
@@ -291,21 +293,21 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 	// Later add a watcher (such as QA person) check here
 	if (count($maillist)) {
 		if ($toemail = delimit_list(', ',$maillist)) {
-		    $t->assign(array(
-			'bugid' => $buginfo['bug_id'],
-			'bugurl' => INSTALL_URL."/bug.php?op=show&bugid={$buginfo['bug_id']}",
-			'priority' => $select['priority'][(!empty($cf['priority']) ? $cf['priority'] : $buginfo['priority'])],
-			'priority_stat' => !empty($cf['priority']) ? '!' : ' ',
-			'reporter' => $reporter,
-			'reporter_stat' => $reporterstat,
-			'assignedto' => $assignedto,
-			'assignedto_stat' => $assignedtostat
-		    ));
+			$t->assign(array(
+				'bugid' => $buginfo['bug_id'],
+				'bugurl' => INSTALL_URL."/bug.php?op=show&bugid={$buginfo['bug_id']}",
+				'priority' => $select['priority'][(!empty($cf['priority']) ? $cf['priority'] : $buginfo['priority'])],
+				'priority_stat' => !empty($cf['priority']) ? '!' : ' ',
+				'reporter' => $reporter,
+				'reporter_stat' => $reporterstat,
+				'assignedto' => $assignedto,
+				'assignedto_stat' => $assignedtostat
+				));
 
-		    qp_mail($toemail,"[Bug {$buginfo['bug_id']}] ".($newbug ? 'New' : 'Changed').' - '.
-			stripslashes((!empty($cf['title']) ? $cf['title'] : $buginfo['title'])),
-			$t->fetch($template),
-			sprintf("From: %s\nReply-To: %s\nErrors-To: %s", ADMIN_EMAIL, ADMIN_EMAIL, ADMIN_EMAIL));
+			qp_mail($toemail,"[Bug {$buginfo['bug_id']}] ".($newbug ? 'New' : 'Changed').' - '.
+				stripslashes((!empty($cf['title']) ? $cf['title'] : $buginfo['title'])),
+				$t->fetch($template),
+				sprintf("From: %s\nReply-To: %s\nErrors-To: %s", ADMIN_EMAIL, ADMIN_EMAIL, ADMIN_EMAIL));
 		}
 	}
 }

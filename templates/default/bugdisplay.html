@@ -156,6 +156,7 @@
 		<br><br>
 		<div align="right">
 {if $smarty.session.uid}
+			{$STRING.BUGDISPLAY.SuppressEmail} <input type="checkbox" name="suppress_email" value="1">
 		    <input type="submit" value="Submit">
 {else}
 			{$STRING.logintomodify}
