@@ -20,17 +20,17 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.16 2002/04/09 23:26:04 bcurtis Exp $
+// $Id: attachment.php,v 1.17 2002/04/10 15:07:39 bcurtis Exp $
 
 include 'include.php';
 
 function del_attachment($attachid) {
-	global $db;
+	global $db, $HTTP_SERVER_VARS;
 	
 	if (list($filename, $mimetype) = grab_attachment($attachid)) {
 		$db->query("delete from ".TBL_ATTACHMENT." where attachment_id = $attachid");
 		unlink($filename);
-		header("Location: bug.php?op=show&bugid=$attachid");
+		header("Location: {$HTTP_SERVER_VARS['HTTP_REFERER']}");
 	}
 }
 
