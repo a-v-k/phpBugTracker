@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.67 2002/04/03 01:00:52 bcurtis Exp $
+// $Id: query.php,v 1.68 2002/04/08 15:05:51 bcurtis Exp $
 
 include 'include.php';
 
@@ -29,7 +29,7 @@ function delete_saved_query($queryid) {
 	
 	$db->query("delete from ".TBL_SAVED_QUERY." where user_id = $u 
 		and saved_query_id = $queryid");
-	header("Location: $me?op=query");
+	header("Location: $me?op=query&form=advanced");
 }
 
 function show_query() {
