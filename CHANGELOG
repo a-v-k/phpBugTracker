@@ -1,9 +1,10 @@
--- 0.2.0 --
-: Allow for browsing the bugs without logging in
-: Started reporting
-: Started using jpgraph (optional) for showing summary charts
-: Added options for hiding and masking email addresses to avoid spambots
+-- 0.2.0 -- 11 Aug 2001
+: Allow for browsing the bugs without logging in.
+: Started reporting.
+: Started using jpgraph (optional) for showing summary charts.
+: Added options for hiding and masking email addresses to avoid spambots.
 : Added a dialog-based configure script.
+: Added file attachments to bugs.
 
 -- 0.1.7 -- 31 July 2001
 : Fixed bugs with valid_email() in admin/user.php
