@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.38 2001/11/13 03:53:04 bcurtis Exp $
+// $Id: query.php,v 1.39 2001/11/13 05:20:49 bcurtis Exp $
 
 include 'include.php';
 
@@ -314,7 +314,7 @@ $t->set_file('wrap','wrap.html');
 
 if ($op) switch($op) {
 	case 'query' : show_query(); break;
-	case 'doquery' : list_items(); break;
+	case 'doquery' : $querystring = ''; list_items(); break;
 	case 'delquery' : delete_saved_query($queryid); break;
 	case 'mybugs' : list_items($assignedto, $reportedby, $open); break;
 	default : show_query(); break;
