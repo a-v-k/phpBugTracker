@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.9 2002/03/18 16:21:42 bcurtis Exp $
+// $Id: functions.php,v 1.10 2002/03/20 20:00:14 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -371,6 +371,16 @@ function db_concat() {
 		default : $retstr = delimit_list(' + ', $pieces); break;
   }
   return $retstr;
+}
+
+// Dump a var
+function dump($var, $title = '') {
+	if ($title) {
+		echo "<b>$title</b><br>";
+	}
+	echo '<pre>';
+	print_r($var);
+	echo '</pre>';
 }
 
 ?>
