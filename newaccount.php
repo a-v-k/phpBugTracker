@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.16 2001/09/03 17:03:55 bcurtis Exp $
+// $Id: newaccount.php,v 1.17 2001/10/02 23:19:42 bcurtis Exp $
 
 include 'include.php'; 
 
@@ -46,7 +46,7 @@ function do_form() {
 		$mpassword = $password;
 	}
 	if (EMAIL_IS_LOGIN) $login = $email;
-	$user_id = $q->nextid('user');
+	$user_id = $q->nextid(TBL_AUTH_USER);
 	$q->query("insert into ".TBL_AUTH_USER." (user_id, login, first_name, last_name, email, password, active, created_date, last_modified_date)"
 	         ." values ($user_id, '$login', '$firstname', '$lastname', '$email', '$mpassword', 1, $now, $now)");
 	$q->query("insert into ".TBL_USER_GROUP." (user_id, group_id)"
