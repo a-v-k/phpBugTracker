@@ -114,10 +114,10 @@ CREATE TABLE `severity` (
   `severity_name` varchar(30) NOT NULL default '',
   `severity_desc` text NOT NULL,
   `sort_order` tinyint(3) unsigned NOT NULL default '0',
-  `severity_color` varchar(6) NOT NULL default 'FFFFFF',
+  `severity_color` varchar(10) NOT NULL default '#FFFFFF',
   PRIMARY KEY  (`severity_id`)
 );
-insert into severity select * from Severity;
+insert into severity select *, null from Severity;
 
 CREATE TABLE `status` (
   `status_id` int(10) unsigned NOT NULL default '0',
