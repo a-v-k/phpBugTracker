@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.25 2002/09/23 20:10:05 bcurtis Exp $
+// $Id: upgrade.php,v 1.26 2002/09/27 18:40:00 bcurtis Exp $
 
 define ('NO_AUTH', 1);
 define ('STYLE', 'default');
@@ -41,6 +41,27 @@ function upgrade() {
 				$db->query("alter table ".TBL_USER_PREF." add saved_queries int2");
 				$db->query("alter table ".TBL_USER_PREF." alter saved_queries set default 1");
 				$db->query("update ".TBL_USER_PREF." set saved_queries = 1");
+				$db->query("create table ".TBL_BUG_HISTORY."_old as select * from ".TBL_BUG_HISTORY);
+				$db->query("drop table ".TBL_BUG_HISTORY);
+				$db->query("create table ".TBL_BUG_HISTORY." ( bug_id INT4  NOT NULL DEFAULT '0', changed_field varchar(30) NOT NULL DEFAULT '', old_value varchar(255) NOT NULL DEFAULT '', new_value varchar(255) NOT NULL DEFAULT '', created_by INT4  NOT NULL DEFAULT '0', created_date INT8  NOT NULL DEFAULT '0' )");
+				$db->query("insert into ".TBL_BUG_HISTORY." select * from ".TBL_BUG_HISTORY."_old");
+				$db->query("drop table ".TBL_BUG_HISTORY."_old");
+				$db->query("alter table ".TBL_BUG." add database_id int4");
+				$db->query("alter table ".TBL_BUG." add site_id int4");
+				$db->query("alter table ".TBL_BUG." add closed_in_version_id int4");
+				$db->query("alter table ".TBL_BUG." add to_be_closed_in_version_id int4");
+				$db->query("create table ".TBL_SITE." ( site_id INT2 NOT NULL DEFAULT '0', site_name varchar(50) NOT NULL DEFAULT '', sort_order INT2 NOT NULL DEFAULT '0', PRIMARY KEY (site_id) )");
+				$db->query("INSERT INTO ".TBL_SITE." VALUES (0,'All',1)");
+				$db->query("INSERT INTO ".TBL_SITE." VALUES (1,'Development',2)");
+				$db->query("INSERT INTO ".TBL_SITE." VALUES (2,'Testing',3)");
+				$db->query("INSERT INTO ".TBL_SITE." VALUES (3,'Staging',4)");
+				$db->query("INSERT INTO ".TBL_SITE." VALUES (4,'Production',5)");
+				$db->query("CREATE SEQUENCE ".TBL_SITE."_seq START 4");
+				$db->query("create table ".TBL_DATABASE." ( database_id INT2 NOT NULL DEFAULT '0', database_name varchar(40) NOT NULL DEFAULT '', sort_order INT2 NOT NULL DEFAULT '0', PRIMARY KEY (database_id) )");
+				$db->query("INSERT INTO ".TBL_DATABASE." VALUES (1,'Oracle 8.1.7',1)");
+				$db->query("INSERT INTO ".TBL_DATABASE." VALUES (2,'MySQL 3.23.49',2)");
+				$db->query("INSERT INTO ".TBL_DATABASE." VALUES (3,'PostgreSQL 7.1.3',3)");
+				$db->query("CREATE SEQUENCE ".TBL_DATABASE."_seq START 3");
 				break;
 			case 'mysql' :
 				$db->query("alter table ".TBL_USER_PREF." add saved_queries tinyint(1) not null default '1' after email_notices");
@@ -52,6 +73,8 @@ function upgrade() {
 				$db->query("create table ".TBL_DATABASE." (database_id int(10) unsigned NOT NULL default '0', database_name varchar(40) NOT NULL default '', sort_order tinyint(3) unsigned NOT NULL default '0', PRIMARY KEY (database_id))");
 				$db->query("create table ".TBL_DATABASE."_seq (id int unsigned auto_increment not null primary key)");
 				$db->query("insert into ".TBL_DATABASE."_seq values (3)");
+				$db->query("INSERT INTO ".TBL_SITE." VALUES (0,'All',1), (1,'Development',2), (2,'Testing',3), (3,'Staging',4), (4,'Production',5)");
+				$db->query("INSERT INTO ".TBL_DATABASE." VALUES (1,'Oracle 8.1.7',1), (2,'MySQL 3.23.49',2), (3,'PostgreSQL 7.1.3',3)");
 				break;
 			case 'oci8' :
 				break;
@@ -63,8 +86,6 @@ function upgrade() {
 		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('BUG_ASSIGNED', '3', 'The status to assign a bug when it is assigned.', 'multi')");
 		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('BUG_REOPENED', '4', 'The status to assign a bug when it is reopened.', 'multi')");
 		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('BUG_CLOSED', '7', 'The status to assign a bug when it is closed.', 'multi')");
-		$db->query("INSERT INTO ".TBL_SITE." VALUES (0,'All',1), (1,'Development',2), (2,'Testing',3), (3,'Staging',4), (4,'Production',5)");
-		$db->query("INSERT INTO ".TBL_DATABASE." VALUES (1,'Oracle 8.1.7',1), (2,'MySQL 3.23.49',2), (3,'PostgreSQL 7.1.3',3");
 	}
 	include 'templates/default/upgrade-finished.html';
 }
