@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.50 2001/10/17 13:19:19 bcurtis Exp $
+// $Id: bug.php,v 1.51 2001/10/26 12:02:37 bcurtis Exp $
 
 include 'include.php';
 
@@ -122,7 +122,8 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
         ." where ${field}_id = {$cf[$field.'_id']}");
       $q->query('insert into '.TBL_BUG_HISTORY
         .' (bug_id, changed_field, old_value, new_value, created_by, created_date)'
-        ." values ({$buginfo['bug_id']}, '$field', '$oldvalue', '$newvalue', $u, $now)");
+        ." values ({$buginfo['bug_id']}, '$field', '".addslashes($oldvalue).
+				"', '".addslashes($newvalue)."', $u, $now)");
       $t->set_var(array(
         $field.'_id' => stripslashes($newvalue),
         $field.'_id_stat' => '!'
