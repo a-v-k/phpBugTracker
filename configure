@@ -11,10 +11,13 @@ INSTALLPATH=`pwd`
 INSTALLURL=http://`hostname -f`/phpbt
 PHPLIBPATH=''
 JPGRAPH_PATH=''
+ATTACHMENT_PATH='attachments'
 
 # Booleans
 ENCRYPTPASS=1
 USE_JPGRAPH=0
+MASK_EMAIL=0
+HIDE_EMAIL=1
 
 administrivia() {
 	$DIALOG --backtitle "phpBT Configuration" \
@@ -37,6 +40,18 @@ If you specify a directory other than the current one, you'll need to move the f
 		return
 	fi
 	INSTALLPATH=`<$tempfile`
+
+	$DIALOG --backtitle "phpBT Configuration" \
+		--title "Attachment Path (2 of 4)" \
+		--inputbox "Enter the sub-directory where the attachments will be stored.\n\n\
+NOTE -- This does not create the directory you specify; it only changes include.php.  \
+If you don't use the default directory, you must make sure the permissions on
+that directory allow the web server to create and read files in it!\n\n" 0 0 $ATTACHMENT_PATH \
+		2> $tempfile
+	if [ $? -gt 0 ]; then
+		return
+	fi
+	ATTACHMENT_PATH=`<$tempfile`
 
 	$DIALOG --backtitle "phpBT Configuration" \
 		--title "Installation URL (3 of 4)" \
@@ -70,16 +85,30 @@ change_features() {
 	else
 		OLD_USE_JPGRAPH=off
 	fi
+	if [ $MASK_EMAIL -eq 1 ]; then
+		OLD_MASK_EMAIL=on
+	else 
+		OLD_MASK_EMAIL=off
+	fi
+	if [ $HIDE_EMAIL -eq 1 ]; then
+		OLD_HIDE_EMAIL=on
+	else
+		OLD_HIDE_EMAIL=off
+	fi
 	
 	NEW_ENCRYPTPASS=0
 	NEW_USE_JPGRAPH=0
+	NEW_MASK_EMAIL=0
+	NEW_HIDE_EMAIL=0
 
 	$DIALOG --backtitle "phpBT Configuration" \
 		--title "Optional Features" \
 		--separate-output \
-  	--checklist "Choose the features below you would like to enable" 10 72 3 \
+  	--checklist "Choose the features below you would like to enable" 12 72 5 \
     	"ENCRYPTPASS" "Store passwords encrypted in the database" $OLD_ENCRYPTPASS \
     	"USE_JPGRAPH" "Use the JP Graph class for charting some reports" $OLD_USE_JPGRAPH \
+    	"MASK_EMAIL" "Replace @ with at and . with dot when showing emails" $OLD_MASK_EMAIL \
+    	"HIDE_EMAIL" "Completely hide emails when not logged in" $OLD_HIDE_EMAIL \
   	2> $tempfile
 
 	retval=$?
@@ -93,11 +122,17 @@ change_features() {
 					NEW_ENCRYPTPASS=1;;
 				USE_JPGRAPH)
 					NEW_USE_JPGRAPH=1;;
+				MASK_EMAIL)
+					NEW_MASK_EMAIL=1;;
+				HIDE_EMAIL)
+					NEW_HIDE_EMAIL=1;;
 			esac
 		done
 
 		ENCRYPTPASS=${NEW_ENCRYPTPASS:-0}
 		USE_JPGRAPH=${NEW_USE_JPGRAPH:-0}
+		MASK_EMAIL=${NEW_MASK_EMAIL:-0}
+		HIDE_EMAIL=${NEW_HIDE_EMAIL:-0}
 	fi
 	
 	if [ $USE_JPGRAPH -eq 1 ]; then
@@ -136,16 +171,20 @@ show_menu() {
 				;;
 			Save)
 				mv include.php include.php.bak
-				echo "/ENCRYPTPASS/s/0/$ENCRYPTPASS/" > $tempfile
-				echo "/USE_JPGRAPH/s/0/$USE_JPGRAPH/" >> $tempfile
+				echo "/ENCRYPTPASS/s/[[:digit:]]/$ENCRYPTPASS/" > $tempfile
+				echo "/USE_JPGRAPH/s/[[:digit:]]/$USE_JPGRAPH/" >> $tempfile
+				echo "/MASK_EMAIL/s/[[:digit:]]/$MASK_EMAIL/" >> $tempfile
+				echo "/HIDE_EMAIL/s/[[:digit:]]/$HIDE_EMAIL/" >> $tempfile
 				echo "/ADMINEMAIL/s|,'.*'|,'$ADMINEMAIL'|" >> $tempfile
 				echo "/INSTALLPATH/s|,'.*'|,'$INSTALLPATH'|" >> $tempfile
+				echo "/ATTACHMENT_PATH/s|, '.*'|, '$ATTACHMENT_PATH'|" >> $tempfile
 				echo "/INSTALLURL/s|,'.*'|,'$INSTALLURL'|" >> $tempfile
 				echo "/PHPLIBPATH/s|,'.*'|,'$PHPLIBPATH'|" >> $tempfile
 				echo "/JPGRAPH_PATH/s|,'.*'|,'$JPGRAPH_PATH'|" >> $tempfile
 				sed -f $tempfile include.php.bak > include.php
 				$DIALOG --backtitle "phpBT Configuration" \
 					--infobox "Your changes have been saved" 5 36
+				exit
 				;;
 		esac
 	else
