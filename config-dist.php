@@ -19,10 +19,10 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config-dist.php,v 1.14 2002/04/09 20:53:07 bcurtis Exp $
+// $Id: config-dist.php,v 1.15 2002/04/11 22:03:57 bcurtis Exp $
 
 // Database Config
-define ('DB_TYPE', '{db_type}');  // using PHPlib file naming (mysql | pgsql)
+define ('DB_TYPE', '{db_type}');  // using PEAR::DB naming (mysql, pgsql, etc.)
 define ('DB_HOST', '{db_host}'); // hostname of database server
 define ('DB_DATABASE', '{db_database}'); // database name
 define ('DB_USER', '{db_user}'); // username for database connection
