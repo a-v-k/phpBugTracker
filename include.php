@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.58 2001/10/06 03:35:37 bcurtis Exp $
+// $Id: include.php,v 1.59 2001/10/11 14:24:03 bcurtis Exp $
 
 if (defined("INCLUDE_PATH")) {
   require INCLUDE_PATH."config.php";
@@ -245,14 +245,20 @@ class templateclass extends Template {
   }
 }
 
-$t = new templateclass('templates/'.THEME,'keep');
+if (defined('INCLUDE_PATH')) {
+	$t = new templateclass(INCLUDE_PATH.'templates/'.THEME.'admin', 'keep');
+} else {
+	$t = new templateclass('templates/'.THEME, 'keep');
+}
+
 $t->set_var(array(
   'TITLE' => '',
   'me' => $me,
   'me2' => $me2,
   'error' => '',
   'cssfile' => $cssfile,
-  'loginerror' => ''));
+  'loginerror' => '',
+	'template_path' => 'templates/'.THEME));
 
 // End classes -- Begin helper functions
 
