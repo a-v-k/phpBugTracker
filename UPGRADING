@@ -7,7 +7,8 @@ altered.
 Following the steps below will upgrade your installation of phpBT.
 
 1. Edit config-dist.php, changing the database settings to match those from
-   your old config.php.  Save config-dist.php as config.php.
+   your old config.php (DB_* and TBL_PREFIX constants).  Save config-dist.php 
+   as config.php.
 2. With your web browser, load upgrade.php from the directory where you 
    installed the new set of files.
 3. After running that script your installation has been upgraded.
