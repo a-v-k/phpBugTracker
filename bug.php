@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.75 2002/01/26 14:20:40 bcurtis Exp $
+// $Id: bug.php,v 1.76 2002/01/26 17:19:19 bcurtis Exp $
 
 include 'include.php';
 
@@ -436,7 +436,13 @@ function do_form($bugid = 0) {
 			$status = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = 'Assigned'");
 		} else {
 			$owner = 0;
-    	$status = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = 'Unconfirmed'");
+			// If we aren't using voting to promote, then auto-promote to New
+			if (PROMOTE_VOTES) {
+				$stat_to_assign = 'Unconfirmed';
+			} else {
+				$stat_to_assign = 'New';
+			}
+    	$status = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = '$stat_to_assign'");
 		}
     $q->query("insert into ".TBL_BUG." (bug_id, title, description, url, 
 			severity_id, priority, status_id, assigned_to, created_by, created_date, 
