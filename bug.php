@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.35 2001/09/01 15:44:20 mohni Exp $
+// $Id: bug.php,v 1.36 2001/09/01 16:14:29 bcurtis Exp $
 
 include 'include.php';
 
@@ -476,7 +476,7 @@ function show_bug($bugid = 0, $error = '') {
 		}
 	}
 			
-	$q->query("select comment_text, comment.created_date, email"
+	$q->query("select comment_text, c.created_date, email"
 	         ." from ".TBL_COMMENT." c, ".TBL_AUTH_USER
 		 ." where bug_id = $bugid and c.created_by = user_id order by c.created_date");
 	if (!$q->num_rows()) {
