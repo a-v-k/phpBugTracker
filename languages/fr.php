@@ -21,9 +21,10 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: fr.php,v 1.1 2001/09/03 18:12:18 bcurtis Exp $
+// $Id: fr.php,v 1.2 2001/09/04 09:46:50 mbravo Exp $
 
 $STRING = array(
+	'lang_charset' => 'iso8859-1',
 	'nouser' => 'Cet utilisateur n\'existe pas',
 	'dupeofself' => 'Un bogue ne peut pas être doublon de lui-même',
 	'nobug' => 'Ce bogue n\'existe pas',
