@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.68 2001/12/12 14:42:57 bcurtis Exp $
+// $Id: bug.php,v 1.69 2001/12/19 13:33:14 bcurtis Exp $
 
 include 'include.php';
 
@@ -79,7 +79,7 @@ function show_history($bugid) {
 
 ///
 /// Send the email about changes to the bug and log the changes in the DB
-function do_changedfields($userid, $buginfo, $cf = array(), $comments = '') {
+function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
   global $q, $t, $u, $select, $now, $STRING;
 
 	// It's a new bug if the changedfields array is empty and there are no comments
@@ -360,7 +360,7 @@ function update_bug($bugid = 0) {
   $q->query("update ".TBL_BUG." set title = '$title', url = '$url', severity_id = $severity_id, priority = $priority, ".(isset($status_id) ? "status_id = $status_id, " : ''). ($changeresolution ? "resolution_id = $resolution_id, " : ''). (isset($assignedto) ? "assigned_to = $assignedto, " : '')." project_id = $project_id, version_id = $version_id, component_id = $component_id, os_id = $os_id, last_modified_by = $u, last_modified_date = $now where bug_id = $bugid");
 
   if (count($changedfields) or !empty($comments)) {
-    do_changedfields($u, &$buginfo, $changedfields, $comments);
+    do_changedfields($u, $buginfo, $changedfields, $comments);
   }
   header("Location: bug.php?op=show&bugid=$bugid&pos=$pos");
 }
@@ -405,7 +405,7 @@ function do_form($bugid = 0) {
 			$now, $u, $now, $project, $version, $component, '$os', 
 			'{$GLOBALS['HTTP_USER_AGENT']}')");
 		$buginfo = $q->grab('select * from '.TBL_BUG." where bug_id = $bugid");
-		do_changedfields($u, &$buginfo);
+		do_changedfields($u, $buginfo);
   } else {
     $q->query("update ".TBL_BUG." set title = '$title', description = '$description', url = '$url', severity_id = '$severity', priority = '$priority', status_id = $status, assigned_to = '$assignedto', project_id = $project, version_id = $version, component_id = $component, os_id = '$os', browser_string = '{$GLOBALS['HTTP_USER_AGENT']}' last_modified_by = $u, last_modified_date = $time where bug_id = '$bugid'");
   }
