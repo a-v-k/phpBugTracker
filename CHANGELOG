@@ -1,4 +1,4 @@
--- 0.6.0 --
+-- 0.6.0 -- 15 Dec 2001
 : Fixed a bug with old queries being retained when submitting a new query.
 : Moved session, auth, and database classes into the package.
 : Added Previous and Next links for moving to other bugs in the bug list
