@@ -9,7 +9,7 @@
   list.
 : Updated translations.
 : Cleaned up printing of bug detail page.
-: Added required files from PEAR (DB.php, etc.) to the distribution.
+: Added required files from PEAR (DB.php, etc.) and Smarty to the distribution.
 : Improved compatibility with IIS.
 : Fixed various small bugs.
 
