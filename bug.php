@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.76 2002/01/26 17:19:19 bcurtis Exp $
+// $Id: bug.php,v 1.77 2002/02/14 03:56:22 bcurtis Exp $
 
 include 'include.php';
 
@@ -389,7 +389,7 @@ function update_bug($bugid = 0) {
     $changedfields['resolution_id'] = $resolution_id;
   }
   if ($comments) {
-    $comments = strip_tags($comments);
+    //$comments = strip_tags($comments); -- Uncomment this if you want no <> content in the comments
     $q->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
     	." values (".$q->nextid(TBL_COMMENT).", $bugid, '$comments', $u, $now)");
   }
