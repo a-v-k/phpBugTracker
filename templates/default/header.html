@@ -33,7 +33,7 @@
 				<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='report.php'">
 					<a href="report.php" class="sidenavlink">View Reports</a>
 				</div>
-				{if not NEW_ACCOUNTS_DISABLED}
+				{if not NEW_ACCOUNTS_DISABLED and not $smarty.session.uid}
 					<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='newaccount.php'">
 						<a href="newaccount.php" class="sidenavlink">Create a new account</a>
 					</div>
