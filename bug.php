@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.106 2002/05/18 02:59:32 bcurtis Exp $
+// $Id: bug.php,v 1.107 2002/05/21 13:37:00 firma Exp $
 
 include 'include.php';
 
@@ -150,6 +150,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
     'component' => TBL_COMPONENT,
     'status' => TBL_STATUS,
     'resolution' => TBL_RESOLUTION,
+    'database' => TBL_DATABASE,
     'severity' => TBL_SEVERITY,
     'os' => TBL_OS,
     'version' => TBL_VERSION
@@ -373,6 +374,7 @@ function update_bug($bugid = 0) {
   $db->query("update ".TBL_BUG." set title = ".$db->quote(stripslashes($title)).
 		', url = '.$db->quote(stripslashes($url)).", severity_id = $severity_id, ".
 		"priority = $priority, status_id = $status_id, ".
+		"database_id = $database_id, to_be_closed_in_version_id = $to_be_closed_in_version_id, ".
 		"resolution_id = $resolution_id, assigned_to = $assigned_to, ".
 		"project_id = $project_id, version_id = $version_id, ".
 		"component_id = $component_id, os_id = $os_id, last_modified_by = $u, ".
