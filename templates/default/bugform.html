@@ -1,161 +1,163 @@
-        <form action="bug.php" method="post" enctype="multipart/form-data">
-            <table border="0">
-                <?php if (!empty($error)) { ?>
-                <tr>
-                    <td colspan="2" class="error">
-                        <?php echo $error ?>
-                    </td>
-                </tr>
-                <?php } ?>
-                <tr>
-                    <td align="right" valign="top">
-                        <?php echo translate("Project"); ?>:
-                    </td>
-                    <td>
-                        <?php echo stripslashes($projectname) ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <?php echo translate("Reporter"); ?>:
-                    </td>
-                    <td>
-                        <select name="reporter">
-                            <?php build_select('reporter', $reporter) ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <?php echo translate("Version"); ?>:
-                    </td>
-                    <td>
-                        <select name="version">
-                            <?php build_select('version', $version, $project) ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <?php echo translate("Summary"); ?>:
-                    </td>
-                    <td>
-                        <input type="text" size="50" maxlength="100" name="title" value="<?php echo htmlspecialchars(stripslashes($title)) ?>">
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <?php echo translate("Description"); ?>:
-                    </td>
-                    <td>
+		<form action="bug.php" method="post" enctype="multipart/form-data">
+			<table border="0">
+				<?php if (!empty($error)) { ?>
+				<tr>
+					<td colspan="2" class="error">
+						<?php echo $error ?>
+					</td>
+				</tr>
+				<?php } ?>
+				<tr>
+					<td align="right" valign="top">
+						<?php echo translate("Project"); ?>:
+					</td>
+					<td>
+						<?php echo stripslashes($projectname) ?>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" valign="top">
+						<?php echo translate("Reporter"); ?>:
+					</td>
+					<td>
+						<select name="reporter">
+							<?php build_select('reporter', $reporter) ?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" valign="top">
+						<?php echo translate("Version"); ?>:
+					</td>
+					<td>
+						<select name="version">
+							<?php build_select('version', $version, $project) ?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" valign="top">
+						<?php echo translate("Summary"); ?>:
+					</td>
+					<td>
+						<input type="text" size="50" maxlength="100" name="title" value="<?php echo htmlspecialchars(stripslashes($title)) ?>">
+					</td>
+				</tr>
+				<tr>
+					<td align="right" valign="top">
+						<?php echo translate("Description"); ?>:
+					</td>
+					<td>
 						<textarea name="description" cols="50" rows="8" wrap="virtual"><?php echo htmlspecialchars(stripslashes($description)) ?></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        URL:
-                    </td>
-                    <td>
-                        <input type="text" size="30" maxlength="255" name="url" value="<?php echo $url ?>">
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <?php echo translate("Severity"); ?>:
-                    </td>
-                    <td>
-                        <select name="severity">
-                            <?php build_select('severity', $severity) ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <?php echo translate("Priority"); ?>:
-                    </td>
-                    <td>
-                        <select name="priority">
-                            <?php build_select('priority', $priority) ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <?php echo translate("Component"); ?>:
-                    </td>
-                    <td>
-                        <select name="component">
-                            <?php build_select('component',  $component, $project) ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <?php echo translate("Database"); ?>:
-                    </td>
-                    <td>
-                        <select name="database">
-                            <?php build_select('database', $database) ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <?php echo translate("Site"); ?>:
-                    </td>
-                    <td>
-                        <select name="site">
-                            <?php build_select('site', $site) ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <?php echo translate("Operating System"); ?>:
-                    </td>
-                    <td>
-                        <select name="os">
-                            <?php build_select('os', $os) ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right">
-                        Attachment:
-                    </td>
-                    <td>
-                        <table border="0" align="center">
-                            <tr>
-                                <td colspan="2" align="center">
-                                    Please choose a file to upload and enter a one-line description.
-                                    <br>
-                                     Maximum file size: <?php echo $max_size ?> bytes
-                                    <br>
-                                    <br>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    File:
-                                </td>
-                                <td>
-                                    <input type="file" name="attachment">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Description:
-                                </td>
-                                <td>
-                                    <input type="text" name="at_description" maxlength="255" value="">
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <input type="submit" name="submit" value="<?php echo translate("Submit"); ?>"> 
-            <input type="hidden" name="bugid" value="0"> 
-            <input type="hidden" name="project" value="<?php echo $project ?>"> 
-            <input type="hidden" name="op" value="do">
-        </form>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" valign="top">
+						URL:
+					</td>
+					<td>
+						<input type="text" size="30" maxlength="255" name="url" value="<?php echo $url ?>">
+					</td>
+				</tr>
+				<tr>
+					<td align="right" valign="top">
+						<?php echo translate("Severity"); ?>:
+					</td>
+					<td>
+						<select name="severity">
+							<?php build_select('severity', $severity) ?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" valign="top">
+						<?php echo translate("Priority"); ?>:
+					</td>
+					<td>
+						<select name="priority">
+							<?php build_select('priority', $priority) ?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" valign="top">
+						<?php echo translate("Component"); ?>:
+					</td>
+					<td>
+						<select name="component">
+							<?php build_select('component',  $component, $project) ?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" valign="top">
+						<?php echo translate("Database"); ?>:
+					</td>
+					<td>
+						<select name="database">
+							<?php build_select('database', $database) ?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" valign="top">
+						<?php echo translate("Site"); ?>:
+					</td>
+					<td>
+						<select name="site">
+							<?php build_select('site', $site) ?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" valign="top">
+						<?php echo translate("Operating System"); ?>:
+					</td>
+					<td>
+						<select name="os">
+							<?php build_select('os', $os) ?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">
+						&nbsp;
+					</td>
+					<td>
+						<table border="0" align="center">
+							<tr>
+								<td colspan="2" align="center">
+									If you wish to attach a file to this report, please choose a file to upload and enter a one-line description.
+									<br>
+									 Maximum file size: <?php echo ini_get('upload_max_filesize') < ATTACHMENT_MAX_SIZE
+										? number_format(ini_get('upload_max_filesize'))
+										: number_format(ATTACHMENT_MAX_SIZE) ?> bytes
+									<br>
+									<br>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									File:
+								</td>
+								<td>
+									<input type="file" name="attachment">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Description:
+								</td>
+								<td>
+									<input type="text" name="at_description" maxlength="255" value="">
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			<input type="submit" name="submit" value="<?php echo translate("Submit"); ?>"> 
+			<input type="hidden" name="bugid" value="0"> 
+			<input type="hidden" name="project" value="<?php echo $project ?>"> 
+			<input type="hidden" name="op" value="do">
+		</form>
