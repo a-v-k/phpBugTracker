@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.82 2002/03/05 22:14:00 bcurtis Exp $
+// $Id: bug.php,v 1.83 2002/03/11 18:28:35 bcurtis Exp $
 
 include 'include.php';
 
@@ -843,7 +843,7 @@ function show_projects() {
 	
   switch ($q->num_rows()) {
     case 0 :
-      $t->set_var('rows',$STRING['noprojects']);
+      $t->set_var('content',"<div class=\"error\">{$STRING['noprojects']}</div>");
       return;
     case 1 :
       $row = $q->grab();
