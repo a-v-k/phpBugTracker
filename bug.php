@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.111 2002/06/17 15:08:56 firma Exp $
+// $Id: bug.php,v 1.112 2002/06/17 15:49:17 firma Exp $
 
 include 'include.php';
 
@@ -449,75 +449,84 @@ function update_bug($bugid = 0) {
 }
 
 function do_form($bugid = 0) {
-  global $db, $me, $u, $_pv, $_gv, $STRING, $now, $HTTP_SERVER_VARS;
+    global $db, $me, $u, $_pv, $_gv, $STRING, $now, $HTTP_SERVER_VARS;
 
-	$error = '';
-  // Validation
-  if (!$_pv['title'] = htmlspecialchars(trim($_pv['title']))) {
-    $error = $STRING['givesummary'];
-  } elseif (!$_pv['description'] = htmlspecialchars(trim($_pv['description']))) {
-    $error = $STRING['givedesc'];
-  }
-  if ($error) {
-    $_gv['project'] = $_pv['project'];
-    show_form($bugid, $error);
-    return;
-  }
+    $error = '';
+    // Validation
+    if (!$_pv['title'] = htmlspecialchars(trim($_pv['title']))) {
+	$error = $STRING['givesummary'];
+    } elseif (!$_pv['description'] = htmlspecialchars(trim($_pv['description']))) {
+	$error = $STRING['givedesc'];
+    }
+    if ($error) {
+	$_gv['project'] = $_pv['project'];
+	show_form($bugid, $error);
+	return;
+    }
 
-  while (list($k,$v) = each($_pv)) $$k = $v;
+    while (list($k,$v) = each($_pv)) {
+	$$k = $v;
+    }
 
-  if ($url == 'http://') {
-    $url = '';
-  }
+    if ($url == 'http://') {
+	$url = '';
+    }
 
-	// Allow for removing of some items from the bug page
-	$priority = $priority ? $priority : 0;
-	$os = $os ? $os : 0;
-	$severity = $severity ? $severity : 0;
+    // Allow for removing of some items from the bug page
+    $priority = $priority ? $priority : 0;
+    $os = $os ? $os : 0;
+    $severity = $severity ? $severity : 0;
 	
-  if (!$bugid) {
-		$bugid = $db->nextId(TBL_BUG);
+    if (!$bugid) {
+	$bugid = $db->nextId(TBL_BUG);
 
-		// Check to see if this bug's component has an owner and should be assigned
-		if ($owner = $db->getOne("select owner from ".TBL_COMPONENT.
-			" c where component_id = $component")) {
-			$status = $db->getOne("select status_id from ".TBL_STATUS." where status_name = 'Assigned'");
-		} else {
-			$owner = 0;
-			// If we aren't using voting to promote, then auto-promote to New
-			if (PROMOTE_VOTES) {
-				$stat_to_assign = 'Unconfirmed';
-			} else {
-				$stat_to_assign = 'New';
-			}
-    	$status = $db->getOne("select status_id from ".TBL_STATUS." where status_name = '$stat_to_assign'");
-		}
-    $db->query("insert into ".TBL_BUG." (bug_id, title, description, url, 
-			severity_id, priority, status_id, assigned_to, created_by, created_date, 
-			last_modified_by, last_modified_date, project_id, version_id, 
-			component_id, os_id, browser_string) values ($bugid, ".
-			join(', ', array($db->quote(stripslashes($title)), 
-				$db->quote(stripslashes($description)), 
-				$db->quote(stripslashes($url)))).
-			", $severity, $priority, $status, $owner, $u, $now, $u, $now, $project, ".
-			"$version, $component, $os, '{$HTTP_SERVER_VARS['HTTP_USER_AGENT']}')");
-		$buginfo = $db->getRow('select * from '.TBL_BUG." where bug_id = $bugid");
-		do_changedfields($u, $buginfo);
-  } else {
-    $db->query("update ".TBL_BUG.
-			" set title = ".$db->quote(stripslashes($title)).
-			", description = ".$db->quote(stripslashes($description)).
-			", url = ".$db->quote(stripslashes($url)).
-			", severity_id = '$severity', priority = '$priority', ".
-			"status_id = $status, assigned_to = '$assignedto', ".
-			"project_id = $project, version_id = $version, ".
-			"component_id = $component, os_id = '$os', ".
-			"browser_string = '{$GLOBALS['HTTP_USER_AGENT']}' ".
-			"last_modified_by = $u, last_modified_date = $time ".
-			"where bug_id = '$bugid'");
-  }
-  if (isset($another)) header("Location: $me?op=add&project=$project");
-  else header("Location: query.php");
+	// Check to see if this bug's component has an owner and should be assigned
+	if ($owner = $db->getOne("select owner from ".TBL_COMPONENT." c where component_id = $component")) {
+	    $status = $db->getOne("select status_id from ".TBL_STATUS." where status_name = 'Assigned'");
+	} else {
+	    $owner = 0;
+
+	    // If we aren't using voting to promote, then auto-promote to New
+	    if (PROMOTE_VOTES) {
+		$stat_to_assign = 'Unconfirmed';
+	    } else {
+		$stat_to_assign = 'New';
+	    }
+
+	    $status = $db->getOne("select status_id from ".TBL_STATUS." where status_name = '$stat_to_assign'");
+	}
+	
+	$db->query('insert into '.TBL_BUG.' (bug_id, title, description, url, '.
+	    'severity_id, priority, status_id, assigned_to, created_by, created_date, '.
+	    'last_modified_by, last_modified_date, project_id, site_id, database_id, version_id, '.
+	    'component_id, os_id, browser_string) values ('.$bugid.', '.
+	    join(', ', array($db->quote(stripslashes($title)),
+	    $db->quote(stripslashes($description)),
+	    $db->quote(stripslashes($url)))).', '.
+	    $severity.', '.$priority.', '.$status.', '.$owner.', '.$u.', '.$now.', '.$u.', '.$now.', '.$project.', '.
+	    $site.', '.$database.', '.$version.', '.$component.', '.$os.', '.
+	    $db->quote(stripslashes($HTTP_SERVER_VARS['HTTP_USER_AGENT'])).')');
+	$buginfo = $db->getRow('select * from '.TBL_BUG." where bug_id = $bugid");
+	do_changedfields($u, $buginfo);
+    } else {
+	$db->query('update '.TBL_BUG.' set title = '.$db->quote(stripslashes($title)).
+	    ", description = ".$db->quote(stripslashes($description)).
+	    ", url = ".$db->quote(stripslashes($url)).
+	    ", severity_id = '$severity', priority = '$priority', ".
+	    "status_id = $status, assigned_to = '$assignedto', ".
+	    'database_id = '.$database.', site_id = '.$site.', '.
+	    "project_id = $project, version_id = $version, ".
+	    "component_id = $component, os_id = '$os', ".
+	    "browser_string = '{$GLOBALS['HTTP_USER_AGENT']}' ".
+	    "last_modified_by = $u, last_modified_date = $time ".
+	    "where bug_id = '$bugid'");
+    }
+
+    if (isset($another)) {
+	header("Location: $me?op=add&project=$project");
+    } else {
+	header("Location: query.php");
+    }
 }
 
 function show_form($bugid = 0, $error = '') {
@@ -685,20 +694,39 @@ function show_projects() {
 }
 
 if ($op) {
-  switch($op) {
-    case 'history' : show_history($_gv['bugid']); break;
-    case 'add' :
-      $perm->check('Editbug');
-      if (isset($_gv['project'])) show_form();
-      else show_projects();
-      break;
-    case 'show' : show_bug($_gv['bugid']); break;
-    case 'update' : update_bug($_pv['bugid']); break;
-    case 'do' : do_form($_pv['bugid']); break;
-    case 'print' : show_bug_printable($_gv['bugid']); break;
-    case 'vote' : vote_bug($_gv['bugid']); break;
-    case 'viewvotes' : vote_view($_gv['bugid']); break;
-  }
-} else header("Location: query.php");
+    switch($op) {
+	case 'history':
+	    show_history($_gv['bugid']);
+	break;
+	case 'add':
+	    $perm->check('Editbug');
+	    if (isset($_gv['project'])) {
+		show_form();
+	    } else {
+		show_projects();
+	    }
+	break;
+	case 'show':
+	    show_bug($_gv['bugid']);
+	break;
+	case 'update':
+	    update_bug($_pv['bugid']);
+	break;
+	case 'do':
+	    do_form($_pv['bugid']);
+	break;
+	case 'print':
+	    show_bug_printable($_gv['bugid']);
+	break;
+	case 'vote':
+	    vote_bug($_gv['bugid']);
+	break;
+	case 'viewvotes':
+	    vote_view($_gv['bugid']);
+	break;
+    }
+} else {
+    header("Location: query.php");
+}
 
 ?>

@@ -11,10 +11,12 @@ INSTEAD FOLLOW BUG'S URL BELOW IN ORDER TO DETAIL BUG:
        Product: {$project_id}
        Version: {$version_id}
      Component: {$component_id}
+          Site: {$site_id}
         Status: {$status_id}
     Resolution: {$resolution_id}
       Severity: {$severity_id}
     OS/Version: {$os_id}
+      Database: {$database_id}
       Priority: {$priority}
    Assigned To: {$assignedto}
 ============================================================================
