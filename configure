@@ -10,6 +10,9 @@ INSTALLURL=http://`hostname -f`/phpbt
 PHPLIBPATH=''
 JPGRAPH_PATH=''
 ATTACHMENT_PATH='attachments'
+DB_HOST='localhost'
+DB_USER='root'
+DB_PASS=''
 
 # Booleans
 ENCRYPTPASS=1
@@ -69,6 +72,35 @@ that directory allow the web server to create and read files in it!\n\n" 0 0 $AT
 	fi
 	
 	PHPLIBPATH=`<$tempfile`
+}
+
+database() {
+	$DIALOG --backtitle "phpBT Configuration" \
+		--title "Database Host" \
+		--inputbox "Enter the hostname of the server hosting the database server" 0 0 $DB_HOST \
+		2> $tempfile
+	if [ $? -gt 0 ]; then
+		return
+	fi
+	DB_HOST=`<$tempfile`
+
+	$DIALOG --backtitle "phpBT Configuration" \
+		--title "Database User" \
+		--inputbox "Enter the username to use for connecting to the database" 0 0 $DB_USER \
+		2> $tempfile
+	if [ $? -gt 0 ]; then
+		return
+	fi
+	DB_USER=`<$tempfile`
+
+	$DIALOG --backtitle "phpBT Configuration" \
+		--title "Database Password" \
+		--inputbox "Enter the password to use when connecting to the database" 0 0 $DB_PASS \
+		2> $tempfile
+	if [ $? -gt 0 ]; then
+		return
+	fi
+	DB_PASS=`<$tempfile`
 }
 
 change_features() {
@@ -149,6 +181,7 @@ show_menu() {
 		--title "Configuration Menu" \
   	--menu "Choose from the options below to configure your phpBugTracker installation." 15 68 4 \
 			"Administrivia" "Parameters that must be configured" \
+			"Database" "Database connection settings" \
   		"Features"  "Optional features" \
 			"Save" "Save configuration changes" \
 		2> $tempfile
@@ -160,6 +193,9 @@ show_menu() {
     case $choice in
 			Administrivia)
 				administrivia
+				;;
+			Database)
+				database
 				;;
 			Features)
 				change_features
@@ -176,6 +212,9 @@ show_menu() {
 				echo "/INSTALLURL/s|,'.*'|,'$INSTALLURL'|" >> $tempfile
 				echo "/PHPLIBPATH/s|,'.*'|,'$PHPLIBPATH'|" >> $tempfile
 				echo "/JPGRAPH_PATH/s|,'.*'|,'$JPGRAPH_PATH'|" >> $tempfile
+				echo "/var \$Host/s|'.*'|'$DB_HOST'|" >> $tempfile
+				echo "/var \$User/s|'.*'|'$DB_USER'|" >> $tempfile
+				echo "/var \$Password/s|'.*'|'$DB_PASS'|" >> $tempfile
 				sed -f $tempfile include.php.bak > include.php
 				$DIALOG --backtitle "phpBT Configuration" \
 					--infobox "Your changes have been saved" 5 36
