@@ -96,7 +96,7 @@
 	</tr><tr>
 	    <td>{$STRING.BUGDISPLAY.ToBeClosedInVersion}</td>
 	    <td><select name="to_be_closed_in_version_id">
-		    <option value="0">Choose One</option>
+		    <option value="0">{$STRING.BUGDISPLAY.ChooseOne}</option>
 		    {build_select box=version selected=$to_be_closed_in_version_id project=$project_id}
 		</select></td>
 	    <td>{$STRING.BUGDISPLAY.Database}:</td>
@@ -104,7 +104,7 @@
 	</tr><tr>
 	    <td>{$STRING.BUGDISPLAY.ClosedInVersion}</td>
 	    <td><select name="closed_in_version_id">
-		    <option value="0">Choose One</option>
+		    <option value="0">{$STRING.BUGDISPLAY.ChooseOne}</option>
 		    {build_select box=version selected=$closed_in_version_id project=$project_id}
 		</select></td>
 	    <td>{$STRING.BUGDISPLAY.Site}</td>
