@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: sl.php,v 1.1 2002/04/11 18:40:35 bcurtis Exp $
+// $Id: sl.php,v 1.2 2002/04/11 20:16:26 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso-8859-2',
@@ -73,8 +73,8 @@ $STRING = array(
 		0 => 'Vsi uporabniki',
 		1 => 'Aktivni uporabniki',
 		2 => 'Neaktivni uporabniki'),
-	'dupe_dependency' => 'That bug dependency has already been added',
-	'image_path_not_writeable' => 'The subdirectory "jpgimages" is not writeable by the web process, so the summary image can not be rendered'
+	'dupe_dependency' => 'Odvisnost med hrosci je ze bila dodana',
+	'image_path_not_writeable' => 'Ne morem pisati v imenik "jpgimages", zato slike s povzetkom ni bilo mogoce pripraviti'
 	);
 
 // Page titles
