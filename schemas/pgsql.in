@@ -5,7 +5,7 @@
 --
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.14 2001/12/24 20:00:49 bcurtis Exp $
+-- $Id: pgsql.in,v 1.15 2002/01/26 16:10:04 bcurtis Exp $
 
 BEGIN;
 
@@ -111,6 +111,13 @@ CREATE TABLE TBL_BUG_HISTORY (
   new_value varchar(255) NOT NULL DEFAULT '',
   created_by INT4  NOT NULL DEFAULT '0',
   created_date INT8  NOT NULL DEFAULT '0'
+);
+
+CREATE TABLE TBL_BUG_GROUP (
+  user_id INT4  NOT NULL DEFAULT '0',
+  bug_id INT4  NOT NULL DEFAULT '0',
+  created_date INT8  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (user_id,bug_id)
 );
 
 CREATE TABLE TBL_COMMENT (
