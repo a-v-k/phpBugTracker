@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.102 2002/05/07 12:54:50 bcurtis Exp $
+// $Id: bug.php,v 1.103 2002/05/07 15:34:03 firma Exp $
 
 include 'include.php';
 
@@ -278,10 +278,15 @@ function update_bug($bugid = 0) {
     foreach ($_pv as $k => $v) {
       $$k = $v;
       if ($k == 'url') {
-        if ($v == 'http://') $v = '';
-        elseif ($v and substr($v,0,7) != 'http://') $v = 'http://'.$v;
-        $url = $v;
+
+        if (($v == 'http://') || ($v == 'https://')) {
+          $v = '';
+	} elseif (($v) && (strtolower(substr($v,0,7)) != 'http://') && (strtolower(substr($v,0,8)) != 'https://') && (strtolower(substr($v,0,6)) != 'ftp://')) {
+	  $v = 'http://'.$v;
+	}
+	$url = $v;
       }
+						
       if (isset($buginfo[$k]) && stripslashes($buginfo[$k]) != stripslashes($v)) {
         $changedfields[$k] = $v;
       }
@@ -400,7 +405,9 @@ function do_form($bugid = 0) {
 
   while (list($k,$v) = each($_pv)) $$k = $v;
 
-  if ($url == 'http://') $url = '';
+  if ($url == 'http://') {
+    $url = '';
+  }
 
 	// Allow for removing of some items from the bug page
 	$priority = $priority ? $priority : 0;
