@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.20 2002/03/26 18:43:25 bcurtis Exp $
+# $Id: mysql.in,v 1.21 2002/03/29 18:28:54 bcurtis Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id int(10) unsigned NOT NULL default '0',
@@ -294,6 +294,7 @@ INSERT INTO TBL_CONFIGURATION VALUES ('STRICT_UPDATING', '0', 'Only the bug repo
 INSERT INTO TBL_CONFIGURATION VALUES ('NEW_ACCOUNTS_DISABLED', '0', 'Only admins can create new user accounts - newaccount.php is disabled', 'bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('RECALL_LOGIN', '0', 'Enable use of cookies to store username between logins', 'bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('SHOW_PROJECT_SUMMARIES', '1', 'Itemize bug stats by project on the home page', 'bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('FORCE_LOGIN', '0', 'Force users to login before being able to use the bug tracker', 'bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('PROMOTE_VOTES', 5, 'The number of votes required to promote a bug from Unconfirmed to New (Set to 0 to disable promotions by voting)', 'string');
 INSERT INTO TBL_CONFIGURATION VALUES ('MAX_USER_VOTES', 5, 'The maximum number of votes a user can cast across all bugs (Set to 0 to have no limit)', 'string');
 INSERT INTO TBL_CONFIGURATION VALUES ('ATTACHMENT_PATH','attachments','Sub-dir of the INSTALLPATH - Needs to be writeable by the web process','string');
