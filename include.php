@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.102 2002/03/26 18:40:27 bcurtis Exp $
+// $Id: include.php,v 1.103 2002/03/28 20:47:06 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -186,8 +186,9 @@ if (!defined('NO_AUTH')) {
 
 // Check to see if the user is trying to login
 if (isset($_pv['dologin'])) {
-  if (isset($_pv['sendpass'])) {
-    list($email, $password) = $db->getRow("select email, password from ".TBL_AUTH_USER." where login = '{$_pv['username']}' and active > 0");
+  if (!empty($_pv['sendpass'])) {
+		$username = $_pv['username'];
+    list($email, $password) = $db->getRow("select email, password from ".TBL_AUTH_USER." where login = '{$_pv['username']}' and active > 0", null, DB_FETCHMODE_ORDERED);
     if (!$email) {
       $t->set_var('loginerror', '<div class="error">Invalid login</div>');
     } else {
@@ -200,10 +201,12 @@ if (isset($_pv['dologin'])) {
         $password),  sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMIN_EMAIL, $STRING['lang_charset']));
       $t->set_var('loginerror',
         '<div class="result">Your password has been emailed to you</div>');
+			$emailsuccess = true;
     }
   } else {
     if (!$u = $auth->auth_validatelogin()) {
       $t->set_var('loginerror', '<div class="error">Invalid login</div>');
+			$username = $_pv['username'];
     }
   }
 
@@ -217,6 +220,12 @@ if (isset($_pv['dologin'])) {
 		}
 	}
 		
+}
+
+if (FORCE_LOGIN and !$u and 
+	!strstr($HTTP_SERVER_VARS['SCRIPT_NAME'], 'newaccount.php')) {
+	include(INSTALL_PATH.'/templates/'.THEME.'/login.html');
+	exit;
 }
 
 $op = isset($_gv['op']) ? $_gv['op'] : (isset($_pv['op']) ? $_pv['op'] : '');
