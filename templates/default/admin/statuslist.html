@@ -19,6 +19,7 @@
 					<th class="{$headers.name.class}"><a href="{$headers.name.url}">Name</a></th>
 					<th class="{$headers.description.class}"><a href="{$headers.description.url}">Description</a></th>
 					<th class="{$headers.sortorder.class}"><a href="{$headers.sortorder.url}">Sort Order</a></th>
+					<th>Bugs are</th>
 					<th>Delete</th>
 				</tr>
 				{section name=status loop=$statuses}
@@ -26,6 +27,13 @@
 					<td><a href="{$smarty.server.PHP_SELF}?op=edit&status_id={$statuses[status].status_id}" onClick="popupStatus({$statuses[status].status_id}); return false;">{$statuses[status].status_name|stripslashes}</a></td>
 					<td>&nbsp;{$statuses[status].status_desc}</td>
 					<td align="center">{$statuses[status].sort_order}</td>
+					<td align="center">
+						{if $statuses[status].bug_open eq 1}
+							Open
+							{else}
+							Closed
+						{/if}
+					</td>
 					<td align="center">
 						{if not $statuses[status].bug_count and $statuses[status].status_id neq BUG_UNCONFIRMED}
 						<a href="{$smarty.server.PHP_SELF}?op=del&status_id={$statuses[status].status_id}" onClick="return confirm('Are you sure you want to delete this status?')">Delete</a>

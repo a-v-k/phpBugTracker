@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.133 2003/07/06 22:57:33 bcurtis Exp $
+// $Id: bug.php,v 1.134 2003/07/24 04:47:13 kennyt Exp $
 
 include 'include.php';
 
@@ -437,7 +437,7 @@ function update_bug($bugid = 0) {
 	$os_id = $os_id ? $os_id : 0;
 	$severity_id = $severity_id ? $severity_id : 0;
 
-	if ($status_id == BUG_CLOSED) {
+	if (is_closed($status_id)) {
 		$closed_query = ", close_date = $now";
 	} else {
 		$closed_query = '';

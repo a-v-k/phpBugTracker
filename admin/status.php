@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: status.php,v 1.29 2002/08/26 18:11:13 bcurtis Exp $
+// $Id: status.php,v 1.30 2003/07/24 04:47:13 kennyt Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -58,14 +58,16 @@ function do_form($statusid = 0) {
 	if (empty($sort_order)) $sort_order = 0;
 	if (!$statusid) {
 		$db->query("insert into ".TBL_STATUS.
-			" (status_id, status_name, status_desc, sort_order) values (".
+			" (status_id, status_name, status_desc, bug_open, sort_order) values (".
 			$db->nextId(TBL_STATUS).', '.
 			$db->quote(stripslashes($status_name)).', '.
-			$db->quote(stripslashes($status_desc)).", '$sort_order')");
+			$db->quote(stripslashes($status_desc)).', '.
+			(int)$bug_open.", '$sort_order')");
 	} else {
 		$db->query("update ".TBL_STATUS.
 			" set status_name = ".$db->quote(stripslashes($status_name)).
 			', status_desc = '.$db->quote(stripslashes($status_desc)).
+			', bug_open = '.(int)$bug_open.
 			", sort_order = $sort_order where status_id = $statusid");
 	}
 	if ($use_js) {
@@ -84,6 +86,7 @@ function show_form($statusid = 0, $error = '') {
 			" where status_id = '$statusid'"));
 	} else {
  		$t->assign($_pv);
+		$t->assign(array('bug_open' => 1)); // new bugs def. open :)
 	}
 	$t->assign('error', $error);
 	$t->wrap('admin/status-edit.html', ($statusid ? 'editstatus' : 'addstatus'));

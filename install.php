@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.38 2003/06/11 12:05:17 bcurtis Exp $
+// $Id: install.php,v 1.39 2003/07/24 04:47:13 kennyt Exp $
 
 // Location of smarty templates class
 define ('SMARTY_PATH','./inc/smarty/');
@@ -192,6 +192,12 @@ function create_tables() {
 		}
 		$db->query(stripslashes($do_query));
 		$do_query = '';
+	}
+	/*!! BAD! Must figure out how to get db_version from config-dist.php... */
+	$query = preg_replace(array_keys($tables), array_values($tables), 'INSERT INTO '.TBL_CONFIGURATION.' (varname,varvalue,description,vartype) VALUES (\'DB_VERSION\', './*!!!*/4/*!!!*/.', \'Database Version <b>Warning:</b> Changing this might make things go horribly wrong, so don\\\'t change it.\', \'mixed\')');
+	$res = $db->query($query);
+	if (PEAR::isError($res)) {
+		echo 'DB_VERSION not set!';
 	}
 }
 

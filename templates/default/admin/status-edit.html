@@ -41,7 +41,10 @@
   <td align="right" valign="top">Sort Order:</td>
   <td><input type="text" size="3" maxlength="3" name="sort_order" value="{$sort_order}"></td>
 </tr>
-
+<tr>
+	<td align="right" valign="top">Bugs Are:{$bug_open}</td>
+	<td><input type="radio" name="bug_open" value="1"{if $bug_open neq 0} checked="checked"{/if}/>Open <input type="radio" name="bug_open" value="0"{if $bug_open eq 0} checked="checked"{/if}/>Closed</td>
+</tr>
 </table>
 <br>
 <input type='submit' name='submit' value='Submit'>

@@ -40,7 +40,7 @@ $QUERY = array(
 		TBL_BUG.' using (site_id) group by s.site_id, site_name, sort_order '.
 		'order by %s %s',
 	'admin-list-statuses' => 'select s.status_id, status_name, status_desc, '.
-		'sort_order, count(bug_id) as bug_count '.
+		'sort_order, bug_open, count(bug_id) as bug_count '.
 		'from '.TBL_STATUS.' s left join '. TBL_BUG.' using (status_id) '.
 		'group by s.status_id, status_name, status_desc, sort_order '.
 		'order by %s %s',

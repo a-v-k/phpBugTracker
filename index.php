@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: index.php,v 1.38 2003/02/18 12:50:57 bcurtis Exp $
+// $Id: index.php,v 1.39 2003/07/24 04:47:13 kennyt Exp $
 
 include 'include.php';
 
@@ -171,7 +171,7 @@ $t->assign('closedbugs',
 	$db->getAll($db->modifyLimitQuery('select b.bug_id, title, project_name from '.TBL_BUG.' b, '.
 		TBL_PROJECT.' p'.
 		" where b.project_id not in ($restricted_projects)".
-		' and status_id = '.BUG_CLOSED.
+		' and '.in_closed('status_id').
 		' and b.project_id = p.project_id order by close_date desc', 0, 5)));
 
 if ($u != 'nobody') {

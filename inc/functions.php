@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.42 2003/07/05 22:54:26 bcurtis Exp $
+// $Id: functions.php,v 1.43 2003/07/24 04:47:13 kennyt Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -571,4 +571,27 @@ function qp_mail($to, $subject = 'No subject', $body, $headers = '') {
     return ($retval);
 }
 
+// Generate a testable WHERE expression for closed bugs
+function in_closed($column) {
+	global $db;
+	
+	$closed_statuses = array();
+	
+	foreach($db->getAll('SELECT status_id FROM '.TBL_STATUS.' WHERE bug_open = 0') as $row) {
+		$closed_statuses[] = (int)$row['status_id'];
+	}
+	
+	return '('.$column.' = '.join(' OR '.$column.' = ', $closed_statuses).')';
+}
+
+// Check whether or not a status-id means BUG_CLOSED
+function is_closed($status_id) {
+	global $db;
+
+	if ($db->getOne('SELECT status_id FROM '.TBL_STATUS.' WHERE bug_open = 0 AND status_id = '.$status_id)) {
+		return true;
+	} else {
+		return false;
+	}
+}
 ?>
