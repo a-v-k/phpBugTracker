@@ -69,7 +69,7 @@ function checkSavedQueries(frm) {
 	    <td align="left" valign="top"><select name="status[]"
 		multiple size="7">{build_select box=status}</select></td>
 	    <td align="left" valign="top"><select name="resolution[]"
-		multiple size="7">{build_select box=resolution}</select></td>
+		multiple size="7"><option value="0">{$STRING.BUGDISPLAY.resolutionnone}{build_select box=resolution}</select></td>
 	    <td align="left" valign="top"><select name="os[]"
 		multiple size="7">{build_select box=os}</select></td>
 	    <td align="left" valign="top"><select name="priority[]"

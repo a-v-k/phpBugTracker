@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.94 2003/04/04 13:29:24 bcurtis Exp $
+// $Id: query.php,v 1.95 2003/06/11 12:09:19 bcurtis Exp $
 
 include 'include.php';
 
@@ -87,7 +87,8 @@ function build_query($assignedto, $reportedby, $open) {
 		if (!empty($status) and $status[0]) {
 			$flags[] = 'b.status_id in ('.@join(',',$status).')';
 		}
-		if (!empty($resolution) and $resolution[0]) {
+		// If $resolution[0] == 0 then 'None' was selected
+		if (!empty($resolution) or isset($resolution[0])) {
 			$flags[] = 'b.resolution_id in ('.@join(',',$resolution).')';
 		}
 		if (!empty($os) and $os[0]) {
