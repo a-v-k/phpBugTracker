@@ -12,8 +12,8 @@
 : Added tracking of changes in priority to the bug history.
 : You can now search on "additional comments" and "description".
 : Added the ability to download to Excel
-: Fixed publicly-reported bugs
-: Changed the localization from string arrays to gettext
+: Fixed a number of bugs
+: Dropped Smarty
 
 -- 0.9.1 -- 4 Jan 2003
 : Fixed bugs with PostgreSQL
