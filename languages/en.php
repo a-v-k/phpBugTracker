@@ -1,6 +1,6 @@
 <?php
 
-// strings-en.php - English strings and titles
+// en.php - English strings and titles
 // ------------------------------------------------------------------------
 // Copyright (c) 2001 The phpBugTracker Group
 // ------------------------------------------------------------------------
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.14 2002/04/11 16:08:05 bcurtis Exp $
+// $Id: en.php,v 1.15 2002/04/11 18:39:31 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'us-ascii',
