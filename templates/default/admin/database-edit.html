@@ -1,0 +1,27 @@
+<b>{$page_title}&nbsp;</b>
+<hr size="1">
+<form action="{$smarty.server.PHP_SELF}" method="post">
+<input type="hidden" name="database_id" value="{$database_id}">
+<input type="hidden" name="use_js" value="{$smarty.request.use_js}">
+<table border='0'>
+{if $error}
+  <tr>
+		<td colspan="2" class="error">{$error}</td>
+  </tr>
+{/if}
+<tr>
+  <td align="right" valign="top">Name:</td>
+  <td><input type="text" size="20" maxlength="40" name="database_name" value="{$database_name|stripslashes|htmlspecialchars}"></td>
+</tr>
+<tr>
+  <td align="right" valign="top">Version:</td>
+  <td><textarea name="database_version" cols=20 rows=5 wrap=virtual>{$database_version|stripslashes|htmlspecialchars}</textarea></td>
+</tr>
+<tr>
+  <td align="right" valign="top">Sort Order:</td>
+  <td><input type="text" size="3" maxlength="3" name="sort_order" value="{$sort_order}"></td>
+</tr>
+</table>
+<br>
+<input type='submit' name='submit' value='Submit'>
+</form>
