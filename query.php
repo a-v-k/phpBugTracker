@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.58 2002/03/05 22:14:00 bcurtis Exp $
+// $Id: query.php,v 1.59 2002/03/05 23:04:21 bcurtis Exp $
 
 include 'include.php';
 
@@ -327,7 +327,7 @@ if (isset($_gv['op'])) switch($_gv['op']) {
 	case 'query' : show_query(); break;
 	case 'doquery' : $_sv['queryinfo'] = array(); list_items(); break;
 	case 'delquery' : delete_saved_query($_gv['queryid']); break;
-	case 'mybugs' : list_items($_gv['assignedto'], $_gv['reportedby'], $_gv['open']); break;
+	case 'mybugs' : list_items($assignedto, $reportedby, $open); break;
 	default : show_query(); break;
 }
 else list_items($assignedto, $reportedby, $open);
