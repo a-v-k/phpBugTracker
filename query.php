@@ -250,8 +250,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	foreach ($mydbfields as $field => $title) {
 		$t->set_var(array(
 			'coldata' => "<a href='{{$field}url}'>$title</a>",
-			'colclass' => 'header-col',
-			'bgcolor' => "{{$field}color}"
+			'td-extra' => "class=\"header-col\" bgcolor=\"{{$field}color}\""
 			));
 		$t->parse('cols', 'col', true);
 	}
@@ -267,37 +266,36 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 			switch ($field) {
 				case 'url' : 
 					$coldata = "<a href='{$row[$field]}'>{$row[$field]}</a>"; 
-					$colclass = '';
+					$td_extra = '';
 					break;
 				case 'created_date' :
 				case 'last_modified_date' :
 				case 'close_date' : 
 					$coldata = date(DATEFORMAT, $row[$field]); 
-					$colclass = 'center-col';
+					$td_extra = 'class="center-col"';
 					break;
 				case 'bug_id' :
 				case 'title' :
 					$coldata = "<a href='bug.php?op=show&bugid={$row['bug_id']}'>{$row[$field]}</a>"; 
-					$colclass = '';
+					$td_extra = '';
 					break;
 				case 'reporter' :
 				case 'owner' : 
 					$coldata = maskemail($row[$field]);
-					$colclass = 'center-col';
+					$td_extra = 'class="center-col"';
 					break;
 				case 'priority' :
 					$coldata = $select['priority'][$row[$field]];
-					$colclass = 'center-col';
+					$td_extra = 'class="center-col"';
 					break;
 				default :
 					$coldata = $row[$field];
-					$colclass = 'center-col';
+					$td_extra = 'class="center-col"';
 					break;
 			}
 			$t->set_var(array(
 				'coldata' => "&nbsp;$coldata&nbsp;",
-				'colclass' => $colclass,
-				'bgcolor' => ''
+				'td-extra' => $td_extra
 				));
 			$t->parse('cols', 'col', true);
 		}
