@@ -7,6 +7,7 @@
 : Allow users to override saved queries by saving a new query with the same
   name as an old one.
 : Added client-side validation to admin pages.
+: Allow admins to delegate power to developers, on a per-project basis.
 
 -- 0.9.1 -- 4 Jan 2003
 : Fixed bugs with PostgreSQL
