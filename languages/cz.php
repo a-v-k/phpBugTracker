@@ -2,7 +2,7 @@
 
 // cz.php - Czech strings and titles encoded in Windows-1250 codepage
 // ------------------------------------------------------------------------
-// Copyright (c) 2001, 2002 The phpBugTracker Group
+// Copyright (c) 2001, 2002, 2003 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz.php,v 1.24 2002/10/28 22:05:58 bcurtis Exp $
+// $Id: cz.php,v 1.25 2003/04/01 21:39:41 firma Exp $
 
 $STRING = array(
     'lang_charset' => 'Windows-1250',
@@ -137,15 +137,15 @@ $STRING = array(
 	'Documentation' => 'Dokumentace',
 	'AdminTools' => 'Administraèní nástroje',
 	'CreateNewAccount' => 'Vytvoøit nový úèet',
-	'Email' => 'Email',
+	'Email' => 'E-mail',
 	'Login' => 'Login',
-	'DoLogin' => 'Login',
-	'BugsAssigned' => 'Bugs assigned to me',
-	'BugsReported' => 'Bugs reported by me',
-	'PersonalPage' => 'Personal Page',
-	'Logout' => 'Logout',
-	'EmailPassword' => 'Email Password',
-	'RememberMe' => 'Remember me',
+	'DoLogin' => 'Pøihlásit',
+	'BugsAssigned' => 'Bugy pøiøazené mnì',
+	'BugsReported' => 'Bugy hlášené mnou',
+	'PersonalPage' => 'Osobní stránka',
+	'Logout' => 'Odhlášení',
+	'EmailPassword' => 'Heslo e-mailu',
+	'RememberMe' => 'Zapamatovat si mì',
     ),
     'BUGFORM' => array(
         'Project' => 'Projekt',
@@ -204,12 +204,12 @@ $STRING = array(
 	'postedby' => 'Zaslal',
 	'date' => 'Dne',
 	'dateon' => '&nbsp;', // This is correct
-	'submit' => 'Odeslat zmíny',
+	'submit' => 'Odeslat zmìny',
         'site' => 'Prostøedí',
 	'database' => 'Databáze',
         'os' => 'Operaèní systém',
 	'chooseone' => 'Vyberte',
-		'suppressemail' => 'Suppress notification email'
+	'suppressemail' => 'Potlaèit oznámení e-mailem'
     ),
     'USER_PREF' => array(
 	'ReceiveNotifications' => 'Zasílat upozornìní o zmìnách bugù',

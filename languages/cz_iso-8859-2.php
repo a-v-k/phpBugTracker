@@ -2,7 +2,7 @@
 
 // cz_iso-8859-2.php - Czech strings and titles encoded in iso-8859-2
 // ------------------------------------------------------------------------
-// Copyright (c) 2001, 2002 The phpBugTracker Group
+// Copyright (c) 2001, 2002, 2003 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,10 +20,10 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz_iso-8859-2.php,v 1.21 2002/10/28 22:05:59 bcurtis Exp $
+// $Id: cz_iso-8859-2.php,v 1.22 2003/04/01 21:39:43 firma Exp $
 
 $STRING = array(
-    'lang_charset' => 'ISO-8859-2',
+    'lang_charset' => 'iso-8859-2',
     'nouser' => 'Tento u¾ivatel neexistuje',
     'dupeofself' => 'Bug nemù¾e být shodný se sám se sebou',
     'nobug' => 'Tento bug neexistuje',
@@ -137,15 +137,15 @@ $STRING = array(
 	'Documentation' => 'Dokumentace',
 	'AdminTools' => 'Administraèní nástroje',
 	'CreateNewAccount' => 'Vytvoøit nový úèet',
-	'Email' => 'Email',
+	'Email' => 'E-mail',
 	'Login' => 'Login',
-	'DoLogin' => 'Login',
-	'BugsAssigned' => 'Bugs assigned to me',
-	'BugsReported' => 'Bugs reported by me',
-	'PersonalPage' => 'Personal Page',
-	'Logout' => 'Logout',
-	'EmailPassword' => 'Email Password',
-	'RememberMe' => 'Remember me',
+	'DoLogin' => 'Pøihlásit',
+	'BugsAssigned' => 'Bugy pøiøazené mnì',
+	'BugsReported' => 'Bugy hlá¹ené mnou',
+	'PersonalPage' => 'Osobní stránka',
+	'Logout' => 'Odhlá¹ení',
+	'EmailPassword' => 'Heslo e-mailu',
+	'RememberMe' => 'Zapamatovat si mì',
     ),
     'BUGFORM' => array(
         'Project' => 'Projekt',
@@ -204,12 +204,12 @@ $STRING = array(
 	'postedby' => 'Zaslal',
 	'date' => 'Dne',
 	'dateon' => '&nbsp;', // This is correct
-	'submit' => 'Odeslat zmíny',
+	'submit' => 'Odeslat zmìny',
         'site' => 'Prostøedí',
 	'database' => 'Databáze',
         'os' => 'Operaèní systém',
 	'chooseone' => 'Vyberte',
-		'suppressemail' => 'Suppress notification email'
+	'suppressemail' => 'Potlaèit oznámení e-mailem'
     ),
     'USER_PREF' => array(
 	'ReceiveNotifications' => 'Zasílat upozornìní o zmìnách bugù',

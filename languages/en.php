@@ -20,10 +20,10 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.36 2002/11/05 17:50:40 bcurtis Exp $
+// $Id: en.php,v 1.37 2003/04/01 21:39:43 firma Exp $
 
 $STRING = array(
-	'lang_charset' => 'iso8859-1',
+	'lang_charset' => 'iso-8859-1',
 	'nouser' => 'That user does not exist',
 	'dupeofself' => 'A bug can\'t be a duplicate of itself',
 	'nobug' => 'That bug does not exist',
