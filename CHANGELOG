@@ -1,10 +1,14 @@
 -- 0.6.0 --
 : Fixed a bug with old queries being retained when submitting a new query.
-: Moved session and auth classes into the package.
+: Moved session, auth, and database classes into the package.
 : Added Previous and Next links for moving to other bugs in the bug list
   from the bug display page.
+: Added a link to return to the bug list from the bug display page.
 : Added quick query links from the bug summary table on the home page (when
   not using jpgraph).
+: Fixed a bug with the language selection not being updated when changed on
+  the configuration page.
+: Multiple bugs related to the bug query page fixed.
 
 -- 0.5.1 -- 11 Nov 2001
 : Fixed a bug (introduced in 0.5.0) with severity color not being pulled in
