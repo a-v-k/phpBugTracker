@@ -1,7 +1,27 @@
+<script language="JavaScript">
+	var nameString = '{$STRING.givename}';
+	var descString = '{$STRING.givedesc}';
+
+	{literal}
+	function checkForm(frm) {
+		if (frm.component_name.value == '') {
+			alert(nameString);
+			frm.component_name.focus();
+			return false;
+		}
+		if (frm.component_desc.value == '') {
+			alert(descString);
+			frm.component_desc.focus();
+			return false;
+		}
+		return true;
+	}
+	{/literal}
+</script>
 		&nbsp;<b>{$page_title}</b>
 		<hr size="1">
 		{if $error}<div class="error">{$error}</div>{/if}
-		<form action="{$smarty.server.PHP_SELF}" method="post">
+		<form action="{$smarty.server.PHP_SELF}" method="post" onSubmit="return checkForm(this)">
 		<table border="0">
 			<input type="hidden" name="do" value="component">
 			<input type="hidden" name="component_id" value="{$component_id}">

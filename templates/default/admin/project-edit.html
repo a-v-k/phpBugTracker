@@ -2,7 +2,23 @@
 <!--
 	var me = '{$smarty.server.PHP_SELF}';
 	var projectId = '{$project_id}';
+	var nameString = '{$STRING.givename}';
+	var descString = '{$STRING.givedesc}';
+
 	{literal}
+	function checkForm(frm) {
+		if (frm.project_name.value == '') {
+			alert(nameString);
+			frm.project_name.focus();
+			return false;
+		}
+		if (frm.project_desc.value == '') {
+			alert(descString);
+			frm.project_desc.focus();
+			return false;
+		}
+		return true;
+	}
 
 	function popupComponent(id) {
 		window.open(me + '?op=edit_component&project_id='+projectId+'&use_js=1&id='+id, 'ewin', 'dependent=yes,width=450,height=300,scrollbars=1');
@@ -17,7 +33,7 @@
 // -->
 </script>
 
-<form action="{$smarty.server.PHP_SELF}" method="post">
+<form action="{$smarty.server.PHP_SELF}" method="post" onSubmit="return checkForm(this)">
 <input type="hidden" name="id" value="{$project_id}">
 <input type="hidden" name="do" value="project">
 <table border="0" cellpadding="2" cellspacing="2" width="100%">

@@ -1,7 +1,21 @@
+<script language="JavaScript">
+	var nameString = '{$STRING.giveversion}';
+
+	{literal}
+	function checkForm(frm) {
+		if (frm.version_name.value == '') {
+			alert(nameString);
+			frm.version_name.focus();
+			return false;
+		}
+		return true;
+	}
+	{/literal}
+</script>
 		&nbsp;<b>{$page_title}</b>
 		<hr size="1">
 		{if $error}<div class="error">{$error}</div>{/if}
-		<form action="{$smarty.server.PHP_SELF}" method="post">
+		<form action="{$smarty.server.PHP_SELF}" method="post" onSubmit="return checkForm(this)">
 		<table border="0">
 			<input type="hidden" name="do" value="version">
 			<input type="hidden" name="version_id" value="{$version_id}">
