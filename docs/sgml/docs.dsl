@@ -9,52 +9,24 @@ Stylesheet//EN" CDATA dsssl>
 <style-specification use="docbook">
 <style-specification-body>
 
-;; Copyright (c)  2001  Jesse Goerz, NewbieDoc project.
-;; http://sourceforge.net/projects/newbiedoc
+;; Copyright (c)  2001  phpBugTracker Group
 ;; Permission is granted to copy, distribute and/or modify this
 ;; document under the terms of the GNU Free Documentation License,
 ;; Version 1.1 or any later version published by the Free Software
 ;; Foundation; with no Invariant Sections, with no Front-Cover
 ;; Texts, and with no Back-Cover Texts. A copy of the license can
 ;; be found at http://www.fsf.org/copyleft/fdl.html.
-
-
 ;;
-;; $Log: docs.dsl,v $
-;; Revision 1.1  2001/09/27 13:40:20  bcurtis
-;; Starting the documentation book
-;;
-;; Revision 1.1  2001/05/05 08:37:08  jgoerz
-;; stable: stylesheet for single html file
-;;
-;; Revision 1.2  2001/05/04 04:24:02  jesse
-;; Added callouts, changed bgcolor for body and
-;; verbatim environments.
-;;
-;; Revision 1.1  2001/04/24 09:09:54  jesse
-;; Initial revision
-;;
-
-
-
-(define %generate-article-toc%
-  ;; Should a Table of Contents be produced for Articles?
-  #t)
+;; $Id: docs.dsl,v 1.2 2001/09/29 18:35:34 bcurtis Exp $
 
 
 (define (toc-depth nd)
   (if (string=? (gi nd) (normalize "book"))
-      ;;
-      ;; Docbook default is 1 level deep
-      ;; I don't understand "normalize book" but
-      ;; it doesn't seem to affect if we use
-      ;; articles.  I changed it to 2 deep.
-      ;;
       3
       2))
 
 
-(define %generate-article-titlepage%
+(define %generate-book-titlepage%
   ;; Should an article title page be produced?
   #t)
 
@@ -70,26 +42,13 @@ Stylesheet//EN" CDATA dsssl>
 
 
 (define %admon-graphics-path%
-  ;; Path to admonition graphics
-  ;; Sets the path, probably relative to the directory
-  ;; where the HTML files are created, to the admonition
-  ;; graphics.
-  ;;
-  ;; This needs to be "./images/" for tar distributed articles
-  ;; This needs to be "../images/" for tar distributed Newbiedoc book
-  ;; This needs to be "../images/" for individual articles on our website
-  "../images/")
+  "images/")
 
 (define %callout-graphics%
-  ;; If true, callouts are presented with graphics (e.g., reverse-video
-  ;; circled numbers instead of "(1)", "(2)", etc.).
-  ;; Default graphics are provided in the distribution.
   #t)
 
 (define %callout-graphics-path%
-  ;; Sets the path, probably relative to the directory where the HTML
-  ;; files are created, to the callout graphics.
-  "../images/callouts/")
+  "images/callouts/")
 
 (define %callout-graphics-number-limit%
   ;; If '%callout-graphics%' is true, graphics are used to represent
@@ -186,6 +145,10 @@ Stylesheet//EN" CDATA dsssl>
 ;;Default extension for filenames?
 (define %html-ext%
   ".html")
+	
+(define %spacing-paras%
+  ;; Block-element spacing hack
+  #f)
 
 </style-specification-body>
 </style-specification>
