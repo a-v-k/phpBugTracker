@@ -121,31 +121,34 @@ if (USE_JPGRAPH) {
 }
 
 // Show the recently added and closed bugs
-$rs = $db->limitQuery("select bug_id, title from ".TBL_BUG.
-	" where project_id not in ($restricted_projects)".
-	' order by created_date desc', 0, 5);
+$rs = $db->limitQuery("select bug_id, title, project_name from ".TBL_BUG.
+	' b, '.TBL_PROJECT." p where b.project_id not in ($restricted_projects)".
+	' and b.project_id = p.project_id order by b.created_date desc', 0, 5);
 if (DB::isError($rs) or !$rs->numRows()) {
 	$t->set_var('recentrows', $STRING['nobugs']);
 } else {
-	while (list($bugid, $title) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
+	while (extract($rs->fetchRow())) {
 		$t->set_var(array(
 			'title' => stripslashes($title),
-			'bugid' => $bugid
+			'bugid' => $bugid,
+			'project' => stripslashes($project_name)
 		));
 		$t->parse('recentrows', 'recentrow', true);
 	}
 }
-$rs = $db->limitQuery('select b.bug_id, title from '.TBL_BUG.' b, '.TBL_BUG_HISTORY.
-	" h where project_id not in ($restricted_projects) and b.bug_id = h.bug_id".
+$rs = $db->limitQuery('select b.bug_id, title, project_name from '.TBL_BUG.' b, '.
+	TBL_BUG_HISTORY.' h, '.TBL_PROJECT.' p'.
+	" where b.project_id not in ($restricted_projects) and b.bug_id = h.bug_id".
 	" and changed_field = 'status' and new_value = 'Closed'".
-	' order by h.created_date desc', 0, 5);
+	' and b.project_id = p.project_id order by h.created_date desc', 0, 5);
 if (DB::isError($rs) or !$rs->numRows()) {
 	$t->set_var('closerows', $STRING['nobugs']);
 } else {
-	while (list($bugid, $title) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
+	while (extract($rs->fetchRow())) {
 		$t->set_var(array(
 			'title' => stripslashes($title),
-			'bugid' => $bugid
+			'bugid' => $bugid,
+			'project' => stripslashes($project_name)
 		));
 		$t->parse('closerows', 'closerow', true);
 	}
