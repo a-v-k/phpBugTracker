@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.30 2002/07/29 12:26:18 bcurtis Exp $
+// $Id: install.php,v 1.31 2002/09/13 18:13:25 bcurtis Exp $
 
 // Location of smarty templates class
 define ('SMARTY_PATH', '');
@@ -59,7 +59,7 @@ $db_types = array(
 	'mysql' => 'MySQL',
 	'oci8' => 'Oracle 8.1.x',
 	'pgsql' => 'PostgreSQL');
-		
+
 ini_set("magic_quotes_runtime", 0); // runtime quotes will kill the included sql
 
 if (!empty($_pv)) {
@@ -97,7 +97,7 @@ if (!empty($_pv)) {
 		'/TBL_DATABASE/' => $_pv['tbl_prefix'].'database_server',
 		'/TBL_SITE/' => $_pv['tbl_prefix'].'site',
 		'/OPTION_ADMIN_EMAIL/' => $_pv['admin_login'],
-		'/OPTION_ADMIN_PASS/' => $_pv['encrypt_pass'] ? md5($_pv['admin_pass']) 
+		'/OPTION_ADMIN_PASS/' => $_pv['encrypt_pass'] ? md5($_pv['admin_pass'])
 			: $_pv['admin_pass'],
 		'/OPTION_PHPBT_EMAIL/' => $_pv['phpbt_email'],
 		'/OPTION_ENCRYPT_PASS/' => $_pv['encrypt_pass'],
@@ -113,13 +113,13 @@ if (defined('DB_HOST')) { // Already configured
 
 function build_select($params) {
 	global $db_types;
-	
+
 	extract($params);
 	$text = '';
 	foreach ($db_types as $val => $item) {
 		if ($selected == $val and $selected != '') $sel = ' selected';
-    else $sel = '';
-    $text .= "<option value=\"$val\"$sel>$item</option>";
+	else $sel = '';
+	$text .= "<option value=\"$val\"$sel>$item</option>";
 	}
 	echo $text;
 }
@@ -141,16 +141,17 @@ function grab_config_file() {
 	// Smarty
 	$patterns[] = '{smarty_path}';
 	$replacements[] = SMARTY_PATH;
-	
+
 	$contents = join('', file('config-dist.php'));
 	return str_replace($patterns, $replacements, $contents);
-	
+
 }
 
 function create_tables() {
 	global $_pv, $tables;
-	
+
 	// PEAR::DB
+	chdir('inc/pear'); // Drop down to the pear directory to include pear stuff
 	require_once('DB.php');
 	$dsn = array(
 		'phptype' => $_pv['db_type'],
@@ -160,22 +161,24 @@ function create_tables() {
 		'password'  => $_pv['db_pass']
 		);
 	$db = DB::Connect($dsn);
-  // Simple error checking on returned DB object to check connection to db 
-  if(get_class($db)=='db_error') {
-    die('<br><br>
-    <div align="center">The installation script could not connect to the database (' . $_pv['db_database'] .
-    ') on the host (' . $_pv['db_host'] . ') using the specified username and password.
-    <br>
-    Please check these details are correct and that the database already exists then retry.
-    </div>
-    <br>'.$db->message.'<br>'.$db->userinfo);
-  }
+	chdir('../..'); // Come back up from the pear directory
+
+	// Simple error checking on returned DB object to check connection to db
+	if(get_class($db)=='db_error') {
+		die('<br><br>
+		<div align="center">The installation script could not connect to the database (' . $_pv['db_database'] .
+		') on the host (' . $_pv['db_host'] . ') using the specified username and password.
+		<br>
+		Please check these details are correct and that the database already exists then retry.
+		</div>
+		<br>'.$db->message.'<br>'.$db->userinfo);
+	}
 
 
 	$db->setOption('optimize', 'portability');
 
 	$q_temp_ary = file('schemas/'.$_pv['db_type'].'.in');
-	$queries = preg_replace(array_keys($tables), array_values($tables), 
+	$queries = preg_replace(array_keys($tables), array_values($tables),
 		$q_temp_ary);
 	$do_query = '';
 	foreach ($queries as $query) {
@@ -192,7 +195,7 @@ function create_tables() {
 
 function check_vars() {
 	global $_pv;
-	
+
 	$error = '';
 	if (!$_pv['db_host'] = trim($_pv['db_host'])) {
 		$error = 'Please enter the host name for your database server';
@@ -213,7 +216,7 @@ function check_vars() {
 	} elseif ($_pv['admin_pass'] != $_pv['admin_pass2']) {
 		$error = 'The admin passwords don\'t match';
 	}
-	
+
 	if (!empty($error)) {
 		show_front($error);
 		return false;
@@ -246,14 +249,14 @@ function save_config_file() {
 
 function show_finished() {
 	global $t, $_pv;
-	
+
 	$t->assign('login', $_pv['admin_login']);
 	$t->display('install-complete.html');
 }
 
 function show_front($error = '') {
 	global $t, $_pv, $select, $HTTP_SERVER_VARS;
-	
+
 	$t->assign($_pv);
 	$t->assign('error', $error);
 	$t->assign('default_email', 'phpbt@'.$HTTP_SERVER_VARS['SERVER_NAME']);

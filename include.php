@@ -20,9 +20,9 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.121 2002/07/18 13:02:14 bcurtis Exp $
+// $Id: include.php,v 1.122 2002/09/13 18:13:25 bcurtis Exp $
 
-ini_set("magic_quotes_runtime", 0); 
+ini_set("magic_quotes_runtime", 0);
 
 if (!@include('config.php')) {
   header("Location: install.php");
@@ -37,6 +37,7 @@ if (!defined('DB_HOST')) { // Installation hasn't been completed
 include ('inc/functions.php');
 
 // PEAR::DB
+chdir('inc/pear'); // Drop down to the pear directory to include pear stuff
 require_once('DB.php');
 $dsn = array(
 	'phptype' => DB_TYPE,
@@ -52,17 +53,18 @@ if (DB::isError($db)) {
 $db->setOption('optimize', 'portability');
 $db->setFetchMode(DB_FETCHMODE_ASSOC);
 $db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_db_error");
+chdir('../..'); // Come back up from the pear directory
 
 // Set up the configuration variables
 $rs = $db->query('select varname, varvalue from '.TBL_CONFIGURATION);
 while (list($k, $v) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
   define($k, $v);
 }
-define('OPEN_BUG_STATUSES', join(', ', array(BUG_UNCONFIRMED, BUG_PROMOTED, 
+define('OPEN_BUG_STATUSES', join(', ', array(BUG_UNCONFIRMED, BUG_PROMOTED,
 	BUG_ASSIGNED, BUG_REOPENED)));
 
 require_once ('inc/db/'.DB_TYPE.'.php');
-	
+
 // Localization - include the file with the desired language
 include 'languages/'.LANGUAGE.'.php';
 
@@ -98,7 +100,7 @@ $all_db_fields = array(
   'browser_string' => 'Browser',
   'close_date' => 'Closed Date'
   );
-	
+
 $default_db_fields = array('bug_id', 'title', 'reporter', 'owner',
   'severity_name', 'priority', 'status_name', 'resolution_name');
 
@@ -115,15 +117,15 @@ class extSmarty extends Smarty {
 		error_reporting(E_ALL ^ E_NOTICE); // Clobber Smarty warnings
 		return Smarty::fetch($_smarty_tpl_file, $_smarty_cache_id, $_smarty_compile_id, $_smarty_display);
 	}
-	
+
 	function wrap($template, $title = '') {
 		global $TITLE, $_gv, $_pv;
-		
+
 		$this->assign(array(
 			'content_template' => $template,
 			'page_title' => isset($TITLE[$title]) ? $TITLE[$title] : $title
 			));
-			
+
 		// Use a popup wrap?
 		if ((isset($_gv['use_js']) and $_gv['use_js']) or
 			(isset($_pv['use_js']) and $_pv['use_js'])) {
@@ -143,6 +145,7 @@ $t = new extSmarty;
 $t->template_dir = 'templates/'.THEME.'/';
 $t->compile_dir = 'c_templates';
 $t->config_dir = '.';
+$t->use_sub_dirs = false;
 $t->register_function('build_select', 'build_select');
 $t->register_function('project_js', 'build_project_js');
 $t->register_modifier('date', 'bt_date');
@@ -203,14 +206,14 @@ if (isset($_pv['dologin'])) {
 			setcookie('phpbt_user');
 		}
 	}
-		
+
 }
 
 if (!empty($u)) {
-  list($owner_open, $owner_closed) = 
-		$db->getRow(sprintf($QUERY['include-template-owner'], $u), 
+  list($owner_open, $owner_closed) =
+		$db->getRow(sprintf($QUERY['include-template-owner'], $u),
 			DB_FETCHMODE_ORDERED);
-  list($reporter_open, $reporter_closed) = 
+  list($reporter_open, $reporter_closed) =
 		$db->getRow(sprintf($QUERY['include-template-reporter'], $u),
 			DB_FETCHMODE_ORDERED);
   $t->assign(array(
@@ -233,11 +236,11 @@ if (!defined('NO_AUTH')) {
 	// Check to see if we have projects that shouldn't be visible to the user
 	$restricted_projects = '0';
 	if (!$perm->have_perm('Admin')) {
-		$viewable_projects = delimit_list(',', 
+		$viewable_projects = delimit_list(',',
 			$db->getCol("select project_id from ".TBL_PROJECT_GROUP.
 				" where group_id in (".delimit_list(',', $_sv['group_ids']).")"));
 		$viewable_projects = $viewable_projects ? $viewable_projects : '0';
-		$matching_projects = delimit_list(',', 
+		$matching_projects = delimit_list(',',
 			$db->getCol("select project_id from ".TBL_PROJECT_GROUP.
 				" where project_id not in ($viewable_projects) group by project_id"));
 		if ($matching_projects) {
