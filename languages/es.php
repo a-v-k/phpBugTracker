@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: es.php,v 1.1 2002/01/23 14:46:52 bcurtis Exp $
+// $Id: es.php,v 1.2 2002/02/28 17:31:45 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso-8859-1',
@@ -65,7 +65,9 @@ $STRING = array(
 	'bad_permission' => 'Esa funcion requiere privilegios administrativos que Ud. no posee',
 	'project_only_all_groups' => 'No se pueden elegir grupos específicos si "Todos los grupos" está seleccionado',
 	'previous_bug' => 'Previo',
-	'next_bug' => 'Siguiente'
+	'next_bug' => 'Siguiente',
+	'already_voted' => 'You have already voted for this bug',
+	'too_many_votes' => 'You have reached the maximum number of votes per user'
 	);
 
 // Page titles

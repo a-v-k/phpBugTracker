@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: ru_koi8-r.php,v 1.6 2001/12/10 13:42:04 bcurtis Exp $
+// $Id: ru_koi8-r.php,v 1.7 2002/02/28 17:31:45 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'koi8-r',
@@ -65,7 +65,9 @@ $STRING = array(
 	'bad_permission' => 'У вас нет полномочий, необходимых дляданной функции',
 	'project_only_all_groups' => 'You cannot choose specific groups when "All Groups" is chosen',
 	'previous_bug' => 'Previous',
-	'next_bug' => 'Next'
+	'next_bug' => 'Next',
+	'already_voted' => 'You have already voted for this bug',
+	'too_many_votes' => 'You have reached the maximum number of votes per user'
 	);
 	
 // Page titles

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.77 2002/02/14 03:56:22 bcurtis Exp $
+// $Id: bug.php,v 1.78 2002/02/28 17:31:45 bcurtis Exp $
 
 include 'include.php';
 
@@ -62,7 +62,12 @@ function vote_bug($bug_id) {
     	do_changedfields($u, $buginfo, $changedfields);
 		}
 	}
-  header("Location: bug.php?op=show&bugid=$bug_id&pos={$_pv['pos']}");
+	if (isset($_pv['pos'])) {
+		$posinfo = "&pos={$_pv['pos']}";
+	} else {
+		$posinfo = '';
+	}
+  header("Location: bug.php?op=show&bugid=$bug_id$posinfo");
 	
 }
 
@@ -671,6 +676,7 @@ function show_bug($bugid = 0, $error = array()) {
 		isset($_gv['pos']) ? $_gv['pos'] : 0);
   $t->set_var(array(
     'statuserr' => isset($error['status']) ? $error['status'].'<br><br>' : '',
+		'vote_error' => isset($error['vote']) ? "<div class=\"error\">{$error['vote']}</div>" : '',
     'bugid' => $bugid,
     'TITLE' => "{$TITLE['editbug']} #$bugid",
     'title' => stripslashes($row['title']),
@@ -700,8 +706,12 @@ function show_bug($bugid = 0, $error = array()) {
 		'prevlink' => $prevlink,
 		'nextlink' => $nextlink,
 		'prevnextsep' => $prevlink && $nextlink ? ' | ' : '',
-		'pos' => isset($_gv['pos']) ? $_gv['pos'] : 0
-    ));
+		'pos' => isset($_gv['pos']) ? $_gv['pos'] : 0,
+		'already_voted' => $q->grab_field("select count(*) from ".TBL_BUG_VOTE.
+			" where bug_id = $bugid and user_id = $u"),
+		'num_votes' => $q->grab_field("select count(*) from ".TBL_BUG_VOTE.
+			" where bug_id = $bugid")
+		));
   switch($row['status_name']) {
     case 'Unconfirmed' :
     case 'New' :
@@ -847,6 +857,7 @@ if ($op) {
     case 'update' : update_bug($_pv['bugid']); break;
     case 'do' : do_form($_pv['bugid']); break;
     case 'print' : show_bug_printable($_gv['bugid']); break;
+    case 'vote' : vote_bug($_gv['bugid']); break;
   }
 } else header("Location: query.php");
 

@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: se.php,v 1.8 2001/12/10 13:42:04 bcurtis Exp $
+// $Id: se.php,v 1.9 2002/02/28 17:31:45 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -66,7 +66,9 @@ $STRING = array(
 	'bad_permission' => 'Du har inte den behövliga behörigheten för att använda den funktionen',
 	'project_only_all_groups' => 'You cannot choose specific groups when "All Groups" is chosen',
 	'previous_bug' => 'Previous',
-	'next_bug' => 'Next'
+	'next_bug' => 'Next',
+	'already_voted' => 'You have already voted for this bug',
+	'too_many_votes' => 'You have reached the maximum number of votes per user'
 	);
 	
 // Page titles

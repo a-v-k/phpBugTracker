@@ -227,9 +227,9 @@ function updateMenus(f) {
 	</tr>
 </table>
 </form>
-
-<b><a href="{me}?op=vote&bugid={bugid}">Vote for this bug</a></b> | 
-<b><a href="{me}?op=viewvotes&bugid={bugid}">View votes for this bug</a></b> | 
+{vote_error}
+<b><a href="{me}?op=vote&bugid={bugid}" onClick="if ({already_voted}) { alert ('You have already voted for this bug'); return false; }">Vote for this bug</a></b> | 
+<b><a href="{me}?op=viewvotes&bugid={bugid}">View votes ({num_votes}) for this bug</a></b> | 
 <b><a href="{me}?op=history&bugid={bugid}">View bug activity</a></b> | 
 <b><a href="{me}?op=print&&bugid={bugid}">Printable view</a></b>
 

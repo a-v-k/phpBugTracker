@@ -68,7 +68,9 @@ $STRING = array(
 	'bad_permission' => '您没有使用这个功能的权限',
 	'project_only_all_groups' => 'You cannot choose specific groups when "All Groups" is chosen',
 	'previous_bug' => 'Previous',
-	'next_bug' => 'Next'
+	'next_bug' => 'Next',
+	'already_voted' => 'You have already voted for this bug',
+	'too_many_votes' => 'You have reached the maximum number of votes per user'
 	);
 	
 // Page titles
