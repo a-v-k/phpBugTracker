@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.101 2002/03/20 20:03:17 bcurtis Exp $
+// $Id: include.php,v 1.102 2002/03/26 18:40:27 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -51,7 +51,7 @@ $dsn = array(
 $db = DB::Connect($dsn);
 $db->setOption('optimize', 'portability');
 $db->setFetchMode(DB_FETCHMODE_ASSOC);
-
+$db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_db_error");
 
 // Set up the configuration variables
 $rs = $db->query('select varname, varvalue from '.TBL_CONFIGURATION);

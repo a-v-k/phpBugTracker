@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.11 2002/03/20 23:56:22 bcurtis Exp $
+// $Id: functions.php,v 1.12 2002/03/26 18:40:27 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -381,6 +381,11 @@ function dump($var, $title = '') {
 	echo '<pre>';
 	print_r($var);
 	echo '</pre>';
+}
+
+// Handle a database error
+function handle_db_error(&$obj) {
+	die($obj->message.'<br>'.$obj->userinfo);
 }
 
 ?>
