@@ -1,14 +1,20 @@
-Upgrading from 0.6.x to 0.7.2
+Upgrading from 0.7.x to 0.8.x
 -----------------------------
 
-A new table, bug_vote, has been added, and new configuration variables have
-been added.  
+Two new tables, user_pref and bug_dependency have been added.  The handling
+of sequences has been changed with the conversion to PEAR::DB, which causes
+new *_seq tables to be created in MySQL and new sequences to be created in 
+PostgreSQL.  Four new configuration values have been added to the configuration
+table.  A new constant definition was added to config-dist.php, SMARTY_PATH,
+which is used to specify the location of the smarty templates package.  This
+constant should be an empty string ('') if smarty (http://smarty.php.net/) is
+in your include path.
 
 Following the steps below will upgrade your installation of phpBT.
 
 1. Edit config-dist.php, changing the database settings to match those from
-   your old config.php (DB_* and TBL_PREFIX constants).  Save config-dist.php 
-   as config.php.
+   your old config.php (DB_*, SMARTY_PATH and TBL_PREFIX constants).  Save 
+   config-dist.php as config.php.
 2. With your web browser, load upgrade.php from the directory where you 
    installed the new set of files.
 3. After running that script your installation has been upgraded.
