@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: ru_koi8-r.php,v 1.3 2001/09/03 17:33:40 mbravo Exp $
+// $Id: ru_koi8-r.php,v 1.4 2001/12/04 14:32:24 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'koi8-r',
@@ -85,7 +85,8 @@ $TITLE = array(
 	'severity' => 'Важность',
 	'user' => 'Пользователи',
 	'home' => 'Главная страница',
-	'reporting' => 'Отчеты'
+	'reporting' => 'Отчеты',
+	'group' => 'Groups'
 	);
 	
 ?>

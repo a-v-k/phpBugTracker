@@ -23,7 +23,7 @@
 // Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 // MA 02111-1307, USA.
 // ------------------------------------------------------------------------- 
-// $Id: de.php,v 1.5 2001/09/03 17:03:22 bcurtis Exp $
+// $Id: de.php,v 1.6 2001/12/04 14:32:23 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -88,7 +88,8 @@ $TITLE = array(
 	'severity' => 'Severity',
 	'user' => 'Benutzer',
 	'home' => 'Home',
-	'reporting' => 'Bericht'
+	'reporting' => 'Bericht',
+	'group' => 'Groups'
 	);
 	
 ?>

@@ -11,6 +11,7 @@
 
 class DB_Sql {
   var $Host     = "";
+  var $Port     = "";
   var $Database = "";
   var $User     = "";
   var $Password = "";
@@ -24,6 +25,7 @@ class DB_Sql {
 
   var $Errno    = 0;
   var $Error    = "";
+  var $Debug    = 0;
 
   var $Auto_Free = 0; # Set this to 1 for automatic pg_freeresult on 
                       # last record.
@@ -64,7 +66,7 @@ class DB_Sql {
     
     $this->connect();
 
-#   printf("<br>Debug: query = %s<br>\n", $Query_String);
+    if ($this->Debug) printf("<br>Debug: query = %s<br>\n", $Query_String);
 
     $this->Query_ID = pg_Exec($this->Link_ID, $Query_String);
     $this->Row   = 0;
@@ -203,32 +205,6 @@ class DB_Sql {
     print $this->Record[$Name];
   }
 
-  ## contributed Saillard Luc <luc.saillard@alcove.fr>
-
-  function nextid($seq_name) {
-    $this->connect();
-
-    $q_id=@pg_exec($this->Link_ID,"select nextval('$seq_name')");
-    if (!$q_id) {
-      if (!@pg_exec($this->Link_ID,"create sequence $seq_name")) {
-        $this->halt("<BR> nextid() function - unable to create sequence");
-        return 0;
-      }
-      $q_id=@pg_exec($this->Link_ID,"select nextval('$seq_name')");
-      if (!$q_id) {
-        $this->halt("<BR>pg_exec() failed:<BR>nextID function");
-        return 0;
-      }
-    }
-    $r=@pg_fetch_row($q_id, 0);
-    if ($r==false)
-      $nextid=0;
-    else
-      $nextid=$r[0];
-
-    return $nextid;
-  }
-  
   function halt($msg) {
     printf("</td></tr></table><b>Database error:</b> %s<br>\n", $msg);
     printf("<b>PostgreSQL Error</b>: %s (%s)<br>\n",

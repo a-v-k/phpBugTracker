@@ -88,7 +88,8 @@ $TITLE = array(
 	'severity' => '严重程度',
 	'user' => '用户',
 	'home' => '主页面',
-	'reporting' => '报表'
+	'reporting' => '报表',
+	'group' => 'Groups'
 	);
 	
 ?>

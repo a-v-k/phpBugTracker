@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: fr.php,v 1.2 2001/09/04 09:46:50 mbravo Exp $
+// $Id: fr.php,v 1.3 2001/12/04 14:32:24 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -86,7 +86,8 @@ $TITLE = array(
 	'user' => 'Utilisateurs',
 	'home' => 'Sommaire',
 	'reporting' => 'Tableaux de bord',
-	'severity' => 'Criticité'
+	'severity' => 'Criticité',
+	'group' => 'Groups'
 	);
 	
 ?>

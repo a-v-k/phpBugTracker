@@ -1,0 +1,56 @@
+<br>
+<table border="0" width="640">
+  <tr>
+    <td valign="top">
+      <b>&nbsp;Group List</b>
+      <hr size="1">
+      <table border="0">
+        <tr bgcolor="#eeeeee">
+          <th><a href="{nameurl}">Name</a></th>
+          <th><a href="{counturl}">Users</a></th>
+					<th>&nbsp;</th>
+        </tr>
+        <!-- BEGIN row -->
+				<!-- BEGIN unlockedblock -->
+        <tr class="{trclass}">
+          <td><a href="{me}?op=edit&id={groupid}">{name}</a></td>
+          <td align="center">{count}</td>
+					<td align="center">
+						<a href="{me}?op=del&id={groupid}" onClick="return confirm('This will remove all user assignments to this group and the group itself.  Continue?')">Delete</a> | 
+						<a href="{me}?op=purge&id={groupid}" onClick="return confirm('This will remove all user assignments to this group.  Continue?')">Purge</a>
+					</td>
+        </tr>
+				<!-- END unlockedblock -->
+				<!-- BEGIN lockedblock -->
+        <tr class="{trclass}">
+          <td>{name}</td>
+          <td align="center">{count}</td>
+					<td align="center">Locked</td>
+        </tr>
+				<!-- END lockedblock -->
+        <!-- END row -->
+      </table>
+    </td>
+    <td valign="top">
+      <div align="right"><b>{action} Group&nbsp;</b></div>
+      <hr size="1">
+      <form action="{me}" method="post">
+      <input type="hidden" name="id" value="{fgroupid}">
+      <table border='0'>
+      <tr>
+              <td colspan="2" align="center" valign="top">
+                <font color="#ff0000">{error}</font>
+              </td>
+      </tr>
+      <tr>
+              <td align="right" valign="top">Name:</td>
+              <td><input type="text" size="20" maxlength="40" name="fname" value="{fname}"></td>
+      </tr>
+
+      </table>
+      <div align="right">
+        <input type='submit' name='submit' value='Submit'>
+      </div>
+      </form>
+    </td>
+</table>
