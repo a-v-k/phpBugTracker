@@ -6,4 +6,4 @@ Misc:
 - Be able to color by priority instead of severity
 - Conversion script from a bugzilla database
 - Be able to change bug comments sort order (i.e., to most recent first) and be able to save a default for this setting in the config
-- Move db abstraction to adodb (?)
+- Full i18n/l10n
