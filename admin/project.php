@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.44 2003/04/07 18:55:37 kennyt Exp $
+// $Id: project.php,v 1.45 2003/04/09 18:27:44 kennyt Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -38,7 +38,7 @@ function del_version($versionid, $projectid) {
 }
 
 function save_version($version_id = 0) {
-	global $db, $me, $_pv, $STRING, $now, $u, $t;
+	global $db, $me, $_pv, $STRING, $now, $u, $t, $perm;
 
         $perm->check_proj($projectid);
 
