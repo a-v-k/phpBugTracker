@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script to edit configuration settings
-# $Id: configure,v 1.9 2001/09/15 15:39:57 bcurtis Exp $
+# $Id: configure,v 1.10 2001/09/15 15:49:42 bcurtis Exp $
 
 DIALOG=${DIALOG=dialog}
 tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/test$$
@@ -83,8 +83,8 @@ database() {
 	$DIALOG --backtitle "phpBT Configuration" \
 		--title "Database Server Software (1 of 5)" \
 		--radiolist "Enter the type database server" 0 0 3 \
-			MySQL '' on \
-			Postgres '' off
+			mysql MySQL on \
+			pgsql PostgreSQL off \
 		2> $tempfile
 	if [ $? -gt 0 ]; then
 		return
@@ -247,9 +247,11 @@ show_menu() {
 				echo "/INSTALLURL/s|, '.*'|, '$INSTALLURL'|" >> $tempfile
 				echo "/PHPLIBPATH/s|, '.*'|, '$PHPLIBPATH'|" >> $tempfile
 				echo "/JPGRAPH_PATH/s|, '.*'|, '$JPGRAPH_PATH'|" >> $tempfile
+				echo "/DB_TYPE/s|, '.*'|, '$DB_TYPE'|" >> $tempfile
 				echo "/DB_HOST/s|, '.*'|, '$DB_HOST'|" >> $tempfile
 				echo "/DB_USER/s|, '.*'|, '$DB_USER'|" >> $tempfile
 				echo "/DB_PASSWORD/s|, '.*'|, '$DB_PASS'|" >> $tempfile
+				echo "/TBL_PREFIX/s|, '.*'|, '$DB_TBL_PREFIX'|" >> $tempfile
 				sed -f $tempfile config.php.bak > config.php
 				$DIALOG --backtitle "phpBT Configuration" \
 					--infobox "Your changes have been saved" 5 36
