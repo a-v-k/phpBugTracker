@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.10 2002/03/20 20:00:14 bcurtis Exp $
+// $Id: functions.php,v 1.11 2002/03/20 23:56:22 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -43,7 +43,7 @@ $select['priority'] = array(
 ///
 /// Build a select box with the item matching $value selected
 function build_select($box, $value = '', $project = 0) {
-  global $db, $select, $perm, $auth, $STRING, $restricted_projects;
+  global $db, $select, $perm, $STRING, $restricted_projects;
 
   //create hash to map tablenames
   $cfgDatabase = array(
@@ -300,9 +300,9 @@ function valid_email($email) {
 ///
 /// If the constant is set do a little email masking to make harvesting a little harder
 function maskemail($email) {
-  global $auth;
+  global $_sv;
 
-  if (HIDE_EMAIL && empty($auth->auth['uid'])) {
+  if (HIDE_EMAIL && empty($_sv['uid'])) {
     return '******';
   } elseif (MASK_EMAIL) {
     return str_replace('@', ' at ', str_replace('.', ' dot ', $email));
@@ -314,7 +314,7 @@ function maskemail($email) {
 ///
 /// Build the javascript for the dynamic project -> component -> version select boxes
 function build_project_js() {
-	global $db, $u, $perm, $auth;
+	global $db, $u, $perm, $_sv;
 	
 	$js = '';
 	
@@ -326,7 +326,7 @@ function build_project_js() {
 		$rs = $db->query('select p.project_id, project_name from '.TBL_PROJECT.
 			' p left join '.TBL_PROJECT_GROUP.' pg using(project_id) 
 			where active = 1 and (pg.project_id is null or pg.group_id in ('.
-			delimit_list(',', $auth->auth['group_ids']).')) group by 
+			delimit_list(',', $_sv['group_ids']).')) group by 
 			p.project_id, p.project_name order by project_name');
 	}
 	while (list($pid, $pname) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
