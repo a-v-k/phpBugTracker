@@ -241,7 +241,7 @@ function build_select($box, $value='',$project=0) {
 			}
 			break;
 		case 'owner' :
-			$q->query("Select UserID, Email from User where UserLevel order by Email");
+			$q->query("Select UserID, Email from User where UserLevel > 1 order by Email");
 			while ($row = $q->grab()) {
 				if ($value == $row['UserID']) $sel = ' selected';
 				else $sel = '';
