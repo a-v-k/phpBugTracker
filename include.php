@@ -20,14 +20,17 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.82 2001/12/10 13:42:39 bcurtis Exp $
+// $Id: include.php,v 1.83 2001/12/14 14:41:06 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
 	define('INCLUDE_PATH', '');
 }
 
-include (INSTALL_PATH.'/'.INCLUDE_PATH.'config.php');
+if (!@include (INSTALL_PATH.'/'.INCLUDE_PATH.'config.php')) {
+	header("Location: install.php");
+	exit();
+}
 if (!defined('DB_HOST')) { // Installation hasn't been completed
 	header("Location: install.php");
 	exit();
