@@ -1,4 +1,7 @@
 #!/bin/bash
+# Script to edit configuration settings
+# $Id: configure,v 1.8 2001/08/23 02:28:52 bcurtis Exp $
+
 DIALOG=${DIALOG=dialog}
 tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/test$$
 trap "rm -f $tempfile" 0 1 2 5 15
@@ -19,6 +22,7 @@ ENCRYPTPASS=1
 USE_JPGRAPH=0
 MASK_EMAIL=0
 HIDE_EMAIL=1
+SEV_COLOR=1
 
 administrivia() {
 	$DIALOG --backtitle "phpBT Configuration" \
@@ -124,20 +128,27 @@ change_features() {
 	else
 		OLD_HIDE_EMAIL=off
 	fi
+	if [ $SEV_COLOR -eq 1 ]; then
+		OLD_SEV_COLOR=on
+	else
+		OLD_SEV_COLOR=off
+	fi
 	
 	NEW_ENCRYPTPASS=0
 	NEW_USE_JPGRAPH=0
 	NEW_MASK_EMAIL=0
 	NEW_HIDE_EMAIL=0
+	NEW_SEV_COLOR=0
 
 	$DIALOG --backtitle "phpBT Configuration" \
 		--title "Optional Features" \
 		--separate-output \
-  	--checklist "Choose the features below you would like to enable" 12 72 5 \
+  	--checklist "Choose the features below you would like to enable" 18 78 8 \
     	"ENCRYPTPASS" "Store passwords encrypted in the database" $OLD_ENCRYPTPASS \
     	"USE_JPGRAPH" "Use the JP Graph class for charting some reports" $OLD_USE_JPGRAPH \
     	"MASK_EMAIL" "Replace @ with at and . with dot when showing emails" $OLD_MASK_EMAIL \
     	"HIDE_EMAIL" "Completely hide emails when not logged in" $OLD_HIDE_EMAIL \
+    	"SEV_COLOR" "Color rows in bug list according to severity" $OLD_SEV_COLOR \
   	2> $tempfile
 
 	retval=$?
@@ -155,6 +166,8 @@ change_features() {
 					NEW_MASK_EMAIL=1;;
 				HIDE_EMAIL)
 					NEW_HIDE_EMAIL=1;;
+				SEV_COLOR)
+					NEW_SEV_COLOR=1;;
 			esac
 		done
 
@@ -162,6 +175,7 @@ change_features() {
 		USE_JPGRAPH=${NEW_USE_JPGRAPH:-0}
 		MASK_EMAIL=${NEW_MASK_EMAIL:-0}
 		HIDE_EMAIL=${NEW_HIDE_EMAIL:-0}
+		SEV_COLOR=${NEW_SEV_COLOR:-0}
 	fi
 	
 	if [ $USE_JPGRAPH -eq 1 ]; then
@@ -201,21 +215,21 @@ show_menu() {
 				change_features
 				;;
 			Save)
-				mv include.php include.php.bak
+				mv config.php config.php.bak
 				echo "/ENCRYPTPASS/s/[[:digit:]]/$ENCRYPTPASS/" > $tempfile
 				echo "/USE_JPGRAPH/s/[[:digit:]]/$USE_JPGRAPH/" >> $tempfile
 				echo "/MASK_EMAIL/s/[[:digit:]]/$MASK_EMAIL/" >> $tempfile
 				echo "/HIDE_EMAIL/s/[[:digit:]]/$HIDE_EMAIL/" >> $tempfile
-				echo "/ADMINEMAIL/s|,'.*'|,'$ADMINEMAIL'|" >> $tempfile
-				echo "/INSTALLPATH/s|,'.*'|,'$INSTALLPATH'|" >> $tempfile
+				echo "/ADMINEMAIL/s|, '.*'|, '$ADMINEMAIL'|" >> $tempfile
+				echo "/INSTALLPATH/s|, '.*'|, '$INSTALLPATH'|" >> $tempfile
 				echo "/ATTACHMENT_PATH/s|, '.*'|, '$ATTACHMENT_PATH'|" >> $tempfile
-				echo "/INSTALLURL/s|,'.*'|,'$INSTALLURL'|" >> $tempfile
-				echo "/PHPLIBPATH/s|,'.*'|,'$PHPLIBPATH'|" >> $tempfile
-				echo "/JPGRAPH_PATH/s|,'.*'|,'$JPGRAPH_PATH'|" >> $tempfile
-				echo "/var \$Host/s|'.*'|'$DB_HOST'|" >> $tempfile
-				echo "/var \$User/s|'.*'|'$DB_USER'|" >> $tempfile
-				echo "/var \$Password/s|'.*'|'$DB_PASS'|" >> $tempfile
-				sed -f $tempfile include.php.bak > include.php
+				echo "/INSTALLURL/s|, '.*'|, '$INSTALLURL'|" >> $tempfile
+				echo "/PHPLIBPATH/s|, '.*'|, '$PHPLIBPATH'|" >> $tempfile
+				echo "/JPGRAPH_PATH/s|, '.*'|, '$JPGRAPH_PATH'|" >> $tempfile
+				echo "/DB_HOST/s|, '.*'|, '$DB_HOST'|" >> $tempfile
+				echo "/DB_USER/s|, '.*'|, '$DB_USER'|" >> $tempfile
+				echo "/DB_PASSWORD/s|, '.*'|, '$DB_PASS'|" >> $tempfile
+				sed -f $tempfile config.php.bak > config.php
 				$DIALOG --backtitle "phpBT Configuration" \
 					--infobox "Your changes have been saved" 5 36
 				exit

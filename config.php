@@ -20,20 +20,20 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.3 2001/08/23 02:10:18 bcurtis Exp $
+// $Id: config.php,v 1.4 2001/08/23 02:28:52 bcurtis Exp $
 
 define ('INSTALLPATH', '/home/bcurtis/public_html/phpbt');
 define ('INSTALLURL', 'http://localhost/~bcurtis/phpbt');
 
-define ('PHPLIBPATH', ''); // If it's not in the include path
-define ('JPGRAPH_PATH', ''); // If it's not in the include path
+define ('PHPLIBPATH', ''); // If not in the include path
+define ('JPGRAPH_PATH', ''); // If not in the include path
 
 //Database Config
 define ('DB_TYPE', 'mysql');  //using PHPlib file naming
 define ('DB_HOST', 'localhost');
 define ('DB_DATABASE', 'BugTracker');
 define ('DB_USER', 'root');
-define ('DB_PASSWORD','');
+define ('DB_PASSWORD', '');
 
 define ('ADMINEMAIL', 'phpbt@bencurtis.com');
 define ('ENCRYPTPASS', 0);  // Whether to store passwords encrypted
