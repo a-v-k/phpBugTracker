@@ -1,7 +1,7 @@
 <?php
 
 $STRING = array (
-  'lang_charset' => 'iso8859-1',
+  'charset' => 'iso8859-1',
   'That user does not exist' => 'Ese usuario no existe',
   'A bug can\'t be a duplicate of itself' => 'Un bug no puede ser un duplicado de si mismo',
   'That bug does not exist' => 'Ese bug no existe',

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.48 2005/01/22 16:13:18 bcurtis Exp $
+// $Id: functions.php,v 1.49 2005/02/15 13:34:20 bcurtis Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -591,12 +591,11 @@ function qp_mail($to, $subject = 'No subject', $body, $headers = '') {
 		$headers .= "\n";
 		// There have to be no newline at the end of $headers
 	}
-	$charset = !empty($STRING['lang_charset']) ? 
-		$STRING['lang_charset'] : 'iso-8859-1';
+	
 	if (false/*HTML_EMAIL*/) {
-		$headers .= "Content-Type: text/html; charset=\"$charset\"\r\nContent-Transfer-Encoding: ";
+		$headers .= "Content-Type: text/html; charset=\"".CHARSET."\"\r\nContent-Transfer-Encoding: ";
 	} else {
-		$headers .= "Content-Type: text/plain; charset=\"$charset\"\r\nContent-Transfer-Encoding: ";
+		$headers .= "Content-Type: text/plain; charset=\"".CHARSET."\"\r\nContent-Transfer-Encoding: ";
 	}
 
 	// If configured to send MIME encoded emails
@@ -618,7 +617,6 @@ function translate($string, $plural = false) {
 	if (USE_GETTEXT) {
 		return $plural ? ngettext($string) : gettext($string);
 	} else {
-		@include_once('languages/'.LANGUAGE.'.php');
 		if (!empty($STRING[$string])) return $STRING[$string];
 		else return $string;
 	}

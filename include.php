@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.129 2004/12/05 17:01:32 bcurtis Exp $
+// $Id: include.php,v 1.130 2005/02/15 13:34:19 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0);
 ini_set("magic_quotes_sybase", 0);
@@ -64,6 +64,17 @@ if (empty($upgrading)) {
 	}
 	define('OPEN_BUG_STATUSES', join(', ', 
 		$db->getCol("select status_id from " . TBL_STATUS ." where bug_open = 1")));
+	
+	// Set up translation and character set
+	@include_once('languages/'.LANGUAGE.'.php');
+	if (!defined('CHARSET')) {
+		if (!empty($STRING['charset'])) {
+			define('CHARSET', $STRING['charset']);
+		} else {
+			define('CHARSET', 'utf-8');
+		}
+	}
+
 }
 require_once ('inc/db/'.DB_TYPE.'.php');
 
