@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: et.php,v 1.2 2002/03/28 15:05:44 bcurtis Exp $
+// $Id: et.php,v 1.1 2002/10/19 20:05:58 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso-8859-1',

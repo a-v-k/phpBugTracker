@@ -1,0 +1,3 @@
+The language files in this directory were made obsolete by changes in the
+handling of transations as of version 0.9.0.  They are here to serve as a
+starting point for anyone interested in updating them.
