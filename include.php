@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.59 2001/10/11 14:24:03 bcurtis Exp $
+// $Id: include.php,v 1.60 2001/10/11 14:28:37 bcurtis Exp $
 
 if (defined("INCLUDE_PATH")) {
   require INCLUDE_PATH."config.php";
@@ -258,7 +258,7 @@ $t->set_var(array(
   'error' => '',
   'cssfile' => $cssfile,
   'loginerror' => '',
-	'template_path' => 'templates/'.THEME));
+	'template_path' => INCLUDE_PATH.'templates/'.THEME));
 
 // End classes -- Begin helper functions
 
