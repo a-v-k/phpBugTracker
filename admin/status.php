@@ -20,10 +20,11 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: status.php,v 1.26 2002/04/03 00:58:26 bcurtis Exp $
+// $Id: status.php,v 1.27 2002/04/09 20:44:52 bcurtis Exp $
 
+chdir('..');
 define('TEMPLATE_PATH', 'admin');
-include '../include.php';
+include 'include.php';
 
 function del_item($statusid = 0) {
 	global $db, $me;

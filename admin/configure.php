@@ -20,10 +20,11 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: configure.php,v 1.7 2002/04/03 18:18:02 bcurtis Exp $
+// $Id: configure.php,v 1.8 2002/04/09 20:44:52 bcurtis Exp $
 
+chdir('..');
 define('TEMPLATE_PATH', 'admin');
-include '../include.php';
+include 'include.php';
 
 $perm->check('Admin');
 

@@ -20,10 +20,11 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: group.php,v 1.8 2002/04/03 00:58:26 bcurtis Exp $
+// $Id: group.php,v 1.9 2002/04/09 20:44:52 bcurtis Exp $
 
+chdir('..');
 define('TEMPLATE_PATH', 'admin');
-include '../include.php';
+include 'include.php';
 
 function purge_group($groupid = 0) {
 	global $db;

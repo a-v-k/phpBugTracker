@@ -20,10 +20,11 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.38 2002/04/04 13:30:17 bcurtis Exp $
+// $Id: project.php,v 1.39 2002/04/09 20:44:52 bcurtis Exp $
 
+chdir('..');
 define('TEMPLATE_PATH', 'admin');
-include '../include.php';
+include 'include.php';
 
 function del_version($versionid, $projectid) {
 	global $db, $me;
