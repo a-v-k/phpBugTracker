@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.15 2002/04/03 01:00:52 bcurtis Exp $
+// $Id: attachment.php,v 1.16 2002/04/09 23:26:04 bcurtis Exp $
 
 include 'include.php';
 
@@ -48,7 +48,7 @@ function grab_attachment($attachid) {
 		show_text($STRING['bad_attachment'], true);
 		return false;
 	}
-	$filename = join('/',array(INSTALL_PATH, ATTACHMENT_PATH, 
+	$filename = join('/',array(ATTACHMENT_PATH, 
 		$ainfo['project_id'], "{$ainfo['bug_id']}-{$ainfo['file_name']}"));
 	if (!is_readable($filename)) {
 		show_text($STRING['bad_attachment'], true);
@@ -90,7 +90,7 @@ function add_attachment($bugid, $description) {
 		}
 	}
 	
-	$filepath = INSTALL_PATH.'/'.ATTACHMENT_PATH;
+	$filepath = ATTACHMENT_PATH;
 	$tmpfilename = $HTTP_POST_FILES['attachment']['tmp_name'];
 	$filename = "$bugid-{$HTTP_POST_FILES['attachment']['name']}";
 
@@ -118,10 +118,10 @@ function add_attachment($bugid, $description) {
 	$db->query("insert into ".TBL_ATTACHMENT." (attachment_id, bug_id, file_name, ".
 		"description, file_size, mime_type, created_by, created_date) values (".
 		join(', ', array($db->nextId(TBL_ATTACHMENT), $bugid,
-			$HTTP_POST_FILES['attachment']['name'], 
+			$db->quote($HTTP_POST_FILES['attachment']['name']), 
 			$db->quote(stripslashes($description)), 
 			$HTTP_POST_FILES['attachment']['size'], 
-			$HTTP_POST_FILES['attachment']['type'], $u, $now)).")");
+			$db->quote($HTTP_POST_FILES['attachment']['type']), $u, $now)).")");
 	$t->assign('bugid', $bugid);
 	$t->display('bugattachmentsuccess.html');
 }
@@ -129,7 +129,6 @@ function add_attachment($bugid, $description) {
 function show_attachment_form($bugid, $error = '') {
 	global $db, $t, $STRING;
 	
-	$t->set_file('content', 'bugattachmentform.html');
 	if (!is_numeric($bugid)) { 
 		show_text($STRING['nobug'], true);
 		return;
@@ -170,7 +169,7 @@ if (isset($_gv['del'])) {
 	}
 } else {
 	$perm->check('Editbug');
-	show_attachment_form($_gv['bugid']);
+	show_attachment_form($_gv['bug_id']);
 }
 
 ?>
