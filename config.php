@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.8 2001/09/03 15:04:49 bcurtis Exp $
+// $Id: config.php,v 1.9 2001/09/07 13:49:14 bcurtis Exp $
 
 define ('INSTALLPATH', '/home/bcurtis/public_html/phpbt');
 define ('INSTALLURL', 'http://localhost/~bcurtis/phpbt');
@@ -59,24 +59,24 @@ define ('TIMEFORMAT', 'g:i A');
 //define ('TBL_PREFIX', 'phpbt_');	//the prefix for all tables
 define ('TBL_PREFIX', '');	//the prefix for all tables, leave empty to use the old style
 define ('TBL_ATTACHMENT',    TBL_PREFIX.'attachment');
+define ('TBL_AUTH_GROUP',    TBL_PREFIX.'auth_group');
+define ('TBL_AUTH_PERM',     TBL_PREFIX.'auth_perm');
+define ('TBL_AUTH_USER',     TBL_PREFIX.'auth_user');
 define ('TBL_BUG',           TBL_PREFIX.'bug');
+define ('TBL_BUG_GROUP',     TBL_PREFIX.'bug_group');
 define ('TBL_BUG_HISTORY',   TBL_PREFIX.'bug_history');
 define ('TBL_COMMENT',       TBL_PREFIX.'comment');
 define ('TBL_COMPONENT',     TBL_PREFIX.'component');
+define ('TBL_GROUP_PERM',    TBL_PREFIX.'group_perm');
+define ('TBL_OS',            TBL_PREFIX.'os');
 define ('TBL_PROJECT',       TBL_PREFIX.'project');
 define ('TBL_RESOLUTION',    TBL_PREFIX.'resolution');
 define ('TBL_SAVED_QUERY',   TBL_PREFIX.'saved_query');
 define ('TBL_SEVERITY',      TBL_PREFIX.'severity');
 define ('TBL_STATUS',        TBL_PREFIX.'status');
-define ('TBL_AUTH_USER',     TBL_PREFIX.'auth_user');
-define ('TBL_VERSION',       TBL_PREFIX.'version');
-define ('TBL_OS',            TBL_PREFIX.'os');
-define ('TBL_AUTH_GROUP',    TBL_PREFIX.'auth_group');
-define ('TBL_AUTH_PERM',     TBL_PREFIX.'auth_perm');
 define ('TBL_USER_GROUP',    TBL_PREFIX.'user_group');
 define ('TBL_USER_PERM',     TBL_PREFIX.'user_perm');
-define ('TBL_GROUP_PERM',    TBL_PREFIX.'group_perm');
-define ('TBL_BUG_GROUP',     TBL_PREFIX.'bug_group');
+define ('TBL_VERSION',       TBL_PREFIX.'version');
 define ('TBL_PROJECT_GROUP', TBL_PREFIX.'project_group');
 
 require_once (PHPLIBPATH.'db_'.DB_TYPE.'.inc');
