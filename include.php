@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.49 2001/09/03 17:36:07 javyer Exp $
+// $Id: include.php,v 1.50 2001/09/03 20:16:34 bcurtis Exp $
 
 if (defined("INCLUDE_PATH")) {
   require INCLUDE_PATH."config.php";
@@ -126,9 +126,9 @@ class uauth extends Auth {
 
       // Grab group assignments and permissions based on groups
       $q->query("select group_name, perm_name"
-               ." from ".TBL_AUTH_PERM." ap, ".TBL_GROUP_PERM." gp, ".TBL_AUTH_GROUP." ag, ".TBL_USER_GROUP." ug"
-         ." where ap.perm_id = gp.perm_id and gp.group_id = ag.group_id"
-         ."  and ag.group_id = ug.group_id and ug.user_id = {$u['user_id']}");
+      	." from ".TBL_AUTH_PERM." ap, ".TBL_GROUP_PERM." gp, ".TBL_AUTH_GROUP." ag, ".TBL_USER_GROUP." ug"
+      	." where ap.perm_id = gp.perm_id and gp.group_id = ag.group_id"
+      	."  and ag.group_id = ug.group_id and ug.user_id = {$u['user_id']}");
       while (list($group, $perm) = $q->grab()) {
         $this->auth['perm'][$perm] = true;
         $this->auth['group'][$group] = true;
@@ -151,7 +151,7 @@ class uperm extends Perm {
     global $auth;
 
     // Administrators always pass
-    if ($auth->auth[$auth_var]['admin']) {
+    if ($auth->auth[$auth_var]['Admin']) {
       return true;
     }
 
@@ -200,13 +200,13 @@ class templateclass extends Template {
     if ($u && $u != 'nobody') {
       list($owner_open, $owner_closed) =
         $q->grab("select sum(if(status_name in ('Unconfirmed','New','Assigned','Reopened'),1,0)),"
-          ."  sum(if(status_name not in ('Unconfirmed','New','Assigned','Reopened'),1,0))"
-    ." from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id)"
-    ." where assigned_to = $u");
+        	."  sum(if(status_name not in ('Unconfirmed','New','Assigned','Reopened'),1,0))"
+    			." from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id)"
+    			." where assigned_to = $u");
       list($reporter_open, $reporter_closed) =
-  $q->grab("select sum(if(status_name in ('Unconfirmed','New','Assigned','Reopened'),1,0)),"
-    ."  sum(if(status_name not in ('Unconfirmed','New','Assigned','Reopened'),1,0))"
-    ." from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) where created_by = $u");
+ 				$q->grab("select sum(if(status_name in ('Unconfirmed','New','Assigned','Reopened'),1,0)),"
+    			."  sum(if(status_name not in ('Unconfirmed','New','Assigned','Reopened'),1,0))"
+    			." from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) where created_by = $u");
       $this->set_var(array(
         'loggedinas' => $auth->auth['uname'],
         'liblock' => '',
@@ -281,7 +281,7 @@ function build_select($box, $value = '', $project = 0) {
   $text = '';
   $querystart = "select {$box}_id, {$box}_name from $cfgDatabase[$box]";
   $queries = array(
-    'group' => $querystart.' order by group_name',
+    'group' => $querystart.' where group_name <> "User" order by group_name',
     'severity' => $querystart.' where sort_order > 0 order by sort_order',
     'status' => $querystart.' where sort_order > 0 order by sort_order',
     'resolution' => $querystart.' where sort_order > 0 order by sort_order',
@@ -294,7 +294,7 @@ function build_select($box, $value = '', $project = 0) {
     case 'group' :
       $q->query($queries[$box]);
       while ($row = $q->grab()) {
-        if ($value == $row[$box.'_id'] and $value != '') $sel = ' selected';
+        if (count($value) && in_array($row[$box.'_id'], $value)) $sel = ' selected';
         else $sel = '';
         $text .= '<option value="'.
           $row[$box.'_id']."\"$sel>".$row[$box.'_name'].'</option>';
@@ -326,7 +326,7 @@ function build_select($box, $value = '', $project = 0) {
       }
       break;
     case 'owner' :
-      $q->query("select user_id, login from ".TBL_AUTH_USER." where active > 0 order by login");
+      $q->query("select u.user_id, login from ".TBL_AUTH_USER." u, ".TBL_USER_GROUP." ug, ".TBL_AUTH_GROUP." g where u.active > 0 and u.user_id = ug.user_id and ug.group_id = g.group_id and group_name = 'Developer' order by login");
       while ($row = $q->grab()) {
         if ($value == $row['user_id']) $sel = ' selected';
         else $sel = '';
