@@ -2,7 +2,7 @@
 -- Oracle database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: oci8.in,v 1.14 2002/06/13 11:29:39 firma Exp $
+-- $Id: oci8.in,v 1.15 2002/06/14 15:30:45 firma Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id number(10)   default '0' NOT NULL,
@@ -104,7 +104,7 @@ CREATE INDEX GROUPIDX ON TBL_BUG_GROUP ( group_id );
 
 CREATE TABLE TBL_BUG_HISTORY (
   bug_id number(10)   default '0' NOT NULL,
-  changed_field varchar2(20)  default '' NOT NULL,
+  changed_field varchar2(30)  default '' NOT NULL,
   old_value varchar2(255)  default '' NOT NULL,
   new_value varchar2(255)  default '' NOT NULL,
   created_by number(10)   default '0' NOT NULL,

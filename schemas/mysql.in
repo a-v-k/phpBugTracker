@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.30 2002/06/13 11:29:39 firma Exp $
+# $Id: mysql.in,v 1.31 2002/06/14 15:30:45 firma Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id int(10) unsigned NOT NULL default '0',
@@ -103,9 +103,9 @@ CREATE TABLE TBL_BUG_GROUP (
 
 CREATE TABLE TBL_BUG_HISTORY (
   bug_id int(10) unsigned NOT NULL default '0',
-  changed_field char(20) NOT NULL default '',
-  old_value char(255) NOT NULL default '',
-  new_value char(255) NOT NULL default '',
+  changed_field varchar(30) NOT NULL default '',
+  old_value varchar(255) NOT NULL default '',
+  new_value varchar(255) NOT NULL default '',
   created_by int(10) unsigned NOT NULL default '0',
   created_date bigint(20) unsigned NOT NULL default '0'
 ) TYPE=MyISAM;

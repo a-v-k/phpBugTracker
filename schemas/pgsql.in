@@ -2,7 +2,7 @@
 -- PostgreSQL database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.31 2002/06/13 11:29:39 firma Exp $
+-- $Id: pgsql.in,v 1.32 2002/06/14 15:30:45 firma Exp $
 
 BEGIN;
 
@@ -105,7 +105,7 @@ CREATE TABLE TBL_BUG_GROUP (
 
 CREATE TABLE TBL_BUG_HISTORY (
   bug_id INT4  NOT NULL DEFAULT '0',
-  changed_field varchar(20) NOT NULL DEFAULT '',
+  changed_field varchar(30) NOT NULL DEFAULT '',
   old_value varchar(255) NOT NULL DEFAULT '',
   new_value varchar(255) NOT NULL DEFAULT '',
   created_by INT4  NOT NULL DEFAULT '0',
