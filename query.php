@@ -5,14 +5,23 @@
 include 'include.php';
 
 page_open(array('sess' => 'usess', 'auth' => 'uauth'));
+$u = $auth->auth['uid'];
+
+function delete_saved_query($queryid) {
+	global $q, $u, $me;
+	
+	$q->query("delete from SavedQuery where UserID = $u and SavedQueryID = $queryid");
+	header("Location: $me?op=query");
+}
 
 function show_query() {
-  global $q, $t, $status, $resolution, $os, $priority, $severity, $TITLE;
+  global $q, $t, $status, $resolution, $os, $priority, $severity, $TITLE, $u;
   
   $nq = new dbclass;
   
   $t->set_file('content','queryform.html');
-  
+	$t->set_block('content','row','rows');
+	 
   // Build the javascript-powered select boxes
   $q->query("select ProjectID, Name from Project where Active order by Name");
   while (list($pid, $pname) = $q->grab()) {
@@ -34,6 +43,21 @@ function show_query() {
     if (substr($js,-1) == ',') $js = substr($js,0,-1);
     $js .= ");\n";
   }
+	
+	// Grab the saved queries if there are any
+	$q->query("select * from SavedQuery where UserID = $u");
+	if (!$q->num_rows()) {
+		$t->set_var('rows','');
+	} else {
+		while ($row = $q->grab()) {
+			$t->set_var(array(
+				'savedquerystring' => $row['SavedQueryString'],
+				'savedqueryname' => stripslashes($row['SavedQueryName']),
+				'savedqueryid' => $row['SavedQueryID']
+				));
+			$t->parse('rows', 'row', true);
+		}
+	}
   
   $t->set_var(array(
     'js' => $js,
@@ -109,11 +133,16 @@ function build_query($showmybugs = false) {
 
 function list_items($showmybugs = false) {
   global $querystring, $me, $q, $t, $selrange, $order, $sort, $query, 
-    $page, $op, $select, $TITLE, $STRING;
+    $page, $op, $select, $TITLE, $STRING, $savedqueryname, $u;
 
   $t->set_file('content','buglist.html');
   $t->set_block('content','row','rows');
   
+	// Save the query if requested
+	if ($savedqueryname) {
+		$savedquerystring = ereg_replace('&savedqueryname=.*(&?)', '\\1', $GLOBALS['QUERY_STRING']);
+		$q->query("insert into SavedQuery (UserID, SavedQueryName, SavedQueryString) values ($u, '$savedqueryname', '$savedquerystring')");
+	}
   if (!$order) { $order = 'BugID'; $sort = 'asc'; }
   if (!$querystring or $op) build_query($showmybugs);
   $nr = $q->grab_field("select count(*) from Bug left join User Owner on 
@@ -195,6 +224,7 @@ $t->set_file('wrap','wrap.html');
 if ($op) switch($op) {
 	case 'query' : show_query(); break;
 	case 'doquery' : list_items(); break;
+	case 'delquery' : delete_saved_query($queryid); break;
 	case 'mybugs' : list_items(true); break;
 	default : show_query(); break;
 }

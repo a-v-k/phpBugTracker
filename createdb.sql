@@ -188,6 +188,19 @@ INSERT INTO Resolution VALUES (6,'Duplicate','',6);
 insert into db_sequence values ('Resolution', 6);
 
 #
+# Table structure for table 'SavedQuery'
+#
+
+DROP TABLE IF EXISTS SavedQuery;
+CREATE TABLE SavedQuery (
+   SavedQueryID int(10) unsigned NOT NULL auto_increment,
+   UserID int(10) unsigned DEFAULT '0' NOT NULL,
+   SavedQueryName varchar(40) NOT NULL,
+   SavedQueryString text NOT NULL,
+   PRIMARY KEY (SavedQueryID, UserID)
+);
+
+#
 # Table structure for table 'Severity'
 #
 
@@ -269,7 +282,3 @@ CREATE TABLE active_sessions (
   PRIMARY KEY (name,sid),
   KEY changed (changed)
 );
-
-# Upgrading from 0.1.2 to 0.1.3
-# alter table Bug add LastModifiedBy int(10) unsigned DEFAULT '0' NOT NULL after CreatedDate, add LastModifiedDate bigint(20) unsigned DEFAULT '0' NOT NULL after LastModifiedBy;
-# alter table Version change Version Name char (10) DEFAULT '' NOT NULL;
