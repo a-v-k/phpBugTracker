@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.1 2001/10/30 04:05:58 bcurtis Exp $
+// $Id: install.php,v 1.2 2001/10/30 04:08:35 bcurtis Exp $
 
 include_once('template.inc');
 $t = new Template('templates/default', 'keep');
@@ -65,9 +65,9 @@ $tables = array(
 		);
 
 @include_once('config.php');
-// if (defined('DB_HOST')) { // Already configured
-// 	header("Location: index.php");
-// }
+if (defined('DB_HOST')) { // Already configured
+	header("Location: index.php");
+}
 
 function build_select($box, $value = '', $ary) {
 	foreach ($ary as $val => $item) {
