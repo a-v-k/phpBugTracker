@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.59 2001/11/14 04:11:02 bcurtis Exp $
+// $Id: bug.php,v 1.60 2001/11/14 04:39:23 bcurtis Exp $
 
 include 'include.php';
 
@@ -356,7 +356,7 @@ function update_bug($bugid = 0) {
   if ($changedfields or $comments) {
     do_changedfields($u, $buginfo, $changedfields, $comments);
   }
-  header("Location: bug.php?op=show&bugid=$bugid");
+  header("Location: bug.php?op=show&bugid=$bugid&pos=$pos");
 }
 
 function do_form($bugid = 0) {
@@ -618,7 +618,8 @@ function show_bug($bugid = 0, $error = '') {
 		'developer_list' => build_select('owner'),
 		'prevlink' => $prevlink,
 		'nextlink' => $nextlink,
-		'prevnextsep' => $prevlink && $nextlink ? ' | ' : ''
+		'prevnextsep' => $prevlink && $nextlink ? ' | ' : '',
+		'pos' => $_gv['pos']
     ));
   switch($row['status_name']) {
     case 'Unconfirmed' :
