@@ -25,7 +25,9 @@ $STRING = array(
 	'nocomponents' => 'No components found',
 	'nostatses' => 'No statuses found',
 	'givepassword' => 'Please enter a password',
-	'nousers' => 'No users found'
+	'nousers' => 'No users found',
+	'bugbadperm' => 'You cannot change this bug',
+	'bugbadnum' => 'That bug does not exist'
 	);
 	
 // Page titles
