@@ -1,0 +1,44 @@
+#!/bin/bash
+# Script to generate database-creation-scripts
+# $Id: configure_db,v 1.1 2001/09/07 13:15:37 mohni Exp $
+
+# prefix for tablenames
+#TBL_PREFIX="phpbt_"
+TBL_PREFIX=""
+
+#------------------------------------------------------------------------------
+#parameters:
+#  $TBL_PREFIX	prefix for tablenames
+#  $1		filename for input
+#  $2		filename for output
+generate_sql() {
+  cat $1 | sed "
+    s/TBL_ATTACHMENT/${TBL_PREFIX}attachment/g
+    s/TBL_BUG/${TBL_PREFIX}bug/g
+    s/TBL_BUG_HISTORY/${TBL_PREFIX}bug_history/g
+    s/TBL_COMMENT/${TBL_PREFIX}comment/g
+    s/TBL_COMPONENT/${TBL_PREFIX}component/g
+    s/TBL_PROJECT/${TBL_PREFIX}project/g
+    s/TBL_RESOLUTION/${TBL_PREFIX}resolution/g
+    s/TBL_SAVED_QUERY/${TBL_PREFIX}saved_query/g
+    s/TBL_SEVERITY/${TBL_PREFIX}severity/g
+    s/TBL_STATUS/${TBL_PREFIX}status/g
+    s/TBL_AUTH_USER/${TBL_PREFIX}auth_user/g
+    s/TBL_VERSION/${TBL_PREFIX}version/g
+    s/TBL_OS/${TBL_PREFIX}os/g
+    s/TBL_AUTH_GROUP/${TBL_PREFIX}auth_group/g
+    s/TBL_AUTH_PERM/${TBL_PREFIX}auth_perm/g
+    s/TBL_USER_GROUP/${TBL_PREFIX}user_group/g
+    s/TBL_USER_PERM/${TBL_PREFIX}user_perm/g
+    s/TBL_GROUP_PERM/${TBL_PREFIX}group_perm/g
+    s/TBL_BUG_GROUP/${TBL_PREFIX}bug_group/g
+    s/TBL_PROJECT_GROUP/${TBL_PREFIX}project_group/g
+    s/^#\ TEMPLATE:.*$//
+  " > $2
+}
+
+#------------------------------------------------------------------------------
+
+#generate_sql createdb.sql.in createdb.sql
+#generate_sql createdb_pg.sql.in createdb_pg.sql
+generate_sql createdb.sql.in createdb.sql.out
