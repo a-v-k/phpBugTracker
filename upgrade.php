@@ -20,9 +20,11 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.21 2002/04/03 18:18:02 bcurtis Exp $
+// $Id: upgrade.php,v 1.22 2002/04/08 17:05:52 bcurtis Exp $
 
 define ('NO_AUTH', 1);
+define ('STYLE', 'default');
+
 include 'include.php';
 
 function upgrade() {
@@ -31,22 +33,9 @@ function upgrade() {
 	// Note, no upgrades for oracle since we didn't support oracle before 0.8.0
 	$upgraded = $db->getOne('select varname from '.TBL_CONFIGURATION.' where varname = \'FORCE_LOGIN\'');
 	if (!$upgraded or DB::isError($upgraded)) {
-		if (!@include('Smarty.class.php')) { // Template class
-			die('<br><br>
-			<div align="center">The Smarty templates class is not in your include path.
-			Without this class being available, phpBugTracker will not be able to work.
-			Please visit <a href="http://www.phpinsider.com/php/code/Smarty/">the smarty
-			website</a> and install the package.  Please reload this page when smarty 
-			has been installed.</div>
-			');
-		}
 		if (!@is_writeable('c_templates')) {
-			die('<br><br>
-			<div align="center">The "c_templates" subdirectory is not writeable by the 
-			web process.  This needs to be corrected before the upgrade can proceed 
-			so the templates can be compiled by smarty.  Please reload this page when 
-			this has been corrected.</div>
-			');
+			include('templates/default/base/templatesperm.html');
+			exit;
 		}
 		// Convert the sequences
 		if (DB_TYPE == 'mysql') {
@@ -57,6 +46,7 @@ function upgrade() {
 		if (DB_TYPE == 'pgsql') {
 			// Set up the user prefs table
 			$db->query("CREATE TABLE ".TBL_USER_PREF." ( user_id INT4  NOT NULL DEFAULT '0', email_notices INT2  NOT NULL DEFAULT '1', PRIMARY KEY  (user_id) )");
+			$db->query("CREATE TABLE ".TBL_BUG_DEPENDENCY." ( bug_id INT4  NOT NULL DEFAULT '0', depends_on INT4  NOT NULL DEFAULT '0', PRIMARY KEY  (bug_id,depends_on) )");
 			$db->query("insert into ".TBL_USER_PREF." (user_id) select user_id from ".TBL_AUTH_USER);
 			// Move the sequences
 			while ($rs->fetchInto($row)) {
@@ -65,6 +55,7 @@ function upgrade() {
 		} else {
 			// Set up the user prefs table
 			$db->query("CREATE TABLE ".TBL_USER_PREF." ( user_id int(11) NOT NULL default '0', email_notices tinyint(1) NOT NULL default '1', PRIMARY KEY  (user_id) )");
+			$db->query("CREATE TABLE ".TBL_BUG_DEPENDENCY." ( bug_id int(10) unsigned NOT NULL default '0', depends_on int(10) unsigned NOT NULL default '0', PRIMARY KEY  (bug_id,depends_on) )");
 			$db->query("insert into ".TBL_USER_PREF." (user_id) select user_id from ".TBL_AUTH_USER);
 			// Move the sequences
 			while ($rs->fetchInto($row)) {
