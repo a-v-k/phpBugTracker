@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.43 2001/09/18 03:43:06 bcurtis Exp $
+// $Id: bug.php,v 1.44 2001/09/18 03:43:45 bcurtis Exp $
 
 include 'include.php';
 
@@ -506,7 +506,7 @@ function show_bug($bugid = 0, $error = '') {
 
 function show_projects() {
 	global $me, $q, $t, $project, $STRING;
-	$q->Debug=true;
+	
 	// Show only active projects with at least one component
 	$q->query('select p.* from '.TBL_PROJECT.' p, '.TBL_COMPONENT
 		.' c where p.active and p.project_id = c.project_id group by p.project_id 
