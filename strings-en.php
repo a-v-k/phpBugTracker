@@ -51,9 +51,11 @@ $STRING = array(
 	'passwordmatch' => 'Those passwords don\'t match -- please try again',
 	'nobughistory' => 'There is no history for that bug',
 	'logintomodify' => 'You must be logged in to modify this bug',
+	'give_attachment' => 'Please specify a file to upload',
 	'no_attachment_save_path' => 'Couldn\'t find where to save the file!',
 	'attachment_path_not_writeable' => 'Couldn\'t create a file in the save path',
-	'attachment_move_error' => 'There was an error moving the uploaded file'
+	'attachment_move_error' => 'There was an error moving the uploaded file',
+	'bad_attachment' => 'That attachment does not exist'
 	);
 	
 // Page titles
