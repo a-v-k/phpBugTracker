@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: pt-br.php,v 1.15 2002/06/25 14:34:19 firma Exp $
+// $Id: pt-br.php,v 1.16 2002/06/27 13:50:53 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -283,4 +283,3 @@ $TITLE = array(
 );
 	
 ?>
-
