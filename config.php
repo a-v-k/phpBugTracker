@@ -2,7 +2,7 @@
 
 // config.php - Set up configuration options
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001 - 2003 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.39 2003/07/25 19:22:26 kennyt Exp $
+// $Id: config.php,v 1.40 2004/10/25 12:06:57 bcurtis Exp $
 
 define ('PHPLIB_PATH', ''); // If PHPlib is not in your include path
 

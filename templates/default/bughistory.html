@@ -1,26 +1,28 @@
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr bgcolor="#eeeeee">
-		<th>Who</th>
-		<th>What</th>
-		<th>Old Value</th>
-		<th>New Value</th>
-		<th>When</th>
+		<th><?php echo translate("Who"); ?></th>
+		<th><?php echo translate("What"); ?></th>
+		<th><?php echo translate("Old Value"); ?></th>
+		<th><?php echo translate("New Value"); ?></th>
+		<th><?php echo translate("When"); ?></th>
 	</tr>
-	{section name=event loop=$history}
-		<tr{if $smarty.section.event.iteration is even} class="alt" bgcolor="#dddddd"{/if}>
-			<td>{$history[event].login|maskemail}</td>
-			<td>{$history[event].changed_field}</td>
-			<td>&nbsp;{$history[event].old_value}</td>
-			<td>&nbsp;{$history[event].new_value}</td>
-			<td align="center">{$history[event].created_date|date:DATE_FORMAT} {$history[event].created_date|date:TIME_FORMAT}</td>
-		</tr>
-	{sectionelse}
+    <?php if ($count = count($history)) { ?>
+        <?php for ($i = 0; $i < $count; $i++) { ?>
+            <tr<?php if ($i % 2) echo ' class="alt" bgcolor="#dddddd"' ?>>
+                <td><?php echo maskemail($history[$i]['login']); ?></td>
+                <td><?php echo $history[$i]['changed_field']; ?></td>
+                <td>&nbsp;<?php echo $history[$i]['old_value']; ?></td>
+                <td>&nbsp;<?php echo $history[$i]['new_value']; ?></td>
+                <td align="center"><?php echo date(TIME_FORMAT.' '.DATE_FORMAT, $history[$i]['created_date']); ?></td>
+            </tr>
+	    <?php } ?>
+    <?php } else { ?>
 		<tr>
-			<td colspan="5" align="center">{$STRING.nobughistory}</td>
+			<td colspan="5" align="center"><?php echo translate("No history found for this bug"); ?></td>
 		</tr>
-	{/section}
+	<?php } ?>
 </table>
 <br>
-<a href="{$smarty.server.PHP_SELF}?op=show&bugid={$smarty.get.bugid}">Back to bug #{$smarty.get.bugid}</a>
+<a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=show&bugid=<?php echo $_GET['bugid']; ?>"><?php echo translate("Back to bug"); ?></a>
 <br>
 <br>

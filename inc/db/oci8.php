@@ -39,7 +39,7 @@ $QUERY = array(
 		'group by d.database_id, database_name, sort_order '.
 		'order by %s %s',
 	'admin-list-sites' => 'select s.site_id, site_name, sort_order, '.
-		'count(bug_id) as bug_count from '.TBL_SITE. ' s, '.TBL_BUG.
+		'count(bug_id) as bug_count from '.TBL_SITE. ' s, '.TBL_BUG.' b '.
 		'where s.site_id = b.site_id(+) group by s.site_id, site_name, '.
 		'sort_order order by %s %s',
 	'admin-list-statuses' => 'select s.status_id, status_name, status_desc, '.
@@ -54,7 +54,7 @@ $QUERY = array(
 		'and group_name <> \'User\'',
 	'bug-history' => 'select bh.*, login '.
 		'from '.TBL_BUG_HISTORY.' bh, '.TBL_AUTH_USER .
-		' where user_id = bh.created_by(+) and bug_id = %s',
+		' where user_id = bh.created_by(+) and bug_id = %s order by bh.created_date',
 	'bug-cc-list' => 'select email '.
 		'from '.TBL_BUG_CC.' bc, ' . TBL_AUTH_USER.' u, ' . TBL_USER_PREF.' p '.
 		'where u.user_id = bc.user_id(+) and u.user_id = p.user_id '.

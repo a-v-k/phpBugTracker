@@ -1,36 +1,53 @@
-<script language="JavaScript">
-	var nameString = '{$STRING.givename}';
+<script type="text/javascript" language="JavaScript">
+    var nameString = '<?php echo translate("Please enter a name"); ?>';
 
-	{literal}
-	function checkForm(frm) {
-		if (frm.group_name.value == '') {
-			alert(nameString);
-			frm.group_name.focus();
-			return false;
-		}
-		return true;
-	}
-	{/literal}
+    function checkForm(frm) {
+        if (frm.group_name.value == '') {
+            alert(nameString);
+            frm.group_name.focus();
+            return false;
+        }
+        return true;
+    }
 </script>
-<b>{$page_title}&nbsp;</b>
+<b><?php echo $page_title; ?></b> 
 <hr size="1">
-<form action="{$smarty.server.PHP_SELF}" method="post" onSubmit="return checkForm(this)">
-<input type="hidden" name="group_id" value="{$group_id}">
-<input type="hidden" name="use_js" value="{$smarty.request.use_js}">
-<table border='0'>
-{if $error}
-  <tr>
-		<td colspan="2" class="error">{$error}</td>
-  </tr>
-{/if}
-<tr>
-  <td align="right" valign="top">Name:</td>
-  <td><input type="text" size="20" maxlength="40" name="group_name" value="{$group_name|stripslashes|htmlspecialchars}"></td>
-</tr>
-<tr>
-  <td align="right" valign="top">Assignable:</td>
-  <td><input type="checkbox" name="assignable" value="1" {if $assignable > 0}checked="checked"{/if}></td>
-</table>
-<br>
-<input type='submit' name='submit' value='Submit'>
+<form method="post" onsubmit="return checkForm(this)">
+    <table border='0'>
+        <?php if (!empty($error)) { ?>
+        <tr>
+            <td colspan="2" class="error">
+                <?php echo $error; ?>
+            </td>
+        </tr>
+        <?php } ?>
+        <tr>
+            <td align="right" valign="top">
+                Name:
+            </td>
+            <td>
+                <input type="text" size="20" maxlength="40" name="group_name" value="<?php echo stripslashes(htmlspecialchars($group_name)); ?>">
+            </td>
+        </tr>
+        <tr>
+            <td align="right" valign="top">
+                Assignable:
+            </td>
+            <td>
+                <input type="checkbox" name="assignable" value="1" <?php if ($assignable > 0) echo 'checked'; ?>>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" valign="top">
+                &nbsp;
+            </td>
+            <td>
+                <input type='submit' value='<?php echo translate("Submit"); ?>'> 
+                <input type="hidden" name="op" value="save">
+                <input type="hidden" name="group_id" value="<?php echo $group_id; ?>"> 
+                <input type="hidden" name="use_js" value="<?php echo $_REQUEST['use_js']; ?>">             
+            </td>
+        </tr>
+    </table>
 </form>
+

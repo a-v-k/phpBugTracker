@@ -3,7 +3,6 @@
 : Added display of the bug ids a bug blocks.
 : Allow users to suppress the update email when changing a bug.
 : Use localized strings in bug history.
-: Added Japanese, Danish, Norwegian, and Spanish translations.
 : Allow users to override saved queries by saving a new query with the same
   name as an old one.
 : Added client-side validation to admin pages.
@@ -12,6 +11,9 @@
 : Fixed a bug with not being able to change the name of the 'Developer' group.
 : Added tracking of changes in priority to the bug history.
 : You can now search on "additional comments" and "description".
+: Added the ability to download to Excel
+: Fixed publicly-reported bugs
+: Changed the localization from string arrays to gettext
 
 -- 0.9.1 -- 4 Jan 2003
 : Fixed bugs with PostgreSQL

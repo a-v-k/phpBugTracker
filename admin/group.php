@@ -2,7 +2,7 @@
 
 // group.php - Administer the user groups
 // ------------------------------------------------------------------------
-// Copyright (c) 2001, 2002 The phpBugTracker Group
+// Copyright (c) 2001 - 2004 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: group.php,v 1.12 2003/06/25 02:11:10 kennyt Exp $
+// $Id: group.php,v 1.13 2004/10/25 12:06:59 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -40,58 +40,52 @@ function del_group($groupid = 0) {
 }
 
 function do_form($groupid = 0) {
-	global $db, $me, $_pv, $STRING, $u, $now, $t;
+	global $db, $me, $u, $now, $t;
 
-	extract($_pv);
+	extract($_POST);
 	$error = '';
 	// Validation
 	if (!$group_name = trim($group_name))
-		$error = $STRING['givename'];
+		$error = translate("Please enter a name");
 	if ($error) { show_form($groupid, $error); return; }
 
 	if (!$groupid) {
-		$db->query("insert into ".TBL_AUTH_GROUP.
-			" (group_id, group_name, created_by, created_date, last_modified_by, last_modified_date, assignable)"
-			." values (".$db->nextId(TBL_AUTH_GROUP).", ".
-			$db->quote(stripslashes($group_name)).", $u, $now, $u, $now, ". ((int)$assignable).')');
+		$db->query("insert into ".TBL_AUTH_GROUP." (group_id, group_name, created_by, created_date, last_modified_by, last_modified_date, assignable) values (".$db->nextId(TBL_AUTH_GROUP).", ".$db->quote(stripslashes($group_name)).", $u, $now, $u, $now, ". ((int)$assignable).')');
 	} else {
-		$db->query("update ".TBL_AUTH_GROUP.
-			" set group_name = ".$db->quote(stripslashes($group_name)).
-			", last_modified_by = $u, last_modified_date = $now, assignable = ".($assignable?1:0)." where group_id = '$groupid'");
+		$db->query("update ".TBL_AUTH_GROUP." set group_name = ".$db->quote(stripslashes($group_name)).", last_modified_by = $u, last_modified_date = $now, assignable = ".($assignable?1:0)." where group_id = '$groupid'");
 	}
 	if ($use_js) {
-		$t->display('admin/edit-submit.html');
+		$t->render('edit-submit.html', '', 'wrap-popup.html');
 	} else {
 		header("Location: $me?");
 	}
 }
 
 function show_form($groupid = 0, $error = '') {
-	global $db, $me, $t, $_pv, $STRING;
+	global $db, $me, $t;
 
 	if ($groupid && !$error) {
-		$t->assign($db->getRow("select * from ".TBL_AUTH_GROUP.
-			" where group_id = '$groupid'"));
+		$t->assign($db->getRow("select * from ".TBL_AUTH_GROUP." where group_id = '$groupid'"));
 	} else {
-		$t->assign($_pv);
+		$t->assign($_POST);
 	}
 	$t->assign('error', $error);
-	$t->wrap('admin/group-edit.html', ($groupid ? 'editgroup' : 'addgroup'));
+	$t->render('group-edit.html', translate("Edit Group"), (!empty($_GET['use_js']) ? 'wrap-popup.html' : 'wrap.html'));
 }
 
 
 function list_items($groupid = 0, $error = '') {
-	global $me, $db, $t, $_gv, $STRING, $TITLE, $QUERY;
+	global $me, $db, $t, $QUERY;
 
-	if (empty($_gv['order'])) { 
+	if (empty($_GET['order'])) { 
 		$order = 'group_name'; 
 		$sort = 'asc'; 
 	} else {
-		$order = $_gv['order']; 
-		$sort = $_gv['sort']; 
+		$order = $_GET['order']; 
+		$sort = $_GET['sort']; 
 	}
 
-	$page = isset($_gv['page']) ? $_gv['page'] : 0;
+	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	
 	$nr = $db->getOne("select count(*) from ".TBL_AUTH_GROUP);
 
@@ -107,17 +101,18 @@ function list_items($groupid = 0, $error = '') {
 
 	sorting_headers($me, $headers, $order, $sort, "page=$page");
 
-	$t->wrap('admin/grouplist.html', 'group');
+	$t->render('grouplist.html', translate("Group List"));
 }
 
 $perm->check('Admin');
 
-if (isset($_gv['op'])) switch($_gv['op']) {
-	case 'edit' : show_form($_gv['group_id']); break;
-	case 'del' : del_group($_gv['group_id']); list_items($_gv['group_id']); break;
-	case 'purge' : purge_group($_gv['group_id']); list_items($_gv['group_id']); break;
-} elseif(isset($_pv['submit'])) {
-	do_form($_pv['group_id']);
+if (isset($_REQUEST['op'])) {
+	switch($_REQUEST['op']) {
+		case 'save' : do_form($_POST['group_id']); break;
+		case 'edit' : show_form($_GET['group_id']); break;
+		case 'del' : del_group($_GET['group_id']); list_items($_GET['group_id']); break;
+		case 'purge' : purge_group($_GET['group_id']); list_items($_GET['group_id']); break;
+	}
 } else list_items();
 
 ?>

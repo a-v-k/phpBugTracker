@@ -1,50 +1,39 @@
 <script language="JavaScript">
 <!--
-	var me = '{$smarty.server.PHP_SELF}';
-	{literal}
-		
 	function popupUser(id) {
-		window.open(me + '?op=edit&use_js=1&user_id='+id, 'ewin', 'dependent=yes,width=350,height=300,scrollbars=1');
+		window.open('user.php?op=edit&use_js=1&user_id='+id, 'ewin', 'dependent=yes,width=350,height=300,scrollbars=1');
 	}
-	{/literal}
 // -->
 </script>
 <table border="0" width="100%">
 	<tr>
 		<td valign="top">
-			<b>&nbsp;{$page_title}</b> - <a href="{$smarty.server.PHP_SELF}?op=edit&user_id=0&filter={$filter}" onClick="popupUser(0); return false;">{$STRING.addnew} User</a>
+			<b>&nbsp;<?php echo $page_title; ?></b> - <a href="user.php?op=edit&user_id=0&filter=<?php echo $filter; ?>" onClick="popupUser(0); return false;"><?php echo translate("Add new user"); ?></a>
 			<hr size="1">
 			<form>
 			<div align="center">
-				<select name="filter" onChange="document.location.href='{$smarty.server.PHP_SELF}?filter=' + this.options[this.selectedIndex].value">{build_select box=user_filter selected=$filter}</select> 
-				<input type="submit" value="Filter">
+				<select name="filter" onChange="document.location.href='user.php?filter=' + this.options[this.selectedIndex].value">
+                    <?php build_select('user_filter', $filter); ?></select> 
+				<input type="submit" value="<?php echo translate("Filter"); ?>">
 			</div>
 			</form>
-			<table border="0" width="100%">
+			<table class="bordertable" align="center">
 				<tr>
-					<th class="{$headers.login.class}"><a href="{$headers.login.url}">Login</a></th>
-					<th class="{$headers.name.class}"><a href="{$headers.name.url}">Name</a></th>
-					<th class="{$headers.date.class}"><a href="{$headers.date.url}">Created</a></th>
-					<th class="{$headers.active.class}"><a href="{$headers.active.url}">Active</a></th>
+					<th class="<?php echo $headers['login']['class']; ?>"><a href="<?php echo $headers['login']['url']; ?>"><?php echo translate("Login"); ?></a></th>
+					<th class="<?php echo $headers['name']['class']; ?>"><a href="<?php echo $headers['name']['url']; ?>"><?php echo translate("Name"); ?></a></th>
+					<th class="<?php echo $headers['date']['class']; ?>"><a href="<?php echo $headers['date']['url']; ?>"><?php echo translate("Created"); ?></a></th>
+					<th class="<?php echo $headers['active']['class']; ?>"><a href="<?php echo $headers['active']['url']; ?>"><?php echo translate("Active"); ?></a></th>
 				</tr>
-				{section name=user loop=$users}
-				<tr{if $smarty.section.user.iteration is even} class="alt"{/if}>
-					<td><a href="{$smarty.server.PHP_SELF}?op=edit&user_id={$users[user].user_id}&filter={$filter}" onClick="popupUser({$users[user].user_id}); return false;">{$users[user].login|stripslashes}</a></td>
-					<td align="center">{$users[user].first_name|stripslashes} {$users[user].last_name|stripslashes}</td>
-					<td align="center">{$users[user].created_date|date:DATE_FORMAT}</td>
-					<td align="center">{if $users[user].active}Yes{else}No{/if}</td>
-				</tr>
-				{/section}
+				<?php for ($i = 0, $count = count($users); $i < $count; $i++) { ?>
 				<tr>
-					<td colspan="3" align="center">
-						<br>
-  					{$first} - {$last} of {$total}
-						<br>
-						{if $pages ne "1"}[ {$pages} ]{/if}
-  					<br>
-					</td>
+					<td><a href="user.php?op=edit&user_id=<?php echo $users[$i]['user_id']; ?>&filter=<?php echo $filter; ?>" onClick="popupUser(<?php echo $users[$i]['user_id']; ?>); return false;"><?php echo stripslashes(htmlspecialchars($users[$i]['login'])); ?></a></td>
+					<td align="center"><?php echo stripslashes(htmlspecialchars($users[$i]['first_name'].' '.$users[$i]['last_name'])); ?></td>
+					<td align="center"><?php echo $users[$i]['created_date'] ? date(DATE_FORMAT, $users[$i]['created_date']) : ''; ?></td>
+					<td align="center"><?php echo $users[$i]['active'] ? translate("Yes") : translate("No"); ?></td>
 				</tr>
+				<?php } ?>
 			</table>
+            <?php include('pagination.html'); ?>
 		</td>
 	</tr>
 </table>

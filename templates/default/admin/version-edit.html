@@ -1,7 +1,6 @@
 <script language="JavaScript">
-	var nameString = '{$STRING.giveversion}';
+	var nameString = '<?php echo translate("Please enter a version"); ?>';
 
-	{literal}
 	function checkForm(frm) {
 		if (frm.version_name.value == '') {
 			alert(nameString);
@@ -10,38 +9,40 @@
 		}
 		return true;
 	}
-	{/literal}
 </script>
-		&nbsp;<b>{$page_title}</b>
-		<hr size="1">
-		{if $error}<div class="error">{$error}</div>{/if}
-		<form action="{$smarty.server.PHP_SELF}" method="post" onSubmit="return checkForm(this)">
-		<table border="0">
-			<input type="hidden" name="do" value="version">
-			<input type="hidden" name="version_id" value="{$version_id}">
-			<input type="hidden" name="project_id" value="{$project_id}">
-			<input type="hidden" name="use_js" value="{$smarty.request.use_js}">
-			<tr>
-				<td valign="top">
-					Name:
-				</td>
-				<td valign="top">
-					<input type="text" name="version_name" value="{$version_name|stripslashes|htmlspecialchars}">
-				</td>
-			</tr>
-			<tr>
-				<td valign="top">
-					Active:
-				</td>
-				<td valign="top">
-					<input type="checkbox" name="active" value="1" {if $active or not $version_id}checked{/if}>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="submit" value="Submit">
-				</td>
-			</tr>
-		</table>
-		</form>
+&nbsp;<b><?php echo $page_title; ?></b>
+<hr size="1">
+<?php if($error) { ?><div class="error"><?php echo $error; ?></div><?php } ?>
+<form method="post" onSubmit="return checkForm(this)">
+<table border="0">
+    <tr>
+        <td valign="top">
+            <?php echo translate("Name"); ?>:
+        </td>
+        <td valign="top">
+            <input type="text" name="version_name" value="<?php echo stripslashes(htmlspecialchars($version_name)); ?>">
+        </td>
+    </tr>
+    <tr>
+        <td valign="top">
+            <?php echo translate("Active"); ?>:
+        </td>
+        <td valign="top">
+            <input type="checkbox" name="active" value="1" <?php if($active || !$version_id) { ?>checked<?php } ?>>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top">
+            &nbsp;
+        </td>
+        <td>
+            <input type="submit" value="<?php echo translate("Submit"); ?>">
+            <input type="hidden" name="version_id" value="<?php echo $version_id; ?>">
+            <input type="hidden" name="project_id" value="<?php echo $project_id; ?>">
+            <input type="hidden" name="use_js" value="<?php echo $_REQUEST['use_js']; ?>">
+            <input type="hidden" name="op" value="save_version">
+        </td>
+    </tr>
+</table>
+</form>
 

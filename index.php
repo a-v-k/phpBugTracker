@@ -2,7 +2,7 @@
 
 // index.php - Front page
 // ------------------------------------------------------------------------
-// Copyright (c) 2001, 2002 The phpBugTracker Group
+// Copyright (c) 2001 - 2004 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: index.php,v 1.39 2003/07/24 04:47:13 kennyt Exp $
+// $Id: index.php,v 1.40 2004/10/25 12:06:57 bcurtis Exp $
 
 include 'include.php';
 
@@ -34,8 +34,7 @@ function grab_data($restricted_projects) {
 	}
 
 	// Grab the data
-	$rs = $db->query("select status_id, count(status_id) as count from ".TBL_BUG.
-		" where project_id not in ($restricted_projects) group by status_id");
+	$rs = $db->query("select status_id, count(status_id) as count from ".TBL_BUG." where project_id not in ($restricted_projects) group by status_id");
 	while ($rs->fetchInto($row)) {
 		$stats[$row['status_id']]['count'] = $row['count'];
 	}
@@ -44,11 +43,14 @@ function grab_data($restricted_projects) {
 }
 
 function build_image($restricted_projects) {
-	global $STRING;
 
 	error_reporting(0); // Force this, just in case
-	include_once JPGRAPH_PATH.'jpgraph.php';
-	include_once JPGRAPH_PATH.'jpgraph_pie.php';
+	if (!@include_once(JPGRAPH_PATH.'jpgraph.php')) {
+		return '<span class="error">'.translate("Unable to load JPGraph").'</span>';
+	}
+	if (!@include_once(JPGRAPH_PATH.'jpgraph_pie.php')) {
+		return '<span class="error">'.translate("Unable to load JPGraph pie class").'</span>';
+	}
 
 	$stats = grab_data($restricted_projects);
 	$totalbugs = 0;
@@ -63,47 +65,42 @@ function build_image($restricted_projects) {
 	}
 
 	if (!$totalbugs) {
-		return $STRING['nobugs'];
+		return translate("No bugs found");
 	}
 
 	// Create the Pie Graph.
 	$graph = new PieGraph(350,200,"bug_cat_summary");
-	$graph->SetShadow();
-
-	// Set A title for the plot
-	$graph->title->Set(sprintf("Bug Summary (%d bug%s)",
-		$totalbugs, $totalbugs == 1 ? '' : 's'));
-	$graph->title->SetFont(FF_FONT1,FS_BOLD);
-
-	$graph->legend->Pos(0.03, 0.5, 'right', 'center');
-	// Create
-	$p1 = new PiePlot($data);
-	$p1->value->SetFormat("%d%%");
-	$p1->value->Show();
-	$p1->SetLegends($legend);
-	$p1->SetCSIMTargets($targ,$alts);
-	$p1->SetCenter(0.25);
-	$graph->Add($p1);
-	$graph->Stroke('jpgimages/'.GenImgName());
-
-	return $graph->GetHTMLImageMap("myimagemap").
-		"<img align=\"right\" src=\"jpgimages/".GenImgName()."\" ISMAP USEMAP=\"#myimagemap\" border=0>";
-}
-
-// Show the overall bug stats
-if (USE_JPGRAPH) {
-	if (!is_writeable('jpgimages')) {
-		$t->assign('summary_image', $STRING['image_path_not_writeable']);
+	include('inc/is_a.php');
+	// Make sure that the library loaded and we could create the library object
+	if (is_a($graph,'PieGraph')) {
+		$graph->SetShadow();
+	
+		// Set A title for the plot
+		$graph->title->Set(translate("Bug Summary"));
+		$graph->title->SetFont(FF_FONT1,FS_BOLD);
+	
+		$graph->legend->Pos(0.03, 0.5, 'right', 'center');
+		// Create
+		$p1 = new PiePlot($data);
+		$p1->value->SetFormat("%d%%");
+		$p1->value->Show();
+		$p1->SetLegends($legend);
+		$p1->SetCSIMTargets($targ,$alts);
+		$p1->SetCenter(0.25);
+		$graph->Add($p1);
+		$graph->Stroke('jpgimages/'.GenImgName());
+	
+		return $graph->GetHTMLImageMap("myimagemap").
+			"<img align=\"right\" src=\"jpgimages/".GenImgName()."\" ISMAP USEMAP=\"#myimagemap\" border=0>";
 	} else {
-		$t->assign('summary_image', build_image($restricted_projects));
+		return '<span class="error">'.translate("There was a problem when trying to use the JPGraph library. Please fix or disable by setting 'USE_JPGRAPH' to 'NO' on the Configuration page of the Administration Tools.").'</span>';
 	}
-} else {
-	$t->assign('stats', grab_data($restricted_projects));
 }
+
 
 if (SHOW_PROJECT_SUMMARIES) {
 	$querystring = $QUERY['index-projsummary-1'];
-	$resfields = array('Project','Open');
+	$resfields = array(translate("Project"), translate("Open"));
 
 	// Grab the resolutions from the database
 	$rs = $db->query($QUERY['index-projsummary-2'].
@@ -115,7 +112,7 @@ if (SHOW_PROJECT_SUMMARIES) {
 		$resfields[] = $fieldname;
 		$querystring .= $countquery;
 	}
-	$resfields[] = 'Total';
+	$resfields[] = translate("Total");
 
 	$db->setOption('optimize', 'performance'); // For Oracle to do this loop
 	$aProjects = array(
@@ -139,8 +136,8 @@ if (SHOW_PROJECT_SUMMARIES) {
 
 	// Lastly we will need a list of all statuses so we can exclude 'closed"
 	// for the open query
-	$sOpenStatusQuery = '&status%5B%5D='.@join('&status%5B%5D=', array(BUG_UNCONFIRMED, BUG_PROMOTED,
-	BUG_ASSIGNED, BUG_REOPENED));
+	$sOpenStatusQuery = '&status%5B%5D='.@join('&status%5B%5D=',
+		$db->getCol("select status_id from " . TBL_STATUS ." where bug_open = 1"));
 	
 	foreach ($aProjects['projects'] as $iProjectNumberKey => $value1) {
 		foreach ($aProjects['projects'][$iProjectNumberKey] as $sResolutionKey => $value2) {
@@ -157,22 +154,16 @@ if (SHOW_PROJECT_SUMMARIES) {
 	// End Create links for the project resolutions
 	
 	$t->assign($aProjects);
-		
+	$t->assign('resfields', $resfields);
 	$db->setOption('optimize', 'portability');
 }
 
 // Show the recently added and closed bugs
 $t->assign('recentbugs',
-	$db->getAll($db->modifyLimitQuery("select bug_id, title, project_name from ".TBL_BUG.
-		' b, '.TBL_PROJECT." p where b.project_id not in ($restricted_projects)".
-		' and b.project_id = p.project_id order by b.created_date desc', 0, 5)));
+	$db->getAll($db->modifyLimitQuery("select bug_id, title, project_name from ".TBL_BUG.' b, '.TBL_PROJECT." p where b.project_id not in ($restricted_projects) and b.project_id = p.project_id order by b.created_date desc", 0, 5)));
 
 $t->assign('closedbugs',
-	$db->getAll($db->modifyLimitQuery('select b.bug_id, title, project_name from '.TBL_BUG.' b, '.
-		TBL_PROJECT.' p'.
-		" where b.project_id not in ($restricted_projects)".
-		' and '.in_closed('status_id').
-		' and b.project_id = p.project_id order by close_date desc', 0, 5)));
+	$db->getAll($db->modifyLimitQuery('select b.bug_id, title, project_name from '.TBL_BUG.' b, '.TBL_PROJECT." p where b.project_id not in ($restricted_projects) and ".in_closed('status_id').' and b.project_id = p.project_id order by close_date desc', 0, 5)));
 
 if ($u != 'nobody') {
 	$pref = $db->GetOne('select saved_queries from '.TBL_USER_PREF." where user_id='".$u."'");
@@ -183,6 +174,7 @@ if ($u != 'nobody') {
 	}
 }
 
-$t->wrap('index.html', 'home');
+$t->assign('restricted_projects', $restricted_projects);
+$t->render('index.html', translate("Home"));
 
 ?>

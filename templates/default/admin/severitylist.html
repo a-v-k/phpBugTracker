@@ -1,53 +1,41 @@
 <script language="JavaScript">
 <!--
-	var me = '{$smarty.server.PHP_SELF}';
-	{literal}
-		
 	function popupSeverity(id) {
-		window.open(me + '?op=edit&use_js=1&severity_id='+id, 'ewin', 'dependent=yes,width=350,height=300,scrollbars=1');
+		window.open('severity.php?op=edit&use_js=1&severity_id='+id, 'ewin', 'dependent=yes,width=350,height=300,scrollbars=1');
 	}
-	{/literal}
 // -->
 </script>
 <table border="0" width="100%">
 	<tr>
 		<td valign="top">
-			<b>&nbsp;{$page_title}</b> - <a href="{$smarty.server.PHP_SELF}?op=edit&severity_id=0" onClick="popupSeverity(0); return false;">{$TITLE.addseverity}</a>
+			<b>&nbsp;<?php echo $page_title; ?></b> - <a href="severity.php?op=edit&severity_id=0" onClick="popupSeverity(0); return false;"><?php echo translate("Add new severity"); ?></a>
 			<hr size="1">
-			<table border="0" cellpadding="2" cellspacing="1" width="100%">
+			<table class="bordertable" align="center">
 				<tr>
-					<th class="{$headers.name.class}"><a href="{$headers.name.url}">Name</a></th>
-					<th class="{$headers.description.class}"><a href="{$headers.description.url}">Description</a></th>
-					<th class="{$headers.sortorder.class}"><a href="{$headers.sortorder.url}">Sort Order</a></th>
-					<th>Delete</th>
+					<th class="<?php echo $headers['name']['class']; ?>"><a href="<?php echo $headers['name']['url']; ?>"><?php echo translate("Name"); ?></a></th>
+					<th class="<?php echo $headers['description']['class']; ?>"><a href="<?php echo $headers['description']['url']; ?>"><?php echo translate("Description"); ?></a></th>
+					<th class="<?php echo $headers['sortorder']['class']; ?>"><a href="<?php echo $headers['sortorder']['url']; ?>"><?php echo translate("Sort Order"); ?></a></th>
+					<th><?php echo translate("Delete"); ?></th>
 				</tr>
-				{section name=severity loop=$severities}
-				<tr{if $smarty.section.severity.iteration is even} class="alt"{/if}>
-					<td><a href="{$smarty.server.PHP_SELF}?op=edit&severity_id={$severities[severity].severity_id}" onClick="popupSeverity({$severities[severity].severity_id}); return false;">{$severities[severity].severity_name|stripslashes}</a></td>
-					<td>&nbsp;{$severities[severity].severity_desc}</td>
-					<td align="center">{$severities[severity].sort_order}</td>
+				<?php for ($i = 0, $count = count($severities); $i < $count; $i++) { ?>
+				<tr>
+					<td><a href="severity.php?op=edit&severity_id=<?php echo $severities[$i]['severity_id']; ?>" onClick="popupSeverity(<?php echo $severities[$i]['severity_id']; ?>); return false;"><?php echo stripslashes(htmlspecialchars($severities[$i]['severity_name'])); ?></a></td>
+					<td>&nbsp;<?php echo $severities[$i]['severity_desc']; ?></td>
+					<td align="center"><?php echo $severities[$i]['sort_order']; ?></td>
 					<td align="center">
-						{if not $severities[severity].bug_count}
-							<a href="{$smarty.server.PHP_SELF}?op=del&severity_id={$severities[severity].severity_id}" onClick="return confirm('Are you sure you want to delete this severity?')">Delete</a>
-						{/if}
+						<?php if(!$severities[$i]['bug_count']) { ?>
+							<a href="severity.php?op=del&severity_id=<?php echo $severities[$i]['severity_id']; ?>" onClick="return confirm('<?php echo translate("Are you sure you want to delete this severity?"); ?>')"><?php echo translate("Delete"); ?></a>
+						<?php } ?>
 					</td>
 				</tr>
-				{/section}
-				<tr>
-					<td colspan="3" align="center">
-						<br>
-  					{$first} - {$last} of {$total}
-						<br>
-						{if $pages ne "1"}[ {$pages} ]{/if}
-  					<br>
-					</td>
-				</tr>
+				<?php } ?>
 			</table>
+            <?php include('pagination.html'); ?>
 			<br>
 			<div class="info">
-				Severities with a Sort Order = 0 will not be selectable by users
-				<br>
-				Only those Severities that have no bugs referencing them can be deleted
+				<?php echo translate("Items with a Sort Order = 0 will not be selectable by users."); ?>
+                <br>
+                <?php echo translate("Only those items that have no bugs referencing them can be deleted."); ?>
 			</div>
 		</td>
 	</tr>

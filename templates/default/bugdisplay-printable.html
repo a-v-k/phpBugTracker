@@ -1,73 +1,87 @@
 <table border='0' width="100%" cellspacing="0" cellpadding="0">
 	<tr>
 		<td>
-			Bug <b>#{$bug_id}</b>
+			<?php echo translate("Bug"); ?> <b>#<?php echo $bug_id; ?></b>
 		</td>
 		<td>
-			Created: <b>{$created_date|date:DATE_FORMAT}</b>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Reporter: <b>{$reporter|maskemail}</b>
-		</td>
-		<td>Assigned To: <b>{$owner|maskemail}</td>
-	</tr>
-	<tr>
-	  	<td>Status: <b>{$status_name}</b></td>
-	  	<td>Resolution: <b>{$resolution_name}</b></td>
-	</tr>
-	<tr>
-		<td>
-			Project: {$project_name}
-		</td>
-		<td>
-			Component: {$component_name}
+			<?php echo translate("Created"); ?>: <b><?php echo date(DATE_FORMAT, $created_date); ?></b>
 		</td>
 	</tr>
 	<tr>
 		<td>
-			Version: {$version_name}
+			<?php echo translate("Reporter"); ?>: <b><?php echo maskemail($reporter); ?></b>
+		</td>
+		<td><?php echo translate("Assigned to"); ?>: <b><?php echo maskemail($owner); ?></td>
+	</tr>
+	<tr>
+	  	<td><?php echo translate("Status"); ?>: <b><?php echo $status_name; ?></b></td>
+	  	<td><?php echo translate("Resolution"); ?>: <b><?php echo $resolution_name; ?></b></td>
+	</tr>
+	<tr>
+		<td>
+			<?php echo translate("Project"); ?>: <?php echo $project_name; ?>
 		</td>
 		<td>
-			Severity: {$severity_name}
+			<?php echo translate("Component"); ?>: <?php echo $component_name; ?>
 		</td>
 	</tr>
 	<tr>
 		<td>
-			Priority: {$priority}
+			<?php echo translate("Version"); ?>: <?php echo $version_name; ?>
+		</td>
+		<td>
+			<?php echo translate("Severity"); ?>: <?php echo $severity_name; ?>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<?php echo translate("Priority"); ?>: <?php echo $priority; ?>
 		</td>
 		<td colspan="2">
-			OS: {$os_name}
+			<?php echo translate("Operating System"); ?>: <?php echo $os_name; ?>
 		</td>
 	</tr>
 </table>
 <br>
-Summary: {$title|stripslashes}
+<?php echo translate("Summary"); ?>: <?php echo stripslashes($title); ?>
 <br>
-URL: {$url}
+<?php echo translate("URL"); ?>: <?php echo $url; ?>
 <br>
-Bug Dependencies: {$bug_dependencies}
+<?php echo translate("Depends on bugs"); ?>: 
+<?php for ($i = 0, $count = count($bug_dependencies); $i < $count; $i++) {
+    printf('<a href="bug.php?op=show&bugid=%d" class="%s">#%d</a>%s', 
+        $bug_dependencies[$i]['bug_id'], 
+        ($bug_dependencies[$i]['bug_open'] ? 'open_bug_number' : 'closed_bug_number'),
+        $bug_dependencies[$i]['bug_id'],
+        ($i < $count - 1 ? ', ' : ''));
+} ?>
 <br>
-{$STRING.BUGDISPLAY.blocks}: {$rev_bug_dependencies}
+<?php echo translate("Blocks bugs"); ?>: 
+<?php for ($i = 0, $count = count($bug_blocks); $i < $count; $i++) {
+    printf('<a href="bug.php?op=show&bugid=%d" class="%s">#%d</a>%s', 
+        $bug_blocks[$i]['bug_id'], 
+        ($bug_blocks[$i]['bug_open'] ? 'open_bug_number' : 'closed_bug_number'),
+        $bug_blocks[$i]['bug_id'],
+        ($i < $count - 1 ? ', ' : ''));
+} ?>
 <br>
 <br>
-Comments:
+<?php echo translate("Comments"); ?>:
 <hr size="1">
-<i>----- Posted by {$reporter|maskemail} at {$created_date|date:TIME_FORMAT} on {$created_date|date:DATE_FORMAT} -----</i>
+<i>----- <?php echo translate("Posted by").' '.maskemail($reporter).' ('.date(TIME_FORMAT.' '.DATE_FORMAT, $created_date).')' ?>-----</i>
 <br>
-{$description|stripslashes|format_comments|nl2br}
-<br>
-<br>
-{section name=comment loop=$comments}
-<i>----- Posted by {$comments[comment].login|maskemail} at {$comments[comment].created_date|date:TIME_FORMAT} on {$comments[comment].created_date|date:DATE_FORMAT}-----</i>
-<br>
-{$comments[comment].comment_text|stripslashes|format_comments|nl2br}
+<?php echo stripslashes(format_comments(nl2br($description))) ?>
 <br>
 <br>
-{/section}
+<?php for ($i = 0, $ccount = count($comments); $i < $ccount; $i++) { ?>
+<i>----- <?php echo translate("Posted by").' '.maskemail($comments[$i]['login']).' ('.date(TIME_FORMAT.' '.DATE_FORMAT, $comments[$i]['created_date']).')'; ?>-----</i>
+<br>
+<?php echo stripslashes(format_comments(nl2br($comments[$i]['comment_text']))); ?>
+<br>
+<br>
+<?php } ?>
 
 <br>
-<a class="bugdisplaylinks" href="{$smarty.server.PHP_SELF}?op=show&bugid={$bug_id}">Back to bug #{$bug_id}</a>
+<a class="bugdisplaylinks" href="<?php echo $_SERVER['PHP_SELF']; ?>?op=show&bugid=<?php echo $bug_id; ?>"><?php echo translate("Back to bug"); ?></a>
 <br>
 <br>

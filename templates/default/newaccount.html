@@ -1,36 +1,36 @@
-<h2>Create a new account</h2>
-<form action="{$smarty.server.PHP_SELF}" method="post">
+<h2><?php echo translate("Create a new account"); ?></h2>
+<form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
 <input type="hidden" name="createaccount" value="1">
 <table border="0">
-	{if $error}
+	<?php if (!empty($error)) { ?>
 		<tr>
-			<td class="error" colspan="2">{$error}</td>
+			<td class="error" colspan="2"><?php echo $error; ?></td>
 		</tr>
-	{/if}
-	{if !EMAIL_IS_LOGIN}
+	<?php } ?>
+	<?php if (!EMAIL_IS_LOGIN) { ?>
 		<tr>
-			<td align="right">Login: </td>
+			<td align="right"><?php echo translate("Login"); ?>: </td>
 			<td>
-				<input type="text" name="login" value="{$smarty.post.login|stripslashes|htmlspecialchars}">
+				<input type="text" name="login" value="<?php echo stripslashes(htmlspecialchars($_POST['login'])); ?>">
 			</td>
 		</tr>
-	{/if}
+	<?php } ?>
 	<tr>
-		<td align="right">Email: </td>
-		<td><input type="text" name="email" value="{$smarty.post.email|stripslashes|htmlspecialchars}"></td>
+		<td align="right"><?php echo translate("Email"); ?>: </td>
+		<td><input type="text" name="email" value="<?php echo stripslashes(htmlspecialchars($_POST['email'])); ?>"></td>
 	</tr>
 	<tr>
-		<td align="right">First Name (optional):</td>
+		<td align="right"><?php echo translate("First Name"); ?> (<?php echo translate("optional"); ?>):</td>
 		<td>
-			<input type="text" name="firstname" value="{$smarty.post.firstname|stripslashes|htmlspecialchars}">
+			<input type="text" name="firstname" value="<?php echo stripslashes(htmlspecialchars($_POST['firstname'])); ?>">
 		</td>
 	</tr>
 	<tr>
-		<td align="right">Last Name (optional):</td>
+		<td align="right"><?php echo translate("Last Name"); ?> (<?php echo translate("optional"); ?>):</td>
 		<td>
-			<input type="text" name="lastname" value="{$smarty.post.lastname|stripslashes|htmlspecialchars}">
+			<input type="text" name="lastname" value="<?php echo stripslashes(htmlspecialchars($_POST['lastname'])); ?>">
 		</td>
 	</tr>
 </table>
-<input type="submit" value="Create new account">
+<input type="submit" value="<?php echo translate("Create new account"); ?>">
 </form>

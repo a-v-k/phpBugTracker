@@ -1,21 +1,21 @@
-<form enctype="multipart/form-data" action="{$smarty.server.PHP_SELF}" method="post">
-<input type="hidden" name="bugid" value="{$bugid}">
-<input type="hidden" name="use_js" value="{$smarty.request.use_js}">
+<form enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<input type="hidden" name="bugid" value="<?php echo $bugid; ?>">
+<input type="hidden" name="use_js" value="<?php echo $_REQUEST['use_js']; ?>">
 <table border="0" align="center">
 	<tr>
 		<td colspan="2" align="center">
 			Please choose a file to upload and enter a one-line description.  
 			<br>
-			Maximum file size: {$max_size} bytes
+			Maximum file size: <?php echo $max_size; ?> bytes
 			<br>
 			<br>
 		</td>
 	</tr>
-	{if $error}
+	<?php if ($error) { ?>
 		<tr>
-			<td colspan="2" class="error">{$error}</td>
+			<td colspan="2" class="error"><?php echo $error; ?></td>
 		</tr>
-	{/if}
+	<?php } ?>
 	<tr>
 		<td>
 			File:
@@ -29,7 +29,7 @@
 			Description:
 		</td>
 		<td>
-			<input type="text" name="description" maxlength="255" value="{$description}">
+			<input type="text" name="description" maxlength="255" value="<?php echo $description; ?>">
 		</td>
 	</tr>
 	<tr>

@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>phpBugTracker Login</title>
+	<title><?php echo translate("phpBugTracker Login"); ?></title>
 	<link rel="StyleSheet" href="styles/default.css" type="text/css">
 </head>
 <body bgcolor="#ffffff" text="#000000" link="#004433" alink="#004433" vlink="#004433">
@@ -8,7 +8,7 @@
 	<br>
 	<br>
 	<br>
-	<div align='center'><b>User Login</b></div>
+	<div align='center'><b><?php echo translate("User Login"); ?></b></div>
 	<br>
 
 	<form action='index.php' method='post'>
@@ -18,24 +18,24 @@
 			<td align='center'>
 				<?php if (!$emailsuccess) { ?>
 				<font color='#ff0000'>
-					<b>Invalid login and/or password</b>
+					<b><?php echo translate('Invalid login and/or password'); ?></b>
 				</font>
 				<?php } else { ?>
 				<font color='#0000ff'>
-					<b>Your password has been mailed to you</b>
+					<b><?php echo translate("Your password has been mailed to you"); ?></b>
 				</font>
 				<?php } ?>
 			</td>
 		</tr>
 		<?php } ?>
 		<tr>
-			<td><?php echo EMAIL_IS_LOGIN ? 'Email' : 'Login' ?></td>
+			<td><?php echo EMAIL_IS_LOGIN ? translate("Email") : translate("Login") ?></td>
 		</tr>
 		<tr>
 			<td><input size="30" name='username' value='<?php if (isset($_sv["uname"])) print $_sv["uname"] ?>'></td>
 		</tr>
 		<tr>
-			<td>Password:</td>
+			<td><?php echo translate("Password"); ?>:</td>
 		</tr>
 		<tr>
 			<td><input size="30" type='password' name='password'></td>
@@ -43,7 +43,7 @@
 		<tr>
 			<td align="right">
 				<input type="submit" value="Go">
-				<input type="submit" name="sendpass" value="Email my password">
+				<input type="submit" name="sendpass" value="<?php echo translate("Email my password"); ?>">
 				<input type="hidden" name="dologin" value="1">
 			</td>
 		</tr>
@@ -53,7 +53,7 @@
 				<hr size="1" color="#000000" width="140">
 				<br>
 				<br>
-				<a href="newaccount.php">Open a new account</a>
+				<a href="newaccount.php"><?php echo translate("Open a new account"); ?></a>
 			</td>
 		</tr>
 		<?php } ?>

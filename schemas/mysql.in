@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.43 2003/07/24 04:50:51 kennyt Exp $
+# $Id: mysql.in,v 1.44 2004/10/25 12:07:02 bcurtis Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id int(10) unsigned NOT NULL default '0',
@@ -298,6 +298,7 @@ insert into TBL_AUTH_GROUP_seq values (3);
 # ... and only two permissions
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (1, 'Admin');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (2, 'Editbug');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (3, 'EditAssignment');
 
 # Admins can do all the admin stuff and users can edit bugs
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (1, 1);

@@ -2,7 +2,7 @@
 
 // configure.php - Interface for configuration options
 // ------------------------------------------------------------------------
-// Copyright (c) 2001, 2002 The phpBugTracker Group
+// Copyright (c) 2001 - 2004 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: configure.php,v 1.12 2002/11/18 14:32:28 bcurtis Exp $
+// $Id: configure.php,v 1.13 2004/10/25 12:06:59 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -28,8 +28,8 @@ include 'include.php';
 
 $perm->check('Admin');
 
-if (isset($_pv['submit'])) {
-	foreach ($_pv as $k => $v) {
+if (isset($_POST['submit'])) {
+	foreach ($_POST as $k => $v) {
 		// Check the jpgraph path to make sure it has a trailing /
 		if ($k == 'JPGRAPH_PATH' and strlen($v) and substr($v, -1) != '/') $v .= '/';
 
@@ -43,7 +43,7 @@ if (isset($_pv['submit'])) {
 }
 
 $t->assign('vars',  $db->getAll('select * from '.TBL_CONFIGURATION));
-$t->wrap('admin/configure.html', 'configuration');
+$t->render('configure.html', translate("Configuration"));
 
 ?>
 

@@ -2,7 +2,7 @@
 
 // resolution.php - Interface to the Resolution table
 // ------------------------------------------------------------------------
-// Copyright (c) 2001, 2002 The phpBugTracker Group
+// Copyright (c) 2001 - 2004 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: resolution.php,v 1.30 2002/08/26 18:06:01 bcurtis Exp $
+// $Id: resolution.php,v 1.31 2004/10/25 12:06:59 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -31,11 +31,9 @@ function del_item($resolutionid = 0) {
 	
 	if ($resolutionid) {
 		// Make sure we are going after a valid record
-		$itemexists = $db->getOne('select count(*) from '.TBL_RESOLUTION.
-			" where resolution_id = $resolutionid");
+		$itemexists = $db->getOne('select count(*) from '.TBL_RESOLUTION." where resolution_id = $resolutionid");
 		// Are there any bugs tied to this one?
-		$bugcount = $db->getOne('select count(*) from '.TBL_BUG.
-			" where resolution_id = $resolutionid");
+		$bugcount = $db->getOne('select count(*) from '.TBL_BUG." where resolution_id = $resolutionid");
 		if ($itemexists and !$bugcount) {
 			$db->query('delete from '.TBL_RESOLUTION." where resolution_id = $resolutionid");
 		}
@@ -44,64 +42,59 @@ function del_item($resolutionid = 0) {
 }
 
 function do_form($resolutionid = 0) {
-	global $db, $me, $_pv, $STRING, $t;
+	global $db, $me, $t;
 
-	extract($_pv);
+	extract($_POST);
 	$error = '';
 	// Validation
 	if (!$resolution_name = trim($resolution_name))
-		$error = $STRING['givename'];
+		$error = translate("Please enter a name");
 	elseif (!$resolution_desc = trim($resolution_desc))
-		$error = $STRING['givedesc'];
+		$error = translate("Please enter a description");
 	if ($error) { show_form($resolutionid, $error); return; }
 
 	if (empty($sort_order)) $sort_order = 0;
 	if (!$resolutionid) {
 		$db->query("insert into ".TBL_RESOLUTION.
-			" (resolution_id, resolution_name, resolution_desc, sort_order)"
-			." values (".$db->nextId(TBL_RESOLUTION).", ".
-			$db->quote(stripslashes($resolution_name)).', '.
-			$db->quote(stripslashes($resolution_desc)).', '.$sort_order.')');
+			" (resolution_id, resolution_name, resolution_desc, sort_order) values (".$db->nextId(TBL_RESOLUTION).", ".$db->quote(stripslashes($resolution_name)).', '.$db->quote(stripslashes($resolution_desc)).', '.$sort_order.')');
 	} else {
 		$db->query("update ".TBL_RESOLUTION.
-			' set resolution_name = '.$db->quote(stripslashes($resolution_name)).
-			', resolution_desc = '.$db->quote(stripslashes($resolution_desc)).
-			", sort_order = $sort_order where resolution_id = $resolutionid");
+			' set resolution_name = '.$db->quote(stripslashes($resolution_name)).', resolution_desc = '.$db->quote(stripslashes($resolution_desc)).", sort_order = $sort_order where resolution_id = $resolutionid");
 	}
 	if ($use_js) {
-		$t->display('admin/edit-submit.html');
+		$t->render('edit-submit.html');
 	} else {
 		header("Location: $me?");
 	}
 }
 
 function show_form($resolutionid = 0, $error = '') {
-	global $db, $me, $t, $_pv, $STRING;
+	global $db, $me, $t;
 
-	extract($_pv);
+	extract($_POST);
 	if ($resolutionid && !$error) {
-		$t->assign($db->getRow("select * from ".TBL_RESOLUTION.
-			" where resolution_id = '$resolutionid'"));
+		$t->assign($db->getRow("select * from ".TBL_RESOLUTION." where resolution_id = '$resolutionid'"));
 	} else {
- 		$t->assign($_pv);
+ 		$t->assign($_POST);
 	}
 	$t->assign('error', $error);
-	$t->wrap('admin/resolution-edit.html', ($resolutionid ? 'editresolution' : 'addresolution'));
+	$t->render('resolution-edit.html', translate("Edit Resolution"),
+		!empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
 }
 
 
 function list_items($resolutionid = 0, $error = '') {
-	global $me, $db, $t, $STRING, $TITLE, $_gv, $QUERY;
+	global $me, $db, $t, $QUERY;
 
-	if (empty($_gv['order'])) { 
+	if (empty($_GET['order'])) { 
 		$order = 'sort_order'; 
 		$sort = 'asc'; 
 	} else {
-		$order = $_gv['order']; 
-		$sort = $_gv['sort']; 
+		$order = $_GET['order']; 
+		$sort = $_GET['sort']; 
 	}
 	
-	$page = isset($_gv['page']) ? $_gv['page'] : 0;
+	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	
 	$nr = $db->getOne("select count(*) from ".TBL_RESOLUTION);
 
@@ -118,16 +111,17 @@ function list_items($resolutionid = 0, $error = '') {
 
 	sorting_headers($me, $headers, $order, $sort, "page=$page");
 
-	$t->wrap('admin/resolutionlist.html', 'resolution');
+	$t->render('resolutionlist.html', translate("Resolution List"));
 }
 
 $perm->check('Admin');
 
-if (isset($_gv['op'])) switch($_gv['op']) {
-	case 'edit' : show_form($_gv['resolution_id']); break;
-	case 'del' : del_item($_gv['resolution_id']); break;
-} elseif(isset($_pv['submit'])) {
-	do_form($_pv['resolution_id']);
+if (isset($_REQUEST['op'])) {
+	switch($_REQUEST['op']) {
+		case 'edit' : show_form($_GET['resolution_id']); break;
+		case 'del' : del_item($_GET['resolution_id']); break;
+		case 'save' : do_form($_POST['resolution_id']); break;
+	}
 } else list_items();
 
 ?>

@@ -1,15 +1,14 @@
-<H2>First, you must pick a product on which to enter
-a bug.</H2>
+<H2><?php echo translate("First, you must pick a product on which to enter a bug."); ?></H2>
 
 <table>
-	{section name=project loop=$projects}
+	<?php for ($i = 0, $count = count($projects); $i < $count; $i++) { ?>
 	<tr>
 		<td align="right" valign="top">
-			<a href="bug.php?op=add&project={$projects[project].project_id}">{$projects[project].project_name|stripslashes}</a>:
+			<?php printf('<a href="bug.php?op=add&project=%d">%s</a>:', $projects[$i]['project_id'], stripslashes($projects[$i]['project_name'])); ?>
 		</td>
 		<td valign="top">
-			{$projects[project].project_desc|stripslashes|nl2br}
+			<?php echo nl2br(stripslashes($projects[$i]['project_desc'])); ?>
 		</td>
 	</tr>
-	{/section}
+	<?php } ?>
 </table>

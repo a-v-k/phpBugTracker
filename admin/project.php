@@ -2,7 +2,7 @@
 
 // project.php - Create and update projects
 // ------------------------------------------------------------------------
-// Copyright (c) 2001, 2002 The phpBugTracker Group
+// Copyright (c) 2001 - 2004 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.46 2003/06/07 02:52:24 kennyt Exp $
+// $Id: project.php,v 1.47 2004/10/25 12:06:59 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -38,51 +38,46 @@ function del_version($versionid, $projectid) {
 }
 
 function save_version($version_id = 0) {
-	global $db, $me, $_pv, $STRING, $now, $u, $t, $perm;
+	global $db, $me, $now, $u, $t, $perm;
 
 	$perm->check_proj($projectid);
 
 	$error = '';
 	// Validation
-	if (!$_pv['version_name'] = trim($_pv['version_name']))
-		$error = $STRING['giveversion'];
+	if (!$_POST['version_name'] = trim($_POST['version_name']))
+		$error = translate("Please enter a version");
 	if ($error) {
-		show_version($_pv['version_id'], $error); return;
+		show_version($_POST['version_id'], $error); return;
 	}
 
-	extract($_pv);
+	extract($_POST);
 	if (!isset($active)) $active = 0;
 	if (!$version_id) {
-		$db->query('insert into '.TBL_VERSION
-		." (version_id, project_id, version_name, active, created_by, created_date)
-		values (".$db->nextId(TBL_VERSION).", $project_id, ".
-		$db->quote(stripslashes($version_name)).", $active, $u, $now)");
+		$db->query('insert into '.TBL_VERSION." (version_id, project_id, version_name, active, created_by, created_date) values (".$db->nextId(TBL_VERSION).", $project_id, ".$db->quote(stripslashes($version_name)).", $active, $u, $now)");
 	} else {
-		$db->query('update '.TBL_VERSION
-		." set project_id = $project_id, version_name = ".
-		$db->quote(stripslashes($version_name)).
-		", active = $active where version_id = '$version_id'");
+		$db->query('update '.TBL_VERSION." set project_id = $project_id, version_name = ".$db->quote(stripslashes($version_name)).", active = $active where version_id = '$version_id'");
 	}
 	if ($use_js) {
-		$t->display('admin/edit-submit.html');
+		$t->render('edit-submit.html');
 	} else {
 		header("Location:$me?op=edit&id=$project_id");
 	}
 }
 
 function show_version($versionid = 0, $error = '') {
-  global $db, $t, $_pv, $STRING, $QUERY, $_gv;
+	global $db, $t, $QUERY;
 
-	foreach ($_pv as $k => $v) $$k = $v;
-
+	extract($_POST);
 	if ($versionid) {
 		$t->assign($db->getRow(sprintf($QUERY['admin-show-version'], $versionid)));
 	} else {
-		if (!empty($_gv['project_id'])) $t->assign('project_id', $_gv['project_id']);
-	    $t->assign($_pv);
+		if (!empty($_GET['project_id'])) 
+			$t->assign('project_id', $_GET['project_id']);
+		$t->assign($_POST);
 	}
 	$t->assign('error', $error);
-	$t->wrap('admin/version-edit.html', ($versionid ? 'editversion' : 'addversion'));
+	$t->render('version-edit.html', translate("Edit Version"), 
+		!empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
 }
 
 function del_component($componentid, $projectid) {
@@ -97,139 +92,120 @@ function del_component($componentid, $projectid) {
 }
 
 function save_component($component_id = 0) {
-	global $db, $me, $_pv, $u, $STRING, $now, $t, $perm;
+	global $db, $me, $u, $now, $t, $perm;
 
 	$perm->check_proj($projectid);
 
 	$error = '';
 	// Validation
-	if (!$_pv['component_name'] = trim($_pv['component_name']))
-		$error = $STRING['givename'];
-	elseif (!$_pv['component_desc'] = trim($_pv['component_desc']))
-		$error = $STRING['givedesc'];
-	if ($error) { show_component($_pv['component_id'], $error); return; }
+	if (!$_POST['component_name'] = trim($_POST['component_name'])) {
+		$error = translate("Please enter a name");
+	} elseif (!$_POST['component_desc'] = trim($_POST['component_desc'])) {
+		$error = translate("Please enter a description");
+	}
+	if ($error) {
+		show_component($_POST['component_id'], $error);
+		return;
+	}
 
-	foreach ($_pv as $k => $v) $$k = $v;
+	extract($_POST);
 	if (!$owner) $owner = 0;
 	if (!$active) $active = 0;
 	if (!$component_id) {
-		$db->query('insert into '.TBL_COMPONENT
-			." (component_id, project_id, component_name, component_desc, owner,
-			active, created_by, created_date, last_modified_by, last_modified_date)
-			values (".$db->nextId(TBL_COMPONENT).", $project_id, ".
-			$db->quote(stripslashes($component_name)).", ".
-			$db->quote(stripslashes($component_desc)).
-			", $owner, $active, $u, $now, $u, $now)");
+		$db->query('insert into '.TBL_COMPONENT." (component_id, project_id, component_name, component_desc, owner, active, created_by, created_date, last_modified_by, last_modified_date) values (".$db->nextId(TBL_COMPONENT).", $project_id, ".$db->quote(stripslashes($component_name)).", ".$db->quote(stripslashes($component_desc)).", $owner, $active, $u, $now, $u, $now)");
 	} else {
-		$db->query('update '.TBL_COMPONENT
-			." set component_name = ".$db->quote(stripslashes($component_name)).
-			', component_desc = '.$db->quote(stripslashes($component_desc)).
-			", owner = $owner, active = $active, last_modified_by = $u, ".
-			"last_modified_date = $now where component_id = $component_id");
+		$db->query('update '.TBL_COMPONENT." set component_name = ".$db->quote(stripslashes($component_name)).', component_desc = '.$db->quote(stripslashes($component_desc)).", owner = $owner, active = $active, last_modified_by = $u, "."last_modified_date = $now where component_id = $component_id");
 	}
 	if ($use_js) {
-		$t->display('admin/edit-submit.html');
+		$t->render('edit-submit.html');
 	} else {
 		header("Location: $me?op=edit&id=$project_id");
 	}
 }
 
 function show_component($componentid = 0, $error = '') {
-	global $db, $t, $_pv, $STRING, $QUERY, $_gv;
+	global $db, $t, $QUERY;
 
 	if ($componentid) {
 		$t->assign($db->getRow(sprintf($QUERY['admin-show-component'], $componentid)));
 	} else {
-		if (!empty($_gv['project_id'])) $t->assign('project_id', $_gv['project_id']);
-		$t->assign($_pv);
+		if (!empty($_GET['project_id'])) $t->assign('project_id', $_GET['project_id']);
+		$t->assign($_POST);
 	}
 	$t->assign('error', $error);
-	$t->wrap('admin/component-edit.html', ($componentid ? 'editcomponent' : 'addcomponent'));
+	$t->render('component-edit.html', translate("Edit Component"), 
+		!empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
 }
 
 function save_project($projectid = 0) {
-  global $db, $me, $u, $STRING, $now, $_pv, $perm;
+	global $db, $me, $u, $now, $perm;
 
 	$perm->check_proj($projectid);
 
 	$error = '';
-  // Validation
-  if (!$_pv['project_name'] = htmlspecialchars(trim($_pv['project_name']))) {
-	$error = $STRING['givename'];
-  } elseif (!$_pv['project_desc'] = htmlspecialchars(trim($_pv['project_desc']))) {
-	$error = $STRING['givedesc'];
-  } elseif (isset($_pv['usergroup']) and is_array($_pv['usergroup']) and
-		in_array('all', $_pv['usergroup']) and count($_pv['usergroup']) > 1) {
-		$error = $STRING['project_only_all_groups'];
+	// Validation
+	if (!$_POST['project_name'] = htmlspecialchars(trim($_POST['project_name']))) {
+		$error = translate("Please enter a name");
+	} elseif (!$_POST['project_desc'] = htmlspecialchars(trim($_POST['project_desc']))) {
+		$error = translate("Please enter a description");
+	} elseif (isset($_POST['usergroup']) and is_array($_POST['usergroup']) and
+			  in_array('all', $_POST['usergroup']) and count($_POST['usergroup']) > 1) {
+		$error = translate("You cannot choose specific groups when \"All Groups\" is chosen");
 	}
-	if ($error) { show_project($projectid, $error); return; }
+	if ($error) { 
+		show_project($projectid, $error); 
+		return; 
+	}
 
 	if (!$projectid) {
-		if (!$_pv['version_name'] = htmlspecialchars(trim($_pv['version_name']))) {
-		$error['version_error'] = $STRING['giveversion'];
-  	} elseif (!$_pv['component_name'] = trim($_pv['component_name'])) {
-			$error['component_error'] = $STRING['givename'];
-		} elseif (!$_pv['component_desc'] = trim($_pv['component_desc'])) {
-			$error['component_error'] = $STRING['givedesc'];
+		if (!$_POST['version_name'] = htmlspecialchars(trim($_POST['version_name']))) {
+			$error['version_error'] = translate("Please enter a version");
+		} elseif (!$_POST['component_name'] = trim($_POST['component_name'])) {
+			$error['component_error'] = translate("Please enter a name");
+		} elseif (!$_POST['component_desc'] = trim($_POST['component_desc'])) {
+			$error['component_error'] = translate("Please enter a description");
 		}
 	}
-	if ($error) { show_project($projectid, $error); return; }
+	if ($error) { 
+		show_project($projectid, $error); 
+		return; 
+	}
 
-	foreach ($_pv as $k => $v) $$k = $v;
-  if (!isset($active)) $active = 0;
-  if (!$projectid) {
-	$projectid = $db->nextId(TBL_PROJECT);
-	$db->query('insert into '.TBL_PROJECT
-			." (project_id, project_name, project_desc, active, created_by, created_date)
-	  values ($projectid , ".$db->quote(stripslashes($project_name)).", ".
-			$db->quote(stripslashes($project_desc)).", $active, $u, $now)");
-	$db->query('insert into '.TBL_VERSION
-			." (version_id, project_id, version_name, active, created_by, created_date)
-			values (".$db->nextId(TBL_VERSION).", $projectid, ".
-			$db->quote(stripslashes($version_name)).", 1, $u, $now)");
-		$db->query('insert into '.TBL_COMPONENT
-			." (component_id, project_id, component_name, component_desc, owner,
-			active, created_by, created_date, last_modified_by, last_modified_date)
-			values (".$db->nextId(TBL_COMPONENT).", $projectid, ".
-			$db->quote(stripslashes($component_name)).", ".
-			$db->quote(stripslashes($component_desc)).
-			", $owner, 1, $u, $now, $u, $now)");
-  } else {
-	$db->query('update '.TBL_PROJECT
-			." set project_name = ".$db->quote(stripslashes($project_name)).
-			", project_desc = ".$db->quote(stripslashes($project_desc)).
-			", active = $active where project_id = $projectid");
-  }
-  // project -> user relationship
-  $old_useradmin = $db->getCol('select user_id from '.TBL_PROJECT_PERM.
-			       " where project_id = $projectid");
-  if (isset($useradmin) and is_array($useradmin) and count($useradmin)) {
-    // Compute differences between old and new
-    $remove_from = array_diff($old_useradmin, $useradmin);
-    $add_to = array_diff($useradmin, $old_useradmin);
+	extract($_POST);
+	if (!isset($active)) $active = 0;
+	if (!$projectid) {
+		$projectid = $db->nextId(TBL_PROJECT);
+		$db->query('insert into '.TBL_PROJECT." (project_id, project_name, project_desc, active, created_by, created_date) values ($projectid , ".$db->quote(stripslashes($project_name)).", ".$db->quote(stripslashes($project_desc)).", $active, $u, $now)");
+		$db->query('insert into '.TBL_VERSION." (version_id, project_id, version_name, active, created_by, created_date) values (".$db->nextId(TBL_VERSION).", $projectid, ".$db->quote(stripslashes($version_name)).", 1, $u, $now)");
+		$db->query('insert into '.TBL_COMPONENT." (component_id, project_id, component_name, component_desc, owner, active, created_by, created_date, last_modified_by, last_modified_date) values (".$db->nextId(TBL_COMPONENT).", $projectid, ".$db->quote(stripslashes($component_name)).", ".$db->quote(stripslashes($component_desc)).", $owner, 1, $u, $now, $u, $now)");
+	} else {
+		$db->query('update '.TBL_PROJECT." set project_name = ".$db->quote(stripslashes($project_name)).", project_desc = ".$db->quote(stripslashes($project_desc)).", active = $active where project_id = $projectid");
+	}
+	// project -> user relationship
+	$old_useradmin = $db->getCol('select user_id from '.TBL_PROJECT_PERM." where project_id = $projectid");
+	if (isset($useradmin) and is_array($useradmin) and count($useradmin)) {
+		// Compute differences between old and new
+		$remove_from = array_diff($old_useradmin, $useradmin);
+		$add_to = array_diff($useradmin, $old_useradmin);
 
-    if (count($remove_from)) {
-      foreach ($remove_from as $user) {
-	$db->query('delete from '.TBL_PROJECT_PERM." where project_id = $projectid
-                                         and user_id = $user");
-      }
-    }
-    if (count($add_to)) {
-      foreach ($add_to as $user) {
-	$db->query("insert into ".TBL_PROJECT_PERM
-                        ." (project_id, user_id)
-                        values ('$projectid', $user)");
-      }
-    }
-  } elseif (count($old_useradmin)) {
-    // user killed em all
-    $db->query('delete from '.TBL_PROJECT_PERM." where project_id = $projectid");
-  }
+		if (count($remove_from)) {
+			foreach ($remove_from as $user) {
+				$db->query('delete from '.TBL_PROJECT_PERM." where project_id = $projectid and user_id = $user");
+			}
+		}
+		if (count($add_to)) {
+			foreach ($add_to as $user) {
+				$db->query("insert into ".TBL_PROJECT_PERM." (project_id, user_id) values ('$projectid', $user)");
+			}
+		}
+	} elseif (count($old_useradmin)) {
+		// user killed em all
+		$db->query('delete from '.TBL_PROJECT_PERM." where project_id = $projectid");
+	}
 
 
 	// Handle project -> group relationship
-	$old_usergroup = $db->getCol('select group_id from '.TBL_PROJECT_GROUP.
-		" where project_id = $projectid");
+	$old_usergroup = $db->getCol('select group_id from '.TBL_PROJECT_GROUP." where project_id = $projectid");
 	if (isset($usergroup) and is_array($usergroup) and count($usergroup)) {
 		if (in_array('all', $usergroup)) {
 			// User selected 'All groups'
@@ -239,111 +215,107 @@ function save_project($projectid = 0) {
 		} else {
 			// Compute differences between old and new
 			$remove_from = array_diff($old_usergroup, $usergroup);
-		$add_to = array_diff($usergroup, $old_usergroup);
+			$add_to = array_diff($usergroup, $old_usergroup);
 
 			if (count($remove_from)) {
 				foreach ($remove_from as $group) {
-					$db->query('delete from '.TBL_PROJECT_GROUP." where project_id = $projectid
-					 and group_id = $group");
+					$db->query('delete from '.TBL_PROJECT_GROUP." where project_id = $projectid and group_id = $group");
 				}
 			}
 			if (count($add_to)) {
-	  	foreach ($add_to as $group) {
-			$db->query("insert into ".TBL_PROJECT_GROUP
-		  	." (project_id, group_id, created_by, created_date)
-		  	values ('$projectid' ,'$group', $u, $now)");
-	  	}
-		}
+				foreach ($add_to as $group) {
+					$db->query("insert into ".TBL_PROJECT_GROUP." (project_id, group_id, created_by, created_date) values ('$projectid' ,'$group', $u, $now)");
+				}
+			}
 		}
 	} elseif (count($old_usergroup)) {
 		// User selected nothing, so consider it 'All groups'
 		$db->query('delete from '.TBL_PROJECT_GROUP." where project_id = $projectid");
 	}
 
-  header("Location: $me?op=edit&id=$projectid");
+	header("Location: $me?op=edit&id=$projectid");
 }
 
 function show_project($projectid = 0, $error = null) {
-  global $db, $me, $t, $TITLE, $_gv, $_pv, $QUERY, $perm;
+	global $db, $me, $t, $QUERY, $perm;
 
 	if (is_array($error)) $t->assign($error);
 	else $t->assign('error', $error);
-	$t->assign('project_groups', $db->getCol('select group_id from '.
-		TBL_PROJECT_GROUP." where project_id = $projectid"));
+	$t->assign('project_groups', 
+		$db->getCol('select group_id from '.TBL_PROJECT_GROUP." where project_id = $projectid"));
 	if ($perm->have_perm('Administrator')) {
-	  $t->assign('project_admins', $db->getCol('select user_id from '.
-						   TBL_PROJECT_PERM." where project_id = $projectid"));
-	  
+		$t->assign('project_admins', 
+			$db->getCol('select user_id from '.TBL_PROJECT_PERM." where project_id = $projectid"));
+
 	} else {
-	  $t->assign('project_admins', $db->getCol('select u.login from '.TBL_AUTH_USER.' as u, '.TBL_PROJECT_PERM.' as p where u.user_id = p.user_id and p.project_id = '.$projectid));
+		$t->assign('project_admins', 
+			$db->getCol('select u.login from '.TBL_AUTH_USER.' as u, '.TBL_PROJECT_PERM.' as p where u.user_id = p.user_id and p.project_id = '.$projectid));
 	}
 
 	if ($projectid) {
-	  $t->assign($db->getRow('select * from '.TBL_PROJECT
-				 ." where project_id = $projectid"));
-	  $t->assign(array(
-			   'components' => $db->getAll(sprintf($QUERY['admin-list-components'],
-							       $projectid)),
-			   'versions' =>   $db->getAll(sprintf($QUERY['admin-list-versions'],
-							       $projectid))
-			   ));
-	  
-	  $t->wrap('admin/project-edit.html', 'editproject');
+		$t->assign($db->getRow('select * from '.TBL_PROJECT." where project_id = $projectid"));
+		$t->assign(array(
+			'components' => $db->getAll(sprintf($QUERY['admin-list-components'], $projectid)),
+			'versions' =>   $db->getAll(sprintf($QUERY['admin-list-versions'], $projectid))
+			));
+
+		$t->render('project-edit.html', translate("Edit Project"));
 	} else {
-	  if (!empty($_pv)) {
-	    $t->assign($_pv);
-	  } else {
-	    $t->assign('active', 1);
-	  }
-	  $t->wrap('admin/project-add.html', 'addproject');
+		if (!empty($_POST)) {
+			$t->assign($_POST);
+		} else {
+			$t->assign('active', 1);
+		}
+		$t->render('project-add.html', translate("Edit Project"));
 	}
 
 }
 
 function list_projects() {
-  global $me, $db, $t, $selrange, $_gv, $STRING, $TITLE;
+	global $me, $db, $t, $selrange;
 
-  if (!isset($_gv['order'])) { $order = 'created_date'; $sort = 'asc'; }
-	else { $order = $_gv['order']; $sort = $_gv['sort']; }
-	$page = isset($_gv['page']) ? $_gv['page'] : 1;
+	if (!isset($_GET['order'])) { 
+		$order = 'created_date'; $sort = 'asc'; 
+	}
+	else { 
+		$order = $_GET['order']; $sort = $_GET['sort']; 
+	}
+	$page = isset($_GET['page']) ? $_GET['page'] : 1;
 
-  $nr = $db->getOne("select count(*) from ".TBL_PROJECT);
+	$nr = $db->getOne("select count(*) from ".TBL_PROJECT);
 
-  list($selrange, $llimit) = multipages($nr, $page, "order=$order&sort=$sort");
+	list($selrange, $llimit) = multipages($nr, $page, "order=$order&sort=$sort");
 
-  $t->assign('projects', $db->getAll($db->modifyLimitQuery(
-		"select * from ".TBL_PROJECT." order by $order $sort", $llimit, $selrange)));
+	$t->assign('projects', 
+		$db->getAll($db->modifyLimitQuery("select * from ".TBL_PROJECT." order by $order $sort", $llimit, $selrange)));
 
-  $headers = array(
-	'projectid' => 'project_id',
-	'name' => 'project_name',
-	'description' => 'project_desc',
-	'active' => 'active',
-	'createdby' => 'created_by',
-	'createddate' => 'created_date'
-	);
+	$headers = array(
+		'projectid' => 'project_id',
+		'name' => 'project_name',
+		'description' => 'project_desc',
+		'active' => 'active',
+		'createdby' => 'created_by',
+		'createddate' => 'created_date'
+		);
 
-  sorting_headers($me, $headers, $order, $sort);
+	sorting_headers($me, $headers, $order, $sort);
 
-	$t->wrap('admin/projectlist.html', 'project');
+	$t->render('projectlist.html', translate("Project List"));
 }
 
 // $perm->check('Admin');
 
-if (isset($_gv['op'])) {
-	switch($_gv['op']) {
-	  	case 'add' : show_project(); break;
-	  	case 'edit' : show_project($_gv['id']); break;
-	  	case 'edit_component' : show_component($_gv['id']);	break;
-	  	case 'edit_version' : show_version($_gv['id']); break;
-	  	case 'del_component' : del_component($_gv['id'], $_gv['project_id']); break;
-	  	case 'del_version' : del_version($_gv['id'], $_gv['project_id']); break;
-	}
-} elseif (isset($_pv['do'])) {
-	switch($_pv['do']) {
-	  	case 'project' : save_project($_pv['id']); break;
-		case 'version' : save_version($_pv['version_id']); break;
-		case 'component' : save_component($_pv['component_id']); break;
+if (isset($_REQUEST['op'])) {
+	switch($_REQUEST['op']) {
+		case 'add' : show_project(); break;
+		case 'edit' : show_project($_REQUEST['id']); break;
+		case 'edit_component' : show_component($_REQUEST['id']);     break;
+		case 'edit_version' : show_version($_REQUEST['id']); break;
+		case 'del_component' : del_component($_REQUEST['id'], $_REQUEST['project_id']); break;
+		case 'del_version' : del_version($_REQUEST['id'], $_REQUEST['project_id']); break;
+		case 'save_project' : save_project($_POST['id']); break;
+		case 'save_version' : save_version($_POST['version_id']); break;
+		case 'save_component' : save_component($_POST['component_id']); break;
 	}
 } else list_projects();
 

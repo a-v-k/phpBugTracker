@@ -1,47 +1,36 @@
 <script language="JavaScript">
 <!--
-	var me = '{$SCRIPT_NAME}';
-	{literal}
+	var me = '<?php echo $_SERVER['SCRIPT_NAME']; ?>';
 
 	function popupDatabase(id) {
 		window.open(me + '?op=edit&use_js=1&database_id='+id, 'ewin', 'dependent=yes,width=350,height=300,scrollbars=1');
 	}
-	{/literal}
 // -->
 </script>
 <table border="0" width="100%">
 	<tr>
 		<td valign="top">
-			<b>&nbsp;{$STRING.databaselist'}</b> - <a href="{$SCRIPT_NAME}?op=edit&database_id=0" onClick="popupDatabase(0); return false;">{$STRING.addnew} {$STRING.database}</a>
+			<b>&nbsp;<?php echo translate("Database list"); ?></b> - <a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>?op=edit&database_id=0" onClick="popupDatabase(0); return false;"><?php echo translate("Add new database"); ?></a>
 			<hr size="1">
-			<table border="0" cellpadding="2" cellspacing="1" width="100%">
+			<table class="bordertable" align="center">
 				<tr>
-					<th class="{$headers.name.class}"><a href="{$headers.name.url}">{$STRING.name}</a></th>
-					<th class="{$headers.sortorder.class}"><a href="{$headers.sortorder.url}">{$STRING.sortorder}</a></th>
-					<th>Delete</th>
+					<th class="<?php echo $headers['name']['class']; ?>"><a href="<?php echo $headers['name']['url']; ?>"><?php echo translate("Name"); ?></a></th>
+					<th class="<?php echo $headers['sortorder']['class']; ?>"><a href="<?php echo $headers['sortorder']['url']; ?>"><?php echo translate("Sort Order"); ?></a></th>
+					<th>&nbsp;</th>
 				</tr>
-				{section name=database loop=$databases}
-				<tr{if $smarty.section.database.iteration is even} class="alt"{/if}>
-					<td><a href="{$SCRIPT_NAME}?op=edit&database_id={$databases[database].database_id}" onClick="popupDatabase({$databases[database].database_id}); return false;">{$databases[database].database_name|stripslashes}</a></td>
-					<td align="center">{$databases[database].sort_order}</td>
+				<?php for ($i = 0, $count = count($databases); $i < $count; $i++) { ?>
+				<tr>
+					<td><a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>?op=edit&database_id=<?php echo $databases[$i]['database_id']; ?>" onClick="popupDatabase(<?php echo $databases[$i]['database_id']; ?>); return false;"><?php echo stripslashes($databases[$i]['database_name']); ?></a></td>
+					<td align="center"><?php echo $databases[$i]['sort_order']; ?></td>
 					<td align="center">
-						{if not $databases[database].bug_count}
-							<a href="{$SCRIPT_NAME}?op=del&database_id={$databases[database].database_id}" onClick="return confirm('{$STRING.suredeletedb}')">{$STRING.delete}</a>
-						{/if}
+						<?php if (!$databases[$i]['bug_count']) { ?>
+							<a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>?op=del&database_id=<?php echo $databases[$i]['database_id']; ?>" onClick="return confirm('<?php echo translate("Are you sure you want to delete this item?"); ?>')"><?php echo translate("Delete"); ?></a>
+						<?php } ?>
 					</td>
 				</tr>
-				{/section}
-				<tr>
-					<td colspan="3" align="center">
-						<br>
-  					{$first} - {$last} of {$total}
-						<br>
-						{if $pages ne "1"}[ {$pages} ]{/if}
-  					<br>
-					</td>
-				</tr>
+				<?php } ?>
 			</table>
-			<br>
+			<?php include('pagination.html'); ?>
 		</td>
 	</tr>
 </table>

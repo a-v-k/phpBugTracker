@@ -2,7 +2,7 @@
 
 // os.php - Interface to the OS table
 // ------------------------------------------------------------------------
-// Copyright (c) 2001, 2002 The phpBugTracker Group
+// Copyright (c) 2001 - 2004 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: os.php,v 1.28 2002/08/26 18:11:13 bcurtis Exp $
+// $Id: os.php,v 1.29 2004/10/25 12:06:59 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -31,11 +31,9 @@ function del_item($osid = 0) {
 	
 	if ($osid) {
 		// Make sure we are going after a valid record
-		$itemexists = $db->getOne('select count(*) from '.TBL_OS.
-			" where os_id = $osid");
+		$itemexists = $db->getOne('select count(*) from '.TBL_OS." where os_id = $osid");
 		// Are there any bugs tied to this one?
-		$bugcount = $db->getOne('select count(*) from '.TBL_BUG.
-			" where os_id = $osid");
+		$bugcount = $db->getOne('select count(*) from '.TBL_BUG." where os_id = $osid");
 		if ($itemexists and !$bugcount) {
 			$db->query('delete from '.TBL_OS." where os_id = $osid");
 		}
@@ -44,57 +42,55 @@ function del_item($osid = 0) {
 }
 
 function do_form($osid = 0) {
-	global $db, $me, $_pv, $STRING, $t;
+	global $db, $me, $t;
 
-	extract($_pv);
+	extract($_POST);
 	$error = '';
 	// Validation
 	if (!$os_name = trim($os_name))
-		$error = $STRING['givename'];
+		$error = translate("Please enter a name");
 	if ($error) { show_form($osid, $error); return; }
 
 	if (empty($sort_order)) $sort_order = 0;
 	if (!$osid) {
-		$db->query("insert into ".TBL_OS." (os_id, os_name, regex, sort_order) ".
-			"values (".$db->nextId(TBL_OS).", ".$db->quote(stripslashes($os_name)).
-			", '$regex', '$sort_order')");
+		$db->query("insert into ".TBL_OS." (os_id, os_name, regex, sort_order) values (".$db->nextId(TBL_OS).", ".$db->quote(stripslashes($os_name)).", '$regex', '$sort_order')");
 	} else {
-		$db->query("update ".TBL_OS." set os_name = ".$db->quote(stripslashes($os_name)).
-			", regex = '$regex', sort_order = '$sort_order' where os_id = '$os_id'");
+		$db->query("update ".TBL_OS." set os_name = ".$db->quote(stripslashes($os_name)).", regex = '$regex', sort_order = '$sort_order' where os_id = '$os_id'");
 	}
 	if ($use_js) {
-		$t->display('admin/edit-submit.html');
+		$t->render('edit-submit.html', '', 'wrap-popup.html');
 	} else {
 		header("Location: $me?");
 	}
 }
 
 function show_form($osid = 0, $error = '') {
-	global $db, $me, $t, $_pv, $STRING;
+	global $db, $me, $t;
 
-	extract($_pv);
+	extract($_POST);
 	if ($osid && !$error) {
 		$t->assign($db->getRow("select * from ".TBL_OS." where os_id = '$osid'"));
 	} else {
-		$t->assign($_pv);
+		$t->assign($_POST);
 	}
 	$t->assign('error', $error);
-	$t->wrap('admin/os-edit.html', ($osid ? 'editos' : 'addos'));
+	$t->render('os-edit.html', translate("Edit Operating System"), 
+		!empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
 }
 
 
 function list_items($osid = 0, $error = '') {
-	global $db, $me, $t, $_gv, $STRING, $TITLE, $QUERY;
+	global $db, $me, $t, $QUERY;
 
-	if (empty($_gv['order'])) { 
+	if (empty($_GET['order'])) { 
 		$order = 'sort_order'; 
 		$sort = 'asc'; 
 	} else {
-		$order = $_gv['order']; 
-		$sort = $_gv['sort']; 
+		$order = $_GET['order']; 
+		$sort = $_GET['sort']; 
 	}
 	
-	$page = isset($_gv['page']) ? $_gv['page'] : 0;
+	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	
 	$nr = $db->getOne("select count(*) from ".TBL_OS);
 
@@ -111,16 +107,17 @@ function list_items($osid = 0, $error = '') {
 
 	sorting_headers($me, $headers, $order, $sort, "page=$page");
 
-	$t->wrap('admin/oslist.html', 'os');
+	$t->render('oslist.html', translate("Operating System List"));
 }
 
 $perm->check('Admin');
 
-if (isset($_gv['op'])) switch($_gv['op']) {
-	case 'edit' : show_form($_gv['os_id']); break;
-	case 'del' : del_item($_gv['os_id']); break;
-} elseif(isset($_pv['submit'])) {
-	do_form($_pv['os_id']);
+if (isset($_REQUEST['op'])) {
+	switch($_REQUEST['op']) {
+		case 'save' : do_form($_POST['os_id']); break;
+		case 'edit' : show_form($_GET['os_id']); break;
+		case 'del' : del_item($_GET['os_id']); break;
+	}
 } else list_items();
 
 ?>

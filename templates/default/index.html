@@ -1,66 +1,76 @@
 <table border=0 width="100%">
-    <tr>
-	<td valign="top" width="250"><b>{$STRING.INDEX.FiveRecentlySubmitted}</b>
-	    <br>
-{section name=bug loop=$recentbugs}
-	    <a href="bug.php?op=show&bugid={$recentbugs[bug].bug_id}">{$recentbugs[bug].title|stripslashes}</a> &nbsp;&nbsp;(<i>{$recentbugs[bug].project_name|stripslashes}</i>)<br>
-{sectionelse}
-	    {$STRING.nobugs}
-{/section}
-	    <br><br>
-	    <b>{$STRING.INDEX.FiveRecentlyClosed}</b>
-	    <br>
-{section name=bug loop=$closedbugs}
-	    <a href="bug.php?op=show&bugid={$closedbugs[bug].bug_id}">{$closedbugs[bug].title|stripslashes}</a> &nbsp;&nbsp;(<i>{$closedbugs[bug].project_name|stripslashes}</i>)<br>
-{sectionelse}
-	    {$STRING.nobugs}
-{/section}
-{if count($queries)}
-	    <br><br>
-	    <b>{$STRING.INDEX.SavedQueries}</b>
-	    <br>
-    {section name=query loop=$queries}
-	    <a href="query.php?{$queries[query].saved_query_string}">{$queries[query].saved_query_name}</a><br>
-    {/section}
-{/if}
-	</td>
-	<td valign="top"> 
-{if USE_JPGRAPH}
-	    {$summary_image}
-{else}
-	    <b>{$STRING.INDEX.QuickStats}</b>
-	    <br><br>
-	    <table border="1" cellspacing="0" cellpadding="2">
-		<tr>
-		    <th>{$STRING.INDEX.Status}</th>
-		    <th>{$STRING.INDEX.NumberOfBugs}</th>
-		</tr>
-    {foreach name=outer key=key item=item from=$stats}
-		<tr>
-		    <td><a href="query.php?op=doquery&status[]={$key}">{$item.name}</a></td>
-		    <td align="center">{$item.count|default:0}</td>
-		</tr>
-    {/foreach}
-	    </table>
-{/if}
-	</td>
-    </tr>
+	<tr>
+		<td valign="top" width="250">
+			<b><?php echo translate("Five most recently submitted bugs") ?></b>
+			<br>
+			<?php 
+				if ($count = count($recentbugs)) {
+					for ($i = 0; $i < $count; $i++) { 
+						echo '<a href="bug.php?op=show&bugid='.$recentbugs[$i]['bug_id'].'">'.stripslashes($recentbugs[$i]['title']).'</a> &nbsp;&nbsp;(<i>'.stripslashes($recentbugs[$i]['project_name']).'</i>)<br>';
+					}
+				} else {
+					echo translate("No bugs found");
+				}
+			?>
+			<br><br>
+			<b><?php echo translate("Five most recently closed bugs") ?></b>
+			<br>
+			<?php 
+				if ($count = count($closedbugs)) {
+					for ($i = 0; $i < $count; $i++) { 
+						echo '<a href="bug.php?op=show&bugid='.$closedbugs[$i]['bug_id'].'">'.stripslashes($closedbugs[$i]['title']).'</a> &nbsp;&nbsp;(<i>'.stripslashes($closedbugs[$i]['project_name']).'</i>)<br>';
+					}
+				} else {
+					echo translate("No bugs found");
+				}
+			?>
+			<?php if (isset($queries) && count($queries)) { ?>
+				<br><br>
+				<b><?php echo translate("Saved Queries") ?></b>
+				<br>
+				<?php for ($i = 0, $count = count($queries); $i < $count; $i++) { 
+					echo '<a href="query.php?'.$queries[$i]['saved_query_string'].'">'.$queries[$i]['saved_query_name'].'</a><br>';
+				}
+			} ?>
+		</td>
+		<td valign="top"> 
+			<?php if (USE_JPGRAPH) {
+				if (!is_writeable('jpgimages')) {
+					echo translate("The image path is not writeable");
+				} else {
+					echo build_image($restricted_projects);
+				}
+			} else { ?>
+				<b><?php echo translate("Quick Stats"); ?></b>
+				<br><br>
+				<table border="1" cellspacing="0" cellpadding="2">
+					<tr>
+						<th><?php echo translate("Status"); ?></th>
+						<th><?php echo translate('# bugs'); ?></th>
+					</tr>
+					<?php $stats = grab_data($restricted_projects); ?>
+					<?php foreach ($stats as $statid => $info) { ?>
+						<tr>
+							<td><a href="query.php?op=doquery&status[]=<?php echo $statid ?>"><?php echo $info['name'] ?></a></td>
+							<td align="center"><?php echo $info['count'] ? $info['count'] : 0 ?></td>
+						</tr>
+					<?php } ?>
+				</table>
+			<?php } ?>
+		</td>
+	</tr>
 </table>
 <br>
 <br>
-{if SHOW_PROJECT_SUMMARIES}
-<table border="0" cellpadding="4">
-    <tr>
-    {section name=col loop=$resfields}
-	<th>{$resfields[col]}</th>
-    {/section}
-    </tr>
-    {section name=project loop=$projects}
-    <tr{if $smarty.section.project.iteration is even} class="alt"{/if}>
-	{foreach key=key item=item from=$projects[project]}
-	<td{if $key ne "Project"} align="center"{/if}>{$item|stripslashes}</td>
-	{/foreach}
-    </tr>
-    {/section}
-</table>
-{/if}
+<?php if (SHOW_PROJECT_SUMMARIES) { ?>
+	<table class="bordertable" align="center">
+		<tr>
+		<?php foreach ($resfields as $field) echo "<th>$field</th>"; ?>
+		</tr>
+		<?php for ($i = 0, $count = count($projects); $i < $count; $i++) { ?>
+			<tr<?php if ($i % 2 != 0) echo ' class="alt"'?>>
+			<?php foreach ($projects[$i] as $var => $val) echo '<td'.($var != 'Project' ? ' align="center"' : '').'>'.stripslashes($val).'</td>'; ?>
+			</tr>
+		<?php } ?>
+	</table>
+<?php } ?>

@@ -1,22 +1,18 @@
 <html>
 	<head>
-		<title>DB Test Failure</title>
+		<title><?php echo translate("DB Test Failure"); ?></title>
 		<link rel="StyleSheet" href="styles/default.css" type="text/css">
 	</head>
 	<body>
 		<br><br>
 		<div align="center">
-			The installation script could not connect to the database
-			<b><?php echo $params['db_database']?></b> on the host <b><?php echo $params['db_host']?></b>
-			using the specified username and password.
-			<br>
-			Please check these details are correct and that the database already exists then retry.
+			<?php printf(translate("The installation script could not connect to the database <b>%s</b> on the host <b>%s</b> using the specified username and password.<br>Please check these details are correct and that the database already exists then retry."), $params['db_database'], $params['db_host']); ?>
 			<br>
 			<br>
 			<?php
 				echo $db->message.'<br>'.$db->userinfo."\n";
 				if ($testonly) {
-					echo '<br><br><a href="javascript:window.close()">Close window</a>';
+					echo '<br><br><a href="javascript:window.close()"><?php echo translate("Close window"); ?></a>';
 				}
 			?>
 		</div>

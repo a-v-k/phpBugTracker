@@ -1,35 +1,28 @@
-<table cellpadding="2">
+<table class="bordertable" align="center" style="width: 100%">
 	<tr>
-		{section name=col loop=$db_fields}
-			<th class={$headers[col].class} bgcolor={$headers[col].color}><a href="{$headers[col].url}">{$field_titles[col]}</a></th>
-		{/section}
+		<?php for ($i = 0, $colcount = count($db_fields); $i < $colcount; $i++) { 
+			echo "<th class='{$headers[$i]['class']}' bgcolor='{$headers[$i]['color']}'><a  href='{$headers[$i]['url']}'>{$field_titles[$i]}</a></th>";
+		} ?>
 	</tr>
-	{section name=bug loop=$bugs}
-		<tr{if $smarty.section.bug.iteration is even} class="alt" bgcolor="#dddddd"{/if}>
-			{foreach key=key item=item from=$bugs[bug]}
-				{if $key eq "bug_link_id"}
-					{assign var=bug_id value=$item}
-				{elseif $key eq "severity_color"}
-					{assign var=bgcolor value=$item}
-				{else}
-					<td {if USE_SEVERITY_COLOR}bgcolor="{$bgcolor}"{/if}>{$item|modify_bug_col:$key:$bug_id:$smarty.section.bug.iteration}</td>
-				{/if}
-			{/foreach}
-		</tr>
-	{sectionelse}
-		<tr>
-			<td colspan="{$smarty.section.col.loop}" align="center">
-				{$STRING.nobugs}
-			</td>
-		</tr>
-	{/section}
-	{if $smarty.section.bug.total}
-	<tr>
-		<td colspan="{$smarty.section.col.loop}" align="center">
-			<br>
-			{$first} - {$last} of {$total}<br>[ {$pages} ]<!-- <a href="bugs.php?page=all">Show all</a>-->
-			<br>
+	<?php if (!$bugcount = count($bugs)) { ?>
+		<td colspan="<?php echo $colcount ?>" align="center">
+			<?php echo translate("No bugs found"); ?>
 		</td>
-	</tr>
-	{/if}
+	<?php } else { ?>
+		<?php for ($i = 0; $i < $bugcount; $i++) { ?>
+			<tr<?php if ($i % 2 != 0) echo ' class="alt" bgcolor="#dddddd"'; ?>>
+				<?php 
+					foreach ($bugs[$i] as $var => $val) {
+						if ($var == 'bug_link_id') $bugid = $val;
+						elseif ($var == 'severity_color') $bgcolor = $val;
+						else echo '<td '.(USE_SEVERITY_COLOR ? "bgcolor='$bgcolor'" : '').'>'.format_bug_col($val, $var, $bugid, $i).'</td>';
+					}
+				?>
+			</tr>
+		<?php } ?>
+	<?php } ?>
 </table>
+<?php include('admin/pagination.html'); ?>
+<div align="center">
+	<a href="query.php?xl=1"><?php echo translate("Download to spreadsheet"); ?></a>
+</div>

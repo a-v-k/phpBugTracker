@@ -1,20 +1,15 @@
 <html>
 	<head>
-		<title>Upgade phpBT</title>
+		<title><?php echo translate("Upgade phpBugTracker"); ?></title>
 	</head>
 	<body>
 		<div align="center">
 			<br>
 			<br>
-			This script will upgrade your database from version 0.8.x to version 0.9.x
-			of phpBugTracker.
+			<?php echo printf(translate('This script will upgrade your database from version %s to version %s of phpBugTracker.'), '0.9.x', '1.0'); ?>
 			<br>
 			<br>
-			<b>Oracle Users</b>:  This script will not complete all the tasks necessary for the upgrade.  Please
-			see upgrade.php for further required schema changes.
-			<br>
-			<br>
-			<a href="<?php echo $HTTP_SERVER_VARS['PHP_SELF']; ?>?doit=1">Do it!</a>
+			<a href="<?php echo $HTTP_SERVER_VARS['PHP_SELF']; ?>?doit=1"><?php echo translate('Do it!'); ?></a>
 		</div>
 	</body>
 </html>

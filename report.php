@@ -2,7 +2,7 @@
 
 // report.php - Generate reports on various bug activities
 // ------------------------------------------------------------------------
-// Copyright (c) 2001, 2002 The phpBugTracker Group
+// Copyright (c) 2001 - 2004 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: report.php,v 1.26 2002/05/18 02:59:32 bcurtis Exp $  
+// $Id: report.php,v 1.27 2004/10/25 12:06:58 bcurtis Exp $  
 
 include 'include.php';
 
@@ -29,7 +29,7 @@ function resolution_by_engineer($projectid = 0) {
 	
 	// Start off our query
 	$querystring = $QUERY['report-resbyeng-1'];
-	$resfields = array('Assigned To','Open');
+	$resfields = array(translate("Assigned To"), translate("Open"));
 
 	// Grab the resolutions from the database
 	$rs = $db->query($QUERY['report-resbyeng-2'].
@@ -40,7 +40,7 @@ function resolution_by_engineer($projectid = 0) {
 		$resfields[] = $fieldname;
 		$querystring .= $countquery;
 	}
-	$resfields[] = 'Total';
+	$resfields[] = translate("Total");
 	
 	if ($projectid && is_numeric($projectid)) {
 		$projectquery = $QUERY['join-where']." project_id = $projectid";
@@ -59,21 +59,21 @@ function resolution_by_engineer($projectid = 0) {
 		));
 	$db->setOption('optimize', 'portability'); 
 
-	$t->wrap('report.html', 'reporting');
+	$t->render('report.html', translate("Reporting"));
 }
 
 function new_bugs_by_date($date_range) {
-	global $db, $t, $now, $_gv;
+	global $db, $t, $now;
 	
-	include ("jpgraph.php");
-	include ("jpgraph_bar.php");
+	include_once("jpgraph.php");
+	include_once("jpgraph_bar.php");
 	
 	$colors = array('red', 'cadetblue', 'gold', 'darkmagenta');
 	
 	$graph = new Graph(450,300);
 	$graph->SetShadow();
 	$graph->SetScale("textlin");
-	$graph->title->Set("Bug Counts by Date");
+	$graph->title->Set(translate("Bug Counts by Date"));
 	$graph->title->SetFont(FF_FONT1,FS_BOLD);
 	$graph->img->SetMargin(40,140,40,80);
 	if ($date_range > 30) {
@@ -118,9 +118,9 @@ function new_bugs_by_date($date_range) {
 	$graph->Add($p1);
 	
 	// Resolutions
-	if (isset($_gv['resolutions'])) {
+	if (isset($_GET['resolutions'])) {
 		$color = 0;
-		foreach ($_gv['resolutions'] as $resolution) {
+		foreach ($_GET['resolutions'] as $resolution) {
 			$stats = array(
 				'dates' => array(), 
 				'labels' => array(), 
@@ -154,12 +154,12 @@ function new_bugs_by_date($date_range) {
 	$graph->Stroke();
 }
 
-$projectid = isset($_gv['projectid']) ? $_gv['projectid'] : 0;
+$projectid = isset($_GET['projectid']) ? $_GET['projectid'] : 0;
 
-if (isset($_gv['op'])) {
-	switch ($_gv['op']) {
+if (isset($_GET['op'])) {
+	switch ($_GET['op']) {
 		case 'bugsbydate' : 
-			new_bugs_by_date(isset($_gv['date_range']) ? $_gv['date_range'] : 7);
+			new_bugs_by_date(isset($_GET['date_range']) ? $_GET['date_range'] : 7);
 			break;
 	}
 } else {

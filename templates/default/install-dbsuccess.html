@@ -1,19 +1,15 @@
 <html>
 	<head>
-		<title>DB Test Success</title>
+		<title><?php echo translate("DB Test Success"); ?></title>
 		<link rel="StyleSheet" href="styles/default.css" type="text/css">
 	</head>
 	<body>
 		<br><br>
 		<div align="center">
-			The installation script successfully connected to the database
-			<b><?php echo $params['db_database']?></b> on the host <b><?php echo $params['db_host']?></b>
-			using the specified username and password.
-			<br>
-			Congratulations!
+			<?php printf(translate("The installation script successfully connected to the database <b>%s</b> on the host <b>%s</b> using the specified username and password.<br>Congratulations!"), $params['db_database'], $params['db_host']); ?>
 			<br>
 			<br>
-			<a href="javascript:window.close()">Close window</a>
+			<a href="javascript:window.close()"><?php echo translate("Close window"); ?></a>
 		</div>
 	</body>
 </html>

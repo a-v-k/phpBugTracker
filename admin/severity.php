@@ -2,7 +2,7 @@
 
 // severity.php - Interface to the severity table
 // ------------------------------------------------------------------------
-// Copyright (c) 2001, 2002 The phpBugTracker Group
+// Copyright (c) 2001 - 2004 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: severity.php,v 1.25 2002/08/26 18:11:13 bcurtis Exp $
+// $Id: severity.php,v 1.26 2004/10/25 12:06:59 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -31,11 +31,9 @@ function del_item($severityid = 0) {
 	
 	if ($severityid) {
 		// Make sure we are going after a valid record
-		$itemexists = $db->getOne('select count(*) from '.TBL_SEVERITY.
-			" where severity_id = $severityid");
+		$itemexists = $db->getOne('select count(*) from '.TBL_SEVERITY." where severity_id = $severityid");
 		// Are there any bugs tied to this one?
-		$bugcount = $db->getOne('select count(*) from '.TBL_BUG.
-			" where severity_id = $severityid");
+		$bugcount = $db->getOne('select count(*) from '.TBL_BUG." where severity_id = $severityid");
 		if ($itemexists and !$bugcount) {
 			$db->query('delete from '.TBL_SEVERITY." where severity_id = $severityid");
 		}
@@ -44,65 +42,56 @@ function del_item($severityid = 0) {
 }
 
 function do_form($severityid = 0) {
-	global $db, $me, $_pv, $STRING, $t;
+	global $db, $me, $t;
 
-	extract($_pv);
+	extract($_POST);
 	$error = '';
 	// Validation
 	if (!$severity_name = trim($severity_name))
-		$error = $STRING['givename'];
+		$error = translate("Please enter a name");
 	elseif (!$severity_desc = trim($severity_desc))
-		$error = $STRING['givedesc'];
+		$error = translate("Please enter a description");
 	if ($error) { show_form($severityid, $error); return; }
 
 	if (empty($sort_order)) $sort_order = 0;
 	if (!$severityid) {
-		$db->query("insert into ".TBL_SEVERITY.
-			" (severity_id, severity_name, severity_desc, sort_order, severity_color) 
-			values (".$db->nextId(TBL_SEVERITY).', '.
-			$db->quote(stripslashes($severity_name)).', '.
-			$db->quote(stripslashes($severity_desc)).", $sort_order, ".
-			$db->quote(stripslashes($severity_color)).')');
+		$db->query("insert into ".TBL_SEVERITY." (severity_id, severity_name, severity_desc, sort_order, severity_color)  values (".$db->nextId(TBL_SEVERITY).', '.$db->quote(stripslashes($severity_name)).', '.$db->quote(stripslashes($severity_desc)).", $sort_order, ".$db->quote(stripslashes($severity_color)).')');
 	} else {
-		$db->query("update ".TBL_SEVERITY.
-			" set severity_name = ".$db->quote(stripslashes($severity_name)).
-			', severity_desc = '.$db->quote(stripslashes($severity_desc)).
-			", sort_order = $sort_order, severity_color = ".
-			$db->quote(stripslashes($severity_color))." where severity_id = $severity_id");
+		$db->query("update ".TBL_SEVERITY." set severity_name = ".$db->quote(stripslashes($severity_name)).', severity_desc = '.$db->quote(stripslashes($severity_desc)).", sort_order = $sort_order, severity_color = ".$db->quote(stripslashes($severity_color))." where severity_id = $severity_id");
 	}
 	if ($use_js) {
-		$t->display('admin/edit-submit.html');
+		$t->render('edit-submit.html');
 	} else {
 		header("Location: $me?");
 	}
 }
 
 function show_form($severityid = 0, $error = '') {
-	global $db, $me, $t, $_pv, $STRING;
+	global $db, $me, $t;
 
 	if ($severityid && !$error) {
-		$t->assign($db->getRow("select * from ".TBL_SEVERITY.
-			" where severity_id = '$severityid'"));
+		$t->assign($db->getRow("select * from ".TBL_SEVERITY." where severity_id = '$severityid'"));
 	} else {
- 		$t->assign($_pv);
+ 		$t->assign($_POST);
 	}
 	$t->assign('error', $error);
-	$t->wrap('admin/severity-edit.html', ($severityid ? 'editseverity' : 'addseverity'));
+	$t->render('severity-edit.html', translate("Edit Severity"),
+		!empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
 }
 
 
 function list_items($severityid = 0, $error = '') {
-	global $me, $db, $t, $_gv, $STRING, $TITLE, $QUERY;
+	global $me, $db, $t, $QUERY;
 
-	if (empty($_gv['order'])) { 
+	if (empty($_GET['order'])) { 
 		$order = 'sort_order'; 
 		$sort = 'asc'; 
 	} else {
-		$order = $_gv['order']; 
-		$sort = $_gv['sort']; 
+		$order = $_GET['order']; 
+		$sort = $_GET['sort']; 
 	}
 	
-	$page = isset($_gv['page']) ? $_gv['page'] : 0;
+	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	
 	$nr = $db->getOne("select count(*) from ".TBL_SEVERITY);
 
@@ -121,17 +110,18 @@ function list_items($severityid = 0, $error = '') {
 
 	sorting_headers($me, $headers, $order, $sort);
 
-	$t->wrap('admin/severitylist.html', 'severity');
+	$t->render('severitylist.html', translate("Severity List"));
 }
 
 $perm->check('Admin');
 
-if (isset($_gv['op'])) switch($_gv['op']) {
-	case 'add' : list_items(); break;
-	case 'edit' : show_form($_gv['severity_id']); break;
-	case 'del' : del_item($_gv['severity_id']); break;
-} elseif(isset($_pv['submit'])) {
-	do_form($_pv['severity_id']);
+if (isset($_REQUEST['op'])) {
+	switch($_REQUEST['op']) {
+		case 'add' : list_items(); break;
+		case 'edit' : show_form($_GET['severity_id']); break;
+		case 'del' : del_item($_GET['severity_id']); break;
+		case 'save' : do_form($_POST['severity_id']);
+	}
 } else list_items();
 
 ?>

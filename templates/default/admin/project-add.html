@@ -1,10 +1,9 @@
 <script language="JavaScript">
 <!--
-	var nameString = '{$STRING.givename}';
-	var descString = '{$STRING.givedesc}';
-	var versionString = '{$STRING.giveversion}';
+	var nameString = '<?php echo translate("Please enter a name"); ?>';
+	var descString = '<?php echo translate("Please enter a description"); ?>';
+	var versionString = '<?php echo translate("Please enter a version"); ?>';
 
-	{literal}
 	function checkForm(frm) {
 		if (frm.project_name.value == '') {
 			alert(nameString);
@@ -33,42 +32,39 @@
 		}
 		return true;
 	}
-	{/literal}
 // -->
 </script>
 <form action="project.php" method="post" onSubmit="return checkForm(this)">
-<input type="hidden" name="id" value="0">
-<input type="hidden" name="do" value="project">
 <table border="0">
 	<tr>
 		<td valign="top" rowspan="2" width="320">
 			<table border="0">
 				<tr>
 					<td>
-						<b>Project Information</b>
+						<b><?php echo translate("Project Information"); ?></b>
 						<hr size="1">
-						{if $error}<div class="error">{$error}</div>{/if}
+						<?php if ($error) { ?><div class="error"><?php echo $error; ?></div><?php } ?>
 					</td>
 				</tr>
 				<tr>
         	<td valign="top">
-						Name:
+						<?php echo translate("Name"); ?>:
 						<br>
-						<input type="text" size="30" maxlength="30" name="project_name" value="{$project_name|stripslashes|htmlspecialchars}">
+						<input type="text" size="30" maxlength="30" name="project_name" value="<?php echo htmlspecialchars(stripslashes($project_name)); ?>">
 					</td>
 				</tr>
 				<tr>
         	<td valign="top">
-						Description:
+						<?php echo translate("Description"); ?>:
 						<br>
-        		<textarea name="project_desc" cols=40 rows=5 wrap=virtual>{$project_desc|stripslashes|htmlspecialchars}</textarea>
+        		<textarea name="project_desc" cols=40 rows=5 wrap=virtual><?php echo stripslashes(htmlspecialchars($project_desc)); ?></textarea>
 					</td>
 				</tr>
 				<tr>
         	<td valign="top">
-						Active:
+						<?php echo translate("Active"); ?>:
 						<br>
-        		<input type="checkbox" name="active" value="1" {if $active}checked{/if}>
+        		<input type="checkbox" name="active" value="1" <?php if ($active) echo 'checked'; ?>>
 					</td>
 				</tr>
 			</table>
@@ -77,16 +73,16 @@
 			<table border="0">
 				<tr>
 					<td>
-						<b>Version Information</b>
+						<b><?php echo translate("Version Information"); ?></b>
 						<hr size="1">
-						{if $version_error}<div class="error">{$version_error}</div>{/if}
+						<?php if ($version_error) { ?><div class="error"><?php echo $version_error; ?></div><?php } ?>
 					</td>
 				</tr>
 				<tr>
         	<td valign="top">
-						Initial Version:
+						<?php echo translate("Initial Version"); ?>:
 						<br>
-        		<input type="text" size="30" maxlength="30" name="version_name" value="{$version_name|stripslashes|htmlspecialchars}">
+        		<input type="text" size="30" maxlength="30" name="version_name" value="<?php echo stripslashes(htmlspecialchars($version_name)); ?>">
 					</td>
 				</tr>
 			</table>
@@ -97,35 +93,37 @@
 			<table border="0">
 				<tr>
 					<td>
-						<b>Component Information</b>
+						<b><?php echo translate("Component Information"); ?></b>
 						<hr size="1">
-						{if $component_error}<div class="error">{$component_error}</div>{/if}
+						<?php if ($component_error) { ?><div class="error"><?php echo $component_error; ?></div><?php } ?>
 					</td>
 				</tr>
 				<tr>
         	<td valign="top">
-						Initial Component Name:
+						<?php echo translate("Initial Component Name"); ?>:
 						<br>
-        		<input type="text" size="30" maxlength="30" name="component_name" value="{$component_name|stripslashes|htmlspecialchars}">
+        		<input type="text" size="30" maxlength="30" name="component_name" value="<?php echo stripslashes(htmlspecialchars($component_name)); ?>">
 					</td>
 				</tr>
 				<tr>
         	<td valign="top">
-						Description:
+						<?php echo translate("Description"); ?>:
 						<br>
-        		<textarea name="component_desc" cols="30">{$component_desc|stripslashes|htmlspecialchars}</textarea>
+        		<textarea name="component_desc" cols="30"><?php echo stripslashes(htmlspecialchars($component_desc)); ?></textarea>
 					</td>
 				</tr>
 				<tr>
         	<td valign="top">
-						Owner:
+						<?php echo translate("Owner"); ?>:
 						<br>
-        		<select name="owner"><option value="0">None</option>{build_select box=owner selected=$owner}</select>
+        		<select name="owner"><option value="0">None</option><?php build_select('owner', $owner); ?></select>
 					</td>
 				</tr>
 			</table>
 		</td>
 	</tr>
 </table>
-<input type='submit' name='submit' value='Submit'>
+<input type='submit' name='submit' value='<?php echo translate("Submit"); ?>'>
+<input type="hidden" name="id" value="0">
+<input type="hidden" name="op" value="save_project">
 </form>

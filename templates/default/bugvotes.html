@@ -1,20 +1,22 @@
 <table border="0" cellspacing="2" cellpadding="2">
 	<tr bgcolor="#eeeeee">
-		<th>Who</th>
-		<th>When</th>
+		<th><?php echo translate("Who"); ?></th>
+		<th><?php echo translate("When"); ?></th>
 	</tr>
-	{section name=vote loop=$votes}
-		<tr{if $smarty.section.vote.iteration is even} class="alt" bgcolor="#dddddd"{/if}>
-			<td>{$votes[vote].login|maskemail}</td>
-			<td>{$votes[vote].created_date|date:DATE_FORMAT} {$votes[vote].created_date|date:TIME_FORMAT}</td>
-		</tr>
-	{sectionelse}
+	<?php if ($count = count($votes)) { ?>
+        <?php for ($i = 0; $i < $count; $i++) { ?>
+            <tr<?php if ($i % 2) echo ' class="alt" bgcolor="#dddddd"'; ?>>
+                <td><?php echo maskemail($votes[$i]['login']); ?></td>
+                <td><?php echo date(TIME_FORMAT.' '.DATE_FORMAT, $votes[$i]['created_date']); ?></td>
+            </tr>
+	    <?php } ?>
+    <?php } else { ?>
 		<tr>
-			<td colspan="2" align="center">{$STRING.no_votes}</td>
+			<td colspan="2" align="center"><?php echo translate("No votes found for this bug"); ?></td>
 		</tr>
-	{/section}
+	<?php } ?>
 </table>
 <br>
-<a href="{$smarty.server.PHP_SELF}?op=show&bugid={$smarty.get.bugid}">Back to bug #{$smarty.get.bugid}</a>
+<a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=show&bugid=<?php echo $_GET['bugid']; ?>"><?php echo translate("Back to bug"); ?></a>
 <br>
 <br>

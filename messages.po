@@ -1,0 +1,1474 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+
+#: attachment.php:41 attachment.php:46 attachment.php:52
+msgid "That attachment does not exist"
+msgstr ""
+
+#: attachment.php:62 attachment.php:68
+msgid "Please specify a file to upload"
+msgstr ""
+
+#: attachment.php:70
+#, php-format
+msgid "The file you specified is larger than %s bytes"
+msgstr ""
+
+#: attachment.php:78
+#, php-format
+msgid "The file you specified is larger than %d bytes"
+msgstr ""
+
+#: attachment.php:84 attachment.php:135 attachment.php:141 bug.php:357
+#: bug.php:361 bug.php:545 bug.php:611
+msgid "That bug does not exist"
+msgstr ""
+
+#: attachment.php:92
+msgid "That attachment already exists for this bug"
+msgstr ""
+
+#: attachment.php:102
+msgid "Couldn't find where to save the file!"
+msgstr ""
+
+#: attachment.php:107
+msgid "Couldn't create a file in the save path"
+msgstr ""
+
+#: attachment.php:117
+msgid "There was an error moving the uploaded file"
+msgstr ""
+
+#: attachment.php:154
+msgid "Add Attachment"
+msgstr ""
+
+#: attachment.php:160 templates/default/admin/badperm.html:5
+msgid "You do not have the permissions required for that function"
+msgstr ""
+
+#: bug.php:33
+msgid "Bug Votes"
+msgstr ""
+
+#: bug.php:43 templates/default/bugdisplay.html:239
+msgid "You have already voted for this bug"
+msgstr ""
+
+#: bug.php:49
+msgid "You have reached the maximum number of votes per user"
+msgstr ""
+
+#: bug.php:102
+msgid "There is no history for this bug"
+msgstr ""
+
+#: bug.php:107
+msgid "Bug History"
+msgstr ""
+
+#: bug.php:324
+msgid "You can not change this bug"
+msgstr ""
+
+#: bug.php:330
+msgid ""
+"Someone has updated this bug since you viewed it. The bug info has been "
+"reloaded with the latest changes."
+msgstr ""
+
+#: bug.php:337
+msgid "That user does not exist"
+msgstr ""
+
+#: bug.php:367
+msgid "That bug dependency has already been added"
+msgstr ""
+
+#: bug.php:482
+msgid "Please enter a summary"
+msgstr ""
+
+#: bug.php:484 admin/project.php:104 admin/project.php:150
+#: admin/project.php:166 admin/resolution.php:53 admin/severity.php:53
+#: admin/status.php:53 templates/default/admin/component-edit.html:3
+#: templates/default/admin/project-add.html:4
+#: templates/default/admin/project-edit.html:5
+#: templates/default/admin/resolution-edit.html:3
+#: templates/default/admin/severity-edit.html:3
+#: templates/default/admin/status-edit.html:3
+msgid "Please enter a description"
+msgstr ""
+
+#: bug.php:536
+msgid "Create Bug"
+msgstr ""
+
+#: bug.php:557 bug.php:650
+msgid "View Bug"
+msgstr ""
+
+#: bug.php:667
+msgid "No projects found"
+msgstr ""
+
+#: bug.php:675
+msgid "Select Project"
+msgstr ""
+
+#: include.php:164 include.php:181
+msgid "Invalid login"
+msgstr ""
+
+#: include.php:172 newaccount.php:65 templates/default/login.html:3
+msgid "phpBugTracker Login"
+msgstr ""
+
+#: include.php:173 newaccount.php:66
+#, php-format
+msgid "Your phpBugTracker password is %s"
+msgstr ""
+
+#: include.php:176
+msgid "Your password has been emailed to you"
+msgstr ""
+
+#: index.php:64 templates/default/buglist.html:9
+#: templates/default/index.html:12 templates/default/index.html:24
+msgid "No bugs found"
+msgstr ""
+
+#: index.php:72
+msgid "Bug Summary"
+msgstr ""
+
+#: index.php:93 index.php:135 templates/default/admin/projectlist.html:11
+#: templates/default/bugdisplay-printable.html:22
+#: templates/default/bugdisplay.html:89 templates/default/bugform.html:12
+#: templates/default/queryform-simple.html:50
+#: templates/default/queryform.html:172
+msgid "Project"
+msgstr ""
+
+#: index.php:93 index.php:135 index.php:137 report.php:32
+#: templates/default/admin/status-edit.html:59
+#: templates/default/admin/statuslist.html:27
+msgid "Open"
+msgstr ""
+
+#: index.php:105 index.php:135 index.php:139 report.php:43
+msgid "Total"
+msgstr ""
+
+#: index.php:169 templates/default/wrap.html:23
+msgid "Home"
+msgstr ""
+
+#: install.php:197
+msgid "Please enter the host name for your database server"
+msgstr ""
+
+#: install.php:199
+msgid "Please enter the name of the database you will be using"
+msgstr ""
+
+#: install.php:201
+msgid "Please enter the user name for connecting to the database"
+msgstr ""
+
+#: install.php:203
+msgid "Please enter the phpBT email address"
+msgstr ""
+
+#: install.php:205
+msgid "Please enter the admin login"
+msgstr ""
+
+#: install.php:207
+msgid "Please use a valid email address for the admin login"
+msgstr ""
+
+#: install.php:209
+msgid "Please enter the admin password"
+msgstr ""
+
+#: install.php:211
+msgid "Please confirm the admin password"
+msgstr ""
+
+#: install.php:213
+msgid "The admin passwords don't match"
+msgstr ""
+
+#: install.php:238
+msgid "Error writing to config.php"
+msgstr ""
+
+#: newaccount.php:37 admin/user.php:35
+msgid "Please enter a login"
+msgstr ""
+
+#: newaccount.php:39
+msgid "Please enter a valid email"
+msgstr ""
+
+#: newaccount.php:41
+msgid "That login has already been used"
+msgstr ""
+
+#: newaccount.php:69
+msgid "New account created"
+msgstr ""
+
+#: newaccount.php:78 templates/default/newaccount.html:35
+msgid "Create new account"
+msgstr ""
+
+#: query.php:49 query.php:51 templates/default/wrap.html:25
+msgid "Query Bugs"
+msgstr ""
+
+#: query.php:357
+msgid "Bug List"
+msgstr ""
+
+#: report.php:32 templates/default/queryform.html:123
+msgid "Assigned To"
+msgstr ""
+
+#: report.php:62
+msgid "Reporting"
+msgstr ""
+
+#: report.php:76
+msgid "Bug Counts by Date"
+msgstr ""
+
+#: user.php:40
+msgid "Your bug list column preferences have been saved"
+msgstr ""
+
+#: user.php:47 admin/user.php:39
+msgid "Please enter a password"
+msgstr ""
+
+#: user.php:49
+msgid "Those passwords don't match -- please try again"
+msgstr ""
+
+#: user.php:67
+msgid "Password changed"
+msgstr ""
+
+#: user.php:68 user.php:96
+msgid "Changes Saved"
+msgstr ""
+
+#: user.php:95
+msgid "Preferences changed"
+msgstr ""
+
+#: user.php:109
+msgid "Receive notifications of bug changes via email"
+msgstr ""
+
+#: user.php:110
+msgid "Show saved queries on the homepage"
+msgstr ""
+
+#: user.php:132
+msgid "User preferences"
+msgstr ""
+
+#: admin/configure.php:46 templates/default/admin/wrap.html:23
+#: templates/default/install.html:65
+msgid "Configuration"
+msgstr ""
+
+#: admin/database.php:51 admin/group.php:49 admin/os.php:51
+#: admin/project.php:102 admin/project.php:148 admin/project.php:164
+#: admin/resolution.php:51 admin/severity.php:51 admin/site.php:53
+#: admin/status.php:51 templates/default/admin/component-edit.html:2
+#: templates/default/admin/database-edit.html:2
+#: templates/default/admin/group-edit.html:2
+#: templates/default/admin/os-edit.html:2
+#: templates/default/admin/project-add.html:3
+#: templates/default/admin/project-edit.html:4
+#: templates/default/admin/resolution-edit.html:2
+#: templates/default/admin/severity-edit.html:2
+#: templates/default/admin/site-edit.html:2
+#: templates/default/admin/status-edit.html:2
+msgid "Please enter a name"
+msgstr ""
+
+#: admin/database.php:76
+msgid "Edit Database"
+msgstr ""
+
+#: admin/database.php:107
+msgid "Database List"
+msgstr ""
+
+#: admin/group.php:73
+msgid "Edit Group"
+msgstr ""
+
+#: admin/group.php:104
+msgid "Group List"
+msgstr ""
+
+#: admin/os.php:77
+msgid "Edit Operating System"
+msgstr ""
+
+#: admin/os.php:110
+msgid "Operating System List"
+msgstr ""
+
+#: admin/project.php:48 admin/project.php:162
+#: templates/default/admin/project-add.html:5
+#: templates/default/admin/version-edit.html:2
+msgid "Please enter a version"
+msgstr ""
+
+#: admin/project.php:79
+msgid "Edit Version"
+msgstr ""
+
+#: admin/project.php:136
+msgid "Edit Component"
+msgstr ""
+
+#: admin/project.php:153
+msgid "You cannot choose specific groups when \"All Groups\" is chosen"
+msgstr ""
+
+#: admin/project.php:262 admin/project.php:269
+msgid "Edit Project"
+msgstr ""
+
+#: admin/project.php:303
+msgid "Project List"
+msgstr ""
+
+#: admin/resolution.php:81
+msgid "Edit Resolution"
+msgstr ""
+
+#: admin/resolution.php:114
+msgid "Resolution List"
+msgstr ""
+
+#: admin/severity.php:78
+msgid "Edit Severity"
+msgstr ""
+
+#: admin/severity.php:113
+msgid "Severity List"
+msgstr ""
+
+#: admin/site.php:78
+msgid "Edit Site"
+msgstr ""
+
+#: admin/site.php:109
+msgid "Site List"
+msgstr ""
+
+#: admin/status.php:80
+msgid "Edit Status"
+msgstr ""
+
+#: admin/status.php:113
+msgid "Status List"
+msgstr ""
+
+#: admin/user.php:37
+msgid "Please enter an email"
+msgstr ""
+
+#: admin/user.php:148
+msgid "Edit User"
+msgstr ""
+
+#: admin/user.php:191
+msgid "User List"
+msgstr ""
+
+#: templates/default/admin/component-edit.html:26
+#: templates/default/admin/database-edit.html:27
+#: templates/default/admin/databaselist.html:17
+#: templates/default/admin/grouplist.html:17
+#: templates/default/admin/os-edit.html:26
+#: templates/default/admin/oslist.html:17
+#: templates/default/admin/project-add.html:51
+#: templates/default/admin/project-edit.html:42
+#: templates/default/admin/resolution-edit.html:32
+#: templates/default/admin/resolutionlist.html:15
+#: templates/default/admin/severity-edit.html:32
+#: templates/default/admin/severitylist.html:15
+#: templates/default/admin/site-edit.html:26
+#: templates/default/admin/sitelist.html:15
+#: templates/default/admin/status-edit.html:32
+#: templates/default/admin/statuslist.html:15
+#: templates/default/admin/userlist.html:23
+#: templates/default/admin/version-edit.html:20
+#: templates/default/bugdisplay.html:188
+msgid "Name"
+msgstr ""
+
+#: templates/default/admin/component-edit.html:34
+#: templates/default/admin/project-add.html:58
+#: templates/default/admin/project-add.html:110
+#: templates/default/admin/project-edit.html:56
+#: templates/default/admin/resolution-edit.html:40
+#: templates/default/admin/resolutionlist.html:16
+#: templates/default/admin/severity-edit.html:40
+#: templates/default/admin/severitylist.html:16
+#: templates/default/admin/status-edit.html:40
+#: templates/default/admin/statuslist.html:16
+#: templates/default/bugform.html:48
+msgid "Description"
+msgstr ""
+
+#: templates/default/admin/component-edit.html:42
+#: templates/default/admin/project-add.html:117
+msgid "Owner"
+msgstr ""
+
+#: templates/default/admin/component-edit.html:45
+#: templates/default/bugdisplay.html:128 templates/default/bugdisplay.html:132
+#: templates/default/queryform.html:75
+msgid "None"
+msgstr ""
+
+#: templates/default/admin/component-edit.html:50
+#: templates/default/admin/projectlist.html:13
+#: templates/default/admin/project-add.html:65
+#: templates/default/admin/project-edit.html:63
+#: templates/default/admin/project-edit.html:103
+#: templates/default/admin/project-edit.html:129
+#: templates/default/admin/user-edit.html:86
+#: templates/default/admin/userlist.html:25
+#: templates/default/admin/version-edit.html:28
+msgid "Active"
+msgstr ""
+
+#: templates/default/admin/component-edit.html:61
+#: templates/default/admin/configure.html:35
+#: templates/default/admin/database-edit.html:46
+#: templates/default/admin/group-edit.html:45
+#: templates/default/admin/os-edit.html:53
+#: templates/default/admin/project-add.html:126
+#: templates/default/admin/project-edit.html:88
+#: templates/default/admin/resolution-edit.html:61
+#: templates/default/admin/severity-edit.html:68
+#: templates/default/admin/site-edit.html:45
+#: templates/default/admin/status-edit.html:67
+#: templates/default/admin/user-edit.html:105
+#: templates/default/admin/version-edit.html:39
+#: templates/default/bugform.html:157 templates/default/user.html:26
+#: templates/default/user.html:49
+msgid "Submit"
+msgstr ""
+
+#: templates/default/admin/projectlist.html:6
+msgid "Add new project"
+msgstr ""
+
+#: templates/default/admin/projectlist.html:12
+msgid "Created Date"
+msgstr ""
+
+#: templates/default/admin/projectlist.html:23
+#: templates/default/admin/project-edit.html:110
+#: templates/default/admin/project-edit.html:136
+#: templates/default/admin/userlist.html:32
+msgid "Yes"
+msgstr ""
+
+#: templates/default/admin/projectlist.html:23
+#: templates/default/admin/project-edit.html:110
+#: templates/default/admin/project-edit.html:136
+#: templates/default/admin/userlist.html:32
+msgid "No"
+msgstr ""
+
+#: templates/default/admin/configure.html:9
+msgid "Variable"
+msgstr ""
+
+#: templates/default/admin/configure.html:10
+msgid "Value"
+msgstr ""
+
+#: templates/default/admin/configure.html:11
+msgid "Information"
+msgstr ""
+
+#: templates/default/admin/configure.html:26
+msgid "description"
+msgstr ""
+
+#: templates/default/admin/database-edit.html:35
+#: templates/default/admin/databaselist.html:18
+#: templates/default/admin/os-edit.html:42
+#: templates/default/admin/oslist.html:19
+#: templates/default/admin/resolution-edit.html:50
+#: templates/default/admin/resolutionlist.html:17
+#: templates/default/admin/severity-edit.html:49
+#: templates/default/admin/severitylist.html:17
+#: templates/default/admin/site-edit.html:34
+#: templates/default/admin/sitelist.html:16
+#: templates/default/admin/status-edit.html:48
+#: templates/default/admin/statuslist.html:17
+msgid "Sort Order"
+msgstr ""
+
+#: templates/default/admin/databaselist.html:13
+msgid "Database list"
+msgstr ""
+
+#: templates/default/admin/databaselist.html:13
+msgid "Add new database"
+msgstr ""
+
+#: templates/default/admin/databaselist.html:27
+#: templates/default/admin/sitelist.html:31
+#: templates/default/admin/statuslist.html:31
+msgid "Are you sure you want to delete this item?"
+msgstr ""
+
+#: templates/default/admin/databaselist.html:27
+#: templates/default/admin/grouplist.html:29
+#: templates/default/admin/oslist.html:29
+#: templates/default/admin/project-edit.html:104
+#: templates/default/admin/project-edit.html:111
+#: templates/default/admin/project-edit.html:130
+#: templates/default/admin/project-edit.html:137
+#: templates/default/admin/resolutionlist.html:18
+#: templates/default/admin/resolutionlist.html:27
+#: templates/default/admin/severitylist.html:18
+#: templates/default/admin/severitylist.html:27
+#: templates/default/admin/sitelist.html:17
+#: templates/default/admin/sitelist.html:31
+#: templates/default/admin/statuslist.html:19
+#: templates/default/admin/statuslist.html:31
+#: templates/default/bugdisplay.html:214
+#: templates/default/queryform-simple.html:129
+#: templates/default/queryform.html:225 templates/default/user.html:88
+msgid "Delete"
+msgstr ""
+
+#: templates/default/admin/grouplist.html:13
+msgid "Add new group"
+msgstr ""
+
+#: templates/default/admin/grouplist.html:18
+#: templates/default/admin/wrap.html:25
+msgid "Users"
+msgstr ""
+
+#: templates/default/admin/grouplist.html:27
+msgid "Locked"
+msgstr ""
+
+#: templates/default/admin/grouplist.html:29
+msgid ""
+"This will remove all user assignments to this group and the group itself.  "
+"Continue?"
+msgstr ""
+
+#: templates/default/admin/grouplist.html:30
+msgid "This will remove all user assignments to this group.  Continue?"
+msgstr ""
+
+#: templates/default/admin/grouplist.html:30
+msgid "Purge"
+msgstr ""
+
+#: templates/default/admin/grouplist.html:33
+msgid "Assignable"
+msgstr ""
+
+#: templates/default/admin/wrap.html:17 templates/default/wrap.html:17
+msgid "Find Bug"
+msgstr ""
+
+#: templates/default/admin/wrap.html:24
+msgid "Projects"
+msgstr ""
+
+#: templates/default/admin/wrap.html:26
+msgid "Groups"
+msgstr ""
+
+#: templates/default/admin/wrap.html:27
+msgid "Documentation"
+msgstr ""
+
+#: templates/default/admin/wrap.html:28
+msgid "User Tools"
+msgstr ""
+
+#: templates/default/admin/wrap.html:31
+msgid "Statuses"
+msgstr ""
+
+#: templates/default/admin/wrap.html:32
+msgid "Resolutions"
+msgstr ""
+
+#: templates/default/admin/wrap.html:33
+msgid "Severities"
+msgstr ""
+
+#: templates/default/admin/wrap.html:34
+msgid "Operating Systems"
+msgstr ""
+
+#: templates/default/admin/wrap.html:35
+msgid "Databases"
+msgstr ""
+
+#: templates/default/admin/wrap.html:36
+msgid "Sites"
+msgstr ""
+
+#: templates/default/admin/os-edit.html:34
+#: templates/default/admin/oslist.html:18
+msgid "Regex"
+msgstr ""
+
+#: templates/default/admin/oslist.html:13
+msgid "Add new operating system"
+msgstr ""
+
+#: templates/default/admin/oslist.html:29
+msgid "Are you sure you want to delete this OS"
+msgstr ""
+
+#: templates/default/admin/oslist.html:38
+#: templates/default/admin/resolutionlist.html:36
+#: templates/default/admin/severitylist.html:36
+#: templates/default/admin/sitelist.html:40
+#: templates/default/admin/statuslist.html:40
+msgid "Items with a Sort Order = 0 will not be selectable by users."
+msgstr ""
+
+#: templates/default/admin/oslist.html:40
+#: templates/default/admin/resolutionlist.html:38
+#: templates/default/admin/severitylist.html:38
+#: templates/default/admin/sitelist.html:42
+#: templates/default/admin/statuslist.html:42
+msgid "Only those items that have no bugs referencing them can be deleted."
+msgstr ""
+
+#: templates/default/admin/project-add.html:44
+msgid "Project Information"
+msgstr ""
+
+#: templates/default/admin/project-add.html:76
+msgid "Version Information"
+msgstr ""
+
+#: templates/default/admin/project-add.html:83
+msgid "Initial Version"
+msgstr ""
+
+#: templates/default/admin/project-add.html:96
+msgid "Component Information"
+msgstr ""
+
+#: templates/default/admin/project-add.html:103
+msgid "Initial Component Name"
+msgstr ""
+
+#: templates/default/admin/project-edit.html:47
+msgid "Only users in the following groups can see this project"
+msgstr ""
+
+#: templates/default/admin/project-edit.html:71
+#: templates/default/admin/project-edit.html:81
+msgid "These developers can administer this project"
+msgstr ""
+
+#: templates/default/admin/project-edit.html:97
+msgid "Versions"
+msgstr ""
+
+#: templates/default/admin/project-edit.html:97
+msgid "Add new version"
+msgstr ""
+
+#: templates/default/admin/project-edit.html:101
+#: templates/default/bugdisplay-printable.html:30
+#: templates/default/bugdisplay.html:99 templates/default/bugform.html:30
+#: templates/default/queryform-simple.html:59
+#: templates/default/queryform.html:179
+msgid "Version"
+msgstr ""
+
+#: templates/default/admin/project-edit.html:102
+#: templates/default/admin/project-edit.html:128
+#: templates/default/admin/userlist.html:24
+#: templates/default/bugdisplay-printable.html:7
+#: templates/default/bugdisplay.html:86 templates/default/bugdisplay.html:191
+msgid "Created"
+msgstr ""
+
+#: templates/default/admin/project-edit.html:116
+msgid "No versions found"
+msgstr ""
+
+#: templates/default/admin/project-edit.html:123
+msgid "Components"
+msgstr ""
+
+#: templates/default/admin/project-edit.html:123
+msgid "Add new component"
+msgstr ""
+
+#: templates/default/admin/project-edit.html:127
+#: templates/default/bugdisplay-printable.html:25
+#: templates/default/bugdisplay.html:94 templates/default/bugform.html:84
+#: templates/default/queryform-simple.html:67
+#: templates/default/queryform.html:188
+msgid "Component"
+msgstr ""
+
+#: templates/default/admin/project-edit.html:142
+msgid "No components found"
+msgstr ""
+
+#: templates/default/admin/resolutionlist.html:11
+msgid "Add new resolution"
+msgstr ""
+
+#: templates/default/admin/resolutionlist.html:27
+msgid "Are you sure you want to delete this resolution?"
+msgstr ""
+
+#: templates/default/admin/severity-edit.html:57
+msgid "Row Color"
+msgstr ""
+
+#: templates/default/admin/severitylist.html:11
+msgid "Add new severity"
+msgstr ""
+
+#: templates/default/admin/severitylist.html:27
+msgid "Are you sure you want to delete this severity?"
+msgstr ""
+
+#: templates/default/admin/sitelist.html:11
+msgid "Add new site"
+msgstr ""
+
+#: templates/default/admin/status-edit.html:56
+#: templates/default/admin/statuslist.html:18
+msgid "Open/Closed"
+msgstr ""
+
+#: templates/default/admin/status-edit.html:59
+#: templates/default/admin/statuslist.html:27
+msgid "Closed"
+msgstr ""
+
+#: templates/default/admin/statuslist.html:11
+msgid "Add new status"
+msgstr ""
+
+#: templates/default/admin/user-edit.html:35
+#: templates/default/admin/userlist.html:22
+#: templates/default/install-complete.html:31 templates/default/login.html:32
+#: templates/default/newaccount.html:12 templates/default/queryform.html:112
+#: templates/default/wrap.html:39 templates/default/wrap.html:45
+msgid "Login"
+msgstr ""
+
+#: templates/default/admin/user-edit.html:44 templates/default/login.html:32
+#: templates/default/newaccount.html:19 templates/default/queryform.html:111
+#: templates/default/wrap.html:38
+msgid "Email"
+msgstr ""
+
+#: templates/default/admin/user-edit.html:52
+#: templates/default/newaccount.html:23
+msgid "First Name"
+msgstr ""
+
+#: templates/default/admin/user-edit.html:60
+#: templates/default/newaccount.html:29
+msgid "Last Name"
+msgstr ""
+
+#: templates/default/admin/user-edit.html:68
+#: templates/default/install-complete.html:34
+#: templates/default/install.html:52 templates/default/login.html:38
+#: templates/default/user.html:19 templates/default/wrap.html:43
+msgid "Password"
+msgstr ""
+
+#: templates/default/admin/user-edit.html:76
+msgid "User Groups"
+msgstr ""
+
+#: templates/default/admin/user-edit.html:94
+msgid "Email Notify"
+msgstr ""
+
+#: templates/default/admin/userlist.html:11
+msgid "Add new user"
+msgstr ""
+
+#: templates/default/admin/userlist.html:17
+msgid "Filter"
+msgstr ""
+
+#: templates/default/bugdisplay-printable.html:4
+#: templates/default/user.html:80
+msgid "Bug"
+msgstr ""
+
+#: templates/default/bugdisplay-printable.html:12
+#: templates/default/bugdisplay.html:84 templates/default/bugform.html:20
+#: templates/default/queryform-simple.html:93
+#: templates/default/queryform.html:126 templates/default/queryform.html:199
+msgid "Reporter"
+msgstr ""
+
+#: templates/default/bugdisplay-printable.html:14
+#: templates/default/bugdisplay.html:130
+msgid "Assigned to"
+msgstr ""
+
+#: templates/default/bugdisplay-printable.html:17
+#: templates/default/bugdisplay.html:122 templates/default/index.html:48
+#: templates/default/queryform-simple.html:75
+#: templates/default/queryform-simple.html:96
+#: templates/default/queryform.html:60 templates/default/queryform.html:200
+msgid "Status"
+msgstr ""
+
+#: templates/default/bugdisplay-printable.html:18
+#: templates/default/bugdisplay.html:127 templates/default/queryform.html:61
+msgid "Resolution"
+msgstr ""
+
+#: templates/default/bugdisplay-printable.html:33
+#: templates/default/bugdisplay.html:96 templates/default/bugform.html:64
+#: templates/default/queryform-simple.html:90
+#: templates/default/queryform.html:64 templates/default/queryform.html:198
+msgid "Severity"
+msgstr ""
+
+#: templates/default/bugdisplay-printable.html:38
+#: templates/default/bugdisplay.html:91 templates/default/bugform.html:74
+#: templates/default/queryform-simple.html:99
+#: templates/default/queryform.html:63 templates/default/queryform.html:201
+msgid "Priority"
+msgstr ""
+
+#: templates/default/bugdisplay-printable.html:41
+#: templates/default/bugdisplay.html:101 templates/default/bugform.html:114
+#: templates/default/queryform.html:62
+msgid "Operating System"
+msgstr ""
+
+#: templates/default/bugdisplay-printable.html:46
+#: templates/default/bugdisplay.html:120 templates/default/bugform.html:40
+#: templates/default/queryform.html:135
+msgid "Summary"
+msgstr ""
+
+#: templates/default/bugdisplay-printable.html:48
+#: templates/default/queryform.html:151
+msgid "URL"
+msgstr ""
+
+#: templates/default/bugdisplay-printable.html:50
+#: templates/default/bugdisplay.html:144
+msgid "Depends on bugs"
+msgstr ""
+
+#: templates/default/bugdisplay-printable.html:59
+#: templates/default/bugdisplay.html:153
+msgid "Blocks bugs"
+msgstr ""
+
+#: templates/default/bugdisplay-printable.html:69
+#: templates/default/bugdisplay.html:246
+msgid "Comments"
+msgstr ""
+
+#: templates/default/bugdisplay-printable.html:71
+#: templates/default/bugdisplay-printable.html:77
+#: templates/default/bugdisplay.html:248 templates/default/bugdisplay.html:255
+msgid "Posted by"
+msgstr ""
+
+#: templates/default/bugdisplay-printable.html:85
+#: templates/default/bughistory.html:26 templates/default/bugvotes.html:20
+msgid "Back to bug"
+msgstr ""
+
+#: templates/default/bugdisplay.html:4 templates/default/bugdisplay.html:178
+msgid "You must login to modify this bug"
+msgstr ""
+
+#: templates/default/bugdisplay.html:67
+msgid "Return to bug list"
+msgstr ""
+
+#: templates/default/bugdisplay.html:70
+msgid "Previous bug"
+msgstr ""
+
+#: templates/default/bugdisplay.html:74
+msgid "Next bug"
+msgstr ""
+
+#: templates/default/bugdisplay.html:104
+msgid "To be closed in version"
+msgstr ""
+
+#: templates/default/bugdisplay.html:106 templates/default/bugdisplay.html:114
+msgid "Choose one"
+msgstr ""
+
+#: templates/default/bugdisplay.html:109 templates/default/bugform.html:94
+#: templates/default/queryform.html:65
+msgid "Database"
+msgstr ""
+
+#: templates/default/bugdisplay.html:112
+msgid "Closed in version"
+msgstr ""
+
+#: templates/default/bugdisplay.html:117 templates/default/bugform.html:104
+msgid "Site"
+msgstr ""
+
+#: templates/default/bugdisplay.html:139
+msgid "Add CC"
+msgstr ""
+
+#: templates/default/bugdisplay.html:162
+msgid "Add dependency"
+msgstr ""
+
+#: templates/default/bugdisplay.html:163
+msgid "Remove dependency"
+msgstr ""
+
+#: templates/default/bugdisplay.html:165
+msgid "Remove selected CCs"
+msgstr ""
+
+#: templates/default/bugdisplay.html:171
+msgid "Additional comments"
+msgstr ""
+
+#: templates/default/bugdisplay.html:176
+msgid "Supress notification email"
+msgstr ""
+
+#: templates/default/bugdisplay.html:183
+msgid "Attachments"
+msgstr ""
+
+#: templates/default/bugdisplay.html:184
+msgid "Create new attachment"
+msgstr ""
+
+#: templates/default/bugdisplay.html:189
+msgid "Size"
+msgstr ""
+
+#: templates/default/bugdisplay.html:190
+msgid "Type"
+msgstr ""
+
+#: templates/default/bugdisplay.html:214
+msgid "Are you sure you want to delete this attachment?"
+msgstr ""
+
+#: templates/default/bugdisplay.html:221
+msgid "No attachments found for this bug"
+msgstr ""
+
+#: templates/default/bugdisplay.html:239
+msgid "Vote for this bug"
+msgstr ""
+
+#: templates/default/bugdisplay.html:240
+msgid "View votes"
+msgstr ""
+
+#: templates/default/bugdisplay.html:241
+msgid "View bug history"
+msgstr ""
+
+#: templates/default/bugdisplay.html:249 templates/default/bugdisplay.html:256
+msgid "Date"
+msgstr ""
+
+#: templates/default/bughistory.html:3 templates/default/bugvotes.html:3
+msgid "Who"
+msgstr ""
+
+#: templates/default/bughistory.html:4
+msgid "What"
+msgstr ""
+
+#: templates/default/bughistory.html:5
+msgid "Old Value"
+msgstr ""
+
+#: templates/default/bughistory.html:6
+msgid "New Value"
+msgstr ""
+
+#: templates/default/bughistory.html:7 templates/default/bugvotes.html:4
+#: templates/default/user.html:81
+msgid "When"
+msgstr ""
+
+#: templates/default/bughistory.html:21
+msgid "No history found for this bug"
+msgstr ""
+
+#: templates/default/buglist.html:27
+msgid "Download to spreadsheet"
+msgstr ""
+
+#: templates/default/bugvotes.html:15
+msgid "No votes found for this bug"
+msgstr ""
+
+#: templates/default/error.html:10
+msgid "Back"
+msgstr ""
+
+#: templates/default/index.html:4
+msgid "Five most recently submitted bugs"
+msgstr ""
+
+#: templates/default/index.html:16
+msgid "Five most recently closed bugs"
+msgstr ""
+
+#: templates/default/index.html:29 templates/default/queryform-simple.html:121
+#: templates/default/queryform.html:217
+msgid "Saved Queries"
+msgstr ""
+
+#: templates/default/index.html:39
+msgid "The image path is not writeable"
+msgstr ""
+
+#: templates/default/index.html:44
+msgid "Quick Stats"
+msgstr ""
+
+#: templates/default/index.html:49
+msgid "# bugs"
+msgstr ""
+
+#: templates/default/install-complete.html:2
+#: templates/default/install-complete.html:10
+#: templates/default/install.html:24
+msgid "phpBugTracker Installation"
+msgstr ""
+
+#: templates/default/install-dbfailure.html:3
+msgid "DB Test Failure"
+msgstr ""
+
+#: templates/default/install-dbfailure.html:9
+#, php-format
+msgid ""
+"The installation script could not connect to the database <b>%s</b> on the "
+"host <b>%s</b> using the specified username and password.<br>Please check "
+"these details are correct and that the database already exists then retry."
+msgstr ""
+
+#: templates/default/install-dbsuccess.html:3
+msgid "DB Test Success"
+msgstr ""
+
+#: templates/default/install-dbsuccess.html:9
+#, php-format
+msgid ""
+"The installation script successfully connected to the database <b>%s</b> on "
+"the host <b>%s</b> using the specified username and password."
+"<br>Congratulations!"
+msgstr ""
+
+#: templates/default/install-dbsuccess.html:12
+msgid "Close window"
+msgstr ""
+
+#: templates/default/install.html:28
+msgid "Database Options"
+msgstr ""
+
+#: templates/default/install.html:40
+msgid "Database Name"
+msgstr ""
+
+#: templates/default/install.html:45
+msgid "This database must already exist"
+msgstr ""
+
+#: templates/default/install.html:48
+msgid "User"
+msgstr ""
+
+#: templates/default/install.html:56
+msgid "Table Prefix"
+msgstr ""
+
+#: templates/default/install.html:61
+msgid "Test Database Connection"
+msgstr ""
+
+#: templates/default/install.html:69
+msgid "phpBT Email"
+msgstr ""
+
+#: templates/default/install.html:71
+msgid "The email address used for sending bug updates, etc."
+msgstr ""
+
+#: templates/default/install.html:77
+msgid "Admin Login"
+msgstr ""
+
+#: templates/default/install.html:79
+msgid "Must be a valid email address"
+msgstr ""
+
+#: templates/default/install.html:84
+msgid "Admin Password"
+msgstr ""
+
+#: templates/default/install.html:88
+msgid "Confirm Password"
+msgstr ""
+
+#: templates/default/install.html:92
+msgid "Encrypt Passwords in DB"
+msgstr ""
+
+#: templates/default/install.html:102
+msgid ""
+"When you submit the form, the database tables will be created and config.php "
+"will be saved to disk.  You will then be able \t\t\t\t\t\t\tto login and use "
+"the bug tracker."
+msgstr ""
+
+#: templates/default/install.html:105
+msgid ""
+"Since config.php is not writeable by this script, when you submit this form "
+"you will be prompted to save config.php.  Copy \t\t\t\t\t\t\tthis file to "
+"the location of the bug tracker, and then you will \t\t\t\t\t\t\tbe able to "
+"<a href=\"index.php\">login to the bug tracker</a>.  From \t\t\t\t\t\t\tthe "
+"home page you can go to the Admin Tools and customize your \t\t\t\t\t\t"
+"\tinstallation via the Configuration link.  Once you have \t\t\t\t\t\t"
+"\tcompleted the configuration, you will be ready to add a project and \t\t\t"
+"\t\t\t\tstart reporting bugs!"
+msgstr ""
+
+#: templates/default/install.html:110
+msgid "Save Options"
+msgstr ""
+
+#: templates/default/login.html:11
+msgid "User Login"
+msgstr ""
+
+#: templates/default/login.html:21
+msgid "Invalid login and/or password"
+msgstr ""
+
+#: templates/default/login.html:25
+msgid "Your password has been mailed to you"
+msgstr ""
+
+#: templates/default/login.html:46
+msgid "Email my password"
+msgstr ""
+
+#: templates/default/login.html:56
+msgid "Open a new account"
+msgstr ""
+
+#: templates/default/logout.html:16
+msgid "You have been logged out"
+msgstr ""
+
+#: templates/default/logout.html:19
+msgid "Return to phpBugTracker home"
+msgstr ""
+
+#: templates/default/newaccount-disabled.html:4
+msgid ""
+"Sorry, but the self-creation of new accounts has been disabled.  Please "
+"contact the administrator to have an account created for you."
+msgstr ""
+
+#: templates/default/newaccount.html:1
+msgid "Create a new account"
+msgstr ""
+
+#: templates/default/newaccount.html:23 templates/default/newaccount.html:29
+msgid "optional"
+msgstr ""
+
+#: templates/default/newaccountsuccess.html:6
+msgid "Thanks for creating an account.  Check your email for your password."
+msgstr ""
+
+#: templates/default/projectlist.html:1
+msgid "First, you must pick a product on which to enter a bug."
+msgstr ""
+
+#: templates/default/queryform-simple.html:53
+#: templates/default/queryform-simple.html:62
+#: templates/default/queryform-simple.html:70
+#: templates/default/queryform.html:174 templates/default/queryform.html:180
+#: templates/default/queryform.html:183 templates/default/queryform.html:186
+#: templates/default/queryform.html:189
+msgid "All"
+msgstr ""
+
+#: templates/default/queryform-simple.html:83
+msgid "Sort by"
+msgstr ""
+
+#: templates/default/queryform-simple.html:87
+#: templates/default/queryform.html:197
+msgid "Bug number"
+msgstr ""
+
+#: templates/default/queryform-simple.html:103
+#: templates/default/queryform.html:204
+msgid "Ascending"
+msgstr ""
+
+#: templates/default/queryform-simple.html:104
+#: templates/default/queryform.html:205
+msgid "Descending"
+msgstr ""
+
+#: templates/default/queryform-simple.html:112
+#: templates/default/queryform.html:210
+msgid "Save this query as"
+msgstr ""
+
+#: templates/default/queryform-simple.html:117
+#: templates/default/queryform.html:213
+msgid "Reset to default query"
+msgstr ""
+
+#: templates/default/queryform-simple.html:129
+#: templates/default/queryform.html:225
+msgid "Are you sure you want to delete this saved query?"
+msgstr ""
+
+#: templates/default/queryform-simple.html:136
+msgid "Go to the advanced query page"
+msgstr ""
+
+#: templates/default/queryform.html:66
+msgid "Reported on Site"
+msgstr ""
+
+#: templates/default/queryform.html:114
+msgid "matching as"
+msgstr ""
+
+#: templates/default/queryform.html:116 templates/default/queryform.html:139
+#: templates/default/queryform.html:147 templates/default/queryform.html:155
+msgid "regexp"
+msgstr ""
+
+#: templates/default/queryform.html:117 templates/default/queryform.html:140
+#: templates/default/queryform.html:148 templates/default/queryform.html:156
+msgid "not regexp"
+msgstr ""
+
+#: templates/default/queryform.html:118 templates/default/queryform.html:138
+#: templates/default/queryform.html:146 templates/default/queryform.html:154
+msgid "substring"
+msgstr ""
+
+#: templates/default/queryform.html:119
+msgid "exact"
+msgstr ""
+
+#: templates/default/queryform.html:143
+msgid "A description entry"
+msgstr ""
+
+#: templates/default/queryform.html:160
+msgid "Created Date Range"
+msgstr ""
+
+#: templates/default/queryform.html:164
+msgid "to"
+msgstr ""
+
+#: templates/default/queryform.html:182
+msgid "Closed in Version"
+msgstr ""
+
+#: templates/default/queryform.html:185
+msgid "To be Closed in Version"
+msgstr ""
+
+#: templates/default/queryform.html:195
+msgid "Sort By"
+msgstr ""
+
+#: templates/default/queryform.html:232
+msgid "Go to the simple query page"
+msgstr ""
+
+#: templates/default/report.html:2
+msgid "Show bug statistics for the selected project"
+msgstr ""
+
+#: templates/default/report.html:4
+msgid "All projects"
+msgstr ""
+
+#: templates/default/report.html:7
+msgid "Go"
+msgstr ""
+
+#: templates/default/report.html:10
+msgid "Bug Resolutions"
+msgstr ""
+
+#: templates/default/report.html:21
+msgid "Unassigned"
+msgstr ""
+
+#: templates/default/upgrade-finished.html:3 templates/default/upgrade.html:3
+msgid "Upgade phpBugTracker"
+msgstr ""
+
+#: templates/default/upgrade-finished.html:9
+msgid "Your database has been updated."
+msgstr ""
+
+#: templates/default/upgrade-finished.html:12
+msgid "phpBugTracker home"
+msgstr ""
+
+#: templates/default/upgrade.html:9
+#, php-format
+msgid ""
+"This script will upgrade your database from version %s to version %s of "
+"phpBugTracker."
+msgstr ""
+
+#: templates/default/upgrade.html:12
+msgid "Do it!"
+msgstr ""
+
+#: templates/default/user.html:8
+msgid "Change Password"
+msgstr ""
+
+#: templates/default/user.html:16
+msgid "Enter new password"
+msgstr ""
+
+#: templates/default/user.html:22
+msgid "Verify password"
+msgstr ""
+
+#: templates/default/user.html:33
+msgid "Change Preferences"
+msgstr ""
+
+#: templates/default/user.html:44
+msgid "Number of results per page"
+msgstr ""
+
+#: templates/default/user.html:61
+msgid "Bug List Columns"
+msgstr ""
+
+#: templates/default/user.html:63
+msgid "Choose the fields you want to see in the bug list"
+msgstr ""
+
+#: templates/default/user.html:77
+msgid "Votes"
+msgstr ""
+
+#: templates/default/user.html:88
+msgid "Are you sure you want to delete this vote?"
+msgstr ""
+
+#: templates/default/wrap.html:24
+msgid "Add a new bug"
+msgstr ""
+
+#: templates/default/wrap.html:26
+msgid "View Reports"
+msgstr ""
+
+#: templates/default/wrap.html:27
+msgid "Create a New Account"
+msgstr ""
+
+#: templates/default/wrap.html:28
+msgid "Read Documentation"
+msgstr ""
+
+#: templates/default/wrap.html:29
+msgid "Administration Tools"
+msgstr ""
+
+#: templates/default/wrap.html:46
+msgid "Email Password"
+msgstr ""
+
+#: templates/default/wrap.html:46
+msgid "Forgot your password?  Have it sent to you"
+msgstr ""
+
+#: templates/default/wrap.html:48
+#, php-format
+msgid "Remember %s for next time"
+msgstr ""
+
+#: templates/default/wrap.html:48
+msgid "Remember me"
+msgstr ""
+
+#: templates/default/wrap.html:51
+msgid "Bugs assigned to me"
+msgstr ""
+
+#: templates/default/wrap.html:52
+msgid "Bugs reported by me"
+msgstr ""
+
+#: templates/default/wrap.html:53
+msgid "Personal Page"
+msgstr ""
+
+#: templates/default/wrap.html:54
+#, php-format
+msgid "Logout %s"
+msgstr ""

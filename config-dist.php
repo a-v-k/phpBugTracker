@@ -1,7 +1,7 @@
 <?php
 // config.php - Set up configuration options
 // ------------------------------------------------------------------------
-// Copyright (c) 2001, 2002 The phpBugTracker Group
+// Copyright (c) 2001 - 2004 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -19,7 +19,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config-dist.php,v 1.27 2003/07/25 19:22:26 kennyt Exp $
+// $Id: config-dist.php,v 1.28 2004/10/25 12:06:57 bcurtis Exp $
 
 // Database Config
 define ('DB_TYPE', '{db_type}');  // using PEAR::DB naming (mysql, pgsql, etc.)
@@ -27,10 +27,6 @@ define ('DB_HOST', '{db_host}'); // hostname of database server
 define ('DB_DATABASE', '{db_database}'); // database name
 define ('DB_USER', '{db_user}'); // username for database connection
 define ('DB_PASSWORD', '{db_pass}'); // password for database connection
-
-// Smarty templates location (leave blank if Smarty is in include path)
-// If not blank, make sure the trailing slash is present.
-define ('SMARTY_PATH', '{smarty_path}');
 
 // Database Table Config
 // you can change either the prefix of the table names or each table name individually
@@ -69,7 +65,7 @@ define ('TBL_DATABASE',	       TBL_PREFIX.'database_server');
 define ('TBL_SITE',	       TBL_PREFIX.'site');
 
 define ('ONEDAY', 86400);
-define ('PHPBT_VERSION', '0.9.0');
+define ('PHPBT_VERSION', '1.0');
 
 require_once ('./inc/auth.php');
 

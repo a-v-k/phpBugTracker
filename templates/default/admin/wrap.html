@@ -1,102 +1,45 @@
 <html>
 <head>
     <META HTTP-EQUIV="Expires" CONTENT="-1">
-    <title>phpBugTracker Admin - {$page_title}</title>
-    <link rel="StyleSheet" href="../styles/{$STYLE}.css" type="text/css">
+    <title>phpBugTracker Admin - <?php echo $page_title; ?></title>
+    <link rel="StyleSheet" href="../styles/<?php echo $STYLE; ?>.css" type="text/css">
 	<link rel="stylesheet" type"text/css" href="../styles/print.css" media="print">
-    <META http-equiv="Content-Type" content="text/html; charset={$STRING.lang_charset}">
+    <?php if (defined('CHARSET')) echo '<META http-equiv="Content-Type" content="text/html; charset='.CHARSET.'">'; ?>
 </head>
 <body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0">
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-	<td class="nav" valign="middle"><img name="title" src="{$template_path}/../images/title.gif" width="500" height="50" border="0" alt="" hspace="0" vspace="0"></td>
-	<td align="right" valign="middle" class="nav">
-		<form action="../bug.php">
-		<input type="hidden" name="op" value="show">
-		{$STRING.WRAP.FindBug}
-		<input name="bugid" type="text" id="bugid" size="4">
-		&nbsp;
-		</form>
-	</td>
-  </tr>
-  <tr>
-	  <td class="navtitlebar" height="4" colspan="2"><img src="{$template_path}/../images/spacer.gif" height="1" width="1"></td>
-  </tr>
-  <tr>
-	  <td class="navtitlebar" colspan="2">
-	  <table border="0" cellspacing="0" cellpadding="4">
-			<tr>
-			  <td><a href="configure.php" class="navlink">{$TITLE.configuration}</a></td>
-			  <td>|</td>
-			  <td><a href="project.php" class="navlink">{$TITLE.project}</a></td>
-			  <td>|</td>
-			  <td><a href="user.php" class="navlink">{$TITLE.user}</a></td>
-			  <td>|</td>
-			  <td><a href="group.php" class="navlink">{$TITLE.group}</a></td>
-			  <td>|</td>
-			  <td><a href="status.php" class="navlink">{$TITLE.status}</a></td>
-			  <td>|</td>
-			  <td><a href="resolution.php" class="navlink">{$TITLE.resolution}</a></td>
-			</tr><tr>
-			  <td><a href="severity.php" class="navlink">{$TITLE.severity}</a></td>
-			  <td>|</td>
-			  <td><a href="os.php" class="navlink">{$TITLE.os}</a></td>
-			  <td>|</td>
-			  <td><a href="database.php" class="navlink">{$TITLE.database}</a></td>
-			  <td>|</td>
-			  <td><a href="site.php" class="navlink">{$TITLE.site}</a></td>
-			  <td>|</td>
-			  <td><a href="../docs/html/userguide.html" class="navlink">{$STRING.WRAP.Documentation}</a></td>
-			  <td>|</td>
-			  <td><a href="../index.php" class="navlink">{$TITLE.usertools}</a></td>
-			</tr>
-		</table>
-	</td>
-  </tr>
-  <tr>
-	  <td class="navtitlebar" height="4" colspan="2"><img src="{$template_path}/../images/spacer.gif" height="1" width="1"></td>
-  </tr>
-  <tr>
-	  <td class="navborder" height="1" colspan="2"><img src="{$template_path}/../images/spacer.gif" height="1" width="1"></td>
-  </tr>
-	<tr>
-	    <td colspan="2" height="20" class="bottomnav">
-		<form method="post" action="{$smarty.server.SCRIPT_NAME}{if $smarty.request.QUERY_STRING}?{$smarty.request.QUERY_STRING}{/if}">
-		&nbsp;
-{if not $smarty.session.uid}
-    {if EMAIL_IS_LOGIN}
-	{assign var="loginlabel" value="Email"}
-    {else}
-	{assign var="loginlabel" value="Login"}
-    {/if}
-		{$loginerror}
-		{$loginlabel}: <input type="text" name="username" class="bottomnavinput" value="{$smarty.cookies.phpbt_user}">
-		Password: <input type="password" name="password" class="bottomnavinput">
-		<input type="hidden" name="dologin" value="1">
-		<input type="submit" value="Login" class="bottomnavinput">
-		<input type="submit" name="sendpass" value="Email Password" class="bottomnavinput" title="Forgot your password?  Have it sent to you">
-    {if RECALL_LOGIN}
-		<input type="checkbox" name="savecookie" value="1" {if !empty($smarty.cookies.phpbt_user)}checked{/if} class="bottomnavinput" title="Remember {$loginlabel} for next time"> Remember me
-    {/if}
-{else}
-		Bugs assigned to me: <a href="../query.php?op=mybugs&assignedto=1&open=1" title="Open">{$owner_open}</a> / <a href="../query.php?op=mybugs&assignedto=1&open=0" title="Closed">{$owner_closed}</a>
-		| Bugs reported by me: <a href="../query.php?op=mybugs&reportedby=1&open=1" title="Open">{$reporter_open}</a> / <a href="../query.php?op=mybugs&reportedby=1&open=0" title="Closed">{$reporter_closed}</a>
-		| <a href="../user.php">Personal Page</a>
-		| <a href="../logout.php">Logout {$smarty.session.uname}</a>
-{/if}
-		&nbsp;
-		</form>
-	    </td>
-	</tr>
-  <tr>
-	  <td class="navborder" height="1" colspan="2"><img src="{$template_path}/../images/spacer.gif" height="1" width="1"></td>
-  </tr>
-  <tr>
-	  <td class="navbotspacer" height="20" colspan="2"><img src="{$template_path}/../images/spacer.gif" height="1" width="1"></td>
-  </tr>
-</table>
+<div class="nav">
+    <div class="header_image">
+        <img name="title" src="<?php echo $template_path ?>/../images/title.gif" width="500" height="50" border="0" alt="" hspace="0" vspace="0">
+    </div>
+    <div class="header_search">
+        <form action="../bug.php">
+            <input type="hidden" name="op" value="show">
+            <?php echo translate("Find Bug") ?>
+            <input name="bugid" type="text" id="bugid" size="4">
+            &nbsp;
+        </form>
+    </div>
+    <ul id="tabnav">
+        <li><a href="configure.php" class="navlink"><?php echo translate("Configuration"); ?></a></li>
+        <li><a href="project.php" class="navlink"><?php echo translate("Projects"); ?></a></li>
+        <li><a href="user.php" class="navlink"><?php echo translate("Users"); ?></a></li>
+        <li><a href="group.php" class="navlink"><?php echo translate("Groups"); ?></a></li>
+        <li><a href="../docs/html/userguide.html" class="navlink"><?php echo translate("Documentation"); ?></a></li>
+        <li><a href="../index.php" class="navlink"><?php echo translate("User Tools"); ?></a></li>
+    </ul>
+    <ul id="tabnav">
+        <li><a href="status.php" class="navlink"><?php echo translate("Statuses"); ?></a></li>
+        <li><a href="resolution.php" class="navlink"><?php echo translate("Resolutions"); ?></a></li>
+        <li><a href="severity.php" class="navlink"><?php echo translate("Severities"); ?></a></li>
+        <li><a href="os.php" class="navlink"><?php echo translate("Operating Systems"); ?></a></li>
+        <li><a href="database.php" class="navlink"><?php echo translate("Databases"); ?></a></li>
+        <li><a href="site.php" class="navlink"><?php echo translate("Sites"); ?></a></li>
+    </ul>
+</div>
 
-{include file=$content_template}
+<div style="padding: 0px 5px;">
+    <?php include($content_template); ?>
+</div>
 
 </body>
 </html>

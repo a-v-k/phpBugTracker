@@ -1,5 +1,5 @@
 <html>
-	<title>phpBugTracker Installation</title>
+	<title><?php echo translate("phpBugTracker Installation"); ?></title>
 	<link rel="StyleSheet" href="styles/default.css" type="text/css">
 </head>
 <body bgcolor="#ffffff" link="#006699" vlink="#006699" alink="#006699">
@@ -7,7 +7,7 @@
 	<tr>
 		<td width="200" valign="top"><br><img src="logo.jpg"></td>
 		<td valign="top">
-			<div class="banner">phpBugTracker Installation</div>
+			<div class="banner"><?php echo translate("phpBugTracker Installation"); ?></div>
 			The database tables have been created and the config file has been
 			written.  Especially if you are on a shared server, you should
 			change the permissions so that config.php isn't writeable by others
@@ -28,10 +28,10 @@
 			<form action="index.php" method="post">
 				<table border="0" cellpadding="1" cellspacing="3" align="center">
 					<tr>
-						<td>Login:</td>
-						<td><input type="text" name="username" value="{$login}"></td>
+						<td><?php echo translate("Login"); ?>:</td>
+						<td><input type="text" name="username" value="<?php echo $login; ?>"></td>
 					</tr>
-						<td>Password:</td>
+						<td><?php echo translate("Password"); ?>:</td>
 						<td><input type="password" name="password"></td>
 					</tr>
 					<tr>

@@ -2,7 +2,7 @@
 -- PostgreSQL database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.44 2003/09/14 22:16:24 kennyt Exp $
+-- $Id: pgsql.in,v 1.45 2004/10/25 12:07:02 bcurtis Exp $
 
 BEGIN;
 
@@ -23,7 +23,8 @@ CREATE TABLE TBL_AUTH_GROUP (
   group_id INT4  NOT NULL DEFAULT '0',
   group_name varchar(80) NOT NULL DEFAULT '',
   locked INT2 NOT NULL DEFAULT 0,
-	created_by INT4  NOT NULL DEFAULT '0',
+  assignable INT2 NOT NULL DEFAULT 0,
+  created_by INT4  NOT NULL DEFAULT '0',
   created_date INT8  NOT NULL DEFAULT '0',
   last_modified_by INT4  NOT NULL DEFAULT '0',
   last_modified_date INT8  NOT NULL DEFAULT '0',
@@ -220,7 +221,7 @@ CREATE TABLE TBL_STATUS (
   status_name varchar(30) NOT NULL DEFAULT '',
   status_desc TEXT DEFAULT '' NOT NULL,
   sort_order INT2  NOT NULL DEFAULT '0',
-  bug_open INT2 NOT NULL default '1',
+  bug_open INT2  NOT NULL DEFAULT '0',
   PRIMARY KEY  (status_id)
 );
 
@@ -293,6 +294,7 @@ CREATE SEQUENCE TBL_AUTH_GROUP_seq START 4;
 -- ... and only two permissions
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (1, 'Admin');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (2, 'Editbug');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (3, 'EditAssignment');
 
 -- Admins can do all the admin stuff and users can edit bugs
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (1, 1);
@@ -334,7 +336,6 @@ INSERT INTO TBL_CONFIGURATION VALUES ('BUG_UNCONFIRMED','1','The status to assig
 INSERT INTO TBL_CONFIGURATION VALUES ('BUG_PROMOTED','2','The status to assign a bug when it is promoted (if enabled).','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('BUG_ASSIGNED','3','The status to assign a bug when it is assigned.','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('BUG_REOPENED','4','The status to assign a bug when it is reopened.','multi');
-INSERT INTO TBL_CONFIGURATION VALUES ('BUG_CLOSED','7','The status to assign a bug when it is closed.','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('EMAIL_DISABLED', '0', 'Whether to disable all mail sent from the system', 'bool');
 
 INSERT INTO TBL_OS VALUES (1,'All',1,'');
@@ -387,13 +388,13 @@ INSERT INTO TBL_SEVERITY VALUES (6,'Significant','A bug affecting the intended p
 INSERT INTO TBL_SEVERITY VALUES (7,'Critical','A bug severe enough to prevent the release of the product',7,'#daaaaa');
 CREATE SEQUENCE TBL_SEVERITY_seq START 8;
 
-INSERT INTO TBL_STATUS VALUES (1,'Unconfirmed','Reported but not confirmed',1);
-INSERT INTO TBL_STATUS VALUES (2,'New','A new bug',2);
-INSERT INTO TBL_STATUS VALUES (3,'Assigned','Assigned to a developer',3);
-INSERT INTO TBL_STATUS VALUES (4,'Reopened','Closed but opened again for further inspection',4);
-INSERT INTO TBL_STATUS VALUES (5,'Resolved','Set by engineer with a resolution',5);
-INSERT INTO TBL_STATUS VALUES (6,'Verified','The resolution is confirmed by the reporter',6);
-INSERT INTO TBL_STATUS VALUES (7,'Closed','The bug is officially squashed (QA)',7);
+INSERT INTO TBL_STATUS VALUES (1,'Unconfirmed','Reported but not confirmed',1,1);
+INSERT INTO TBL_STATUS VALUES (2,'New','A new bug',2,1);
+INSERT INTO TBL_STATUS VALUES (3,'Assigned','Assigned to a developer',3,1);
+INSERT INTO TBL_STATUS VALUES (4,'Reopened','Closed but opened again for further inspection',4,1);
+INSERT INTO TBL_STATUS VALUES (5,'Resolved','Set by engineer with a resolution',5,0);
+INSERT INTO TBL_STATUS VALUES (6,'Verified','The resolution is confirmed by the reporter',6,0);
+INSERT INTO TBL_STATUS VALUES (7,'Closed','The bug is officially squashed (QA)',7,0);
 CREATE SEQUENCE TBL_STATUS_seq START 8;
 
 INSERT INTO TBL_DATABASE VALUES (1,'Oracle 8.1.7',1);

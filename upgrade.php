@@ -2,7 +2,7 @@
 
 // upgrade.php -- Upgrade from the previous version
 // ------------------------------------------------------------------------
-// Copyright (c) 2001, 2002 The phpBugTracker Group
+// Copyright (c) 2001 - 2004 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,10 +20,10 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.36 2003/07/25 19:22:26 kennyt Exp $
+// $Id: upgrade.php,v 1.37 2004/10/25 12:06:58 bcurtis Exp $
 
 define ('NO_AUTH', 1);
-
+$upgrading = true;
 @include 'include.php';
 
 function upgrade() {
@@ -32,14 +32,27 @@ function upgrade() {
 	$thisvers = $db->getOne('select varvalue from '.TBL_CONFIGURATION.' where varname = \'DB_VERSION\'');
 	if ($thisvers == CUR_DB_VERSION) $upgraded = 1;
 	if (!$upgraded or DB::isError($thisvers)) {
-		if (!@is_writeable('c_templates')) {
-			include('templates/default/base/templatesperm.html');
-			exit;
-		}
 		switch(DB_TYPE) {
 			case 'pgsql' :
 				$db->query("create table ".TBL_PROJECT_PERM." ( project_id INT4 NOT NULL DEFAULT '0', user_id INT4 NOT NULL DEFAULT '0' )");
-				//! TBL_AUTH_GROUP
+				if ($thisvers < 2) {
+					$db->query("alter table ".TBL_AUTH_GROUP." ADD assignable INT2");
+					$db->query("alter table ".TBL_AUTH_GROUP." alter assignable set DEFAULT 0");
+					$db->query("update ".TBL_AUTH_GROUP." set assignable = 0");
+					$db->query("alter table ".TBL_AUTH_GROUP." alter assignable set NOT NULL");
+				}
+				if ($thisvers < 3) {
+					$db->query("ALTER TABLE ".TBL_USER_PREF." ADD def_results INT4");
+					$db->query("ALTER TABLE ".TBL_USER_PREF." alter def_results set DEFAULT 20");
+					$db->query("update ".TBL_USER_PREF." set def_results = 20");
+					$db->query("ALTER TABLE ".TBL_USER_PREF." alter def_results set NOT NULL");
+				}
+				if ($thisvers < 4) {
+					$db->query('ALTER TABLE '.TBL_STATUS.' ADD bug_open INT2');
+					$db->query("ALTER TABLE ".TBL_STATUS." alter bug_open set DEFAULT 1");
+					$db->query("update ".TBL_STATUS." set bug_open = 1");
+					$db->query("ALTER TABLE ".TBL_STATUS." alter bug_open set NOT NULL");
+				}
 				break;
 			case 'mysql' :
 				$db->query("create table if not exists ".TBL_PROJECT_PERM." ( project_id int(11) NOT NULL default '0', user_id int(11) NOT NULL default '0' )");
@@ -53,9 +66,9 @@ function upgrade() {
 					$db->query('ALTER TABLE '.TBL_STATUS.' ADD bug_open TINYINT DEFAULT \'1\' NOT NULL');
 				}
 				break;
-			case 'pgsql' :
-				//! Missing Alter/Create's
 			case 'oci8' :
+				echo "Oracle is not supported in version 1.0";
+				exit;
 				$db->query("create table ".TBL_PROJECT_PERM." ( project_id number(10) default '0' NOT NULL, user_id number(10) default '0' NOT NULL )");
 				//! TBL_AUTH_GROUP
 				//! TBL_USER_PERM.def_results (see mysql)
@@ -74,6 +87,7 @@ function upgrade() {
 		if ($thisvers < 4) {
 			$db->query('DELETE FROM '.TBL_CONFIGURATION.' WHERE varname = \'BUG_CLOSED\'');
 			echo 'You must set your Statuses to either open or closed. Default settings should be modified so that "resolved", "closed", and "verified" are shown as being closed, and all other statuses are set to open.';
+			$db->query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (3, 'EditAssignment')");
 		}
 
 		/* update to current DB_VERSION */
@@ -83,7 +97,7 @@ function upgrade() {
 	include 'templates/default/upgrade-finished.html';
 }
 
-if (isset($_gv['doit'])) {
+if (isset($_GET['doit'])) {
 	upgrade();
 } else {
 	include 'templates/default/upgrade.html';

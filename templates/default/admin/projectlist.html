@@ -1,31 +1,30 @@
 <table border="0" width="100%">
   <tr>
     <td valign="top">
-      <b>&nbsp;{$page_title}</b> - <a href="{$smarty.server.PHP_SELF}?op=add">{$STRING.addnew} Project</a>
+      <b>&nbsp;<?php echo $page_title; ?></b>
+	  <?php if (isset($perm) and $perm->have_perm('Administrator')) 
+	  	echo " - <a href=\"{$_SERVER['SCRIPT_NAME']}?op=add\">".translate("Add new project")."</a>";
+	  ?>
       <hr size="1">
-			<table border="0" cellpadding="2" cellspacing="1" width="100%">
+			<table class="bordertable" align="center">
 				<tr>
-					<th class="{$headers.name.class}"><a href="{$headers.name.url}">Project</a></th>
-					<th class="{$headers.createddate.class}"><a href="{$headers.createddate.url}">Created</a></th>
-					<th class="{$headers.active.class}"><a href="{$headers.active.url}">Active</a></th>
+					<th class="<?php echo $headers['name']['class']; ?>"><a href="<?php echo $headers['name']['url']; ?>"><?php echo translate("Project"); ?></a></th>
+					<th class="<?php echo $headers['createddate']['class']; ?>"><a href="<?php echo $headers['createddate']['url']; ?>"><?php echo translate("Created Date"); ?></a></th>
+					<th class="<?php echo $headers['active']['class']; ?>"><a href="<?php echo $headers['active']['url']; ?>"><?php echo translate("Active"); ?></a></th>
 				</tr>
-				{section name=project loop=$projects}
-					<tr{if $smarty.section.project.iteration is even} class="alt"{/if}>
-						<td>{if $perm->have_perm('Administrator') or $perm->have_perm_proj($projects[project].project_id)}<a href="{$smarty.server.PHP_SELF}?op=edit&id={$projects[project].project_id}">{$projects[project].project_name|stripslashes}</a>{else}{$projects[project].project_name|stripslashes}{/if}</td>
-						<td align="center">{$projects[project].created_date|date:DATE_FORMAT}</td>
-						<td align="center">{if $projects[project].active}Yes{else}No{/if}</td>
+				<?php for ($i = 0, $count = count($projects); $i < $count; $i++) { ?>
+					<tr>
+						<td>
+                            <?php if (isset($perm) and ($perm->have_perm('Administrator') or $perm->have_perm_proj($projects[$i]['project_id']))) { ?>
+                                <a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>?op=edit&id=<?php echo $projects[$i]['project_id']; ?>"><?php echo stripslashes($projects[$i]['project_name']); ?></a>
+                            <?php } else { echo stripslashes($projects[$i]['project_name']); } ?>
+                        </td>
+						<td align="center"><?php echo date(DATE_FORMAT, $projects[$i]['created_date']); ?></td>
+						<td align="center"><?php echo $projects[$i]['active'] ? translate("Yes") : translate("No"); ?></td>
 					</tr>
-				{/section}
-				<tr>
-					<td colspan="3" align="center">
-						<br>
-  					{$first} - {$last} of {$total}
-						<br>
-						{if $pages ne "1"}[ {$pages} ]{/if}
-  					<br>
-					</td>
-				</tr>
+				<?php } ?>
 			</table>
+          <?php include('pagination.html'); ?>
     </td>
 	</tr>
 </table>

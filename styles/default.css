@@ -3,6 +3,7 @@ body {
 	font-size: 12px; 
 	color: #000000;
 	background: #ffffff;
+	margin: 0px;
 	}
 
 a:link      { text-decoration: none; color: #006699; }
@@ -24,13 +25,14 @@ th {
 	font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
 	font-size: 12px;
 	color: #000000;
-	background-color: #eeeeee;
+	background-color: #ffc;
 	}
 	
 th.selected {
 	font-weight: bold; 
 	text-align: center;
-	background-color: #bbbbbb;
+	background-color: #ffc;
+	font-style: italic;
 	}
 
 select {
@@ -59,22 +61,6 @@ textarea {
 	font-size: 12px;
 	}
 	
-.navfont { 
-	font-family: "Verdana","Arial","Helvetica","MS Sans Serif","Sans-Serif";
-	font-size: 10px; 
-	}
-
-.login-box {
-	vertical-align: text-bottom; 
-	font-size: 10px; 
-	}
-
-input[type="text"].login-box { 
-	padding-top: 0.1em; 
-	padding-left: 0.2em; 
-	padding-right: 0.2em; 
-	}
-
 .banner { 
 	text-align: center; 
 	font-weight: bold;
@@ -96,11 +82,6 @@ input[type="text"].login-box {
 	padding-bottom: 0.1em;
 	}
 
-a.sidenavlink {
-	color: #000000;
-	text-decoration: none;
-	}
-	
 .nav {
 	vertical-align: middle;
 	background: #9999ff;
@@ -110,94 +91,11 @@ a.sidenavlink {
 	font-weight: bold;
 	}
 
-.navtitlebar {
-	background: #99f;
-	}
-
-.navborder {
-	background: #000;
-	}
-	
-.navbotspacer {
-	background: #fff;
-	}
-
-.navinput {
-	vertical-align: middle;
-	background: #ffffff;
-	color: #00000;
-	font-family: "Arial", sans-serif;
-	font-size: 12px;
-	}
-	
-.sidenav {
-	vertical-align: top;
-	background: #9999ff;
-	color: #ffffff;
-	font-family: "Verdana", "Tahoma", "Helvetica", sans-serif;
-	font-size: 14px;
-	font-weight: bold;
-	}
-	
-.bottomnav {
-	vertical-align: middle;
-	background: #ffffcc;
-	color: #000000;
-	font-family: "Arial", sans-serif;
-	font-size: 10px;
-	font-weight: bold;
-	}
-	
 .bottomnavinput {
 	vertical-align: middle;
 	color: #00000;
 	font-family: "Arial", sans-serif;
 	font-size: 10px;
-	}
-	
-.topnavbox {
-	vertical-align: middle;
-	background: #9999ff;
-	color: #ffffff;
-	font-family: "Arial", sans-serif;
-	font-size: 14px;
-	font-weight: bold;
-	border-width: 1px 0px 1px 0px;
-	border-color: #ffffff;
-	border-style: solid;
-	padding: 5px;
-	cursor: pointer;
-	cursor: hand;
-	}
-	
-.navbox {
-	vertical-align: middle;
-	background: #9999ff;
-	color: #ffffff;
-	font-family: "Arial", sans-serif;
-	font-size: 14px;
-	font-weight: bold;
-	border-width: 0px 0px 1px 0px;
-	border-color: #ffffff;
-	border-style: solid;
-	padding: 5px;
-	cursor: pointer;
-	cursor: hand;
-	}
-	
-.navboxselected {
-	vertical-align: middle;
-	background: #ffffcc;
-	color: #ffffff;
-	font-family: "Arial", sans-serif;
-	font-size: 14px;
-	font-weight: bold;
-	border-width: 0px 0px 1px 0px;
-	border-color: #ffffff;
-	border-style: solid;
-	padding: 5px;
-	cursor: pointer;
-	cursor: hand;
 	}
 	
 .maincontent {
@@ -223,13 +121,79 @@ a.sidenavlink {
 .header-col { font-weight: bold; }
 .center-col { text-align: center; }
 
-a.navlink, a.navlink:link, a.navlink:visited, a.navlink:active {
-	color: #FFFFFF;
-	text-decoration: none;
-	font-family: Arial, Helvetica, sans-serif;
-	font-weight: bold;
-	}
+.bordertable {
+	width: 90%;
+}
 
-a.navlink:hover {
+.bordertable, .bordertable td {
+	border: 1px solid #666666;
+	border-collapse: collapse;
+}
+
+.bordertable td {
+	padding: 2px 4px;
+}
+
+.pagination {
+	padding: 5px;
+}
+
+a.closed_bug_number { 
+	text-decoration: line-through;
+}
+
+.header_image {
+	height: 55px;
+}
+
+.header_search {
+	position: absolute;
+	top: 10px;
+	right: 0px;
+	height: 40px;
+}
+
+#tabnav {
+	height: 22px;
+	margin: 0;
+	padding-left: 6px;
+}
+
+#tabnav li {
+	margin: 0; 
+	padding: 0;
+	display: inline;
+	list-style-type: none;
+}
+	
+#tabnav a:link, #tabnav a:visited {
+	float: left;
+	font-size: 12px;
+	line-height: 14px;
+	font-weight: bold;
+	padding: 2px 5px 2px 0px;
+	margin-right: 4px;
+	/* border-left: 1px solid #000; */
+	text-decoration: none;
+	color: #fff;
+}
+	
+#tabnav a:hover {
 	text-decoration: underline;
 }
+
+.personalarea {
+	/* position: absolute;
+	top: 77px; */
+	width: 100%;
+	/* height: 50px; */
+	background: #ffc;
+	color: #000000;
+	font-size: 10px;
+	font-weight: bold;
+	border-top: 1px solid #000;
+	border-bottom: 1px solid #000;
+}
+	
+
+

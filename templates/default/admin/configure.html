@@ -1,38 +1,38 @@
-<form action="{$smarty.server.PHP_SELF}" method="post">
+<form method="post">
 <table border="0" width="100%">
 	<tr>
 		<td valign="top">
-			<b>&nbsp;{$page_title}</b>
+			<b>&nbsp;<?php echo $page_title; ?></b>
 			<hr size="1">
 			<table border="0">
 				<tr>
-					<th>Variable</th>
-					<th>Value</th>
-					<th>Information</th>
+					<th><?php echo translate("Variable"); ?></th>
+					<th><?php echo translate("Value"); ?></th>
+					<th><?php echo translate("Information"); ?></th>
 				</tr>
-				{section name=var loop=$vars}
-				<tr{if $smarty.section.var.iteration is even} class="alt"{/if}>
-					<td>{$vars[var].varname}</td>
+				<?php for ($i = 0, $count = count($vars); $i < $count; $i++) { ?>
+				<tr<?php if ($i % 2) echo ' class="alt"'; ?>>
+					<td><?php echo $vars[$i]['varname']; ?></td>
 					<td>
-						{if $vars[var].vartype eq "multi"}
-							<select name="{$vars[var].varname}">{build_select box=$vars[var].varname selected=$vars[var].varvalue}</select>
-						{elseif $vars[var].vartype eq "bool"}
-							<input type="radio" name="{$vars[var].varname}" value="1"{if $vars[var].varvalue} checked{/if}> Yes 
-							<input type="radio" name="{$vars[var].varname}" value="0"{if not $vars[var].varvalue} checked{/if}> No 
-						{else}
-							<input type="text" name="{$vars[var].varname}" value="{$vars[var].varvalue}">
-						{/if}
+						<?php if ($vars[$i]['vartype'] == "multi") { ?>
+							<select name="<?php echo $vars[$i]['varname']; ?>"><?php build_select($vars[$i]['varname'], $vars[$i]['varvalue']); ?></select>
+						<?php } elseif ($vars[$i]['vartype'] == "bool") { ?>
+							<input type="radio" name="<?php echo $vars[$i]['varname']; ?>" value="1"<?php if ($vars[$i]['varvalue']) echo ' checked'; ?>> Yes 
+							<input type="radio" name="<?php echo $vars[$i]['varname']; ?>" value="0"<?php if (!$vars[$i]['varvalue']) echo ' checked'; ?>> No 
+						<?php } else { ?>
+							<input type="text" name="<?php echo $vars[$i]['varname']; ?>" value="<?php echo $vars[$i]['varvalue']; ?>">
+						<?php } ?>
 					</td>
-					<td>{$vars[var].description}</td>
+					<td><?php echo translate($vars[$i]['description']); ?></td>
 				</tr>
-				{/section}
+				<?php } ?>
 			</table>
 		</td>
 	</tr>
 	<tr>
 		<td align="center">
-			<input type="reset" value="Reset Form">
-			<input type="submit" name="submit" value="Submit Changes">
+			<input type="reset">
+			<input type="submit" name="submit" value="<?php echo translate("Submit"); ?>">
 		</td>
 	</tr>
 </table>

@@ -50,7 +50,7 @@ $QUERY = array(
 	'bug-history' => 'select bh.*, login '.
 		'from '.TBL_BUG_HISTORY.' bh '.
 		'left join '. TBL_AUTH_USER.' on bh.created_by = user_id '.
-		'where bug_id = %s',
+		'where bug_id = %s order by bh.created_date',
 	'bug-cc-list' => 'select email '.
 		'from '.TBL_BUG_CC.' left join '. TBL_AUTH_USER.' u using(user_id), '.
 		TBL_USER_PREF.' p '.

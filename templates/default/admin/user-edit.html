@@ -1,77 +1,114 @@
-<script language="JavaScript">
+<script type="text/javascript" language="JavaScript">
 <!--
-	var hadAdmin = {$hadadmin};
-	var numAdmins = {$numadmins};
+    var hadAdmin = <?php echo $hadadmin; ?>;
+    var numAdmins = <?php echo $numadmins; ?>;
 
-	{literal}
-	function checkAdmin(slct) {
-		var adminSelected = false;
+    function checkAdmin(slct) {
+        var adminSelected = false;
 
-		if (hadAdmin && numAdmins == 1) {
-			for (current = 0; current < slct.options.length; current++ ) {
-				if (slct.options[current].selected && slct.options[current].value == 1) {
-					adminSelected = true;
-				}
-			}
-			if (!adminSelected) {
-				alert('This is the only admin user for the system.  Removing this user from the Admin group would be unwise.');
-			}
-		}
-	}
-	{/literal}
+        if (hadAdmin && numAdmins == 1) {
+            for (current = 0; current < slct.options.length; current++ ) {
+                if (slct.options[current].selected && slct.options[current].value == 1) {
+                    adminSelected = true;
+                }
+            }
+            if (!adminSelected) {
+                alert('This is the only admin user for the system.  Removing this user from the Admin group would be unwise.');
+            }
+        }
+    }
 // -->
 </script>
-<b>{$page_title}&nbsp;</b>
+<b><?php echo $page_title; ?>&nbsp;</b> 
 <hr size="1">
 <form action="user.php" method="post">
-<input type="hidden" name="user_id" value="{$user_id}">
-<input type="hidden" name="filter" value="{$filter}">
-<input type="hidden" name="use_js" value="{$smarty.request.use_js}">
-<table border='0'>
-{if $error}
-  <tr>
-		<td colspan="2" class="error">{$error}</td>
-  </tr>
-{/if}
-{if not EMAIL_IS_LOGIN}
-<tr>
-  <td align="right" valign="top">Login:</td>
-  <td><input type="text" size="20" maxlength="40" name="login" value="{$login|stripslashes}"></td>
-</tr>
-{/if}
-<tr>
-  <td align="right" valign="top">Email:</td>
-  <td><input type="text" size="20" maxlength="40" name="email" value="{$email}"></td>
-</tr>
-<tr>
-  <td align="right" valign="top">FirstName:</td>
-  <td><input type="text" size="20" maxlength="40" name="first_name" value="{$first_name|stripslashes|htmlspecialchars}"></td>
-</tr>
-<tr>
-  <td align="right" valign="top">LastName:</td>
-  <td><input type="text" size="20" maxlength="40" name="last_name" value="{$last_name|stripslashes|htmlspecialchars}"></td>
-</tr>
-<tr>
-  <td align="right" valign="top">Password:</td>
-  <td><input type="text" size="20" maxlength="40" name="password" value="{$password}"></td>
-</tr>
-<tr>
-  <td align="right" valign="top">User Groups:</td>
-  <td>
-    <select name="fusergroup[]" size="5" multiple onClick="checkAdmin(this)">
-    {build_select box=group selected=$user_groups}
-    </select>
-  </td>
-</tr>
-<tr>
-        <td align="right" valign="top">Active:</td>
-        <td><input type="checkbox" name="active" value="1" {if $active}checked{/if}></td>
-</tr>
-<tr>
-        <td align="right" valign="top">Email Notify:</td>
-        <td><input type="checkbox" name="fe_notice" value="1" {if $email_notices}checked{/if}></td>
-</tr>
-</table>
-<br>
-<input type='submit' name='submit' value='Submit'>
+    <table border='0'>
+        <?php if($error) { ?>
+        <tr>
+            <td colspan="2" class="error">
+                <?php echo $error; ?>
+            </td>
+        </tr>
+        <?php } ?><?php if(!EMAIL_IS_LOGIN) { ?>
+        <tr>
+            <td align="right" valign="top">
+                <?php echo translate("Login"); ?>:
+            </td>
+            <td>
+                <input type="text" size="20" maxlength="40" name="login" value="<?php echo stripslashes(htmlspecialchars($login)); ?>">
+            </td>
+        </tr>
+        <?php } ?>
+        <tr>
+            <td align="right" valign="top">
+                <?php echo translate("Email"); ?>:
+            </td>
+            <td>
+                <input type="text" size="20" maxlength="40" name="email" value="<?php echo $email; ?>">
+            </td>
+        </tr>
+        <tr>
+            <td align="right" valign="top">
+                <?php echo translate("First Name"); ?>:
+            </td>
+            <td>
+                <input type="text" size="20" maxlength="40" name="first_name" value="<?php echo stripslashes(htmlspecialchars($first_name)); ?>">
+            </td>
+        </tr>
+        <tr>
+            <td align="right" valign="top">
+                <?php echo translate("Last Name"); ?>:
+            </td>
+            <td>
+                <input type="text" size="20" maxlength="40" name="last_name" value="<?php echo stripslashes(htmlspecialchars($last_name)); ?>">
+            </td>
+        </tr>
+        <tr>
+            <td align="right" valign="top">
+                <?php echo translate("Password"); ?>:
+            </td>
+            <td>
+                <input type="text" size="20" maxlength="40" name="password" value="<?php echo $password; ?>">
+            </td>
+        </tr>
+        <tr>
+            <td align="right" valign="top">
+                <?php echo translate("User Groups"); ?>:
+            </td>
+            <td>
+                <select name="fusergroup[]" size="5" multiple onclick="checkAdmin(this)">
+                    <?php build_select('group', $user_groups); ?>
+                </select> 
+            </td>
+        </tr>
+        <tr>
+            <td align="right" valign="top">
+                <?php echo translate("Active"); ?>:
+            </td>
+            <td>
+                <input type="checkbox" name="active" value="1" <?php echo $active ? 'checked' : ''; ?>>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" valign="top">
+                <?php echo translate("Email Notify"); ?>:
+            </td>
+            <td>
+                <input type="checkbox" name="fe_notice" value="1" <?php echo $email_notices ? 'checked' : ''; ?>>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" valign="top">
+                &nbsp;
+            </td>
+            <td>
+                <input type='submit' name='submit' value='<?php echo translate("Submit"); ?>'>
+                <input type="hidden" name="user_id" value="<?php echo $user_id; ?>"> 
+                <input type="hidden" name="filter" value="<?php echo $_REQUEST['filter']; ?>"> 
+                <input type="hidden" name="use_js" value="<?php echo $_REQUEST['use_js']; ?>"> 
+                <input type="hidden" name="op" value="save"> 
+            </td>
+        </tr>
+    </table>
 </form>
+

@@ -59,23 +59,6 @@ textarea {
 	font-size: 12px;
 	}
 
-.navfont {
-  font-family: "Verdana","Arial","Helvetica","MS Sans Serif","Sans-Serif";
-  font-size: 10px;
-	}
-
-.login-box {
-	vertical-align: text-bottom;
-	font-size: 10px;
-	display: none;
-	}
-
-input[type="text"].login-box {
-	padding-top: 0.1em;
-	padding-left: 0.2em;
-	padding-right: 0.2em;
-	}
-
 .banner {
 	text-align: center;
 	font-weight: bold;
@@ -97,11 +80,6 @@ input[type="text"].login-box {
 	padding-bottom: 0.1em;
 	}
 
-a.sidenavlink {
-	color: #000000;
-	text-decoration: none;
-	}
-
 .nav {
 	vertical-align: middle;
 	background: #9999ff;
@@ -112,84 +90,11 @@ a.sidenavlink {
 	display: none;
 	}
 
-.navinput {
-	vertical-align: middle;
-	background: #ffffff;
-	color: #00000;
-	font-family: "Arial", sans-serif;
-	font-size: 12px;
-	}
-
-.sidenav {
-	vertical-align: top;
-	background: #9999ff;
-	color: #ffffff;
-	font-family: "Verdana", "Tahoma", "Helvetica", sans-serif;
-	font-size: 14px;
-	font-weight: bold;
-	}
-
-.bottomnav {
-	vertical-align: middle;
-	background: #ffffcc;
-	color: #000000;
-	font-family: "Arial", sans-serif;
-	font-size: 10px;
-	font-weight: bold;
-	}
-
 .bottomnavinput {
 	vertical-align: middle;
 	color: #00000;
 	font-family: "Arial", sans-serif;
 	font-size: 10px;
-	}
-
-.topnavbox {
-	vertical-align: middle;
-	background: #9999ff;
-	color: #ffffff;
-	font-family: "Arial", sans-serif;
-	font-size: 14px;
-	font-weight: bold;
-	border-width: 1px 0px 1px 0px;
-	border-color: #ffffff;
-	border-style: solid;
-	padding: 5px;
-	cursor: pointer;
-	cursor: hand;
-	display: none;
-	}
-
-.navbox {
-	vertical-align: middle;
-	background: #9999ff;
-	color: #ffffff;
-	font-family: "Arial", sans-serif;
-	font-size: 14px;
-	font-weight: bold;
-	border-width: 0px 0px 1px 0px;
-	border-color: #ffffff;
-	border-style: solid;
-	padding: 5px;
-	cursor: pointer;
-	cursor: hand;
-	display: none;
-	}
-
-.navboxselected {
-	vertical-align: middle;
-	background: #ffffcc;
-	color: #ffffff;
-	font-family: "Arial", sans-serif;
-	font-size: 14px;
-	font-weight: bold;
-	border-width: 0px 0px 1px 0px;
-	border-color: #ffffff;
-	border-style: solid;
-	padding: 5px;
-	cursor: pointer;
-	cursor: hand;
 	}
 
 .maincontent {
@@ -222,6 +127,6 @@ a.sidenavlink {
 	font-weight: bold;
 }
 
-.bugdisplaylinks {
+.bugdisplaylinks, .noprint {
 	display: none;
 }
