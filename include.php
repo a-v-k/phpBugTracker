@@ -125,15 +125,15 @@ class uauth extends Auth {
 		if (ENCRYPTPASS) {
 			$password = md5($password);
 		}
-		$u = $q->grab("select * from User where Email = '$username' and Password = '$password' and UserLevel > 0");
+		$u = $q->grab("select * from user where email = '$username' and password = '$password' and user_level > 0");
 		if (!$q->num_rows()) {
 			return 'nobody';
 		} else {
-			$this->auth['fname'] = $u['FirstName'];
-			$this->auth['lname'] = $u['LastName'];
-			$this->auth['email'] = $u['Email'];
-			$this->auth['perm'] = $select['authlevels'][$u['UserLevel']];
-			return $u['UserID'];
+			$this->auth['fname'] = $u['first_name'];
+			$this->auth['lname'] = $u['last_name'];
+			$this->auth['email'] = $u['email'];
+			$this->auth['perm'] = $select['authlevels'][$u['user_level']];
+			return $u['user_id'];
 		}
 	}
 }
@@ -165,9 +165,9 @@ class templateclass extends Template {
 		$this->set_block('wrap', 'adminnavblock', 'anblock');
 		if ($u && $u != 'nobody') {
 			list($owner_open, $owner_closed) = 
-				$q->grab("select sum(if(s.Name in ('Unconfirmed','New','Assigned','Reopened'),1,0)) as Open, sum(if(s.Name not in ('Unconfirmed','New','Assigned','Reopened'),1,0)) as Closed from Bug b left join Status s on Status = StatusID where AssignedTo = $u");
+				$q->grab("select sum(if(status_name in ('Unconfirmed','New','Assigned','Reopened'),1,0)), sum(if(status_name not in ('Unconfirmed','New','Assigned','Reopened'),1,0)) from bug b left join status s using(status_id) where assigned_to = $u");
 			list($reporter_open, $reporter_closed) = 
-					$q->grab("select sum(if(s.Name in ('Unconfirmed','New','Assigned','Reopened'),1,0)) as Open, sum(if(s.Name not in ('Unconfirmed','New','Assigned','Reopened'),1,0)) as Closed from Bug b left join Status s on Status = StatusID where CreatedBy = $u");
+					$q->grab("select sum(if(status_name in ('Unconfirmed','New','Assigned','Reopened'),1,0)), sum(if(status_name not in ('Unconfirmed','New','Assigned','Reopened'),1,0)) from bug b left join status s using(status_id) where created_by = $u");
 			$this->set_var(array(
 				'loggedinas' => $auth->auth['email'],
 				'liblock' => '',
@@ -225,62 +225,51 @@ $select['priority'] = array(
 
 ///
 /// Build a select box with the item matching $value selected
-function build_select($box, $value='',$project=0) {
-	#static $select;
+function build_select($box, $value = '', $project = 0) {
 	global $q, $select;
-
-	//include_once "select.php";
+	
+	$text = '';
+	$queries = array(
+		'severity' => "select {$box}_id, {$box}_name from $box where sort_order > 0 order by sort_order",
+		'status' => "select {$box}_id, {$box}_name from $box where sort_order > 0 order by sort_order",
+		'resolution' => "select {$box}_id, {$box}_name from $box where sort_order > 0 order by sort_order",
+		'project' => "select {$box}_id, {$box}_name from $box where active = 1 order by {$box}_name",
+		'component' => "select {$box}_id, {$box}_name from $box where project_id = $project order by {$box}_name",
+		'version' => "select {$box}_id, {$box}_name from $box where project_id = $project order by {$box}_name"
+		);
+		
 	switch($box) {
-		case 'Severity' :
-		case 'Status' :
-		case 'Resolution' :
-			$q->query("Select {$box}ID, Name from $box where SortOrder order by SortOrder");
+		case 'severity' :
+		case 'status' :
+		case 'resolution' :
+		case 'project' :
+		case 'component' :
+		case 'version' :
+			$q->query($queries[$box]);
 			while ($row = $q->grab()) {
-				if ($value == $row[$box.'ID'] and $value != '') $sel = ' selected';
+				if ($value == $row[$box.'_id'] and $value != '') $sel = ' selected';
 				else $sel = '';
-				$text .= '<option value="'.$row[$box.'ID']."\"$sel>{$row['Name']}</option>";
+				$text .= '<option value="'.
+					$row[$box.'_id']."\"$sel>".$row[$box.'_name']."</option>";
 			}
 			break;
-		case 'Project' :
-			$q->query("Select {$box}ID, Name from $box where Active order by Name");
-			while ($row = $q->grab()) {
-				if ($value == $row[$box.'ID'] and $value != '') $sel = ' selected';
-				else $sel = '';
-				$text .= '<option value="'.$row[$box.'ID']."\"$sel>{$row['Name']}</option>";
-			}
-			break;
-		case 'Component' :
-			$q->query("Select {$box}ID, Name from $box where ProjectID = $project order by Name");
-			while ($row = $q->grab()) {
-				if ($value == $row[$box.'ID'] and $value != '') $sel = ' selected';
-				else $sel = '';
-				$text .= '<option value="'.$row[$box.'ID']."\"$sel>{$row['Name']}</option>";
-			}
-			break;
-		case 'OS' :
-			$q->query("Select {$box}ID, Name, Regex from $box order by SortOrder");
+		case 'os' :
+			$q->query("select {$box}_id, {$box}_name, regex from $box order by sort_order");
 			while ($row = $q->grab()) {
 				if ($value == '' and $row['Regex'] and 
 					preg_match($row['Regex'],$GLOBALS['HTTP_USER_AGENT'])) $sel = ' selected';
 				elseif ($value == $row[$box.'ID']) $sel = ' selected';
 				else $sel = '';
-				$text .= '<option value="'.$row[$box.'ID']."\"$sel>{$row['Name']}</option>";
-			}
-			break;
-		case 'Version' :
-			$q->query("Select {$box}ID, Name from $box where ProjectID = $project order by Name");
-			while ($row = $q->grab()) {
-				if ($value == $row[$box.'ID']) $sel = ' selected';
-				else $sel = '';
-				$text .= '<option value="'.$row[$box.'ID']."\"$sel>{$row['Name']}</option>";
+				$text .= '<option value="'.
+					$row[$box.'_id']."\"$sel>".$row[$box.'_name']."</option>";
 			}
 			break;
 		case 'owner' :
-			$q->query("Select UserID, Email from User where UserLevel > 1 order by Email");
+			$q->query("Select user_id, email from user where user_level > 1 order by email");
 			while ($row = $q->grab()) {
-				if ($value == $row['UserID']) $sel = ' selected';
+				if ($value == $row['user_id']) $sel = ' selected';
 				else $sel = '';
-				$text .= '<option value="'.$row['UserID']."\"$sel>{$row['Email']}</option>";
+				$text .= "<option value=\"{$row['user_id']}\"$sel>{$row['email']}</option>";
 			}
 			break;
 		default :
@@ -422,7 +411,7 @@ if (!defined('NO_AUTH')) {
 // Check to see if the user is trying to login
 if (isset($HTTP_POST_VARS['login'])) {
 	if (isset($HTTP_POST_VARS['sendpass'])) {
-		list($email, $password) = $q->grab("select Email, Password from User where Email = '$username' and UserLevel > 0");
+		list($email, $password) = $q->grab("select email, password from user where email = '$username' and user_level > 0");
 		if (!$q->num_rows()) { 
 			$t->set_var(array(
 				'loginerrorcolor' => '#ff0000',
@@ -432,7 +421,7 @@ if (isset($HTTP_POST_VARS['login'])) {
 			if (ENCRYPTPASS) {
 				$password = genpassword(10);
 				$mpassword = md5($password);
-				$q->query("update User set Password = '$mpassword' where Email = '$username'");
+				$q->query("update user set password = '$mpassword' where email = '$username'");
 			}
 			mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
 				$password),	'From: '.ADMINEMAIL);

@@ -83,12 +83,12 @@ function show_query() {
 	
 	$t->set_var(array(
 		'js' => $js,
-		'status' => build_select('Status',$q->grab_field("select status_id from status where status_name = 'New'")),
-		'resolution' => build_select('Resolution',$resolution),
-		'os' => build_select('OS',-1), // Prevent the OS regex selection
+		'status' => build_select('status',$q->grab_field("select status_id from status where status_name = 'New'")),
+		'resolution' => build_select('resolution',$resolution),
+		'os' => build_select('os',-1), // Prevent the OS regex selection
 		'priority' => build_select('priority',$priority),
-		'severity' => build_select('Severity',$severity),
-		'projects' => build_select('Project'),
+		'severity' => build_select('severity',$severity),
+		'projects' => build_select('project'),
 		'TITLE' => $TITLE['bugquery']
 		));
 			
@@ -180,7 +180,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'first' => $llimit+1,
 		'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
 		'total' => $nr,
-		'project' => build_select('Project'),
+		'project' => build_select('project'),
 		'TITLE' => $TITLE['buglist']));
 	
 	$q->query("select bug_id, title, reporter.email as reporter, owner.email as owner, severity_name as severity, bug.created_date, status_name as status, priority_id, version_name as version, component_name as component, resolution_name as resolution from bug, resolution, severity, status, version, component left join user owner on bug.assigned_to = owner.user_id left join user reporter on bug.created_by = reporter.user_id where bug.resolution_id = resolution.resolution_id and bug.severity_id = severity.severity_id and bug.status_id = status.status_id and bug.version_id = version.version_id and bug.component_id = component.component_id ". ($querystring != '' ? "and $querystring " : ''). "order by $order $sort limit $llimit, $selrange");
