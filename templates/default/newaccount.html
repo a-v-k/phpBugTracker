@@ -1,11 +1,20 @@
 <h2>Create a new account</h2>
 <form action="{me}" method="post">
+<input type="hidden" name="createaccount" value="1">
 <table border="0">
 	<tr>
 		<td align="center" colspan="2">
 			<font color="#ff0000">{error}</font>
 		</td>
 	</tr>
+	<!-- BEGIN loginentryarea -->
+	<tr>
+		<td align="right">Login: </td>
+		<td>
+			<input type="text" name="login" value="{login}">
+		</td>
+	</tr>
+	<!-- END loginentryarea -->
 	<tr>
 		<td align="right">Email: </td>
 		<td><input type="text" name="email" value="{email}"></td>

@@ -20,15 +20,18 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
+// $Id: newaccount.php,v 1.13 2001/08/28 04:15:15 bcurtis Exp $
 
 include 'include.php'; 
 
 function do_form() {
-	global $q, $t, $email, $firstname, $lastname, $STRING, $now, $u;
+	global $q, $t, $login, $email, $firstname, $lastname, $STRING, $now, $u;
 	
-	if (!$email or !valid_email($email)) 
+	if (!EMAIL_IS_LOGIN && !$login = trim($login)) 
+		$error = $STRING['loginused'];
+	elseif (!$email or !valid_email($email)) 
 		$error = $STRING['giveemail'];
-	elseif ($q->grab_field("select user_id from auth_user where email = '$email'"))
+	elseif ($q->grab_field("select user_id from auth_user where email = '$email' or login = '$login'"))
 		$error = $STRING['loginused'];
 	if ($error) { 
 		show_form($error);
@@ -42,28 +45,40 @@ function do_form() {
 	} else {
 		$mpassword = $password;
 	}
-	$q->query("insert into auth_user (user_id, first_name, last_name, email, password, user_level, created_date, last_modified_date) values (".$q->nextid('user').", '$firstname', '$lastname', '$email', '$mpassword', 1, $now, $now)");
+	if (EMAIL_IS_LOGIN) $login = $email;
+	$user_id = $q->nextid('user');
+	$q->query("insert into auth_user (user_id, login, first_name, last_name, email, password, active, created_date, last_modified_date) values ($user_id, '$login', '$firstname', '$lastname', '$email', '$mpassword', 1, $now, $now)");
+	$q->query("insert into user_group (user_id, group_id) select $user_id, group_id from auth_group where group_name = 'user'"); 
 	mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
 		$password),	'From: '.ADMINEMAIL);
 	$t->set_file('content','newaccountsuccess.html');
 }
 
 function show_form($error = '') {
-	global $q, $t, $email, $firstname, $lastname;
+	global $q, $t, $login, $email, $firstname, $lastname;
 	
 	$t->set_file('content','newaccount.html');
+	$t->set_block('content', 'loginentryarea', 'loginarea');
 	$t->set_var(array(
 		'error' => $error,
+		'login' => stripslashes($login),
 		'email' => $email,
-		'firstname' => $firstname,
-		'lastname' => $lastname
+		'firstname' => stripslashes($firstname),
+		'lastname' => stripslashes($lastname)
 		));
+		
+	// Show the login field if necessary
+	if (EMAIL_IS_LOGIN) {
+		$t->set_var('loginarea', '');
+	} else {
+		$t->parse('loginarea', 'loginentryarea', true);
+	}
 }
 
 $t->set_file('wrap','wrap.html');
 $t->set_var('TITLE',$TITLE['newaccount']);
 
-if ($email) do_form();
+if ($_pv['createaccount']) do_form();
 else show_form();
 
 $t->pparse('main',array('content','wrap','main'));
