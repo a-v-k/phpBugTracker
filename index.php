@@ -92,17 +92,6 @@ function build_image($restricted_projects) {
 		"<img align=\"right\" src=\"jpgimages/".GenImgName()."\" ISMAP USEMAP=\"#myimagemap\" border=0>";
 }
 
-// Check to see if we have bugs from projects that shouldn't be visible to the user
-$restricted_projects = '0';
-if (!$perm->have_perm('Admin')) {
-	$matching_projects = delimit_list(',', 
-		$q->grab_field_set("select project_id from ".TBL_PROJECT_GROUP.
-			" where group_id not in (".delimit_list(',', $auth->auth['group_ids']).")"));
-	if ($matching_projects) {
-		$restricted_projects .= ",$matching_projects";
-	}
-}
-
 // Show the overall bug stats
 if (USE_JPGRAPH) {
 	$t->set_var('sblock', build_image($restricted_projects));
