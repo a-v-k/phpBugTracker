@@ -20,9 +20,37 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.78 2002/02/28 17:31:45 bcurtis Exp $
+// $Id: bug.php,v 1.79 2002/02/28 17:45:53 bcurtis Exp $
 
 include 'include.php';
+
+///
+/// View the votes for a bug
+function vote_view($bug_id) {
+	global $u, $q, $t, $STRING;
+	
+	$t->set_file('content', 'bugvotes.html');
+	$t->set_block('content', 'row', 'rows');
+	
+	$q->query('select login, v.created_date from '.TBL_AUTH_USER.' u, '.
+		TBL_BUG_VOTE." v where u.user_id = v.user_id and bug_id = $bug_id".
+		' order by v.created_date');
+	if (!$q->num_rows()) {
+		$t->set_var('rows', "<tr><td colspan=\"2\" align=\"center\">{$STRING['no_votes']}</td></tr>");
+	} else {
+		$i = 0;
+		while (list($login, $date) = $q->grab()) {
+			$t->set_var(array(
+      	'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
+				'trclass' => $i % 2 ? '' : 'alt',
+				'login' => $login,
+				'date' => date(DATE_FORMAT.' '.TIME_FORMAT, $date)
+			));
+			$t->parse('rows', 'row', true);
+		}
+	}
+	$t->set_var('bugid', $bug_id);
+}
 
 ///
 /// Add a vote to a bug to (possibly) promote it
@@ -858,6 +886,7 @@ if ($op) {
     case 'do' : do_form($_pv['bugid']); break;
     case 'print' : show_bug_printable($_gv['bugid']); break;
     case 'vote' : vote_bug($_gv['bugid']); break;
+    case 'viewvotes' : vote_view($_gv['bugid']); break;
   }
 } else header("Location: query.php");
 
