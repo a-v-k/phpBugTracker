@@ -24,6 +24,17 @@
     <abstract>
       <para>&phpbt; is a web-based bug reporting and tracking system.  It helps development teams to manage the testing and debugging segments of the development cycle.</para>
     </abstract>
+    <!--<mediaobject>
+      <imageobject>
+	<imagedata fileref="images/logo.jpg" format="JPG" align="left">
+      </imageobject>
+      <imageobject>
+	<imagedata fileref="images/logo.eps" format="EPS" align="left">
+      </imageobject>
+      <textobject>
+	<phrase>&phpbt; logo</phrase>
+      </textobject>
+    </mediaobject>-->
   </bookinfo>
 	
   <chapter id="userguide">
@@ -32,7 +43,7 @@
       <para>Currently all interactions with &phpbt; are done via the web interface.  Users can submit bugs, communicate with developers and testers about bugs, and search through the bug database.</para>
     </abstract>
 		
-		&primer;
+    &primer;
 		
   </chapter>
 
