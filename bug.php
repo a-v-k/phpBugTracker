@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.110 2002/06/14 15:26:05 firma Exp $
+// $Id: bug.php,v 1.111 2002/06/17 15:08:56 firma Exp $
 
 include 'include.php';
 
@@ -435,8 +435,7 @@ function update_bug($bugid = 0) {
 	    "priority = $priority, status_id = $status_id, ".
 	    "database_id = $database_id, to_be_closed_in_version_id = $to_be_closed_in_version_id, ".
 	    'closed_in_version_id = '.$closed_in_version_id.', '.
-	    // 'site_id ='.$site_id.', '.
-	    // -- uncomment this when bugdisplay template ready
+	    'site_id ='.$site_id.', '.
 	    "resolution_id = $resolution_id, assigned_to = $assigned_to, ".
 	    "project_id = $project_id, version_id = $version_id, ".
 	    "component_id = $component_id, os_id = $os_id, last_modified_by = $u, ".

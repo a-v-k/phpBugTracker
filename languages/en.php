@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.25 2002/06/17 13:48:19 firma Exp $
+// $Id: en.php,v 1.26 2002/06/17 15:08:56 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'us-ascii',
@@ -151,7 +151,55 @@ $STRING = array(
 		'OS' => 'OS',
 		'AddAnother' => 'Add another',
 		'Submit' => 'Submit'
-        )
+        ),
+	'BUGDISPLAY' => array(
+		'Reporter' => 'Reporter',
+		'ReturnTo' => 'Return to',
+		'BugList' => 'bug list',
+		'Project' => 'Project',
+		'Created' => 'Created',
+		'Version' => 'Version',
+		'ClosedInVersion' => 'Closed in Version',
+		'ToBeClosedInVersion' => 'To be Closed in Version',
+		'AssignedTo' => 'Assigned To',
+		'AssignedToNobody' => 'Nobody',
+		'BugDependency' => 'Dependencies',
+		'AddDependency' => 'Add Dependency',
+		'RemoveDependency' => 'Remove Dependency',
+		'Summary' => 'Summary',
+		'Status' => 'Status',
+		'Description' => 'Description',
+		'Severity' => 'Severity',
+		'Priority' => 'Priority',
+		'Component' => 'Component',
+		'Resolution' => 'Resolution',
+		'ResolutionNone' => 'None',
+		'AddCC' => 'Add CC',
+		'RemoveSelectedCC' => 'Remove selected CCs',
+		'Addiditional Comments' => 'Additional Comments',
+		'Attachments' => 'Attachments',
+		'CreateAttachment' => 'Create Attachment',
+		'SureDeleteAttachment' => 'Are you sure you want to delete this attachment?',
+		'Name' => 'Name',
+		'Size' => 'Size',
+		'Type' => 'Type',
+		'Created' => 'Created',
+		'VoteForThisBug' => 'Vote for this bug',
+		'ViewVotes' => 'View votes',
+		'ForThisBug' => 'for this bug',
+		'ViewBugActivity' => 'View bug activity',
+		'PrintableView' => 'Printable View',
+		'NoAttachments' => 'No attachments',
+		'Comments' => 'Comments',
+		'PostedBy' => 'Posted By',
+		'Date' => 'Date',
+		'DateOn' => 'On',
+		'Submit' => 'Submit',
+		'Site' => 'Reported on Site',
+		'Database' => 'Database',
+		'OS' => 'OS',
+	)
+
 );
 	
 // Page titles
@@ -206,3 +254,6 @@ $TITLE = array(
 );
 
 ?>
+
+
+

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz.php,v 1.14 2002/06/17 13:48:18 firma Exp $
+// $Id: cz.php,v 1.15 2002/06/17 15:08:56 firma Exp $
 
 $STRING = array(
     'lang_charset' => 'Windows-1250',
@@ -145,12 +145,59 @@ $STRING = array(
         'Description' => 'Popis',
         'Severity' => 'Dùležitost',
         'Priority' => 'Priorita',
-        'Component' => 'Komponent',
+        'Component' => 'Komponenta',
         'Site' => 'Prostøedí',
 	'Database' => 'Databáze',
         'OS' => 'Operaèní systém',
         'AddAnother' => 'Pøidat další',
         'Submit' => 'Pøidat'
+    ),
+    'BUGDISPLAY' => array(
+	'Reporter' => 'Reportér',
+	'ReturnTo' => 'Návrat na',
+	'BugList' => 'seznam bugù',
+        'Project' => 'Projekt',
+	'Created' => 'Vytvoøen',
+        'Version' => 'Verze',
+	'ClosedInVersion' => 'Uzavøeno ve verzi',
+	'ToBeClosedInVersion' => 'K uzavøení ve verzi',
+	'AssignedTo' => 'Pøiøazeno',
+	'AssignedToNobody' => 'Nikdo',
+	'BugDependency' => 'Závislosti',
+	'AddDependency' => 'Pøidat závislost',
+	'RemoveDependency' => 'Odebrat závislost',
+        'Summary' => 'Shrnutí',
+	'Status' => 'Status',
+        'Description' => 'Popis',
+        'Severity' => 'Dùležitost',
+        'Priority' => 'Priorita',
+        'Component' => 'Komponenta',
+	'Resolution' => 'Rozhodnutí',
+	'ResolutionNone' => 'Zatím není',
+	'AddCC' => 'Pøidat kopii',
+	'RemoveSelectedCC' => 'Odebrat vybranou kopii',
+	'Addiditional Comments' => 'Další komentáøe',
+	'Attachments' => 'Pøílohy',
+	'CreateAttachment' => 'Vytvoøit pøílohu',
+	'SureDeleteAttachment' => 'Opravdu chcete odtranit tuto pøílohu?',
+	'Name' => 'Název',
+	'Size' => 'Velikost',
+	'Type' => 'Typ',
+	'Created' => 'Vytvoøeno',
+	'VoteForThisBug' => 'Hlasovat pro tento BUG',
+	'ViewVotes' => 'Zobrazit volby',
+	'ForThisBug' => 'pro tento BUG',
+	'ViewBugActivity' => 'Zobrazit aktivitu',
+	'PrintableView' => 'Tisknutelné zobrazení',
+	'NoAttachments' => 'Nemá pøílohy',
+	'Comments' => 'Komentáøe',
+	'PostedBy' => 'Zaslal',
+	'Date' => 'Dne',
+	'DateOn' => '&nbsp;', // This is correct
+	'Submit' => 'Odeslat zmíny',
+        'Site' => 'Prostøedí',
+	'Database' => 'Databáze',
+        'OS' => 'Operaèní systém',
     )
 );
 

@@ -1,4 +1,4 @@
-<script language="JavaScript">
+<script type="text/JavaScript">
 <!-- 
 	versions = new Array();
 	closedversions = new Array();
@@ -48,262 +48,185 @@
 //-->
 </script>
 <form action="bug.php" method="post">
-<input type="hidden" name="op" value="update">
-<input type="hidden" name="bugid" value="{$bug_id}">
-<input type="hidden" name="projectid" value="{$project_id}">
-<input type="hidden" name="last_modified_date" value="{$last_modified_date}">
-<input type="hidden" name="pos" value="{$smarty.request.pos}">
-<table border="0" width="100%">
+    <input type="hidden" name="op" value="update">
+    <input type="hidden" name="bugid" value="{$bug_id}">
+    <input type="hidden" name="projectid" value="{$project_id}">
+    <input type="hidden" name="last_modified_date" value="{$last_modified_date}">
+    <input type="hidden" name="pos" value="{$smarty.request.pos}">
+    <table border="0" width="100%">
 	<tr>
-		<td>Bug <b>#{$bug_id}</b> - Return to <a href="query.php">bug list</a></td>
+	    <td>Bug <b>#{$bug_id}</b> - {$STRING.BUGDISPLAY.ReturnTo} <a href="query.php">{$STRING.BUGDISPLAY.BugList}</a></td>
 		<td align="right">
-			{if $prevbug}
-				<b><a href="bug.php?op=show&bugid={$prevbug}&pos={$prevpos}">{$STRING.previous_bug}</a></b>
-			{/if}
-			{if $prevbug and $nextbug}
-				|
-			{/if}
-			{if $nextbug}
-				<b><a href="bug.php?op=show&bugid={$nextbug}&pos={$nextpos}">{$STRING.next_bug}</a></b>
-			{/if}
-		</td>
+{if $prevbug}
+		    <b><a href="bug.php?op=show&bugid={$prevbug}&pos={$prevpos}">{$STRING.previous_bug}</a></b>
+{/if}
+{if $prevbug and $nextbug}
+		    |
+{/if}
+{if $nextbug}
+		    <b><a href="bug.php?op=show&bugid={$nextbug}&pos={$nextpos}">{$STRING.next_bug}</a></b>
+{/if}
+	    </td>
 	</tr>
-	{if $error.status}
-		<tr><td class="error">{$error.status}</td></tr>
-	{/if}
-</table>
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
+{if $error.status}
+	<tr><td class="error">{$error.status}</td></tr>
+{/if}
+    </table>
+    <table border="0" width="100%" cellspacing="0" cellpadding="2">
 	<tr>
-		<td>Reporter:</td>
-		<td><b>{$reporter|maskemail}</b></td>
-		<td>Created:</td>
-		<td><b>{$created_date|date:DATE_FORMAT}</b></td>
+	    <td>{$STRING.BUGDISPLAY.Reporter}:</td>
+	    <td><b>{$reporter|maskemail}</b></td>
+	    <td>{$STRING.BUGDISPLAY.Created}:</td>
+	    <td><b>{$created_date|date:DATE_FORMAT}</b></td>
+	</tr><tr>
+	    <td>{$STRING.BUGDISPLAY.Project}:</td>
+	    <td><select name="project_id" onChange="updateMenus(this.form)">{build_select box=project selected=$project_id}</select></td>
+	    <td>{$STRING.BUGDISPLAY.Priority}:</td>
+	    <td><select name="priority">{build_select box=priority selected=$priority}</select></td>
+	</tr><tr>
+	    <td>{$STRING.BUGDISPLAY.Component}:</td>
+	    <td><select name="component_id">{build_select box=component selected=$component_id project=$project_id}</select></td>
+	    <td>{$STRING.BUGDISPLAY.Severity}:</td>
+	    <td><select name="severity_id">{build_select box=severity selected=$severity_id}</select></td>
+	</tr><tr>
+	    <td>{$STRING.BUGDISPLAY.Version}:</td>
+	    <td><select name="version_id">{build_select box=version selected=$version_id project=$project_id}</select></td>
+	    <td>{$STRING.BUGDISPLAY.OS}:</td>
+	    <td><select name="os_id">{build_select box=os selected=$os_id}</select></td>
+	</tr><tr>
+	    <td>{$STRING.BUGDISPLAY.ToBeClosedInVersion}</td>
+	    <td><select name="to_be_closed_in_version_id">
+		    <option value="0">Choose One</option>
+		    {build_select box=version selected=$to_be_closed_in_version_id project=$project_id}
+		</select></td>
+	    <td>{$STRING.BUGDISPLAY.Database}:</td>
+	    <td><select name="database_id">{build_select box=database selected=$database_id}</select></td>
+	</tr><tr>
+	    <td>{$STRING.BUGDISPLAY.ClosedInVersion}</td>
+	    <td><select name="closed_in_version_id">
+		    <option value="0">Choose One</option>
+		    {build_select box=version selected=$closed_in_version_id project=$project_id}
+		</select></td>
+	    <td>{$STRING.BUGDISPLAY.Site}</td>
+	    <td><select name="site_id">{build_select box=site selected=$site_id}</select></td>
+	</tr><tr>
+	    <td>{$STRING.BUGDISPLAY.Summary}:</td>
+	    <td><input type="text" size="30" maxlength="100" name="title" value="{$title|stripslashes|htmlspecialchars}"></td>
+	    <td>{$STRING.BUGDISPLAY.Status}:</td>
+	    <td><select name="status_id">{build_select box=status selected=$status_id}</select></td>
+	</tr><tr>
+	    <td>{if $url}<a href="{$url}">URL</a>{else}URL{/if}:</td>
+	    <td><input type="text" size="30" maxlength="255" name="url" value="{$url}"></td>
+	    <td>{$STRING.BUGDISPLAY.Resolution}:</td>
+	    <td><select name="resolution_id"><option value="0">{$STRING.BUGDISPLAY.ResolutionNone}</option>{build_select box=resolution selected=$resolution_id}</select></td>
+	</tr><tr>
+	    <td>{$STRING.BUGDISPLAY.AssignedTo}:</td>
+	    <td><select name="assigned_to"><option value="0">{$STRING.BUGDISPLAY.AssignedToNobody}</option>{build_select box=owner selected=$assigned_to}</select></td>
+	    <td>{$STRING.BUGDISPLAY.AddCC}:</td>
+	    <td><input type="text" name="add_cc"></td>
+	</tr><tr>
+	    <td colspan="2" valign="top">
+{if !empty($error.add_dep)}<div class="error">{$error.add_dep}</div>{/if}
+		{$STRING.BUGDISPLAY.BugDependency}: {$bug_dependencies}<br>
+		{$STRING.BUGDISPLAY.AddDependency}: <input type="text" name="add_dependency" size="5"><br>
+		{$STRING.BUGDISPLAY.RemoveDependency}: <input type="text" name="del_dependency" size="5"><br><br></td>
+	    <td colspan="2" valign="top">
+		{$STRING.BUGDISPLAY.RemoveSelectedCC}:<br>
+		<select name="remove_cc[]" size="5" style="width: 15em" multiple>{build_select box=bug_cc selected=$bug_id}</select></td>
 	</tr>
+    </table>
+    <table border="0" cellpadding="2" cellspacing="0" width="100%">
 	<tr>
-		<td>
-			Project:
-		</td>
-		<td>
-			<select name="project_id" onChange="updateMenus(this.form)">{build_select box=project selected=$project_id}</select>
-		</td>
-		<td>
-			Priority: 
-		</td>
-		<td>
-			<select name="priority">{build_select box=priority selected=$priority}</select>
-		</td>
+	    <td valign="top">{$STRING.BUGDISPLAY.AdditionalComments}:<br><br>
+		<textarea name="comments" rows="6" cols="55" wrap="virtual"></textarea>
+		<br><br>
+		<div align="right">
+{if $smarty.session.uid}
+		    <input type="submit" value="Submit">
+{else}
+			{$STRING.logintomodify}
+{/if}
+		</div></td>
+	</tr><tr>
+	    <td><table border="0" cellpadding="0">
+		    <tr>
+			<td colspan="2">{$STRING.BUGDISPLAY.Attachments}:</td>
+			<td colspan="3" align="right"><a href="attachment.php?bugid={$bug_id}" onClick="return popupAtt({$bug_id})">Create attachment</a></td>
+		    </tr><tr>
+			<td colspan="5" height="2" bgcolor="#ffffff"><spacer type="block" height="2" width="2"></td>
+		    </tr><tr>
+			<td width="250" bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.Name}</b></td>
+			<td width="60" bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.Size}</b></a></td>
+			<td width="150" bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.Type}</b></a></td>
+			<td width="80" bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.Created}</b></a></td>
+			<td width="80" bgcolor="#cccccc" align="center">&nbsp;</a></td>
+		    </tr><tr>
+			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
+			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
+			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
+			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
+			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
+		    </tr>
+{section name=attachment loop=$attachments}
+		    <tr title="{$attachments[attachment].description|stripslashes}"{if $smarty.section.attachment.iteration is even} class="alt" bgcolor="#dddddd"{/if}>
+			<td>{$attachments[attachment].file_name|stripslashes}</td>
+			<td align="right">
+    {if $attachments[attachment].file_size > 1024}
+	{math equation="(round(x) / 1024 * 100) / 100" x=$attachments[attachment].file_size assign=file_size}
+	{$file_size|number_format}k
+    {else}
+	{$attachments[attachment].file_size|number_format}b
+    {/if}
+			</td>
+			<td align="center">{$attachments[attachment].mime_type}</td>
+			<td align="center">{$attachments[attachment].created_date|date:DATE_FORMAT}</td>
+			<td align="center"><a href='attachment.php?attachid={$attachments[attachment].attachment_id}'>View</a>
+    {if isset($perm) and $perm->have_perm('Administrator')}
+			    | <a href='attachment.php?del={$attachments[attachment].attachment_id}' onClick="return confirm('{$STRING.BUGDISPLAY.SureDeleteAttachment}');">{$STRING.delete}</a>
+    {/if}
+			</td>
+		    </tr>
+{sectionelse}
+		    <tr>
+			<td colspan="5" align="center">{$STRING.BUGDISPLAY.NoAttachments}</td>
+		    </tr>
+{/section}
+		    <tr>
+			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
+			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
+			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
+			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
+			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
+		    </tr><tr>
+			<td colspan="5" height="2" bgcolor="#ffffff"><spacer type="block" height="2" width="2"></td>
+		    </tr>
+		</table></td>
 	</tr>
-	<tr>
-		<td>
-			Component: 
-		</td>
-		<td>
-			<select name="component_id">{build_select box=component selected=$component_id project=$project_id}</select>
-		</td>
-		<td>
-			Severity: 
-		</td>
-		<td>
-			<select name="severity_id">{build_select box=severity selected=$severity_id}</select>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			{$STRING.version}:
-		</td>
-		<td>
-			<select name="version_id">{build_select box=version selected=$version_id project=$project_id}</select>
-		</td>
-		<td>
-			OS: 
-		</td>
-		<td>
-			<select name="os_id">{build_select box=os selected=$os_id}</select>
-		</td>
-	</tr>
-	<tr>
-		<td>To Be Closed Version</td>
-		<td>
-			<select name="to_be_closed_in_version_id">
-				<option value="0">Choose One</option>
-				{build_select box=version selected=$to_be_closed_in_version_id project=$project_id}
-			</select>
-		</td>
-		<td>
-			{$STRING.database}:
-		</td>
-		<td>
-			<select name="database_id">{build_select box=database selected=$database_id}</select>
-		</td>
-	</tr>
-	<tr>
-		<td>Closed Version</td>
-		<td>
-
-			<select name="closed_in_version_id">
-				<option value="0">Choose One</option>
-				{build_select box=version selected=$closed_in_version_id project=$project_id}
-			</select>
-		</td>
-		<td colspan="2">&nbsp;</td>
-	</tr>
-	<tr>
-  	<td>Summary:</td>
-  	<td><input type="text" size="30" maxlength="100" name="title" value="{$title|stripslashes|htmlentities}"></td>
-  	<td>Status:</td>
-  	<td><select name="status_id">{build_select box=status selected=$status_id}</select></td>
-	</tr>
-	<tr>
-  	<td>{if $url}<a href="{$url}">URL</a>{else}URL{/if}:</td>
-  	<td><input type="text" size="30" maxlength="255" name="url" value="{$url}"></td>
-  	<td>Resolution:</td>
-  	<td><select name="resolution_id"><option value="0">None</option>{build_select box=resolution selected=$resolution_id}</select></td>
-	</tr>
-	<tr>
-		<td>Assigned To:</td>
-		<td><select name="assigned_to"><option value="0">None</option>{build_select box=owner selected=$assigned_to}</select></td>
-		<td>Add CC:</td>
-		<td><input type="text" name="add_cc"></td>
-	</tr>
-	<tr>
-		<td colspan="2" valign="top">
-			{if !empty($error.add_dep)}<div class="error">{$error.add_dep}</div>{/if}
-			Bug Dependencies: {$bug_dependencies}
-			<br>
-			Add Dependency: <input type="text" name="add_dependency" size="5">
-			<br>
-			Remove Dependency: <input type="text" name="del_dependency" size="5">
-			<br>
-			<br>
-		</td>
-		<td colspan="2" valign="top">
-			Remove selected CCs:
-			<br>
-			<select name="remove_cc[]" size="5" style="width: 15em" multiple>{build_select box=bug_cc selected=$bug_id}</select>
-		</td>
-	</tr>
-</table>
-<table border="0" cellpadding="2" cellspacing="0" width="100%">
-	<tr>
-		<td valign="top">
-			Additional Comments:
-			<br>
-			<br>
-			<textarea name="comments" rows="6" cols="55" wrap="virtual"></textarea>
-			<br>
-			<br>
-			<div align="right">
-				{if $smarty.session.uid}
-					<input type="submit" value="Submit">
-				{else}
-					{$STRING.logintomodify}
-				{/if}
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<table border="0" cellpadding="0">
-				<tr>
-					<td colspan="2">Attachments:</td>
-					<td colspan="3" align="right"><a href="attachment.php?bugid={$bug_id}" onClick="return popupAtt({$bug_id})">Create attachment</a></td>
-				</tr>
-				<tr><td colspan="5" height="2" bgcolor="#ffffff"><spacer type="block" height="2" width="2"></td></tr>
-				<tr>
-					<td width="250" bgcolor="#cccccc" align="center"><b>Name</b></td>
-					<td width="60" bgcolor="#cccccc" align="center"><b>Size</b></a></td>
-					<td width="150" bgcolor="#cccccc" align="center"><b>Type</b></a></td>
-					<td width="80" bgcolor="#cccccc" align="center"><b>Created</b></a></td>
-					<td width="80" bgcolor="#cccccc" align="center">&nbsp;</a></td>
-				</tr>
-				<tr>
-					<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-					<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-					<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-					<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-					<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-				</tr>
-				{section name=attachment loop=$attachments}
-					<tr title="{$attachments[attachment].description|stripslashes}"{if $smarty.section.attachment.iteration is even} class="alt" bgcolor="#dddddd"{/if}>
-						<td>{$attachments[attachment].file_name|stripslashes}</td>
-						<td align="right">
-							{if $attachments[attachment].file_size > 1024}
-								{math equation="(round(x) / 1024 * 100) / 100" x=$attachments[attachment].file_size assign=file_size}
-								{$file_size|number_format}k
-							{else}
-								{$attachments[attachment].file_size|number_format}b
-							{/if}
-						</td>
-						<td align="center">{$attachments[attachment].mime_type}</td>
-						<td align="center">{$attachments[attachment].created_date|date:DATE_FORMAT}</td>
-						<td align="center">
-							<a href='attachment.php?attachid={$attachments[attachment].attachment_id}'>View</a>
-							{if isset($perm) and $perm->have_perm('Administrator')}
-								| <a href='attachment.php?del={$attachments[attachment].attachment_id}' onClick="return confirm('Are you sure you want to delete this attachment?');">Delete</a>
-							{/if}
-						</td>
-					</tr>
-				{sectionelse}
-					<tr>
-						<td colspan="5" align="center">No attachments</td>
-					</tr>
-				{/section}
-				<tr>
-					<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-					<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-					<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-					<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-					<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-				</tr>
-				<tr><td colspan="5" height="2" bgcolor="#ffffff"><spacer type="block" height="2" width="2"></td></tr>
-			</table>
-		</td>
-	</tr>
-</table>
+    </table>
 </form>
 <div align="center">
 {if !empty($error.vote)}<div class="error">{$error.vote}</div>{/if}
-<b><a href="{$smarty.server.PHP_SELF}?op=vote&bugid={$bug_id}" onClick="if ({$already_voted}) {literal}{ alert ('{/literal}{$STRING.already_voted}{literal}'); return false; }{/literal}">Vote for this bug</a></b> | 
-<b><a href="{$smarty.server.PHP_SELF}?op=viewvotes&bugid={$bug_id}">View votes ({$num_votes}) for this bug</a></b> | 
-<b><a href="{$smarty.server.PHP_SELF}?op=history&bugid={$bug_id}">View bug activity</a></b> | 
-<b><a href="{$smarty.server.PHP_SELF}?op=print&bugid={$bug_id}">Printable view</a></b>
+    <b><a href="{$smarty.server.PHP_SELF}?op=vote&bugid={$bug_id}" onClick="if ({$already_voted}) {literal}{ alert ('{/literal}{$STRING.already_voted}{literal}'); return false; }{/literal}">{$STRING.BUGDISPLAY.VoteForThisBug}</a></b> | 
+    <b><a href="{$smarty.server.PHP_SELF}?op=viewvotes&bugid={$bug_id}">{$STRING.BUGDISPLAY.ViewVotes} ({$num_votes}) {$STRING.BUGDISPLAY.ForThisBug}</a></b> | 
+    <b><a href="{$smarty.server.PHP_SELF}?op=history&bugid={$bug_id}">{$STRING.BUGDISPLAY.ViewBugActivity}</a></b> | 
+    <b><a href="{$smarty.server.PHP_SELF}?op=print&bugid={$bug_id}">{$STRING.BUGDISPLAY.PrintableView}</a></b>
 </div>
-<br>
-<br>
+<br><br>
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
-	<tr>
-		<td>
-			Comments:
-		</td>
-	</tr>
-	<tr class="alt">
-		<td>
-			Posted by: {$reporter|maskemail}
-			<br>
-			Date: {$created_date|date:TIME_FORMAT} on {$created_date|date:DATE_FORMAT}
-		</td>
-	</tr>
-	<tr>
-		<td>
-			{$description|stripslashes|format_comments|nl2br}
-			<br>
-			<br>
-		</td>
-	</tr>
-	{section name=comment loop=$comments}
-	<tr class="alt">
-		<td>
-			Posted by: {$comments[comment].login|maskemail}
-			<br>
-			Date: {$comments[comment].created_date|date:TIME_FORMAT} on {$comments[comment].created_date|date:DATE_FORMAT}
-		</td>
-	</tr>
-	<tr>
-		<td>
-			{$comments[comment].comment_text|stripslashes|format_comments|nl2br}
-			<br>
-			<br>
-		</td>
-	</tr>
-	{/section}
+    <tr>
+	<td>{$STRING.BUGDISPLAY.Comments}:</td>
+    </tr><tr class="alt">
+	<td>{$STRING.BUGDISPLAY.PostedBy}: {$reporter|maskemail} <br>
+	    {$STRING.BUGDISPLAY.Date}: {$created_date|date:TIME_FORMAT} {$STRING.BUGDISPLAY.DateOn} {$created_date|date:DATE_FORMAT}</td>
+    </tr><tr>
+	<td>{$description|stripslashes|format_comments|nl2br} <br><br></td>
+    </tr>
+    {section name=comment loop=$comments}
+    <tr class="alt">
+	<td>{$STRING.BUGDISPLAY.PostedBy}: {$comments[comment].login|maskemail} <br>
+	    {$STRING.BUGDISPLAY.Date}: {$comments[comment].created_date|date:TIME_FORMAT} {$STRING.BUGDISPLAY.On} {$comments[comment].created_date|date:DATE_FORMAT}</td>
+    </tr><tr>
+	<td>{$comments[comment].comment_text|stripslashes|format_comments|nl2br} <br><br></td>
+    </tr>
+    {/section}
 </table>
