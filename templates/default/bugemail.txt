@@ -1,18 +1,18 @@
 ============================================================================
-         Bug #: {bugid} ({url})
-{ReporterStat}  Reported By: {Reporter}
+         Bug #: {bugid} ({bugurl})
+{reporter_stat}  Reported By: {reporter}
 ----------------------------------------------------------------------------
-{TitleStat}      Summary: {Title}
-{URLStat}          URL: {URL}
-{ProjectStat}      Product: {Project}
-{VersionStat}      Version: {Version}
-{ComponentStat}    Component: {Component}
-{StatusStat}       Status: {Status}
-{ResolutionStat}   Resolution: {Resolution}
-{SeverityStat}     Severity: {Severity}
-{OSStat}   OS/Version: {OS}
-{PriorityStat}     Priority: {Priority}
-{AssignedToStat}  Assigned To: {AssignedTo}
+{title_stat}      Summary: {title}
+{url_stat}          URL: {url}
+{project_id_stat}      Product: {project_id}
+{version_id_stat}      Version: {version_id}
+{component_id_stat}    Component: {component_id}
+{status_id_stat}       Status: {status_id}
+{resolution_id_stat}   Resolution: {resolution_id}
+{severity_id_stat}     Severity: {severity_id}
+{os_id_stat}   OS/Version: {os_id}
+{priority_stat}     Priority: {priority}
+{assignedto_stat}  Assigned To: {assignedto}
 ============================================================================
 <!-- BEGIN commentblock -->
                               COMMENTS                                   

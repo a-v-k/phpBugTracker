@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.32 2001/08/29 13:56:56 bcurtis Exp $
+// $Id: bug.php,v 1.33 2001/08/30 13:49:08 bcurtis Exp $
 
 include 'include.php';
 
@@ -68,19 +68,19 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 			$q->query("insert into bug_history (bug_id, changed_field, old_value, new_value, created_by, created_date) values ({$buginfo['bug_id']}, '$field', '$buginfo[$field]', '$cf[$field]', $u, $now)");
 			$t->set_var(array(
 				$field => $cf[$field],
-				$field.'Stat' => '!'
+				$field.'_stat' => '!'
 				));
 		} else {
 			$t->set_var(array(
 				$field => $buginfo[$field],
-				$field.'Stat' => ' '
+				$field.'_stat' => ' '
 				));
 		}
 	}
 	
 	foreach(array('project','component','status','resolution','severity','os',
 		'version') as $field) {
-		$oldvalue = $q->grab_field("select ${field}_name from $field where ${field}_id = $buginfo[$field]");
+		$oldvalue = $q->grab_field("select ${field}_name from $field where ${field}_id = {$buginfo[$field.'_id']}");
 		if ($cf[$field]) {
 			$newvalue = $q->grab_field("select ${field}_name from $field where ${field}_id = $cf[$field]");
 			$q->query("insert into bug_history (bug_id, changed_field, old_value, new_value, created_by, created_date) values ({$buginfo['bug_id']}, '$field', '$oldvalue', '$newvalue', $u, $now)");
@@ -134,7 +134,7 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 	} else {
 		$t->set_var('cblock', '');
 	}
-		
+	
 	// Don't email the person who just made the changes (later, make this 
 	// behavior toggable by the user)
 	if ($userid != $buginfo['created_by']) 
@@ -146,15 +146,13 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 		
 	$t->set_var(array(
 		'bugid' => $buginfo['bug_id'],
-		'url' => INSTALLURL."/bug.php?op=show&bugid={$buginfo['bug_id']}",
-		'Priority' => $select['priority'][($cf['priority'] ? $cf['priority'] : $buginfo['priority'])],
-		'PriorityStat' => $cf['priority'] ? '!' : ' ',
-		'Reporter' => $reporter,
-		'ReporterStat' => $reporterstat,
-		'AssignedTo' => $assignedto,
-		'AssignedToStat' => $assignedtostat,
-		'Comments' => textwrap($oldcomments,72,"\n	")."\n\n+".
-			textwrap($comments,72,"\n+ ")."\n"
+		'bugurl' => INSTALLURL."/bug.php?op=show&bugid={$buginfo['bug_id']}",
+		'priority' => $select['priority'][($cf['priority'] ? $cf['priority'] : $buginfo['priority'])],
+		'priority_stat' => $cf['priority'] ? '!' : ' ',
+		'reporter' => $reporter,
+		'reporter_stat' => $reporterstat,
+		'assignedto' => $assignedto,
+		'assignedto_stat' => $assignedtostat
 		));
 	if ($toemail) {
 		mail($toemail,"[Bug {$buginfo['bug_id']}] Changed - ".
@@ -170,15 +168,15 @@ function update_bug($bugid = 0) {
 	// Pull bug from database to determine changed fields and for user validation
 	$buginfo = $q->grab("select * from bug where bug_id = $bugid");
 	
-	if ($pv = $GLOBALS['HTTP_POST_VARS']) {
-		while (list($k,$v) = each($GLOBALS['HTTP_POST_VARS'])) {
+	if (isset($GLOBALS['HTTP_POST_VARS'])) {
+		foreach ($GLOBALS['HTTP_POST_VARS'] as $k => $v) {
 			$$k = $v;
-			if ($k == 'URL') {
+			if ($k == 'url') {
 				if ($v == 'http://') $v = '';
 				elseif ($v and substr($v,0,7) != 'http://') $v = 'http://'.$v;
-				$URL = $v;
+				$url = $v;
 			}
-			if ($buginfo[$k] != $v) { $changedfields[$k] = $v; }
+			if (stripslashes($buginfo[$k]) != stripslashes($v)) { $changedfields[$k] = $v; }
 		}
 	}
 	
@@ -194,7 +192,7 @@ function update_bug($bugid = 0) {
 		return;
 	}
 	
-	if ($lastmodifieddate != $buginfo['last_modified_date']) {
+	if ($last_modified_date != $buginfo['last_modified_date']) {
 		show_bug($bugid, array('status' => $STRING['datecollision']));
 		return;
 	}
@@ -255,7 +253,7 @@ function update_bug($bugid = 0) {
 		$q->query("insert into comment (comment_id, bug_id, comment_text, created_by, created_date) values (".$q->nextid('comment').", $bugid, '$comments', $u, $now)");
 	}
 
-	$q->query("update bug set title = '$title', url = '$url', severity_id = $severity, priority = $priority, ".($status ? "status_id = $status, " : ''). ($changeresolution ? "resolution_id = $bugresolution, " : ''). ($assignedto ? "assigned_to = $assignedto, " : '')." project_id = $project, version_id = $version, component_id = $component, os_id = $os, last_modified_by = $u, last_modified_date = $now where bug_id = $bugid");
+	$q->query("update bug set title = '$title', url = '$url', severity_id = $severity_id, priority = $priority, ".($status ? "status_id = $status, " : ''). ($changeresolution ? "resolution_id = $bugresolution, " : ''). ($assignedto ? "assigned_to = $assignedto, " : '')." project_id = $project_id, version_id = $version_id, component_id = $component_id, os_id = $os_id, last_modified_by = $u, last_modified_date = $now where bug_id = $bugid");
 	
 	if ($changedfields or $comments) {
 		do_changedfields($u, $buginfo, $changedfields, $comments);

@@ -1,8 +1,6 @@
-<form action="bug.php" method="post">
-<input type="hidden" name="bugid" value="{bugid}">
+<form action="bug.php?op=update&bugid={bugid}" method="post">
 <input type="hidden" name="projectid" value="{projectid}">
-<input type="hidden" name="lastmodifieddate" value="{lastmodifieddate}">
-<input type="hidden" name="op" value="update">
+<input type="hidden" name="last_modified_date" value="{lastmodifieddate}">
 <table border='0' width="640">
 	<tr>
 		<td width="210" colspan="2">
@@ -20,19 +18,19 @@
 			Product:
 		</td>
 		<td>
-			<select name="Project">{project}</select>
+			<select name="project_id">{project}</select>
 		</td>
 		<td>
 			Component: 
 		</td>
 		<td>
-			<select name="Component">{component}</select>
+			<select name="component_id">{component}</select>
 		</td>
 		<td>
 			Version: 
 		</td>
 		<td>
-			<select name="Version">{version}</select>
+			<select name="version_id">{version}</select>
 		</td>
 	</tr>
 	<tr>
@@ -40,19 +38,19 @@
 			Severity: 
 		</td>
 		<td>
-			<select name="Severity">{severity}</select>
+			<select name="severity_id">{severity}</select>
 		</td>
 		<td>
 			Priority: 
 		</td>
 		<td>
-			<select name="Priority">{priority}</select>
+			<select name="priority">{priority}</select>
 		</td>
 		<td>
 			OS: 
 		</td>
 		<td>
-			<select name="OS">{os}</select>
+			<select name="os_id">{os}</select>
 		</td>
 	</tr>
 	<tr>
@@ -73,13 +71,13 @@
   	<td>Status:</td>
   	<td><b>{status}</b></td>
   	<td>Summary:</td>
-  	<td><input type="text" size="30" maxlength="30" name="Title" value="{title}"></td>
+  	<td><input type="text" size="30" maxlength="30" name="title" value="{title}"></td>
 	</tr>
 	<tr>
   	<td>Resolution:</td>
   	<td><b>{resolution}</b></td>
   	<td>{urllabel}:</td>
-  	<td><input type="text" size="30" maxlength="255" name="URL" value="{url}"></td>
+  	<td><input type="text" size="30" maxlength="255" name="url" value="{url}"></td>
 	</tr>
 	<tr>
   	<td colspan="4">
