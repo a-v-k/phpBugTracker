@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.38 2001/09/03 17:59:11 bcurtis Exp $
+// $Id: bug.php,v 1.39 2001/09/08 14:34:52 bcurtis Exp $
 
 include 'include.php';
 
@@ -105,13 +105,13 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 				.' (bug_id, changed_field, old_value, new_value, created_by, created_date)'
 				." values ({$buginfo['bug_id']}, '$field', '$oldvalue', '$newvalue', $u, $now)");
 			$t->set_var(array(
-				$field => stripslashes($newvalue),
-				$field.'Stat' => '!'
+				$field.'_id' => stripslashes($newvalue),
+				$field.'_id_stat' => '!'
 				));
 		} else {
 			$t->set_var(array(
-				$field => stripslashes($oldvalue),
-				$field.'Stat' => ' '
+				$field.'_id' => stripslashes($oldvalue),
+				$field.'_id_stat' => ' '
 				));
 		}
 	}
