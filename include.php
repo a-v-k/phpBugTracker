@@ -13,6 +13,7 @@ define ('ADMINEMAIL','phpbt@bencurtis.com');
 define ('ENCRYPTPASS',0);  // Whether to store passwords encrypted
 define ('THEME','default/'); // Which set of templates to use
 define ('USE_JPGRAPH',0); // Whether to show images or not
+define ('JPGRAPH_PATH', '/home/bcurtis/public_html/jp/'); // If it's not in the include path
 
 require PHPLIBPATH.'db_mysql.inc';
 require PHPLIBPATH.'ct_sql.inc';
@@ -25,22 +26,7 @@ require PHPLIBPATH.'template.inc';
 // Localization - include the file with the desired language
 include INSTALLPATH.'/strings-en.php';
 
-$cssfile = 'global.css';
-
-
-$me = $PHP_SELF;
-$me2 = $REQUEST_URI;
-$selrange = 30;
-$now = time();
-$select['authlevels'] = array(
-	0 => 'Inactive',
-	1 => 'User',
-	3 => 'Developer',
-	7 => 'Manager',
-	15 => 'Administrator'
-	);
-
-
+// Edit this class with your database information
 class dbclass extends DB_Sql {
 	var $classname = 'dbclass';
 	var $Host = 'localhost';
@@ -61,6 +47,18 @@ class dbclass extends DB_Sql {
 }
 
 $q = new dbclass;
+$cssfile = 'global.css';
+$me = $PHP_SELF;
+$me2 = $REQUEST_URI;
+$selrange = 30;
+$now = time();
+$select['authlevels'] = array(
+	0 => 'Inactive',
+	1 => 'User',
+	3 => 'Developer',
+	7 => 'Manager',
+	15 => 'Administrator'
+	);
 
 class sqlclass extends CT_Sql {
 	var $database_class = 'dbclass';
@@ -81,6 +79,7 @@ class uauth extends Auth {
 	var $classname = 'uauth';
 	var $lifetime = 0;
 	var $magic = 'looneyville';
+	var $nobody = true;
 	
 	function auth_loginform() {
 		global $sess;
@@ -92,7 +91,7 @@ class uauth extends Auth {
 	function auth_validatelogin() {
 		global $username, $password, $q, $select, $emailpass, $emailsuccess, $STRING;
 		
-		if (!$username) return false;
+		if (!$username) return 'nobody';
 		if ($emailpass) {
 			list($email, $password) = $q->grab("select Email, Password from User where Email = '$username' and UserLevel > 0");
 			if (!$q->num_rows()) { 
@@ -114,7 +113,7 @@ class uauth extends Auth {
 		}
 		$u = $q->grab("select * from User where Email = '$username' and Password = '$password' and UserLevel > 0");
 		if (!$q->num_rows()) {
-			return false;
+			return 'nobody';
 		} else {
 			$this->auth['fname'] = $u['FirstName'];
 			$this->auth['lname'] = $u['LastName'];
@@ -144,17 +143,28 @@ class uperm extends Perm {
 
 class templateclass extends Template {
 	function pparse($target, $handle, $append = false) {
-		global $auth;
+		global $auth, $perm;
 		
-		$this->set_block('wrap', 'logoutblock', 'lblock');
-		if ($auth->auth['uid']) {
-			$this->set_var('loggedinas', $auth->auth['email']);
-			$this->parse('lblock', 'logoutblock', true);
+		$this->set_block('wrap', 'logoutblock', 'loblock');
+		$this->set_block('wrap', 'loginblock', 'liblock');
+		$this->set_block('wrap', 'adminnavblock', 'anblock');
+		if ($auth->auth['uid'] && $auth->auth['uid'] != 'nobody') {
+			$this->set_var(array(
+				'loggedinas' => $auth->auth['email'],
+				'liblock' => ''
+				));
+			$this->parse('loblock', 'logoutblock', true);
 		} else {
 			$this->set_var(array(
 				'loggedinas' => '',
-				'lblock' => ''
+				'loblock' => ''
 				));
+			$this->parse('liblock', 'loginblock', true);
+		}
+		if (isset($perm) && $perm->have_perm('Administrator')) {
+			$this->parse('anblock', 'adminnavblock', true);
+		} else {
+			$this->set_var('anblock', '');
 		}
 		print $this->finish($this->parse($target, $handle, $append));
 		return false;
@@ -165,8 +175,10 @@ $t = new templateclass('templates/'.THEME,'keep');
 $t->set_var(array(
 	'TITLE' => '', 
 	'me' => $PHP_SELF,
+	'me2' => $REQUEST_URI,
 	'error' => '',
-	'cssfile' => $cssfile));
+	'cssfile' => $cssfile,
+	'loginerror' => ''));
 	
 // End classes -- Begin helper functions 
 	
@@ -382,6 +394,20 @@ function delimit_list($delimiter, $ary) {
 /// (From zend.com)
 function valid_email($email) {		 
 	return eregi('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$', $email); 
+}
+
+// Begin every page with a page_open
+if (!defined('NO_AUTH')) {
+	page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
+	$u = $auth->auth['uid'];
+}
+
+// Check to see if the user is trying to login
+if (isset($HTTP_POST_VARS['login'])) {
+	$auth->auth['uid'] = $auth->auth_validatelogin();
+	if ($auth->auth['uid'] == 'nobody') {
+		$t->set_var('loginerror', 'Invalid login');
+	}
 }
 
 ?>

@@ -10,26 +10,25 @@
 		<td width="640" colspan="2"><hr size="1" width="640"></td>
 	</tr>
 	<tr>
-		<td width="540" valign="center">
+		<td width="540" valign="middle">
 			<font id="stockfontb"><b>&nbsp;&nbsp;
 				[
 				<a href="index.php">Home</a> | 
 				<a href="bug.php?op=add">Enter Bug</a> | 
 				<a href="query.php?op=query">Query Bugs</a> | 
-				<a href="report.php">Reporting</a> | 
-				<a href="user.php">Personal Page</a> 
-				<!-- BEGIN logoutblock -->
-				| <a href="logout.php">Logout {loggedinas}</a>
-				<!-- END logoutblock -->
+				<a href="report.php">Reporting</a> 
 				]
-			</font>
+			</b></font>
 		</td>
-		<td width="100" align="right" valign="center">
+		<td width="100" align="right" valign="middle">
 			<font id="stockfontb"><b>
+				<!-- BEGIN adminnavblock -->
 				[
 				<a href="admin/project.php">Admin Tools</a>
-				]	&nbsp;&nbsp;
-			</font>
+				]	
+				<!-- END adminnavblock -->
+				&nbsp;&nbsp;
+			</b></font>
 		</td>
 	</tr>
 	<tr>
@@ -39,18 +38,29 @@
 {content}
 <table border="0" cellpadding="0" cellspacing="0">
 	<tr>
-		<td width="640" colspan="2"><hr size="1" width="640"></td>
+		<td width="640"><hr size="1" width="640"></td>
 	</tr>
 	<tr>
+		<!-- BEGIN loginblock -->
+		<td class="login-box" nowrap>
+			<form method="post" action="{me2}">
+				Email: <input type="text" name="username" class="login-box"> 
+				Password: <input type="password" name="password" class="login-box"> 
+				<!--<input type="image" border="0" name="login" value="doit" src="go.gif" width="30" height="20" align="middle" class="login-button">-->
+				<input type="hidden" name="login" value="1">
+				<input type="submit" value="Login" class="login-box"> 
+			</form>
+			<font color="#ff0000">{loginerror}</font>
+		</td>
+		<!-- END loginblock -->
+		<!-- BEGIN logoutblock -->
 		<td>
-			<font id="stockfontb">
-				<b><a href="#top">Top</a></b>
-			</font>
+			<font id="stockfontb"><b>
+				[ <a href="user.php">Personal Page</a> 
+				| <a href="logout.php">Logout {loggedinas}</a> 
+				]
+			</b></font>
 		</td>
-		<td align="right">
-			<font id="stockfontb">
-				<b><a href="index.php">Home</a></b>
-			</font>
-		</td>
+		<!-- END logoutblock -->
 	</tr>
 </table>
