@@ -10,6 +10,7 @@ ADMINEMAIL=phpbt@`hostname -d`
 INSTALLPATH=`pwd`
 INSTALLURL=http://`hostname -f`/phpbt
 PHPLIBPATH=''
+JPGRAPH_PATH=''
 
 # Booleans
 ENCRYPTPASS=1
@@ -28,7 +29,9 @@ administrivia() {
 
 	$DIALOG --backtitle "phpBT Configuration" \
 		--title "Installation Path (2 of 4)" \
-		--inputbox "Enter the directory where the files will be stored." 0 0 $INSTALLPATH \
+		--inputbox "Enter the directory where the files will be stored.\n\n\
+NOTE -- This does not move the files to the directory you specify; it only changes include.php.  \
+If you specify a directory other than the current one, you'll need to move the files there yourself!\n\n" 0 0 $INSTALLPATH \
 		2> $tempfile
 	if [ $? -gt 0 ]; then
 		return
@@ -54,7 +57,6 @@ administrivia() {
 	
 	PHPLIBPATH=`<$tempfile`
 	menuitem='Features'
-	show_menu
 }
 
 change_features() {
@@ -68,6 +70,9 @@ change_features() {
 	else
 		OLD_USE_JPGRAPH=off
 	fi
+	
+	NEW_ENCRYPTPASS=0
+	NEW_USE_JPGRAPH=0
 
 	$DIALOG --backtitle "phpBT Configuration" \
 		--title "Optional Features" \
@@ -95,8 +100,17 @@ change_features() {
 		USE_JPGRAPH=${NEW_USE_JPGRAPH:-0}
 	fi
 	
+	if [ $USE_JPGRAPH -eq 1 ]; then
+		$DIALOG --backtitle "phpBT Configuration" \
+			--title "JPGraph Path" \
+			--inputbox "If JPGraph is not in PHP's include path, specify the location of JPGraph." 0 0 $JPGRAPH_PATH \
+			2> $tempfile
+		if [ $? -eq 0 ]; then
+			JPGRAPH_PATH=`<$tempfile`
+		fi
+	fi
+		
 	menuitem='Save'
-	show_menu
 }
 
 show_menu() {
@@ -121,8 +135,15 @@ show_menu() {
 				change_features
 				;;
 			Save)
-				#echo $ENCRYPTPASS
-				#echo $USE_JPGRAPH
+				mv include.php include.php.bak
+				echo "/ENCRYPTPASS/s/0/$ENCRYPTPASS/" > $tempfile
+				echo "/USE_JPGRAPH/s/0/$USE_JPGRAPH/" >> $tempfile
+				echo "/ADMINEMAIL/s|,'.*'|,'$ADMINEMAIL'|" >> $tempfile
+				echo "/INSTALLPATH/s|,'.*'|,'$INSTALLPATH'|" >> $tempfile
+				echo "/INSTALLURL/s|,'.*'|,'$INSTALLURL'|" >> $tempfile
+				echo "/PHPLIBPATH/s|,'.*'|,'$PHPLIBPATH'|" >> $tempfile
+				echo "/JPGRAPH_PATH/s|,'.*'|,'$JPGRAPH_PATH'|" >> $tempfile
+				sed -f $tempfile include.php.bak > include.php
 				$DIALOG --backtitle "phpBT Configuration" \
 					--infobox "Your changes have been saved" 5 36
 				;;
@@ -130,7 +151,10 @@ show_menu() {
 	else
   	$DIALOG --backtitle "phpBT Configuration" \
 			--infobox "Quitting without saving changes" 5 36
+		return 254
 	fi
 }
 
-show_menu
+while [ $? -ne 254 ]; do
+	show_menu
+done
