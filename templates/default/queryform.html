@@ -79,12 +79,12 @@ function updateMenus(f) {
                         </option>
                       </select> </td>
 
-                      <td><input type="checkbox" name="emailfield1[]" value="Owner"
+                      <td><input type="checkbox" name="emailfield1[]" value="owner"
                       checked>Assigned To</td>
                     </tr>
 
                     <tr>
-                      <td><input type="checkbox" name="emailfield1[]" value="Reporter">
+                      <td><input type="checkbox" name="emailfield1[]" value="reporter">
                       Reporter</td>
                     </tr>
                   </table>
@@ -99,9 +99,9 @@ function updateMenus(f) {
         <tr>
           <td align="right">Summary:</td>
 
-          <td><input name="Title" size="30" value=""></td>
+          <td><input name="title" size="30" value=""></td>
 
-          <td><select name="Title_type">
+          <td><select name="title_type">
             <option value="like" selected>
               substring
             </option>
@@ -119,9 +119,9 @@ function updateMenus(f) {
         <tr>
           <td align="right">A description entry:</td>
 
-          <td><input name="Description" size="30" value=""></td>
+          <td><input name="description" size="30" value=""></td>
 
-          <td><select name="Description_type">
+          <td><select name="description_type">
             <option value="like" selected>
               substring
             </option>
@@ -139,9 +139,9 @@ function updateMenus(f) {
         <tr>
           <td align="right">URL:</td>
 
-          <td><input name="URL" size="30" value=""></td>
+          <td><input name="url" size="30" value=""></td>
 
-          <td><select name="URL_type">
+          <td><select name="url_type">
             <option value="like" selected>
               substring
             </option>
@@ -185,19 +185,19 @@ function updateMenus(f) {
       <input type="hidden" name="op" value="doquery">
 			<nobr><b>Sort By:</b> 
 			<select name="order">
-        <option value="BugID">
+        <option value="bug_id">
           Bug Number
         </option>
-        <option selected value="Severity.SortOrder">
+        <option selected value="severity.sort_order">
           Severity
         </option>
-        <option value="Reporter">
+        <option value="reporter">
           Reporter
         </option>
-        <option value="Status.SortOrder">
+        <option value="status.sort_order">
           Status
         </option>
-        <option value="Priority">
+        <option value="priority">
           Priority
         </option>
       </select>

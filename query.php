@@ -26,7 +26,7 @@ include 'include.php';
 function delete_saved_query($queryid) {
 	global $q, $u, $me;
 	
-	$q->query("delete from SavedQuery where UserID = $u and SavedQueryID = $queryid");
+	$q->query("delete from saved_query where user_id = $u and saved_query_id = $queryid");
 	header("Location: $me?op=query");
 }
 
@@ -40,11 +40,11 @@ function show_query() {
 	$t->set_block('savequeryblock','row','rows');
 	 
 	// Build the javascript-powered select boxes
-	$q->query("select ProjectID, Name from Project where Active order by Name");
+	$q->query("select project_id, project_name from project where active order by project_name");
 	while (list($pid, $pname) = $q->grab()) {
 		// Version array
 		$js .= "versions['$pname'] = new Array(new Array('','All'),";
-		$nq->query("select Name, VersionID from Version where ProjectID = $pid and Active");
+		$nq->query("select version_name, version_id from version where project_id = $pid and active");
 		while (list($version,$vid) = $nq->grab()) {
 			$js .= "new Array($vid,'$version'),";
 		}
@@ -53,7 +53,7 @@ function show_query() {
 		
 		// Component array
 		$js .= "components['$pname'] = new Array(new Array('','All'),";
-		$nq->query("select Name, ComponentID from Component where ProjectID = $pid and Active");
+		$nq->query("select component_name, component_id from component where project_id = $pid and active");
 		while (list($comp,$cid) = $nq->grab()) {
 			$js .= "new Array($cid,'$comp'),";
 		}
@@ -63,15 +63,15 @@ function show_query() {
 	
 	if ($u != 'nobody') {
 		// Grab the saved queries if there are any
-		$q->query("select * from SavedQuery where UserID = '$u'");
+		$q->query("select * from saved_query where user_id = '$u'");
 		if (!$q->num_rows()) {
 			$t->set_var('rows','');
 		} else {
 			while ($row = $q->grab()) {
 				$t->set_var(array(
-					'savedquerystring' => $row['SavedQueryString'],
-					'savedqueryname' => stripslashes($row['SavedQueryName']),
-					'savedqueryid' => $row['SavedQueryID']
+					'savedquerystring' => $row['saved_query_string'],
+					'savedqueryname' => stripslashes($row['saved_query_name']),
+					'savedqueryid' => $row['saved_query_id']
 					));
 				$t->parse('rows', 'row', true);
 			}
@@ -83,7 +83,7 @@ function show_query() {
 	
 	$t->set_var(array(
 		'js' => $js,
-		'status' => build_select('Status',$q->grab_field("select StatusID from Status where Name = 'New'")),
+		'status' => build_select('Status',$q->grab_field("select status_id from status where status_name = 'New'")),
 		'resolution' => build_select('Resolution',$resolution),
 		'os' => build_select('OS',-1), // Prevent the OS regex selection
 		'priority' => build_select('priority',$priority),
@@ -101,21 +101,21 @@ function build_query($assignedto, $reportedby, $open) {
 
 	// Open bugs assigned to the user -- a hit list
 	if ($assignedto || $reportedby) {
-		$q->query("select StatusID from Status where Name ".($open ? '' : 'not ')."in ('Unconfirmed', 'New', 'Assigned', 'Reopened')");
+		$q->query("select status_id from status where status_name ".($open ? '' : 'not ')."in ('Unconfirmed', 'New', 'Assigned', 'Reopened')");
 		while ($statusid = $q->grab_field()) $status[] = $statusid;
-		$query[] = 'Status in ('.delimit_list(',',$status).')';
+		$query[] = 'status_id in ('.delimit_list(',',$status).')';
 		if ($assignedto) {
-			$query[] = "AssignedTo = {$auth->auth['uid']}";
+			$query[] = "assigned_to = {$auth->auth['uid']}";
 		} else {
-			$query[] = "Bug.CreatedBy = {$auth->auth['uid']}";
+			$query[] = "bug.created_by = {$auth->auth['uid']}";
 		}
 	} else {
 		// Select boxes
-		if ($status) $flags[] = 'Status in ('.delimit_list(',',$status).')';
-		if ($resolution) $flags[] = 'Resolution in ('.delimit_list(',',$resolution).')';
-		if ($os) $flags[] = 'OS in ('.delimit_list(',',$os).')';
-		if ($priority) $flags[] = 'Priority in ('.delimit_list(',',$priority).')';
-		if ($severity) $flags[] = 'Severity in ('.delimit_list(',',$severity).')';
+		if ($status) $flags[] = 'bug.status_id in ('.delimit_list(',',$status).')';
+		if ($resolution) $flags[] = 'bug.resolution_id in ('.delimit_list(',',$resolution).')';
+		if ($os) $flags[] = 'bug.os_id in ('.delimit_list(',',$os).')';
+		if ($priority) $flags[] = 'bug.priority_id in ('.delimit_list(',',$priority).')';
+		if ($severity) $flags[] = 'bug.severity_id in ('.delimit_list(',',$severity).')';
 		if ($flags) $query[] = '('.delimit_list(' or ',$flags).')';
 
 		// Email field(s)
@@ -126,12 +126,12 @@ function build_query($assignedto, $reportedby, $open) {
 				case 'not rlike' : 
 				case '=' : $econd = "$emailtype1 '$email1'"; break;
 			}
-			foreach($emailfield1 as $field) $equery[] = "$field.Email $econd";
+			foreach($emailfield1 as $field) $equery[] = "$field.email $econd";
 			$query[] = '('.delimit_list(' or ',$equery).')';
 		}
 
 		// Text search field(s)
-		foreach(array('Title','Description','URL') as $searchfield) {
+		foreach(array('title','tescription','url') as $searchfield) {
 			if ($$searchfield) {
 				switch (${$searchfield."_type"}) {
 					case 'like' : $cond = "like '%".$$searchfield."%'"; break;
@@ -145,9 +145,9 @@ function build_query($assignedto, $reportedby, $open) {
 
 		// Project/Version/Component
 		if ($projects) {
-			$proj[] = "Bug.Project = $projects";
-			if ($versions) $proj[] = "Bug.Version = $versions";
-			if ($components) $proj[] = "Component = $components";
+			$proj[] = "bug.project_id = $projects";
+			if ($versions) $proj[] = "bug.version_id = $versions";
+			if ($components) $proj[] = "component_id = $components";
 			$query[] = '('.delimit_list(' and ',$proj).')';
 		}
 	}
@@ -166,11 +166,11 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	// Save the query if requested
 	if ($savedqueryname) {
 		$savedquerystring = ereg_replace('&savedqueryname=.*(&?)', '\\1', $GLOBALS['QUERY_STRING']);
-		$q->query("insert into SavedQuery (UserID, SavedQueryName, SavedQueryString) values ($u, '$savedqueryname', '$savedquerystring')");
+		$q->query("insert into saved_query (user_id, saved_query_name, saved_query_string) values ($u, '$savedqueryname', '$savedquerystring')");
 	}
-	if (!$order) { $order = 'BugID'; $sort = 'asc'; }
+	if (!$order) { $order = 'bug_id'; $sort = 'asc'; }
 	if (!$querystring or $op) build_query($assignedto, $reportedby, $open);
-	$nr = $q->grab_field("select count(*) from Bug left join User Owner on Bug.AssignedTo = Owner.UserID left join User Reporter on Bug.CreatedBy = Reporter.UserID ".($querystring != '' ? "where $querystring": ''));
+	$nr = $q->grab_field("select count(*) from bug left join user owner on bug.assigned_to = owner.user_id left join user reporter on bug.created_by = reporter.user_id ".($querystring != '' ? "where $querystring": ''));
 
 	list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
 		"order=$order&sort=$sort");
@@ -183,24 +183,24 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'project' => build_select('Project'),
 		'TITLE' => $TITLE['buglist']));
 	
-	$q->query("select BugID, Title, Reporter.Email as Reporter, Owner.Email as Owner, Severity.Name as Severity, Bug.CreatedDate, Status.Name as Status, Priority, Version.Name as Version, Component.Name as Component, Resolution.Name as Resolution from Bug, Severity, Status, Version, Component left join User Owner on Bug.AssignedTo = Owner.UserID left join User Reporter on Bug.CreatedBy = Reporter.UserID left join Resolution on Bug.Resolution = ResolutionID where Severity = SeverityID and Status = StatusID and Bug.Version = VersionID and Component = ComponentID ". ($querystring != '' ? "and $querystring " : ''). "order by $order $sort limit $llimit, $selrange");
+	$q->query("select bug_id, title, reporter.email as reporter, owner.email as owner, severity_name as severity, bug.created_date, status_name as status, priority_id, version_name as version, component_name as component, resolution_name as resolution from bug, resolution, severity, status, version, component left join user owner on bug.assigned_to = owner.user_id left join user reporter on bug.created_by = reporter.user_id where bug.resolution_id = resolution.resolution_id and bug.severity_id = severity.severity_id and bug.status_id = status.status_id and bug.version_id = version.version_id and bug.component_id = component.component_id ". ($querystring != '' ? "and $querystring " : ''). "order by $order $sort limit $llimit, $selrange");
 				
 	$headers = array(
-		'bugid' => 'BugID',
-		'title' => 'Title',
-		'description' => 'Description',
-		'url' => 'URL',
-		'severity' => 'Severity.SortOrder',
-		'priority' => 'Priority',
-		'status' => 'Status.SortOrder',
-		'owner' => 'Owner',
-		'createdby' => 'Reporter',
-		'createddate' => 'CreatedDate',
-		'project' => 'Project',
-		'component' => 'Component',
-		'os' => 'OS',
-		'browserstring' => 'BrowserString',
-		'resolution' => 'Resolution');
+		'bugid' => 'bug_id',
+		'title' => 'title',
+		'description' => 'description',
+		'url' => 'url',
+		'severity' => 'severity.sort_order',
+		'priority' => 'bug.priority_id',
+		'status' => 'status.sort_order',
+		'owner' => 'owner',
+		'createdby' => 'reporter',
+		'createddate' => 'created_date',
+		'project' => 'project_id',
+		'component' => 'component',
+		'os' => 'os_id',
+		'browserstring' => 'browser_string',
+		'resolution' => 'resolution');
 
 	sorting_headers($me, $headers, $order, $sort, "page=$page");
 				
@@ -212,22 +212,22 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	while ($row = $q->grab()) {
 		$t->set_var(array(
 			'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
-			'bugid' => $row['BugID'],
-			'title' => $row['Title'],
-			'description' => $row['Description'],
-			'url' => $row['URL'],
-			'severity' => $row['Severity'],
-			'priority' => $select['priority'][$row['Priority']],
-			'status' => $row['Status'],
-			'assignedto' => $row['AssignedTo'],
-			'reporter' => maskemail($row['Reporter']),
-			'owner' => maskemail($row['Owner']),
-			'createddate' => date(DATEFORMAT,$row['CreatedDate']),
-			'project' => $row['Project'],
-			'component' => $row['Component'],
-			'os' => $row['OS'],
-			'browserstring' => $row['BrowserString'],
-			'resolution' => $row['Resolution']));
+			'bugid' => $row['bug_id'],
+			'title' => $row['title'],
+			'description' => $row['description'],
+			'url' => $row['url'],
+			'severity' => $row['severity'],
+			'priority' => $select['priority'][$row['priority_id']],
+			'status' => $row['status'],
+			'assignedto' => $row['assigned_to'],
+			'reporter' => maskemail($row['reporter']),
+			'owner' => maskemail($row['owner']),
+			'createddate' => date(DATEFORMAT,$row['created_date']),
+			'project' => $row['project_id'],
+			'component' => $row['component'],
+			'os' => $row['os_id'],
+			'browserstring' => $row['browser_string'],
+			'resolution' => $row['resolution']));
 		$t->parse('rows','row',true);
 	}
 }
