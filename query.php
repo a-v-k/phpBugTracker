@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.99 2004/10/25 12:06:58 bcurtis Exp $
+// $Id: query.php,v 1.100 2005/01/22 16:09:30 bcurtis Exp $
 
 include 'include.php';
 
@@ -327,7 +327,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	if (!in_array($sort, array('asc', 'desc'))) $sort = 'asc';
 	
 	if (empty($_SESSION['queryinfo'])) $_SESSION['queryinfo'] = array();
-	$_SESSION['queryinfo']['order'] = $order;
+	$_SESSION['queryinfo']['order'] = $db_headers[$order];;
 	$_SESSION['queryinfo']['sort'] = $sort;
 
 	if (empty($_SESSION['queryinfo']['query']) or isset($op)) {
