@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.12 2002/03/18 15:54:39 bcurtis Exp $
+// $Id: upgrade.php,v 1.13 2002/03/18 17:52:56 bcurtis Exp $
 
 define ('NO_AUTH', 1);
 include 'include.php';
@@ -28,6 +28,7 @@ include 'include.php';
 function upgrade() {
 	global $db;
 	
+	// Note, no upgrades for oracle since we didn't support oracle before 0.8.0
 	$upgraded = $db->getOne('select count(*) from '.TBL_BUG.'_seq');
 	if (!$upgraded or DB::isError($upgraded)) {
 		// Convert the sequences
@@ -37,10 +38,12 @@ function upgrade() {
 		}
 		$rs = $db->query("select * from ".TBL_DB_SEQUENCE);
 		if (DB_TYPE == 'pgsql') {
+			// Move the sequences
 			while ($rs->fetchInto($row)) {
 				$db->query("create sequence {$row['seq_name']}_seq start {$row['nextid']}");
 			}
 		} else {
+			// Move the sequences
 			while ($rs->fetchInto($row)) {
 				$db->query("create table {$row['seq_name']}_seq (id int unsigned auto_increment not null primary key)");
 				$db->query("insert into {$row['seq_name']}_seq values ({$row['nextid']})");
