@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.69 2001/10/30 13:51:16 bcurtis Exp $
+// $Id: include.php,v 1.70 2001/10/31 02:30:42 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -327,7 +327,7 @@ function build_select($box, $value = '', $project = 0) {
   $text = '';
   $querystart = "select {$box}_id, {$box}_name from $cfgDatabase[$box]";
   $queries = array(
-    'group' => $querystart.' where group_name <> "User" order by group_name',
+    'group' => $querystart.' where group_name <> \'User\' order by group_name',
     'severity' => $querystart.' where sort_order > 0 order by sort_order',
     'status' => $querystart.' where sort_order > 0 order by sort_order',
     'resolution' => $querystart.' where sort_order > 0 order by sort_order',
