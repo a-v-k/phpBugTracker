@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.107 2002/05/21 13:37:00 firma Exp $
+// $Id: bug.php,v 1.108 2002/06/13 15:20:21 firma Exp $
 
 include 'include.php';
 
@@ -476,29 +476,29 @@ function show_form($bugid = 0, $error = '') {
 }
 
 function show_bug_printable($bugid) {
-	global $db, $me, $t, $select, $TITLE, $QUERY, $restricted_projects;
+    global $db, $me, $t, $select, $TITLE, $QUERY, $restricted_projects;
 	
-	if (!is_numeric($bugid) or
-    !$row = $db->getRow(sprintf($QUERY['bug-printable'], $bugid, 
-			$restricted_projects))) {
+    if (!is_numeric($bugid) or 
+	!$row = $db->getRow(sprintf($QUERY['bug-printable'], $bugid, 
+	    $restricted_projects))) {
 		show_text($STRING['bugbadnum'],true);
 		exit;
-	}
+    }
 	
-	$t->assign($row);
-  $t->assign(array(
-		'bug_dependencies' => delimit_list(', ', $db->getCol('select '.
-			db_concat("'<a href=\"$me?op=show&bugid='", 'depends_on', '\'">#\'', 
-				'depends_on', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY.
-				" where bug_id = $bugid"))
+    $t->assign($row);
+    $t->assign(array(
+	'bug_dependencies' => delimit_list(', ', $db->getCol('select '.
+	    db_concat("'<a href=\"$me?op=show&bugid='", 'depends_on', '\'">#\'',
+	'depends_on', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY.
+	    " where bug_id = $bugid"))
     ));
 
-	// Show the comments
-  $t->assign('comments', $db->getAll('select comment_text, c.created_date, login'
-    .' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER
-    ." where bug_id = $bugid and c.created_by = user_id order by c.created_date"));
-	
-	$t->wrap('bugdisplay-printable.html', 'viewbug');
+    // Show the comments
+    $t->assign('comments', $db->getAll('select comment_text, c.created_date, login'.
+	' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER.
+	" where bug_id = $bugid and c.created_by = user_id order by c.created_date"
+    ));
+    $t->wrap('bugdisplay-printable.html', 'viewbug');
 }
 
 ///
@@ -547,49 +547,49 @@ function prev_next_links($bugid, $pos) {
 }
 
 function show_bug($bugid = 0, $error = array()) {
-  global $db, $me, $t, $STRING, $TITLE, $u, $_gv, $QUERY, $restricted_projects;
+    global $db, $me, $t, $STRING, $TITLE, $u, $_gv, $QUERY, $restricted_projects;
 
-  if (!ereg('^[0-9]+$',$bugid) or
-    !$row = $db->getRow(sprintf($QUERY['bug-show-bug'], $bugid, 
-			$restricted_projects))) {
-    show_text($STRING['bugbadnum'],true);
-    return;
-  }
-
-	prev_next_links($bugid, isset($_gv['pos']) ? $_gv['pos'] : 0);
-	$t->assign($row);
-  $t->assign(array(
-		'error' => $error,
-		'already_voted' => $db->getOne("select count(*) from ".TBL_BUG_VOTE.
-			" where bug_id = $bugid and user_id = $u"),
-		'num_votes' => $db->getOne("select count(*) from ".TBL_BUG_VOTE.
-			" where bug_id = $bugid"),
-		'bug_dependencies' => delimit_list(', ', $db->getCol('select '.
-			db_concat("'<a href=\"$me?op=show&bugid='", 'depends_on', '\'">#\'', 
-				'depends_on', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY.
-				" where bug_id = $bugid")),
-		));
-
-  // Show the attachments
-	$attachments = array();
-  $rs = $db->query("select * from ".TBL_ATTACHMENT." where bug_id = $bugid");
-  if ($rs->numRows()) {
-    while ($rs->fetchInto($att)) {
-      if (@is_readable(ATTACHMENT_PATH."/{$row['project_id']}/$bugid-{$att['file_name']}")) {
-        $attachments[] = $att;
-      }
+    if (!ereg('^[0-9]+$',$bugid) or
+	!$row = $db->getRow(sprintf($QUERY['bug-show-bug'], $bugid, 
+	    $restricted_projects))) {
+		show_text($STRING['bugbadnum'],true);
+		return;
     }
-  }
 
-	// Show the comments
-  $t->assign(array(
-		'attachments' => $attachments,
-		'comments' => $db->getAll('select comment_text, c.created_date, login'
-    	.' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER
-    	." where bug_id = $bugid and c.created_by = user_id order by c.created_date")
-		));
+    prev_next_links($bugid, isset($_gv['pos']) ? $_gv['pos'] : 0);
+    $t->assign($row);
+    $t->assign(array(
+	'error' => $error,
+	'already_voted' => $db->getOne("select count(*) from ".TBL_BUG_VOTE.
+	    " where bug_id = $bugid and user_id = $u"),
+	'num_votes' => $db->getOne("select count(*) from ".TBL_BUG_VOTE.
+	    " where bug_id = $bugid"),
+	'bug_dependencies' => delimit_list(', ', $db->getCol('select '.
+	    db_concat("'<a href=\"$me?op=show&bugid='", 'depends_on', '\'">#\'', 
+	'depends_on', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY.
+	    " where bug_id = $bugid")),
+    ));
+
+    // Show the attachments
+    $attachments = array();
+    $rs = $db->query("select * from ".TBL_ATTACHMENT." where bug_id = $bugid");
+    if ($rs->numRows()) {
+	while ($rs->fetchInto($att)) {
+	    if (@is_readable(ATTACHMENT_PATH."/{$row['project_id']}/$bugid-{$att['file_name']}")) {
+		$attachments[] = $att;
+	    }
+	}
+    }
+
+    // Show the comments
+    $t->assign(array(
+	'attachments' => $attachments,
+	'comments' => $db->getAll('select comment_text, c.created_date, login'.
+	    ' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER.
+	    " where bug_id = $bugid and c.created_by = user_id order by c.created_date")
+    ));
 	
-	$t->wrap('bugdisplay.html', 'viewbug');
+    $t->wrap('bugdisplay.html', 'viewbug');
 }
 
 function show_projects() {

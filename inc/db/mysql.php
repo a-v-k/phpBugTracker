@@ -77,12 +77,14 @@ $QUERY = array(
 		'left join '.TBL_AUTH_USER.' lastmodifier on b.last_modified_by = lastmodifier.user_id '.
 		'left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_id, '.
 		TBL_SEVERITY.' severity, '.TBL_STATUS.' status, '.TBL_OS.' os, '.
-		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.TBL_PROJECT.' project '.
+		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.
+		TBL_PROJECT.' project, '.TBL_SITE.' site '.
 		'where b.severity_id = severity.severity_id '.
 		'and b.status_id = status.status_id and b.os_id = os.os_id '.
 		'and b.version_id = version.version_id '.
 		'and b.component_id = component.component_id '.
 		'and b.project_id = project.project_id and %s '.
+		'and b.site_id = site.site_id '.
 		'and bug_id <> %s '.
 		'order by %s %s, bug_id asc',
 	'bug-show-bug' =>  'select b.*, reporter.login as reporter, '.
@@ -91,7 +93,7 @@ $QUERY = array(
 		'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
 		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
 		'left join '.TBL_RESOLUTION.' r on b.resolution_id = r.resolution_id, '.
-		TBL_SEVERITY.' sv, '.TBL_STATUS.' st '.
+		TBL_SEVERITY.' sv, '.TBL_STATUS.' st, '.TBL_SITE.' site '.
 		'where bug_id = %s and b.project_id not in (%s) '.
 		'and b.severity_id = sv.severity_id and b.status_id = st.status_id',
 	'functions-bug-cc' => 'select b.user_id, login '.
