@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.115 2002/09/14 18:11:34 bcurtis Exp $
+// $Id: bug.php,v 1.116 2002/09/14 19:06:30 bcurtis Exp $
 
 include 'include.php';
 
@@ -159,48 +159,31 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 	);
 
 	foreach($cfgDatabase as $field => $table) {
-		switch ($field) {
-		    case 'database':
-			if ($buginfo[$field.'_id']) {
-			    $db_oldvalue = $db->getRow('select '.$field.'_name, '.$field.'_version from '.$table.
-				' where '.$field.'_id = '.$buginfo[$field.'_id']);
-			    $oldvalue = $db_oldvalue[$field.'_name'].' '.$db_oldvalue[$field.'_version'];
-			} else {
-			    $oldvalue = 'None';
-			}
-
-			if (!empty($cf[$field.'_id'])) {
-			    $db_newvalue = $db->getRow('select '.$field.'_name, '.$field.'_version from '.$table.
-				' where '.$field.'_id = '.$cf[$field.'_id']);
-			    $newvalue = $db_newvalue[$field.'_name'].' '.$db_newvalue[$field.'_version'];
-			} else {
-			    $newvalue = 'None';
-			}
-		    break;
-		    default:
+    	if (isset($buginfo[$field.'_id'])) {
 			$oldvalue = $db->getOne("select ${field}_name from $table".
 			    " where ${field}_id = {$buginfo[$field.'_id']}");
-			if (!empty($cf[$field.'_id'])) {
-			    $newvalue = $db->getOne("select ${field}_name from $table".
-				" where ${field}_id = {$cf[$field.'_id']}");
-			}
-		    break;
 		}
-		if (!empty($cf[$field.'_id'])) {
+		if (empty($oldvalue)) $oldvalue = 'None';
+
+		if (isset($cf[$field.'_id'])) {
+		    $newvalue = $db->getOne("select ${field}_name from $table".
+				" where ${field}_id = {$cf[$field.'_id']}");
+			if (empty($newvalue)) $newvalue = 'None';
+
 		    $db->query('insert into '.TBL_BUG_HISTORY.
-			' (bug_id, changed_field, old_value, new_value, created_by, created_date)'.
+				' (bug_id, changed_field, old_value, new_value, created_by, created_date)'.
 			    " values (". join(', ', array($buginfo['bug_id'], $db->quote($field),
-			$db->quote(stripslashes($oldvalue)),
-			$db->quote(stripslashes($newvalue)), $u, $now)).")");
+				$db->quote(stripslashes($oldvalue)),
+				$db->quote(stripslashes($newvalue)), $u, $now)).")");
 		    $t->assign(array(
-			$field.'_id' => stripslashes($newvalue),
-			$field.'_id_stat' => '!'
-		    ));
+				$field.'_id' => stripslashes($newvalue),
+				$field.'_id_stat' => '!'
+			    ));
 		} else {
 		    $t->assign(array(
-			$field.'_id' => stripslashes($oldvalue),
-			$field.'_id_stat' => ' '
-		    ));
+				$field.'_id' => stripslashes($oldvalue),
+				$field.'_id_stat' => ' '
+			    ));
 		}
 	}
 
@@ -209,28 +192,31 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 		'closed_in_version' => 'closed in version');
 
 	foreach($versions as $field => $field_name) {
-		if ($buginfo[$field.'_id']) {
+		if (isset($buginfo[$field.'_id'])) {
 		    $oldvalue = $db->getOne('select version_name from '.$cfgDatabase['version'].
 			' where version_id = '.$buginfo[$field.'_id']);
 		}
+		if (empty($oldvalue)) $oldvalue = 'None';
 
-		if (!empty($cf[$field.'_id'])) {
+		if (isset($cf[$field.'_id'])) {
 		    $newvalue = $db->getOne('select version_name from '.$cfgDatabase['version'].
-			' where version_id = '.$cf[$field.'_id']);
+				' where version_id = '.$cf[$field.'_id']);
+			if (empty($newvalue)) $newvalue = 'None';
+
 		    $db->query('insert into '.TBL_BUG_HISTORY.
-			' (bug_id, changed_field, old_value, new_value, created_by, created_date)'.
+				' (bug_id, changed_field, old_value, new_value, created_by, created_date)'.
 			    " values (". join(', ', array($buginfo['bug_id'], $db->quote($field_name),
-			$db->quote(stripslashes($oldvalue)),
-			$db->quote(stripslashes($newvalue)), $u, $now)).")");
+				$db->quote(stripslashes($oldvalue)),
+				$db->quote(stripslashes($newvalue)), $u, $now)).")");
 		    $t->assign(array(
-			$field.'_id' => stripslashes($newvalue),
-			$field.'_id_stat' => '!'
-		    ));
+				$field.'_id' => stripslashes($newvalue),
+				$field.'_id_stat' => '!'
+			    ));
 		} else {
 		    $t->assign(array(
-			$field.'_id' => stripslashes($oldvalue),
-			$field.'_id_stat' => ' '
-		    ));
+				$field.'_id' => stripslashes($oldvalue),
+				$field.'_id_stat' => ' '
+			    ));
 		}
 	}
 
@@ -586,7 +572,7 @@ function prev_next_links($bugid, $pos) {
 		$offset = $pos - 1;
 		$limit = 2;
 	} else {
-		$offset = $pos;
+		$offset = 0;
 		$limit = 1;
 	}
 	$rs = $db->limitQuery(sprintf($QUERY['bug-prev-next'],
