@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.94 2002/03/05 22:11:47 bcurtis Exp $
+// $Id: include.php,v 1.95 2002/03/11 16:41:14 bcurtis Exp $
 
 // Where are we?
 define ('INSTALL_PATH', dirname(__FILE__));
@@ -245,14 +245,16 @@ if (isset($_pv['dologin'])) {
 
 $op = isset($_gv['op']) ? $_gv['op'] : (isset($_pv['op']) ? $_pv['op'] : '');
 
-// Check to see if we have projects that shouldn't be visible to the user
-$restricted_projects = '0';
-if (!$perm->have_perm('Admin')) {
-	$matching_projects = delimit_list(',', 
-		$q->grab_field_set("select project_id from ".TBL_PROJECT_GROUP.
-			" where group_id not in (".delimit_list(',', $auth->auth['group_ids']).")"));
-	if ($matching_projects) {
-		$restricted_projects .= ",$matching_projects";
+if (!defined('NO_AUTH')) {
+	// Check to see if we have projects that shouldn't be visible to the user
+	$restricted_projects = '0';
+	if (!$perm->have_perm('Admin')) {
+		$matching_projects = delimit_list(',', 
+			$q->grab_field_set("select project_id from ".TBL_PROJECT_GROUP.
+				" where group_id not in (".delimit_list(',', $auth->auth['group_ids']).")"));
+		if ($matching_projects) {
+			$restricted_projects .= ",$matching_projects";
+		}
 	}
 }
 
