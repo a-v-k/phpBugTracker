@@ -20,8 +20,16 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
+// $Id: user.php,v 1.19 2002/02/28 18:23:31 bcurtis Exp $
 
 include 'include.php';
+
+function delete_vote($bug_id) {
+	global $q, $u, $me, $now;
+	
+	$q->query("delete from ".TBL_BUG_VOTE." where user_id = $u and bug_id = $bug_id");
+	header("Location: $me?r=$now");
+}
 
 function change_bug_list_columns($column_list) {
 	global $q, $u, $t, $auth;
@@ -55,10 +63,12 @@ function change_password($pass1, $pass2) {
 }
 
 function show_preferences_form($error = '') {
-	global $t, $pass1, $pass2, $all_db_fields, $default_db_fields, $auth;
+	global $t, $pass1, $pass2, $all_db_fields, $default_db_fields, $auth, $q, $u;
 	
 	$t->set_file('content', 'user.html');
 	$t->set_block('content', 'column_list_row', 'list_rows');
+	$t->set_block('content', 'votesblock', 'votesb');
+	$t->set_block('votesblock', 'vote_row', 'vote_rows');
 	
 	$t->set_var(array(
 		'error' => $error ? $error.'<br><br>' : '',
@@ -79,12 +89,33 @@ function show_preferences_form($error = '') {
 			));
 		$t->parse('list_rows', 'column_list_row', true);
 	}
+	
+	// Display the votes (if any)
+	$q->query("select * from ".TBL_BUG_VOTE." where user_id = $u");
+	if (!$q->num_rows()) {
+		$t->set_var('votesb', '&nbsp;');
+	} else {
+		$i = 0;
+		while ($row = $q->grab()) {
+			$t->set_var(array(
+      	'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
+				'trclass' => $i % 2 ? '' : 'alt',
+				'bugid' => $row['bug_id'],
+				'date' => date(DATE_FORMAT.' '.TIME_FORMAT, $row['created_date'])
+				));
+			$t->parse('vote_rows', 'vote_row', true);
+		}
+		$t->parse('votesb', 'votesblock', true);
+	}
 }
 
 $t->set_file('wrap', 'wrap.html');
 $perm->check_group('User');
 
-if (isset($_pv['do'])) switch ($_pv['do']) {
+if (isset($_gv['op'])) switch ($_gv['op']) {
+	case 'delvote' : delete_vote($_gv['bugid']); break;
+}
+elseif (isset($_pv['do'])) switch ($_pv['do']) {
 	case 'changepassword' : change_password($_pv['pass1'], $_pv['pass2']); break;
 	case 'changecolumnlist' : change_bug_list_columns($_pv['column_list']); break;
 	default : show_preferences_form();
