@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.24 2002/09/14 19:03:48 bcurtis Exp $
+// $Id: upgrade.php,v 1.25 2002/09/23 20:10:05 bcurtis Exp $
 
 define ('NO_AUTH', 1);
 define ('STYLE', 'default');
@@ -38,6 +38,9 @@ function upgrade() {
 		}
 		switch(DB_TYPE) {
 			case 'pgsql' :
+				$db->query("alter table ".TBL_USER_PREF." add saved_queries int2");
+				$db->query("alter table ".TBL_USER_PREF." alter saved_queries set default 1");
+				$db->query("update ".TBL_USER_PREF." set saved_queries = 1");
 				break;
 			case 'mysql' :
 				$db->query("alter table ".TBL_USER_PREF." add saved_queries tinyint(1) not null default '1' after email_notices");
@@ -59,6 +62,7 @@ function upgrade() {
 		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('BUG_PROMOTED', '2', 'The status to assign a bug when it is promoted (if enabled).', 'multi')");
 		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('BUG_ASSIGNED', '3', 'The status to assign a bug when it is assigned.', 'multi')");
 		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('BUG_REOPENED', '4', 'The status to assign a bug when it is reopened.', 'multi')");
+		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('BUG_CLOSED', '7', 'The status to assign a bug when it is closed.', 'multi')");
 		$db->query("INSERT INTO ".TBL_SITE." VALUES (0,'All',1), (1,'Development',2), (2,'Testing',3), (3,'Staging',4), (4,'Production',5)");
 		$db->query("INSERT INTO ".TBL_DATABASE." VALUES (1,'Oracle 8.1.7',1), (2,'MySQL 3.23.49',2), (3,'PostgreSQL 7.1.3',3");
 	}
