@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.33 2001/11/22 05:14:33 bcurtis Exp $
+// $Id: user.php,v 1.34 2001/12/13 14:06:45 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -59,11 +59,17 @@ function do_form($userid = 0) {
       values ($new_user_id, '{$_pv['ffirstname']}', '{$_pv['flastname']}',
       '$login', '{$_pv['femail']}', '$mpassword', {$_pv['factive']}, $u, $now,
       $u, $now)");
+		// Add to the selected groups
     foreach ($_pv['fusergroup'] as $group) {
       $q->query("insert into ".TBL_USER_GROUP
         ." (user_id, group_id, created_by, created_date)
         values ('$new_user_id' ,'$group', $u, $now)");
     }
+		// And add to the user group
+		$q->query("insert into ".TBL_USER_GROUP.
+			" (user_id, group_id, created_by, created_date) 
+			select $new_user_id, group_id, $u, $now from ".TBL_AUTH_GROUP.
+			" where group_name = 'User'");
   } else {
     if (ENCRYPT_PASS) {
       $oldpass = $q->grab_field("select password from ".TBL_AUTH_USER
