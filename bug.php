@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.51 2001/10/26 12:02:37 bcurtis Exp $
+// $Id: bug.php,v 1.52 2001/10/30 14:23:12 bcurtis Exp $
 
 include 'include.php';
 
@@ -52,9 +52,8 @@ function show_history($bugid) {
     return;
   }
 
-  $q->query('select bh.*, login from '.TBL_BUG_HISTORY.' bh left join '
-    .TBL_AUTH_USER.' on bh.created_by = user_id'
-    ." where bug_id = $bugid");
+  $q->query('select bh.*, login from '.TBL_BUG_HISTORY.' bh left join '.
+    TBL_AUTH_USER." on bh.created_by = user_id where bug_id = $bugid");
   if (!$q->num_rows()) {
     show_text($STRING['nobughistory']);
     return;
@@ -303,9 +302,9 @@ function update_bug($bugid = 0) {
         return;
       }
       $q->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
-                     ." values (".$q->nextid(TBL_COMMENT).", $dupenum, 'Bug #$bugid has been marked a duplicate of this bug', $u, $now)");
+      	." values (".$q->nextid(TBL_COMMENT).", $dupenum, 'Bug #$bugid has been marked a duplicate of this bug', $u, $now)");
       $q->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
-               ." values (".$q->nextid(TBL_COMMENT).", $bugid, 'This bug is a duplicate of bug #$dupenum', $u, $now)");
+      	." values (".$q->nextid(TBL_COMMENT).", $bugid, 'This bug is a duplicate of bug #$dupenum', $u, $now)");
       $statusfield = 'Duplicate';
       $resolution_id = $q->grab_field("select resolution_id from ".TBL_RESOLUTION." where resolution_name = 'Duplicate'");
       $statusfield = 'Resolved';
@@ -336,7 +335,7 @@ function update_bug($bugid = 0) {
   if ($comments) {
     $comments = strip_tags($comments);
     $q->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
-             ." values (".$q->nextid(TBL_COMMENT).", $bugid, '$comments', $u, $now)");
+    	." values (".$q->nextid(TBL_COMMENT).", $bugid, '$comments', $u, $now)");
   }
 
   $q->query("update ".TBL_BUG." set title = '$title', url = '$url', severity_id = $severity_id, priority = $priority, ".($status_id ? "status_id = $status_id, " : ''). ($changeresolution ? "resolution_id = $resolution_id, " : ''). ($assignedto ? "assigned_to = $assignedto, " : '')." project_id = $project_id, version_id = $version_id, component_id = $component_id, os_id = $os_id, last_modified_by = $u, last_modified_date = $now where bug_id = $bugid");
@@ -432,11 +431,14 @@ function show_bug($bugid = 0, $error = '') {
   global $q, $me, $t, $project, $STRING, $u, $perm;
 
   if (!ereg('^[0-9]+$',$bugid) or
-    !$row = $q->grab('select b.*, reporter.login as reporter, owner.login as owner, status_name, resolution_name'
-      .' from '.TBL_BUG.' b left join '.TBL_RESOLUTION.' r using(resolution_id),'
-      .TBL_SEVERITY.' sv, '.TBL_STATUS.' st left join '.TBL_AUTH_USER.' owner on b.assigned_to=owner.user_id'
-      .' left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id'
-      ." where bug_id = '$bugid' and b.severity_id = sv.severity_id and b.status_id = st.status_id")) {
+    !$row = $q->grab('select b.*, reporter.login as reporter, owner.login as owner, status_name, resolution_name 
+      from '.TBL_BUG.' b 
+			left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id 
+      left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id 
+			left join '.TBL_RESOLUTION.' r on b.resolution_id = r.resolution_id,'.
+			TBL_SEVERITY.' sv, '.TBL_STATUS." st 
+      where bug_id = '$bugid' and b.severity_id = sv.severity_id 
+			and b.status_id = st.status_id")) {
     show_text($STRING['bugbadnum'],true);
     return;
   }
@@ -563,9 +565,11 @@ function show_projects() {
   global $me, $q, $t, $project, $STRING;
 
   // Show only active projects with at least one component
-  $q->query('select p.* from '.TBL_PROJECT.' p, '.TBL_COMPONENT
-    .' c where p.active and p.project_id = c.project_id group by p.project_id
-    order by project_name');
+  $q->query('select p.project_id, p.project_name, p.project_desc, p.created_date 
+		from '.TBL_PROJECT.' p, '.TBL_COMPONENT.
+		' c where p.active = 1 and p.project_id = c.project_id group by 
+		p.project_id, p.project_name, p.project_desc, p.created_date 
+		order by project_name');
   switch ($q->num_rows()) {
     case 0 :
       $t->set_var('rows',$STRING['noprojects']);
