@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.23 2002/04/08 15:19:33 bcurtis Exp $
+// $Id: install.php,v 1.24 2002/04/08 17:06:50 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname(__FILE__));
 
@@ -31,21 +31,12 @@ define ('SMARTY_PATH','');
 //define ('SMARTY_PATH','./inc/smarty/');
 
 if (!@include(SMARTY_PATH . 'Smarty.class.php')) { // Template class
-	die('<br><br>
-	<div align="center">The Smarty templates class is not in your include path.
-	Without this class being available, phpBugTracker will not be able to work.
-	Please visit <a href="http://www.phpinsider.com/php/code/Smarty/">the smarty
-	website</a> and install the package.  Please reload this page when smarty 
-	has been installed.</div>
-	');
+	include('templates/default/base/smartymissing.html');
+	exit;
 }
 if (!@is_writeable('c_templates')) {
-	die('<br><br>
-	<div align="center">The "c_templates" subdirectory is not writeable by the 
-	web process.  This needs to be corrected before the installation can proceed 
-	so the templates can be compiled by smarty.  Please reload this page when 
-	this has been corrected.</div>
-	');
+	include('templates/default/base/templatesperm.html');
+	exit;
 }
 
 // Template class
