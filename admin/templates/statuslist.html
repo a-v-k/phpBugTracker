@@ -1,0 +1,47 @@
+<br>
+<table border="0" width="640">
+	<tr>
+		<td valign="top">
+			<b>&nbsp;Status List</b>
+			<hr size="1">
+			<table border="0">
+				<tr bgcolor="#eeeeee">
+					<th><a href="{nameurl}">Name</a></th>
+					<th><a href="{descriptionurl}">Description</a></th>
+					<th><a href="{sortorderurl}">Sort Order</a></th>
+				</tr>
+				<!-- BEGIN row -->
+				<tr bgcolor="{bgcolor}">
+					<td><a href="{me}?op=edit&id={statusid}">{name}</a></td>
+					<td>&nbsp;{description}</td>
+					<td align="center">{sortorder}</td>
+				</tr>
+				<!-- END row -->
+			</table>
+		</td>
+		<td valign="top">
+			<div align="right"><b>{action} status&nbsp;</b></div>
+			<hr size="1">
+			<form action="{me}" method="post">
+			<input type="hidden" name="id" value="{fstatusid}">
+			<table border='0'>
+			<tr>
+        			<td align="right" valign="top">Name:</td>
+        			<td><input type="text" size="20" maxlength="40" name="fname" value="{fname}"></td>
+			</tr>
+			<tr>
+        			<td align="right" valign="top">Description:</td>
+        			<td><textarea name="fdescription" cols=20 rows=5 wrap=virtual>{fdescription}</textarea></td>
+			</tr>
+			<tr>
+        			<td align="right" valign="top">Sort Order:</td>
+        			<td><input type="text" size="3" maxlength="3" name="fsortorder" value="{fsortorder}"></td>
+			</tr>
+
+			</table>
+			<div align="right">
+				<input type='submit' name='submit' value='Submit'>
+			</div>
+			</form>
+		</td>
+</table>

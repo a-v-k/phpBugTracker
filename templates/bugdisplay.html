@@ -1,0 +1,168 @@
+<form action="bug.php" method="post">
+<input type="hidden" name="bugid" value="{bugid}">
+<input type="hidden" name="projectid" value="{projectid}">
+<input type="hidden" name="op" value="update">
+<table border='0' width="640">
+	<tr>
+		<td width="210" colspan="2">
+			Bug <b>#{bugid}</b>
+		</td>
+		<td width="210" colspan="2">
+			Reporter: <b>{reporter}</b>
+		</td>
+		<td width="210" colspan="2">
+			Created: <b>{createddate}</b>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Product:
+		</td>
+		<td>
+			<select name="project">{project}</select>
+		</td>
+		<td>
+			Component: 
+		</td>
+		<td>
+			<select name="component">{component}</select>
+		</td>
+		<td>
+			Version: 
+		</td>
+		<td>
+			<select name="version">{version}</select>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Severity: 
+		</td>
+		<td>
+			<select name="severity">{severity}</select>
+		</td>
+		<td>
+			Priority: 
+		</td>
+		<td>
+			<select name="priority">{priority}</select>
+		</td>
+		<td>
+			OS: 
+		</td>
+		<td>
+			<select name="os">{os}</select>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<hr size="1">
+		</td>
+	</tr>
+</table>
+<table border="0" cellpadding="2" cellspacing="0" width="640">
+	<tr>
+  	<td align="right">Status:</td>
+  	<td><b>{status}</b></td>
+  	<td align="right">Resolution:</td>
+  	<td><b>{resolution}</b></td>
+	</tr>
+	<tr>
+  	<td align="right">Summary:</td>
+  	<td><input type="text" size="30" maxlength="30" name="title" value="{title}"></td>
+  	<td align="right">URL:</td>
+  	<td><input type="text" size="30" maxlength="255" name="url" value="{url}"></td>
+	</tr>
+	<tr>
+  	<td colspan="4">
+			&nbsp;
+		</td>
+	</tr>
+</table>
+<table border="0" cellpadding="2" cellspacing="0" width="640">
+	<tr>
+		<td valign="top">
+			Additional Comments:
+			<br>
+			<br>
+			<textarea name="comments" rows="10" cols="35" wrap="virtual"></textarea>
+		</td>
+		<td valign="top">
+			Update Bug Status:
+			<br>
+			<br>
+			<font color="#ff0000">{statuserr}</font>
+			<input type="radio" name="outcome" value="unchanged" checked> 
+				Leave as <b>{status} {resolution}</b><br>
+			<!-- BEGIN arow -->
+			<input type="radio" name="outcome" value="assign"> 
+				Accept bug (change status to <b>Assigned</b>)<br>
+			<!-- END arow -->
+			<!-- BEGIN rrow -->
+			<input type="radio" name="outcome" value="resolve"> 
+				Resolve bug, changing resolution to <select name="bugresolution">{bugresolution}</select><br>
+			<input type="radio" name="outcome" value="dupe"> 
+				Resolve bug, mark it as a duplicate of bug #<input type="text" name="dupenum" size="5"><br>
+			<input type="radio" name="outcome" value="reassign"> 
+				Reassign bug to <input type="text" name="reassignto"><br>
+			<input type="radio" name="outcome" value="reassigntocomponent"> 
+				Reassign bug to owner of selected component<br>
+			<!-- END rrow -->
+			<!-- BEGIN rerow -->
+			<input type="radio" name="outcome" value="reopen"> 
+				Reopen bug<br>
+			<!-- END rerow -->
+			<!-- BEGIN vrow -->
+			<input type="radio" name="outcome" value="verify"> 
+				Mark bug as verified<br>
+			<!-- END vrow -->
+			<!-- BEGIN crow -->
+			<input type="radio" name="outcome" value="close"> 
+				Mark bug as closed<br>
+			<!-- END crow -->
+			<br>
+			<br>
+			<div align="right">
+				<input type='submit' name='submit' value='Submit'>
+			</div>
+		</td>
+	</tr>
+</table>
+</form>
+<table border="0" cellpadding="2" cellspacing="0" width="640">
+	<tr>
+		<td>
+			Comments:
+			<hr size="1">
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<div align="center">
+				<i>----- Posted by {reporter} at {createdtime} on {createddate} -----</i>
+				<br>
+				<br>
+			</div>
+			{description}
+			<br>
+			<br>
+			<br>
+		</td>
+	</tr>
+	<!-- BEGIN row -->
+	<tr>
+		<td>
+			<div align="center">
+				<i>----- Posted by {rreporter} at {rcreateddate} -----</i>
+				<br>
+				<br>
+			</div>
+			{rdescription}
+			<br>
+			<br>
+			<br>
+		</td>
+	</tr>
+	<!-- END row -->
+</table>
+			

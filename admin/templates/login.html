@@ -1,0 +1,71 @@
+<?php 
+
+global $formvars;
+if (!$formvars) {
+	$formvars = htmlentities(serialize($GLOBALS[HTTP_POST_VARS]));
+}
+?>
+
+<html>
+<head>
+	<title>phpBT Admin</title>
+	<!--<link rel="StyleSheet" href="/siteadmin.css" type="text/css">-->
+	<style>
+		td				{	font-family: "Verdana","Tahoma","Arial","Helvetica","Times";
+							color: rgb(0,0,0);
+							font-size: 9px;	}
+	
+	</style>
+</head>
+<body bgcolor="#ffffff" text="#000000" link="#004433" alink="#004433" vlink="#004433">
+<center>
+	<br>
+	<br>
+	<br>
+	<div align='center'><b>Admin Login</b></div>
+	<br>
+	
+	<form action='<?php print $GLOBALS[REQUEST_URI] ?>' method='post'>
+	<input type="hidden" name="formvars" value="<?php echo $formvars ?>">
+	<table border="0">
+		<?php global $username; if ( isset($username) ): ?>
+		<tr>
+			<td align='center'>
+				<font color=red>
+					<b>Invalid login and/or password</b>
+				</font>
+			</td>
+		</tr>
+		<?php endif ?>
+		<tr>
+			<td>Login:</td>
+		</tr>
+		<tr>
+			<td><input size="30" name='username' value='<?php if (isset($this->auth["uname"])) print $this->auth["uname"] ?>'></td>
+		</tr>
+		<tr>
+			<td>Password:</td>
+		</tr>
+		<tr>
+			<td><input size="30" type='password' name='password'></td>
+		</tr>
+		<tr>
+			<td align="right"><input type="submit" value="Go"></td>
+		</tr>
+		<tr>
+			<td><hr size="1" color="#000000" width="140"></td>
+		</tr>
+	</table>
+	</form>
+</center>
+</body>
+<script language="JavaScript">
+<!--
+  if (document.forms[0][0].value != '') {
+      document.forms[0][1].focus();
+  } else {
+      document.forms[0][0].focus();
+  }
+// -->
+</script>
+</html>

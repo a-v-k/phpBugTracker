@@ -1,0 +1,81 @@
+<form action="bug.php" method="post">
+<input type="hidden" name="bugid" value="{bugid}">
+<input type="hidden" name="project" value="{project}">
+<input type="hidden" name="op" value="do">
+<table border='0'>
+<tr>
+        <td colspan="2"><font color="#ff0000">{error}</font></td>
+</tr>
+<tr>
+        <td align="right" valign="top">Project:</td>
+        <td>{projectname}</td>
+</tr>
+<tr>
+        <td align="right" valign="top">Version:</td>
+        <td>
+                <select name="version">
+                {version}
+                </select>
+        </td>
+</tr>
+        
+<tr>
+        <td align="right" valign="top">Summary:</td>
+        <td><input type="text" size="30" maxlength="30" name="title" value="{title}"></td>
+</tr>
+<tr>
+        <td align="right" valign="top">Description:</td>
+        <td><textarea name="description" cols=30 rows=5 wrap=virtual>{description}</textarea></td>
+</tr>
+<tr>
+        <td align="right" valign="top">URL:</td>
+        <td><input type="text" size="30" maxlength="255" name="url" value="{url}"></td>
+</tr>
+        
+<tr>
+        <td align="right" valign="top">Severity:</td>
+        <td>
+                <select name="severity">
+                {severity}
+                </select>
+        </td>
+</tr>
+        
+<tr>
+        <td align="right" valign="top">Priority:</td>
+        <td>
+                <select name="priority">
+                {priority}
+                </select>
+        </td>
+</tr>
+        
+<tr>
+        <td align="right" valign="top">Component:</td>
+        <td>
+                <select name="component">
+                {component}
+                </select>
+        </td>
+</tr>
+        
+<tr>
+        <td align="right" valign="top">OS:</td>
+        <td>
+                <select name="os">
+                {os}
+                </select>
+        </td>
+</tr>
+<tr>
+	<td align="right" valign="top">
+		Add another: 
+	</td>
+	<td valign="top">
+		<input type="checkbox" name="another" value="1">
+	</td>
+</tr>
+
+</table>
+<input type='submit' name='submit' value='Submit'>
+</form>

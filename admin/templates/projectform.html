@@ -1,0 +1,69 @@
+<form action="project.php" method="post">
+<input type="hidden" name="id" value="{projectid}">
+<table border='0'>
+<tr>
+	<td colspan="2"><font color="#ff0000">{error}</td>
+</tr>
+<tr>
+        <td align="right" valign="top">Name:</td>
+        <td><input type="text" size="30" maxlength="30" name="name" value="{name}"></td>
+</tr>
+<!-- BEGIN vfield -->
+<tr>
+        <td align="right" valign="top">Version:</td>
+        <td><input type="text" name="version" value="{version}"></td>
+</tr>
+<!-- END vfield -->
+<tr>
+        <td align="right" valign="top">Description:</td>
+        <td><textarea name="description" cols=40 rows=5 wrap=virtual>{description}</textarea></td>
+</tr>
+<tr>
+        <td align="right" valign="top">Active:</td>
+        <td align="left" valign="top"><input type="checkbox" name="active" value="1" {active}></td>
+</tr>
+</table>
+<input type='submit' name='submit' value='Submit'>
+</form>
+<!-- BEGIN box -->
+<hr width="640" align="left">
+<b>Versions of {name} - 
+<a href="version.php?op=add&projectid={projectid}">Add a new version</a>
+</b>
+<br>
+<br>
+<table border="0">
+	<tr bgcolor="#eeeeee">
+		<th>Version</th>
+		<th>Created</th>
+		<th>Active</th>
+	</tr>
+	<!-- BEGIN verrow -->
+	<tr bgcolor="{bgcolor}">
+		<td><a href="version.php?op=edit&id={verid}">{vername}</a></td>
+		<td>{verdate}</td>
+		<td align="center">{veractive}</td>
+	</tr>
+	<!-- END verrow -->
+</table>
+<hr width="640" align="left">
+<b>Components of {name} - 
+<a href="component.php?op=add&projectid={projectid}">Add a new component</a>
+</b>
+<br>
+<br>
+<table border="0">
+	<tr bgcolor="#eeeeee">
+		<th>Component</th>
+		<th>Created</th>
+		<th>Active</th>
+	</tr>
+	<!-- BEGIN row -->
+	<tr bgcolor="{bgcolor}">
+		<td><a href="component.php?op=edit&id={compid}">{compname}</a></td>
+		<td>{compdate}</td>
+		<td align="center">{compactive}</td>
+	</tr>
+	<!-- END row -->
+</table>
+<!-- END box -->

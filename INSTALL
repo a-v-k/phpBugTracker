@@ -1,0 +1,10 @@
+Ok, here's the quick and dirty install instructions:
+
+1. Edit the database creation script, changing the info for the Admin user.
+2. Run the database creation script (currently only MySQL) by running
+     "mysql -u <user> -p<password> < createdb.sql"
+3. Edit include.php, changing the ADMINEMAIL constant to what you want and 
+   changing the database login info in class dbclass.
+4. Browse on over to the installation, choose Admin tools, login with the info
+   you put in the database creation script, and create your first project.
+5. Start reporting bugs

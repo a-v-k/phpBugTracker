@@ -1,0 +1,53 @@
+Required Functionality:
+
+Front Page:
+Links to the most common fuctions, including querying the bugs (including ones
+assigned to the user), getting reports, entering a bug, etc.  Include quick
+stats showing bugs in the database broken down by category (and other
+classifications, like date ranges?).
+
+Query:
+Search the bug database with the following parameters: Status, Resolution,
+Operating System, Priority, Severity, Email (substring, regex, exact match),
+specific bug number, Age (creation, modification), Date Range, Product, Version,
+Component, Summary, Description, URL.
+
+Enter Bug:
+Same fields as Bugzilla minus the platform. (Or should we use platform as well
+to make it more of a drop-in replacement for bugzilla?)
+
+Personal Page:
+At the least this should copy the My Bugs link in Bugzilla, running a query of
+bugs assigned to the logged in user.  One improvement I'd like to make to bugzilla 
+is not only showing bugs assigned to you as My Bugs but also bugs submitted by you.
+We should separate them into distinct lists.  I don't know whether it would be i
+this page but we need a place for the user to change password, theme, etc.
+
+New Account:
+Allow users to create their own accounts to be able to submit bugs.  This should
+be a system configurable option, though, like Bugzilla's despot setting, which
+would require new users to be added by an administrator.  Also, we need to look
+at the feasibility of letting the administrator easily swap out the user
+database for a pre-existing one.  PHPLib's authentication routine is a step in
+this direction.
+
+Administration:
+
+Project + Component + Version:
+When creating a project the adminstrator should be led through this page
+sequence so that the minimum attributes of a project are all present.  Component
+and version administration will be handled from the project edit page.
+
+Users:
+Listing, editing, adding, and possibly reporting (activity, etc.) users for the
+system.  The reporting could be based on the bug logs, like who contributes the
+most, who clears the most, etc.  I don't know that we need the specific grant
+options in Bugzilla (editusers.cgi) but we do need the permissions settings.
+
+Miscellaneous:
+
+Groups:
+Do we want to replicate the groups functionality of Bugzilla?  It's groups allow
+the adminstrator to assign a set of users to a group, which is in turn related
+to a project.  This allows you to restrict bug viewability to a group of people.
+

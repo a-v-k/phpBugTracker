@@ -1,0 +1,47 @@
+<br>
+<table border="0" width="640">
+	<tr>
+		<td valign="top">
+			<b>&nbsp;OS List</b>
+			<hr size="1">
+			<table border="0">
+				<tr bgcolor="#eeeeee">
+					<th><a href="{nameurl}">Name</a></th>
+					<th><a href="{descriptionurl}">Regex</a></th>
+					<th><a href="{sortorderurl}">Sort Order</a></th>
+				</tr>
+				<!-- BEGIN row -->
+				<tr bgcolor="{bgcolor}">
+					<td><a href="{me}?op=edit&id={osid}">{name}</a></td>
+					<td>&nbsp;{regex}</td>
+					<td align="center">{sortorder}</td>
+				</tr>
+				<!-- END row -->
+			</table>
+		</td>
+		<td valign="top">
+			<div align="right"><b>{action} OS&nbsp;</b></div>
+			<hr size="1">
+			<form action="{me}" method="post">
+			<input type="hidden" name="id" value="{fosid}">
+			<table border='0'>
+			<tr>
+        			<td align="right" valign="top">Name:</td>
+        			<td><input type="text" size="20" maxlength="40" name="fname" value="{fname}"></td>
+			</tr>
+			<tr>
+        			<td align="right" valign="top">Regex:</td>
+        			<td><input type="text" size="20" maxlength="40" name="fregex" value="{fregex}"></td>
+			</tr>
+			<tr>
+        			<td align="right" valign="top">Sort Order:</td>
+        			<td><input type="text" size="3" maxlength="3" name="fsortorder" value="{fsortorder}"></td>
+			</tr>
+
+			</table>
+			<div align="right">
+				<input type='submit' name='submit' value='Submit'>
+			</div>
+			</form>
+		</td>
+</table>

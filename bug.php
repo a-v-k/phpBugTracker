@@ -1,0 +1,312 @@
+<?php
+
+// bug.php
+
+include 'include.php';
+
+page_open(array('sess' => 'usess', 'auth' => 'uauth'));
+
+$u = $auth->auth[uid];
+
+function update_bug($bugid = 0) {
+	global $q, $t, $u;
+	
+	if ($GLOBALS[HTTP_POST_VARS]) 
+		while (list($k,$v) = each($GLOBALS[HTTP_POST_VARS])) $$k = $v;
+		
+	if ($outcome == 'reassign' and (!$assignedto = $q->grab_field("select UserID
+		from User where Email = '$reassignto'"))) {
+		show_bug($bugid,array('status' => 'That user does not exist'));
+		return;
+	}
+	$now = time();
+	if ($comments) {
+		$comments = htmlspecialchars($comments);
+		$q->query("insert into Comment (CommentID, BugID, Text, CreatedBy, 
+			CreatedDate) values (".$q->nextid('Comment').", $bugid, '$comments',
+			$u, $now)");
+	}
+	switch($outcome) {
+		case 'unchanged' : break;
+		case 'assign' : $assignedto = $u; $statusfield = 'Assigned'; break;
+		case 'reassign' :$statusfield = 'Assigned'; break;
+		case 'reassigntocomponent' : 
+			$assignedto = $q->grab_field("select Owner from Component where 
+				ComponentID = $component");
+			$statusfield = 'Assigned'; break;
+		case 'dupe' : 
+			$changeresolution = true;
+			if ($dupenum == $bugid) {
+				show_bug($bugid,array('status' => 'A bug can\'t be a duplicate of itself'));
+				return;
+			} elseif (!$q->grab_field("select BugID from Bug where BugID = $dupenum")) {
+				show_bug($bugid,array('status' => 'That bug does not exist'));
+				return;
+			}
+			$q->query("insert into Comment (CommentID, BugID, Text, CreatedBy, 
+				CreatedDate) values (".$q->nextid('Comment').", $dupenum, 
+				'Bug #$bugid is a duplicate of this bug', $u, $now)");
+			$q->query("insert into Comment (CommentID, BugID, Text, CreatedBy, 
+				CreatedDate) values (".$q->nextid('Comment').", $bugid, 
+				'This bug is a duplicate of bug #$dupenum', $u, $now)");
+			$statusfield = 'Duplicate'; 
+			$bugresolution = $q->grab_field("select ResolutionID from Resolution
+				where Name = 'Duplicate'");
+			$statusfield = 'Resolved';
+			break;
+		case 'resolve' : 
+			$changeresolution = true;
+			$statusfield = 'Resolved'; 
+			break;
+		case 'reopen' :
+			$changeresolution = true;
+			$statusfield = 'Reopened';
+			$bugresolution = 0;
+			break;
+		case 'verify' :
+			$statusfield = 'Verified';
+			break;
+		case 'close' :
+			$statusfield = 'Closed';
+			break;
+	}
+	if ($statusfield) {
+		$status = $q->grab_field("select StatusID
+			from Status where Name = '$statusfield'"); 
+	}
+	if ($url == 'http://') $url = '';
+	elseif ($url and substr($url,0,7) != 'http://') $url = 'http://'.$url;
+	#$q->Debug=true;
+	$q->query("Update Bug set Title = '$title', URL = '$url', Severity = $severity,
+		Priority = $priority, ".($status ? "Status = $status, " : '').
+		($changeresolution ? "Resolution = $bugresolution, " : '').
+		($assignedto ? "AssignedTo = $assignedto, " : '')." Project = $project, 
+		Version = $version, Component = $component, OS = $os where BugID = $bugid");
+	
+	header("Location: bug.php?op=show&bugid=$bugid");
+}
+
+function do_form($bugid = 0) {
+  global $q, $me, $title, $u, $another;
+  
+	$pv = $GLOBALS[HTTP_POST_VARS];
+  // Validation
+	if (!$pv[title] = htmlspecialchars(trim($pv[title])))
+		$error = 'Please enter a title';
+	elseif (!$pv[description] = htmlspecialchars(trim($pv[description])))
+		$error = 'Please enter a title';
+  if ($error) { show_form($bugid, $error); return; }
+  
+	while (list($k,$v) = each($pv)) $$k = $v;
+	
+	if ($url == 'http://') $url = '';
+	$time = time();
+  if (!$bugid) {
+		$status = $q->grab_field("select StatusID from Status where Name = 'Unconfirmed'");
+    $q->query("insert into Bug (BugID, Title, Description, URL, Severity, 
+			Priority, Status, CreatedBy, CreatedDate, Project, Version, Component, 
+			OS, BrowserString) values (".$q->nextid('Bug').", '$title', '$description', 
+			'$url', $severity, $priority, $status, $u, $time, $project, $version, 
+			$component, '$os', '$GLOBALS[HTTP_USER_AGENT]')");
+  } else {
+    $q->query("update Bug set Title='$title', Description='$description', 
+			URL='$url', Severity='$severity', Priority='$priority', 
+			Status=$status, AssignedTo='$assignedto', Project=$project, 
+			Version=$version, Component=$component, OS='$os', BrowserString='$GLOBALS[HTTP_USER_AGENT]' 
+			where BugID = '$bugid'");
+  }
+	if ($another) header("Location: $me?op=add&project=$project");
+  else header("Location: query.php");
+}  
+
+function show_form($bugid = 0, $error = '') {
+  global $q, $me, $t, $project;
+  
+	if ($GLOBALS[HTTP_POST_VARS]) 
+		while (list($k,$v) = each($GLOBALS[HTTP_POST_VARS])) $$k = $v;
+	
+	$t->set_file('content','bugform.html');
+	$projectname = $q->grab_field("select Name from Project where ProjectID = $project");
+  if ($bugid && !$error) {
+    $row = $q->grab("select * from Bug where BugID = '$bugid'");
+    $t->set_var(array(
+			'bugid' => $bugid,
+			'TITLE' => 'Edit Bug',
+      'title' => stripslashes($row[Title]),
+      'description' => stripslashes($row[Description]),
+      'url' => $row[URL],
+      'severity' => build_select('Severity',$row[Severity]),
+      'priority' => build_select('priority',$row[Priority]),
+      'status' => build_select('Status',$row[Status]),
+      'resolution' => build_select('Resolution',$row[Resolution]),
+      'assignedto' => $row[AssignedTo],
+      'createdby' => $row[CreatedBy],
+      'createddate' => date(DATEFORMAT,$row[CreatedDate]),
+      'project' => $row[Project],
+			'projectname' => $projectname,
+			'version' => build_select('Version',$row[Version],$row[Project]),
+      'component' => build_select('Component',$row[Component],$row[Project]),
+      'os' => build_select('OS',$row[OS]),
+      'browserstring' => $row[BrowserString]));
+  } else {
+    $t->set_var(array(
+			'TITLE' => 'Enter a Bug',
+      'error' => $error,
+      'bugid' => $bugid,
+      'title' => stripslashes($title),
+      'description' => stripslashes($description),
+      'url' => $url ? $url : 'http://',
+      'severity' => build_select('Severity',$severity),
+      'priority' => build_select('priority',$priority),
+      'status' => build_select('Status',$status),
+      'resolution' => build_select('Resolution',$resolution),
+      'assignedto' => $assignedto,
+      'createdby' => $createdby,
+      'createddate' => $createddate,
+      'project' => $project,
+			'projectname' => $projectname,
+			'version' => build_select('Version',$version,$project),
+      'component' => build_select('Component',$component,$project),
+      'os' => build_select('OS',$os)));
+  }
+}
+
+function show_bug($bugid = 0, $error = '') {
+  global $q, $me, $t, $project; # $title, $description, $url, $severity, $priority, $status, $assignedto, $createdby, $createddate, $project, $component, $os, $browserstring;
+  
+	$t->set_file('content','bugdisplay.html');
+	$t->set_block('content','row','rows');
+  $t->set_block('content','arow','assignrow');
+  $t->set_block('content','rrow','resolverow');
+  $t->set_block('content','rerow','reopenrow');
+  $t->set_block('content','vrow','verifyrow');
+  $t->set_block('content','crow','closerow');
+	$t->set_unknowns('remove');
+  if (!ereg('^[0-9]+$',$bugid) or !$row = $q->grab("select BugID, Title, 
+		Reporter.Email as Reporter, Owner.Email as Owner, Project,
+		Severity, Bug.CreatedDate, Status.Name as Status, Priority, 
+		Bug.Description, Resolution.Name as Resolution, URL, Component, OS 
+		from Bug, Severity, Status left join User Owner on Bug.AssignedTo = Owner.UserID left join 
+		User Reporter on Bug.CreatedBy = Reporter.UserID left join Resolution on 
+		Resolution = ResolutionID where BugID = '$bugid'  
+		and Severity = SeverityID and Status = StatusID")) {
+		show_text('That bug is not available');
+		return;
+	}
+  $t->set_var(array(
+		'statuserr' => $error[status] ? $error[status].'<br><br>' : '',
+		'bugid' => $bugid,
+		'TITLE' => "Edit Bug #$bugid",
+    'title' => stripslashes($row[Title]),
+    'description' => nl2br(stripslashes($row[Description])),
+    'url' => $row[URL],
+    'severity' => build_select('Severity',$row[Severity]),
+    'priority' => build_select('priority',$row[Priority]),
+    'status' => $row[Status],
+    'resolution' => $row[Resolution],
+    'owner' => $row[Owner],
+    'reporter' => $row[Reporter],
+    'createddate' => date(DATEFORMAT,$row[CreatedDate]),
+		'createdtime' => date(TIMEFORMAT,$row[CreatedDate]),
+    'project' => build_select('Project',$row[Project]),
+		'projectid' => $row[Project],
+		'version' => build_select('Version',$row[Version],$row[Project]),
+    'component' => build_select('Component',$row[Component],$row[Project]),
+    'os' => build_select('OS',$row[OS]),
+    'browserstring' => $row[BrowserString],
+		'bugresolution' => build_select('Resolution')
+		));
+	switch($row[Status]) {
+		case 'Unconfirmed' :
+		case 'New' :
+		case 'Reopened' :
+			$t->parse('assignrow','arow',true);
+			$t->parse('resolverow','rrow',true);
+			break;
+		case 'Assigned' :
+			$t->parse('resolverow','rrow',true);
+			break;
+		case 'Resolved' :
+			$t->parse('reopenrow','rerow',true);
+			$t->parse('verifyrow','vrow',true);
+			$t->parse('closerow','crow',true);
+			break;
+		case 'Verified' :
+			$t->parse('reopenrow','rerow',true);
+			$t->parse('closerow','crow',true);
+			break;
+		case 'Closed' :
+			$t->parse('reopenrow','rerow',true);
+			break;
+	}
+			
+	$q->query("select Text, Comment.CreatedDate, Email from Comment, User where 
+		BugID = $bugid and CreatedBy = UserID order by CreatedDate");
+	if (!$q->num_rows()) {
+		$t->set_var('rows','');
+	} else {
+		while ($row = $q->grab()) {
+			$t->set_var(array(
+				'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
+				'rdescription' => eregi_replace('(bug)[[:space:]]*(#?)([0-9]+)',
+					"\\1 <a href='$me?op=show&bugid=\\3'>\\2\\3</a>",nl2br($row[Text])),
+				'rreporter' => $row[Email],
+				'rcreateddate' => date(TIMEFORMAT,$row[CreatedDate]).' on '.
+					date(DATEFORMAT,$row[CreatedDate])
+				));
+			$t->parse('rows','row',true);
+		}
+	}
+}
+
+function show_projects() {
+	global $me, $q, $t, $project;
+	
+	$q->query("select * from Project where Active order by Name");
+	switch ($q->num_rows()) {
+		case 0 :
+			$t->set_var('rows','No projects found');
+			return;
+		case 1 :
+			$row = $q->grab();
+			$project = $row[ProjectID];
+			show_form();
+			break;
+		default :
+			$t->set_file('content','projectlist.html');
+			$t->set_block('content','row','rows');
+
+			while ($row = $q->grab()) {
+			$t->set_var(array(
+				'id' => $row[ProjectID],
+				'name' => $row[Name],
+				'description' => $row[Description],
+				'date' => date(DATEFORMAT,$row[CreatedDate])
+				));
+			$t->parse('rows','row',true);
+		}
+		$t->set_var('TITLE', 'Enter a bug');
+	}	
+}
+
+$t->set_file('wrap','wrap.html');
+
+
+if ($op) {
+	switch($op) {
+		case 'add' : 
+			if ($project) show_form(); 
+			else show_projects();
+			break;
+		case 'show' : show_bug($bugid); break;
+		case 'update' : update_bug($bugid); break;
+		case 'do' : do_form($bugid); break;
+	}
+} else header("Location: query.php");
+
+$t->parse('main',array('content','wrap','main'));
+$t->p('main');
+
+page_close();
+
+?>

@@ -1,0 +1,167 @@
+    <form method="get" action="query.php">
+      <table>
+        <tr>
+          <th align="left">Status:</th>
+          <th align="left">Resolution:</th>
+          <th align="left">OpSys:</th>
+          <th align="left">Priority:</th>
+          <th align="left">Severity:</th>
+        </tr>
+
+        <tr>
+          <td align="left" valign="top">
+						<select name="status[]" multiple size="7">{status}</select>
+					</td>
+          <td align="left" valign="top">
+						<select name="resolution[]" multiple size="7">{resolution}</select>
+					</td>
+          <td align="left" valign="top">
+						<select name="os[]" multiple size="7">{os}</select>
+					</td>
+          <td align="left" valign="top">
+						<select name="priority[]" multiple size="7">{priority}</select>
+					</td>
+          <td align="left" valign="top">
+						<select name="severity[]" multiple size="7">{severity}</select>
+					</td>
+        </tr>
+      </table>
+			<br>
+			<br>
+     	<table>
+        <tr>
+          <td>
+            <table border="1" cellspacing="0" cellpadding="0">
+              <tr>
+                <td>
+                  <table cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td rowspan="2" valign="top">
+                      Email: <input name="email1" size="30" value="">&nbsp;matching
+                      as <select name="emailtype1">
+                        <option value="rlike">
+                          regexp
+                        </option>
+
+                        <option value="not rlike">
+                          not regexp
+                        </option>
+
+                        <option selected value="like">
+                          substring
+                        </option>
+
+                        <option value="=">
+                          exact
+                        </option>
+                      </select> </td>
+
+                      <td><input type="checkbox" name="emailfield1[]" value="Owner"
+                      checked>Assigned To</td>
+                    </tr>
+
+                    <tr>
+                      <td><input type="checkbox" name="emailfield1[]" value="Reporter">
+                      Reporter</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+			</table>
+
+      <table border="0">
+        <tr>
+          <td align="right">Summary:</td>
+
+          <td><input name="Title" size="30" value=""></td>
+
+          <td><select name="Title_type">
+            <option value="like" selected>
+              substring
+            </option>
+
+            <option value="rlike">
+              regular expression
+            </option>
+
+            <option value="not rlike">
+              not ( regular expression )
+            </option>
+          </select></td>
+        </tr>
+
+        <tr>
+          <td align="right">A description entry:</td>
+
+          <td><input name="Description" size="30" value=""></td>
+
+          <td><select name="Description_type">
+            <option value="like" selected>
+              substring
+            </option>
+
+            <option value="rlike">
+              regular expression
+            </option>
+
+            <option value="not rlike">
+              not ( regular expression )
+            </option>
+          </select></td>
+        </tr>
+
+        <tr>
+          <td align="right">URL:</td>
+
+          <td><input name="URL" size="30" value=""></td>
+
+          <td><select name="URL_type">
+            <option value="like" selected>
+              substring
+            </option>
+
+            <option value="rlike">
+              regular expression
+            </option>
+
+            <option value="not rlike">
+              not ( regular expression )
+            </option>
+          </select></td>
+        </tr>
+      </table>
+
+      <hr>
+      <input type="hidden" name="op" value="doquery">
+			<nobr><b>Sort By:</b> 
+			<select name="order">
+        <option value="BugID">
+          Bug Number
+        </option>
+        <option selected value="Severity.SortOrder">
+          Severity
+        </option>
+        <option value="Reporter">
+          Reporter
+        </option>
+        <option value="Status.SortOrder">
+          Status
+        </option>
+        <option value="Priority">
+          Priority
+        </option>
+      </select>
+			<select aame="sort">
+				<option selected value="asc">Ascending</option>
+				<option value="desc">Descending</option>
+			</select>
+			</nobr> <input type="submit" value="Submit query"><input type="reset"
+      value="Reset back to the default query">
+    </form>
+
+  </body>
+</html>
+

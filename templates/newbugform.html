@@ -1,0 +1,83 @@
+<html>
+<head>
+        <title>Bug Form</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+<form action="bug.php" method="post">
+<input type="hidden" name="bugid" value="{bugid}">
+<table border='0'>
+<tr>
+        <td align="right" valign="top">Title:</td>
+        <td><input type="text" size="30" maxlength="30" name="title" value="{title}"></td>
+</tr>
+<tr>
+        <td align="right" valign="top">Description:</td>
+        <td><textarea name="description" cols=40 rows=5 wrap=virtual>{description}</textarea></td>
+</tr>
+<tr>
+        <td align="right" valign="top">URL:</td>
+        <td><input type="text" size="255" maxlength="255" name="url" value="{url}"></td>
+</tr>
+        
+<tr>
+        <td align="right" valign="top">Severity:</td>
+        <td>
+                <select name="severity">
+                {severity}
+                </select>
+        </td>
+</tr>
+        
+<tr>
+        <td align="right" valign="top">Priority:</td>
+        <td>
+                <select name="priority">
+                {priority}
+                </select>
+        </td>
+</tr>
+        
+<tr>
+        <td align="right" valign="top">Status:</td>
+        <td>
+                <select name="status">
+                {status}
+                </select>
+        </td>
+</tr>
+<tr>
+        <td align="right" valign="top">AssignedTo:</td>
+        <td><input type="text" size="3" maxlength="3" name="assignedto" value="{assignedto}"></td>
+</tr>
+<tr>
+        <td align="right" valign="top">Project:</td>
+        <td>
+                <select name="project">
+                {project}
+                </select>
+        </td>
+</tr>
+        
+<tr>
+        <td align="right" valign="top">Component:</td>
+        <td>
+                <select name="component">
+                {component}
+                </select>
+        </td>
+</tr>
+        
+<tr>
+        <td align="right" valign="top">OS:</td>
+        <td>
+                <select name="os">
+                {os}
+                </select>
+        </td>
+</tr>
+</table>
+<input type='submit' name='submit' value='Submit'>
+</form>
+</body>
+</html>
