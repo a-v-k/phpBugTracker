@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.47 2001/12/08 14:55:42 bcurtis Exp $
+// $Id: query.php,v 1.48 2001/12/19 13:52:03 bcurtis Exp $
 
 include 'include.php';
 
@@ -248,7 +248,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		and b.os_id = os.os_id and b.version_id = version.version_id 
 		and b.component_id = component.component_id and b.project_id = project.project_id '.
 		($queryinfo['query'] != '' ? "and {$queryinfo['query']} " : '').
-		"order by $order $sort", $selrange, $llimit);
+		"order by $order $sort, bug_id asc", $selrange, $llimit);
 				
 	$headers = array(
 		'bug_id' => 'bug_id',

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.69 2001/12/19 13:33:14 bcurtis Exp $
+// $Id: bug.php,v 1.70 2001/12/19 13:52:03 bcurtis Exp $
 
 include 'include.php';
 
@@ -554,7 +554,8 @@ function prev_next_links($bugid, $pos) {
 		$offset = $pos;
 		$limit = 1;
 	}
-	$q->limit_query('select bug_id from '.TBL_BUG.' b
+	$q->limit_query('select bug_id, reporter.login as reporter, owner.login as owner 
+		from '.TBL_BUG.' b
 		left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id
 		left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id 
 		left join '.TBL_AUTH_USER.' lastmodifier on b.last_modified_by = lastmodifier.user_id 
@@ -565,7 +566,7 @@ function prev_next_links($bugid, $pos) {
 		and b.os_id = os.os_id and b.version_id = version.version_id 
 		and b.component_id = component.component_id and b.project_id = project.project_id '.
 		"and {$queryinfo['query']} and bug_id <> $bugid 
-		order by {$queryinfo['order']} {$queryinfo['sort']}", $limit, $offset);
+		order by {$queryinfo['order']} {$queryinfo['sort']}, bug_id asc", $limit, $offset);
 		
 	$firstid = $q->grab_field();
 	$secondid = $q->grab_field();
