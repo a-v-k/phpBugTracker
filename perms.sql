@@ -4,6 +4,7 @@ create table user_group (user_id int unsigned not null, group_id int unsigned no
 create table user_perm (user_id int unsigned not null, perm_id int unsigned not null, primary key (user_id, perm_id), key (perm_id));
 create table group_perm (group_id int unsigned not null, perm_id int unsigned not null, primary key (group_id, perm_id), key (perm_id));
 create table bug_group (bug_id int unsigned not null, group_id int unsigned not null, primary key (bug_id, group_id), key (group_id));
+create table project_group (project_id int unsigned not null, group_id int unsigned not null, primary key (project_id, group_id), key (group_id));
 
 # Start off with two user levels...
 insert into auth_group (group_id, group_name) values (1, 'admin');

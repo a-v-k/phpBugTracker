@@ -149,9 +149,10 @@ CREATE TABLE `auth_user` (
   `created_date` bigint(20) unsigned NOT NULL default '0',
   `last_modified_by` int(10) unsigned NOT NULL default '0',
   `last_modified_date` bigint(20) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`user_id`)
+  PRIMARY KEY  (`user_id`),
+	UNIQUE login (login)
 );
-insert into auth_user select UserID, FirstName, LastName, Email, Password, if (UserLevel > 0, 1, 0), '', 0, CreatedDate, 0, CreatedDate from User;
+insert into auth_user select UserID, Email, FirstName, LastName, Email, Password, if (UserLevel > 0, 1, 0), '', 0, CreatedDate, 0, CreatedDate from User;
 
 CREATE TABLE `version` (
   `version_id` int(10) unsigned NOT NULL default '0',
