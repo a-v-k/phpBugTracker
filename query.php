@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.96 2003/06/21 13:36:30 bcurtis Exp $
+// $Id: query.php,v 1.97 2003/07/13 14:22:42 bcurtis Exp $
 
 include 'include.php';
 
@@ -120,7 +120,7 @@ function build_query($assignedto, $reportedby, $open) {
 				case '=' : $econd = "$emailtype1 '$email1'"; break;
 			}
 			foreach($emailfield1 as $field) $equery[] = "$field.$emailsearch1 $econd";
-			$query[] = '('.@join(' or ',$equery).')';
+			$query[] = '('.@join(' and ',$equery).')';
 		}
 
 		// Text search field(s)
@@ -134,7 +134,7 @@ function build_query($assignedto, $reportedby, $open) {
 				$fields[] = "$searchfield $cond";
 			}
 		}
-		if (!empty($fields)) $query[] = '('.@join(' or ',$fields).')';
+		if (!empty($fields)) $query[] = '('.@join(' and ',$fields).')';
 
 		// Project/Version/Component
 		if (!empty($projects)) {
@@ -147,6 +147,12 @@ function build_query($assignedto, $reportedby, $open) {
 		} elseif (!$perm->have_perm('Admin')) { // Filter results from hidden projects
 			$query[] = "b.project_id not in ($restricted_projects)";
 		}
+		// TODO: Something like this can be used for searching descriptions
+		/* 
+		select b.bug_id, b.title, b.description, c.comment_id, c.comment_text 
+		from bug b left join comment c using (bug_id)
+		where description like '%yet%' or comment_text like '%yet%'
+		*/
 	}
 
 	if (!empty($query)) {
