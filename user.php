@@ -40,7 +40,7 @@ function change_password($pass1, $pass2) {
 		$mpassword = $pass1;
 	}
 	
-	$q->query("update User set Password = '$mpassword' where UserID = $u");
+	$q->query("update user set password = '$mpassword' where user_id = $u");
 	$t->set_file('content', 'passwordchanged.html');
 }
 
