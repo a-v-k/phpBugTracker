@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.14 2002/03/13 17:40:18 bcurtis Exp $
+// $Id: install.php,v 1.15 2002/03/17 01:39:31 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname(__FILE__));
 
@@ -107,13 +107,9 @@ function grab_config_file() {
 function create_tables() {
 	global $_pv, $tables;
 	
-	include_once(INSTALL_PATH.'/inc/db/'.$_pv['db_type'].'.php');
-
-	$db = new DB_Sql;
-	$db->Host = $_pv['db_host'];
-	$db->Database = $_pv['db_database'];
-	$db->User = $_pv['db_user'];
-	$db->Password = $_pv['db_pass'];
+	// PEAR::DB
+	require_once('DB.php');
+	$db = DB::Connect($_pv['db_type'].'://'.$_pv['db_user'].':'.$_pv['db_pass'].'@'.$_pv['db_host'].'/'.$_pv['db_database']);
 
 	$q_temp_ary = file('schemas/'.$_pv['db_type'].'.in');
 	$queries = preg_replace(array_keys($tables), array_values($tables), 
@@ -123,6 +119,9 @@ function create_tables() {
 		// First, collect multi-line queries into one line, then run the query
 		$do_query .= chop($query);
 		if (empty($do_query) or substr($do_query, -1) != ';') continue;
+		if ($_pv['db_type'] == 'oci8' ) {
+		    $do_query = substr($do_query, 0, -1);
+		}
 		$db->query($do_query);
 		$do_query = '';
 	}
@@ -197,6 +196,7 @@ function show_front($error = '') {
 	
 	$db_types = array(
 		'mysql' => 'MySQL',
+		'oci8' => 'Oracle 8.1.x',
 		'pgsql' => 'PostgreSQL');
 		
 	foreach ($_pv as $k => $v) $$k = $v;
