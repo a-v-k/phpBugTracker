@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script to generate database-creation-scripts
-# $Id: configure_db,v 1.1 2001/09/07 13:15:37 mohni Exp $
+# $Id: configure_db,v 1.2 2001/09/11 03:02:13 bcurtis Exp $
 
 # prefix for tablenames
 #TBL_PREFIX="phpbt_"
@@ -39,6 +39,5 @@ generate_sql() {
 
 #------------------------------------------------------------------------------
 
-#generate_sql createdb.sql.in createdb.sql
-#generate_sql createdb_pg.sql.in createdb_pg.sql
-generate_sql createdb.sql.in createdb.sql.out
+#generate_sql schemas/postgres.sql.in createdb.sql
+generate_sql schemas/mysql.sql.in createdb.sql

@@ -1,0 +1,397 @@
+
+BEGIN;
+
+
+-- PostgreSQL database creation script
+-- If you change the database name, make sure you change the DB_DATABASE 
+-- constant in config.php.  Make sure you edit the TBL_AUTH_USER insert below.
+--
+-- TEMPLATE: This is a template for configure_db -- not for creating the database!
+--
+-- $Id: postgres.sql.in,v 1.1 2001/09/11 03:02:13 bcurtis Exp $
+
+create database BugTracker;
+use BugTracker;
+
+CREATE TABLE active_sessions (
+  sid varchar(32) NOT NULL DEFAULT '',
+  name varchar(32) NOT NULL DEFAULT '',
+  val text,
+  changed varchar(14) NOT NULL DEFAULT '',
+  PRIMARY KEY  (name,sid)
+);
+
+CREATE TABLE TBL_ATTACHMENT (
+  attachment_id INT4  NOT NULL DEFAULT '0',
+  bug_id INT4  NOT NULL DEFAULT '0',
+  file_name char(255) NOT NULL DEFAULT '',
+  description char(255) NOT NULL DEFAULT '',
+  file_size INT8  NOT NULL DEFAULT '0',
+  mime_type char(30) NOT NULL DEFAULT '',
+  created_by INT4  NOT NULL DEFAULT '0',
+  created_date INT8  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (attachment_id)
+);
+
+CREATE TABLE TBL_AUTH_GROUP (
+  group_id INT4  NOT NULL DEFAULT '0',
+  group_name varchar(80) NOT NULL DEFAULT '',
+  created_by INT4  NOT NULL DEFAULT '0',
+  created_date INT8  NOT NULL DEFAULT '0',
+  last_modified_by INT4  NOT NULL DEFAULT '0',
+  last_modified_date INT8  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (group_id)
+);
+
+CREATE TABLE TBL_AUTH_PERM (
+  perm_id INT4  NOT NULL DEFAULT '0',
+  perm_name varchar(80) NOT NULL DEFAULT '',
+  created_by INT4  NOT NULL DEFAULT '0',
+  created_date INT8  NOT NULL DEFAULT '0',
+  last_modified_by INT4  NOT NULL DEFAULT '0',
+  last_modified_date INT8  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (perm_id)
+);
+
+CREATE TABLE TBL_AUTH_USER (
+  user_id INT4  NOT NULL DEFAULT '0',
+  login char(40) NOT NULL DEFAULT '',
+  first_name char(40) NOT NULL DEFAULT '',
+  last_name char(40) NOT NULL DEFAULT '',
+  email char(60) NOT NULL DEFAULT '',
+  password char(40) NOT NULL DEFAULT '',
+  active INT2  NOT NULL DEFAULT '1',
+  bug_list_fields char(255) NOT NULL DEFAULT '',
+  created_by INT4  NOT NULL DEFAULT '0',
+  created_date INT8  NOT NULL DEFAULT '0',
+  last_modified_by INT4  NOT NULL DEFAULT '0',
+  last_modified_date INT8  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (user_id)
+);
+
+CREATE TABLE TBL_BUG (
+  bug_id INT4  NOT NULL DEFAULT '0',
+  title varchar(100) NOT NULL DEFAULT '',
+  description TEXT DEFAULT '' NOT NULL,
+  url varchar(255) NOT NULL DEFAULT '',
+  severity_id INT2  NOT NULL DEFAULT '0',
+  priority INT2  NOT NULL DEFAULT '0',
+  status_id INT2  NOT NULL DEFAULT '0',
+  resolution_id INT2  NOT NULL DEFAULT '0',
+  assigned_to INT4  NOT NULL DEFAULT '0',
+  created_by INT4  NOT NULL DEFAULT '0',
+  created_date INT8  NOT NULL DEFAULT '0',
+  last_modified_by INT4  NOT NULL DEFAULT '0',
+  last_modified_date INT8  NOT NULL DEFAULT '0',
+  project_id INT4  NOT NULL DEFAULT '0',
+  version_id INT4  NOT NULL DEFAULT '0',
+  component_id INT4  NOT NULL DEFAULT '0',
+  os_id INT2  NOT NULL DEFAULT '0',
+  browser_string varchar(255) NOT NULL DEFAULT '',
+  close_date INT8  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (bug_id)
+);
+
+CREATE TABLE TBL_BUG_GROUP (
+  bug_id INT4  NOT NULL DEFAULT '0',
+  group_id INT4  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (bug_id,group_id)
+);
+
+CREATE TABLE TBL_BUG_HISTORY (
+  bug_id INT4  NOT NULL DEFAULT '0',
+  changed_field char(20) NOT NULL DEFAULT '',
+  old_value char(255) NOT NULL DEFAULT '',
+  new_value char(255) NOT NULL DEFAULT '',
+  created_by INT4  NOT NULL DEFAULT '0',
+  created_date INT8  NOT NULL DEFAULT '0'
+);
+
+CREATE TABLE TBL_COMMENT (
+  comment_id INT4  NOT NULL DEFAULT '0',
+  bug_id INT4  NOT NULL DEFAULT '0',
+  comment_text TEXT DEFAULT '' NOT NULL,
+  created_by INT4  NOT NULL DEFAULT '0',
+  created_date INT8  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (comment_id)
+);
+
+CREATE TABLE TBL_COMPONENT (
+  component_id INT4  NOT NULL DEFAULT '0',
+  project_id INT4  NOT NULL DEFAULT '0',
+  component_name varchar(30) NOT NULL DEFAULT '',
+  component_desc TEXT DEFAULT '' NOT NULL,
+  owner INT4  NOT NULL DEFAULT '0',
+  active INT2 NOT NULL DEFAULT '1',
+  created_by INT4  NOT NULL DEFAULT '0',
+  created_date INT8  NOT NULL DEFAULT '0',
+  last_modified_by INT4  NOT NULL DEFAULT '0',
+  last_modified_date INT8  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (component_id)
+);
+
+CREATE TABLE db_sequence (
+  seq_name varchar(127) NOT NULL DEFAULT '',
+  nextid INT4  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (seq_name)
+);
+
+CREATE TABLE TBL_GROUP_PERM (
+  group_id INT4  NOT NULL DEFAULT '0',
+  perm_id INT4  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (group_id,perm_id)
+);
+
+CREATE TABLE TBL_OS (
+  os_id INT4  NOT NULL DEFAULT '0',
+  os_name char(30) NOT NULL DEFAULT '',
+  sort_order INT2  NOT NULL DEFAULT '0',
+  regex char(40) NOT NULL DEFAULT '',
+  PRIMARY KEY  (os_id)
+);
+
+CREATE TABLE TBL_PROJECT (
+  project_id INT4  NOT NULL DEFAULT '0',
+  project_name varchar(30) NOT NULL DEFAULT '',
+  project_desc TEXT DEFAULT '' NOT NULL,
+  active INT2 NOT NULL DEFAULT '1',
+  created_by INT4  NOT NULL DEFAULT '0',
+  created_date INT8  NOT NULL DEFAULT '0',
+  last_modified_by INT4  NOT NULL DEFAULT '0',
+  last_modified_date INT8  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (project_id)
+);
+
+CREATE TABLE TBL_RESOLUTION (
+  resolution_id INT4  NOT NULL DEFAULT '0',
+  resolution_name varchar(30) NOT NULL DEFAULT '',
+  resolution_desc TEXT DEFAULT '' NOT NULL,
+  sort_order INT2  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (resolution_id)
+);
+
+
+
+--
+-- Sequences for table TBL_SAVED_QUERY
+--
+
+CREATE SEQUENCE tbl_saved_query_saved_query_;
+
+CREATE TABLE TBL_SAVED_QUERY (
+  saved_query_id INT4 DEFAULT nextval('tbl_saved_query_saved_query_'),
+  user_id INT4  NOT NULL DEFAULT '0',
+  saved_query_name varchar(40) NOT NULL DEFAULT '',
+  saved_query_string TEXT DEFAULT '' NOT NULL,
+  PRIMARY KEY  (saved_query_id,user_id)
+);
+
+CREATE TABLE TBL_SEVERITY (
+  severity_id INT4  NOT NULL DEFAULT '0',
+  severity_name varchar(30) NOT NULL DEFAULT '',
+  severity_desc TEXT DEFAULT '' NOT NULL,
+  sort_order INT2  NOT NULL DEFAULT '0',
+  severity_color varchar(10) NOT NULL DEFAULT '#FFFFFF',
+  PRIMARY KEY  (severity_id)
+);
+
+CREATE TABLE TBL_STATUS (
+  status_id INT4  NOT NULL DEFAULT '0',
+  status_name varchar(30) NOT NULL DEFAULT '',
+  status_desc TEXT DEFAULT '' NOT NULL,
+  sort_order INT2  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (status_id)
+);
+
+CREATE TABLE TBL_USER_GROUP (
+  user_id INT4  NOT NULL DEFAULT '0',
+  group_id INT4  NOT NULL DEFAULT '0',
+  created_by INT4  NOT NULL DEFAULT '0',
+  created_date INT8  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (user_id,group_id)
+);
+
+CREATE TABLE TBL_USER_PERM (
+  user_id INT4  NOT NULL DEFAULT '0',
+  perm_id INT4  NOT NULL DEFAULT '0',
+  created_by INT4  NOT NULL DEFAULT '0',
+  created_date INT8  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (user_id,perm_id)
+);
+
+CREATE TABLE TBL_VERSION (
+  version_id INT4  NOT NULL DEFAULT '0',
+  project_id INT4  NOT NULL DEFAULT '0',
+  version_name char(10) NOT NULL DEFAULT '',
+  active INT2 NOT NULL DEFAULT '1',
+  created_by INT4  NOT NULL DEFAULT '0',
+  created_date INT8  NOT NULL DEFAULT '0',
+  last_modified_by INT4  NOT NULL DEFAULT '0',
+  last_modified_date INT8  NOT NULL DEFAULT '0',
+  PRIMARY KEY  (version_id)
+);
+
+--
+-- -- Insert initial data --
+--
+
+INSERT INTO TBL_AUTH_USER 
+	(user_id, login, first_name, last_name, email, password)
+	values (1, 'admin@example.com', 'System', 'Admin', 'admin@example.com', 
+		'somepassword');
+
+-- Start off with three user levels...
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name) VALUES (1, 'Admin');
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name) VALUES (2, 'User');
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name) VALUES (3, 'Developer');
+
+-- ... and only two permissions 
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (1, 'Admin');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (2, 'Editbug');
+
+-- Admins can do all the admin stuff and users can edit bugs
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (1, 1);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (2, 2);
+
+-- And user_id 1 is an admin and a user
+INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 1);
+INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 2);
+
+
+INSERT INTO TBL_OS VALUES (1,'All',1,'');
+INSERT INTO TBL_OS VALUES (2,'Windows 3.1',2,'/Mozilla.*\\(Win16.*\\)/');
+INSERT INTO TBL_OS VALUES (3,'Windows 95',3,'/Mozilla.*\\(.*;.*; 32bit.*\\)/');
+INSERT INTO TBL_OS VALUES (4,'Windows 98',4,'/Mozilla.*\\(Win98.*\\)/');
+INSERT INTO TBL_OS VALUES (5,'Windows ME',5,'');
+INSERT INTO TBL_OS VALUES (6,'Windows 2000',6,'/Mozilla.*Windows NT 5.*\\)/');
+INSERT INTO TBL_OS VALUES (7,'Windows NT',7,'/Mozilla.*\\(Windows.*NT/');
+INSERT INTO TBL_OS VALUES (8,'Mac System 7',8,'');
+INSERT INTO TBL_OS VALUES (9,'Mac System 7.5',9,'');
+INSERT INTO TBL_OS VALUES (10,'Mac System 7.6.1',10,'');
+INSERT INTO TBL_OS VALUES (11,'Mac System 8.0',11,'');
+INSERT INTO TBL_OS VALUES (12,'Mac System 8.5',12,'/Mozilla.*\\(.*;.*; 68K.*\\)/');
+INSERT INTO TBL_OS VALUES (13,'Mac System 8.6',13,'/Mozilla.*\\(.*;.*; PPC.*\\)/');
+INSERT INTO TBL_OS VALUES (14,'Mac System 9.0',14,'');
+INSERT INTO TBL_OS VALUES (15,'Mac TBL_OS X',15,'');
+INSERT INTO TBL_OS VALUES (16,'Linux',16,'/Mozilla.*\\(.*;.*; Linux.*\\)/');
+INSERT INTO TBL_OS VALUES (17,'BSDI',17,'/Mozilla.*\\(.*;.*; BSD\\/OS.*\\)/');
+INSERT INTO TBL_OS VALUES (18,'FreeBSD',18,'/Mozilla.*\\(.*;.*; FreeBSD.*\\)/');
+INSERT INTO TBL_OS VALUES (19,'NetBSD',19,'');
+INSERT INTO TBL_OS VALUES (20,'OpenBSD',20,'');
+INSERT INTO TBL_OS VALUES (21,'AIX',21,'/Mozilla.*\\(.*;.*; AIX.*\\)/');
+INSERT INTO TBL_OS VALUES (22,'BeOS',22,'');
+INSERT INTO TBL_OS VALUES (23,'HP-UX',23,'/Mozilla.*\\(.*;.*; HP-UX.*\\)/');
+INSERT INTO TBL_OS VALUES (24,'IRIX',24,'/Mozilla.*\\(.*;.*; IRIX.*\\)/');
+INSERT INTO TBL_OS VALUES (25,'Neutrino',25,'');
+INSERT INTO TBL_OS VALUES (26,'OpenVMS',26,'');
+INSERT INTO TBL_OS VALUES (27,'OS/2',27,'');
+INSERT INTO TBL_OS VALUES (28,'OSF/1',28,'/Mozilla.*\\(.*;.*; OSF.*\\)/');
+INSERT INTO TBL_OS VALUES (29,'Solaris',29,'/Mozilla.*\\(.*;.*; SunOS 5.*\\)/');
+INSERT INTO TBL_OS VALUES (30,'SunOS',30,'/Mozilla.*\\(.*;.*; SunOS.*\\)/');
+INSERT INTO TBL_OS VALUES (31,'other',31,'');
+
+INSERT INTO TBL_RESOLUTION VALUES (1,'Fixed','Bug was eliminated',1);
+INSERT INTO TBL_RESOLUTION VALUES (2,'Not a bug','It\'s not a bug -- it\'s a feature!',2);
+INSERT INTO TBL_RESOLUTION VALUES (3,'Won\'t Fix','This bug will stay',3);
+INSERT INTO TBL_RESOLUTION VALUES (4,'Deferred','We\'ll get around to it later',4);
+INSERT INTO TBL_RESOLUTION VALUES (5,'Works for me','Can\'t replicate the bug',5);
+INSERT INTO TBL_RESOLUTION VALUES (6,'Duplicate','',6);
+
+INSERT INTO TBL_SEVERITY VALUES (1,'Unassigned','Default bug creation',1,'#dadada');
+INSERT INTO TBL_SEVERITY VALUES (2,'Idea','Ideas for further development',2,'#dad0d0');
+INSERT INTO TBL_SEVERITY VALUES (3,'Feature Request','Requests for specific features',3,'#dacaca');
+INSERT INTO TBL_SEVERITY VALUES (4,'Annoyance','Cosmetic problems or bugs not affecting performance',4,'#dac0c0');
+INSERT INTO TBL_SEVERITY VALUES (5,'Content','Non-functional related bugs, such as text content',5,'#dababa');
+INSERT INTO TBL_SEVERITY VALUES (6,'Significant','A bug affecting the intended performance of the product',6,'#dab0b0');
+INSERT INTO TBL_SEVERITY VALUES (7,'Critical','A bug severe enough to prevent the release of the product',7,'#daaaaa');
+
+INSERT INTO TBL_STATUS VALUES (1,'Unconfirmed','Reported but not confirmed',1);
+INSERT INTO TBL_STATUS VALUES (2,'New','A new bug',2);
+INSERT INTO TBL_STATUS VALUES (3,'Assigned','Assigned to a developer',3);
+INSERT INTO TBL_STATUS VALUES (4,'Reopened','Closed but opened again for further inspection',4);
+INSERT INTO TBL_STATUS VALUES (5,'Resolved','Set by engineer with a resolution',5);
+INSERT INTO TBL_STATUS VALUES (6,'Verified','The resolution is confirmed by the reporter',6);
+INSERT INTO TBL_STATUS VALUES (7,'Closed','The bug is officially squashed (QA)',7);
+
+--
+-- -- Conversion from 0.2.x to 0.3.0 --
+--
+
+--INSERT INTO TBL_ATTACHMENT SELECT * FROM Attachment;
+--INSERT INTO TBL_AUTH_USER SELECT UserID, Email, FirstName, LastName, Email, Password, if (UserLevel > 0, 1, 0), '', 0, CreatedDate, 0, CreatedDate FROM User;
+--INSERT INTO TBL_BUG SELECT *, 0 FROM Bug;
+--INSERT INTO TBL_BUG_HISTORY SELECT * FROM BugHistory;
+--INSERT INTO TBL_COMMENT SELECT * FROM Comment;
+--INSERT INTO TBL_COMPONENT SELECT * FROM Component;
+--INSERT INTO TBL_OS SELECT * FROM OS;
+--INSERT INTO TBL_PROJECT SELECT *, CreatedBy, CreatedDate FROM Project;
+--INSERT INTO TBL_RESOLUTION SELECT * FROM Resolution;
+--INSERT INTO TBL_SAVED_QUERY SELECT * FROM SavedQuery;
+--INSERT INTO TBL_SEVERITY SELECT *, '' FROM Severity;
+--UPDATE TBL_SEVERITY SET severity_color = '#dadada' WHERE severity_id = '1';
+--UPDATE TBL_SEVERITY SET severity_color = '#dad0d0' WHERE severity_id = '2';
+--UPDATE TBL_SEVERITY SET severity_color = '#dacaca' WHERE severity_id = '3';
+--UPDATE TBL_SEVERITY SET severity_color = '#dac0c0' WHERE severity_id = '4';
+--UPDATE TBL_SEVERITY SET severity_color = '#dababa' WHERE severity_id = '5';
+--UPDATE TBL_SEVERITY SET severity_color = '#dab0b0' WHERE severity_id = '6';
+--UPDATE TBL_SEVERITY SET severity_color = '#daaaaa' WHERE severity_id = '7';
+--INSERT INTO TBL_STATUS SELECT * FROM Status;
+--INSERT INTO TBL_VERSION SELECT *, CreatedBy, CreatedDate FROM Version;
+
+-- Start off with three user levels...
+--INSERT INTO TBL_AUTH_GROUP (group_id, group_name) VALUES (1, 'Admin');
+--INSERT INTO TBL_AUTH_GROUP (group_id, group_name) VALUES (2, 'User');
+--INSERT INTO TBL_AUTH_GROUP (group_id, group_name) VALUES (3, 'Developer');
+
+-- ... and only two permissions 
+--INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (1, 'Admin');
+--INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (2, 'Editbug');
+
+-- Admins can do all the admin stuff and users can edit bugs
+--INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (1, 1);
+--INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (2, 2);
+
+-- Move users into the new tables
+--INSERT INTO TBL_USER_GROUP (user_id, group_id) SELECT UserID, group_id FROM User, TBL_AUTH_GROUP where UserLevel = 15 and group_name = 'Admin';
+--INSERT INTO TBL_USER_GROUP (user_id, group_id) SELECT UserID, group_id FROM User, TBL_AUTH_GROUP where UserLevel = 3 and group_name = 'Developer';
+--INSERT INTO TBL_USER_GROUP (user_id, group_id) SELECT UserID, 2 FROM User where UserLevel > 0;
+
+
+
+--
+-- Indexes for table TBL_GROUP_PERM
+--
+
+CREATE INDEX perm_id_TBL_GROUP_PERM_index ON TBL_GROUP_PERM (perm_id);
+
+--
+-- Indexes for table TBL_USER_GROUP
+--
+
+CREATE INDEX group_id_TBL_USER_GROUP_index ON TBL_USER_GROUP (group_id);
+
+--
+-- Indexes for table ACTIVE_SESSIONS
+--
+
+CREATE INDEX changed_active_sessions_index ON active_sessions (changed);
+
+--
+-- Indexes for table TBL_USER_PERM
+--
+
+CREATE INDEX perm_id_TBL_USER_PERM_index ON TBL_USER_PERM (perm_id);
+
+--
+-- Indexes for table TBL_BUG_GROUP
+--
+
+CREATE INDEX group_id_TBL_BUG_GROUP_index ON TBL_BUG_GROUP (group_id);
+
+--
+-- Sequences for table TBL_SAVED_QUERY
+--
+
+SELECT SETVAL('tbl_saved_query_saved_query_',(select case when max(saved_query_id)>0 then max(saved_query_id)+1 else 1 end from TBL_SAVED_QUERY));
+
+COMMIT;
