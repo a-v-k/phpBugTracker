@@ -71,10 +71,11 @@ function build_image($restricted_projects) {
 	$graph->legend->Pos(0.03, 0.5, 'right', 'center');
 	// Create
 	$p1 = new PiePlot($data);
+	$p1->value->SetFormat("%d%%");
+	$p1->value->Show();
 	$p1->SetLegends($legend);
 	$p1->SetCSIMTargets($targ,$alts);
 	$p1->SetCenter(0.25);
-	$p1->SetPrecision(0);
 	$graph->Add($p1);
 	$graph->Stroke('jpgimages/'.GenImgName());
 
