@@ -1,3 +1,10 @@
+-- 0.4.0 -- Oct 2001
+: Fixed a bug with the Features section of the configure script.
+: Improved the CSS file to make choosing different color schemes easier.
+: Consolidated the two separate templates directories into one tree.
+: Fixed a bug with the OS table creation.
+: Moved configuration information to the database.
+
 -- 0.3.3 -- 2 Oct 2001
 : Added the ability to enter cvs:filename.ext or cvs:path/filename.ext:v.vv
   into the bug comments and have that linked to a CVS web interface.
