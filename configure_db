@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script to generate database-creation-scripts
-# $Id: configure_db,v 1.6 2001/09/23 21:20:00 mohni Exp $
+# $Id: configure_db,v 1.7 2001/09/24 08:07:59 mohni Exp $
 
 # prefix for tablenames
 #TBL_PREFIX="phpbt_"
@@ -51,14 +51,18 @@ generate_sql() {
 while [ $# -gt 0 ]; do
   case $1
   in
-    '-t')
+    '-t')		#database type
       if [ $# -gt 1 ]; then
-	DB_TYPE=$2
+	if [ -f schemas/$2.in ]; then	#use only if the file exists
+	  DB_TYPE=$2
+	else
+	  echo "unknown database type $2"
+	fi
 	shift
       fi
       shift;;
 
-    '-p')
+    '-p')		#table prefix
       if [ $# -gt 1 ]; then
 	TBL_PREFIX=$2
 	shift
@@ -68,6 +72,9 @@ while [ $# -gt 0 ]; do
     '-h'|'--help')
       help
       exit 0;;
+
+    *)			#just skip unknown options
+      shift;;
   esac
 done
 
