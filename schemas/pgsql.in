@@ -2,7 +2,7 @@
 -- PostgreSQL database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.26 2002/04/10 14:16:05 bcurtis Exp $
+-- $Id: pgsql.in,v 1.27 2002/04/11 22:17:14 bcurtis Exp $
 
 BEGIN;
 
@@ -375,12 +375,6 @@ CREATE INDEX perm_id_TBL_GROUP_PERM_index ON TBL_GROUP_PERM (perm_id);
 --
 
 CREATE INDEX group_id_TBL_USER_GROUP_index ON TBL_USER_GROUP (group_id);
-
---
--- Indexes for table ACTIVE_SESSIONS
---
-
-CREATE INDEX changed_TBL_ACTIVE_SESSIONS_index ON TBL_ACTIVE_SESSIONS (changed);
 
 --
 -- Indexes for table TBL_USER_PERM
