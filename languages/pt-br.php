@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: pt-br.php,v 1.8 2001/12/10 13:42:04 bcurtis Exp $
+// $Id: pt-br.php,v 1.9 2001/12/15 19:01:16 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -33,7 +33,7 @@ $STRING = array(
 	'noprojects' => 'Nenhum projeto encontrado',
 	'totalbugs' => 'Total de Bugs',
 	'giveemail' => 'Por favor, digite um endereço de email válido',
-	'givelogin' => 'Please enter a login',
+	'givelogin' => 'Por favor, digite um login',
 	'loginused' => 'Este login já está sendo usado',
 	'newacctsubject' => 'phpBugTracker Login',
 	'newacctmessage' => "Sua senha phpBugTracker é %s",
@@ -64,9 +64,9 @@ $STRING = array(
 	'bad_attachment' => 'Este anexo não existe',
 	'attachment_too_large' => 'O arquivo escolhido é maior que '.number_format(ATTACHMENT_MAX_SIZE).' bytes',
 	'bad_permission' => 'Você não tem as permissões necessárias para essa função',
-	'project_only_all_groups' => 'You cannot choose specific groups when "All Groups" is chosen',
-	'previous_bug' => 'Previous',
-	'next_bug' => 'Next'
+	'project_only_all_groups' => 'Você não pode escolher um grupo específico quando "All groups" esta selecionado',
+	'previous_bug' => 'Anterior',
+	'next_bug' => 'Próximo' 
 	);
 	
 // Page titles
@@ -90,7 +90,7 @@ $TITLE = array(
 	'user' => 'Usuários',
 	'home' => 'Home',
 	'reporting' => 'Relatórios',
-	'group' => 'Groups'
+	'group' => 'Grupos'
 	);
 	
 ?>
