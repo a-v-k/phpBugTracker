@@ -127,24 +127,25 @@ INSERT INTO OS VALUES (11,'Mac System 8.0',11,'');
 INSERT INTO OS VALUES (12,'Mac System 8.5',12,'/Mozilla.*\\(.*;.*; 68K.*\\)/');
 INSERT INTO OS VALUES (13,'Mac System 8.6',13,'/Mozilla.*\\(.*;.*; PPC.*\\)/');
 INSERT INTO OS VALUES (14,'Mac System 9.0',14,'');
-INSERT INTO OS VALUES (15,'Linux',15,'/Mozilla.*\\(.*;.*; Linux.*\\)/');
-INSERT INTO OS VALUES (16,'BSDI',16,'/Mozilla.*\\(.*;.*; BSD\\/OS.*\\)/');
-INSERT INTO OS VALUES (17,'FreeBSD',17,'/Mozilla.*\\(.*;.*; FreeBSD.*\\)/');
-INSERT INTO OS VALUES (18,'NetBSD',18,'');
-INSERT INTO OS VALUES (19,'OpenBSD',19,'');
-INSERT INTO OS VALUES (20,'AIX',20,'/Mozilla.*\\(.*;.*; AIX.*\\)/');
-INSERT INTO OS VALUES (21,'BeOS',21,'');
-INSERT INTO OS VALUES (22,'HP-UX',22,'/Mozilla.*\\(.*;.*; HP-UX.*\\)/');
-INSERT INTO OS VALUES (23,'IRIX',23,'/Mozilla.*\\(.*;.*; IRIX.*\\)/');
-INSERT INTO OS VALUES (24,'Neutrino',24,'');
-INSERT INTO OS VALUES (25,'OpenVMS',25,'');
-INSERT INTO OS VALUES (26,'OS/2',26,'');
-INSERT INTO OS VALUES (27,'OSF/1',27,'/Mozilla.*\\(.*;.*; OSF.*\\)/');
-INSERT INTO OS VALUES (28,'Solaris',28,'/Mozilla.*\\(.*;.*; SunOS 5.*\\)/');
-INSERT INTO OS VALUES (29,'SunOS',29,'/Mozilla.*\\(.*;.*; SunOS.*\\)/');
-INSERT INTO OS VALUES (30,'other',30,'');
+INSERT INTO OS VALUES (15,'Mac OS X',15,'');
+INSERT INTO OS VALUES (16,'Linux',16,'/Mozilla.*\\(.*;.*; Linux.*\\)/');
+INSERT INTO OS VALUES (17,'BSDI',17,'/Mozilla.*\\(.*;.*; BSD\\/OS.*\\)/');
+INSERT INTO OS VALUES (18,'FreeBSD',18,'/Mozilla.*\\(.*;.*; FreeBSD.*\\)/');
+INSERT INTO OS VALUES (19,'NetBSD',19,'');
+INSERT INTO OS VALUES (20,'OpenBSD',20,'');
+INSERT INTO OS VALUES (21,'AIX',21,'/Mozilla.*\\(.*;.*; AIX.*\\)/');
+INSERT INTO OS VALUES (22,'BeOS',22,'');
+INSERT INTO OS VALUES (23,'HP-UX',23,'/Mozilla.*\\(.*;.*; HP-UX.*\\)/');
+INSERT INTO OS VALUES (24,'IRIX',24,'/Mozilla.*\\(.*;.*; IRIX.*\\)/');
+INSERT INTO OS VALUES (25,'Neutrino',25,'');
+INSERT INTO OS VALUES (26,'OpenVMS',26,'');
+INSERT INTO OS VALUES (27,'OS/2',27,'');
+INSERT INTO OS VALUES (28,'OSF/1',28,'/Mozilla.*\\(.*;.*; OSF.*\\)/');
+INSERT INTO OS VALUES (29,'Solaris',29,'/Mozilla.*\\(.*;.*; SunOS 5.*\\)/');
+INSERT INTO OS VALUES (30,'SunOS',30,'/Mozilla.*\\(.*;.*; SunOS.*\\)/');
+INSERT INTO OS VALUES (31,'other',31,'');
 
-insert into db_sequence values ('OS', 30);
+insert into db_sequence values ('OS', 31);
 
 #
 # Table structure for table 'Project'
