@@ -1,3 +1,7 @@
+-- 0.6.2 -- 27 Dec 2001
+: Improved compatibility with Opera and IIS.
+: Fixed a bug with logging in.
+
 -- 0.6.1 -- 20 Dec 2001
 : Fixed bugs with the admin tools and buq query.
 
