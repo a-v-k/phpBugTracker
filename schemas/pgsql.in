@@ -3,17 +3,14 @@
 -- If you change the database name, make sure you change the DB_DATABASE 
 -- constant in config.php.  Make sure you edit the TBL_AUTH_USER insert below.
 --
--- TEMPLATE: This is a template for configure_db -- not for creating the database!
+-- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.7 2001/10/24 23:50:45 javyer Exp $
-
-create database BugTracker;
-use BugTracker;
+-- $Id: pgsql.in,v 1.8 2001/10/30 04:02:45 bcurtis Exp $
 
 BEGIN;
 
 
-CREATE TABLE active_sessions (
+CREATE TABLE TBL_ACTIVE_SESSIONS (
   sid varchar(32) NOT NULL DEFAULT '',
   name varchar(32) NOT NULL DEFAULT '',
   val text,
@@ -139,14 +136,14 @@ CREATE TABLE TBL_COMPONENT (
 );
 
 CREATE TABLE TBL_CONFIGURATION (
-  varname char(40) NOT NULL DEFAULT '',
-  varvalue char(255) NOT NULL DEFAULT '',
-  description char(255) NOT NULL DEFAULT '',
+  varname varchar(40) NOT NULL DEFAULT '',
+  varvalue varchar(255) NOT NULL DEFAULT '',
+  description varchar(255) NOT NULL DEFAULT '',
   vartype char(20) NOT NULL DEFAULT '',
   PRIMARY KEY  (varname)
 );
 
-CREATE TABLE db_sequence (
+CREATE TABLE TBL_DB_SEQUENCE (
   seq_name varchar(127) NOT NULL DEFAULT '',
   nextid INT4  NOT NULL DEFAULT '0',
   PRIMARY KEY  (seq_name)
@@ -187,15 +184,8 @@ CREATE TABLE TBL_RESOLUTION (
 );
 
 
-
---
--- Sequences for table TBL_SAVED_QUERY
---
-
-CREATE SEQUENCE tbl_saved_query_saved_query_;
-
 CREATE TABLE TBL_SAVED_QUERY (
-  saved_query_id INT4 DEFAULT nextval('tbl_saved_query_saved_query_'),
+  saved_query_id INT4 DEFAULT '0',
   user_id INT4  NOT NULL DEFAULT '0',
   saved_query_name varchar(40) NOT NULL DEFAULT '',
   saved_query_string TEXT DEFAULT '' NOT NULL,
@@ -253,9 +243,9 @@ CREATE TABLE TBL_VERSION (
 
 INSERT INTO TBL_AUTH_USER 
 	(user_id, login, first_name, last_name, email, password)
-	values (1, 'admin@example.com', 'System', 'Admin', 'admin@example.com', 
-		'somepassword');
-INSERT INTO db_sequence values ('TBL_AUTH_USER', 1);
+	values (1, 'OPTION_ADMIN_EMAIL', 'System', 'Admin', 'OPTION_ADMIN_EMAIL', 
+		'OPTION_ADMIN_PASS');
+INSERT INTO TBL_DB_SEQUENCE values ('TBL_AUTH_USER', 1);
 
 -- Start off with three user levels...
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name) VALUES (1, 'Admin');
@@ -274,11 +264,11 @@ INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (2, 2);
 INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 1);
 INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 2);
 
-INSERT INTO TBL_CONFIGURATION VALUES ('INSTALL_URL','http://localhost/~bcurtis/phpbt','The base URL of the phpBugTracker installation','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('INSTALL_URL','OPTION_INSTALL_URL','The base URL of the phpBugTracker installation','string');
 INSERT INTO TBL_CONFIGURATION VALUES ('JPGRAPH_PATH','','If not in the include path','string');
 INSERT INTO TBL_CONFIGURATION VALUES ('CVS_WEB','http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/phpbt/phpbt/','Location of your cvs web interface (see format_comments() in bug.php)','string');
-INSERT INTO TBL_CONFIGURATION VALUES ('ADMIN_EMAIL','phpbt@bencurtis.com','The email address used in correspondence from the bug tracker','string');
-INSERT INTO TBL_CONFIGURATION VALUES ('ENCRYPT_PASS','','Whether to store passwords encrypted.  <b>Warning:</b> Changing this after users have been created will result in their being unable to login.','bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('ADMIN_EMAIL','OPTION_PHPBT_EMAIL','The email address used in correspondence from the bug tracker','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('ENCRYPT_PASS','OPTION_ENCRYPT_PASS','Whether to store passwords encrypted.  <b>Warning:</b> Changing this after users have been created will result in their being unable to login.','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('USE_JPGRAPH','','Whether to show some reports as images','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('MASK_EMAIL','1','Should email addresses have . changed to \'dot\' and @ change to \'at\'?','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('HIDE_EMAIL','1','Should email addresses be hidden for those not logged in?','bool');
@@ -322,7 +312,7 @@ INSERT INTO TBL_OS VALUES (28,'OSF/1',28,'/Mozilla.*\\(.*;.*; OSF.*\\)/');
 INSERT INTO TBL_OS VALUES (29,'Solaris',29,'/Mozilla.*\\(.*;.*; SunOS 5.*\\)/');
 INSERT INTO TBL_OS VALUES (30,'SunOS',30,'/Mozilla.*\\(.*;.*; SunOS.*\\)/');
 INSERT INTO TBL_OS VALUES (31,'other',31,'');
-INSERT INTO db_sequence values ('TBL_OS', 31);
+INSERT INTO TBL_DB_SEQUENCE values ('TBL_OS', 31);
 
 INSERT INTO TBL_RESOLUTION VALUES (1,'Fixed','Bug was eliminated',1);
 INSERT INTO TBL_RESOLUTION VALUES (2,'Not a bug','It\'s not a bug -- it\'s a feature!',2);
@@ -330,7 +320,7 @@ INSERT INTO TBL_RESOLUTION VALUES (3,'Won\'t Fix','This bug will stay',3);
 INSERT INTO TBL_RESOLUTION VALUES (4,'Deferred','We\'ll get around to it later',4);
 INSERT INTO TBL_RESOLUTION VALUES (5,'Works for me','Can\'t replicate the bug',5);
 INSERT INTO TBL_RESOLUTION VALUES (6,'Duplicate','',6);
-INSERT INTO db_sequence values ('TBL_RESOLUTION', 6);
+INSERT INTO TBL_DB_SEQUENCE values ('TBL_RESOLUTION', 6);
 
 INSERT INTO TBL_SEVERITY VALUES (1,'Unassigned','Default bug creation',1,'#dadada');
 INSERT INTO TBL_SEVERITY VALUES (2,'Idea','Ideas for further development',2,'#dad0d0');
@@ -339,7 +329,7 @@ INSERT INTO TBL_SEVERITY VALUES (4,'Annoyance','Cosmetic problems or bugs not af
 INSERT INTO TBL_SEVERITY VALUES (5,'Content','Non-functional related bugs, such as text content',5,'#dababa');
 INSERT INTO TBL_SEVERITY VALUES (6,'Significant','A bug affecting the intended performance of the product',6,'#dab0b0');
 INSERT INTO TBL_SEVERITY VALUES (7,'Critical','A bug severe enough to prevent the release of the product',7,'#daaaaa');
-INSERT INTO db_sequence values ('TBL_SEVERITY', 7);
+INSERT INTO TBL_DB_SEQUENCE values ('TBL_SEVERITY', 7);
 
 INSERT INTO TBL_STATUS VALUES (1,'Unconfirmed','Reported but not confirmed',1);
 INSERT INTO TBL_STATUS VALUES (2,'New','A new bug',2);
@@ -348,7 +338,7 @@ INSERT INTO TBL_STATUS VALUES (4,'Reopened','Closed but opened again for further
 INSERT INTO TBL_STATUS VALUES (5,'Resolved','Set by engineer with a resolution',5);
 INSERT INTO TBL_STATUS VALUES (6,'Verified','The resolution is confirmed by the reporter',6);
 INSERT INTO TBL_STATUS VALUES (7,'Closed','The bug is officially squashed (QA)',7);
-INSERT INTO db_sequence values ('TBL_STATUS', 7);
+INSERT INTO TBL_DB_SEQUENCE values ('TBL_STATUS', 7);
 
 
 --
@@ -367,7 +357,7 @@ CREATE INDEX group_id_TBL_USER_GROUP_index ON TBL_USER_GROUP (group_id);
 -- Indexes for table ACTIVE_SESSIONS
 --
 
-CREATE INDEX changed_active_sessions_index ON active_sessions (changed);
+CREATE INDEX changed_TBL_ACTIVE_SESSIONS_index ON TBL_ACTIVE_SESSIONS (changed);
 
 --
 -- Indexes for table TBL_USER_PERM
@@ -381,10 +371,5 @@ CREATE INDEX perm_id_TBL_USER_PERM_index ON TBL_USER_PERM (perm_id);
 
 CREATE INDEX group_id_TBL_BUG_GROUP_index ON TBL_BUG_GROUP (group_id);
 
---
--- Sequences for table TBL_SAVED_QUERY
---
-
-SELECT SETVAL('tbl_saved_query_saved_query_',(select case when max(saved_query_id)>0 then max(saved_query_id)+1 else 1 end from TBL_SAVED_QUERY));
 
 COMMIT;
