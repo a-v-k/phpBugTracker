@@ -108,9 +108,6 @@ a.sidenavlink {
 	font-family: "Arial", sans-serif;
 	font-size: 16px;
 	font-weight: bold;
-	border-width: 0px 0px 3px 0px;
-	border-color: #000000;
-	border-style: solid;
 	}
 	
 .navinput {
@@ -213,3 +210,10 @@ a.sidenavlink {
 
 .header-col { font-weight: bold; }
 .center-col { text-align: center; }
+
+.navlink {
+	color: #FFFFFF;
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+}
