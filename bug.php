@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.70 2001/12/19 13:52:03 bcurtis Exp $
+// $Id: bug.php,v 1.71 2002/01/05 19:49:35 bcurtis Exp $
 
 include 'include.php';
 
@@ -414,10 +414,15 @@ function do_form($bugid = 0) {
 }
 
 function show_form($bugid = 0, $error = '') {
-  global $q, $me, $t, $project, $TITLE;
+  global $q, $me, $t, $_gv, $TITLE;
 
-  if ($GLOBALS['HTTP_POST_VARS'])
-    while (list($k,$v) = each($GLOBALS['HTTP_POST_VARS'])) $$k = $v;
+	if (isset($_gv['project'])) {
+		$project = $_gv['project'];
+	}
+	
+  if (isset($_pv)) {
+    foreach ($_pv as $k => $v) $$k = $v;
+	}
 
   $t->set_file('content','bugform.html');
   $projectname = $q->grab_field("select project_name from ".TBL_PROJECT." where project_id = $project");
@@ -540,9 +545,9 @@ function show_bug_printable($bugid) {
 ///
 /// Grab the links for the previous and next bugs in the list
 function prev_next_links($bugid, $pos) {
-	global $q, $queryinfo, $STRING;
+	global $q, $_sv, $STRING;
 	
-	if (!isset($queryinfo['query']) || !$queryinfo['query']) {
+	if (!isset($_sv['queryinfo']['query']) || !$_sv['queryinfo']['query']) {
 		return array('', '');
 	}
 	
@@ -565,8 +570,8 @@ function prev_next_links($bugid, $pos) {
 		where b.severity_id = severity.severity_id and b.status_id = status.status_id 
 		and b.os_id = os.os_id and b.version_id = version.version_id 
 		and b.component_id = component.component_id and b.project_id = project.project_id '.
-		"and {$queryinfo['query']} and bug_id <> $bugid 
-		order by {$queryinfo['order']} {$queryinfo['sort']}, bug_id asc", $limit, $offset);
+		"and {$_sv['queryinfo']['query']} and bug_id <> $bugid 
+		order by {$_sv['queryinfo']['order']} {$_sv['queryinfo']['sort']}, bug_id asc", $limit, $offset);
 		
 	$firstid = $q->grab_field();
 	$secondid = $q->grab_field();
@@ -783,18 +788,18 @@ function show_projects() {
 $t->set_file('wrap','wrap.html');
 
 
-if ($op) {
-  switch($op) {
+if (isset($_gv['op'])) {
+  switch($_gv['op']) {
     case 'history' : show_history($bugid); break;
     case 'add' :
       $perm->check('Editbug');
       if (isset($_gv['project'])) show_form();
       else show_projects();
       break;
-    case 'show' : show_bug($bugid); break;
-    case 'update' : update_bug($bugid); break;
-    case 'do' : do_form($bugid); break;
-    case 'print' : show_bug_printable($bugid); break;
+    case 'show' : show_bug($_gv['bugid']); break;
+    case 'update' : update_bug($_gv['bugid']); break;
+    case 'do' : do_form($_gv['bugid']); break;
+    case 'print' : show_bug_printable($_gv['bugid']); break;
   }
 } else header("Location: query.php");
 

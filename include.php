@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.86 2001/12/24 20:52:50 bcurtis Exp $
+// $Id: include.php,v 1.87 2002/01/05 19:49:35 bcurtis Exp $
 
 // Where are we?
 if (!empty($HTTP_SERVER_VARS['SCRIPT_FILENAME'])) {
@@ -161,12 +161,6 @@ $all_db_fields = array(
 
 $default_db_fields = array('bug_id', 'title', 'reporter', 'owner',
   'severity_name', 'priority', 'status_name', 'resolution_name');
-
-class usess extends Session {
-  var $classname = 'usess';
-  var $lifetime = 0;
-  var $allowcache = '';
-}
 
 class templateclass extends Template {
   function pparse($target, $handle, $append = false) {
@@ -506,13 +500,16 @@ function maskemail($email) {
 
 // Begin every page with a page_open
 if (!defined('NO_AUTH')) {
-  page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
+  session_start();
+	$_sv =& $HTTP_SESSION_VARS;
+  $auth = new uauth;
+	$perm = new uperm;
   $u = isset($auth->auth['uid']) ? $auth->auth['uid'] : 0;
 }
 
 // Check to see if the user is trying to login
-if (isset($HTTP_POST_VARS['dologin'])) {
-  if (isset($HTTP_POST_VARS['sendpass'])) {
+if (isset($_pv['dologin'])) {
+  if (isset($_pv['sendpass'])) {
     list($email, $password) = $q->grab("select email, password from ".TBL_AUTH_USER." where login = '$username' and active > 0");
     if (!$q->num_rows()) {
       $t->set_var(array(
@@ -533,15 +530,11 @@ if (isset($HTTP_POST_VARS['dologin'])) {
         ));
     }
   } else {
-    $auth->auth['uid'] = $auth->auth_validatelogin();
-    if (!$auth->auth['uid']) {
+    if (!$u = $auth->auth_validatelogin()) {
       $t->set_var(array(
         'loginerrorcolor' => '#ff0000',
         'loginerror' => 'Invalid login<br>'
         ));
-    } else {
-			// Now that login is complete update the userid variable
-			$u = $auth->auth['uid'];
 		}
   }
 }

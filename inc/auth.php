@@ -1,6 +1,6 @@
 <?php
 
-// auth.php - Page control, authentication object, and permission object
+// auth.php - Authentication and permission objects
 // ------------------------------------------------------------------------
 // Copyright (c) 2001 The phpBugTracker Group
 // ------------------------------------------------------------------------
@@ -28,11 +28,17 @@ class uauth {
 	var $classname = 'uauth';
 	var $auth = array();
 	
-	function start() {
-		global $sess;
+	function uauth() {
+		global $HTTP_SESSION_VARS;
 		
-		if (!$sess->is_registered('auth')) {
-			$sess->register('auth');
+		if (!session_is_registered('auth')) {
+			session_register('auth');
+			$HTTP_SESSION_VARS['auth'] = array();
+		}
+		
+		$this->auth =& $HTTP_SESSION_VARS['auth'];
+		
+		if (!isset($this->auth['group_ids'])) {
 			$this->auth['group_ids'] = array(0);
 		}
 		
@@ -53,8 +59,9 @@ class uauth {
 	}
 	
 	function auth_validatelogin() {
-    global $username, $password, $q, $select, $emailpass, $emailsuccess, $STRING;
+    global $_pv, $q, $select, $emailpass, $emailsuccess, $STRING;
 
+		extract($_pv);
     if (!$username) return 0;
     $this->auth['uname'] = $username;
     if (ENCRYPT_PASS) {
@@ -73,6 +80,7 @@ class uauth {
       	."  and ag.group_id = ug.group_id and ug.user_id = {$u['user_id']}");
       while (list($groupid, $group, $perm) = $q->grab()) {
         $this->auth['perm'][$perm] = true;
+        $this->auth['uid'] = $u['user_id'];
         $this->auth['group'][$group] = true;
         $this->auth['group_ids'][] = $groupid;
       }
@@ -97,8 +105,8 @@ class uperm {
   function check($p) {
     global $auth;
 
-    if (! $this->have_perm($p)) {    
-      if (! isset($auth->auth['perm']) ) {
+    if (!$this->have_perm($p)) {    
+      if (!isset($auth->auth['perm']) ) {
         $auth->auth['perm'] = '';
       }
       $this->perm_invalid($auth->auth['perm'], $p);
@@ -160,33 +168,4 @@ class uperm {
 	}
 }
 
-function page_open($feature) {
-
-  # enable sess and all dependent features.
-  if (isset($feature["sess"])) {
-    global $sess;
-    $sess = new $feature["sess"];
-    $sess->start();
-    
-    # the auth feature depends on sess
-    if (isset($feature["auth"])) {
-      global $auth;
-      
-      if (!isset($auth)) {
-        $auth = new $feature["auth"];
-      }
-      $auth->start();
-  
-      
-      # the perm feature depends on auth and sess
-      if (isset($feature["perm"])) {
-        global $perm;
-        
-        if (!isset($perm)) {
-          $perm = new $feature["perm"];
-        }
-      }
-    }
-  }
-}
-
+?>

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.51 2002/01/05 12:57:34 bcurtis Exp $
+// $Id: query.php,v 1.52 2002/01/05 19:49:35 bcurtis Exp $
 
 include 'include.php';
 
@@ -195,9 +195,9 @@ function build_query($assignedto, $reportedby, $open) {
 }
 
 function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
-	global $queryinfo, $me, $q, $t, $selrange, $order, $sort, $query, 
+	global $me, $q, $t, $selrange, $order, $sort, $query, 
 		$page, $op, $select, $TITLE, $STRING, $savedqueryname, $u, $auth, 
-		$default_db_fields, $all_db_fields, $sess;
+		$default_db_fields, $all_db_fields, $_sv;
 
 	$t->set_file('content','buglist.html');
 	$t->set_block('content','row','rows');
@@ -211,31 +211,32 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 			values (".$q->nextid(TBL_SAVED_QUERY).", $u, '$savedqueryname', '$savedquerystring')");
 	}
 	if (!$order) { 
-		if (isset($queryinfo['order'])) {
-			$order = $queryinfo['order'];
-			$sort = $queryinfo['sort'];
+		if (isset($_sv['queryinfo']['order'])) {
+			$order = $_sv['queryinfo']['order'];
+			$sort = $_sv['queryinfo']['sort'];
 		} else {
 			$order = 'bug_id'; 
 			$sort = 'asc'; 
 		}
 	}
-	$queryinfo['order'] = $order;
-	$queryinfo['sort'] = $sort;
+	$_sv['queryinfo']['order'] = $order;
+	$_sv['queryinfo']['sort'] = $sort;
 	
-	if (empty($queryinfo['query']) or $op) {
-		$queryinfo['query'] = build_query($assignedto, $reportedby, $open);
+	if (empty($_sv['queryinfo']['query']) or $op) {
+		$_sv['queryinfo']['query'] = build_query($assignedto, $reportedby, $open);
 	}
 	
-	if (!$sess->is_registered('queryinfo')) {
-		$sess->register('queryinfo');
+	if (!session_is_registered('queryinfo')) {
+		session_register('queryinfo');
+		$_sv['queryinfo'] = array();
 	}
 	
 	$nr = $q->grab_field('select count(*) from '.TBL_BUG.' b 
 		left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id
 		left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
-		($queryinfo['query'] != '' ? "where {$queryinfo['query']}": ''));
+		($_sv['queryinfo']['query'] != '' ? "where {$_sv['queryinfo']['query']}": ''));
 
-	$queryinfo['numrows'] = $nr;
+	$_sv['queryinfo']['numrows'] = $nr;
 	list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
 		"order=$order&sort=$sort");
 								
@@ -259,7 +260,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		where b.severity_id = severity.severity_id and b.status_id = status.status_id 
 		and b.os_id = os.os_id and b.version_id = version.version_id 
 		and b.component_id = component.component_id and b.project_id = project.project_id '.
-		($queryinfo['query'] != '' ? "and {$queryinfo['query']} " : '').
+		($_sv['queryinfo']['query'] != '' ? "and {$_sv['queryinfo']['query']} " : '').
 		"order by $order $sort, bug_id asc", $selrange, $llimit);
 				
 	$headers = array(
@@ -366,7 +367,7 @@ $open = !empty($_gv['open']) ? $_gv['open'] : 0;
 
 if (isset($_gv['op'])) switch($_gv['op']) {
 	case 'query' : show_query(); break;
-	case 'doquery' : $queryinfo['query'] = ''; list_items(); break;
+	case 'doquery' : $_sv['queryinfo'] = array(); list_items(); break;
 	case 'delquery' : delete_saved_query($queryid); break;
 	case 'mybugs' : list_items($assignedto, $reportedby, $open); break;
 	default : show_query(); break;
