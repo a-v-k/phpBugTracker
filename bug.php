@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.54 2001/11/03 14:58:04 bcurtis Exp $
+// $Id: bug.php,v 1.55 2001/11/03 19:24:07 bcurtis Exp $
 
 include 'include.php';
 
@@ -427,6 +427,74 @@ function show_form($bugid = 0, $error = '') {
   }
 }
 
+function show_bug_printable($bugid) {
+	global $q, $t, $select;
+	
+	if (!is_numeric($bugid) or
+    !$row = $q->grab('select b.*, reporter.login as reporter, 
+			owner.login as owner, project_name, component_name, version_name, 
+			severity_name, os_name, status_name, resolution_name  
+      from '.TBL_BUG.' b 
+			left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id 
+      left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id 
+			left join '.TBL_RESOLUTION.' r on b.resolution_id = r.resolution_id,'.
+			TBL_SEVERITY.' sv, '.TBL_STATUS.' st, '.TBL_OS.' os, '.
+			TBL_VERSION.' v, '.TBL_COMPONENT.' c, '.TBL_PROJECT." p 
+      where bug_id = '$bugid' and b.severity_id = sv.severity_id 
+			and b.os_id = os.os_id and b.version_id = v.version_id 
+			and b.component_id = c.component_id and b.project_id = p.project_id 
+			and b.status_id = st.status_id")) {
+		show_text($STRING['bugbadnum'],true);
+		exit;
+	}
+	
+	$t->set_file('content', 'bugdisplay-printable.html');
+  $t->set_block('content','row','rows');
+  $t->set_var(array(
+    'TITLE' => "{$TITLE['editbug']} #$bugid",
+    'bugid' => $bugid,
+    'title' => stripslashes($row['title']),
+    'description' => nl2br(stripslashes($row['description'])),
+    'url' => $row['url'] ? "<a href='{$row['url']}'>{$row['url']}</a>" : '',
+    'severity' => $row['severity_name'],
+    'priority' => $select['priority'][$row['priority']],
+    'status' => $row['status_name'],
+    'resolution' => $row['resolution_name'] ? $row['resolution_name'] : '',
+    'owner' => maskemail($row['owner']),
+    'reporter' => maskemail($row['reporter']),
+    'createddate' => date(DATE_FORMAT,$row['created_date']),
+    'createdtime' => date(TIME_FORMAT,$row['created_date']),
+    'lastmodifieddate' => $row['last_modified_date'],
+    'project' => $row['project_name'],
+    'version' => $row['version_name'],
+    'component' => $row['component_name'],
+    'os' => $row['os_name'],
+    'browserstring' => $row['browser_string'],
+    ));
+
+	// Show the comments
+  $q->query('select comment_text, c.created_date, login'
+    .' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER
+    ." where bug_id = $bugid and c.created_by = user_id order by c.created_date");
+  if (!$q->num_rows()) {
+    $t->set_var('rows','');
+  } else {
+    while ($row = $q->grab()) {
+      $t->set_var(array(
+        'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
+				'trclass' => $i % 2 ? '' : 'alt',
+        'rdescription' => nl2br(format_comments(
+					htmlspecialchars($row['comment_text']))),
+        'rreporter' => maskemail($row['login']),
+        'rcreateddate' => date(TIME_FORMAT,$row['created_date']).' on '.
+          date(DATE_FORMAT,$row['created_date'])
+        ));
+      $t->parse('rows','row',true);
+    }
+  }
+}
+	
+
 function show_bug($bugid = 0, $error = '') {
   global $q, $me, $t, $project, $STRING, $u, $perm;
 
@@ -610,6 +678,7 @@ if ($op) {
     case 'show' : show_bug($bugid); break;
     case 'update' : update_bug($bugid); break;
     case 'do' : do_form($bugid); break;
+    case 'print' : show_bug_printable($bugid); break;
   }
 } else header("Location: query.php");
 

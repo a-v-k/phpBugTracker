@@ -2,7 +2,8 @@
 : Fixed a bug with the bug history update.
 : Added web-based installation.
 : Added on option for choosing whether bugs can be changed only by the bug
-  reporter, bug owner, managers, or admins. 
+  reporter, bug owner, managers, or admins.
+: Added a printable view for bugs
 
 -- 0.4.0 -- 18 Oct 2001
 : Improved the CSS file to make choosing different color schemes easier.

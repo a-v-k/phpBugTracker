@@ -1,0 +1,127 @@
+<table border='0' width="640">
+	<tr>
+		<td width="210" colspan="2">
+			Bug <b>#{bugid}</b>
+		</td>
+		<td width="210" colspan="2">
+			Reporter: <b>{reporter}</b>
+		</td>
+		<td width="210" colspan="2">
+			Created: <b>{createddate}</b>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Product:
+		</td>
+		<td>
+			{project}
+		</td>
+		<td>
+			Component: 
+		</td>
+		<td>
+			{component}
+		</td>
+		<td>
+			Version: 
+		</td>
+		<td>
+			{version}
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Severity: 
+		</td>
+		<td>
+			{severity}
+		</td>
+		<td>
+			Priority: 
+		</td>
+		<td>
+			{priority}
+		</td>
+		<td>
+			OS: 
+		</td>
+		<td>
+			{os}
+		</td>
+	</tr>
+	<tr>
+		<td colspan="6">
+			<hr size="1">
+		</td>
+	</tr>
+</table>
+<table border="0" cellpadding="2" cellspacing="0" width="640">
+	<tr>
+		<td>Assigned To:</td>
+		<td><b>{owner}</td>
+		<td colspan="2">
+			&nbsp;
+		</td>
+	</tr>
+	<tr>
+  	<td>Status:</td>
+  	<td><b>{status}</b></td>
+  	<td>Summary:</td>
+  	<td>{title}</td>
+	</tr>
+	<tr>
+  	<td>Resolution:</td>
+  	<td><b>{resolution}</b></td>
+  	<td>URL:</td>
+  	<td>{url}</td>
+	</tr>
+	<tr>
+  	<td colspan="4">
+			&nbsp;
+		</td>
+	</tr>
+</table>
+<br>
+<br>
+<table border="0" cellpadding="2" cellspacing="0" width="640">
+	<tr>
+		<td>
+			Comments:
+			<hr size="1">
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<div align="center">
+				<i>----- Posted by {reporter} at {createdtime} on {createddate} -----</i>
+				<br>
+				<br>
+			</div>
+			{description}
+			<br>
+			<br>
+			<br>
+		</td>
+	</tr>
+	<!-- BEGIN row -->
+	<tr>
+		<td>
+			<div align="center">
+				<i>----- Posted by {rreporter} at {rcreateddate} -----</i>
+				<br>
+				<br>
+			</div>
+			{rdescription}
+			<br>
+			<br>
+			<br>
+		</td>
+	</tr>
+	<!-- END row -->
+</table>
+<br>
+<a href="{me}?op=show&bugid={bugid}">Back to bug #{bugid}</a>
+<br>
+<br>
+			
