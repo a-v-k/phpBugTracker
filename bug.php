@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.112 2002/06/17 15:49:17 firma Exp $
+// $Id: bug.php,v 1.113 2002/07/18 13:02:12 bcurtis Exp $
 
 include 'include.php';
 
@@ -68,7 +68,7 @@ function vote_bug($bug_id) {
 		// If a number of votes are required to promote a bug, check for promotion
 		if (!$bug_is_new and $db->getOne("select count(*) from ".
 			TBL_BUG_VOTE." where bug_id = $bug_id") == PROMOTE_VOTES) {
-			$status_id = $db->getOne("select status_id from ".TBL_STATUS." where status_name = 'New'");
+			$status_id = BUG_PROMOTED;
   		$buginfo = $db->getOne("select * from ".TBL_BUG." where bug_id = $bug_id");
 			$changedfields = array('status_id' => $status_id);
     	do_changedfields($u, $buginfo, $changedfields);
@@ -482,18 +482,11 @@ function do_form($bugid = 0) {
 
 	// Check to see if this bug's component has an owner and should be assigned
 	if ($owner = $db->getOne("select owner from ".TBL_COMPONENT." c where component_id = $component")) {
-	    $status = $db->getOne("select status_id from ".TBL_STATUS." where status_name = 'Assigned'");
+	    $status = BUG_ASSIGNED;
 	} else {
 	    $owner = 0;
-
-	    // If we aren't using voting to promote, then auto-promote to New
-	    if (PROMOTE_VOTES) {
-		$stat_to_assign = 'Unconfirmed';
-	    } else {
-		$stat_to_assign = 'New';
-	    }
-
-	    $status = $db->getOne("select status_id from ".TBL_STATUS." where status_name = '$stat_to_assign'");
+		// If we aren't using voting to promote, then auto-promote to New
+		$status = PROMOTE_VOTES ? BUG_UNCONFIRMED : BUG_PROMOTED;
 	}
 	
 	$db->query('insert into '.TBL_BUG.' (bug_id, title, description, url, '.

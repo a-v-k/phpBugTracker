@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.82 2002/06/17 12:33:59 bcurtis Exp $
+// $Id: query.php,v 1.83 2002/07/18 13:02:14 bcurtis Exp $
 
 include 'include.php';
 
@@ -61,10 +61,8 @@ function build_query($assignedto, $reportedby, $open) {
 	
 	// Open bugs assigned to the user -- a hit list
 	if ($assignedto || $reportedby) {
-		$status = $db->getCol("select status_id from ".TBL_STATUS.
-			" where status_name ".($open ? '' : 'not ').
-			"in ('Unconfirmed', 'New', 'Assigned', 'Reopened')");
-		$query[] = 'b.status_id in ('.delimit_list(',',$status).')';
+		$query[] = 'b.status_id '.($open ? '' : 'not ').
+			'in ('.OPEN_BUG_STATUSES.')';
 		if ($assignedto) {
 			$query[] = "assigned_to = {$_sv['uid']}";
 		} else {

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.120 2002/06/13 14:26:34 firma Exp $
+// $Id: include.php,v 1.121 2002/07/18 13:02:14 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -58,7 +58,11 @@ $rs = $db->query('select varname, varvalue from '.TBL_CONFIGURATION);
 while (list($k, $v) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
   define($k, $v);
 }
+define('OPEN_BUG_STATUSES', join(', ', array(BUG_UNCONFIRMED, BUG_PROMOTED, 
+	BUG_ASSIGNED, BUG_REOPENED)));
 
+require_once ('inc/db/'.DB_TYPE.'.php');
+	
 // Localization - include the file with the desired language
 include 'languages/'.LANGUAGE.'.php';
 

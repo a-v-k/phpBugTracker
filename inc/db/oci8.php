@@ -95,7 +95,7 @@ $QUERY = array(
 		'owner.login as owner, r.resolution_name, st.status_name '.
 		'from '.TBL_BUG.' b, '.TBL_AUTH_USER.' owner, '.TBL_AUTH_USER.' reporter, '.
 		TBL_RESOLUTION.' r, '.TBL_SEVERITY.' sv, '.
-		TBL_STATUS.' st, '.TBL_SITE.' site '
+		TBL_STATUS.' st, '.TBL_SITE.' site '.
 		'where b.resolution_id = r.resolution_id(+) '.
 		'and b.assigned_to = owner.user_id(+) '.
 		'and b.created_by = reporter.user_id(+) '.
@@ -110,10 +110,12 @@ $QUERY = array(
 		'where p.project_id = pg.project_id(+) and active = 1 '.
 		'and (pg.project_id is null or pg.group_id in (%s)) '.
 		'group by p.project_id, p.project_name order by project_name',
-	'include-template-owner' => "SELECT sum(decode( s.status_name, 'Unconfirmed', 1, 'New', 1, 'Assigned', 1, 'Reopened', 1, 0 )) ".
+	'include-template-owner' => "SELECT sum(decode( s.status_id, ".BUG_UNCONFIRMED.", 1, ".BUG_PROMOTED.", 1, ".BUG_ASSIGNED.", 1, ".BUG_REOPENED.", 1, 0 )), ".
+		"sum(decode( s.status_id, ".BUG_UNCONFIRMED.", 0, ".BUG_PROMOTED.", 0, ".BUG_ASSIGNED.", 0, ".BUG_REOPENED.", 0, 1 )), ".
 		'from '.TBL_BUG.' b, '.TBL_STATUS.' s '.
 		'where  b.status_id = s.status_id (+) and b.assigned_to = %s',
-	'include-template-reporter' => "SELECT sum(decode( s.status_name, 'Unconfirmed', 1, 'New', 1, 'Assigned', 1, 'Reopened', 1, 0 )) ".
+	'include-template-reporter' => "SELECT sum(decode( s.status_name, ".BUG_UNCONFIRMED.", 1, ".BUG_PROMOTED.", 1, ".BUG_ASSIGNED.", 1, ".BUG_REOPENED.", 1, 0 )), ".
+		"sum(decode( s.status_id, ".BUG_UNCONFIRMED.", 0, ".BUG_PROMOTED.", 0, ".BUG_ASSIGNED.", 0, ".BUG_REOPENED.", 0, 1 )), ".
 		'from '.TBL_BUG.' b, ' . TBL_STATUS.' s '.
 		'where  b.status_id = s.status_id (+) and b.created_by = %s',
 	'index-projsummary-1' => 'select b.project_id, p.project_name as "Project", '.

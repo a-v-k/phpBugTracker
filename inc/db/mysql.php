@@ -106,12 +106,14 @@ $QUERY = array(
 		'where active = 1 and (pg.project_id is null or pg.group_id in (%s)) '.
 		'group by p.project_id, p.project_name '.
 		'order by project_name',
-	'include-template-owner' => "SELECT sum(CASE WHEN status_name in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) , ".
-		"sum(CASE WHEN status_name not in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) ".
+	'include-template-owner' => "SELECT sum(CASE WHEN s.status_id ".
+		"in (".OPEN_BUG_STATUSES.") THEN 1 ELSE 0 END ) , ".
+		"sum(CASE WHEN s.status_id ".
+		"not in (".OPEN_BUG_STATUSES.") THEN 1 ELSE 0 END ) ".
 		"from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) ".
 		"where assigned_to = %s",
-	'include-template-reporter' => "SELECT sum(CASE WHEN status_name in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) , ".
-		"sum(CASE WHEN status_name not in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) ".
+	'include-template-reporter' => "SELECT sum(CASE WHEN s.status_id in (".OPEN_BUG_STATUSES.") THEN 1 ELSE 0 END ) , ".
+		"sum(CASE WHEN s.status_id not in (".OPEN_BUG_STATUSES.") THEN 1 ELSE 0 END ) ".
 		"from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) ".
 		"where created_by = %s",
 	'index-projsummary-1' => 'select project_name as "Project", '.
