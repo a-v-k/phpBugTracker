@@ -9,30 +9,30 @@ function do_form($userid = 0) {
   
   // Validation
   if (!$femail = valid_email(femail))
-		$error = $STRING[giveemail];
-	elseif (!$fpassword = trim($fpassword))
-		$error = $STRING[givepassword];
-	if ($error) { list_items($userid, $error); return; }
+    $error = $STRING[giveemail];
+  elseif (!$fpassword = trim($fpassword))
+    $error = $STRING[givepassword];
+  if ($error) { list_items($userid, $error); return; }
   
-	if (!$userid) {
+  if (!$userid) {
     $q->query("insert into User (UserID, FirstName, LastName, Email, 
-			Password, UserLevel, CreatedDate) values (".$q->nextid('User').", 
-			'$ffirstname', '$flastname', '$femail', '$fpassword', $usertype, ".time().")");
+      Password, UserLevel, CreatedDate) values (".$q->nextid('User').", 
+      '$ffirstname', '$flastname', '$femail', '$fpassword', $usertype, ".time().")");
   } else {
     $q->query("update User set FirstName='$ffirstname', LastName='$flastname', 
-			Email='$femail', Password='$fpassword', 
-			UserLevel=$usertype where UserID = '$userid'");
+      Email='$femail', Password='$fpassword', 
+      UserLevel=$usertype where UserID = '$userid'");
   }
   header("Location: $me?");
 }  
 
 function show_form($userid = 0, $error = '') {
-  global $q, $me, $t, $firstname, $lastname, $email, $password, $usertype. $STRING;
+  global $q, $me, $t, $firstname, $lastname, $email, $password, $usertype, $STRING;
   
   if ($userid && !$error) {
     $row = $q->grab("select * from User where UserID = '$userid'");
     $t->set_var(array(
-			'action' => $STRING[edit],
+      'action' => $STRING[edit],
       'fuserid' => $row[UserID],
       'ffirstname' => $row[FirstName],
       'flastname' => $row[LastName],
@@ -74,8 +74,8 @@ function list_items($userid = 0, $error = '') {
     'records' => $nr));
                 
   $q->query("select UserID, concat(FirstName,' ',LastName) as FullName, Email, 
-		CreatedDate, UserLevel from User order by $order $sort 
-		limit $llimit, $selrange");
+    CreatedDate, UserLevel from User order by $order $sort 
+    limit $llimit, $selrange");
         
   if (!$q->num_rows()) {
     $t->set_var('rows',"<tr><td>$STRING[nousers]</td></tr>");
@@ -102,9 +102,9 @@ function list_items($userid = 0, $error = '') {
       'date' => date(DATEFORMAT,$row[CreatedDate])));
     $t->parse('rows','row',true);
   }
-	
-	show_form($userid, $error);
-	$t->set_var('TITLE',$TITLE[user]);
+  
+  show_form($userid, $error);
+  $t->set_var('TITLE',$TITLE[user]);
 }
 
 $t->set_file('wrap','wrap.html');
