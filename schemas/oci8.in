@@ -2,7 +2,7 @@
 -- Oracle database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: oci8.in,v 1.15 2002/06/14 15:30:45 firma Exp $
+-- $Id: oci8.in,v 1.16 2002/06/18 15:23:58 firma Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id number(10)   default '0' NOT NULL,
@@ -242,10 +242,11 @@ CREATE TABLE TBL_USER_PERM (
 CREATE INDEX PERMUSERIDX ON TBL_USER_PERM ( perm_id );
 
 CREATE TABLE TBL_USER_PREF (
-  user_id number(10)   default '0' NOT NULL,
-  email_notices number(1)   default '1' NOT NULL,
-  PRIMARY KEY  (user_id) 
-) ;
+    user_id number(10) default '0' NOT NULL,
+    email_notices number(1) default '1' NOT NULL,
+    saved_queries number(1) default '1' NOT NULL,
+    PRIMARY KEY (user_id)
+);
 
 CREATE TABLE TBL_VERSION (
   version_id number(10)   default '0' NOT NULL,
