@@ -111,11 +111,11 @@ $QUERY = array(
 		'and (pg.project_id is null or pg.group_id in (%s)) '.
 		'group by p.project_id, p.project_name order by project_name',
 	'include-template-owner' => "SELECT sum(decode( s.status_id, ".BUG_UNCONFIRMED.", 1, ".BUG_PROMOTED.", 1, ".BUG_ASSIGNED.", 1, ".BUG_REOPENED.", 1, 0 )), ".
-		"sum(decode( s.status_id, ".BUG_UNCONFIRMED.", 0, ".BUG_PROMOTED.", 0, ".BUG_ASSIGNED.", 0, ".BUG_REOPENED.", 0, 1 )), ".
+		"sum(decode( s.status_id, ".BUG_UNCONFIRMED.", 0, ".BUG_PROMOTED.", 0, ".BUG_ASSIGNED.", 0, ".BUG_REOPENED.", 0, 1 )) ".
 		'from '.TBL_BUG.' b, '.TBL_STATUS.' s '.
 		'where  b.status_id = s.status_id (+) and b.assigned_to = %s',
 	'include-template-reporter' => "SELECT sum(decode( s.status_id, ".BUG_UNCONFIRMED.", 1, ".BUG_PROMOTED.", 1, ".BUG_ASSIGNED.", 1, ".BUG_REOPENED.", 1, 0 )), ".
-		"sum(decode( s.status_id, ".BUG_UNCONFIRMED.", 0, ".BUG_PROMOTED.", 0, ".BUG_ASSIGNED.", 0, ".BUG_REOPENED.", 0, 1 )), ".
+		"sum(decode( s.status_id, ".BUG_UNCONFIRMED.", 0, ".BUG_PROMOTED.", 0, ".BUG_ASSIGNED.", 0, ".BUG_REOPENED.", 0, 1 )) ".
 		'from '.TBL_BUG.' b, ' . TBL_STATUS.' s '.
 		'where  b.status_id = s.status_id (+) and b.created_by = %s',
 	'index-projsummary-1' => 'select b.project_id, p.project_name as "Project", '.
