@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: severity.php,v 1.10 2001/10/06 03:35:37 bcurtis Exp $
+// $Id: severity.php,v 1.11 2001/10/06 03:53:33 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -107,9 +107,8 @@ function list_items($severityid = 0, $error = '') {
   while ($row = $q->grab()) {
     $t->set_var(array(
       'bgcolor' => USE_SEVERITY_COLOR ? $row['severity_color'] : 
-				((++$i % 2 == 0) ? '#dddddd' : '#ffffff'),
-			'trclass' => USE_SEVERITY_COLOR ? '' : 
-				$i % 2 ? '' : 'alt',
+				((++$i % 2 == 0) ? '#dddddd' : ''),
+			'trclass' => USE_SEVERITY_COLOR ? '' : ($i % 2 ? '' : 'alt'),
       'severityid' => $row['severity_id'],
       'name' => $row['severity_name'],
       'description' => $row['severity_desc'],

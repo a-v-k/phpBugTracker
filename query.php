@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.29 2001/10/06 03:35:37 bcurtis Exp $
+// $Id: query.php,v 1.30 2001/10/06 03:53:33 bcurtis Exp $
 
 include 'include.php';
 
@@ -253,6 +253,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	while ($row = $q->grab()) {
 		$bgcolor = USE_SEVERITY_COLOR ? $row['severity_color'] : 
 			((++$i % 2 == 0) ? '#dddddd' : '#ffffff');
+		$trclass = USE_SEVERITY_COLOR ? '' : ($i % 2 ? '' : 'alt');
 		foreach ($db_fields as $field) {
 			switch ($field) {
 				case 'url' : 
@@ -263,7 +264,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 				case 'last_modified_date' :
 				case 'close_date' : 
 					$coldata = $row[$field] ? date(DATEFORMAT, $row[$field]) : '&nbsp;';
-					$td_extra = 'class="center-col"';
+					$td_extra = 'class="center"';
 					break;
 				case 'bug_id' :
 				case 'title' :
@@ -274,15 +275,15 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 				case 'owner' : 
 				case 'lastmodifier' : 
 					$coldata = maskemail($row[$field]);
-					$td_extra = 'class="center-col"';
+					$td_extra = 'class="center"';
 					break;
 				case 'priority' :
 					$coldata = $select['priority'][$row[$field]];
-					$td_extra = 'class="center-col"';
+					$td_extra = 'class="center"';
 					break;
 				default :
 					$coldata = $row[$field];
-					$td_extra = 'class="center-col"';
+					$td_extra = 'class="center"';
 					break;
 			}
 			$t->set_var(array(
@@ -291,7 +292,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 				));
 			$t->parse('cols', 'col', true);
 		}
-		$t->set_var('tr-extra', "bgcolor='$bgcolor' onClick=\"document.location.href='bug.php?op=show&bugid={$row['bug_id']}'\" onMouseOver=\"this.style.backgroundColor='#eeeeee'\" onMouseOut=\"this.style.backgroundColor='$bgcolor'\"");
+		$t->set_var('tr-extra', "class='$trclass' onClick=\"document.location.href='bug.php?op=show&bugid={$row['bug_id']}'\" onMouseOver=\"this.style.fontWeight='bold'\" onMouseOut=\"this.style.fontWeight='normal'\"");
 		$t->parse('rows','row',true);
 		$t->set_var('cols', '');
 	}

@@ -29,6 +29,10 @@ td.head-selected {
 	background-color: #bbbbbb;
 	}
 	
+td.center {
+	text-align: center;
+	}
+		
 th { 
   font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
   font-size: 12px; 
