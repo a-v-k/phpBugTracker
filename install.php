@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.34 2002/10/11 20:53:53 bcurtis Exp $
+// $Id: install.php,v 1.35 2002/10/18 17:48:35 bcurtis Exp $
 
 // Location of smarty templates class
 define ('SMARTY_PATH','./inc/smarty/');
@@ -59,6 +59,7 @@ $db_types = array(
 	'pgsql' => 'PostgreSQL');
 
 ini_set("magic_quotes_runtime", 0); // runtime quotes will kill the included sql
+ini_set("magic_quotes_sybase", 0);
 
 if (!empty($_pv)) {
 	$tables = array(
