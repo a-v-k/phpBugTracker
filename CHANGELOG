@@ -1,4 +1,4 @@
--- 0.1.6 -- 
+-- 0.1.6 -- 23 July 2001
 : Fixed the bug of not setting the creation date when creating a new version
 : Fixed the bug of not displaying the correct version in bug display
 : Remove the comments from the notification email if no comments were added when the bug is changed
