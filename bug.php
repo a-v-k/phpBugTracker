@@ -103,13 +103,13 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 	
 	// If there are new comments grab the comments immediately before the latest
 	if ($comments) {
-		$q->query("select u.email, c.text, c.created_date from comment c, user u where bug_id = {$buginfo['bug_id']} and c.created_by = u.user_id order by created_date desc limit 2");
+		$q->query("select u.email, c.comment_text, c.created_date from comment c, user u where bug_id = {$buginfo['bug_id']} and c.created_by = u.user_id order by created_date desc limit 2");
 		$row = $q->grab();
 		$t->set_var(array(
 			'newpostedby' => $row['email'],
 			'newpostedon' => date(TIMEFORMAT, $row['created_date']).' on '.
 				date(DATEFORMAT, $row['created_date']),
-			'newcomments' => textwrap('+ '.stripslashes($row['text']),72,"\n+ ")
+			'newcomments' => textwrap('+ '.stripslashes($row['comment_text']),72,"\n+ ")
 			));
 		// If this comment is the first additional comment after the creation of the
 		// bug then we need to grab the bug's description as the previous comment
@@ -126,7 +126,7 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 				'oldpostedby' => $row['email'],
 				'oldpostedon' => date(TIMEFORMAT,$row['created_date']).' on '.
 					date(DATEFORMAT,$row['created_date']),
-				'oldcomments' => textwrap(stripslashes($row['text']),72)
+				'oldcomments' => textwrap(stripslashes($row['comment_text']),72)
 				));
 		}
 		$t->parse('cblock', 'commentblock', true);
@@ -146,8 +146,8 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 	$t->set_var(array(
 		'bugid' => $buginfo['bug_id'],
 		'url' => INSTALLURL."/bug.php?op=show&bugid={$buginfo['bug_id']}",
-		'Priority' => $select['priority_id'][($cf['priority_id'] ? $cf['priority_id'] : $buginfo['priority_id'])],
-		'PriorityStat' => $cf['priority_id'] ? '!' : ' ',
+		'Priority' => $select['priority'][($cf['priority'] ? $cf['priority'] : $buginfo['priority'])],
+		'PriorityStat' => $cf['priority'] ? '!' : ' ',
 		'Reporter' => $reporter,
 		'ReporterStat' => $reporterstat,
 		'AssignedTo' => $assignedto,
@@ -220,8 +220,8 @@ function update_bug($bugid = 0) {
 				show_bug($bugid,array('status' => $STRING['nobug']));
 				return;
 			}
-			$q->query("insert into comment (comment_id, bug_id, text, created_by, created_date) values (".$q->nextid('comment').", $dupenum, 'Bug #$bugid is a duplicate of this bug', $u, $now)");
-			$q->query("insert into comment (comment_id, bug_id, text, created_by, created_date) values (".$q->nextid('comment').", $bugid, 'This bug is a duplicate of bug #$dupenum', $u, $now)");
+			$q->query("insert into comment (comment_id, bug_id, comment_text, created_by, created_date) values (".$q->nextid('comment').", $dupenum, 'Bug #$bugid is a duplicate of this bug', $u, $now)");
+			$q->query("insert into comment (comment_id, bug_id, comment_text, created_by, created_date) values (".$q->nextid('comment').", $bugid, 'This bug is a duplicate of bug #$dupenum', $u, $now)");
 			$statusfield = 'Duplicate'; 
 			$bugresolution = $q->grab_field("select resolution_id from resolution where resolution_name = 'Duplicate'");
 			$statusfield = 'Resolved';
@@ -249,10 +249,10 @@ function update_bug($bugid = 0) {
 	
 	if ($comments) {
 		$comments = htmlspecialchars($comments);
-		$q->query("insert into comment (comment_id, bug_id, text, created_by, created_date) values (".$q->nextid('comment').", $bugid, '$comments', $u, $now)");
+		$q->query("insert into comment (comment_id, bug_id, comment_text, created_by, created_date) values (".$q->nextid('comment').", $bugid, '$comments', $u, $now)");
 	}
 
-	$q->query("update bug set title = '$title', url = '$url', severity_id = $severity, priority_id = $priority, ".($status ? "status_id = $status, " : ''). ($changeresolution ? "resolution_id = $bugresolution, " : ''). ($assignedto ? "assigned_to = $assignedto, " : '')." project_id = $project, version_id = $version, component_id = $component, os_id = $os, last_modified_by = $u, last_modified_date = $now where bug_id = $bugid");
+	$q->query("update bug set title = '$title', url = '$url', severity_id = $severity, priority = $priority, ".($status ? "status_id = $status, " : ''). ($changeresolution ? "resolution_id = $bugresolution, " : ''). ($assignedto ? "assigned_to = $assignedto, " : '')." project_id = $project, version_id = $version, component_id = $component, os_id = $os, last_modified_by = $u, last_modified_date = $now where bug_id = $bugid");
 	
 	if ($changedfields or $comments) {
 		do_changedfields($u, $buginfo, $changedfields, $comments);
@@ -277,9 +277,9 @@ function do_form($bugid = 0) {
 	$time = time();
 	if (!$bugid) {
 		$status = $q->grab_field("select status_id from status where status_name = 'Unconfirmed'");
-		$q->query("insert into bug (bug_id, title, description, url, severity_id, priority_id, status_id, created_by, created_date, last_modified_by, last_modified_date, project_id, version_id, component_id, os_id, browser_string) values (".$q->nextid('bug').", '$title', '$description', '$url', $severity, $priority, $status, $u, $time, $u, $time, $project, $version, $component, '$os', '{$GLOBALS['HTTP_USER_AGENT']}')");
+		$q->query("insert into bug (bug_id, title, description, url, severity_id, priority, status_id, created_by, created_date, last_modified_by, last_modified_date, project_id, version_id, component_id, os_id, browser_string) values (".$q->nextid('bug').", '$title', '$description', '$url', $severity, $priority, $status, $u, $time, $u, $time, $project, $version, $component, '$os', '{$GLOBALS['HTTP_USER_AGENT']}')");
 	} else {
-		$q->query("update bug set title = '$title', description = '$description', url = '$url', severity_id = '$severity', priority_id = '$priority', status_id = $status, assigned_to = '$assignedto', project_id = $project, version_id = $version, component_id = $component, os_id = '$os', browser_string = '{$GLOBALS['HTTP_USER_AGENT']}' last_modified_by = $u, last_modified_date = $time where bug_id = '$bugid'");
+		$q->query("update bug set title = '$title', description = '$description', url = '$url', severity_id = '$severity', priority = '$priority', status_id = $status, assigned_to = '$assignedto', project_id = $project, version_id = $version, component_id = $component, os_id = '$os', browser_string = '{$GLOBALS['HTTP_USER_AGENT']}' last_modified_by = $u, last_modified_date = $time where bug_id = '$bugid'");
 	}
 	if ($another) header("Location: $me?op=add&project=$project");
 	else header("Location: query.php");
@@ -303,7 +303,7 @@ function show_form($bugid = 0, $error = '') {
 			'url' => $row['URL'],
 			'urllabel' => $row['url'] ? "<a href='{$row['url']}'>URL</a>" : 'URL',
 			'severity' => build_select('severity',$row['severity_id']),
-			'priority' => build_select('priority',$row['priority_id']),
+			'priority' => build_select('priority',$row['priority']),
 			'status' => build_select('status',$row['status_id']),
 			'resolution' => build_select('resolution',$row['resolution_id']),
 			'assignedto' => $row['assigned_to'],
@@ -344,7 +344,7 @@ function show_form($bugid = 0, $error = '') {
 function show_bug($bugid = 0, $error = '') {
 	global $q, $me, $t, $project, $STRING, $u, $perm; 
 	
-	if (!ereg('^[0-9]+$',$bugid) or !$row = $q->grab("select bug_id, title, reporter.email as reporter, owner.email as owner, b.project_id, b.version_id, b.severity_id, b.created_date, b.last_modified_date, status_name as status, b.priority_id, b.description, resolution_name as resolution, url, b.component_id, b.os_id from bug b, severity sv, status st left join user owner on b.assigned_to = owner.user_id left join user reporter on b.created_by = reporter.user_id, resolution r where b.resolution_id = r.resolution_id where bug_id = '$bugid' and b.severity_id = sv.severity_id and b.status_id = st.status_id")) {
+	if (!ereg('^[0-9]+$',$bugid) or !$row = $q->grab("select bug_id, title, reporter.email as reporter, owner.email as owner, b.project_id, b.version_id, b.severity_id, b.created_date, b.last_modified_date, status_name as status, b.priority, b.description, resolution_name as resolution, url, b.component_id, b.os_id from bug b left join resolution r using(resolution_id), severity sv, status st left join user owner on b.assigned_to = owner.user_id left join user reporter on b.created_by = reporter.user_id where bug_id = '$bugid' and b.severity_id = sv.severity_id and b.status_id = st.status_id")) {
 		show_text($STRING['bugbadnum'],true);
 		return;
 	}
@@ -366,7 +366,7 @@ function show_bug($bugid = 0, $error = '') {
 		'url' => $row['url'],
 		'urllabel' => $row['url'] ? "<a href='{$row['url']}'>URL</a>" : 'URL',
 		'severity' => build_select('severity',$row['severity_id']),
-		'priority' => build_select('priority',$row['priority_id']),
+		'priority' => build_select('priority',$row['priority']),
 		'status' => $row['status_id'],
 		'resolution' => $row['resolution_id'],
 		'owner' => maskemail($row['owner']),
@@ -443,7 +443,7 @@ function show_bug($bugid = 0, $error = '') {
 		}
 	}
 			
-	$q->query("select text, comment.created_date, email from comment, user where bug_id = $bugid and created_by = user_id order by comment.created_date");
+	$q->query("select comment_text, comment.created_date, email from comment, user where bug_id = $bugid and comment.created_by = user_id order by comment.created_date");
 	if (!$q->num_rows()) {
 		$t->set_var('rows','');
 	} else {
@@ -451,7 +451,7 @@ function show_bug($bugid = 0, $error = '') {
 			$t->set_var(array(
 				'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
 				'rdescription' => eregi_replace('(bug)[[:space:]]*(#?)([0-9]+)',
-					"\\1 <a href='$me?op=show&bugid=\\3'>\\2\\3</a>",nl2br($row['text'])),
+					"\\1 <a href='$me?op=show&bugid=\\3'>\\2\\3</a>",nl2br($row['comment_text'])),
 				'rreporter' => maskemail($row['email']),
 				'rcreateddate' => date(TIMEFORMAT,$row['created_date']).' on '.
 					date(DATEFORMAT,$row['created_date'])
