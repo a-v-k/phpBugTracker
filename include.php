@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.51 2001/09/05 13:16:55 javyer Exp $
+// $Id: include.php,v 1.52 2001/09/05 13:26:13 javyer Exp $
 
 if (defined("INCLUDE_PATH")) {
   require INCLUDE_PATH."config.php";
@@ -140,6 +140,7 @@ class uauth extends Auth {
 
   function unauth($nobody = false) {
     Auth::unauth($nobody);
+    $this->auth['group'] = '';
     $this->auth['db_fields'] = '';
   }
 }
