@@ -12,11 +12,13 @@ Ok, here's the quick and dirty install instructions:
 				-- or --
 				
 5. Edit include.php as follows: 
-   a. Change the ADMINEMAIL constant to what you want
-   b. Change the database login info in class dbclass.  
-   c. Change the ENCRYPTPASS constant to 1 if you want to have passwords stored
+   a. Change the INSTALLPATH and INSTALLURL variables to point the right 
+	    locations.
+   b. Change the ADMINEMAIL constant to what you want
+   c. Change the database login info in class dbclass.  
+   d. Change the ENCRYPTPASS constant to 1 if you want to have passwords stored
       encrypted in the database.
-   d. Change the USE_JPGRAPH constant to 1 if you want to use the jpgraph class
+   e. Change the USE_JPGRAPH constant to 1 if you want to use the jpgraph class
 	    (http://www.aditus.nu/jpgraph/) to display the bug summary info.  If you
 			enable this you'll also need to edit the JPGRAPH_PATH constant, and 
 			you'll need to edit the jpgraph.php file from the jpgraph disribution.
