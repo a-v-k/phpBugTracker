@@ -1,4 +1,4 @@
-<table border="0" cellspacing="2" cellpadding="2">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr bgcolor="#eeeeee">
 		<th>Who</th>
 		<th>What</th>
@@ -12,7 +12,7 @@
 			<td>{$history[event].changed_field}</td>
 			<td>&nbsp;{$history[event].old_value}</td>
 			<td>&nbsp;{$history[event].new_value}</td>
-			<td>{$history[event].created_date|date:DATE_FORMAT} {$history[event].created_date|date:TIME_FORMAT}</td>
+			<td align="center">{$history[event].created_date|date:DATE_FORMAT} {$history[event].created_date|date:TIME_FORMAT}</td>
 		</tr>
 	{sectionelse}
 		<tr>
