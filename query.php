@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.50 2001/12/24 21:23:50 bcurtis Exp $
+// $Id: query.php,v 1.51 2002/01/05 12:57:34 bcurtis Exp $
 
 include 'include.php';
 
@@ -55,11 +55,13 @@ function show_query() {
 			p.project_id, p.project_name order by project_name');
 	}
 	while (list($pid, $pname) = $q->grab()) {
+		$pname = addslashes($pname);
 		// Version array
 		$js .= "versions['$pname'] = new Array(new Array('','All'),";
 		$nq->query("select version_name, version_id from ".TBL_VERSION.
 			" where project_id = $pid and active = 1");
 		while (list($version,$vid) = $nq->grab()) {
+			$version = addslashes($version);
 			$js .= "new Array($vid,'$version'),";
 		}
 		if (substr($js,-1) == ',') $js = substr($js,0,-1);
@@ -70,6 +72,7 @@ function show_query() {
 		$nq->query("select component_name, component_id from ".TBL_COMPONENT.
 			" where project_id = $pid and active = 1");
 		while (list($comp,$cid) = $nq->grab()) {
+			$comp = addslashes($comp);
 			$js .= "new Array($cid,'$comp'),";
 		}
 		if (substr($js,-1) == ',') $js = substr($js,0,-1);
