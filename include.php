@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.74 2001/11/13 03:53:02 bcurtis Exp $
+// $Id: include.php,v 1.75 2001/11/14 04:58:06 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -220,7 +220,7 @@ function build_select($box, $value = '', $project = 0) {
   global $q, $select;
 
   //create hash to map tablenames
-  $cfgDatabase=array(
+  $cfgDatabase = array(
     'group' => TBL_AUTH_GROUP,
     'project' => TBL_PROJECT,
     'component' => TBL_COMPONENT,
@@ -231,16 +231,18 @@ function build_select($box, $value = '', $project = 0) {
   );
 
   $text = '';
-  $querystart = "select {$box}_id, {$box}_name from $cfgDatabase[$box]";
-  $queries = array(
-    'group' => $querystart.' where group_name <> \'User\' order by group_name',
-    'severity' => $querystart.' where sort_order > 0 order by sort_order',
-    'status' => $querystart.' where sort_order > 0 order by sort_order',
-    'resolution' => $querystart.' where sort_order > 0 order by sort_order',
-    'project' => $querystart." where active > 0 order by {$box}_name",
-    'component' => $querystart." where project_id = $project order by {$box}_name",
-    'version' => $querystart." where project_id = $project order by {$box}_name"
-    );
+	if (in_array($box, $cfgDatabase)) {
+  	$querystart = "select {$box}_id, {$box}_name from $cfgDatabase[$box]";
+  	$queries = array(
+    	'group' => $querystart.' where group_name <> \'User\' order by group_name',
+    	'severity' => $querystart.' where sort_order > 0 order by sort_order',
+    	'status' => $querystart.' where sort_order > 0 order by sort_order',
+    	'resolution' => $querystart.' where sort_order > 0 order by sort_order',
+    	'project' => $querystart." where active > 0 order by {$box}_name",
+    	'component' => $querystart." where project_id = $project order by {$box}_name",
+    	'version' => $querystart." where project_id = $project order by {$box}_name"
+    	);
+	}
 
   switch($box) {
     case 'group' :
@@ -344,6 +346,7 @@ function build_select($box, $value = '', $project = 0) {
 function multipages($nr, $page, $urlstr) {
   global $me, $selrange;
 
+	$pages = '';
   if (!$page) $page = 1;
   if ($page == 'all') {
     $selrange = $nr;

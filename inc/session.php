@@ -482,8 +482,8 @@ class Session {
   */
   function set_tokenname(){
   
-      $this->name = ("" == $this->cookiename) ? $this->classname : $this->cookiename;
-      session_name ($this->name);
+      //$this->name = ("" == $this->cookiename) ? $this->classname : $this->cookiename;
+      session_name ($this->classname);
       
       if (!$this->cookie_domain) {
         $this->cookie_domain = get_cfg_var ("session.cookie_domain");

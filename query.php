@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.40 2001/11/14 04:11:02 bcurtis Exp $
+// $Id: query.php,v 1.41 2001/11/14 04:58:06 bcurtis Exp $
 
 include 'include.php';
 
@@ -36,6 +36,7 @@ function show_query() {
 	global $q, $t, $status, $resolution, $os, $priority, $severity, $TITLE, $u;
 	
 	$nq = new dbclass;
+	$js = '';
 	
 	$t->set_file('content','queryform.html');
 	$t->set_block('content', 'savequeryblock', 'sqblock');
@@ -117,12 +118,12 @@ function build_query($assignedto, $reportedby, $open) {
 		}
 	} else {
 		// Select boxes
-		if ($status) $flags[] = 'b.status_id in ('.delimit_list(',',$status).')';
-		if ($resolution) $flags[] = 'b.resolution_id in ('.delimit_list(',',$resolution).')';
-		if ($os) $flags[] = 'b.os_id in ('.delimit_list(',',$os).')';
-		if ($priority) $flags[] = 'b.priority in ('.delimit_list(',',$priority).')';
-		if ($severity) $flags[] = 'b.severity_id in ('.delimit_list(',',$severity).')';
-		if ($flags) $query[] = '('.delimit_list(' or ',$flags).')';
+		if (!empty($status)) $flags[] = 'b.status_id in ('.delimit_list(',',$status).')';
+		if (!empty($resolution)) $flags[] = 'b.resolution_id in ('.delimit_list(',',$resolution).')';
+		if (!empty($os)) $flags[] = 'b.os_id in ('.delimit_list(',',$os).')';
+		if (!empty($priority)) $flags[] = 'b.priority in ('.delimit_list(',',$priority).')';
+		if (!empty($severity)) $flags[] = 'b.severity_id in ('.delimit_list(',',$severity).')';
+		if (!empty($flags)) $query[] = '('.delimit_list(' or ',$flags).')';
 
 		// Email field(s)
 		if ($email1) {
@@ -137,7 +138,7 @@ function build_query($assignedto, $reportedby, $open) {
 		}
 
 		// Text search field(s)
-		foreach(array('title','tescription','url') as $searchfield) {
+		foreach(array('title','description','url') as $searchfield) {
 			if ($$searchfield) {
 				switch (${$searchfield."_type"}) {
 					case 'like' : $cond = "like '%".$$searchfield."%'"; break;
@@ -147,7 +148,7 @@ function build_query($assignedto, $reportedby, $open) {
 				$fields[] = "$searchfield $cond";
 			}
 		}
-		if ($fields) $query[] = '('.delimit_list(' or ',$fields).')';
+		if (!empty($fields)) $query[] = '('.delimit_list(' or ',$fields).')';
 
 		// Project/Version/Component
 		if ($projects) {
@@ -158,9 +159,11 @@ function build_query($assignedto, $reportedby, $open) {
 		}
 	}
 	
-	if ($query) $querystring = delimit_list(' and ',$query);
-	return $querystring;
-	if (!$sess->is_registered('querystring')) $sess->register('querystring');
+	if (!empty($query)) {
+		return delimit_list(' and ',$query);
+	} else {
+		return '';
+	}
 }
 
 function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
@@ -301,7 +304,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 				case 'reporter' :
 				case 'owner' : 
 				case 'lastmodifier' : 
-					$coldata = maskemail($row[$field]);
+					$coldata = !empty($row[$field]) ? maskemail($row[$field]) : '';
 					$td_extra = 'class="center"';
 					break;
 				case 'priority' :
@@ -309,7 +312,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 					$td_extra = 'class="center"';
 					break;
 				default :
-					$coldata = $row[$field];
+					$coldata = !empty($row[$field]) ? $row[$field] : '';
 					$td_extra = 'class="center"';
 					break;
 			}
@@ -329,6 +332,8 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 
 $t->set_file('wrap','wrap.html');
 
+$reportedby = !empty($_gv['reportedby']) ? $_gv['reportedby'] : 0;
+$assignedto = !empty($_gv['assignedto']) ? $_gv['assignedto'] : 0;
 if ($op) switch($op) {
 	case 'query' : show_query(); break;
 	case 'doquery' : $queryinfo['query'] = ''; list_items(); break;
