@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.24 2002/05/16 12:52:02 bcurtis Exp $
+// $Id: functions.php,v 1.25 2002/05/17 14:35:09 firma Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -427,35 +427,59 @@ function bt_date($string, $format) {
 	return date($format, $string);
 }
 
-// quoted-printable encoder function
+/* quoted-printable encoder function
+    This encoding has all non-ascii (say >127, <32 and =61 chracters)
+    encoded as "=" and it's hexadecimal value. Special case is space
+    (32 decimal) at the end of line, which is converted to =20, other-
+    wise it's not converted and it's returned as space (32 decimal). */
+
 function qp_enc($input, $line_max = 76) {
+    // Initialize variables
     $hex = array('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F');
-    $lines = split("\n", str_replace("\r\n", "\n", $input));
     $eol = "\n";
     $escape = "=";
     $output = "";
+    // Do "dos2unix" and split $input into $lines by end of line
+    $lines = split("\n", str_replace("\r\n", "\n", $input));
+    // Loop throught $lines
     while( list(, $line) = each($lines) ) { 
-        $line = rtrim($line);
-        $linlen = strlen($line);
-        $newline = ""; 
-        for($i = 0; $i < $linlen; $i++) {
-            $c = substr($line, $i, 1);
-            $dec = ord($c);
-            if ( ($dec == 32) && ($i == ($linlen - 1)) ) {
-                $c = "=20";
-            } elseif ( ($dec == 61) || ($dec < 32 ) || ($dec > 126) ) {
-                $h2 = floor($dec/16); $h1 = floor($dec%16);
-                $c = $escape.$hex["$h2"].$hex["$h1"];
-            } 
-            if ( (strlen($newline) + strlen($c)) >= $line_max ) {
-                $output .= $newline.$escape.$eol;
-                $newline = "";
-            } 
-            $newline .= $c;
-        }
-        $output .= $newline.$eol;
+	// Trim each line from right side
+	$line = rtrim($line);
+	// Place line length to $linlen
+	$linlen = strlen($line);
+	// Initialize $newline
+	$newline = "";
+	// Loop throught each line and process each character of the line
+	for($i = 0; $i < $linlen; $i++) {
+	    // Place each character of $line to $c
+	    $c = substr($line, $i, 1);
+	    // Place decimal value of $c to $dec
+	    $dec = ord($c);
+	    // If $c equals to space (" ") and we are at the end of line place
+	    // space (" ") to $c
+	    if (($dec == 32) && ($i == ($linlen - 1))) {
+		$c = "=20";
+	    } elseif ( ($dec == 61) || ($dec < 32 ) || ($dec > 126) ) {
+		// Or if $c is not printable character in ascii, convert the
+		// character to it's quoted-printable value
+		$h2 = floor($dec/16); $h1 = floor($dec%16);
+        	$c = $escape.$hex["$h2"].$hex["$h1"];
+	    }
+	    // If we are at the maximum line length, add whole line (converted)
+	    // with end of line character to $output
+	    if ( (strlen($newline) + strlen($c)) >= $line_max ) {
+		$output .= $newline.$escape.$eol;
+		// And initialize $newline as empty
+		$newline = "";
+	    }
+	    // Add converted (or ascii) character to $newline
+	    $newline .= $c;
+	}
+	// Add $newline with end of line character to output
+	$output .= $newline.$eol;
     }
-    return (trim($output)); 
+    // Return trimmed output
+    return (trim($output));
 }
 
 // mailer with use of quoted-printable encoding
@@ -466,9 +490,9 @@ function qp_mail($to, $subject = 'No subject', $body, $headers = '') {
         $headers .= "\n";
         // There have to be no newline at the end of $headers
     }
-    $headers .= "Content-type: text/plain; charset=\"".$STRING['lang_charset']."\"\n";
+    $headers .= "Content-type: Text/plain; charset=\"".$STRING['lang_charset']."\"\n";
     $headers .= "Content-Transfer-Encoding: quoted-printable\nMIME-Version: 1.0";
     mail ($to, $subject, qp_enc($body), $headers);
-} 
+}
 
 ?>
