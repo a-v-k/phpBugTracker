@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: configure.php,v 1.2 2001/11/13 03:53:04 bcurtis Exp $
+// $Id: configure.php,v 1.3 2001/11/23 05:02:41 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -42,6 +42,7 @@ function list_options() {
 	$t->set_block('row', 'selectblock', 'select');
 	$t->set_block('row', 'radioblock', 'radio');
 	
+	$i = 0;
 	$q->query('select * from '.TBL_CONFIGURATION);
 	while ($row = $q->grab()) {
 		$t->set_var($row);
@@ -88,7 +89,7 @@ $t->set_file('wrap','wrap.html');
 
 $perm->check('Admin');
 
-if ($submit) {
+if (isset($_pv['submit'])) {
 	save_options();
 } 
 list_options();
