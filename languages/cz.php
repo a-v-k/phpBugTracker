@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz.php,v 1.20 2002/06/19 13:59:30 firma Exp $
+// $Id: cz.php,v 1.21 2002/10/22 20:08:27 bcurtis Exp $
 
 $STRING = array(
     'lang_charset' => 'Windows-1250',
@@ -136,7 +136,16 @@ $STRING = array(
 	'ViewReports' => 'Hlášení/Reporty',
 	'Documentation' => 'Dokumentace',
 	'AdminTools' => 'Administraèní nástroje',
-	'CreateNewAccount' => 'Vytvoøit nový úèet'
+	'CreateNewAccount' => 'Vytvoøit nový úèet',
+	'Email' => 'Email',
+	'Login' => 'Login',
+	'DoLogin' => 'Login',
+	'BugsAssigned' => 'Bugs assigned to me',
+	'BugsReported' => 'Bugs reported by me',
+	'PersonalPage' => 'Personal Page',
+	'Logout' => 'Logout',
+	'EmailPassword' => 'Email Password',
+	'RememberMe' => 'Remember me',
     ),
     'BUGFORM' => array(
         'Project' => 'Projekt',

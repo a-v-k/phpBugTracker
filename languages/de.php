@@ -24,9 +24,9 @@
 // Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 // MA 02111-1307, USA.
 // -------------------------------------------------------------------------
-// $Id: de.php,v 1.15 2002/07/18 13:10:53 bcurtis Exp $
+// $Id: de.php,v 1.16 2002/10/22 20:08:28 bcurtis Exp $
 
-$STRING = array(	
+$STRING = array(
 	'lang_charset' => 'iso8859-1',
 	'nouser' => 'Dieser Benutzer extistiert nicht',
 	'dupeofself' => 'Ein Bug kann kein Duplikat von sich selbst sein',
@@ -141,7 +141,16 @@ $STRING = array(
 		'ViewReports' => 'Berichte anzeigen',
 		'Documentation' => 'Dokumentation lesen',
 		'AdminTools' => 'Adminwerkzeuge',
-		'CreateNewAccount' => 'Neuen Account anlegen'
+		'CreateNewAccount' => 'Neuen Account anlegen',
+		'Email' => 'Email',
+		'Login' => 'Login',
+		'DoLogin' => 'Login',
+		'BugsAssigned' => 'Bugs assigned to me',
+		'BugsReported' => 'Bugs reported by me',
+		'PersonalPage' => 'Personal Page',
+		'Logout' => 'Logout',
+		'EmailPassword' => 'Email Password',
+		'RememberMe' => 'Remember me',
 		),
     'BUGFORM' => array(
 		'Project' => 'Projekt',
@@ -230,7 +239,7 @@ $STRING = array(
 		));
 
 // Page titles
-$TITLE = array(	
+$TITLE = array(
 	'enterbug' => 'Geben Sie einen Bug ein',
 	'editbug' => 'Bug Bearbeiten',
 	'newaccount' => 'Einen neuen Account anlegen',
@@ -278,6 +287,6 @@ $TITLE = array(
 	'editdatabase' => 'Datenbank bearbeiten',
 	'database' => 'Datenbanken',
 	'site' => 'Standorte'
-);	
-	
+);
+
 ?>
