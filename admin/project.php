@@ -1,7 +1,7 @@
 <?php
 
 include '../include.php';
-error_reporting(E_ALL);
+
 function do_form($projectid = 0) {
 	global $q, $me, $name, $description, $active, $version, $u, $STRING, $now;
 	
