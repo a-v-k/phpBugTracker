@@ -2,7 +2,7 @@
 
 // report.php - Generate reports on various bug activities
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,16 +20,12 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: report.php,v 1.23 2002/03/29 22:43:38 bcurtis Exp $  
+// $Id: report.php,v 1.24 2002/04/03 01:00:52 bcurtis Exp $  
 
 include 'include.php';
 
 function resolution_by_engineer($projectid = 0) {
 	global $db, $t, $restricted_projects, $perm, $QUERY;
-	
-	$t->set_block('content', 'row', 'rows');
-	$t->set_block('row', 'col', 'cols');
-	$t->set_var('reporttitle', 'Bug resolutions');
 	
 	// Start off our query
 	$querystring = $QUERY['report-resbyeng-1'];
@@ -55,45 +51,15 @@ function resolution_by_engineer($projectid = 0) {
 		$projectquery = '';
 	}
 	
-	$rs = $db->query(sprintf($QUERY['report-resbyeng-6'], $querystring, 
-		$projectquery));
-	if (!$rs->numRows()) {
-		$t->set_var('rows', 'No data to display');
-	} else {
-		foreach ($resfields as $col) {
-			$t->set_var('coldata', stripslashes($col));
-			$t->set_var('colclass', 'header-col');
-			$t->parse('cols', 'col', true);
-		}
-		$t->set_var('bgcolor', '#eeeeee');
-		$t->parse('rows', 'row', true);
-		$t->set_var('cols', '');
-		$i = 0;
-		$db->setOption('optimize', 'performance'); // For Oracle to do this loop
-		while ($rs->fetchInto($row)) {
-			foreach ($resfields as $col) {
-				if (!isset($row[$col]) || $row[$col] == '') {
-					$coldata = 'Unassigned';
-				} elseif ($col == 'Assigned To') {
-					$coldata = maskemail($row[$col]);
-				} else {
-					$coldata = stripslashes($row[$col]);
-				}
-				$t->set_var(array(
-					'coldata' => $coldata,
-					'colclass' => $col == 'Assigned To' ? '' : 'center-col'
-					));
-				$t->parse('cols', 'col', true);
-			}
-			$t->set_var('trclass', $i % 2 ? 'alt' : '');
-			$i++;
-			$t->parse('rows', 'row', true);
-			$t->set_var('cols', '');
-			//for header default
-			$t->set_var('trclass','alt');
-		}
-		$db->setOption('optimize', 'portability'); 
-	}
+	$db->setOption('optimize', 'performance'); // For Oracle to do this loop
+	$t->assign(array(
+		'resfields' => $resfields,
+		'developers' => $db->getAll(sprintf($QUERY['report-resbyeng-6'], 
+			$querystring, $projectquery))
+		));
+	$db->setOption('optimize', 'portability'); 
+
+	$t->display('report.html');
 }
 
 function new_bugs_by_date($date_range) {
@@ -189,12 +155,6 @@ function new_bugs_by_date($date_range) {
 }
 
 $projectid = isset($_gv['projectid']) ? $_gv['projectid'] : 0;
-$t->set_file('wrap','wrap.html');
-$t->set_file('content','report.html');
-$t->set_var(array(
-	'projects' => build_select('project', $projectid),
-	'TITLE' => $TITLE['reporting']
-	));
 
 if (isset($_gv['op'])) {
 	switch ($_gv['op']) {
@@ -206,6 +166,5 @@ if (isset($_gv['op'])) {
 	resolution_by_engineer($projectid);
 }
 
-$t->pparse('main',array('content','wrap','main'));
 
 ?>

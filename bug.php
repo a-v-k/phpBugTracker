@@ -2,7 +2,7 @@
 
 // bug.php - All the interactions with a bug
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.91 2002/03/30 19:12:27 bcurtis Exp $
+// $Id: bug.php,v 1.92 2002/04/03 01:00:52 bcurtis Exp $
 
 include 'include.php';
 
@@ -29,27 +29,11 @@ include 'include.php';
 function vote_view($bug_id) {
 	global $u, $db, $t, $STRING;
 	
-	$t->set_file('content', 'bugvotes.html');
-	$t->set_block('content', 'row', 'rows');
-	
-	$rs = $db->query('select login, v.created_date from '.TBL_AUTH_USER.' u, '.
-		TBL_BUG_VOTE." v where u.user_id = v.user_id and bug_id = $bug_id".
-		' order by v.created_date');
-	if (!$rs->numRows()) {
-		$t->set_var('rows', "<tr><td colspan=\"2\" align=\"center\">{$STRING['no_votes']}</td></tr>");
-	} else {
-		$i = 0;
-		while (list($login, $date) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
-			$t->set_var(array(
-      	'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
-				'trclass' => $i % 2 ? '' : 'alt',
-				'login' => $login,
-				'date' => date(DATE_FORMAT.' '.TIME_FORMAT, $date)
-			));
-			$t->parse('rows', 'row', true);
-		}
-	}
-	$t->set_var('bugid', $bug_id);
+	$t->assign('votes', $db->getAll('select login, v.created_date '.
+		'from '.TBL_AUTH_USER.' u, '.TBL_BUG_VOTE." v ".
+		"where u.user_id = v.user_id and bug_id = $bug_id ".
+		'order by v.created_date'));
+	$t->display('bugvotes.html');
 }
 
 ///
@@ -128,27 +112,8 @@ function show_history($bugid) {
     return;
   }
 
-  $rs = $db->query(sprintf($QUERY['bug-history'], $bugid));
-  if (!$rs->numRows()) {
-    show_text($STRING['nobughistory']);
-    return;
-  }
-
-  $t->set_file('content','bughistory.html');
-  $t->set_block('content', 'row', 'rows');
-  $t->set_var('bugid', $bugid);
-  while ($rs->fetchInto($row)) {
-    $t->set_var(array(
-      'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
-			'trclass' => $i % 2 ? '' : 'alt',
-      'field' => stripslashes($row['changed_field']),
-      'oldvalue' => stripslashes($row['old_value']),
-      'newvalue' => stripslashes($row['new_value']),
-      'createdby' => stripslashes(maskemail($row['login'])),
-      'date' => date(DATE_FORMAT.' '.TIME_FORMAT, $row['created_date'])
-      ));
-    $t->parse('rows', 'row', true);
-  }
+  $t->assign('history', $db->getAll(sprintf($QUERY['bug-history'], $bugid)));
+  $t->display('bughistory.html');
 }
 
 ///
@@ -628,28 +593,8 @@ function show_bug_printable($bugid) {
 		exit;
 	}
 	
-	$t->set_file('content', 'bugdisplay-printable.html');
-  $t->set_block('content','row','rows');
-  $t->set_var(array(
-    'TITLE' => "{$TITLE['editbug']} #$bugid",
-    'bugid' => $bugid,
-    'title' => stripslashes($row['title']),
-    'description' => nl2br(stripslashes($row['description'])),
-    'url' => $row['url'] ? "<a href='{$row['url']}'>{$row['url']}</a>" : '',
-    'severity' => $row['severity_name'],
-    'priority' => $select['priority'][$row['priority']],
-    'status' => $row['status_name'],
-    'resolution' => !empty($row['resolution_name']) ? $row['resolution_name'] : '',
-    'owner' => maskemail($row['owner']),
-    'reporter' => maskemail($row['reporter']),
-    'createddate' => date(DATE_FORMAT,$row['created_date']),
-    'createdtime' => date(TIME_FORMAT,$row['created_date']),
-    'lastmodifieddate' => $row['last_modified_date'],
-    'project' => $row['project_name'],
-    'version' => $row['version_name'],
-    'component' => $row['component_name'],
-    'os' => $row['os_name'],
-    'browserstring' => $row['browser_string'],
+	$t->assign($row);
+  $t->assign(array(
 		'bug_dependencies' => delimit_list(', ', $db->getCol('select '.
 			db_concat("'<a href=\"$me?op=show&bugid='", 'depends_on', '\'">#\'', 
 				'depends_on', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY.
@@ -657,35 +602,22 @@ function show_bug_printable($bugid) {
     ));
 
 	// Show the comments
-  $rs = $db->query('select comment_text, c.created_date, login'
+  $t->assign('comments', $db->getAll('select comment_text, c.created_date, login'
     .' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER
-    ." where bug_id = $bugid and c.created_by = user_id order by c.created_date");
-  if (!$rs->numRows()) {
-    $t->set_var('rows','');
-  } else {
-    while ($rs->fetchInto($row)) {
-      $t->set_var(array(
-        'rdescription' => nl2br(format_comments(
-					htmlspecialchars($row['comment_text']))),
-        'rreporter' => maskemail($row['login']),
-        'rcreateddate' => date(TIME_FORMAT,$row['created_date']).' on '.
-          date(DATE_FORMAT,$row['created_date'])
-        ));
-      $t->parse('rows','row',true);
-    }
-  }
+    ." where bug_id = $bugid and c.created_by = user_id order by c.created_date"));
+	
+	$t->display('bugdisplay-printable.html');
 }
 
 ///
 /// Grab the links for the previous and next bugs in the list
 function prev_next_links($bugid, $pos) {
-	global $db, $_sv, $STRING, $QUERY;
+	global $db, $_sv, $QUERY, $t;
 	
 	if (!isset($_sv['queryinfo']['query']) || !$_sv['queryinfo']['query']) {
 		return array('', '');
 	}
 	
-	$prevlink = $nextlink = '';
 	if ($pos) {
 		$offset = $pos - 1;
 		$limit = 2;
@@ -702,21 +634,16 @@ function prev_next_links($bugid, $pos) {
 	
 	if ($pos) {
 		if ($firstid) {
-			$prevlink = "<a href='bug.php?op=show&bugid=$firstid&pos=".($pos - 1).
-				'\'>'.$STRING['previous_bug'].'</a>';
+			$t->assign(array('prevbug' => $firstid, 'prevpos' => $pos - 1));
 		}
 		if ($secondid) {
-			$nextlink = "<a href='bug.php?op=show&bugid=$secondid&pos=".($pos + 1).
-				'\'>'.$STRING['next_bug'].'</a>';
+			$t->assign(array('nextbug' => $secondid, 'nextpos' => $pos + 1));
 		}
 	} else {
 		if ($firstid) {
-			$nextlink = "<a href='bug.php?op=show&bugid=$firstid&pos=".($pos + 1).
-				'\'>'.$STRING['next_bug'].'</a>';
+			$t->assign(array('nextbug' => $firstid, 'nextpos' => $pos + 1));
 		}
 	}
-	
-	return array($prevlink, $nextlink);
 }
 
 function show_bug($bugid = 0, $error = array()) {
@@ -727,151 +654,41 @@ function show_bug($bugid = 0, $error = array()) {
     show_text($STRING['bugbadnum'],true);
     return;
   }
-  $t->set_file('content','bugdisplay.html');
-  $t->set_block('content','row','rows');
-  $t->set_block('content','arow','assignrow');
-  $t->set_block('content','rrow','resolverow');
-  $t->set_block('content','rerow','reopenrow');
-  $t->set_block('content','vrow','verifyrow');
-  $t->set_block('content','crow','closerow');
-  $t->set_block('content','attrow','attrows');
-  $t->set_unknowns('remove');
-	
-	list($prevlink, $nextlink) = prev_next_links($bugid, 
-		isset($_gv['pos']) ? $_gv['pos'] : 0);
-  $t->set_var(array(
-    'statuserr' => isset($error['status']) ? $error['status'].'<br><br>' : '',
-		'vote_error' => isset($error['vote']) ? "<div class=\"error\">{$error['vote']}</div>" : '',
-    'bugid' => $bugid,
-    'TITLE' => "{$TITLE['editbug']} #$bugid",
-    'title' => htmlentities(stripslashes($row['title'])),
-    'description' => nl2br(htmlentities(stripslashes($row['description']))),
-    'url' => $row['url'],
-    'urllabel' => $row['url'] ? "<a href='{$row['url']}'>URL</a>" : 'URL',
-    'severity' => build_select('severity',$row['severity_id']),
-    'priority' => build_select('priority',$row['priority']),
-    'status' => $row['status_name'],
-    'resolution' => !empty($row['resolution_name']) ? $row['resolution_name'] : '',
-    'owner' => isset($row['owner']) ? maskemail($row['owner']) : '',
-    'reporter' => maskemail($row['reporter']),
-    'createddate' => date(DATE_FORMAT,$row['created_date']),
-    'createdtime' => date(TIME_FORMAT,$row['created_date']),
-    'lastmodifieddate' => $row['last_modified_date'],
-    'project' => build_select('project',$row['project_id']),
-    'projectid' => $row['project_id'],
-    'version' => build_select('version',$row['version_id'],$row['project_id']),
-    'component' => build_select('component',$row['component_id'],$row['project_id']),
-    'os' => build_select('os',$row['os_id']),
-    'browserstring' => $row['browser_string'],
-    'bugresolution' => build_select('resolution'),
-    'cclist' => build_select('bug_cc', $bugid),
-    'submit' => $u == 'nobody' ? $STRING['logintomodify'] :
-      '<input type="submit" value="Submit">',
-		'developer_list' => build_select('owner'),
-		'prevlink' => $prevlink,
-		'nextlink' => $nextlink,
-		'prevnextsep' => $prevlink && $nextlink ? ' | ' : '',
-		'pos' => isset($_gv['pos']) ? $_gv['pos'] : 0,
+
+	prev_next_links($bugid, isset($_gv['pos']) ? $_gv['pos'] : 0);
+	$t->assign($row);
+  $t->assign(array(
 		'already_voted' => $db->getOne("select count(*) from ".TBL_BUG_VOTE.
 			" where bug_id = $bugid and user_id = $u"),
-		'already_voted_string' => $STRING['already_voted'],
 		'num_votes' => $db->getOne("select count(*) from ".TBL_BUG_VOTE.
 			" where bug_id = $bugid"),
 		'bug_dependencies' => delimit_list(', ', $db->getCol('select '.
 			db_concat("'<a href=\"$me?op=show&bugid='", 'depends_on', '\'">#\'', 
 				'depends_on', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY.
 				" where bug_id = $bugid")),
-		'dependency_error' => isset($error['add_dep']) 
-			? '<div class="error">'.$error['add_dep'].'</div>'
-			: ''
 		));
-  switch($row['status_name']) {
-    case 'Unconfirmed' :
-    case 'New' :
-    case 'Reopened' :
-      $t->parse('assignrow','arow',true);
-      $t->parse('resolverow','rrow',true);
-      break;
-    case 'Assigned' :
-      $t->parse('resolverow','rrow',true);
-      break;
-    case 'Resolved' :
-      $t->parse('reopenrow','rerow',true);
-      $t->parse('verifyrow','vrow',true);
-      $t->parse('closerow','crow',true);
-      break;
-    case 'Verified' :
-      $t->parse('reopenrow','rerow',true);
-      $t->parse('closerow','crow',true);
-      break;
-    case 'Closed' :
-      $t->parse('reopenrow','rerow',true);
-      break;
-  }
-	$t->set_var('js', build_project_js());
 
   // Show the attachments
+	$attachments = array();
   $rs = $db->query("select * from ".TBL_ATTACHMENT." where bug_id = $bugid");
-  if (!$rs->numRows()) {
-    $t->set_var('attrows', '<tr><td colspan="5" align="center">No attachments</td></tr>');
-  } else {
-		$j = 0;
+  if ($rs->numRows()) {
     while ($rs->fetchInto($att)) {
       if (@is_readable(INSTALL_PATH.'/'.ATTACHMENT_PATH."/{$row['project_id']}/$bugid-{$att['file_name']}")) {
-        $action = "<a href='attachment.php?attachid={$att['attachment_id']}'>View</a>";
-        if ($perm->have_perm('Administrator')) {
-          $action .= " | <a href='attachment.php?del={$att['attachment_id']}' onClick=\"return confirm('Are you sure you want to delete this attachment?');\">Delete</a>";
-        }
-        if ($att['FileSize'] > 1024) {
-          $attsize = number_format((round($att['file_size']) / 1024 * 100) / 100).'k';
-        } else {
-          $attsize = number_format($att['file_size']).'b';
-        }
-        $t->set_var(array(
-          'bgcolor' => (++$j % 2 == 0) ? '#dddddd' : '#ffffff',
-					'trclass' => $j % 2 ? '' : 'alt',
-          'attid' => $att['attachment_id'],
-          'attname' => stripslashes($att['file_name']),
-          'attdesc' => stripslashes($att['description']),
-          'attsize' => $attsize,
-          'atttype' => $att['mime_type'],
-          'attdate' => date(DATE_FORMAT, $att['created_date']),
-          'attaction' => $action
-          ));
-        $t->parse('attrows', 'attrow', true);
+        $attachments[] = $att;
       }
-    }
-    // If there were attachments in the db but not on disk...
-    if (!$j) {
-      $t->set_var('attrows', '<tr><td colspan="5" align="center">No attachments</td></tr>');
     }
   }
 
 	// Show the comments
-  $rs = $db->query('select comment_text, c.created_date, login'
+  $t->assign('comments', $db->getAll('select comment_text, c.created_date, login'
     .' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER
-    ." where bug_id = $bugid and c.created_by = user_id order by c.created_date");
-  if (!$rs->numRows()) {
-    $t->set_var('rows','');
-  } else {
-		$i = 1;
-    while ($rs->fetchInto($row)) {
-      $t->set_var(array(
-        'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
-				'trclass' => $i % 2 ? '' : 'alt',
-        'rdescription' => nl2br(format_comments(
-					htmlspecialchars($row['comment_text']))),
-        'rreporter' => maskemail($row['login']),
-        'rcreateddate' => date(TIME_FORMAT,$row['created_date']).' on '.
-          date(DATE_FORMAT,$row['created_date'])
-        ));
-      $t->parse('rows','row',true);
-    }
-  }
+    ." where bug_id = $bugid and c.created_by = user_id order by c.created_date"));
+	
+	$t->display('bugdisplay.html');
 }
 
 function show_projects() {
-  global $me, $db, $t, $STRING, $TITLE, $perm, $auth, $restricted_projects, $_gv;
+  global $db, $t, $STRING, $perm, $restricted_projects, $_gv;
 
   // Show only active projects with at least one component
 	if ($perm->have_perm('Admin')) { // Show admins all projects
@@ -879,43 +696,30 @@ function show_projects() {
 	} else { // Filter out projects that can't be seen by this user
 		$p_query = " and p.project_id not in ($restricted_projects)";
 	}
-	$rs = $db->query('select p.project_id, p.project_name, p.project_desc, p.created_date 
+	$projects = array();
+	$projects = $db->getAll('select p.project_id, p.project_name, p.project_desc, p.created_date 
 		from '.TBL_PROJECT.' p, '.TBL_COMPONENT.
 		' c where p.active = 1 and p.project_id = c.project_id'.$p_query.
 		' group by p.project_id, p.project_name, p.project_desc, p.created_date'.
 		' order by project_name');
 	
-  switch ($rs->numRows()) {
+  switch (count($projects)) {
     case 0 :
-      $t->set_var('content',"<div class=\"error\">{$STRING['noprojects']}</div>");
+      show_text($STRING['noprojects'], true);
       return;
     case 1 :
-      $rs->fetchInto($row);
-      $_gv['project'] = $row['project_id'];
+      $_gv['project'] = $projects[0]['project_id'];
       show_form();
       break;
     default :
-      $t->set_file('content','projectlist.html');
-      $t->set_block('content','row','rows');
-
-      while ($rs->fetchInto($row)) {
-      $t->set_var(array(
-        'id' => $row['project_id'],
-        'name' => $row['project_name'],
-        'description' => $row['project_desc'],
-        'date' => date(DATE_FORMAT,$row['created_date'])
-        ));
-      $t->parse('rows','row',true);
-    }
-    $t->set_var('TITLE', $TITLE['enterbug']);
+			$t->assign('projects', $projects);
+			$t->display('projectlist.html');
   }
 }
 
-$t->set_file('wrap','wrap.html');
-
 if ($op) {
   switch($op) {
-    case 'history' : show_history($bugid); break;
+    case 'history' : show_history($_gv['bugid']); break;
     case 'add' :
       $perm->check('Editbug');
       if (isset($_gv['project'])) show_form();
@@ -929,7 +733,5 @@ if ($op) {
     case 'viewvotes' : vote_view($_gv['bugid']); break;
   }
 } else header("Location: query.php");
-
-$t->pparse('main',array('content','wrap','main'));
 
 ?>

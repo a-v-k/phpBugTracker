@@ -2,7 +2,7 @@
 
 // user.php - Preferences page
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.23 2002/03/27 17:52:01 bcurtis Exp $
+// $Id: user.php,v 1.24 2002/04/03 01:00:52 bcurtis Exp $
 
 include 'include.php';
 
@@ -37,7 +37,6 @@ function change_bug_list_columns($column_list) {
 	$HTTP_SESSION_VARS['db_fields'] = $column_list;
 	$column_list = serialize($column_list);
 	$db->query("update ".TBL_AUTH_USER." set bug_list_fields = '$column_list' where user_id = $u");
-	//$t->set_file('content', 'columnlistchanged.html');
 	show_text('Your bug list column preferences have been saved');
 }
 
@@ -48,7 +47,7 @@ function change_password($pass1, $pass2) {
 	elseif ($pass1 != $pass2) $error = $STRING['passwordmatch'];
 	
 	if ($error) {
-		show_password_form($error);
+		show_preferences_form($error);
 		return;
 	}
 	
@@ -59,7 +58,7 @@ function change_password($pass1, $pass2) {
 	}
 	
 	$db->query("update ".TBL_AUTH_USER." set password = '$mpassword' where user_id = $u");
-	$t->set_file('content', 'passwordchanged.html');
+	$t->display('passwordchanged.html');
 }
 
 // Save changes to a user's preferences
@@ -82,75 +81,40 @@ function change_preferences($prefs) {
 		$db->query("update ".TBL_USER_PREF.' '.@join(', ', $updates).
 			" where user_id = $u");
 	}
-	$t->set_file('content', 'preferenceschanged.html');
+	$t->display('preferenceschanged.html');
 }
 
 
 function show_preferences_form($error = '') {
-	global $t, $pass1, $pass2, $all_db_fields, $default_db_fields, $_sv, $db, $u;
-	
-	$t->set_file('content', 'user.html');
-	$t->set_block('content', 'column_list_row', 'list_rows');
-	$t->set_block('content', 'pref_row', 'pref_rows');
-	$t->set_block('content', 'votesblock', 'votesb');
-	$t->set_block('votesblock', 'vote_row', 'vote_rows');
-	
-	$t->set_var(array(
-		'error' => $error ? $error.'<br><br>' : '',
-		'pass1' => $pass1,
-		'pass2' => $pass2
-		));
-		
-	$my_fields = $_sv['db_fields'] ? $_sv['db_fields'] :
-		$default_db_fields;
-	foreach ($my_fields as $field) {
-		$checked[$field] = true;
-	}
-	foreach ($all_db_fields as $field => $title) {
-		$t->set_var(array(
-			'column_name' => $field,
-			'column_title' => $title,
-			'checked' => !empty($checked[$field]) ? 'checked' : ''
-			));
-		$t->parse('list_rows', 'column_list_row', true);
-	}
+	global $t, $all_db_fields, $default_db_fields, $_sv, $db, $u;
 	
 	// Display the votes (if any)
-	$rs = $db->query("select * from ".TBL_BUG_VOTE." where user_id = $u");
-	if (!$rs->numRows()) {
-		$t->set_var('votesb', '&nbsp;');
-	} else {
-		$i = 0;
-		while ($rs->fetchInto($row)) {
-			$t->set_var(array(
-      	'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
-				'trclass' => $i % 2 ? '' : 'alt',
-				'bugid' => $row['bug_id'],
-				'date' => date(DATE_FORMAT.' '.TIME_FORMAT, $row['created_date'])
-				));
-			$t->parse('vote_rows', 'vote_row', true);
-		}
-		$t->parse('votesb', 'votesblock', true);
-	}
+	$t->assign('votes', 
+		$db->getAll("select * from ".TBL_BUG_VOTE." where user_id = $u"));
 	
 	// Display current preference settings
 	$pref_labels = array(
 		'email_notices' => 'Receive notifications of bug changes via email'
 		);
 	$prefs = $db->getRow("select * from ".TBL_USER_PREF." where user_id = $u");
-	array_shift($prefs);
-	
-	foreach ($prefs as $pref => $val) {
-		$t->set_var(array(
-			'pref_label' => $pref_labels[$pref],
+	foreach ($pref_labels as $pref => $label) {
+		$preferences[] = array(
 			'pref' => $pref,
-			'checked' => $val ? 'checked' : ''
-			));
-		$t->parse('pref_rows', 'pref_row', true);
+			'label' => $label,
+			'checked' => $prefs[$pref]
+			);
 	}
+
+	$t->assign(array(
+		'error' => $error,
+		'my_fields' => $_sv['db_fields'] ? $_sv['db_fields'] : $default_db_fields,
+		'field_titles' => $all_db_fields,
+		'preferences' => $preferences
+		));
+		
+	$t->display('user.html');
 }
 
-$t->set_file('wrap', 'wrap.html');
 $perm->check_group('User');
 
 if (isset($_gv['op'])) switch ($_gv['op']) {
@@ -163,7 +127,5 @@ elseif (isset($_pv['do'])) switch ($_pv['do']) {
 	default : show_preferences_form();
 }
 else show_preferences_form();
-
-$t->pparse('main', array('content', 'wrap', 'main'));
 
 ?>

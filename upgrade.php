@@ -2,7 +2,7 @@
 
 // upgrade.php -- Upgrade from the previous version
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.19 2002/03/28 22:18:44 bcurtis Exp $
+// $Id: upgrade.php,v 1.20 2002/04/03 01:00:52 bcurtis Exp $
 
 define ('NO_AUTH', 1);
 include 'include.php';
@@ -31,6 +31,23 @@ function upgrade() {
 	// Note, no upgrades for oracle since we didn't support oracle before 0.8.0
 	$upgraded = $db->getOne('select varname from '.TBL_CONFIGURATION.' where varname = \'FORCE_LOGIN\'');
 	if (!$upgraded or DB::isError($upgraded)) {
+		if (!@include('Smarty.class.php')) { // Template class
+			die('<br><br>
+			<div align="center">The Smarty templates class is not in your include path.
+			Without this class being available, phpBugTracker will not be able to work.
+			Please visit <a href="http://www.phpinsider.com/php/code/Smarty/">the smarty
+			website</a> and install the package.  Please reload this page when smarty 
+			has been installed.</div>
+			');
+		}
+		if (!@is_writeable('c_templates')) {
+			die('<br><br>
+			<div align="center">The "c_templates" subdirectory is not writeable by the 
+			web process.  This needs to be corrected before the upgrade can proceed 
+			so the templates can be compiled by smarty.  Please reload this page when 
+			this has been corrected.</div>
+			');
+		}
 		// Convert the sequences
 		if (DB_TYPE == 'mysql') {
 			// Just in case we have someone who started using phpbt a long time ago...

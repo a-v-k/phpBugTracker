@@ -2,7 +2,7 @@
 
 // auth.php - Authentication and permission objects
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -29,16 +29,6 @@ class uauth {
 	
 	function uauth() {
 		global $HTTP_SESSION_VARS;
-		
-		#if (!session_is_registered('auth')) {
-		#	session_register('auth');
-		#	$HTTP_SESSION_VARS['auth'] = array();
-		#}
-		
-		#$a =& $HTTP_SESSION_VARS['auth'];
-		#$this->auth =& $a->auth;
-		#$this->auth =& $HTTP_SESSION_VARS['auth'];
-
 		
 		if (!isset($HTTP_SESSION_VARS['group_ids'])) {
 			$HTTP_SESSION_VARS['group_ids'] = array(0);
@@ -163,17 +153,15 @@ class uperm {
   function perm_invalid($actual_perms, $required_perms) {
     global $t;
 		
-    $t->set_file('content','badperm.html');
-    $t->pparse('main',array('content','wrap','main'));
+    $t->display('badperm.html');
   }
 
 	function check_group($group) {
 		global $t;
 
 		if (!$this->check_auth('group', $group)) {		
-			$t->set_file('content', 'badgroup.html');
-			$t->set_var('group', $group);
-			$t->pparse('main',array('content','wrap','main'));
+			$t->assign('group', $group);
+			$t->display('badgroup.html');
 			exit();
 		}
 	}

@@ -2,7 +2,7 @@
 
 // include.php - Set up global variables
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.105 2002/03/29 18:25:37 bcurtis Exp $
+// $Id: include.php,v 1.106 2002/04/03 01:00:52 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -91,86 +91,35 @@ $all_db_fields = array(
   'browser_string' => 'Browser',
   'close_date' => 'Closed Date'
   );
-
+	
 $default_db_fields = array('bug_id', 'title', 'reporter', 'owner',
   'severity_name', 'priority', 'status_name', 'resolution_name');
 
-class templateclass extends Template {
-  function pparse($target, $handle, $append = false) {
-    global $_sv, $perm, $db, $HTTP_COOKIE_VARS, $QUERY;
+require('Smarty.class.php'); // Template class
 
-    $u = isset($_sv['uid']) ? $_sv['uid'] : 0;
-    $this->set_block('wrap', 'logoutblock', 'loblock');
-    $this->set_block('wrap', 'loginblock', 'liblock');
-    $this->set_block('wrap', 'adminnavblock', 'anblock');
-    if ($u) {
-      list($owner_open, $owner_closed) = 
-				$db->getRow(sprintf($QUERY['include-template-owner'], $u), 
-					DB_FETCHMODE_ORDERED);
-      list($reporter_open, $reporter_closed) = 
-				$db->getRow(sprintf($QUERY['include-template-reporter'], $u),
-					DB_FETCHMODE_ORDERED);
-      $this->set_var(array(
-        'loggedinas' => $_sv['uname'],
-        'liblock' => '',
-        'owner_open' => $owner_open ? $owner_open : 0,
-        'owner_closed' => $owner_closed ? $owner_closed : 0,
-        'reporter_open' => $reporter_open ? $reporter_open : 0,
-        'reporter_closed' => $reporter_closed ? $reporter_closed : 0
-        ));
-      $this->parse('loblock', 'logoutblock', true);
-    } else {
-    	$this->set_block('loginblock', 'cookieblock', 'ckblock');
-      $this->set_var(array(
-        'loggedinas' => '',
-        'loblock' => '',
-        'loginlabel' => EMAIL_IS_LOGIN ? 'Email' : 'Login'
-        ));
-			if (RECALL_LOGIN) {
-				if (!empty($HTTP_COOKIE_VARS['phpbt_user'])) {
-					$this->set_var(array(
-						'cookielogin' => $HTTP_COOKIE_VARS['phpbt_user'],
-						'cookiechecked' => 'checked'
-						));
-				} else {
-					$this->set_var(array(
-						'cookielogin' => '',
-						'cookiechecked' => ''
-						));
-				}
-				$this->parse('ckblock', 'cookieblock', true);
-			} else {
-				$this->set_var(array(
-					'cookielogin' => '',
-					'ckblock' => ''
-					));
-			}
-      $this->parse('liblock', 'loginblock', true);
-    }
-    if (isset($perm) && $perm->have_perm('Administrator')) {
-      $this->parse('anblock', 'adminnavblock', true);
-    } else {
-      $this->set_var('anblock', '');
-    }
-    print $this->finish($this->parse($target, $handle, $append));
-    return false;
-  }
+// Template class
+class extSmarty extends Smarty {
+
+	function fetch($_smarty_tpl_file, $_smarty_cache_id = null, $_smarty_compile_id = null, $_smarty_display = false) {
+		error_reporting(E_ALL ^ E_NOTICE); // Clobber Smarty warnings
+		return Smarty::fetch($_smarty_tpl_file, $_smarty_cache_id, $_smarty_compile_id, $_smarty_display);
+	}
 }
+
+$t = new extSmarty;
+$t->template_dir = INSTALL_PATH.'/templates/'.THEME.'/';
+$t->compile_dir = INSTALL_PATH.'/c_templates';
+$t->config_dir = '.';
+$t->register_function('build_select', 'build_select');
+$t->register_function('project_js', 'build_project_js');
+$t->register_modifier('date', 'bt_date');
+$t->assign('STRING', $STRING);
 
 if (defined('TEMPLATE_PATH')) {
-  $t = new templateclass(INSTALL_PATH.'/templates/'.THEME.'/'.TEMPLATE_PATH, 'keep');
-	$t->set_var('template_path', '../templates/'.THEME.'/'.TEMPLATE_PATH);
+	$t->assign('template_path', '../templates/'.THEME.'/'.TEMPLATE_PATH);
 } else {
-  $t = new templateclass(INSTALL_PATH.'/templates/'.THEME, 'keep');
-	$t->set_var('template_path', 'templates/'.THEME);
+	$t->assign('template_path', 'templates/'.THEME);
 }
-
-$t->set_var(array(
-  'TITLE' => '',
-  'me' => $me,
-  'me2' => $me2,
-  'error' => '',
-  'loginerror' => ''));
 
 // End classes -- Begin page
 
@@ -188,7 +137,7 @@ if (isset($_pv['dologin'])) {
 		$username = $_pv['username'];
     list($email, $password) = $db->getRow("select email, password from ".TBL_AUTH_USER." where login = '{$_pv['username']}' and active > 0", null, DB_FETCHMODE_ORDERED);
     if (!$email) {
-      $t->set_var('loginerror', '<div class="error">Invalid login</div>');
+      $t->assign('loginerror', '<div class="error">Invalid login</div>');
     } else {
       if (ENCRYPT_PASS) {
         $password = genpassword(10);
@@ -197,13 +146,13 @@ if (isset($_pv['dologin'])) {
       }
       mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'],
         $password),  sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMIN_EMAIL, $STRING['lang_charset']));
-      $t->set_var('loginerror',
+      $t->assign('loginerror',
         '<div class="result">Your password has been emailed to you</div>');
 			$emailsuccess = true;
     }
   } else {
     if (!$u = $auth->auth_validatelogin()) {
-      $t->set_var('loginerror', '<div class="error">Invalid login</div>');
+      $t->assign('loginerror', '<div class="error">Invalid login</div>');
 			$username = $_pv['username'];
     }
   }
@@ -218,6 +167,22 @@ if (isset($_pv['dologin'])) {
 		}
 	}
 		
+}
+
+if ($u) {
+  list($owner_open, $owner_closed) = 
+		$db->getRow(sprintf($QUERY['include-template-owner'], $u), 
+			DB_FETCHMODE_ORDERED);
+  list($reporter_open, $reporter_closed) = 
+		$db->getRow(sprintf($QUERY['include-template-reporter'], $u),
+			DB_FETCHMODE_ORDERED);
+  $t->assign(array(
+    'owner_open' => $owner_open ? $owner_open : 0,
+    'owner_closed' => $owner_closed ? $owner_closed : 0,
+    'reporter_open' => $reporter_open ? $reporter_open : 0,
+    'reporter_closed' => $reporter_closed ? $reporter_closed : 0,
+		'perm' => $perm,
+    ));
 }
 
 if (defined('FORCE_LOGIN') and FORCE_LOGIN and !$u and !defined('NO_AUTH')) {

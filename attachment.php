@@ -2,7 +2,7 @@
 
 // attachment.php - Adding, deleting, and displaying attachments
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.14 2002/03/30 19:12:26 bcurtis Exp $
+// $Id: attachment.php,v 1.15 2002/04/03 01:00:52 bcurtis Exp $
 
 include 'include.php';
 
@@ -122,8 +122,8 @@ function add_attachment($bugid, $description) {
 			$db->quote(stripslashes($description)), 
 			$HTTP_POST_FILES['attachment']['size'], 
 			$HTTP_POST_FILES['attachment']['type'], $u, $now)).")");
-	$t->set_file('content', 'bugattachmentsuccess.html');
-	$t->set_var('bugid', $bugid);
+	$t->assign('bugid', $bugid);
+	$t->display('bugattachmentsuccess.html');
 }
 
 function show_attachment_form($bugid, $error = '') {
@@ -141,7 +141,7 @@ function show_attachment_form($bugid, $error = '') {
 		return;
 	}
 	
-	$t->set_var(array(
+	$t->assign(array(
 		'error' => $error,
 		'bugid' => $bugid,
 		'description' => isset($description) 
@@ -150,9 +150,9 @@ function show_attachment_form($bugid, $error = '') {
 			? number_format(ini_get('upload_max_filesize'))
 			: number_format(ATTACHMENT_MAX_SIZE)
 		));
+	$t->display('bugattachmentform.html');
 }		
 
-$t->set_file('wrap','wrap.html');
 if (isset($_gv['del'])) {
 	if (!$perm->have_perm('Administrator')) {
 		show_text($STRING['bad_permission']);
@@ -172,7 +172,5 @@ if (isset($_gv['del'])) {
 	$perm->check('Editbug');
 	show_attachment_form($_gv['bugid']);
 }
-
-$t->pparse('main',array('content','wrap','main'));
 
 ?>

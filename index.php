@@ -2,7 +2,7 @@
 
 // index.php - Front page
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -22,16 +22,6 @@
 // ------------------------------------------------------------------------
 
 include 'include.php';
-
-$t->set_file(array(
-	'wrap' => 'wrap.html',
-	'content' => 'index.html'
-	));
-$t->set_block('content', 'statsblock', 'sblock');
-$t->set_block('statsblock','row','rows');
-$t->set_block('content', 'recentrow', 'recentrows');
-$t->set_block('content', 'closerow', 'closerows');
-$t->set_var('TITLE',$TITLE['home']);
 
 function grab_data($restricted_projects) {
 	global $db;
@@ -95,35 +85,14 @@ function build_image($restricted_projects) {
 // Show the overall bug stats
 if (USE_JPGRAPH) {
 	if (!is_writeable('jpgimages')) {
-		$t->set_var('sblock', $STRING['image_path_not_writeable']);
+		$t->assign('summary_image', $STRING['image_path_not_writeable']);
 	} else {
-		$t->set_var('sblock', build_image($restricted_projects));
+		$t->assign('summary_image', build_image($restricted_projects));
 	}
 } else {
-	$stats = grab_data($restricted_projects);
-	$total = 0;
-	foreach ($stats as $statid => $stat) {
-		$t->set_var(array(
-			'statid' => $statid,
-			'status' => $stat['name'],
-			'count' => isset($stat['count']) ? $stat['count'] : 0
-			));
-		$total += isset($stat['count']) ? $stat['count'] : 0;
-		$t->parse('rows','row',true);
-	}
-	$t->set_var(array(
-		'statid' => delimit_list('&status[]=', array_keys($stats)),
-		'status' => "<b>{$STRING['totalbugs']}</b>",
-		'count' => $total ? "<b>$total</b>" : 0
-		));
-	$t->parse('rows','row',true);
-	$t->parse('sblock', 'statsblock', true);
+	$t->assign('stats', grab_data($restricted_projects));
 }
 
-// Project summaries
-$t->set_block('content', 'projectsummaryblock', 'projblock');
-$t->set_block('projectsummaryblock', 'projectrow', 'prows');
-$t->set_block('projectrow', 'col', 'cols');
 if (SHOW_PROJECT_SUMMARIES) {
 	$querystring = $QUERY['index-projsummary-1'];
 	$resfields = array('Project','Open');
@@ -138,82 +107,29 @@ if (SHOW_PROJECT_SUMMARIES) {
 		$querystring .= $countquery;
 	}
 	$resfields[] = 'Total';
-
-	$rs = $db->query(sprintf($QUERY['index-projsummary-6'], $querystring, 
-		$restricted_projects));
-	if (!$rs->numRows()) {
-		$t->set_var('projblock', '');
-	} else {
-		foreach ($resfields as $col) {
-			$t->set_var('coldata', stripslashes($col));
-			$t->set_var('colclass', 'header-col');
-			$t->parse('cols', 'col', true);
-		}
-		$t->set_var('bgcolor', '#eeeeee');
-		$t->parse('prows', 'projectrow', true);
-		$t->set_var('cols', '');
-		$i = 0;
-		$db->setOption('optimize', 'performance'); // For Oracle to do this loop
-		while ($rs->fetchInto($row)) {
-			foreach ($resfields as $col) {
-				$t->set_var(array(
-					'coldata' => stripslashes($row[$col]),
-					'colclass' => $col == 'Project' ? '' : 'center-col'
-					));
-				$t->parse('cols', 'col', true);
-			}
-			$t->set_var('trclass', $i % 2 ? 'alt' : '');
-			$i++;
-			$t->parse('prows', 'projectrow', true);
-			$t->set_var('cols', '');
-			//for header default
-			$t->set_var('trclass','alt');
-		}
-		$t->parse('projblock', 'projectsummaryblock', true);
-		$rs->free();
-		$db->setOption('optimize', 'portability'); 
-	}
-} else {
-	$t->set_var('projblock', '');
+	
+	$db->setOption('optimize', 'performance'); // For Oracle to do this loop
+	$t->assign(array(
+		'resfields' => $resfields,
+		'projects' => $db->getAll(sprintf($QUERY['index-projsummary-6'], 
+			$querystring, $restricted_projects))
+		));
+	$db->setOption('optimize', 'portability'); 
 }
 
 // Show the recently added and closed bugs
-$rs = $db->limitQuery("select bug_id, title, project_name from ".TBL_BUG.
-	' b, '.TBL_PROJECT." p where b.project_id not in ($restricted_projects)".
-	' and b.project_id = p.project_id order by b.created_date desc', 0, 5);
-if (DB::isError($rs) or !$rs->numRows()) {
-	$t->set_var('recentrows', $STRING['nobugs']);
-} else {
-	while ($rs->fetchInto($recent)) {
-		$t->set_var(array(
-			'title' => stripslashes($recent['title']),
-			'bugid' => $recent['bug_id'],
-			'project' => stripslashes($recent['project_name'])
-		));
-		$t->parse('recentrows', 'recentrow', true);
-	}
-}
-$rs->free();
-$rs = $db->limitQuery('select b.bug_id, title, project_name from '.TBL_BUG.' b, '.
-	TBL_BUG_HISTORY.' h, '.TBL_PROJECT.' p'.
-	" where b.project_id not in ($restricted_projects) and b.bug_id = h.bug_id".
-	" and changed_field = 'status' and new_value = 'Closed'".
-	' and b.project_id = p.project_id order by h.created_date desc', 0, 5);
-if (DB::isError($rs) or !$rs->numRows()) {
-	$t->set_var('closerows', $STRING['nobugs']);
-} else {
-	while ($rs->fetchInto($closed)) {
-		$t->set_var(array(
-			'title' => stripslashes($closed['title']),
-			'bugid' => $closed['bug_id'],
-			'project' => stripslashes($closed['project_name'])
-		));
-		$t->parse('closerows', 'closerow', true);
-	}
-}
-$rs->free();
+$t->assign('recentbugs', 
+	$db->getAll($db->modifyLimitQuery("select bug_id, title, project_name from ".TBL_BUG.
+		' b, '.TBL_PROJECT." p where b.project_id not in ($restricted_projects)".
+		' and b.project_id = p.project_id order by b.created_date desc', 0, 5)));
 
-	
-$t->pparse('main',array('content','wrap','main'));
+$t->assign('closedbugs', 
+	$db->getAll($db->modifyLimitQuery('select b.bug_id, title, project_name from '.TBL_BUG.' b, '.
+		TBL_BUG_HISTORY.' h, '.TBL_PROJECT.' p'.
+		" where b.project_id not in ($restricted_projects) and b.bug_id = h.bug_id".
+		" and changed_field = 'status' and new_value = 'Closed'".
+		' and b.project_id = p.project_id order by h.created_date desc', 0, 5)));
+
+$t->display('index.html');
 
 ?>

@@ -118,11 +118,7 @@ $QUERY = array(
 		'from '.TBL_BUG.' b, '.TBL_AUTH_USER.' owner, '.TBL_AUTH_USER.' reporter '.
 		'where b.assigned_to = owner.user_id(+) '.
 		'and b.created_by = reporter.user_id(+) ',
-	'query-list-bugs' => 'select b.*, reporter.login as reporter, '.
-		'owner.login as owner, lastmodifier.login as lastmodifier, '.
-		'project.project_name, severity.severity_name, severity.severity_color, '.
-		'status.status_name, os.os_name, version.version_name,'.
-		'component.component_name, resolution.resolution_name '.
+	'query-list-bugs' => 'select %s '.
 		'from '.TBL_BUG.' b, '.TBL_AUTH_USER.' lastmodifier, '.
 		TBL_AUTH_USER.' owner, '.TBL_AUTH_USER.' reporter, '.
 		TBL_SEVERITY.' severity, '.TBL_STATUS.' status, '.TBL_OS.' os, '.

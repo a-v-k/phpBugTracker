@@ -3,7 +3,7 @@
 // install.php -- Web-based installation script
 // Thanks to the phpBB crew for an example on how this can be done.
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -21,16 +21,51 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.18 2002/04/01 15:42:40 bcurtis Exp $
+// $Id: install.php,v 1.19 2002/04/03 01:00:52 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname(__FILE__));
 
-include (INSTALL_PATH.'/inc/template.php');
-$t = new Template('templates/default', 'keep');
-$t->set_var('me', $HTTP_SERVER_VARS['PHP_SELF']);
+if (!@include('Smarty.class.php')) { // Template class
+	die('<br><br>
+	<div align="center">The Smarty templates class is not in your include path.
+	Without this class being available, phpBugTracker will not be able to work.
+	Please visit <a href="http://www.phpinsider.com/php/code/Smarty/">the smarty
+	website</a> and install the package.  Please reload this page when smarty 
+	has been installed.</div>
+	');
+}
+if (!@is_writeable('c_templates')) {
+	die('<br><br>
+	<div align="center">The "c_templates" subdirectory is not writeable by the 
+	web process.  This needs to be corrected before the installation can proceed 
+	so the templates can be compiled by smarty.  Please reload this page when 
+	this has been corrected.</div>
+	');
+}
+
+// Template class
+class extSmarty extends Smarty {
+
+	function fetch($_smarty_tpl_file, $_smarty_cache_id = null, $_smarty_compile_id = null, $_smarty_display = false) {
+		error_reporting(E_ALL ^ E_NOTICE); // Clobber Smarty warnings
+		return Smarty::fetch($_smarty_tpl_file, $_smarty_cache_id, $_smarty_compile_id, $_smarty_display);
+	}
+}
+
+$t = new extSmarty;
+$t->template_dir = 'templates/default';
+$t->compile_dir = 'c_templates';
+$t->config_dir = '.';
+$t->register_function('build_select', 'build_select');
+
 $_gv =& $HTTP_GET_VARS;
 $_pv =& $HTTP_POST_VARS;
 
+$db_types = array(
+	'mysql' => 'MySQL',
+	'oci8' => 'Oracle 8.1.x',
+	'pgsql' => 'PostgreSQL');
+		
 ini_set("magic_quotes_runtime", 0); // runtime quotes will kill the included sql
 
 if (!empty($_pv)) {
@@ -80,14 +115,17 @@ if (defined('DB_HOST')) { // Already configured
 	header("Location: index.php");
 }
 
-function build_select($box, $value = '', &$ary) {
+function build_select($params) {
+	global $db_types;
+	
+	extract($params);
 	$text = '';
-	foreach ($ary as $val => $item) {
-		if ($value == $val and $value != '') $sel = ' selected';
+	foreach ($db_types as $val => $item) {
+		if ($selected == $val and $selected != '') $sel = ' selected';
     else $sel = '';
     $text .= "<option value=\"$val\"$sel>$item</option>";
 	}
-	return $text;
+	echo $text;
 }
 
 ///
@@ -100,10 +138,13 @@ function bt_valid_email($email) {
 function grab_config_file() {
 	global $t, $_pv;
 
-	$t->set_root('.');
-	$t->set_file('content', 'config-dist.php');
-	$t->set_var($_pv);
-	return $t->finish($t->parse('main', 'content'));
+	foreach ($_pv as $key => $val) {
+		$patterns[] = '{'.$key.'}';
+		$replacements[] = $val;
+	}
+	$contents = join('', file('config-dist.php'));
+	return str_replace($patterns, $replacements, $contents);
+	
 }
 
 function create_tables() {
@@ -194,50 +235,16 @@ function save_config_file() {
 function show_finished() {
 	global $t, $_pv;
 	
-	$t->set_root('templates/default');
-	$t->set_file('done', 'install-complete.html');
-	$t->set_var('login', $_pv['admin_login']);
-
-	print $t->finish($t->parse('main', 'done'));
+	$t->assign('login', $_pv['admin_login']);
+	$t->display('install-complete.html');
 }
 
 function show_front($error = '') {
 	global $t, $_pv, $select, $HTTP_SERVER_VARS;
 	
-	$db_types = array(
-		'mysql' => 'MySQL',
-		'oci8' => 'Oracle 8.1.x',
-		'pgsql' => 'PostgreSQL');
-		
-	foreach ($_pv as $k => $v) $$k = $v;
-	
-	$t->set_file('content', 'install.html');
-	$t->set_block('content', 'writeableblock', 'writeable');
-	$t->set_block('content', 'unwriteableblock', 'unwriteable');
-	$t->set_var(array(
-		'error' => !empty($error) ? "<div class=\"error\">$error</div>" : '',
-		'db_type' => build_select('db', (isset($db_type) ? $db_type : ''), $db_types),
-		'db_host' => !empty($db_host) ? $db_host : 'localhost',
-		'db_database' => !empty($db_database) ? $db_database : 'bug_tracker',
-		'db_user' => !empty($db_user) ? $db_user : 'root',
-		'db_pass' => '',
-		'tbl_prefix' => !empty($tbl_prefix) ? $tbl_prefix : 'phpbt_',
-		'admin_login' => !empty($admin_login) ? $admin_login : '',
-		'phpbt_email' => !empty($phpbt_email) ? $phpbt_email : 
-			'phpbt@'.$HTTP_SERVER_VARS['SERVER_NAME']
-		));
-
-	// If we can write to the config file, show that we will do that, otherwise
-	// offer the config file as a download
-	if (@is_writeable('config.php')) {
-		$t->parse('writeable', 'writeableblock', true);
-		$t->set_var('unwriteable', '');
-	} else {
-		$t->parse('unwriteable', 'unwriteableblock', true);
-		$t->set_var('writeable', '');
-	}
-
-	print $t->finish($t->parse('main', 'content'));
+	$t->assign($_pv);
+	$t->assign('default_email', 'phpbt@'.$HTTP_SERVER_VARS['SERVER_NAME']);
+	$t->display('install.html');
 }
 
 if (isset($_pv['op'])) {

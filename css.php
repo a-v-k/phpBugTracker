@@ -2,7 +2,7 @@
 
 // css.php - Kick out the CSS
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: css.php,v 1.7 2002/03/26 18:41:20 bcurtis Exp $
+// $Id: css.php,v 1.8 2002/04/03 01:00:52 bcurtis Exp $
 
 $colors['default'] = array(
 	'link' => '#006699',
@@ -78,12 +78,6 @@ td.head {
 	background-color: <?php echo $color['td.head-bg'] ?>;
 	}
 	
-td.head-selected {
-	font-weight: bold; 
-	text-align: center;
-	background-color: <?php echo $color['td.head-selected-bg'] ?>;
-	}
-
 td.center {
 	text-align: center;
 	}
@@ -95,6 +89,12 @@ th {
 	background-color: <?php echo $color['th-bg'] ?>;
 	}
 	
+th.selected {
+	font-weight: bold; 
+	text-align: center;
+	background-color: <?php echo $color['td.head-selected-bg'] ?>;
+	}
+
 select {
   font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
 	font-size: 12px;

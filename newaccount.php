@@ -2,7 +2,7 @@
 
 // newaccount.php - Set up new user accounts
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.28 2002/04/01 15:42:40 bcurtis Exp $
+// $Id: newaccount.php,v 1.29 2002/04/03 01:00:52 bcurtis Exp $
 
 define('NO_AUTH', 1);
 include 'include.php'; 
@@ -29,7 +29,7 @@ function do_form() {
 	global $db, $t, $_pv, $STRING, $now, $u;
 	
 	if (NEW_ACCOUNTS_DISABLED) {
-		$t->set_file('content', 'newaccount-disabled');
+		$t->display('newaccount-disabled.html');
 		return;
 	}
 
@@ -72,43 +72,21 @@ function do_form() {
 	
 	mail($_pv['email'], $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
 		$password),	sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMIN_EMAIL, $STRING['lang_charset']));
-	$t->set_file('content','newaccountsuccess.html');
+
+	$t->display('newaccountsuccess.html');
 }
 
 function show_form($error = '') {
 	global $t, $_pv;
 	
 	if (NEW_ACCOUNTS_DISABLED) {
-		$t->set_file('content', 'newaccount-disabled.html');
-		return;
-	}
-
-	$t->set_file('content','newaccount.html');
-	$t->set_block('content', 'loginentryarea', 'loginarea');
-	$t->set_var(array(
-		'error' => $error,
-		'login' => isset($_pv['login']) ? stripslashes($_pv['login']) : '',
-		'email' => isset($_pv['email']) ? $_pv['email'] : '',
-		'firstname' => isset($_pv['firstname']) ? stripslashes($_pv['firstname'])
-			: '',
-		'lastname' => isset($_pv['lastname']) ? stripslashes($_pv['lastname'])
-			: ''
-		));
-		
-	// Show the login field if necessary
-	if (EMAIL_IS_LOGIN) {
-		$t->set_var('loginarea', '');
+		$t->display('newaccount-disabled.html');
 	} else {
-		$t->parse('loginarea', 'loginentryarea', true);
+		$t->display('newaccount.html');
 	}
 }
 
-$t->set_file('wrap','wrap.html');
-$t->set_var('TITLE',$TITLE['newaccount']);
-
 if (isset($_pv['createaccount'])) do_form();
 else show_form();
-
-$t->pparse('main',array('content','wrap','main'));
 
 ?>

@@ -2,7 +2,7 @@
 
 // functions.php - Set up global functions
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 The phpBugTracker Group
+// Copyright (c) 2001, 2002 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,16 +20,18 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.15 2002/04/01 15:42:41 bcurtis Exp $
+// $Id: functions.php,v 1.16 2002/04/03 01:01:04 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
 function show_text($text, $iserror = false) {
   global $t;
 
-  $t->set_file('content','error.html');
-  if (!$iserror) $t->set_var('text',$text);
-  else $t->set_var('text',"<font color=red>$text</font>");
+	$t->assign(array(
+		'text' => $text,
+		'iserror' => $iserror
+		));
+	$t->display('error.html');
 }
 
 $select['priority'] = array(
@@ -42,10 +44,13 @@ $select['priority'] = array(
 
 ///
 /// Build a select box with the item matching $value selected
-function build_select($box, $value = '', $project = 0) {
+function build_select($params) {
   global $db, $select, $perm, $STRING, $restricted_projects, $QUERY;
 
-  //create hash to map tablenames
+  extract($params);
+	if (!isset($selected)) $selected = '';
+	
+	//create hash to map tablenames
   $cfgDatabase = array(
     'group' => TBL_AUTH_GROUP,
     'project' => TBL_PROJECT,
@@ -77,12 +82,12 @@ function build_select($box, $value = '', $project = 0) {
 		case 'user_filter' : 
 			foreach ($STRING['user_filter'] as $k => $v) {
 				$text .= sprintf("<option value=\"%d\"%s>%s</option>",
-					$k, ($k == $value ? ' selected' : ''), $v);
+					$k, ($k == $selected ? ' selected' : ''), $v);
 			}
 			break;
     case 'group' :
       if ($project) { // If we are building for project admin page
-        if (!count($value) or (count($value) && in_array(0, $value))) {
+        if (!count($selected) or (count($selected) && in_array(0, $selected))) {
           $sel = ' selected';
         } else {
           $sel = '';
@@ -91,7 +96,7 @@ function build_select($box, $value = '', $project = 0) {
       }
       $rs = $db->query($queries[$box]);
       while ($rs->fetchInto($row)) {
-        if (count($value) && in_array($row[$box.'_id'], $value)) $sel = ' selected';
+        if (count($selected) && in_array($row[$box.'_id'], $selected)) $sel = ' selected';
         else $sel = '';
         $text .= '<option value="'.
           $row[$box.'_id']."\"$sel>".$row[$box.'_name'].'</option>';
@@ -105,7 +110,7 @@ function build_select($box, $value = '', $project = 0) {
     case 'version' :
       $rs = $db->query($queries[$box]);
       while ($rs->fetchInto($row)) {
-        if ($value == $row[$box.'_id'] and $value != '') $sel = ' selected';
+        if ($selected == $row[$box.'_id'] and $selected != '') $sel = ' selected';
         else $sel = '';
         $text .= '<option value="'.
           $row[$box.'_id']."\"$sel>".$row[$box.'_name'].'</option>';
@@ -114,9 +119,9 @@ function build_select($box, $value = '', $project = 0) {
     case 'os' :
       $rs = $db->query("select {$box}_id, {$box}_name, regex from ".TBL_OS." where sort_order > 0 order by sort_order");
       while ($rs->fetchInto($row)) {
-        if ($value == '' and isset($row['Regex']) and
+        if ($selected == '' and isset($row['Regex']) and
           preg_match($row['Regex'],$GLOBALS['HTTP_USER_AGENT'])) $sel = ' selected';
-        elseif ($value == $row[$box.'_id']) $sel = ' selected';
+        elseif ($selected == $row[$box.'_id']) $sel = ' selected';
         else $sel = '';
         $text .= '<option value="'.
           $row[$box.'_id']."\"$sel>".$row[$box.'_name']."</option>";
@@ -125,13 +130,13 @@ function build_select($box, $value = '', $project = 0) {
     case 'owner' :
       $rs = $db->query("select u.user_id, login from ".TBL_AUTH_USER." u, ".TBL_USER_GROUP." ug, ".TBL_AUTH_GROUP." g where u.active > 0 and u.user_id = ug.user_id and ug.group_id = g.group_id and group_name = 'Developer' order by login");
       while ($rs->fetchInto($row)) {
-        if ($value == $row['user_id']) $sel = ' selected';
+        if ($selected == $row['user_id']) $sel = ' selected';
         else $sel = '';
         $text .= "<option value=\"{$row['user_id']}\"$sel>{$row['login']}</option>";
       }
       break;
     case 'bug_cc' :
-      $rs = $db->query(sprintf($QUERY['functions-bug-cc'], $value));
+      $rs = $db->query(sprintf($QUERY['functions-bug-cc'], $selected));
       while (list($uid, $user) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
         $text .= "<option value=\"$uid\">".maskemail($user).'</option>';
       }
@@ -153,7 +158,7 @@ function build_select($box, $value = '', $project = 0) {
 			closedir($dir);
 			sort($filelist);
 			foreach ($filelist as $file) {
-        if ($file == $value) {
+        if ($file == $selected) {
           $sel = ' selected';
         } else {
           $sel = '';
@@ -171,7 +176,7 @@ function build_select($box, $value = '', $project = 0) {
 			closedir($dir);
 			sort($filelist);
 			foreach ($filelist as $file) {
-        if ($file == $value) {
+        if ($file == $selected) {
           $sel = ' selected';
         } else {
           $sel = '';
@@ -182,19 +187,19 @@ function build_select($box, $value = '', $project = 0) {
     default :
       $deadarray = $select[$box];
       while(list($val,$item) = each($deadarray)) {
-        if ($value == $val and $value != '') $sel = ' selected';
+        if ($selected == $val and $selected != '') $sel = ' selected';
         else $sel = '';
         $text .= "<option value=\"$val\"$sel>$item</option>";
       }
       break;
   }
-  return $text;
+  echo $text;
 }
 
 ///
 /// Divide the results of a database query into multiple pages
 function multipages($nr, $page, $urlstr) {
-  global $me, $selrange;
+  global $me, $selrange, $t;
 
   $pages = '';
   if (!$page) $page = 1;
@@ -215,7 +220,14 @@ function multipages($nr, $page, $urlstr) {
       $pages .= $i != $npages ? '|' : '';
     }
   }
-  return array($selrange, $llimit, $npages, $pages);
+	$t->assign(array(
+		'pages' => $pages,
+		'first' => $llimit+1,
+		'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
+		'total' => $nr
+		));
+
+  return array($selrange, $llimit);
 }
 
 ///
@@ -224,12 +236,13 @@ function sorting_headers($url, $headers, $order, $sort, $urlstr = '') {
   global $t;
 
   while(list($k, $v) = each($headers)) {
-    $t->set_var($k.'url', "$url?order=$v&sort=".
+		$theader[$k]['url'] = "$url?order=$v&sort=".
       ($order == $v ? ($sort == 'asc' ? 'desc' : 'asc') : 'asc').
-      ($urlstr ? '&'.$urlstr : ''));
-    $t->set_var($k.'color', $order == $v ? '#bbbbbb' : '#eeeeee');
-    $t->set_var($k.'class', $order == $v ? 'head-selected' : 'head');
+      ($urlstr ? '&'.$urlstr : '');
+    $theader[$k]['color'] = $order == $v ? '#bbbbbb' : '#eeeeee';
+    $theader[$k]['class'] = $order == $v ? 'selected' : '';
   }
+	$t->assign('headers', $theader);
 }
 
 ///
@@ -349,7 +362,7 @@ function build_project_js() {
 		if (substr($js,-1) == ',') $js = substr($js,0,-1);
 		$js .= ");\n";
 	}
-	return $js;
+	echo $js;
 }
 
 ///
@@ -382,6 +395,11 @@ function dump($var, $title = '') {
 // Handle a database error
 function handle_db_error(&$obj) {
 	die($obj->message.'<br>'.$obj->userinfo);
+}
+
+// Date() wrapper for smarty
+function bt_date($string, $format) {
+	return date($format, $string);
 }
 
 ?>
