@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: group.php,v 1.6 2002/03/29 18:25:37 bcurtis Exp $
+// $Id: group.php,v 1.7 2002/03/30 19:12:28 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -51,11 +51,12 @@ function do_form($groupid = 0) {
 	if (!$groupid) {
 		$db->query("insert into ".TBL_AUTH_GROUP.
 			" (group_id, group_name, created_by, created_date, last_modified_by, last_modified_date)"
-			." values (".$db->nextId(TBL_AUTH_GROUP).", '$fname', $u, $now, $u, $now)");
+			." values (".$db->nextId(TBL_AUTH_GROUP).", ".
+			$db->quote(stripslashes($fname)).", $u, $now, $u, $now)");
 	} else {
 		$db->query("update ".TBL_AUTH_GROUP.
-			" set group_name = '$fname', last_modified_by = $u, 
-			last_modified_date = $now where group_id = '$groupid'");
+			" set group_name = ".$db->quote(stripslashes($fname)).
+			", last_modified_by = $u, last_modified_date = $now where group_id = '$groupid'");
 	}
 	header("Location: $me?");
 }

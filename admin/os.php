@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: os.php,v 1.23 2002/03/29 18:25:38 bcurtis Exp $
+// $Id: os.php,v 1.24 2002/03/30 19:12:28 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -53,9 +53,12 @@ function do_form($osid = 0) {
 	if ($error) { list_items($osid, $error); return; }
 
 	if (!$osid) {
-		$db->query("insert into ".TBL_OS." (os_id, os_name, regex, sort_order) values (".$db->nextId(TBL_OS).", '$fname', '$fregex', '$fsortorder')");
+		$db->query("insert into ".TBL_OS." (os_id, os_name, regex, sort_order) ".
+			"values (".$db->nextId(TBL_OS).", ".$db->quote(stripslashes($fname)).
+			", '$fregex', '$fsortorder')");
 	} else {
-		$db->query("update ".TBL_OS." set os_name = '$fname', regex = '$fregex', sort_order = '$fsortorder' where os_id = '$osid'");
+		$db->query("update ".TBL_OS." set os_name = ".$db->quote(stripslashes($fname)).
+			", regex = '$fregex', sort_order = '$fsortorder' where os_id = '$osid'");
 	}
 	header("Location: $me?");
 }

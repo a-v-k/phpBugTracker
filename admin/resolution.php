@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: resolution.php,v 1.24 2002/03/29 18:25:38 bcurtis Exp $
+// $Id: resolution.php,v 1.25 2002/03/30 19:12:30 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -57,11 +57,14 @@ function do_form($resolutionid = 0) {
 	if (!$resolutionid) {
 		$db->query("insert into ".TBL_RESOLUTION.
 			" (resolution_id, resolution_name, resolution_desc, sort_order)"
-			." values (".$db->nextId(TBL_RESOLUTION).", '$fname', '$fdescription', '$fsortorder')");
+			." values (".$db->nextId(TBL_RESOLUTION).", ".
+			$db->quote(stripslashes($fname)).', '.
+			$db->quote(stripslashes($fdescription)).', '.$fsortorder.')');
 	} else {
 		$db->query("update ".TBL_RESOLUTION.
-			" set resolution_name = '$fname', resolution_desc = '$fdescription', 
-			sort_order = '$fsortorder' where resolution_id = '$resolutionid'");
+			' set resolution_name = '.$db->quote(stripslashes($fname)).
+			', resolution_desc = '.$db->quote(stripslashes($fdescription)).
+			", sort_order = $fsortorder where resolution_id = $resolutionid");
 	}
 	header("Location: $me?");
 }

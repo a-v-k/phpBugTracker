@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.90 2002/03/29 18:25:37 bcurtis Exp $
+// $Id: bug.php,v 1.91 2002/03/30 19:12:27 bcurtis Exp $
 
 include 'include.php';
 
@@ -164,10 +164,10 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
   foreach(array('title','url') as $field) {
     if (isset($cf[$field])) {
       $db->query('insert into '.TBL_BUG_HISTORY
-         .' (bug_id, changed_field, old_value, new_value, created_by, created_date)'
-         ." values ({$buginfo['bug_id']}, '$field', '"
-         .addslashes($buginfo[$field])."', '".addslashes($cf[$field])
-         ."', $u, $now)");
+      	.' (bug_id, changed_field, old_value, new_value, created_by, created_date)'
+        ." values (". join(', ', array($buginfo['bug_id'], $db->quote($field), 
+					$db->quote(stripslashes($buginfo[$field])), 
+					$db->quote(stripslashes($cf[$field])), $u, $now)).")");
       $t->set_var(array(
         $field => stripslashes($cf[$field]),
         $field.'_stat' => '!'
@@ -199,8 +199,9 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
         ." where ${field}_id = {$cf[$field.'_id']}");
       $db->query('insert into '.TBL_BUG_HISTORY
         .' (bug_id, changed_field, old_value, new_value, created_by, created_date)'
-        ." values ({$buginfo['bug_id']}, '$field', '".addslashes($oldvalue).
-				"', '".addslashes($newvalue)."', $u, $now)");
+        ." values (". join(', ', array($buginfo['bug_id'], $db->quote($field), 
+					$db->quote(stripslashes($oldvalue)), 
+					$db->quote(stripslashes($newvalue)), $u, $now)).")");
       $t->set_var(array(
         $field.'_id' => stripslashes($newvalue),
         $field.'_id_stat' => '!'
@@ -463,7 +464,8 @@ function update_bug($bugid = 0) {
   if ($comments) {
     //$comments = strip_tags($comments); -- Uncomment this if you want no <> content in the comments
     $db->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
-    	." values (".$db->nextId(TBL_COMMENT).", $bugid, '$comments', $u, $now)");
+    	." values (".$db->nextId(TBL_COMMENT).", $bugid, ".
+			$db->quote(stripslashes($comments)).", $u, $now)");
   }
 
 	// Allow for removing of some items from the bug page
@@ -471,7 +473,15 @@ function update_bug($bugid = 0) {
 	$os_id = $os_id ? $os_id : 0;
 	$severity_id = $severity_id ? $severity_id : 0;
 	
-  $db->query("update ".TBL_BUG." set title = '$title', url = '$url', severity_id = $severity_id, priority = $priority, ".(isset($status_id) ? "status_id = $status_id, " : ''). ($changeresolution ? "resolution_id = $resolution_id, " : ''). (isset($assignedto) ? "assigned_to = $assignedto, " : '')." project_id = $project_id, version_id = $version_id, component_id = $component_id, os_id = $os_id, last_modified_by = $u, last_modified_date = $now where bug_id = $bugid");
+  $db->query("update ".TBL_BUG." set title = ".$db->quote(stripslashes($title)).
+		', url = '.$db->quote(stripslashes($url)).", severity_id = $severity_id, ".
+		"priority = $priority, ".
+		(isset($status_id) ? "status_id = $status_id, " : '').
+		($changeresolution ? "resolution_id = $resolution_id, " : '').
+		(isset($assignedto) ? "assigned_to = $assignedto, " : ' ').
+		"project_id = $project_id, version_id = $version_id, ".
+		"component_id = $component_id, os_id = $os_id, last_modified_by = $u, ".
+		"last_modified_date = $now where bug_id = $bugid");
 
   if (count($changedfields) or !empty($comments)) {
     do_changedfields($u, $buginfo, $changedfields, $comments);
@@ -519,14 +529,26 @@ function do_form($bugid = 0) {
     $db->query("insert into ".TBL_BUG." (bug_id, title, description, url, 
 			severity_id, priority, status_id, assigned_to, created_by, created_date, 
 			last_modified_by, last_modified_date, project_id, version_id, 
-			component_id, os_id, browser_string) values ($bugid, '$title', 
-			'$description', '$url', $severity, $priority, $status, $owner, $u, 
-			$now, $u, $now, $project, $version, $component, '$os', 
-			'{$HTTP_SERVER_VARS['HTTP_USER_AGENT']}')");
+			component_id, os_id, browser_string) values ($bugid, ".
+			join(', ', array($db->quote(stripslashes($title)), 
+				$db->quote(stripslashes($description)), 
+				$db->quote(stripslashes($url)))).
+			", $severity, $priority, $status, $owner, $u, $now, $u, $now, $project, ".
+			"$version, $component, $os, '{$HTTP_SERVER_VARS['HTTP_USER_AGENT']}')");
 		$buginfo = $db->getRow('select * from '.TBL_BUG." where bug_id = $bugid");
 		do_changedfields($u, $buginfo);
   } else {
-    $db->query("update ".TBL_BUG." set title = '$title', description = '$description', url = '$url', severity_id = '$severity', priority = '$priority', status_id = $status, assigned_to = '$assignedto', project_id = $project, version_id = $version, component_id = $component, os_id = '$os', browser_string = '{$GLOBALS['HTTP_USER_AGENT']}' last_modified_by = $u, last_modified_date = $time where bug_id = '$bugid'");
+    $db->query("update ".TBL_BUG.
+			" set title = ".$db->quote(stripslashes($title)).
+			", description = ".$db->quote(stripslashes($description)).
+			", url = ".$db->quote(stripslashes($url)).
+			", severity_id = '$severity', priority = '$priority', ".
+			"status_id = $status, assigned_to = '$assignedto', ".
+			"project_id = $project, version_id = $version, ".
+			"component_id = $component, os_id = '$os', ".
+			"browser_string = '{$GLOBALS['HTTP_USER_AGENT']}' ".
+			"last_modified_by = $u, last_modified_date = $time ".
+			"where bug_id = '$bugid'");
   }
   if (isset($another)) header("Location: $me?op=add&project=$project");
   else header("Location: query.php");

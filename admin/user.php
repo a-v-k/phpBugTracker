@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.42 2002/03/29 18:25:38 bcurtis Exp $
+// $Id: user.php,v 1.43 2002/03/30 19:12:30 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -50,15 +50,17 @@ function do_form($userid = 0) {
 	}
 
 	if (!$userid) {
-		if (ENCRYPT_PASS) $mpassword = md5($_pv['fpassword']);
-		else $mpassword = $_pv['fpassword'];
+		if (ENCRYPT_PASS) $mpassword = $db->quote(md5($_pv['fpassword']));
+		else $mpassword = $db->quote(stripslashes($_pv['fpassword']));
 		$new_user_id = $db->nextId(TBL_AUTH_USER);
 		$db->query('insert into '.TBL_AUTH_USER
 			." (user_id, first_name, last_name, login, email, password, active,
 			created_by, created_date, last_modified_by, last_modified_date)
-			values ($new_user_id, '{$_pv['ffirstname']}', '{$_pv['flastname']}',
-			'$login', '{$_pv['femail']}', '$mpassword', {$_pv['factive']}, $u, $now,
-			$u, $now)");
+			values (".join(', ', array($new_user_id, 
+				$db->quote(stripslashes($_pv['ffirstname'])), 
+				$db->quote(stripslashes($_pv['flastname'])),
+				$db->quote(stripslashes($login)), $_pv['femail'], $mpassword, 
+				$_pv['factive'], $u, $now, $u, $now)).')');
 		// Add to the selected groups
 		if (isset($_pv['fusergroup']) and is_array($_pv['fusergroup']) and
 			$_pv['fusergroup'][0]) {
@@ -83,12 +85,14 @@ function do_form($userid = 0) {
 				$pquery = '';
 			}
 		} else {
-			$pquery = "password = '{$_pv['fpassword']}',";
+			$pquery = "password = ".$db->quote(stripslashes($_pv['fpassword'])).",";
 		}
-		$db->query("update ".TBL_AUTH_USER." set first_name = '{$_pv['ffirstname']}',
-			last_name = '{$_pv['flastname']}', login = '$login', 
-			email = '{$_pv['femail']}', $pquery active = {$_pv['factive']} 
-			where user_id = '$userid'");
+		$db->query("update ".TBL_AUTH_USER.
+			" set first_name = ".$db->quote(stripslashes($_pv['ffirstname'])).
+			", last_name = ".$db->quote(stripslashes($_pv['flastname'])).
+			", login = ".$db->quote(stripslashes($login)).
+			", email = '{$_pv['femail']}', $pquery active = {$_pv['factive']} ".
+			"where user_id = '$userid'");
 
 		// Update group memberships
 		// Get user's groups (without dropping the user group)

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: status.php,v 1.24 2002/03/29 18:25:38 bcurtis Exp $
+// $Id: status.php,v 1.25 2002/03/30 19:12:30 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -57,11 +57,14 @@ function do_form($statusid = 0) {
 	if (!$statusid) {
 		$db->query("insert into ".TBL_STATUS.
 			" (status_id, status_name, status_desc, sort_order) values (".
-			$db->nextId(TBL_STATUS).", '$fname', '$fdescription', '$fsortorder')");
+			$db->nextId(TBL_STATUS).', '.
+			$db->quote(stripslashes($fname)).', '.
+			$db->quote(stripslashes($fdescription)).", '$fsortorder')");
 	} else {
 		$db->query("update ".TBL_STATUS.
-			" set status_name = '$fname', status_desc = '$fdescription', 
-			sort_order = '$fsortorder' where status_id = '$statusid'");
+			" set status_name = ".$db->quote(stripslashes($fname)).
+			', status_desc = '.$db->quote(stripslashes($fdescription)).
+			", sort_order = $fsortorder where status_id = $statusid");
 	}
 	header("Location: $me?");
 }

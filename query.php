@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.65 2002/03/29 18:25:37 bcurtis Exp $
+// $Id: query.php,v 1.66 2002/03/30 19:12:27 bcurtis Exp $
 
 include 'include.php';
 
@@ -174,7 +174,9 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		$nextid = $nextid ? $nextid : 1;
 		$db->query("insert into ".TBL_SAVED_QUERY.
 			" (saved_query_id, user_id, saved_query_name, saved_query_string) 
-			values ($nextid, $u, '$savedqueryname', '$savedquerystring')");
+			values (".join(', ', array($nextid, $u, 
+				$db->quote(stripslashes($savedqueryname)), 
+				$db->quote(stripslashes($savedquerystring)))).")");
 	}
 	if (!isset($order)) { 
 		if (isset($HTTP_SESSION_VARS['queryinfo']['order'])) {

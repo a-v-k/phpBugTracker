@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.35 2002/03/29 18:25:38 bcurtis Exp $
+// $Id: project.php,v 1.36 2002/03/30 19:12:29 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -39,11 +39,13 @@ function save_version($versionid = 0) {
   if (!$versionid) {
     $db->query('insert into '.TBL_VERSION
 			." (version_id, project_id, version_name, active, created_by, created_date) 
-			values (".$db->nextId(TBL_VERSION).", $projectid, '$vf_version', $vf_active, $u, $now)");
+			values (".$db->nextId(TBL_VERSION).", $projectid, ".
+			$db->quote(stripslashes($vf_version)).", $vf_active, $u, $now)");
   } else {
     $db->query('update '.TBL_VERSION
-			." set project_id = $projectid, version_name = '$vf_version', 
-			active = $vf_active where version_id = '$versionid'");
+			." set project_id = $projectid, version_name = ".
+			$db->quote(stripslashes($vf_version)).
+			", active = $vf_active where version_id = '$versionid'");
   }
   header("Location: project.php?op=edit&id=$projectid");
 }
@@ -112,13 +114,16 @@ function save_component($componentid = 0) {
 		$db->query('insert into '.TBL_COMPONENT
 			." (component_id, project_id, component_name, component_desc, owner, 
 			active, created_by, created_date, last_modified_by, last_modified_date) 
-			values (".$db->nextId(TBL_COMPONENT).", $projectid, '$cf_name', 
-			'$cf_description', $cf_owner, $cf_active, $u, $now, $u, $now)");
+			values (".$db->nextId(TBL_COMPONENT).", $projectid, ".
+			$db->quote(stripslashes($cf_name)).", ".
+			$db->quote(stripslashes($cf_description)).
+			", $cf_owner, $cf_active, $u, $now, $u, $now)");
 	} else {
 		$db->query('update '.TBL_COMPONENT
-			." set component_name = '$cf_name', component_desc = '$cf_description', 
-			owner = $cf_owner, active = $cf_active, last_modified_by = $u, 
-			last_modified_date = $now where component_id = '$componentid'");
+			." set component_name = ".$db->quote(stripslashes($cf_name)).
+			', component_desc = '.$db->quote(stripslashes($cf_description)).
+			", owner = $cf_owner, active = $cf_active, last_modified_by = $u, ". 
+			"last_modified_date = $now where component_id = $componentid");
 	}
 	header("Location: project.php?op=edit&id=$projectid");
 }	
@@ -209,19 +214,24 @@ function save_project($projectid = 0) {
     $projectid = $db->nextId(TBL_PROJECT);
     $db->query('insert into '.TBL_PROJECT
 			." (project_id, project_name, project_desc, active, created_by, created_date)
-      values ($projectid , '$name', '$description', $active, $u, $now)");
+      values ($projectid , ".$db->quote(stripslashes($name)).", ".
+			$db->quote(stripslashes($description)).", $active, $u, $now)");
     $db->query('insert into '.TBL_VERSION
 			." (version_id, project_id, version_name, active, created_by, created_date) 
-			values (".$db->nextId(TBL_VERSION).", $projectid, '$vf_version', 1, $u, $now)");
+			values (".$db->nextId(TBL_VERSION).", $projectid, ".
+			$db->quote(stripslashes($vf_version)).", 1, $u, $now)");
 		$db->query('insert into '.TBL_COMPONENT
 			." (component_id, project_id, component_name, component_desc, owner, 
 			active, created_by, created_date, last_modified_by, last_modified_date) 
-			values (".$db->nextId(TBL_COMPONENT).", $projectid, '$cf_name', 
-			'$cf_description', $cf_owner, 1, $u, $now, $u, $now)");
+			values (".$db->nextId(TBL_COMPONENT).", $projectid, ".
+			$db->quote(stripslashes($cf_name)).", ".
+			$db->quote(stripslashes($cf_description)).
+			", $cf_owner, 1, $u, $now, $u, $now)");
   } else {
     $db->query('update '.TBL_PROJECT
-			." set project_name = '$name', project_desc = '$description', 
-			active = $active where project_id = $projectid");
+			." set project_name = ".$db->quote(stripslashes($name)).
+			", project_desc = ".$db->quote(stripslashes($description)).
+			", active = $active where project_id = $projectid");
   }
 	
 	// Handle project -> group relationship

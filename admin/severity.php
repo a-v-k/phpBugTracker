@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: severity.php,v 1.20 2002/03/29 18:25:38 bcurtis Exp $
+// $Id: severity.php,v 1.21 2002/03/30 19:12:30 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -57,11 +57,16 @@ function do_form($severityid = 0) {
 	if (!$severityid) {
 		$db->query("insert into ".TBL_SEVERITY.
 			" (severity_id, severity_name, severity_desc, sort_order, severity_color) 
-			values (".$db->nextId(TBL_SEVERITY).", '$fname', '$fdescription', '$fsortorder', '$fcolor')");
+			values (".$db->nextId(TBL_SEVERITY).', '.
+			$db->quote(stripslashes($fname)).', '.
+			$db->quote(stripslashes($fdescription)).", $fsortorder, ".
+			$db->quote(stripslashes($fcolor)).')');
 	} else {
-		$db->query("update ".TBL_SEVERITY." set severity_name = '$fname', 
-			severity_desc = '$fdescription', sort_order = '$fsortorder', 
-			severity_color = '$fcolor' where severity_id = '$severityid'");
+		$db->query("update ".TBL_SEVERITY.
+			" set severity_name = ".$db->quote(stripslashes($fname)).
+			', severity_desc = '.$db->quote(stripslashes($fdescription)).
+			", sort_order = $fsortorder, severity_color = ".
+			$db->quote(stripslashes($fcolor))." where severity_id = $severityid");
 	}
 	header("Location: $me?");
 }
