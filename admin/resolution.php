@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: resolution.php,v 1.11 2001/08/23 01:39:03 bcurtis Exp $
+// $Id: resolution.php,v 1.12 2001/09/01 15:44:20 mohni Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -36,9 +36,10 @@ function do_form($resolutionid = 0) {
   if ($error) { list_items($resolutionid, $error); return; }
 
   if (!$resolutionid) {
-    $q->query("insert into resolution (resolution_id, resolution_name, resolution_desc, sort_order) values (".$q->nextid('resolution').", '$fname', '$fdescription', '$fsortorder')");
+    $q->query("insert into ".TBL_RESOLUTION." (resolution_id, resolution_name, resolution_desc, sort_order)"
+             ." values (".$q->nextid('resolution').", '$fname', '$fdescription', '$fsortorder')");
   } else {
-    $q->query("update resolution set resolution_name = '$fname', resolution_desc = '$fdescription', sort_order = '$fsortorder' where resolution_id = '$resolutionid'");
+    $q->query("update ".TBL_RESOLUTION." set resolution_name = '$fname', resolution_desc = '$fdescription', sort_order = '$fsortorder' where resolution_id = '$resolutionid'");
   }
   header("Location: $me?");
 }
@@ -47,7 +48,7 @@ function show_form($resolutionid = 0, $error = '') {
   global $q, $me, $t, $fname, $fdescription, $fsortorder, $STRING;
 
   if ($resolutionid && !$error) {
-    $row = $q->grab("select * from resolution where resolution_id = '$resolutionid'");
+    $row = $q->grab("select * from ".TBL_RESOLUTION." where resolution_id = '$resolutionid'");
     $t->set_var(array(
       'action' => $STRING['edit'],
       'fresolutionid' => $row['resolution_id'],
@@ -73,7 +74,7 @@ function list_items($resolutionid = 0, $error = '') {
   $t->set_block('content','row','rows');
 
   if (!$order) { $order = 'sort_order'; $sort = 'asc'; }
-  $nr = $q->query("select count(*) from resolution where resolution_id = '$resolutionid' order by $order $sort");
+  $nr = $q->query("select count(*) from ".TBL_RESOLUTION." where resolution_id = '$resolutionid' order by $order $sort");
 
   list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
     "order=$order&sort=$sort");
@@ -84,7 +85,7 @@ function list_items($resolutionid = 0, $error = '') {
     'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
     'records' => $nr));
 
-  $q->query("select * from resolution order by $order $sort limit $llimit, $selrange");
+  $q->query("select * from ".TBL_RESOLUTION." order by $order $sort limit $llimit, $selrange");
 
   if (!$q->num_rows()) {
     $t->set_var('rows',"<tr><td>{$STRING['noresolutions']}</td></tr>");

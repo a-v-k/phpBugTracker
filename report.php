@@ -34,7 +34,7 @@ function resolution_by_engineer($projectid = 0) {
 	$querystring = 'select email as "Assigned To", sum(if(resolution_id = "0",1,0)) as "Open"';
 	$resfields = array('Assigned To','Open');
 	// Grab the resolutions from the database
-	$q->query("select resolution_name, concat(', sum(if(resolution_id = \"',resolution_id,'\",1,0)) as \"',resolution_name,'\"') from resolution");
+	$q->query("select resolution_name, concat(', sum(if(resolution_id = \"',resolution_id,'\",1,0)) as \"',resolution_name,'\"') from ".TBL_RESOLUTION);
 	while (list($fieldname, $countquery) = $q->grab()) {
 		$resfields[] = $fieldname;
 		$querystring .= $countquery;
@@ -47,7 +47,7 @@ function resolution_by_engineer($projectid = 0) {
 		$projectquery = '';
 	}
 	
-	$q->query("$querystring, count(bug_id) as 'Total' from bug b left join auth_user u on assigned_to = user_id $projectquery group by assigned_to");
+	$q->query("$querystring, count(bug_id) as 'Total' from ".TBL_BUG." b left join ".TBL_AUTH_USER." u on assigned_to = user_id $projectquery group by assigned_to");
 	if (!$q->num_rows()) {
 		$t->set_var('rows', 'No data to display');
 	} else {
@@ -86,7 +86,7 @@ $projectid = isset($_gv['projectid']) ? $_gv['projectid'] : 0;
 $t->set_file('wrap','wrap.html');
 $t->set_file('content','report.html');
 $t->set_var(array(
-	'projects' => build_select('Project', $projectid),
+	'projects' => build_select('project', $projectid),
 	'TITLE' => $TITLE['reporting']
 	));
 

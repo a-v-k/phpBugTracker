@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.13 2001/08/23 01:40:36 bcurtis Exp $
+// $Id: project.php,v 1.14 2001/09/01 15:44:20 mohni Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -40,11 +40,13 @@ function do_form($projectid = 0) {
   if (!$active) $active = 0;
   if (!$projectid) {
     $projectid = $q->nextid('project');
-    $q->query("insert into project (project_id, project_name, project_desc, active, created_by, created_date) values ($projectid , '$name', '$description', $active, $u, $now)");
-    $q->query("insert into version (version_id, project_id, version_name, active, created_by, created_date) values (".$q->nextid('version').", $projectid, '$version', $active, $u, $now)");
+    $q->query("insert into ".TBL_PROJECT." (project_id, project_name, project_desc, active, created_by, created_date)"
+             ." values ($projectid , '$name', '$description', $active, $u, $now)");
+    $q->query("insert into ".TBL_VERSION." (version_id, project_id, version_name, active, created_by, created_date)"
+             ." values (".$q->nextid('version').", $projectid, '$version', $active, $u, $now)");
     $location = "component.php?op=add&projectid=$projectid";
   } else {
-    $q->query("update project set project_name = '$name', project_desc = '$description', active = $active where project_id = $projectid");
+    $q->query("update ".TBL_PROJECT." set project_name = '$name', project_desc = '$description', active = $active where project_id = $projectid");
     $location = "$me?";
   }
   header("Location: $location");
@@ -57,7 +59,7 @@ function show_form($projectid = 0, $error = '') {
   $t->set_block('content','box','details');
   $t->set_block('content','vfield','verfield');
   if ($projectid && !$error) {
-    $row = $q->grab("select * from project where project_id = $projectid");
+    $row = $q->grab("select * from ".TBL_PROJECT." where project_id = $projectid");
     $t->set_var(array(
       'projectid' => $row['project_id'],
       'name' => $row['project_name'],
@@ -97,7 +99,7 @@ function list_versions($projectid) {
   global $q, $t, $STRING;
 
   $t->set_block('box','verrow','verrows');
-  $q->query("select * from version where project_id = $projectid");
+  $q->query("select * from ".TBL_VERSION." where project_id = $projectid");
   if (!$q->num_rows()) {
     $t->set_var('verrows',"<tr><td colspan='2' align='center'>{$STRING['noversions']}</td></tr>");
     return;
@@ -120,7 +122,7 @@ function list_components($projectid) {
   global $q, $t, $STRING;
 
   $t->set_block('box','row','rows');
-  $q->query("select * from component where project_id = $projectid");
+  $q->query("select * from ".TBL_COMPONENT." where project_id = $projectid");
   if (!$q->num_rows()) {
     $t->set_var('rows',"<tr><td colspan='2' align='center'>{$STRING['nocomponents']}</td></tr>");
     return;
@@ -150,7 +152,7 @@ function list_items() {
   $t->set_block('content','row','rows');
 
   if (!$order) { $order = '1'; $sort = 'asc'; }
-  $nr = $q->query("select count(*) from project");
+  $nr = $q->query("select count(*) from ".TBL_PROJECT);
 
   list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
     "order=$order&sort=$sort");
@@ -163,7 +165,7 @@ function list_items() {
     'TITLE' => $TITLE['project']
     ));
 
-  $q->query("select * from project order by $order $sort limit $llimit, $selrange");
+  $q->query("select * from ".TBL_PROJECT." order by $order $sort limit $llimit, $selrange");
 
   if (!$q->num_rows()) {
     $t->set_var('rows',"<tr><td>{$STRING['noprojects']}</td></tr>");

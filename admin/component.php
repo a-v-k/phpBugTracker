@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: component.php,v 1.10 2001/08/23 01:39:03 bcurtis Exp $
+// $Id: component.php,v 1.11 2001/09/01 15:44:20 mohni Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -41,7 +41,7 @@ function do_form($componentid = 0) {
 	if (!$componentid) {
 		$q->query("insert into component (component_id, project_id, component_name, component_desc, owner, active, created_by, created_date, last_modified_by, last_modified_date) values (".$q->nextid('component ').", $projectid, '$name', '$description', $owner, $active, $u, $time, $u, $time)");
 	} else {
-		$q->query("update component  set component_name = '$name', component_desc = '$description', owner = $owner, active = $active, last_modified_by = $u, last_modified_date = $time where component_id = '$componentid'");
+		$q->query("update ".TBL_COMPONENT." set component_name = '$name', component_desc = '$description', owner = $owner, active = $active, last_modified_by = $u, last_modified_date = $time where component_id = '$componentid'");
 	}
 	header("Location: project.php?op=edit&id=$projectid");
 }	
@@ -52,7 +52,10 @@ function show_form($componentid = 0, $error = '') {
 	
 	$t->set_file('content','componentform.html');
 	if ($componentid && !$error) {
-		$row = $q->grab("select c.*, p.project_name as project_name from component c left join project p using (project_id) where component_id = '$componentid'");
+		$row = $q->grab("select c.*, p.project_name as project_name"
+		               ." from ".TBL_COMPONENT." c"
+			       ."  left join ".TBL_PROJECT." p using (project_id)"
+			       ." where component_id = '$componentid'");
 		$t->set_var(array(
 			'componentid' => $row['component_id'],
 			'projectid' => $row['project_id'],
@@ -72,7 +75,7 @@ function show_form($componentid = 0, $error = '') {
 			'error' => $error,
 			'componentid' => $componentid,
 			'projectid' => $projectid,
-			'project' => $q->grab_field("select project_name from project where project_id = $projectid"),
+			'project' => $q->grab_field("select project_name from ".TBL_PROJECT." where project_id = $projectid"),
 			'name' => $name,
 			'description' => $description,
 			'owner' => build_select('owner',$owner),

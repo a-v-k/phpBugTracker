@@ -26,7 +26,7 @@ include 'include.php';
 function delete_saved_query($queryid) {
 	global $q, $u, $me;
 	
-	$q->query("delete from saved_query where user_id = $u and saved_query_id = $queryid");
+	$q->query("delete from ".TBL_SAVED_QUERY." where user_id = $u and saved_query_id = $queryid");
 	header("Location: $me?op=query");
 }
 
@@ -40,11 +40,11 @@ function show_query() {
 	$t->set_block('savequeryblock','row','rows');
 	 
 	// Build the javascript-powered select boxes
-	$q->query("select project_id, project_name from project where active order by project_name");
+	$q->query("select project_id, project_name from ".TBL_PROJECT." where active order by project_name");
 	while (list($pid, $pname) = $q->grab()) {
 		// Version array
 		$js .= "versions['$pname'] = new Array(new Array('','All'),";
-		$nq->query("select version_name, version_id from version where project_id = $pid and active");
+		$nq->query("select version_name, version_id from ".TBL_VERSION." where project_id = $pid and active");
 		while (list($version,$vid) = $nq->grab()) {
 			$js .= "new Array($vid,'$version'),";
 		}
@@ -53,7 +53,7 @@ function show_query() {
 		
 		// Component array
 		$js .= "components['$pname'] = new Array(new Array('','All'),";
-		$nq->query("select component_name, component_id from component where project_id = $pid and active");
+		$nq->query("select component_name, component_id from ".TBL_COMPONENT." where project_id = $pid and active");
 		while (list($comp,$cid) = $nq->grab()) {
 			$js .= "new Array($cid,'$comp'),";
 		}
@@ -63,7 +63,7 @@ function show_query() {
 	
 	if ($u != 'nobody') {
 		// Grab the saved queries if there are any
-		$q->query("select * from saved_query where user_id = '$u'");
+		$q->query("select * from ".TBL_SAVED_QUERY." where user_id = '$u'");
 		if (!$q->num_rows()) {
 			$t->set_var('rows','');
 		} else {
@@ -101,7 +101,7 @@ function build_query($assignedto, $reportedby, $open) {
 
 	// Open bugs assigned to the user -- a hit list
 	if ($assignedto || $reportedby) {
-		$q->query("select status_id from status where status_name ".($open ? '' : 'not ')."in ('Unconfirmed', 'New', 'Assigned', 'Reopened')");
+		$q->query("select status_id from ".TBL_STATUS." where status_name ".($open ? '' : 'not ')."in ('Unconfirmed', 'New', 'Assigned', 'Reopened')");
 		while ($statusid = $q->grab_field()) $status[] = $statusid;
 		$query[] = 'bug.status_id in ('.delimit_list(',',$status).')';
 		if ($assignedto) {
@@ -113,7 +113,7 @@ function build_query($assignedto, $reportedby, $open) {
 		// Select boxes
 		if ($status) $flags[] = 'bug.status_id in ('.delimit_list(',',$status).')';
 		if ($resolution) $flags[] = 'bug.resolution_id in ('.delimit_list(',',$resolution).')';
-		if ($os) $flags[] = 'bug.os_id in ('.delimit_list(',',$os).')';
+		if ($os) $flags[] = 'bug.op_sys_id in ('.delimit_list(',',$os).')';
 		if ($priority) $flags[] = 'bug.priority in ('.delimit_list(',',$priority).')';
 		if ($severity) $flags[] = 'bug.severity_id in ('.delimit_list(',',$severity).')';
 		if ($flags) $query[] = '('.delimit_list(' or ',$flags).')';
@@ -168,11 +168,15 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	// Save the query if requested
 	if ($savedqueryname) {
 		$savedquerystring = ereg_replace('&savedqueryname=.*(&?)', '\\1', $GLOBALS['QUERY_STRING']);
-		$q->query("insert into saved_query (user_id, saved_query_name, saved_query_string) values ($u, '$savedqueryname', '$savedquerystring')");
+		$q->query("insert into ".TBL_SAVED_QUERY." (user_id, saved_query_name, saved_query_string)"
+		         ." values ($u, '$savedqueryname', '$savedquerystring')");
 	}
 	if (!$order) { $order = 'bug_id'; $sort = 'asc'; }
 	if (!$querystring or $op) build_query($assignedto, $reportedby, $open);
-	$nr = $q->grab_field("select count(*) from bug left join auth_user owner on bug.assigned_to = owner.user_id left join auth_user reporter on bug.created_by = reporter.user_id ".($querystring != '' ? "where $querystring": ''));
+	$nr = $q->grab_field("select count(*) from ".TBL_BUG." bug"
+	                    ." left join ".TBL_AUTH_USER." owner on bug.assigned_to = owner.user_id"
+			    ." left join ".TBL_AUTH_USER." reporter on bug.created_by = reporter.user_id "
+			    .($querystring != '' ? "where $querystring": ''));
 
 	list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
 		"order=$order&sort=$sort");
@@ -185,7 +189,20 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'project' => build_select('project'),
 		'TITLE' => $TITLE['buglist']));
 	
-	$q->query("select bug.*, reporter.login as reporter, owner.login as owner, lastmodifier.login as lastmodifier, project_name, severity_name, status_name, os_name, version_name, component_name, resolution_name, severity_color from bug left join resolution using (resolution_id), severity, status, os, version, component, project left join auth_user owner on bug.assigned_to = owner.user_id left join auth_user reporter on bug.created_by = reporter.user_id left join auth_user lastmodifier on bug.last_modified_by = lastmodifier.user_id where bug.severity_id = severity.severity_id and bug.status_id = status.status_id and bug.os_id = os.os_id and bug.version_id = version.version_id and bug.component_id = component.component_id and bug.project_id = project.project_id ". ($querystring != '' ? "and $querystring " : ''). "order by $order $sort limit $llimit, $selrange");
+	$q->query("select bug.*, reporter.login as reporter, owner.login as owner, lastmodifier.login as lastmodifier,"
+	         ."  project_name, severity_name, status_name, os_name, version_name, component_name, resolution_name,"
+		 ."  severity_color"
+		 ." from ".TBL_BUG." bug left join ".TBL_RESOLUTION." resolution using (resolution_id),"
+		 .   TBL_SEVERITY." severity, ".TBL_STATUS." status, ".TBL_OS." os, ".TBL_VERSION." version, "
+		 .   TBL_COMPONENT." component, ".TBL_PROJECT." project"
+		 ."  left join ".TBL_AUTH_USER." owner on bug.assigned_to = owner.user_id"
+		 ."  left join ".TBL_AUTH_USER." reporter on bug.created_by = reporter.user_id"
+		 ."  left join ".TBL_AUTH_USER." lastmodifier on bug.last_modified_by = lastmodifier.user_id"
+		 ." where bug.severity_id = severity.severity_id and bug.status_id = status.status_id"
+		 ."  and bug.os_id = os.os_id and bug.version_id = version.version_id"
+		 ."  and bug.component_id = component.component_id and bug.project_id = project.project_id "
+		 . ($querystring != '' ? "and $querystring " : '')
+		 ." order by $order $sort limit $llimit, $selrange");
 				
 	$headers = array(
 		'bug_id' => 'bug_id',

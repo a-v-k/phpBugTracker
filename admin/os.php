@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: os.php,v 1.10 2001/08/23 01:39:03 bcurtis Exp $
+// $Id: os.php,v 1.11 2001/09/01 15:44:20 mohni Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -34,9 +34,9 @@ function do_form($osid = 0) {
   if ($error) { list_items($osid, $error); return; }
 
   if (!$osid) {
-    $q->query("insert into os (os_id, os_name, regex, sort_order) values (".$q->nextid('os').", '$fname', '$fregex', '$fsortorder')");
+    $q->query("insert into ".TBL_OS." (os_id, os_name, regex, sort_order) values (".$q->nextid('os').", '$fname', '$fregex', '$fsortorder')");
   } else {
-    $q->query("update os set os_name = '$fname', regex = '$fregex', sort_order = '$fsortorder' where os_id = '$osid'");
+    $q->query("update ".TBL_OS." set os_name = '$fname', regex = '$fregex', sort_order = '$fsortorder' where os_id = '$osid'");
   }
   header("Location: $me?");
 }
@@ -46,7 +46,7 @@ function show_form($osid = 0, $error = '') {
 
   #$t->set_file('content','osform.html');
   if ($osid && !$error) {
-    $row = $q->grab("select * from os where os_id = '$osid'");
+    $row = $q->grab("select * from ".TBL_OS." where os_id = '$osid'");
     $t->set_var(array(
       'action' => $STRING['edit'],
       'fosid' => $row['os_id'],
@@ -72,7 +72,7 @@ function list_items($osid = 0, $error = '') {
   $t->set_block('content','row','rows');
 
   if (!$order) { $order = 'sort_order'; $sort = 'asc'; }
-  $nr = $q->query("select count(*) from os where os_id = '$osid' order by $order $sort");
+  $nr = $q->query("select count(*) from ".TBL_OS." where os_id = '$osid' order by $order $sort");
 
   list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
     "order=$order&sort=$sort");
@@ -83,7 +83,7 @@ function list_items($osid = 0, $error = '') {
     'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
     'records' => $nr));
 
-  $q->query("select * from os order by $order $sort limit $llimit, $selrange");
+  $q->query("select * from ".TBL_OS." order by $order $sort limit $llimit, $selrange");
 
   if (!$q->num_rows()) {
     $t->set_var('rows',"<tr><td>{$STRING['nooses']}</td></tr>");

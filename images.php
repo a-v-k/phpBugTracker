@@ -31,13 +31,13 @@ function bug_cat_summary() {
 	include_once JPGRAPH_PATH.'jpgraph_pie.php';
 	
 	// Grab the legend
-	$q->query("select status_id, status_name from status order by sort_order");
+	$q->query("select status_id, status_name from ".TBL_STATUS." order by sort_order");
 	while ($row = $q->grab()) {
 		$stats[$row['status_id']]['name'] = $row['status_name'];
 	}
 	
 	// Grab the data
-	$q->query("select status_id, count(status_id) as count from bug group by status_id");
+	$q->query("select status_id, count(status_id) as count from ".TBL_BUG." group by status_id");
 	while ($row = $q->grab()) {
 		$stats[$row['status_id']]['count'] = $row['count'];
 	}

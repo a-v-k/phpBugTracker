@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.44 2001/08/29 08:05:39 mbravo Exp $
+// $Id: include.php,v 1.45 2001/09/01 15:44:20 mohni Exp $
 
 if (defined("INCLUDE_PATH")) {
 	require INCLUDE_PATH."config.php";
@@ -118,14 +118,17 @@ class uauth extends Auth {
     if (ENCRYPTPASS) {
       $password = md5($password);
     }
-    $u = $q->grab("select * from auth_user where login = '$username' and password = '$password' and active > 0");
+    $u = $q->grab("select * from ".TBL_AUTH_USER." where login = '$username' and password = '$password' and active > 0");
     if (!$q->num_rows()) {
       return 'nobody';
     } else {
       $this->auth['db_fields'] = unserialize($u['bug_list_fields']);
 			
 			// Grab group assignments and permissions based on groups
-			$q->query("select group_name, perm_name from auth_perm ap, group_perm gp, auth_group ag, user_group ug where ap.perm_id = gp.perm_id and gp.group_id = ag.group_id and ag.group_id = ug.group_id and ug.user_id = {$u['user_id']}");
+			$q->query("select group_name, perm_name"
+			         ." from ".TBL_AUTH_PERM." ap, ".TBL_GROUP_PERM." gp, ".TBL_AUTH_GROUP." ag, ".TBL_USER_GROUP." ug"
+				 ." where ap.perm_id = gp.perm_id and gp.group_id = ag.group_id"
+				 ."  and ag.group_id = ug.group_id and ug.user_id = {$u['user_id']}");
 			while (list($group, $perm) = $q->grab()) {
 				$this->auth['perm'][$perm] = true;
 				$this->auth['group'][$group] = true;
@@ -196,9 +199,14 @@ class templateclass extends Template {
     $this->set_block('wrap', 'adminnavblock', 'anblock');
     if ($u && $u != 'nobody') {
       list($owner_open, $owner_closed) =
-        $q->grab("select sum(if(status_name in ('Unconfirmed','New','Assigned','Reopened'),1,0)), sum(if(status_name not in ('Unconfirmed','New','Assigned','Reopened'),1,0)) from bug b left join status s using(status_id) where assigned_to = $u");
+        $q->grab("select sum(if(status_name in ('Unconfirmed','New','Assigned','Reopened'),1,0)),"
+	        ."  sum(if(status_name not in ('Unconfirmed','New','Assigned','Reopened'),1,0))"
+		." from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id)"
+		." where assigned_to = $u");
       list($reporter_open, $reporter_closed) =
-          $q->grab("select sum(if(status_name in ('Unconfirmed','New','Assigned','Reopened'),1,0)), sum(if(status_name not in ('Unconfirmed','New','Assigned','Reopened'),1,0)) from bug b left join status s using(status_id) where created_by = $u");
+	$q->grab("select sum(if(status_name in ('Unconfirmed','New','Assigned','Reopened'),1,0)),"
+		."  sum(if(status_name not in ('Unconfirmed','New','Assigned','Reopened'),1,0))"
+		." from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) where created_by = $u");
       $this->set_var(array(
         'loggedinas' => $auth->auth['uname'],
         'liblock' => '',
@@ -259,14 +267,24 @@ $select['priority'] = array(
 function build_select($box, $value = '', $project = 0) {
   global $q, $select;
 
+  //create hash to map tablenames
+  $cfgDatabase=array(
+    'project' =>	TBL_PROJECT,
+    'component' =>	TBL_COMPONENT,
+    'status' =>		TBL_STATUS,
+    'resolution' =>	TBL_RESOLUTION,
+    'severity' =>	TBL_SEVERITY,
+    'version' =>	TBL_VERSION
+  );
+
   $text = '';
   $queries = array(
-    'severity' => "select {$box}_id, {$box}_name from $box where sort_order > 0 order by sort_order",
-    'status' => "select {$box}_id, {$box}_name from $box where sort_order > 0 order by sort_order",
-    'resolution' => "select {$box}_id, {$box}_name from $box where sort_order > 0 order by sort_order",
-    'project' => "select {$box}_id, {$box}_name from $box where active = 1 order by {$box}_name",
-    'component' => "select {$box}_id, {$box}_name from $box where project_id = $project order by {$box}_name",
-    'version' => "select {$box}_id, {$box}_name from $box where project_id = $project order by {$box}_name"
+    'severity' => "select {$box}_id, {$box}_name from ".$cfgDatabase[$box]." where sort_order > 0 order by sort_order",
+    'status' => "select {$box}_id, {$box}_name from ".$cfgDatabase[$box]." where sort_order > 0 order by sort_order",
+    'resolution' => "select {$box}_id, {$box}_name from ".$cfgDatabase[$box]." where sort_order > 0 order by sort_order",
+    'project' => "select {$box}_id, {$box}_name from ".$cfgDatabase[$box]." where active = 0 order by {$box}_name",
+    'component' => "select {$box}_id, {$box}_name from ".$cfgDatabase[$box]." where project_id = $project order by {$box}_name",
+    'version' => "select {$box}_id, {$box}_name from ".$cfgDatabase[$box]." where project_id = $project order by {$box}_name"
     );
 
   switch($box) {
@@ -285,7 +303,7 @@ function build_select($box, $value = '', $project = 0) {
       }
       break;
     case 'os' :
-      $q->query("select {$box}_id, {$box}_name, regex from $box order by sort_order");
+      $q->query("select {$box}_id, {$box}_name, regex from ".TBL_OS." order by sort_order");
       while ($row = $q->grab()) {
         if ($value == '' and $row['Regex'] and
           preg_match($row['Regex'],$GLOBALS['HTTP_USER_AGENT'])) $sel = ' selected';
@@ -296,7 +314,7 @@ function build_select($box, $value = '', $project = 0) {
       }
       break;
     case 'owner' :
-      $q->query("select user_id, email from auth_user where user_level > 1 order by email");
+      $q->query("select user_id, email from ".TBL_AUTH_USER." where user_level > 1 order by email");
       while ($row = $q->grab()) {
         if ($value == $row['user_id']) $sel = ' selected';
         else $sel = '';
@@ -442,7 +460,7 @@ if (!defined('NO_AUTH')) {
 // Check to see if the user is trying to login
 if (isset($HTTP_POST_VARS['dologin'])) {
   if (isset($HTTP_POST_VARS['sendpass'])) {
-    list($email, $password) = $q->grab("select email, password from auth_user where login = '$username' and active > 0");
+    list($email, $password) = $q->grab("select email, password from ".TBL_AUTH_USER." where login = '$username' and active > 0");
     if (!$q->num_rows()) {
       $t->set_var(array(
         'loginerrorcolor' => '#ff0000',
@@ -452,7 +470,7 @@ if (isset($HTTP_POST_VARS['dologin'])) {
       if (ENCRYPTPASS) {
         $password = genpassword(10);
         $mpassword = md5($password);
-        $q->query("update auth_user set password = '$mpassword' where login = '$username'");
+        $q->query("update ".TBL_AUTH_USER." set password = '$mpassword' where login = '$username'");
       }
       mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'],
         $password),  sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMINEMAIL, $STRING['lang_charset']));

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: status.php,v 1.11 2001/08/23 01:39:03 bcurtis Exp $
+// $Id: status.php,v 1.12 2001/09/01 15:44:20 mohni Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -36,9 +36,9 @@ function do_form($statusid = 0) {
   if ($error) { list_items($statusid, $error); return; }
 
   if (!$statusid) {
-    $q->query("insert into status (status_id, status_name, status_desc, sort_order) values (".$q->nextid('status').", '$fname', '$fdescription', '$fsortorder')");
+    $q->query("insert into ".TBL_STATUS." (status_id, status_name, status_desc, sort_order) values (".$q->nextid('status').", '$fname', '$fdescription', '$fsortorder')");
   } else {
-    $q->query("update status set status_name = '$fname', status_desc = '$fdescription', sort_order = '$fsortorder' where status_id = '$statusid'");
+    $q->query("update ".TBL_STATUS." set status_name = '$fname', status_desc = '$fdescription', sort_order = '$fsortorder' where status_id = '$statusid'");
   }
   header("Location: $me?");
 }
@@ -47,7 +47,7 @@ function show_form($statusid = 0, $error = '') {
   global $q, $me, $t, $fname, $fdescription, $fsortorder, $STRING;
 
   if ($statusid && !$error) {
-    $row = $q->grab("select * from status where status_id = '$statusid'");
+    $row = $q->grab("select * from ".TBL_STATUS." where status_id = '$statusid'");
     $t->set_var(array(
       'action' => $STRING['edit'],
       'fstatusid' => $row['status_id'],
@@ -73,7 +73,7 @@ function list_items($statusid = 0, $error = '') {
   $t->set_block('content','row','rows');
 
   if (!$order) { $order = 'sort_order'; $sort = 'asc'; }
-  $nr = $q->query("select count(*) from status where status_id = '$statusid' order by $order $sort");
+  $nr = $q->query("select count(*) from ".TBL_STATUS." where status_id = '$statusid' order by $order $sort");
 
   list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
     "order=$order&sort=$sort");
@@ -84,7 +84,7 @@ function list_items($statusid = 0, $error = '') {
     'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
     'records' => $nr));
 
-  $q->query("select * from status order by $order $sort limit $llimit, $selrange");
+  $q->query("select * from ".TBL_STATUS." order by $order $sort limit $llimit, $selrange");
 
   if (!$q->num_rows()) {
     $t->set_var('rows',"<tr><td>{$STRING['nostatuses']}</td></tr>");

@@ -34,11 +34,11 @@ $t->set_var('TITLE',$TITLE['home']);
 if (USE_JPGRAPH) {
 	$t->set_var('sblock', '<img src="images.php" align="right">');
 } else {
-	$q->query("select * from status order by sort_order");
+	$q->query("select * from ".TBL_STATUS." order by sort_order");
 	while ($row = $q->grab()) {
 		$stats[$row['status_id']]['name'] = $row['status_name'];
 	}
-	$q->query("select status_id, count(status_id) as count from bug group by status_id");
+	$q->query("select status_id, count(status_id) as count from ".TBL_BUG." group by status_id");
 	while ($row = $q->grab()) {
 		$stats[$row['status_id']]['count'] = $row['count'];
 	}

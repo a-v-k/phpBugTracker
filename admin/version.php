@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: version.php,v 1.11 2001/08/23 01:39:03 bcurtis Exp $
+// $Id: version.php,v 1.12 2001/09/01 15:44:20 mohni Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -35,9 +35,9 @@ function do_form($versionid = 0) {
 
   if (!$active) $active = 0;
   if (!$versionid) {
-    $q->query("insert into version (version_id, project_id, version_name, active, created_by, created_date) values (".$q->nextid('version').", $projectid, '$version', '$active', $u, $now)");
+    $q->query("insert into ".TBL_VERSION." (version_id, project_id, version_name, active, created_by, created_date) values (".$q->nextid('version').", $projectid, '$version', '$active', $u, $now)");
   } else {
-    $q->query("update version set project_id = $projectid, version_name = '$version', active = '$active' where version_id = '$versionid'");
+    $q->query("update ".TBL_VERSION." set project_id = $projectid, version_name = '$version', active = '$active' where version_id = '$versionid'");
   }
   header("Location: project.php?op=edit&id=$projectid");
 }
@@ -47,7 +47,9 @@ function show_form($versionid = 0, $error = '') {
 
   $t->set_file('content','versionform.html');
   if ($versionid && !$error) {
-    $row = $q->grab("select v.*, p.project_name as project_name from version v left join project p using(project_id) where version_id = '$versionid'");
+    $row = $q->grab("select v.*, p.project_name as project_name"
+                   ." from ".TBL_VERSION." v left join ".TBL_PROJECT." p using(project_id)"
+		   ." where version_id = '$versionid'");
     $t->set_var(array(
       'versionid' => $row['version_id'],
       'projectid' => $row['project_id'],
@@ -62,7 +64,7 @@ function show_form($versionid = 0, $error = '') {
       'error' => $error,
       'versionid' => $versionid,
       'projectid' => $projectid,
-      'project' => $q->grab_field("select project_name from project where project_id = $projectid"),
+      'project' => $q->grab_field("select project_name from ".TBL_PROJECT." where project_id = $projectid"),
       'version' => $version,
       'active' => $active ? ' checked' : '',
       'TITLE' => $id ? $TITLE['editversion'] : $TITLE['addversion']));

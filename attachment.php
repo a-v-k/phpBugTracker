@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.6 2001/08/23 02:03:16 bcurtis Exp $
+// $Id: attachment.php,v 1.7 2001/09/01 15:44:20 mohni Exp $
 
 include 'include.php';
 
@@ -28,7 +28,7 @@ function del_attachment($attachid) {
 	global $q;
 	
 	if (list($filename, $mimetype) = grab_attachment($attachid)) {
-		$q->query("delete from attachment where attachment_id = $attachid");
+		$q->query("delete from ".TBL_ATTACHMENT." where attachment_id = $attachid");
 		unlink($filename);
 		header("Location: bug.php?op=show&bugid=$attachid");
 	}
@@ -41,7 +41,9 @@ function grab_attachment($attachid) {
 		show_text($STRING['bad_attachment'], true);
 		return false;
 	}
-	$ainfo = $q->grab("select a.bug_id, file_name, mime_type, project_id from attachment a, bug b where attachment_id = $attachid and a.bug_id = b.bug_id");
+	$ainfo = $q->grab("select a.bug_id, file_name, mime_type, project_id"
+	                 ." from ".TBL_ATTACHMENT." a, ".TBL_BUG." b"
+			 ." where attachment_id = $attachid and a.bug_id = b.bug_id");
 	if ($q->num_rows() != 1) {
 		show_text($STRING['bad_attachment'], true);
 		return false;
@@ -71,14 +73,15 @@ function add_attachment($bugid, $description) {
 		return;
 	}
 	
-	$projectid = $q->grab_field("select project_id from bug where bug_id = $bugid");
+	$projectid = $q->grab_field("select project_id from ".TBL_BUG." where bug_id = $bugid");
 	if (!$projectid) {
 		show_text($STRING['nobug'], true);
 		return;
 	}
 
 	// Check for a previously-uploaded attachment with the same name, bug, and project
-	$q->query("select a.bug_id, project_id from attachment a, bug b where file_name = '{$HTTP_POST_FILES['attachment']['name']}' and a.bug_id = b.bug_id");
+	$q->query("select a.bug_id, project_id from ".TBL_ATTACHMENT." a, ".TBL_BUG." b"
+	         ." where file_name = '{$HTTP_POST_FILES['attachment']['name']}' and a.bug_id = b.bug_id");
 	while ($ainfo = $q->grab()) {
 		if ($bugid == $ainfo['bug_id'] && $projectid == $ainfo['project_id']) {
 			show_attachment_form($bugid, $STRING['dupe_attachment']);
@@ -111,7 +114,7 @@ function add_attachment($bugid, $description) {
 	}
 
 	@chmod("$filepath/$projectid/$filename", 0766);
-	$q->query("insert into attachment (attachment_id, bug_id, file_name, description, file_size, mime_type, created_by, created_date) values (".$q->nextid('attachment').", $bugid, '{$HTTP_POST_FILES['attachment']['name']}', '$description', {$HTTP_POST_FILES['attachment']['size']}, '{$HTTP_POST_FILES['attachment']['type']}', $u, $now)");
+	$q->query("insert into ".TBL_ATTACHMENT." (attachment_id, bug_id, file_name, description, file_size, mime_type, created_by, created_date) values (".$q->nextid('attachment').", $bugid, '{$HTTP_POST_FILES['attachment']['name']}', '$description', {$HTTP_POST_FILES['attachment']['size']}, '{$HTTP_POST_FILES['attachment']['type']}', $u, $now)");
 	$t->set_file('content', 'bugattachmentsuccess.html');
 	$t->set_var('bugid', $bugid);
 }
@@ -125,7 +128,7 @@ function show_attachment_form($bugid, $error = '') {
 		return;
 	}
 	
-	$bugexists = $q->grab_field("select count(*) from bug where bug_id = $bugid");
+	$bugexists = $q->grab_field("select count(*) from ".TBL_BUG." where bug_id = $bugid");
 	if (!$bugexists) { 
 		show_text($STRING['nobug'], true);
 		return;
