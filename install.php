@@ -1,6 +1,7 @@
 <?php
 
 // install.php -- Web-based installation script
+// Thanks to the phpBB crew for an example on how this can be done.
 // ------------------------------------------------------------------------
 // Copyright (c) 2001 The phpBugTracker Group
 // ------------------------------------------------------------------------
@@ -20,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.3 2001/11/03 14:38:17 bcurtis Exp $
+// $Id: install.php,v 1.4 2001/11/03 17:17:40 bcurtis Exp $
 
 include_once('template.inc');
 $t = new Template('templates/default', 'keep');
