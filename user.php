@@ -37,6 +37,7 @@ function show_password_form($error = '') {
 }
 
 $t->set_file('wrap', 'wrap.html');
+$perm->check('User');
 
 if ($do) change_password($pass1, $pass2);
 else show_password_form();
