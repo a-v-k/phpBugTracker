@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.93 2002/04/03 18:45:27 bcurtis Exp $
+// $Id: bug.php,v 1.94 2002/04/04 13:54:03 bcurtis Exp $
 
 include 'include.php';
 
@@ -537,10 +537,11 @@ function show_form($bugid = 0, $error = '') {
 }
 
 function show_bug_printable($bugid) {
-	global $db, $me, $t, $select, $TITLE, $QUERY;
+	global $db, $me, $t, $select, $TITLE, $QUERY, $restricted_projects;
 	
 	if (!is_numeric($bugid) or
-    !$row = $db->getRow(sprintf($QUERY['bug-printable'], $bugid))) {
+    !$row = $db->getRow(sprintf($QUERY['bug-printable'], $bugid, 
+			$restricted_projects))) {
 		show_text($STRING['bugbadnum'],true);
 		exit;
 	}
@@ -599,10 +600,11 @@ function prev_next_links($bugid, $pos) {
 }
 
 function show_bug($bugid = 0, $error = array()) {
-  global $db, $me, $t, $STRING, $TITLE, $u, $perm, $_gv, $QUERY;
+  global $db, $me, $t, $STRING, $TITLE, $u, $_gv, $QUERY, $restricted_projects;
 
   if (!ereg('^[0-9]+$',$bugid) or
-    !$row = $db->getRow(sprintf($QUERY['bug-show-bug'], $bugid))) {
+    !$row = $db->getRow(sprintf($QUERY['bug-show-bug'], $bugid, 
+			$restricted_projects))) {
     show_text($STRING['bugbadnum'],true);
     return;
   }

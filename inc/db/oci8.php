@@ -62,7 +62,7 @@ $QUERY = array(
 		'and b.resolution_id = r.resolution_id(+) and b.os_id = os.os_id '.
 		'and b.version_id = v.version_id and b.component_id = c.component_id '.
 		'and b.project_id = p.project_id and b.severity_id = sv.severity_id '.
-		'and b.status_id = st.status_id and bug_id = %s',
+		'and b.status_id = st.status_id and bug_id = %s and b.project_id not in (%s)',
 	'bug-prev-next' => 'select b.bug_id, reporter.login as reporter, '.
 		'owner.login as owner '.
 		'from '.TBL_BUG.' b, '.TBL_AUTH_USER.' owner, '.TBL_AUTH_USER.' reporter, '.
@@ -88,7 +88,7 @@ $QUERY = array(
 		'and b.assigned_to = owner.user_id(+) '.
 		'and b.created_by = reporter.user_id(+) '.
 		'and b.severity_id = sv.severity_id and b.status_id = st.status_id '.
-		'and bug_id = %s',
+		'and bug_id = %s and b.project_id not in (%s)',
 	'functions-bug-cc' => 'select b.user_id, login '.
 		'from '.TBL_BUG_CC.' b, '. TBL_AUTH_USER.
 		' where phpbt_auth_user.user_id = b.user_id(+) and bug_id = %s',

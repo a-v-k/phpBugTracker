@@ -56,7 +56,8 @@ $QUERY = array(
 		'left join '.TBL_RESOLUTION.' r on b.resolution_id = r.resolution_id, '.
 		TBL_SEVERITY.' sv, '.TBL_STATUS.' st, '.TBL_OS.' os, '. TBL_VERSION.' v, '.
 		TBL_COMPONENT.' c, '.TBL_PROJECT.' p '.
-		'where bug_id = %s and b.severity_id = sv.severity_id '.
+		'where bug_id = %s and b.project_id not in (%s) '.
+		'and b.severity_id = sv.severity_id '.
 		'and b.os_id = os.os_id and b.version_id = v.version_id '.
 		'and b.component_id = c.component_id and b.project_id = p.project_id '.
 		'and b.status_id = st.status_id',
@@ -83,8 +84,8 @@ $QUERY = array(
 		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
 		'left join '.TBL_RESOLUTION.' r on b.resolution_id = r.resolution_id, '.
 		TBL_SEVERITY.' sv, '.TBL_STATUS.' st '.
-		'where bug_id = %s and b.severity_id = sv.severity_id '.
-		'and b.status_id = st.status_id',
+		'where bug_id = %s and b.project_id not in (%s) '.
+		'and b.severity_id = sv.severity_id and b.status_id = st.status_id',
 	'functions-bug-cc' => 'select b.user_id, login '.
 		'from '.TBL_BUG_CC.' b left join '. TBL_AUTH_USER.' using(user_id) '.
 		'where bug_id = %s',
