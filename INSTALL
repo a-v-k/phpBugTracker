@@ -11,5 +11,5 @@ Optional: Install JpGraph (http://www.aditus.nu/jpgraph/) if you wish to use it.
 
 3. After completing the installation, login and start reporting bugs.
 
-* Note: You must have register_globals set to On either in php.ini or in 
-.htaccess.  This requirement will be removed in an upcoming version.
+* Note: You must have magic_quotes_gpc set to On either in php.ini or in 
+.htaccess (see http://www.php.net/manual/en/configuration.php for more info).
