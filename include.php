@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.42 2001/08/25 18:37:39 bcurtis Exp $
+// $Id: include.php,v 1.43 2001/08/28 04:13:59 bcurtis Exp $
 
 if (defined("INCLUDE_PATH")) {
 	require INCLUDE_PATH."config.php";
@@ -54,8 +54,8 @@ $me = $HTTP_SERVER_VARS['PHP_SELF'];
 $me2 = $HTTP_SERVER_VARS['REQUEST_URI'];
 $selrange = 30;
 $now = time();
-$_gv = $HTTP_GET_VARS;
-$_pv = $HTTP_POST_VARS;
+$_gv = &$HTTP_GET_VARS;
+$_pv = &$HTTP_POST_VARS;
 
 $all_db_fields = array(
   'bug_id' => 'ID',
@@ -440,7 +440,7 @@ if (!defined('NO_AUTH')) {
 }
 
 // Check to see if the user is trying to login
-if (isset($HTTP_POST_VARS['login'])) {
+if (isset($HTTP_POST_VARS['dologin'])) {
   if (isset($HTTP_POST_VARS['sendpass'])) {
     list($email, $password) = $q->grab("select email, password from auth_user where login = '$username' and active > 0");
     if (!$q->num_rows()) {
