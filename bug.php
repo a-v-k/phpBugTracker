@@ -418,7 +418,7 @@ function show_bug($bugid = 0, $error = '') {
 			if (is_readable(INSTALLPATH.'/'.ATTACHMENT_PATH."/{$row['Project']}/$bugid-{$att['FileName']}")) {
 				$action = "<a href='attachment.php?attachid={$att['AttachmentID']}'>View</a>";
 				if ($perm->have_perm('Administrator')) {
-					$action .= " | <a href='attachment.php?del={$att['AttachmentID']}' onClick=\"return alert('Are you sure you want to delete this attachment?');\">Delete</a>";
+					$action .= " | <a href='attachment.php?del={$att['AttachmentID']}' onClick=\"return confirm('Are you sure you want to delete this attachment?');\">Delete</a>";
 				}
 				if ($att['FileSize'] > 1024) {
 					$attsize = number_format((round($att['FileSize']) / 1024 * 100) / 100).'k';
