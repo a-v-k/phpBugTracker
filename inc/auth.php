@@ -128,6 +128,31 @@ class uperm {
     }
   }
 
+  function check_proj($project_id) {
+    global $db;
+
+    if ($this->have_perm_proj($project_id)) {
+      return true;
+    } else {
+      $this->perm_invalid($HTTP_SESSION_VARS['perms'], $p);
+      exit();
+    }
+  }
+
+  function have_perm_proj($project_id) {
+    global $db;
+
+    if ($this->have_perm('Admin')) {
+      return true;
+    }
+
+    if ( $db->getCol('SELECT user_id FROM '.TBL_PROJECT_PERM.' WHERE user_id = '.$_SESSION['uid']." AND project_id = $project_id") ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
   function check_auth($auth_var, $reqs) {
     global $HTTP_SESSION_VARS;
 
