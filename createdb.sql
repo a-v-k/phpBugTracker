@@ -248,9 +248,9 @@ INSERT INTO Status VALUES (1,'Unconfirmed','Reported but not confirmed',1);
 INSERT INTO Status VALUES (2,'New','A new bug',2);
 INSERT INTO Status VALUES (3,'Assigned','Assigned to a developer',3);
 INSERT INTO Status VALUES (4,'Reopened','Closed but opened again for further inspection',4);
-INSERT INTO Status VALUES (5,'Resolved','',5);
-INSERT INTO Status VALUES (6,'Verified','Confirmed as a bug',6);
-INSERT INTO Status VALUES (7,'Closed','',7);
+INSERT INTO Status VALUES (5,'Resolved','Set by engineer with a resolution',5);
+INSERT INTO Status VALUES (6,'Verified','The resolution is confirmed by the reporter',6);
+INSERT INTO Status VALUES (7,'Closed','The bug is officially squashed (QA)',7);
 
 insert into db_sequence values ('Status', 7);
 
