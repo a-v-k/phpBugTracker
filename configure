@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script to edit configuration settings
-# $Id: configure,v 1.11 2001/09/15 16:22:51 bcurtis Exp $
+# $Id: configure,v 1.12 2001/09/16 15:12:44 bcurtis Exp $
 
 DIALOG=${DIALOG=dialog}
 tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/test$$
@@ -24,6 +24,7 @@ USE_JPGRAPH=0
 MASK_EMAIL=0
 HIDE_EMAIL=1
 SEV_COLOR=1
+EMAIL_IS_LOGIN=1
 
 administrivia() {
 	$DIALOG --backtitle "phpBT Configuration" \
@@ -154,12 +155,18 @@ change_features() {
 	else
 		OLD_SEV_COLOR=off
 	fi
+	if [ $EMAIL_IS_LOGIN -eq 1 ]; then
+		OLD_EMAIL_IS_LOGIN=on
+	else
+		OLD_EMAIL_IS_LOGIN=off
+	fi
 	
 	NEW_ENCRYPTPASS=0
 	NEW_USE_JPGRAPH=0
 	NEW_MASK_EMAIL=0
 	NEW_HIDE_EMAIL=0
 	NEW_SEV_COLOR=0
+	NEW_EMAIL_IS_LOGIN=0
 
 	$DIALOG --backtitle "phpBT Configuration" \
 		--title "Optional Features" \
@@ -170,6 +177,7 @@ change_features() {
     	"MASK_EMAIL" "Replace @ with at and . with dot when showing emails" $OLD_MASK_EMAIL \
     	"HIDE_EMAIL" "Completely hide emails when not logged in" $OLD_HIDE_EMAIL \
     	"SEV_COLOR" "Color rows in bug list according to severity" $OLD_SEV_COLOR \
+    	"EMAIL_IS_LOGIN" "Use the email address as user login" $OLD_EMAIL_IS_LOGIN \
   	2> $tempfile
 
 	retval=$?
@@ -189,6 +197,8 @@ change_features() {
 					NEW_HIDE_EMAIL=1;;
 				SEV_COLOR)
 					NEW_SEV_COLOR=1;;
+				EMAIL_IS_LOGIN)
+					NEW_EMAIL_IS_LOGIN=1;;
 			esac
 		done
 
@@ -197,6 +207,7 @@ change_features() {
 		MASK_EMAIL=${NEW_MASK_EMAIL:-0}
 		HIDE_EMAIL=${NEW_HIDE_EMAIL:-0}
 		SEV_COLOR=${NEW_SEV_COLOR:-0}
+		EMAIL_IS_LOGIN=${NEW_EMAIL_IS_LOGIN:-0}
 	fi
 	
 	if [ $USE_JPGRAPH -eq 1 ]; then
@@ -242,6 +253,8 @@ show_menu() {
 				echo "/USE_JPGRAPH/s/[[:digit:]]/$USE_JPGRAPH/" >> $tempfile
 				echo "/MASK_EMAIL/s/[[:digit:]]/$MASK_EMAIL/" >> $tempfile
 				echo "/HIDE_EMAIL/s/[[:digit:]]/$HIDE_EMAIL/" >> $tempfile
+				echo "/USE_SEVERITY_COLOR/s/[[:digit:]]/$SEV_COLOR/" >> $tempfile
+				echo "/EMAIL_IS_LOGIN/s/[[:digit:]]/$EMAIL_IS_LOGIN/" >> $tempfile
 				echo "/ADMINEMAIL/s|, '.*'|, '$ADMINEMAIL'|" >> $tempfile
 				echo "/INSTALLPATH/s|, '.*'|, '$INSTALLPATH'|" >> $tempfile
 				echo "/ATTACHMENT_PATH/s|, '.*'|, '$ATTACHMENT_PATH'|" >> $tempfile
