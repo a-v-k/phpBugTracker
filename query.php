@@ -20,16 +20,20 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.75 2002/06/08 20:13:03 bcurtis Exp $
+// $Id: query.php,v 1.76 2002/06/08 20:28:30 bcurtis Exp $
 
 include 'include.php';
 
 function delete_saved_query($queryid) {
-	global $db, $u, $me;
+	global $db, $u, $me, $_gv;
 	
 	$db->query("delete from ".TBL_SAVED_QUERY." where user_id = $u 
 		and saved_query_id = $queryid");
-	header("Location: $me?op=query&form=advanced");
+	if (!empty($_gv['form']) and $_gv['form'] == 'advanced') {
+		header("Location: $me?op=query&form=advanced");
+	} else {
+		header("Location: $me?op=query");
+	}
 }
 
 function show_query() {
@@ -220,7 +224,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	}
 	// Save the query if requested
 	if (!empty($savedqueryname)) {
-		$savedquerystring = ereg_replace('&savedqueryname=.*(&?)', '\\1', $HTTP_SERVER_VARS['QUERY_STRING']);
+		$savedquerystring = ereg_replace('&savedqueryname=.*(&?)', '\1', $HTTP_SERVER_VARS['QUERY_STRING']);
 		$nextid = $db->getOne("select max(saved_query_id)+1 from ".TBL_SAVED_QUERY." where user_id = $u");
 		$nextid = $nextid ? $nextid : 1;
 		$db->query("insert into ".TBL_SAVED_QUERY.
