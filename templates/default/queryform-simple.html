@@ -1,9 +1,11 @@
-<script language="JavaScript">
+<script type="text/JavaScript">
 <!-- 
 versions = new Array();
 components = new Array();
+closedversions = new Array();
 versions['All'] = new Array(new Array('','All'));
 components['All'] = new Array(new Array('','All'));
+closedversions['All'] = new Array(new Array('','All'));
 {project_js}
 
 {literal}
@@ -25,56 +27,56 @@ function updateMenus(f) {
 </script>
     <form method="get" action="query.php" name="query">
       <table>
-				<tr>
-					<td valign="top"><b>Project:</b></td>
+				<tr valign="baseline">
+					<td valign="top"><b>{$TITLE._Project}:</b></td>
 					<td valign="top">
 						<select name="projects" onChange="updateMenus(this.form)">
-							<option value=''>All</option>
+							<option value=''>{$TITLE._opt_All}</option>
 							{build_select box=project}
 						</select>
 					</td>
 				</tr>
-				<tr>
-					<td valign="top"><b>Version:</b></td>
+				<tr valign="baseline">
+					<td valign="top"><b>{$TITLE._Version}:</b></td>
 					<td valign="top">
-						<select name="versions"><option value=''>All</option></select>
+						<select name="versions"><option value=''>{$TITLE._opt_All}</option></select>
 					</td>
 				</tr>
-				<tr>
-					<td valign="top"><b>Component:</b></td>
+				<tr valign="baseline">
+					<td valign="top"><b>{$TITLE._Component}:</b></td>
 					<td valign="top">
-						<select name="components"><option value=''>All</option></select>
+						<select name="components"><option value=''>{$TITLE._opt_All}</option></select>
 					</td>
 				</tr>
-				<tr>
-					<td valign="top"><b>Status:</b></td>
+				<tr valign="baseline">
+					<td valign="top"><b>{$TITLE._Status}:</b></td>
 					<td valign="top">
 						<select name="status[]" multiple size="7">{build_select box=status}</select>
 					</td>
 				</tr>
-				<tr>
-					<td valign="top"><b>Sort By:</b></td>
+				<tr valign="baseline">
+					<td valign="top"><b>{$TITLE._SortBy}:</b></td>
 					<td valign="top">
 						<select name="order">
         			<option value="bug_id">
-          			Bug Number
+          			{$TITLE._SortBy_BugNumber}
         			</option>
         			<option selected value="severity.sort_order">
-          			Severity
+          			{$TITLE._SortBy_Severity}
         			</option>
         			<option value="reporter">
-          			Reporter
+          			{$TITLE._SortBy_Reporter}
         			</option>
         			<option value="status.sort_order">
-          			Status
+          			{$TITLE._SortBy_Status}
         			</option>
         			<option value="priority">
-          			Priority
+          			{$TITLE._SortBy_Priority}
         			</option>
       			</select>
 						<select name="sort">
-							<option selected value="asc">Ascending</option>
-							<option value="desc">Descending</option>
+							<option selected value="asc">{$TITLE._SortAsc}</option>
+							<option value="desc">{$TITLE._SortDesc}</option>
 						</select>
 					</td>
 				</tr>
@@ -82,20 +84,20 @@ function updateMenus(f) {
 			<br>
 			<br>
 			{if $smarty.session.uid}
-				Save this query as: <input maxlength="40" type="text" name="savedqueryname">
+				{$TITLE._SaveThisQueryAs}: <input maxlength="40" type="text" name="savedqueryname">
 				<br><br>
 			{/if}
       <input type="hidden" name="op" value="doquery">
-			<input type="reset" value="Reset back to the default query">
-			<input type="submit" value="Submit query"> 
+			<input type="reset" value="{$TITLE._ResetBackToDefaultQuery}">
+			<input type="submit" value="{$TITLE._SubmitQuery}"> 
 			{if count($queries)}
 				<br><br>
-				<b>Saved Queries</b>
+				<b>{$TITLE._SavedQueries}</b>
 				<br>
 				{section name=query loop=$queries}
-					<a href="{$smarty.server.PHP_SELF}?{$queries[query].saved_query_string}">{$queries[query].saved_query_name}</a> (<a href="{$smarty.server.PHP_SELF}?op=delquery&queryid={$queries[query].saved_query_id}&form=simple" onClick="return confirm('Are you sure you want to delete this saved query?');">Delete</a>)<br>
+					<a href="{$smarty.server.PHP_SELF}?{$queries[query].saved_query_string}">{$queries[query].saved_query_name}</a> (<a href="{$smarty.server.PHP_SELF}?op=delquery&queryid={$queries[query].saved_query_id}&form=simple" onClick="return confirm('{$TITLE._SureDeleteSavedQuery}');">{$STRING.delete}</a>)<br>
 				{/section}
 			{/if}
     </form>
 		<br>
-		Go to the <a href="{$smarty.server.PHP_SELF}?op=query&form=advanced">advanced query page</a>
+		{$TITLE._1GoToThe} <a href="{$smarty.server.PHP_SELF}?op=query&form=advanced">{$TITLE._1AdvancedQueryPage}</a>
