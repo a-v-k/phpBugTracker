@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.7 2001/12/04 14:27:23 bcurtis Exp $
+// $Id: install.php,v 1.8 2001/12/14 14:42:09 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 
@@ -50,6 +50,7 @@ if (!empty($_pv)) {
 		'/TBL_CONFIGURATION/' => $_pv['tbl_prefix'].'configuration',
 		'/TBL_GROUP_PERM/' => $_pv['tbl_prefix'].'group_perm',
 		'/TBL_OS/' => $_pv['tbl_prefix'].'os',
+		'/TBL_PROJECT_GROUP/' => $_pv['tbl_prefix'].'project_group',
 		'/TBL_PROJECT/' => $_pv['tbl_prefix'].'project',
 		'/TBL_RESOLUTION/'  => $_pv['tbl_prefix'].'resolution',
 		'/TBL_SAVED_QUERY/' => $_pv['tbl_prefix'].'saved_query',
@@ -97,7 +98,7 @@ function grab_config_file() {
 	$t->set_root('.');
 	$t->set_file('content', 'config-dist.php');
 	$t->set_var($_pv);
-	return "<?php\n".$t->finish($t->parse('main', 'content'));
+	return $t->finish($t->parse('main', 'content'));
 }
 
 function create_tables() {
@@ -163,14 +164,13 @@ function dump_config_file() {
  	header('Content-Type: text/x-delimtext; name="config.php"');
  	header('Content-disposition: attachment; filename=config.php');
  	echo grab_config_file();
-	show_finished();
 }
 
 function save_config_file() {
 
 	if (!check_vars()) return;
 	create_tables();
-	if (!$fp = fopen('config.php', 'w')) {
+	if (!$fp = @fopen('config.php', 'w')) {
 		show_front('Error writing to config.php');
 	} else {
 		fwrite($fp, grab_config_file());
@@ -184,16 +184,7 @@ function show_finished() {
 	
 	$t->set_root('templates/default');
 	$t->set_file('done', 'install-complete.html');
-	$t->set_block('done', 'writeableblock', 'writeable');
-	$t->set_block('done', 'unwriteableblock', 'unwriteable');
 	$t->set_var('login', $_pv['admin_login']);
-	if (is_writeable('config.php')) {
-		$t->parse('writeable', 'writeableblock', true);
-		$t->set_var('unwriteable', '');
-	} else {
-		$t->parse('unwriteable', 'unwriteableblock', true);
-		$t->set_var('writeable', '');
-	}
 
 	print $t->finish($t->parse('main', 'done'));
 }
@@ -225,7 +216,7 @@ function show_front($error = '') {
 
 	// If we can write to the config file, show that we will do that, otherwise
 	// offer the config file as a download
-	if (is_writeable('config.php')) {
+	if (@is_writeable('config.php')) {
 		$t->parse('writeable', 'writeableblock', true);
 		$t->set_var('unwriteable', '');
 	} else {
