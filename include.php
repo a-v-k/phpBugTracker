@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.106 2002/04/03 01:00:52 bcurtis Exp $
+// $Id: include.php,v 1.107 2002/04/03 18:45:50 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -113,7 +113,11 @@ $t->config_dir = '.';
 $t->register_function('build_select', 'build_select');
 $t->register_function('project_js', 'build_project_js');
 $t->register_modifier('date', 'bt_date');
-$t->assign('STRING', $STRING);
+$t->assign(array(
+	'STRING' => $STRING,
+	'TITLE' => $TITLE,
+	'STYLE' => STYLE
+	));
 
 if (defined('TEMPLATE_PATH')) {
 	$t->assign('template_path', '../templates/'.THEME.'/'.TEMPLATE_PATH);
