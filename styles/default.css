@@ -109,7 +109,19 @@ a.sidenavlink {
 	font-size: 16px;
 	font-weight: bold;
 	}
+
+.navtitlebar {
+	background: #99f;
+}
+
+.navborder {
+	background: #000;
+}
 	
+.navbotspacer {
+	background: #fff;
+}
+
 .navinput {
 	vertical-align: middle;
 	background: #ffffff;
