@@ -34,8 +34,8 @@ function show_form($userid = 0, $error = '') {
     $t->set_var(array(
       'action' => $STRING[edit],
       'fuserid' => $row[UserID],
-      'ffirstname' => $row[FirstName],
-      'flastname' => $row[LastName],
+      'ffirstname' => stripslashes($row[FirstName]),
+      'flastname' => stripslashes($row[LastName]),
       'femail' => $row[Email],
       'fpassword' => $row[Password],
       'usertype' => build_select('authlevels',$row[UserLevel]),
@@ -45,8 +45,8 @@ function show_form($userid = 0, $error = '') {
       'action' => $userid ? $STRING[edit] : $STRING[addnew],
       'error' => $error,
       'fuserid' => $userid,
-      'ffirstname' => $firstname,
-      'flastname' => $lastname,
+      'ffirstname' => stripslashes($firstname),
+      'flastname' => stripslashes($lastname),
       'femail' => $email,
       'fpassword' => $password ? $password : genpassword(10),
       'usertype' => build_select('authlevels',$usertype),
@@ -73,7 +73,7 @@ function list_items($userid = 0, $error = '') {
     'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
     'records' => $nr));
                 
-  $q->query("select UserID, concat(FirstName,' ',LastName) as FullName, Email, 
+  $q->query("select UserID, concat(FirstName,'&nbsp;',LastName) as FullName, Email, 
     CreatedDate, UserLevel from User order by $order $sort 
     limit $llimit, $selrange");
         
@@ -96,7 +96,7 @@ function list_items($userid = 0, $error = '') {
     $t->set_var(array(
       'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
       'userid' => $row[UserID],
-      'name' => $row[FullName],
+      'name' => stripslashes($row[FullName]),
       'email' => $row[Email],
       'userlevel' => $select['authlevels'][$row[UserLevel]],
       'date' => date(DATEFORMAT,$row[CreatedDate])));
