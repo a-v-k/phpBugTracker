@@ -69,7 +69,7 @@ function do_changedfields($user, $buginfo, $cf, $comments) {
     // bug then we need to grab the bug's description as the previous comment
     if ($q->num_rows() < 2) {
       list($by, $on, $comments) = $q->grab("select u.Email, b.CreatedDate, 
-        b.Description from Bug, User where b.CreatedBy = u.UserID and 
+        b.Description from Bug b, User u where b.CreatedBy = u.UserID and 
         BugID = $buginfo[BugID]");
       $t->set_var(array(
         'oldpostedby' => $by,
