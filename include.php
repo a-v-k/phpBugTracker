@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.87 2002/01/05 19:49:35 bcurtis Exp $
+// $Id: include.php,v 1.88 2002/01/05 20:01:17 bcurtis Exp $
 
 // Where are we?
 if (!empty($HTTP_SERVER_VARS['SCRIPT_FILENAME'])) {
@@ -510,12 +510,9 @@ if (!defined('NO_AUTH')) {
 // Check to see if the user is trying to login
 if (isset($_pv['dologin'])) {
   if (isset($_pv['sendpass'])) {
-    list($email, $password) = $q->grab("select email, password from ".TBL_AUTH_USER." where login = '$username' and active > 0");
+    list($email, $password) = $q->grab("select email, password from ".TBL_AUTH_USER." where login = '{$_pv['username']}' and active > 0");
     if (!$q->num_rows()) {
-      $t->set_var(array(
-        'loginerrorcolor' => '#ff0000',
-        'loginerror' => 'Invalid login<br>'
-        ));
+      $t->set_var('loginerror', '<div class="error">Invalid login</div>');
     } else {
       if (ENCRYPT_PASS) {
         $password = genpassword(10);
@@ -524,17 +521,12 @@ if (isset($_pv['dologin'])) {
       }
       mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'],
         $password),  sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMIN_EMAIL, $STRING['lang_charset']));
-      $t->set_var(array(
-        'loginerrorcolor' => '#0000ff',
-        'loginerror' => 'Your password has been emailed to you<br>'
-        ));
+      $t->set_var('loginerror', 
+				'<div class="result">Your password has been emailed to you</div>');
     }
   } else {
     if (!$u = $auth->auth_validatelogin()) {
-      $t->set_var(array(
-        'loginerrorcolor' => '#ff0000',
-        'loginerror' => 'Invalid login<br>'
-        ));
+      $t->set_var('loginerror', '<div class="error">Invalid login</div>');
 		}
   }
 }
