@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.104 2002/03/28 22:14:44 bcurtis Exp $
+// $Id: include.php,v 1.105 2002/03/29 18:25:37 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -97,21 +97,19 @@ $default_db_fields = array('bug_id', 'title', 'reporter', 'owner',
 
 class templateclass extends Template {
   function pparse($target, $handle, $append = false) {
-    global $_sv, $perm, $db, $HTTP_COOKIE_VARS;
+    global $_sv, $perm, $db, $HTTP_COOKIE_VARS, $QUERY;
 
     $u = isset($_sv['uid']) ? $_sv['uid'] : 0;
     $this->set_block('wrap', 'logoutblock', 'loblock');
     $this->set_block('wrap', 'loginblock', 'liblock');
     $this->set_block('wrap', 'adminnavblock', 'anblock');
     if ($u) {
-      list($owner_open, $owner_closed) = $db->getRow("SELECT sum(CASE WHEN status_name in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) ,"
-        ."sum(CASE WHEN status_name not in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END )"
-        ."from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) where assigned_to = $u",
-				DB_FETCHMODE_ORDERED);
-      list($reporter_open, $reporter_closed) = $db->getRow("SELECT sum(CASE WHEN status_name in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) ,"
-        ."sum(CASE WHEN status_name not in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END )"
-        ."from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) where created_by = $u",
-				DB_FETCHMODE_ORDERED);
+      list($owner_open, $owner_closed) = 
+				$db->getRow(sprintf($QUERY['include-template-owner'], $u), 
+					DB_FETCHMODE_ORDERED);
+      list($reporter_open, $reporter_closed) = 
+				$db->getRow(sprintf($QUERY['include-template-reporter'], $u),
+					DB_FETCHMODE_ORDERED);
       $this->set_var(array(
         'loggedinas' => $_sv['uname'],
         'liblock' => '',

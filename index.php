@@ -125,24 +125,22 @@ $t->set_block('content', 'projectsummaryblock', 'projblock');
 $t->set_block('projectsummaryblock', 'projectrow', 'prows');
 $t->set_block('projectrow', 'col', 'cols');
 if (SHOW_PROJECT_SUMMARIES) {
-	$querystring = 'select project_name as "Project", sum(case when resolution_id = 0 then 1 else 0 end) as "Open"';
+	$querystring = $QUERY['index-projsummary-1'];
 	$resfields = array('Project','Open');
 
 	// Grab the resolutions from the database
-	$rs = $db->query("select resolution_name, ".
-		db_concat("', sum(case when resolution_id = '", 'resolution_id', 
-			"' then 1 else 0 end) as \"'", 'resolution_name' ,"'\"'").
-		" from ".TBL_RESOLUTION);
+	$rs = $db->query($QUERY['index-projsummary-2'].
+		db_concat($QUERY['index-projsummary-3'], 'resolution_id', 
+			$QUERY['index-projsummary-4'], 'resolution_name' ,"'\"'").
+		$QUERY['index-projsummary-5']);
 	while (list($fieldname, $countquery) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 		$resfields[] = $fieldname;
 		$querystring .= $countquery;
 	}
 	$resfields[] = 'Total';
 
-	$rs = $db->query("$querystring, count(bug_id) as \"Total\" from ".TBL_BUG.
-		" b left join ".TBL_PROJECT." p using (project_id)".
-		" where b.project_id not in ($restricted_projects) group by b.project_id,".
-		" project_name order by project_name");
+	$rs = $db->query(sprintf($QUERY['index-projsummary-6'], $querystring, 
+		$restricted_projects));
 	if (!$rs->numRows()) {
 		$t->set_var('projblock', '');
 	} else {

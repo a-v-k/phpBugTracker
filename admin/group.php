@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: group.php,v 1.5 2002/03/17 01:38:31 bcurtis Exp $
+// $Id: group.php,v 1.6 2002/03/29 18:25:37 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -81,7 +81,7 @@ function show_form($groupid = 0, $error = '') {
 
 
 function list_items($groupid = 0, $error = '') {
-	global $me, $db, $t, $_gv, $STRING, $TITLE;
+	global $me, $db, $t, $_gv, $STRING, $TITLE, $QUERY;
 
 	$t->set_file('content','grouplist.html');
 	$t->set_block('content','row','rows');
@@ -109,9 +109,7 @@ function list_items($groupid = 0, $error = '') {
 		'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
 		'records' => $nr));
 
-	$rs = $db->limitQuery("select ag.group_id, group_name, locked, count(ug.group_id) as count from ".
-		TBL_AUTH_GROUP." ag left join ".TBL_USER_GROUP." ug using (group_id) left join ".
-		TBL_AUTH_USER." using (user_id) group by ag.group_id, group_name, locked order by $order $sort", 
+	$rs = $db->limitQuery(sprintf($QUERY['admin-list-groups'], $order, $sort), 
 		$llimit, $selrange);
 
 	if (!$rs->numRows()) {

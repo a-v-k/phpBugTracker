@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.89 2002/03/26 17:27:48 bcurtis Exp $
+// $Id: bug.php,v 1.90 2002/03/29 18:25:37 bcurtis Exp $
 
 include 'include.php';
 
@@ -121,15 +121,14 @@ function format_comments($comments) {
 ///
 /// Show the activity for a bug
 function show_history($bugid) {
-  global $db, $t, $STRING;
+  global $db, $t, $STRING, $QUERY;
 
   if (!is_numeric($bugid)) {
     show_text($STRING['nobughistory']);
     return;
   }
 
-  $rs = $db->query('select bh.*, login from '.TBL_BUG_HISTORY.' bh left join '.
-    TBL_AUTH_USER." on bh.created_by = user_id where bug_id = $bugid");
+  $rs = $db->query(sprintf($QUERY['bug-history'], $bugid));
   if (!$rs->numRows()) {
     show_text($STRING['nobughistory']);
     return;
@@ -155,7 +154,7 @@ function show_history($bugid) {
 ///
 /// Send the email about changes to the bug and log the changes in the DB
 function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
-  global $db, $t, $u, $select, $now, $STRING;
+  global $db, $t, $u, $select, $now, $STRING, $QUERY;
 
 	// It's a new bug if the changedfields array is empty and there are no comments
 	$newbug = (!count($cf) and !$comments); 
@@ -274,10 +273,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
     $maillist[] = $assignedto;
 
   // Collect the CCs
-  if ($ccs = $db->getCol('select email from '.TBL_BUG_CC.' left join '.
-		TBL_AUTH_USER." u using(user_id), ".TBL_USER_PREF." p ".
-		"where bug_id = {$buginfo['bug_id']} and u.user_id = p.user_id ".
-		"and email_notices = 1")) {
+  if ($ccs = $db->getCol(sprintf($QUERY['bug-cc-list'], $buginfo['bug_id']))) {
 		array_push($maillist, $ccs);
 	}
 
@@ -602,22 +598,10 @@ function show_form($bugid = 0, $error = '') {
 }
 
 function show_bug_printable($bugid) {
-	global $db, $me, $t, $select, $TITLE;
+	global $db, $me, $t, $select, $TITLE, $QUERY;
 	
 	if (!is_numeric($bugid) or
-    !$row = $db->getRow('select b.*, reporter.login as reporter, 
-			owner.login as owner, project_name, component_name, version_name, 
-			severity_name, os_name, status_name, resolution_name  
-      from '.TBL_BUG.' b 
-			left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id 
-      left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id 
-			left join '.TBL_RESOLUTION.' r on b.resolution_id = r.resolution_id,'.
-			TBL_SEVERITY.' sv, '.TBL_STATUS.' st, '.TBL_OS.' os, '.
-			TBL_VERSION.' v, '.TBL_COMPONENT.' c, '.TBL_PROJECT." p 
-      where bug_id = '$bugid' and b.severity_id = sv.severity_id 
-			and b.os_id = os.os_id and b.version_id = v.version_id 
-			and b.component_id = c.component_id and b.project_id = p.project_id 
-			and b.status_id = st.status_id")) {
+    !$row = $db->getRow(sprintf($QUERY['bug-printable'], $bugid))) {
 		show_text($STRING['bugbadnum'],true);
 		exit;
 	}
@@ -673,7 +657,7 @@ function show_bug_printable($bugid) {
 ///
 /// Grab the links for the previous and next bugs in the list
 function prev_next_links($bugid, $pos) {
-	global $db, $_sv, $STRING;
+	global $db, $_sv, $STRING, $QUERY;
 	
 	if (!isset($_sv['queryinfo']['query']) || !$_sv['queryinfo']['query']) {
 		return array('', '');
@@ -687,19 +671,9 @@ function prev_next_links($bugid, $pos) {
 		$offset = $pos;
 		$limit = 1;
 	}
-	$rs = $db->limitQuery('select bug_id, reporter.login as reporter, owner.login as owner 
-		from '.TBL_BUG.' b
-		left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id
-		left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id 
-		left join '.TBL_AUTH_USER.' lastmodifier on b.last_modified_by = lastmodifier.user_id 
-		left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_id, '.
-		TBL_SEVERITY.' severity, '.TBL_STATUS.' status, '.TBL_OS.' os, '.
-		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.TBL_PROJECT.' project 
-		where b.severity_id = severity.severity_id and b.status_id = status.status_id 
-		and b.os_id = os.os_id and b.version_id = version.version_id 
-		and b.component_id = component.component_id and b.project_id = project.project_id '.
-		"and {$_sv['queryinfo']['query']} and bug_id <> $bugid 
-		order by {$_sv['queryinfo']['order']} {$_sv['queryinfo']['sort']}, bug_id asc", $offset, $limit);
+	$rs = $db->limitQuery(sprintf($QUERY['bug-prev-next'], 
+		$_sv['queryinfo']['query'], $bugid, $_sv['queryinfo']['order'], 
+		$_sv['queryinfo']['sort']), $offset, $limit);
 		
 	list($firstid, $chunks) = $rs->fetchRow(DB_FETCHMODE_ORDERED);
 	list($secondid, $chunks) = $rs->fetchRow(DB_FETCHMODE_ORDERED);
@@ -724,17 +698,10 @@ function prev_next_links($bugid, $pos) {
 }
 
 function show_bug($bugid = 0, $error = array()) {
-  global $db, $me, $t, $STRING, $TITLE, $u, $perm, $_gv;
+  global $db, $me, $t, $STRING, $TITLE, $u, $perm, $_gv, $QUERY;
 
   if (!ereg('^[0-9]+$',$bugid) or
-    !$row = $db->getRow('select b.*, reporter.login as reporter, owner.login as owner, status_name, resolution_name 
-      from '.TBL_BUG.' b 
-			left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id 
-      left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id 
-			left join '.TBL_RESOLUTION.' r on b.resolution_id = r.resolution_id,'.
-			TBL_SEVERITY.' sv, '.TBL_STATUS." st 
-      where bug_id = '$bugid' and b.severity_id = sv.severity_id 
-			and b.status_id = st.status_id")) {
+    !$row = $db->getRow(sprintf($QUERY['bug-show-bug'], $bugid))) {
     show_text($STRING['bugbadnum'],true);
     return;
   }

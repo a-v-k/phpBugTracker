@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: severity.php,v 1.19 2002/03/17 01:38:31 bcurtis Exp $
+// $Id: severity.php,v 1.20 2002/03/29 18:25:38 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -95,7 +95,7 @@ function show_form($severityid = 0, $error = '') {
 
 
 function list_items($severityid = 0, $error = '') {
-	global $me, $db, $t, $_gv, $STRING, $TITLE;
+	global $me, $db, $t, $_gv, $STRING, $TITLE, $QUERY;
 
 	$t->set_file('content','severitylist.html');
 	$t->set_block('content','row','rows');
@@ -122,11 +122,8 @@ function list_items($severityid = 0, $error = '') {
 		'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
 		'records' => $nr));
 
-	$rs = $db->limitQuery('select s.severity_id, severity_name, severity_desc,'.
-		' severity_color, sort_order, count(bug_id) as bug_count from '.TBL_SEVERITY.
-		' s left join '.TBL_BUG.' using (severity_id) group by s.severity_id,'.
-		' severity_name, severity_desc, severity_color, sort_order'.
-		" order by $order $sort", $llimit, $selrange);
+	$rs = $db->limitQuery(sprintf($QUERY['admin-list-severities'], $order, $sort), 
+		$llimit, $selrange);
 
 
 	if (!$rs->numRows()) {

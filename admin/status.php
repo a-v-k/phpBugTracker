@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: status.php,v 1.23 2002/03/17 01:38:31 bcurtis Exp $
+// $Id: status.php,v 1.24 2002/03/29 18:25:38 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -92,7 +92,7 @@ function show_form($statusid = 0, $error = '') {
 
 
 function list_items($statusid = 0, $error = '') {
-	global $me, $db, $t, $_gv, $STRING, $TITLE;
+	global $me, $db, $t, $_gv, $STRING, $TITLE, $QUERY;
 
 	$t->set_file('content','statuslist.html');
 	$t->set_block('content','row','rows');
@@ -119,10 +119,8 @@ function list_items($statusid = 0, $error = '') {
 		'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
 		'records' => $nr));
 
-	$rs = $db->limitQuery('select s.status_id, status_name, status_desc,'.
-		' sort_order, count(bug_id) as bug_count from '.TBL_STATUS.' s left join '.
-		TBL_BUG.' using (status_id) group by s.status_id, status_name, status_desc,'.
-		" sort_order order by $order $sort", $llimit, $selrange);
+	$rs = $db->limitQuery(sprintf($QUERY['admin-list-statuses'], $order, $sort), 
+		$llimit, $selrange);
 
 	if (!$rs->numRows()) {
 		$t->set_var('rows',"<tr><td>{$STRING['nostatuses']}</td></tr>");

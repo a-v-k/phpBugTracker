@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.34 2002/03/28 22:26:06 bcurtis Exp $
+// $Id: project.php,v 1.35 2002/03/29 18:25:38 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -49,14 +49,12 @@ function save_version($versionid = 0) {
 }
 
 function show_version($versionid = 0, $error = '') {
-  global $db, $t, $_pv, $STRING;
+  global $db, $t, $_pv, $STRING, $QUERY;
 
 	foreach ($_pv as $k => $v) $$k = $v;
 	
   if ($versionid && !$error) {
-    $row = $db->getRow("select v.*, p.project_name as project_name"
-    	." from ".TBL_VERSION." v left join ".TBL_PROJECT." p using(project_id)"
-			." where version_id = '$versionid'");
+    $row = $db->getRow(sprintf($QUERY['admin-show-version'], $versionid));
     $t->set_var(array(
       'vf_error' => '',
       'versionid' => $row['version_id'],
@@ -126,14 +124,12 @@ function save_component($componentid = 0) {
 }	
 
 function show_component($componentid = 0, $error = '') {
-	global $db, $t, $_pv, $STRING;
+	global $db, $t, $_pv, $STRING, $QUERY;
 	
 	foreach ($_pv as $k => $v) $$k = $v;
 	
 	if ($componentid && !$error) {
-		$row = $db->getRow('select c.*, p.project_name as project_name
-			from '.TBL_COMPONENT.' c  left join '.TBL_PROJECT." p using (project_id)
-			where component_id = '$componentid'");
+		$row = $db->getRow(sprintf($QUERY['admin-show-component'], $componentid));
 		$t->set_var(array(
 			'cf_error' => '',
 			'componentid' => $row['component_id'],

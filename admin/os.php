@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: os.php,v 1.22 2002/03/17 01:38:31 bcurtis Exp $
+// $Id: os.php,v 1.23 2002/03/29 18:25:38 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -85,7 +85,7 @@ function show_form($osid = 0, $error = '') {
 
 
 function list_items($osid = 0, $error = '') {
-	global $db, $me, $t, $_gv, $STRING, $TITLE;
+	global $db, $me, $t, $_gv, $STRING, $TITLE, $QUERY;
 
 	$t->set_file('content','oslist.html');
 	$t->set_block('content','row','rows');
@@ -113,11 +113,8 @@ function list_items($osid = 0, $error = '') {
 		'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
 		'records' => $nr));
 
-	$rs = $db->limitQuery('select s.os_id, os_name, regex, sort_order,'.
-		' count(bug_id) as bug_count from '.TBL_OS.
-		' s left join '.TBL_BUG.' using (os_id) group by s.os_id,'.
-		' os_name, regex, sort_order'.
-		" order by $order $sort", $llimit, $selrange);
+	$rs = $db->limitQuery(sprintf($QUERY['admin-list-oses'], $order, $sort), 
+		$llimit, $selrange);
 
 	if (!$rs->numRows()) {
 		$t->set_var('rows',"<tr><td>{$STRING['nooses']}</td></tr>");

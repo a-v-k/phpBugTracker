@@ -20,13 +20,13 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.41 2002/03/17 01:38:31 bcurtis Exp $
+// $Id: user.php,v 1.42 2002/03/29 18:25:38 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
 
 function do_form($userid = 0) {
-	global $db, $me, $_pv, $STRING, $now, $u;
+	global $db, $me, $_pv, $STRING, $now, $u, $QUERY;
 
 	$error = '';
 	// Validation
@@ -92,9 +92,7 @@ function do_form($userid = 0) {
 
 		// Update group memberships
 		// Get user's groups (without dropping the user group)
-		$user_groups = $db->getCol('select ug.group_id from '.
-			TBL_USER_GROUP.' ug left join '.TBL_AUTH_GROUP.' g using (group_id) '
-			." where user_id = $userid and group_name <> 'User'");
+		$user_groups = $db->getCol(sprintf($QUERY['admin-user-groups'], $userid));
 
 		// Compute differences between old and new
 		if (!isset($user_groups) or !is_array($user_groups)) {

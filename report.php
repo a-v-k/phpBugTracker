@@ -20,26 +20,26 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: report.php,v 1.21 2002/03/27 18:01:33 bcurtis Exp $  
+// $Id: report.php,v 1.22 2002/03/29 18:25:37 bcurtis Exp $  
 
 include 'include.php';
 
 function resolution_by_engineer($projectid = 0) {
-	global $db, $t, $restricted_projects, $perm;
+	global $db, $t, $restricted_projects, $perm, $QUERY;
 	
 	$t->set_block('content', 'row', 'rows');
 	$t->set_block('row', 'col', 'cols');
 	$t->set_var('reporttitle', 'Bug resolutions');
 	
 	// Start off our query
-	$querystring = 'select email as "Assigned To", sum(case when resolution_id = 0 then 1 else 0 end) as "Open"';
+	$querystring = $QUERY['report-resbyeng-1'];
 	$resfields = array('Assigned To','Open');
 
 	// Grab the resolutions from the database
-	$rs = $db->query("select resolution_name, ".
-		db_concat("', sum(case when resolution_id = '", 'resolution_id', 
-			"' then 1 else 0 end) as \"'", 'resolution_name' ,"'\"'").
-		" from ".TBL_RESOLUTION);
+	$rs = $db->query($QUERY['report-resbyeng-2'].
+		db_concat($QUERY['report-resbyeng-3'], 'resolution_id', 
+			$QUERY['report-resbyeng-4'], 'resolution_name' ,"'\"'").
+		$QUERY['report-resbyeng-5']);
 	while (list($fieldname, $countquery) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 		$resfields[] = $fieldname;
 		$querystring .= $countquery;
@@ -47,16 +47,16 @@ function resolution_by_engineer($projectid = 0) {
 	$resfields[] = 'Total';
 	
 	if ($projectid && is_numeric($projectid)) {
-		$projectquery = "where project_id = $projectid";
+		$projectquery = $QUERY['report-resbyeng-where']." project_id = $projectid";
 	} elseif (!$perm->have_perm('Admin')) {
-		$projectquery = "where project_id not in ($restricted_projects)";
+		$projectquery = $QUERY['report-resbyeng-where'].
+			" project_id not in ($restricted_projects)";
 	} else {
 		$projectquery = '';
 	}
 	
-	$rs = $db->query("$querystring, count(bug_id) as \"Total\" from ".TBL_BUG.
-		" b left join ".TBL_AUTH_USER." u on assigned_to = user_id $projectquery ".
-		"group by assigned_to, u.email");
+	$rs = $db->query(sprintf($QUERY['report-resbyeng-6'], $querystring, 
+		$projectquery));
 	if (!$rs->numRows()) {
 		$t->set_var('rows', 'No data to display');
 	} else {

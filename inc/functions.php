@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.12 2002/03/26 18:40:27 bcurtis Exp $
+// $Id: functions.php,v 1.13 2002/03/29 18:25:38 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -43,7 +43,7 @@ $select['priority'] = array(
 ///
 /// Build a select box with the item matching $value selected
 function build_select($box, $value = '', $project = 0) {
-  global $db, $select, $perm, $STRING, $restricted_projects;
+  global $db, $select, $perm, $STRING, $restricted_projects, $QUERY;
 
   //create hash to map tablenames
   $cfgDatabase = array(
@@ -131,8 +131,7 @@ function build_select($box, $value = '', $project = 0) {
       }
       break;
     case 'bug_cc' :
-      $rs = $db->query('select b.user_id, login from '.TBL_BUG_CC.' b left join '.
-        TBL_AUTH_USER." using(user_id) where bug_id = $value");
+      $rs = $db->query(sprintf($QUERY['functions-bug-cc'], $value));
       while (list($uid, $user) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
         $text .= "<option value=\"$uid\">".maskemail($user).'</option>';
       }
@@ -314,7 +313,7 @@ function maskemail($email) {
 ///
 /// Build the javascript for the dynamic project -> component -> version select boxes
 function build_project_js() {
-	global $db, $u, $perm, $_sv;
+	global $db, $u, $perm, $_sv, $QUERY;
 	
 	$js = '';
 	
@@ -323,11 +322,7 @@ function build_project_js() {
 		$rs = $db->query("select project_id, project_name from ".TBL_PROJECT.
 			" where active = 1 order by project_name");
 	} else {
-		$rs = $db->query('select p.project_id, project_name from '.TBL_PROJECT.
-			' p left join '.TBL_PROJECT_GROUP.' pg using(project_id) 
-			where active = 1 and (pg.project_id is null or pg.group_id in ('.
-			delimit_list(',', $_sv['group_ids']).')) group by 
-			p.project_id, p.project_name order by project_name');
+		$rs = $db->query(sprintf($QUERY['functions-project-js'], $_sv['group_ids']));
 	}
 	while (list($pid, $pname) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 		$pname = addslashes($pname);

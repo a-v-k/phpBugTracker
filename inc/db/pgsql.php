@@ -1,229 +1,149 @@
 <?php
-/*
- * Session Management for PHP3
- *
- * Copyright (c) 1998,1999 NetUSE GmbH
- *                    Boris Erdmann, Kristian Koehntopp
- *
- * db_sql.inc,v 1.4 2000/07/01 22:08:35 kir 
- *
- */ 
 
-class DB_Sql {
-  var $Host     = "";
-  var $Port     = "";
-  var $Database = "";
-  var $User     = "";
-  var $Password = "";
+$QUERY = array(
+	'admin-list-groups' => 'select ag.group_id, group_name, locked, '.
+		'count(ug.group_id) as count '.
+		'from '.TBL_AUTH_GROUP.' ag '.
+		'left join '.TBL_USER_GROUP.' ug using (group_id) '.
+		'left join '.TBL_AUTH_USER.' using (user_id) '.
+		'group by ag.group_id, group_name, locked '.
+		'order by %s %s',
+	'admin-list-oses' => 'select s.os_id, os_name, regex, sort_order, '.
+		'count(bug_id) as bug_count '.
+		'from '.TBL_OS.' s '.
+		'left join '.TBL_BUG.' using (os_id) '.
+		'group by s.os_id, os_name, regex, sort_order '.
+		'order by %s %s',
+	'admin-show-version' => 'select v.*, p.project_name as project_name '.
+		'from '.TBL_VERSION.' v left join '.TBL_PROJECT.' p using(project_id) '.
+		'where version_id = \'%s\'',
+	'admin-show-component' => 'select c.*, p.project_name as project_name '.
+		'from '.TBL_COMPONENT.' c  left join '.TBL_PROJECT.' p using (project_id) '.
+		'where component_id = \'%s\'',
+	'admin-list-resolutions' => 'select s.resolution_id, resolution_name, '.
+		'resolution_desc, sort_order, count(bug_id) as bug_count '.
+		'from '.TBL_RESOLUTION. ' s left join '.TBL_BUG.' using (resolution_id) '.
+		'group by s.resolution_id, resolution_name, resolution_desc, sort_order '.
+		'order by %s %s',
+	'admin-list-severities' => 'select s.severity_id, severity_name, '.
+		'severity_desc, severity_color, sort_order, count(bug_id) as bug_count '.
+		'from '.TBL_SEVERITY. ' s left join '.TBL_BUG.' using (severity_id) '.
+		'group by s.severity_id, severity_name, severity_desc, severity_color, '.
+		'sort_order '.
+		'order by %s %s',
+	'admin-list-statuses' => 'select s.status_id, status_name, status_desc, '.
+		'sort_order, count(bug_id) as bug_count '.
+		'from '.TBL_STATUS.' s left join '. TBL_BUG.' using (status_id) '.
+		'group by s.status_id, status_name, status_desc, sort_order '.
+		'order by %s %s',
+	'admin-user-groups' => 'select ug.group_id '.
+		'from '.TBL_USER_GROUP.' ug left join '.TBL_AUTH_GROUP.' g using (group_id) '.
+		'where user_id = %s and group_name <> \'User\'',
+	'bug-history' => 'select bh.*, login '.
+		'from '.TBL_BUG_HISTORY.' bh '.
+		'left join '. TBL_AUTH_USER.' on bh.created_by = user_id '.
+		'where bug_id = %s',
+	'bug-cc-list' => 'select email '.
+		'from '.TBL_BUG_CC.' left join '. TBL_AUTH_USER.' u using(user_id), '.
+		TBL_USER_PREF.' p '.
+		'where bug_id = %s and u.user_id = p.user_id and email_notices = 1',
+	'bug-printable' => 'select b.*, reporter.login as reporter, '.
+		'owner.login as owner, project_name, component_name, version_name, '.
+		'severity_name, os_name, status_name, resolution_name '.
+		'from '.TBL_BUG.' b '.
+		'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
+		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
+		'left join '.TBL_RESOLUTION.' r on b.resolution_id = r.resolution_id, '.
+		TBL_SEVERITY.' sv, '.TBL_STATUS.' st, '.TBL_OS.' os, '. TBL_VERSION.' v, '.
+		TBL_COMPONENT.' c, '.TBL_PROJECT.' p '.
+		'where bug_id = %s and b.severity_id = sv.severity_id '.
+		'and b.os_id = os.os_id and b.version_id = v.version_id '.
+		'and b.component_id = c.component_id and b.project_id = p.project_id '.
+		'and b.status_id = st.status_id',
+	'bug-prev-next' => 'select bug_id, reporter.login as reporter, '.
+		'owner.login as owner '.
+		'from '.TBL_BUG.' b '.
+		'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
+		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
+		'left join '.TBL_AUTH_USER.' lastmodifier on b.last_modified_by = lastmodifier.user_id '.
+		'left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_id, '.
+		TBL_SEVERITY.' severity, '.TBL_STATUS.' status, '.TBL_OS.' os, '.
+		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.TBL_PROJECT.' project '.
+		'where b.severity_id = severity.severity_id '.
+		'and b.status_id = status.status_id and b.os_id = os.os_id '.
+		'and b.version_id = version.version_id '.
+		'and b.component_id = component.component_id '.
+		'and b.project_id = project.project_id and %s '.
+		'and bug_id <> %s '.
+		'order by %s %s, bug_id asc',
+	'bug-show-bug' =>  'select b.*, reporter.login as reporter, '.
+		'owner.login as owner, status_name, resolution_name '.
+		'from '.TBL_BUG.' b '.
+		'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
+		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
+		'left join '.TBL_RESOLUTION.' r on b.resolution_id = r.resolution_id, '.
+		TBL_SEVERITY.' sv, '.TBL_STATUS.' st '.
+		'where bug_id = %s and b.severity_id = sv.severity_id '.
+		'and b.status_id = st.status_id',
+	'functions-bug-cc' => 'select b.user_id, login '.
+		'from '.TBL_BUG_CC.' b left join '. TBL_AUTH_USER.' using(user_id) '.
+		'where bug_id = %s',
+	'functions-project-js' => 'select p.project_id, project_name '.
+		'from '.TBL_PROJECT. ' p '.
+		'left join '.TBL_PROJECT_GROUP.' pg using(project_id) '.
+		'where active = 1 and (pg.project_id is null or pg.group_id in (%s)) '.
+		'group by p.project_id, p.project_name '.
+		'order by project_name',
+	'include-template-owner' => "SELECT sum(CASE WHEN status_name in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) , ".
+		"sum(CASE WHEN status_name not in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) ".
+		"from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) ".
+		"where assigned_to = %s",
+	'include-template-reporter' => "SELECT sum(CASE WHEN status_name in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) , ".
+		"sum(CASE WHEN status_name not in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) ".
+		"from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) ".
+		"where created_by = %s",
+	'index-projsummary-1' => 'select project_name as "Project", '.
+		'sum(case when resolution_id = 0 then 1 else 0 end) as "Open"',
+	'index-projsummary-2' => "select resolution_name, ",
+	'index-projsummary-3' => "', sum(case when resolution_id = '",
+	'index-projsummary-4' => "' then 1 else 0 end) as \"'",
+	'index-projsummary-5' => " from ".TBL_RESOLUTION,
+	'index-projsummary-6' => '%s, count(bug_id) as "Total" '.
+		'from '.TBL_BUG. ' b left join '.TBL_PROJECT.' p using (project_id) '.
+		'where b.project_id not in (%s) group by b.project_id, project_name '.
+		'order by project_name',
+	'query-list-bugs-count' => 'select count(*) '.
+		'from '.TBL_BUG.' b '.
+		'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
+		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id ',
+	'query-list-bugs' => 'select b.*, reporter.login as reporter, '.
+		'owner.login as owner, lastmodifier.login as lastmodifier, '.
+		'project_name, severity_name, severity_color, status_name, '.
+		'os_name, version_name, component_name, resolution_name '.
+		'from '.TBL_BUG.' b '.
+		'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
+		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
+		'left join '.TBL_AUTH_USER.' lastmodifier on b.last_modified_by = lastmodifier.user_id '.
+		'left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_id, '.
+		TBL_SEVERITY.' severity, '.TBL_STATUS.' status, '.TBL_OS.' os, '.
+		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.TBL_PROJECT.' project '.
+		'where b.severity_id = severity.severity_id '.
+		'and b.status_id = status.status_id and b.os_id = os.os_id '.
+		'and b.version_id = version.version_id '.
+		'and b.component_id = component.component_id '.
+		'and b.project_id = project.project_id %s '.
+		'order by %s %s, bug_id asc',
+	'report-resbyeng-1' => 'select email as "Assigned To", '.
+		'sum(case when resolution_id = 0 then 1 else 0 end) as "Open"',
+	'report-resbyeng-2' => "select resolution_name, ",
+	'report-resbyeng-3' => "', sum(case when resolution_id = '",
+	'report-resbyeng-4' => "' then 1 else 0 end) as \"'",
+	'report-resbyeng-5' => " from ".TBL_RESOLUTION,
+	'report-resbyeng-6' => '%s, count(bug_id) as "Total" '.
+		'from '.TBL_BUG. ' b '.
+		'left join '.TBL_AUTH_USER.' u on assigned_to = user_id %s '.
+		'group by assigned_to, u.email',
+	'report-resbyeng-where' => 'where',
+	);
 
-  var $Link_ID  = 0;
-  var $Query_ID = 0;
-  var $Record   = array();
-  var $Row      = 0;
-
-  var $Seq_Table     = "db_sequence";
-
-  var $Errno    = 0;
-  var $Error    = "";
-  var $Debug    = 0;
-
-  var $Auto_Free = 0; # Set this to 1 for automatic pg_freeresult on 
-                      # last record.
-
-  function ifadd($add, $me) {
-	  if("" != $add) return " ".$me.$add;
-  }
-  
-   /* public: constructor */
-   function DB_Sql($query = "") {
-        $this->query($query);
-   }
-             
-  
-  function connect() {
-	  if ( 0 == $this->Link_ID ) {
-		  $cstr = "dbname=".$this->Database.
-		  $this->ifadd($this->Host, "host=").
-		  $this->ifadd($this->Port, "port=").
-		  $this->ifadd($this->User, "user=").
-		  $this->ifadd($this->Password, "password=");
-		  $this->Link_ID=pg_pconnect($cstr);
-		  if (!$this->Link_ID) {
-			  $this->halt("Link-ID == false, pconnect failed");
-		  }
-	  }
-  }
-
-  function query($Query_String) {
-    
-    /* No empty queries, please, since PHP4 chokes on them. */
-    if ($Query_String == "")
-      /* The empty query string is passed on from the constructor,
-       * when calling the class without a query, e.g. in situations
-       * like these: '$db = new DB_Sql_Subclass;'
-       */
-      return 0;
-    
-    $this->connect();
-
-    if ($this->Debug) printf("<br>Debug: query = %s<br>\n", $Query_String);
-
-    $this->Query_ID = pg_Exec($this->Link_ID, $Query_String);
-    $this->Row   = 0;
-
-    $this->Error = pg_ErrorMessage($this->Link_ID);
-    $this->Errno = ($this->Error == "")?0:1;
-    if (!$this->Query_ID) {
-      $this->halt("Invalid SQL: ".$Query_String);
-    }
-
-    return $this->Query_ID;
-  }
-  
-  function next_record() {
-    $this->Record = @pg_fetch_array($this->Query_ID, $this->Row++);
-    
-    $this->Error = pg_ErrorMessage($this->Link_ID);
-    $this->Errno = ($this->Error == "")?0:1;
-
-    $stat = is_array($this->Record);
-    if (!$stat && $this->Auto_Free) {
-      pg_freeresult($this->Query_ID);
-      $this->Query_ID = 0;
-    }
-    return $stat;
-  }
-
-  function seek($pos) {
-    $this->Row = $pos;
-  }
-
-  function lock($table, $mode = "write") {
-    if ($mode == "write") {
-      $result = pg_Exec($this->Link_ID, "lock table $table");
-    } else {
-      $result = 1;
-    }
-    return $result;
-  }
-  
-  function unlock() {
-    return pg_Exec($this->Link_ID, "commit");
-  }
-
-
-  /* public: sequence numbers */
-  function nextid($seq_name) {
-    $this->connect();
-
-    if ($this->lock($this->Seq_Table)) {
-      /* get sequence number (locked) and increment */
-      $q  = sprintf("select nextid from %s where seq_name = '%s'",
-                $this->Seq_Table,
-                $seq_name);
-      $id  = @pg_Exec($this->Link_ID, $q);
-      $res = @pg_Fetch_Array($id, 0);
-      
-      /* No current value, make one */
-      if (!is_array($res)) {
-        $currentid = 0;
-        $q = sprintf("insert into %s values('%s', %s)",
-                 $this->Seq_Table,
-                 $seq_name,
-                 $currentid);
-        $id = @pg_Exec($this->Link_ID, $q);
-      } else {
-        $currentid = $res["nextid"];
-      }
-      $nextid = $currentid + 1;
-      $q = sprintf("update %s set nextid = '%s' where seq_name = '%s'",
-               $this->Seq_Table,
-               $nextid,
-               $seq_name);
-      $id = @pg_Exec($this->Link_ID, $q);
-      $this->unlock();
-    } else {
-      $this->halt("cannot lock ".$this->Seq_Table." - has it been created?");
-      return 0;
-    }
-    return $nextid;
-  }
-
-
-
-  function metadata($table) {
-    $count = 0;
-    $id    = 0;
-    $res   = array();
-
-    $this->connect();
-    $id = pg_exec($this->Link_ID, "select * from $table");
-    if ($id < 0) {
-      $this->Error = pg_ErrorMessage($id);
-      $this->Errno = 1;
-      $this->halt("Metadata query failed.");
-    }
-    $count = pg_NumFields($id);
-    
-    for ($i=0; $i<$count; $i++) {
-      $res[$i]["table"] = $table;
-      $res[$i]["name"]  = pg_FieldName  ($id, $i); 
-      $res[$i]["type"]  = pg_FieldType  ($id, $i);
-      $res[$i]["len"]   = pg_FieldSize  ($id, $i);
-      $res[$i]["flags"] = "";
-    }
-    
-    pg_FreeResult($id);
-    return $res;
-  }
-
-  function affected_rows() {
-    return pg_cmdtuples($this->Query_ID);
-  }
-
-  function num_rows() {
-    return pg_numrows($this->Query_ID);
-  }
-
-  function num_fields() {
-    return pg_numfields($this->Query_ID);
-  }
-
-  function nf() {
-    return $this->num_rows();
-  }
-
-  function np() {
-    print $this->num_rows();
-  }
-
-  function f($Name) {
-    return $this->Record[$Name];
-  }
-
-  function p($Name) {
-    print $this->Record[$Name];
-  }
-
-  function halt($msg) {
-    printf("</td></tr></table><b>Database error:</b> %s<br>\n", $msg);
-    printf("<b>PostgreSQL Error</b>: %s (%s)<br>\n",
-      $this->Errno,
-      $this->Error);
-    die("Session halted.");
-  }
-
-  function table_names() {
-    $this->query("select relname from pg_class where relkind = 'r' and not relname like 'pg_%'");
-    $i=0;
-    while ($this->next_record())
-     {
-      $return[$i]["table_name"]= $this->f(0);
-      $return[$i]["tablespace_name"]=$this->Database;
-      $return[$i]["database"]=$this->Database;
-      $i++;
-     }
-    return $return;
-  }
-}
 ?>
