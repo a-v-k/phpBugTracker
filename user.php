@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.24 2002/04/03 01:00:52 bcurtis Exp $
+// $Id: user.php,v 1.25 2002/04/24 07:06:23 firma Exp $
 
 include 'include.php';
 
@@ -43,8 +43,13 @@ function change_bug_list_columns($column_list) {
 function change_password($pass1, $pass2) {
 	global $t, $db, $u, $STRING;
 	
-	if (!$pass1 = trim($pass1)) $error = $STRING['givepassword'];
-	elseif ($pass1 != $pass2) $error = $STRING['passwordmatch'];
+	if (!$pass1 = trim($pass1)) {
+	    $error = $STRING['givepassword'];
+	} elseif ($pass1 != $pass2) {
+	    $error = $STRING['passwordmatch'];
+	} else {
+	    $error = false;
+	}
 	
 	if ($error) {
 		show_preferences_form($error);
