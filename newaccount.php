@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.15 2001/09/01 15:44:20 mohni Exp $
+// $Id: newaccount.php,v 1.16 2001/09/03 17:03:55 bcurtis Exp $
 
 include 'include.php'; 
 
@@ -28,7 +28,7 @@ function do_form() {
 	global $q, $t, $login, $email, $firstname, $lastname, $STRING, $now, $u;
 	
 	if (!EMAIL_IS_LOGIN && !$login = trim($login)) 
-		$error = $STRING['loginused'];
+		$error = $STRING['givelogin'];
 	elseif (!$email or !valid_email($email)) 
 		$error = $STRING['giveemail'];
 	elseif ($q->grab_field("select user_id from ".TBL_AUTH_USER." where email = '$email' or login = '$login'"))
