@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: severity.php,v 1.11 2001/10/06 03:53:33 bcurtis Exp $
+// $Id: severity.php,v 1.12 2001/10/30 05:19:54 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -36,9 +36,13 @@ function do_form($severityid = 0) {
   if ($error) { list_items($severityid, $error); return; }
 
   if (!$severityid) {
-    $q->query("insert into ".TBL_SEVERITY." (severity_id, severity_name, severity_desc, sort_order, severity_color) values (".$q->nextid(TBL_SEVERITY).", '$fname', '$fdescription', '$fsortorder', '$fcolor')");
+    $q->query("insert into ".TBL_SEVERITY.
+			" (severity_id, severity_name, severity_desc, sort_order, severity_color) 
+			values (".$q->nextid(TBL_SEVERITY).", '$fname', '$fdescription', '$fsortorder', '$fcolor')");
   } else {
-    $q->query("update ".TBL_SEVERITY." set severity_name = '$fname', severity_desc = '$fdescription', sort_order = '$fsortorder', severity_color = '$fcolor' where severity_id = '$severityid'");
+    $q->query("update ".TBL_SEVERITY." set severity_name = '$fname', 
+			severity_desc = '$fdescription', sort_order = '$fsortorder', 
+			severity_color = '$fcolor' where severity_id = '$severityid'");
   }
   header("Location: $me?");
 }
@@ -47,7 +51,8 @@ function show_form($severityid = 0, $error = '') {
   global $q, $me, $t, $_pv, $STRING;
 
   if ($severityid && !$error) {
-    $row = $q->grab("select * from ".TBL_SEVERITY." where severity_id = '$severityid'");
+    $row = $q->grab("select * from ".TBL_SEVERITY.
+			" where severity_id = '$severityid'");
     $t->set_var(array(
       'action' => $STRING['edit'],
       'fseverityid' => $row['severity_id'],
@@ -77,7 +82,8 @@ function list_items($severityid = 0, $error = '') {
   $t->set_block('content','row','rows');
 
   if (!$order) { $order = 'sort_order'; $sort = 'asc'; }
-  $nr = $q->query("select count(*) from ".TBL_SEVERITY." where severity_id = '$severityid' order by $order $sort");
+  $nr = $q->query("select count(*) from ".TBL_SEVERITY.
+		" where severity_id = '$severityid' order by $order $sort");
 
   list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
     "order=$order&sort=$sort");
@@ -88,7 +94,9 @@ function list_items($severityid = 0, $error = '') {
     'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
     'records' => $nr));
 
-  $q->query("select * from ".TBL_SEVERITY." order by $order $sort limit $llimit, $selrange");
+  $q->limit_query("select * from ".TBL_SEVERITY." order by $order $sort", 
+		$selrange, $llimit);
+
 
   if (!$q->num_rows()) {
     $t->set_var('rows',"<tr><td>{$STRING['noseverities']}</td></tr>");

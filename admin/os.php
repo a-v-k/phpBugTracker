@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: os.php,v 1.14 2001/10/05 04:22:46 bcurtis Exp $
+// $Id: os.php,v 1.15 2001/10/30 05:19:54 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -83,7 +83,8 @@ function list_items($osid = 0, $error = '') {
     'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
     'records' => $nr));
 
-  $q->query("select * from ".TBL_OS." order by $order $sort limit $llimit, $selrange");
+  $q->limit_query("select * from ".TBL_OS." order by $order $sort", 
+		$selrange, $llimit);
 
   if (!$q->num_rows()) {
     $t->set_var('rows',"<tr><td>{$STRING['nooses']}</td></tr>");

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.29 2001/10/12 04:19:31 bcurtis Exp $
+// $Id: user.php,v 1.30 2001/10/30 05:19:54 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -183,9 +183,9 @@ function list_items($userid = 0, $error = '') {
     'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
     'records' => $nr));
 
-  $q->query("select user_id, concat(first_name,'&nbsp;',last_name) as fullname,
+  $q->limit_query("select user_id, concat(first_name,'&nbsp;',last_name) as fullname,
     email, login, created_date, active from ".TBL_AUTH_USER
-    ." order by $order $sort limit $llimit, $selrange");
+    ." order by $order $sort", $selrange, $llimit);
 
   if (!$q->num_rows()) {
     $t->set_var('rows',"<tr><td>{$STRING['nousers']}</td></tr>");

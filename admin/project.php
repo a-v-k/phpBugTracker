@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.23 2001/10/12 04:19:31 bcurtis Exp $
+// $Id: project.php,v 1.24 2001/10/30 05:19:54 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -280,7 +280,8 @@ function list_projects() {
     'TITLE' => $TITLE['project']
     ));
 
-  $q->query("select * from ".TBL_PROJECT." order by $order $sort limit $llimit, $selrange");
+  $q->limit_query("select * from ".TBL_PROJECT." order by $order $sort", 
+		$selrange, $llimit);
 
   if (!$q->num_rows()) {
     $t->set_var('rows',"<tr><td>{$STRING['noprojects']}</td></tr>");

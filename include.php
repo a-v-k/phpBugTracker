@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.67 2001/10/30 04:04:08 bcurtis Exp $
+// $Id: include.php,v 1.68 2001/10/30 05:19:53 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -35,6 +35,19 @@ class dbclass extends DB_Sql {
   var $User = DB_USER;
   var $Password = DB_PASSWORD;
 	var $Seg_Table = TBL_DB_SEQUENCE;
+	
+	// Attempt to handle different limit syntax
+	function limit_query($q_string, $limit, $offset = 0) {
+		if ($offset) {
+			if (DB_TYPE == 'pgsql') {
+				$this->query("$q_string limit $limit offset $offset");
+			} else {
+				$this->query("$q_string limit $offset, $limit");
+			}
+		} else {
+			$this->query("$q_string limit $limit");
+		}
+	}		
 
   function grab($q_string = '') {
     if ($q_string) $this->query($q_string);

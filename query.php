@@ -20,14 +20,15 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.34 2001/10/30 03:57:43 bcurtis Exp $
+// $Id: query.php,v 1.35 2001/10/30 05:19:54 bcurtis Exp $
 
 include 'include.php';
 
 function delete_saved_query($queryid) {
 	global $q, $u, $me;
 	
-	$q->query("delete from ".TBL_SAVED_QUERY." where user_id = $u and saved_query_id = $queryid");
+	$q->query("delete from ".TBL_SAVED_QUERY." where user_id = $u 
+		and saved_query_id = $queryid");
 	header("Location: $me?op=query");
 }
 
@@ -41,11 +42,13 @@ function show_query() {
 	$t->set_block('savequeryblock','row','rows');
 	 
 	// Build the javascript-powered select boxes
-	$q->query("select project_id, project_name from ".TBL_PROJECT." where active = 1 order by project_name");
+	$q->query("select project_id, project_name from ".TBL_PROJECT.
+		" where active = 1 order by project_name");
 	while (list($pid, $pname) = $q->grab()) {
 		// Version array
 		$js .= "versions['$pname'] = new Array(new Array('','All'),";
-		$nq->query("select version_name, version_id from ".TBL_VERSION." where project_id = $pid and active");
+		$nq->query("select version_name, version_id from ".TBL_VERSION.
+			" where project_id = $pid and active");
 		while (list($version,$vid) = $nq->grab()) {
 			$js .= "new Array($vid,'$version'),";
 		}
@@ -54,7 +57,8 @@ function show_query() {
 		
 		// Component array
 		$js .= "components['$pname'] = new Array(new Array('','All'),";
-		$nq->query("select component_name, component_id from ".TBL_COMPONENT." where project_id = $pid and active");
+		$nq->query("select component_name, component_id from ".TBL_COMPONENT.
+			" where project_id = $pid and active");
 		while (list($comp,$cid) = $nq->grab()) {
 			$js .= "new Array($cid,'$comp'),";
 		}
@@ -102,7 +106,8 @@ function build_query($assignedto, $reportedby, $open) {
 	
 	// Open bugs assigned to the user -- a hit list
 	if ($assignedto || $reportedby) {
-		$q->query("select status_id from ".TBL_STATUS." where status_name ".($open ? '' : 'not ')."in ('Unconfirmed', 'New', 'Assigned', 'Reopened')");
+		$q->query("select status_id from ".TBL_STATUS." where status_name ".
+			($open ? '' : 'not ')."in ('Unconfirmed', 'New', 'Assigned', 'Reopened')");
 		while ($statusid = $q->grab_field()) $status[] = $statusid;
 		$query[] = 'bug.status_id in ('.delimit_list(',',$status).')';
 		if ($assignedto) {
@@ -169,7 +174,8 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	// Save the query if requested
 	if ($savedqueryname) {
 		$savedquerystring = ereg_replace('&savedqueryname=.*(&?)', '\\1', $GLOBALS['QUERY_STRING']);
-		$q->query("insert into ".TBL_SAVED_QUERY." (saved_query_id, user_id, saved_query_name, saved_query_string)"
+		$q->query("insert into ".TBL_SAVED_QUERY.
+			" (saved_query_id, user_id, saved_query_name, saved_query_string)"
 			." values (".$q->nextid(TBL_SAVED_QUERY).", $u, '$savedqueryname', '$savedquerystring')");
 	}
 	if (!$order) { 
@@ -195,7 +201,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'project' => build_select('project'),
 		'TITLE' => $TITLE['buglist']));
 	
-	$q->query("select bug.*, reporter.login as reporter, owner.login as owner, 
+	$q->limit_query("select bug.*, reporter.login as reporter, owner.login as owner, 
 		lastmodifier.login as lastmodifier, project_name, severity_name, 
 		status_name, os_name, version_name, component_name, resolution_name, severity_color"
 		." from ".TBL_BUG." bug left join ".TBL_RESOLUTION." resolution using (resolution_id),"
@@ -208,7 +214,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		."  and bug.os_id = os.os_id and bug.version_id = version.version_id"
 		."  and bug.component_id = component.component_id and bug.project_id = project.project_id "
 		. ($querystring != '' ? "and $querystring " : '')
-		." order by $order $sort limit $llimit, $selrange");
+		." order by $order $sort", $selrange, $llimit);
 				
 	$headers = array(
 		'bug_id' => 'bug_id',
