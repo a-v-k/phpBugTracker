@@ -43,6 +43,8 @@ function grab_data($restricted_projects) {
 }
 
 function build_image($restricted_projects) {
+	global $STRING;
+	
 	error_reporting(0); // Force this, just in case
 	include_once JPGRAPH_PATH.'jpgraph.php';
 	include_once JPGRAPH_PATH.'jpgraph_pie.php';
@@ -57,6 +59,10 @@ function build_image($restricted_projects) {
 			$alts[] = $stat['name'];
 			$totalbugs += $stat['count'];
 		}
+	}
+	
+	if (!$totalbugs) {
+		return $STRING['nobugs'];
 	}
 	
 	// Create the Pie Graph. 
