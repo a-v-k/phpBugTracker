@@ -34,20 +34,20 @@ $t->set_var('TITLE',$TITLE['home']);
 if (USE_JPGRAPH) {
 	$t->set_var('sblock', '<img src="images.php" align="right">');
 } else {
-	$q->query("select * from Status order by SortOrder");
+	$q->query("select * from status order by sort_order");
 	while ($row = $q->grab()) {
-		$stats[$row['StatusID']]['Name'] = $row['Name'];
+		$stats[$row['status_id']]['name'] = $row['status_name'];
 	}
-	$q->query("select Status, count(Status) as Count from Bug group by Status");
+	$q->query("select status_id, count(status_id) as count from bug group by status_id");
 	while ($row = $q->grab()) {
-		$stats[$row['Status']]['Count'] = $row['Count'];
+		$stats[$row['status_id']]['count'] = $row['count'];
 	}
 	foreach ($stats as $stat) {
 		$t->set_var(array(
-			'status' => $stat['Name'],
-			'count' => $stat['Count'] ? $stat['Count'] : 0
+			'status' => $stat['name'],
+			'count' => $stat['count'] ? $stat['count'] : 0
 			));
-		$total += $stat['Count'];
+		$total += $stat['count'];
 		$t->parse('rows','row',true);
 	}
 	$t->set_var(array(
