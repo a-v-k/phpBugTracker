@@ -1,0 +1,11 @@
+Upgrading from 0.3.x to 0.4.0
+-----------------------------
+
+The admin templates have been moved from admin/templates/default to 
+templates/default/admin, so if you have customized your templates you'll
+want to move the admin templates to the new location.
+
+The configure_db script can be run with the -u option to create the file
+createdb.sql which will have the SQL commands necessary to update your database.
+This release includes the creation of a new table, called configuration by
+default, which stores the configuration information for the bug tracker.
