@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: configure.php,v 1.9 2002/05/18 03:00:00 bcurtis Exp $
+// $Id: configure.php,v 1.10 2002/10/21 20:02:08 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -30,14 +30,17 @@ $perm->check('Admin');
 
 if (isset($_pv['submit'])) {
 	foreach ($_pv as $k => $v) {
+		// Check the jpgraph path to make sure it has a trailing /
+		if ($k == 'JPGRAPH_PATH' and substr($v, -1) != '/') $v .= '/';
+
 		$db->query('update '.TBL_CONFIGURATION." set varvalue = '$v' where varname = '$k'");
-		
+
 		// Refresh the template variable now instead of waiting for the next page load.
 		if ($k == 'STYLE') {
 			$t->assign('STYLE', $v);
 		}
 	}
-} 
+}
 
 $t->assign('vars',  $db->getAll('select * from '.TBL_CONFIGURATION));
 $t->wrap('admin/configure.html', 'configuration');
