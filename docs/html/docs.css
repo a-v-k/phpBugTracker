@@ -22,3 +22,7 @@ H1.TITLE {
 .CAPTION  {
 	text-align: center;
 	}
+
+TT {
+	font-family: "Tahoma", "Lucida", "Helvetica", "Arial", "Sans-Serif";
+	}
