@@ -20,53 +20,57 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.18 2001/10/12 04:19:31 bcurtis Exp $
+// $Id: newaccount.php,v 1.19 2001/10/24 03:03:58 bcurtis Exp $
 
 include 'include.php'; 
 
 function do_form() {
-	global $q, $t, $login, $email, $firstname, $lastname, $STRING, $now, $u;
+	global $q, $t, $_pv, $STRING, $now, $u;
 	
-	if (!EMAIL_IS_LOGIN && !$login = trim($login)) 
+	if (!EMAIL_IS_LOGIN && !$_pv['login'] = trim($_pv['login'])) 
 		$error = $STRING['givelogin'];
-	elseif (!$email or !valid_email($email)) 
+	elseif (!$_pv['email'] or !valid_email($_pv['email'])) 
 		$error = $STRING['giveemail'];
-	elseif ($q->grab_field("select user_id from ".TBL_AUTH_USER." where email = '$email' or login = '$login'"))
+	elseif ($q->grab_field("select user_id from ".TBL_AUTH_USER." where email = '{$_pv['email']}' or login = '{$_pv['login']}'"))
 		$error = $STRING['loginused'];
 	if ($error) { 
 		show_form($error);
 		return;
 	}
-	$firstname = htmlspecialchars($firstname);
-	$lastname = htmlspecialchars($lastname);
+	$firstname = htmlspecialchars($_pv['firstname']);
+	$lastname = htmlspecialchars($_pv['lastname']);
 	$password = genpassword(10);
 	if (ENCRYPT_PASS) {
 		$mpassword = md5($password);
 	} else {
 		$mpassword = $password;
 	}
-	if (EMAIL_IS_LOGIN) $login = $email;
+	if (EMAIL_IS_LOGIN) {
+		$login = $_pv['email'];
+	} else {
+		$login = $_pv['login'];
+	}
 	$user_id = $q->nextid(TBL_AUTH_USER);
 	$q->query("insert into ".TBL_AUTH_USER." (user_id, login, first_name, last_name, email, password, active, created_date, last_modified_date)"
-	         ." values ($user_id, '$login', '$firstname', '$lastname', '$email', '$mpassword', 1, $now, $now)");
+	         ." values ($user_id, '$login', '$firstname', '$lastname', '{$_pv['email']}', '$mpassword', 1, $now, $now)");
 	$q->query("insert into ".TBL_USER_GROUP." (user_id, group_id)"
 	         ." select $user_id, group_id from ".TBL_AUTH_GROUP." where group_name = 'user'"); 
-	mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
+	mail($_pv['email'], $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
 		$password),	sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMIN_EMAIL, $STRING['lang_charset']));
 	$t->set_file('content','newaccountsuccess.html');
 }
 
 function show_form($error = '') {
-	global $q, $t, $login, $email, $firstname, $lastname;
+	global $q, $t, $_pv;
 	
 	$t->set_file('content','newaccount.html');
 	$t->set_block('content', 'loginentryarea', 'loginarea');
 	$t->set_var(array(
 		'error' => $error,
-		'login' => stripslashes($login),
-		'email' => $email,
-		'firstname' => stripslashes($firstname),
-		'lastname' => stripslashes($lastname)
+		'login' => stripslashes($_pv['login']),
+		'email' => $_pv['email'],
+		'firstname' => stripslashes($_pv['firstname']),
+		'lastname' => stripslashes($_pv['lastname'])
 		));
 		
 	// Show the login field if necessary
