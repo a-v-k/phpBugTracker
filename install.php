@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.29 2002/06/13 14:26:34 firma Exp $
+// $Id: install.php,v 1.30 2002/07/29 12:26:18 bcurtis Exp $
 
 // Location of smarty templates class
 define ('SMARTY_PATH', '');
@@ -168,7 +168,7 @@ function create_tables() {
     <br>
     Please check these details are correct and that the database already exists then retry.
     </div>
-    ');
+    <br>'.$db->message.'<br>'.$db->userinfo);
   }
 
 
