@@ -2,8 +2,8 @@
 	{include file="header-popup.html" page_title="Add Attachment"}
 {else}
 	{include file="header.html" page_title="Add Attachment"}
-{/if}	
-<form enctype="multipart/form-data" action="{$SCRIPT_NAME}" method="post">
+{/if}
+<form enctype="multipart/form-data" action="{$smarty.server.PHP_SELF}" method="post">
 <input type="hidden" name="bugid" value="{$bugid}">
 <input type="hidden" name="use_js" value="{$smarty.request.use_js}">
 <table border="0" align="center">
@@ -48,4 +48,4 @@
 	{include file="admin/footer-popup.html"}
 {else}
 	{include file="admin/footer.html"}
-{/if}	
+{/if}

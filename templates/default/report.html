@@ -1,7 +1,7 @@
 {include file="header.html" page_title="Home"}
-<form action="{$SCRIPT_NAME}">
+<form action="{$smarty.server.PHP_SELF}">
 Bug statistics for 
-<select name="projectid" onChange="document.location.href='{$SCRIPT_NAME}?projectid='+this.options[this.selectedIndex].value">
+<select name="projectid" onChange="document.location.href='{$smarty.server.PHP_SELF}?projectid='+this.options[this.selectedIndex].value">
 	<option value="0">All projects</option>
 	{build_select box=project selected=$smarty.get.projectid}
 </select>

@@ -11,7 +11,7 @@
 		&nbsp;<b>{$page_title}</b>
 		<hr size="1">
 		{if $error}<div class="error">{$error}</div>{/if}
-		<form action="{$SCRIPT_NAME}" method="post">
+		<form action="{$smarty.server.PHP_SELF}" method="post">
 		<table border="0">
 			<input type="hidden" name="do" value="version">
 			<input type="hidden" name="versionid" value="{$version_id}">

@@ -219,10 +219,10 @@
 </form>
 <div align="center">
 {if !empty($error.vote)}<div class="error">{$error.vote}</div>{/if}
-<b><a href="{$SCRIPT_NAME}?op=vote&bugid={$bug_id}" onClick="if ({$already_voted}) {literal}{ alert ('{/literal}{$STRING.already_voted}{literal}'); return false; }{/literal}">Vote for this bug</a></b> | 
-<b><a href="{$SCRIPT_NAME}?op=viewvotes&bugid={$bug_id}">View votes ({$num_votes}) for this bug</a></b> | 
-<b><a href="{$SCRIPT_NAME}?op=history&bugid={$bug_id}">View bug activity</a></b> | 
-<b><a href="{$SCRIPT_NAME}?op=print&bugid={$bug_id}">Printable view</a></b>
+<b><a href="{$smarty.server.PHP_SELF}?op=vote&bugid={$bug_id}" onClick="if ({$already_voted}) {literal}{ alert ('{/literal}{$STRING.already_voted}{literal}'); return false; }{/literal}">Vote for this bug</a></b> | 
+<b><a href="{$smarty.server.PHP_SELF}?op=viewvotes&bugid={$bug_id}">View votes ({$num_votes}) for this bug</a></b> | 
+<b><a href="{$smarty.server.PHP_SELF}?op=history&bugid={$bug_id}">View bug activity</a></b> | 
+<b><a href="{$smarty.server.PHP_SELF}?op=print&bugid={$bug_id}">Printable view</a></b>
 </div>
 <br>
 <br>

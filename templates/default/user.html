@@ -1,7 +1,7 @@
 {include file="header.html" page_title="User Page"}
 <table border="0" cellpadding="0" cellspacing="0" width="600">
 	<td width="300" valign="top">
-		<form action="{$SCRIPT_NAME}" method="post">
+		<form action="{$smarty.server.PHP_SELF}" method="post">
 		<input type="hidden" name="do" value="changepassword">
 		<table border="0" cellpadding="0" cellspacing="0" width="300">
 			<tr>
@@ -34,7 +34,7 @@
 		</form>
 	</td>
 	<td width="300" valign="top">
-		<form action="{$SCRIPT_NAME}" method="post">
+		<form action="{$smarty.server.PHP_SELF}" method="post">
 		<input type="hidden" name="do" value="changeprefs">
 		<table border="0" cellpadding="0" cellspacing="0" width="300">
 			<tr>
@@ -61,7 +61,7 @@
 	</td>
 </table>
 <br>
-<form action="{$SCRIPT_NAME}" method="post">
+<form action="{$smarty.server.PHP_SELF}" method="post">
 <input type="hidden" name="do" value="changecolumnlist">
 	<table border="0" cellpadding="0" cellspacing="0" width="300">
 		<td width="300">
@@ -102,7 +102,7 @@
 					<tr{if $smarty.section.vote.iteration is even} class="alt"{/if}>
 						<td align="center"><a href="bug.php?op=show&bugid={$votes[vote].bug_id}">#{$votes[vote].bug_id}</a></td>
 						<td align="center">{$votes[vote].created_date|date:DATE_FORMAT}</td>
-						<td align="center"><a href="{$SCRIPT_NAME}?op=delvote&bugid={$votes[vote].bug_id}" onClick="return confirm('Are you sure you want to delete this vote?');">Delete</a></td>
+						<td align="center"><a href="{$smarty.server.PHP_SELF}?op=delvote&bugid={$votes[vote].bug_id}" onClick="return confirm('Are you sure you want to delete this vote?');">Delete</a></td>
 					</tr>
 					{/section}
 				</table>

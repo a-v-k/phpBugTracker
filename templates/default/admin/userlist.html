@@ -2,7 +2,7 @@
 
 <script language="JavaScript">
 <!--
-	var me = '{$SCRIPT_NAME}';
+	var me = '{$smarty.server.PHP_SELF}';
 	{literal}
 		
 	function popupUser(id) {
@@ -14,11 +14,11 @@
 <table border="0" width="100%">
 	<tr>
 		<td valign="top">
-			<b>&nbsp;User List</b> - <a href="{$SCRIPT_NAME}?op=edit&user_id=0&filter={$filter}" onClick="popupUser(0); return false;">{$STRING.addnew} User</a>
+			<b>&nbsp;User List</b> - <a href="{$smarty.server.PHP_SELF}?op=edit&user_id=0&filter={$filter}" onClick="popupUser(0); return false;">{$STRING.addnew} User</a>
 			<hr size="1">
 			<form>
 			<div align="center">
-				<select name="filter" onChange="document.location.href='{$SCRIPT_NAME}?filter=' + this.options[this.selectedIndex].value">{build_select box=user_filter selected=$filter}</select> 
+				<select name="filter" onChange="document.location.href='{$smarty.server.PHP_SELF}?filter=' + this.options[this.selectedIndex].value">{build_select box=user_filter selected=$filter}</select> 
 				<input type="submit" value="Filter">
 			</div>
 			</form>
@@ -31,7 +31,7 @@
 				</tr>
 				{section name=user loop=$users}
 				<tr{if $smarty.section.user.iteration is even} class="alt"{/if}>
-					<td><a href="{$SCRIPT_NAME}?op=edit&user_id={$users[user].user_id}&filter={$filter}" onClick="popupUser({$users[user].user_id}); return false;">{$users[user].login|stripslashes}</a></td>
+					<td><a href="{$smarty.server.PHP_SELF}?op=edit&user_id={$users[user].user_id}&filter={$filter}" onClick="popupUser({$users[user].user_id}); return false;">{$users[user].login|stripslashes}</a></td>
 					<td align="center">{$users[user].first_name|stripslashes} {$users[user].last_name|stripslashes}</td>
 					<td align="center">{$users[user].created_date|date:DATE_FORMAT}</td>
 					<td align="center">{if $users[user].active}Yes{else}No{/if}</td>

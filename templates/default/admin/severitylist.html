@@ -2,7 +2,7 @@
 
 <script language="JavaScript">
 <!--
-	var me = '{$SCRIPT_NAME}';
+	var me = '{$smarty.server.PHP_SELF}';
 	{literal}
 		
 	function popupSeverity(id) {
@@ -14,7 +14,7 @@
 <table border="0" width="100%">
 	<tr>
 		<td valign="top">
-			<b>&nbsp;Severity List</b> - <a href="{$SCRIPT_NAME}?op=edit&severity_id=0" onClick="popupSeverity(0); return false;">{$STRING.addnew} Severity</a>
+			<b>&nbsp;Severity List</b> - <a href="{$smarty.server.PHP_SELF}?op=edit&severity_id=0" onClick="popupSeverity(0); return false;">{$STRING.addnew} Severity</a>
 			<hr size="1">
 			<table border="0" cellpadding="2" cellspacing="1" width="100%">
 				<tr>
@@ -25,12 +25,12 @@
 				</tr>
 				{section name=severity loop=$severities}
 				<tr{if $smarty.section.severity.iteration is even} class="alt"{/if}>
-					<td><a href="{$SCRIPT_NAME}?op=edit&severity_id={$severities[severity].severity_id}" onClick="popupSeverity({$severities[severity].severity_id}); return false;">{$severities[severity].severity_name|stripslashes}</a></td>
+					<td><a href="{$smarty.server.PHP_SELF}?op=edit&severity_id={$severities[severity].severity_id}" onClick="popupSeverity({$severities[severity].severity_id}); return false;">{$severities[severity].severity_name|stripslashes}</a></td>
 					<td>&nbsp;{$severities[severity].severity_desc}</td>
 					<td align="center">{$severities[severity].sort_order}</td>
 					<td align="center">
 						{if not $severities[severity].bug_count}
-							<a href="{$SCRIPT_NAME}?op=del&severity_id={$severities[severity].severity_id}" onClick="return confirm('Are you sure you want to delete this severity?')">Delete</a>
+							<a href="{$smarty.server.PHP_SELF}?op=del&severity_id={$severities[severity].severity_id}" onClick="return confirm('Are you sure you want to delete this severity?')">Delete</a>
 						{/if}
 					</td>
 				</tr>

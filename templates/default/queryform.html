@@ -224,12 +224,12 @@ function updateMenus(f) {
 				<b>Saved Queries</b>
 				<br>
 				{section name=query loop=$queries}
-					<a href="{$SCRIPT_NAME}?{$queries[query].saved_query_string}">{$queries[query].saved_query_name}</a> (<a href="{$SCRIPT_NAME}?op=delquery&queryid={$queries[query].saved_query_id}" onClick="return confirm('Are you sure you want to delete this saved query?');">Delete</a>)<br>
+					<a href="{$smarty.server.PHP_SELF}?{$queries[query].saved_query_string}">{$queries[query].saved_query_name}</a> (<a href="{$smarty.server.PHP_SELF}?op=delquery&queryid={$queries[query].saved_query_id}" onClick="return confirm('Are you sure you want to delete this saved query?');">Delete</a>)<br>
 				{/section}
 			{/if}
     </form>
 		<br>
-		Go to the <a href="{$SCRIPT_NAME}?op=query">simple query page</a>
+		Go to the <a href="{$smarty.server.PHP_SELF}?op=query">simple query page</a>
 
 {include file="footer.html"}
 
