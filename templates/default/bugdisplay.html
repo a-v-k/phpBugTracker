@@ -1,5 +1,5 @@
 <script type="text/JavaScript">
-<!-- 
+<!--
 	versions = new Array();
 	closedversions = new Array();
 	components = new Array();
@@ -39,7 +39,7 @@
 			f.component_id.selectedIndex = 0;
   	}
 	}
-		
+
 	function popupAtt(id) {
 		window.open('attachment.php?use_js=1&bugid='+id, 'ewin', 'dependent=yes,width=350,height=200,scrollbars=1');
 		return false;
@@ -148,14 +148,14 @@
 {/if}
 		</div></td>
 	</tr><tr>
-	    <td><table border="0" cellpadding="0">
+	    <td><table border="0" cellpadding="0" width="100%">
 		    <tr>
 			<td colspan="2">{$STRING.BUGDISPLAY.Attachments}:</td>
 			<td colspan="3" align="right"><a href="attachment.php?bugid={$bug_id}" onClick="return popupAtt({$bug_id})">{$STRING.BUGDISPLAY.CreateAttachment}</a></td>
 		    </tr><tr>
 			<td colspan="5" height="2" bgcolor="#ffffff"><spacer type="block" height="2" width="2"></td>
 		    </tr><tr>
-			<td width="250" bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.Name}</b></td>
+			<td bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.Name}</b></td>
 			<td width="60" bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.Size}</b></a></td>
 			<td width="150" bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.Type}</b></a></td>
 			<td width="80" bgcolor="#cccccc" align="center"><b>{$STRING.BUGDISPLAY.Created}</b></a></td>
@@ -204,11 +204,11 @@
 	</tr>
     </table>
 </form>
-<div align="center">
+<div align="center" class="bugdisplaylinks">
 {if !empty($error.vote)}<div class="error">{$error.vote}</div>{/if}
-    <b><a href="{$smarty.server.PHP_SELF}?op=vote&bugid={$bug_id}" onClick="if ({$already_voted}) {literal}{ alert ('{/literal}{$STRING.already_voted}{literal}'); return false; }{/literal}">{$STRING.BUGDISPLAY.VoteForThisBug}</a></b> | 
-    <b><a href="{$smarty.server.PHP_SELF}?op=viewvotes&bugid={$bug_id}">{$STRING.BUGDISPLAY.ViewVotes} ({$num_votes}) {$STRING.BUGDISPLAY.ForThisBug}</a></b> | 
-    <b><a href="{$smarty.server.PHP_SELF}?op=history&bugid={$bug_id}">{$STRING.BUGDISPLAY.ViewBugActivity}</a></b> | 
+    <b><a href="{$smarty.server.PHP_SELF}?op=vote&bugid={$bug_id}" onClick="if ({$already_voted}) {literal}{ alert ('{/literal}{$STRING.already_voted}{literal}'); return false; }{/literal}">{$STRING.BUGDISPLAY.VoteForThisBug}</a></b> |
+    <b><a href="{$smarty.server.PHP_SELF}?op=viewvotes&bugid={$bug_id}">{$STRING.BUGDISPLAY.ViewVotes} ({$num_votes}) {$STRING.BUGDISPLAY.ForThisBug}</a></b> |
+    <b><a href="{$smarty.server.PHP_SELF}?op=history&bugid={$bug_id}">{$STRING.BUGDISPLAY.ViewBugActivity}</a></b> |
     <b><a href="{$smarty.server.PHP_SELF}?op=print&bugid={$bug_id}">{$STRING.BUGDISPLAY.PrintableView}</a></b>
 </div>
 <br><br>

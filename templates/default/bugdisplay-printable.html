@@ -1,133 +1,71 @@
-<table border='0' width="100%">
+<table border='0' width="100%" cellspacing="0" cellpadding="0">
 	<tr>
-		<td width="210" colspan="2">
+		<td>
 			Bug <b>#{$bug_id}</b>
 		</td>
-		<td width="210" colspan="2">
-			Reporter: <b>{$reporter|maskemail}</b>
-		</td>
-		<td width="210" colspan="2">
+		<td>
 			Created: <b>{$created_date|date:DATE_FORMAT}</b>
 		</td>
 	</tr>
 	<tr>
 		<td>
-			Project:
+			Reporter: <b>{$reporter|maskemail}</b>
+		</td>
+		<td>Assigned To: <b>{$owner|maskemail}</td>
+	</tr>
+	<tr>
+	  	<td>Status: <b>{$status_name}</b></td>
+	  	<td>Resolution: <b>{$resolution_name}</b></td>
+	</tr>
+	<tr>
+		<td>
+			Project: {$project_name}
 		</td>
 		<td>
-			{$project_name}
-		</td>
-		<td>
-			Component: 
-		</td>
-		<td>
-			{$component_name}
-		</td>
-		<td>
-			Version: 
-		</td>
-		<td>
-			{$version_name}
+			Component: {$component_name}
 		</td>
 	</tr>
 	<tr>
 		<td>
-			Severity: 
+			Version: {$version_name}
 		</td>
 		<td>
-			{$severity_name}
-		</td>
-		<td>
-			Priority: 
-		</td>
-		<td>
-			{$priority}
-		</td>
-		<td>
-			OS: 
-		</td>
-		<td>
-			{$os_name}
+			Severity: {$severity_name}
 		</td>
 	</tr>
 	<tr>
-		<td colspan="6">
-			<hr size="1">
+		<td>
+			Priority: {$priority}
 		</td>
-	</tr>
-</table>
-<table border="0" cellpadding="2" cellspacing="0" width="100%">
-	<tr>
-		<td>Assigned To:</td>
-		<td><b>{$owner|maskemail}</td>
 		<td colspan="2">
-			&nbsp;
-		</td>
-	</tr>
-	<tr>
-  	<td>Status:</td>
-  	<td><b>{$status_name}</b></td>
-  	<td>Summary:</td>
-  	<td>{$title|stripslashes}</td>
-	</tr>
-	<tr>
-  	<td>Resolution:</td>
-  	<td><b>{$resolution_name}</b></td>
-  	<td>URL:</td>
-  	<td>{$url}</td>
-	</tr>
-	<tr>
-  	<td colspan="4">
-			&nbsp;
+			OS: {$os_name}
 		</td>
 	</tr>
 </table>
 <br>
+Summary: {$title|stripslashes}
 <br>
-<table border="0" cellpadding="2" cellspacing="0" width="100%">
-	<tr>
-		<td>
-			Bug Dependencies: {$bug_dependencies}
-			<br>
-			<br>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Comments:
-			<hr size="1">
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<div align="center">
-				<i>----- Posted by {$reporter|maskemail} at {$created_date|date:TIME_FORMAT} on {$created_date|date:DATE_FORMAT} -----</i>
-				<br>
-				<br>
-			</div>
-			{$description|stripslashes|format_comments|nl2br}
-			<br>
-			<br>
-			<br>
-		</td>
-	</tr>
-	{section name=comment loop=$comments}
-	<tr>
-		<td>
-			<div align="center">
-				<i>----- Posted by {$comments[comment].login|maskemail} at {$comments[comment].created_date|date:TIME_FORMAT} on {$comments[comment].created_date|date:DATE_FORMAT}-----</i>
-				<br>
-				<br>
-			</div>
-			{$comments[comment].comment_text|stripslashes|format_comments|nl2br}
-			<br>
-			<br>
-			<br>
-		</td>
-	</tr>
-	{/section}
-</table>
+URL: {$url}
 <br>
-<a href="{$smarty.server.PHP_SELF}?op=show&bugid={$bug_id}">Back to bug #{$bug_id}</a>
+Bug Dependencies: {$bug_dependencies}
+<br>
+<br>
+Comments:
+<hr size="1">
+<i>----- Posted by {$reporter|maskemail} at {$created_date|date:TIME_FORMAT} on {$created_date|date:DATE_FORMAT} -----</i>
+<br>
+{$description|stripslashes|format_comments|nl2br}
+<br>
+<br>
+{section name=comment loop=$comments}
+<i>----- Posted by {$comments[comment].login|maskemail} at {$comments[comment].created_date|date:TIME_FORMAT} on {$comments[comment].created_date|date:DATE_FORMAT}-----</i>
+<br>
+{$comments[comment].comment_text|stripslashes|format_comments|nl2br}
+<br>
+<br>
+{/section}
+
+<br>
+<a class="bugdisplaylinks" href="{$smarty.server.PHP_SELF}?op=show&bugid={$bug_id}">Back to bug #{$bug_id}</a>
 <br>
 <br>
