@@ -8,7 +8,7 @@ BEGIN;
 --
 -- TEMPLATE: This is a template for configure_db -- not for creating the database!
 --
--- $Id: postgres.sql.in,v 1.1 2001/09/11 03:02:13 bcurtis Exp $
+-- $Id: pgsql.in,v 1.1 2001/09/15 16:22:13 bcurtis Exp $
 
 create database BugTracker;
 use BugTracker;
