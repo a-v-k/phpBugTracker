@@ -1,3 +1,8 @@
+-- 0.8.1 -- 13 Apr 2002
+: Fixed bugs with version and component creation.
+: Bug fixed with displaying both created date and last modified date in the bug
+  list.
+
 -- 0.8.0 -- 11 Apr 2002
 : Switched database abstraction layer to PEAR::DB.
 : Added bug dependencies.
