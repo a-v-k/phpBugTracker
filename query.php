@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.72 2002/05/08 12:59:13 bcurtis Exp $
+// $Id: query.php,v 1.73 2002/05/18 02:59:32 bcurtis Exp $
 
 include 'include.php';
 
@@ -42,9 +42,9 @@ function show_query() {
 			$t->assign('queries', 
 				$db->getAll("select * from ".TBL_SAVED_QUERY." where user_id = '$u'"));
 		}
-		$t->display('queryform.html');
+		$t->wrap('queryform.html', 'bugquery');
 	} else { // or show the simple one
-		$t->display('queryform-simple.html');
+		$t->wrap('queryform-simple.html', 'bugquery');
 	}
 }
 
@@ -275,7 +275,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		$order, $sort), $llimit, $selrange)));
 				
 	sorting_headers($me, $headers, $order, $sort, "page=$page");
-	$t->display('buglist.html');
+	$t->wrap('buglist.html', 'buglist');
 }
 
 $reportedby = !empty($_gv['reportedby']) ? $_gv['reportedby'] : 0;

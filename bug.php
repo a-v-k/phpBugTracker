@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.105 2002/05/16 11:01:02 firma Exp $
+// $Id: bug.php,v 1.106 2002/05/18 02:59:32 bcurtis Exp $
 
 include 'include.php';
 
@@ -33,7 +33,7 @@ function vote_view($bug_id) {
 		'from '.TBL_AUTH_USER.' u, '.TBL_BUG_VOTE." v ".
 		"where u.user_id = v.user_id and bug_id = $bug_id ".
 		'order by v.created_date'));
-	$t->display('bugvotes.html');
+	$t->wrap('bugvotes.html', 'bugvotes');
 }
 
 ///
@@ -113,7 +113,7 @@ function show_history($bugid) {
   }
 
   $t->assign('history', $db->getAll(sprintf($QUERY['bug-history'], $bugid)));
-  $t->display('bughistory.html');
+  $t->wrap('bughistory.html', 'bughistory');
 }
 
 ///
@@ -278,10 +278,10 @@ function update_bug($bugid = 0) {
 
         if (($v == 'http://') || ($v == 'https://')) {
           $v = '';
-	} elseif (($v) && (strtolower(substr($v,0,7)) != 'http://') && (strtolower(substr($v,0,8)) != 'https://') && (strtolower(substr($v,0,6)) != 'ftp://')) {
-	  $v = 'http://'.$v;
-	}
-	$url = $v;
+        } elseif (($v) && (strtolower(substr($v,0,7)) != 'http://') && (strtolower(substr($v,0,8)) != 'https://') && (strtolower(substr($v,0,6)) != 'ftp://')) {
+          $v = 'http://'.$v;
+        }
+        $url = $v;
       }
 						
       if (isset($buginfo[$k]) && stripslashes($buginfo[$k]) != stripslashes($v)) {
@@ -470,7 +470,7 @@ function show_form($bugid = 0, $error = '') {
 			'projectname' => $projectname
 			));
   }
-  $t->display('bugform.html');
+  $t->wrap('bugform.html', 'enterbug');
 }
 
 function show_bug_printable($bugid) {
@@ -496,7 +496,7 @@ function show_bug_printable($bugid) {
     .' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER
     ." where bug_id = $bugid and c.created_by = user_id order by c.created_date"));
 	
-	$t->display('bugdisplay-printable.html');
+	$t->wrap('bugdisplay-printable.html', 'viewbug');
 }
 
 ///
@@ -587,7 +587,7 @@ function show_bug($bugid = 0, $error = array()) {
     	." where bug_id = $bugid and c.created_by = user_id order by c.created_date")
 		));
 	
-	$t->display('bugdisplay.html');
+	$t->wrap('bugdisplay.html', 'viewbug');
 }
 
 function show_projects() {
@@ -616,7 +616,7 @@ function show_projects() {
       break;
     default :
 			$t->assign('projects', $projects);
-			$t->display('projectlist.html');
+			$t->wrap('projectlist.html', 'enterbug');
   }
 }
 

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: severity.php,v 1.23 2002/04/09 20:44:52 bcurtis Exp $
+// $Id: severity.php,v 1.24 2002/05/18 03:00:00 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -86,7 +86,7 @@ function show_form($severityid = 0, $error = '') {
  		$t->assign($_pv);
 	}
 	$t->assign('error', $error);
-	$t->display('admin/severity-edit.html');
+	$t->wrap('admin/severity-edit.html', ($severityid ? 'editseverity' : 'addseverity'));
 }
 
 
@@ -120,7 +120,7 @@ function list_items($severityid = 0, $error = '') {
 
 	sorting_headers($me, $headers, $order, $sort);
 
-	$t->display('admin/severitylist.html');
+	$t->wrap('admin/severitylist.html', 'severity');
 }
 
 $perm->check('Admin');

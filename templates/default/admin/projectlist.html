@@ -1,9 +1,7 @@
-{include file="admin/header.html" page_title="$TITLE[project]"}
-
 <table border="0" width="100%">
   <tr>
     <td valign="top">
-      <b>&nbsp;Project List</b> - <a href="{$smarty.server.PHP_SELF}?op=add">{$STRING.addnew} Project</a>
+      <b>&nbsp;{$page_title}</b> - <a href="{$smarty.server.PHP_SELF}?op=add">{$STRING.addnew} Project</a>
       <hr size="1">
 			<table border="0" cellpadding="2" cellspacing="1" width="100%">
 				<tr>
@@ -31,4 +29,3 @@
     </td>
 	</tr>
 </table>
-{include file="admin/footer.html"}

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.48 2002/04/12 12:01:22 bcurtis Exp $
+// $Id: user.php,v 1.49 2002/05/18 03:00:00 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -169,7 +169,7 @@ function show_form($userid = 0, $error = '') {
 	// The number of admins in the system
 	$t->assign('numadmins', $db->getOne('select count(*) from '.TBL_USER_GROUP.
 		' where group_id = 1'));
-	$t->display('admin/user-edit.html');
+	$t->wrap('admin/user-edit.html', ($userid ? 'edituser' : 'adduser'));
 }
 
 function list_items($userid = 0, $error = '') {
@@ -214,7 +214,7 @@ function list_items($userid = 0, $error = '') {
 	sorting_headers($me, $headers, $order, $sort, "page=$page&filter=$user_filter");
 
 	$t->assign('filter', $user_filter);
-	$t->display('admin/userlist.html');
+	$t->wrap('admin/userlist.html', 'user');
 }
 
 $perm->check('Admin');

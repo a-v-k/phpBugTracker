@@ -1,14 +1,4 @@
-{if $resolution_id}
-	{assign var="action" value=$STRING.edit}
-{else}
-	{assign var="action" value=$STRING.addnew}
-{/if}
-{if $smarty.request.use_js}
-	{include file="admin/header-popup.html" page_title="$action Resolution"}
-{else}
-	{include file="admin/header.html" page_title="$action Resolution"}
-{/if}	
-<b>{$action} Resolution&nbsp;</b>
+<b>{$page_title}&nbsp;</b>
 <hr size="1">
 <form action="{$smarty.server.PHP_SELF}" method="post">
 <input type="hidden" name="resolution_id" value="{$resolution_id}">
@@ -36,8 +26,3 @@
 <br>
 <input type='submit' name='submit' value='Submit'>
 </form>
-{if $smarty.request.use_js}
-	{include file="admin/footer-popup.html"}
-{else}
-	{include file="admin/footer.html"}
-{/if}	

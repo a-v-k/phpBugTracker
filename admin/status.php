@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: status.php,v 1.27 2002/04/09 20:44:52 bcurtis Exp $
+// $Id: status.php,v 1.28 2002/05/18 03:00:00 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -85,7 +85,7 @@ function show_form($statusid = 0, $error = '') {
  		$t->assign($_pv);
 	}
 	$t->assign('error', $error);
-	$t->display('admin/status-edit.html');
+	$t->wrap('admin/status-edit.html', ($statusid ? 'editstatus' : 'addstatus'));
 }
 
 
@@ -117,7 +117,7 @@ function list_items($statusid = 0, $error = '') {
 
 	sorting_headers($me, $headers, $order, $sort);
 
-	$t->display('admin/statuslist.html');
+	$t->wrap('admin/statuslist.html', 'status');
 }
 
 $perm->check('Admin');

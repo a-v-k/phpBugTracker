@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.116 2002/05/09 02:53:14 bcurtis Exp $
+// $Id: include.php,v 1.117 2002/05/18 02:59:32 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -107,12 +107,12 @@ class extSmarty extends Smarty {
 		return Smarty::fetch($_smarty_tpl_file, $_smarty_cache_id, $_smarty_compile_id, $_smarty_display);
 	}
 	
-	function wrap($template, $title = '', $dir = '') {
+	function wrap($template, $title = '') {
 		global $TITLE, $_gv, $_pv;
 		
 		$this->assign(array(
 			'content_template' => $template,
-			'page_title' => isset($TITLE[$title]) ? $TITLE[$title] : ''
+			'page_title' => isset($TITLE[$title]) ? $TITLE[$title] : $title
 			));
 			
 		// Use a popup wrap?
@@ -122,8 +122,11 @@ class extSmarty extends Smarty {
 		} else {
 			$wrap = 'wrap.html';
 		}
-		
-		$this->display($dir . $wrap);
+		if (($dir = dirname($template)) != '.') {
+			$this->display("$dir/$wrap");
+		} else {
+			$this->display($wrap);
+		}
 	}
 }
 

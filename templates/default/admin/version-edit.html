@@ -1,13 +1,3 @@
-{if $version_id}
-	{assign var="page_title" value=$TITLE.editversion}
-{else}
-	{assign var="page_title" value=$TITLE.addversion}
-{/if}
-{if $smarty.request.use_js}
-	{include file="admin/header-popup.html" page_title=$page_title}
-{else}
-	{include file="admin/header.html" page_title=$page_title}
-{/if}	
 		&nbsp;<b>{$page_title}</b>
 		<hr size="1">
 		{if $error}<div class="error">{$error}</div>{/if}
@@ -40,8 +30,4 @@
 			</tr>
 		</table>
 		</form>
-{if $smarty.request.use_js}
-	{include file="admin/footer-popup.html"}
-{else}
-	{include file="admin/footer.html"}
-{/if}	
+ 

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.25 2002/04/24 07:06:23 firma Exp $
+// $Id: user.php,v 1.26 2002/05/18 02:59:32 bcurtis Exp $
 
 include 'include.php';
 
@@ -63,7 +63,8 @@ function change_password($pass1, $pass2) {
 	}
 	
 	$db->query("update ".TBL_AUTH_USER." set password = '$mpassword' where user_id = $u");
-	$t->display('passwordchanged.html');
+	$t->assign('changetext', $STRING['password_changed']);
+	$t->wrap('changessaved.html', 'changessaved');
 }
 
 // Save changes to a user's preferences
@@ -86,7 +87,8 @@ function change_preferences($prefs) {
 		$db->query("update ".TBL_USER_PREF.' '.@join(', ', $updates).
 			" where user_id = $u");
 	}
-	$t->display('preferenceschanged.html');
+	$t->assign('changetext', $STRING['prefs_changed']);
+	$t->wrap('changessaved.html', 'changessaved');
 }
 
 
@@ -117,7 +119,7 @@ function show_preferences_form($error = '') {
 		'preferences' => $preferences
 		));
 		
-	$t->display('user.html');
+	$t->wrap('user.html', 'preferences');
 }
 
 $perm->check_group('User');

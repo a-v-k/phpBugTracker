@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: group.php,v 1.9 2002/04/09 20:44:52 bcurtis Exp $
+// $Id: group.php,v 1.10 2002/05/18 03:00:00 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -76,7 +76,7 @@ function show_form($groupid = 0, $error = '') {
 		$t->assign($_pv);
 	}
 	$t->assign('error', $error);
-	$t->display('admin/group-edit.html');
+	$t->wrap('admin/group-edit.html', ($groupid ? 'editgroup' : 'addgroup'));
 }
 
 
@@ -107,7 +107,7 @@ function list_items($groupid = 0, $error = '') {
 
 	sorting_headers($me, $headers, $order, $sort, "page=$page");
 
-	$t->display('admin/grouplist.html');
+	$t->wrap('admin/grouplist.html', 'group');
 }
 
 $perm->check('Admin');

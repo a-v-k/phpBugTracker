@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: resolution.php,v 1.28 2002/04/09 20:44:52 bcurtis Exp $
+// $Id: resolution.php,v 1.29 2002/05/18 03:00:00 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -85,7 +85,7 @@ function show_form($resolutionid = 0, $error = '') {
  		$t->assign($_pv);
 	}
 	$t->assign('error', $error);
-	$t->display('admin/resolution-edit.html');
+	$t->wrap('admin/resolution-edit.html', ($resolutionid ? 'editresolution' : 'addresolution'));
 }
 
 
@@ -117,7 +117,7 @@ function list_items($resolutionid = 0, $error = '') {
 
 	sorting_headers($me, $headers, $order, $sort, "page=$page");
 
-	$t->display('admin/resolutionlist.html');
+	$t->wrap('admin/resolutionlist.html', 'resolution');
 }
 
 $perm->check('Admin');

@@ -137,6 +137,6 @@ $t->assign('closedbugs',
 		" and changed_field = 'status' and new_value = 'Closed'".
 		' and b.project_id = p.project_id order by h.created_date desc', 0, 5)));
 
-$t->display('index.html');
+$t->wrap('index.html', 'home');
 
 ?>

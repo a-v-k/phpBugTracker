@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.30 2002/04/11 07:32:25 bcurtis Exp $
+// $Id: newaccount.php,v 1.31 2002/05/18 02:59:32 bcurtis Exp $
 
 define('NO_AUTH', 1);
 include 'include.php'; 
@@ -29,7 +29,7 @@ function do_form() {
 	global $db, $t, $_pv, $STRING, $now, $u;
 	
 	if (NEW_ACCOUNTS_DISABLED) {
-		$t->display('newaccount-disabled.html');
+		$t->wrap('newaccount-disabled.html');
 		return;
 	}
 
@@ -73,16 +73,16 @@ function do_form() {
 	mail($_pv['email'], $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
 		$password),	sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMIN_EMAIL, $STRING['lang_charset']));
 
-	$t->display('newaccountsuccess.html');
+	$t->wrap('newaccountsuccess.html', 'accountcreated');
 }
 
 function show_form($error = '') {
 	global $t, $_pv;
 	
 	if (NEW_ACCOUNTS_DISABLED) {
-		$t->display('newaccount-disabled.html');
+		$t->wrap('newaccount-disabled.html');
 	} else {
-		$t->display('newaccount.html');
+		$t->wrap('newaccount.html', 'newaccount');
 	}
 }
 

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.15 2002/04/11 18:39:31 bcurtis Exp $
+// $Id: en.php,v 1.16 2002/05/18 03:01:22 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'us-ascii',
@@ -74,7 +74,9 @@ $STRING = array(
 		1 => 'Active users',
 		2 => 'Inactive users'),
 	'dupe_dependency' => 'That bug dependency has already been added',
-	'image_path_not_writeable' => 'The subdirectory "jpgimages" is not writeable by the web process, so the summary image can not be rendered'
+	'image_path_not_writeable' => 'The subdirectory "jpgimages" is not writeable by the web process, so the summary image can not be rendered',
+	'password_changed' => 'Your password has been changed',
+	'prefs_changed' => 'Your preferences have been changed',
 	);
 	
 // Page titles
@@ -98,7 +100,27 @@ $TITLE = array(
 	'user' => 'Users',
 	'home' => 'Home',
 	'reporting' => 'Reporting',
-	'group' => 'Groups'
+	'group' => 'Groups',
+	'bugvotes' => 'Bug Votes',
+	'bughistory' => 'Bug History',
+	'viewbug' => 'View Bug',
+	'addattachment' => 'Add Attachment',
+	'accountcreated' => 'Account Created',
+	'changessaved' => 'Changes Saved',
+	'preferences' => 'User Preferences',
+	'edituser' => 'Edit User',
+	'adduser' => 'Add User',
+	'editstatus' => 'Edit Status',
+	'addstatus' => 'Add Status',
+	'editseverity' => 'Edit Severity',
+	'addseverity' => 'Add Severity',
+	'editresolution' => 'Edit Resolution',
+	'addresolution' => 'Add Resolution',
+	'editos' => 'Edit Operating System',
+	'addos' => 'Add Operating System',
+	'editgroup' => 'Edit Group',
+	'addgroup' => 'Add Group',
+	'configuration' => 'Configuration',
 	);
 	
 ?>

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.41 2002/04/13 14:51:57 bcurtis Exp $
+// $Id: project.php,v 1.42 2002/05/18 03:00:00 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -82,7 +82,7 @@ function show_version($versionid = 0, $error = '') {
 		}
 	}
 	$t->assign('error', $error);
-	$t->display('admin/version-edit.html');
+	$t->wrap('admin/version-edit.html', ($versionid ? 'editversion' : 'addversion'));
 }
 
 function del_component($componentid, $projectid) {
@@ -146,7 +146,7 @@ function show_component($componentid = 0, $error = '') {
 		}
 	}
 	$t->assign('error', $error);
-	$t->display('admin/component-edit.html');
+	$t->wrap('admin/component-edit.html', ($componentid ? 'editcomponent' : 'addcomponent'));
 }
 
 function save_project($projectid = 0) {
@@ -255,14 +255,14 @@ function show_project($projectid = 0, $error = null) {
 				$projectid))
 			));
 
-		$t->display('admin/project-edit.html');
+		$t->wrap('admin/project-edit.html', 'editproject');
   } else {
 		if (!empty($_pv)) {
 		    $t->assign($_pv);
 		} else {
 		    $t->assign('active', 1);
 		}
-		$t->display('admin/project-add.html');
+		$t->wrap('admin/project-add.html', 'addproject');
   }
 	
 }
@@ -292,7 +292,7 @@ function list_projects() {
 
   sorting_headers($me, $headers, $order, $sort);
 	
-	$t->display('admin/projectlist.html');
+	$t->wrap('admin/projectlist.html', 'project');
 }
 
 $perm->check('Admin');

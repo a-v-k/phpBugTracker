@@ -1,5 +1,3 @@
-{include file="admin/header.html" page_title="$TITLE[user]"}
-
 <script language="JavaScript">
 <!--
 	var me = '{$smarty.server.PHP_SELF}';
@@ -14,7 +12,7 @@
 <table border="0" width="100%">
 	<tr>
 		<td valign="top">
-			<b>&nbsp;User List</b> - <a href="{$smarty.server.PHP_SELF}?op=edit&user_id=0&filter={$filter}" onClick="popupUser(0); return false;">{$STRING.addnew} User</a>
+			<b>&nbsp;{$page_title}</b> - <a href="{$smarty.server.PHP_SELF}?op=edit&user_id=0&filter={$filter}" onClick="popupUser(0); return false;">{$STRING.addnew} User</a>
 			<hr size="1">
 			<form>
 			<div align="center">
@@ -50,5 +48,3 @@
 		</td>
 	</tr>
 </table>
-
-{include file="admin/footer.html"}

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.18 2002/04/11 15:49:58 bcurtis Exp $
+// $Id: attachment.php,v 1.19 2002/05/18 02:59:32 bcurtis Exp $
 
 include 'include.php';
 
@@ -153,7 +153,7 @@ function show_attachment_form($bugid, $error = '') {
 			? number_format(ini_get('upload_max_filesize'))
 			: number_format(ATTACHMENT_MAX_SIZE)
 		));
-	$t->display('bugattachmentform.html');
+	$t->wrap('bugattachmentform.html', 'addattachment');
 }		
 
 if (isset($_gv['del'])) {

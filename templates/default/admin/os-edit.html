@@ -1,14 +1,4 @@
-{if $os_id}
-	{assign var="action" value=$STRING.edit}
-{else}
-	{assign var="action" value=$STRING.addnew}
-{/if}
-{if $smarty.request.use_js}
-	{include file="admin/header-popup.html" page_title="$action OS"}
-{else}
-	{include file="admin/header.html" page_title="$action OS"}
-{/if}	
-<b>{$action} OS&nbsp;</b>
+<b>{$page_title}&nbsp;</b>
 <hr size="1">
 <form action="{$smarty.server.PHP_SELF}" method="post">
 <input type="hidden" name="os_id" value="{$os_id}">
@@ -37,8 +27,3 @@
 <input type='submit' name='submit' value='Submit'>
 </form>
 </td>
-{if $smarty.request.use_js}
-	{include file="admin/footer-popup.html"}
-{else}
-	{include file="admin/footer.html"}
-{/if}	

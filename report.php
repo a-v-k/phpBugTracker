@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: report.php,v 1.25 2002/04/03 19:08:47 bcurtis Exp $  
+// $Id: report.php,v 1.26 2002/05/18 02:59:32 bcurtis Exp $  
 
 include 'include.php';
 
@@ -59,7 +59,7 @@ function resolution_by_engineer($projectid = 0) {
 		));
 	$db->setOption('optimize', 'portability'); 
 
-	$t->display('report.html');
+	$t->wrap('report.html', 'reporting');
 }
 
 function new_bugs_by_date($date_range) {
