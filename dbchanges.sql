@@ -143,13 +143,14 @@ CREATE TABLE `user` (
   `email` char(60) NOT NULL default '',
   `password` char(40) NOT NULL default '',
   `user_level` tinyint(3) unsigned NOT NULL default '1',
+	`bug_list_fields` char(255) NOT NULL default '',
   `created_by` int(10) unsigned NOT NULL default '0',
   `created_date` bigint(20) unsigned NOT NULL default '0',
   `last_modified_by` int(10) unsigned NOT NULL default '0',
   `last_modified_date` bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (`user_id`)
 );
-insert into user select UserID, FirstName, LastName, Email, Password, UserLevel, 0, CreatedDate, 0, CreatedDate from User;
+insert into user select UserID, FirstName, LastName, Email, Password, UserLevel, '', 0, CreatedDate, 0, CreatedDate from User;
 
 CREATE TABLE `version` (
   `version_id` int(10) unsigned NOT NULL default '0',
