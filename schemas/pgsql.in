@@ -2,7 +2,7 @@
 -- PostgreSQL database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.29 2002/05/18 15:59:20 firma Exp $
+-- $Id: pgsql.in,v 1.30 2002/05/18 16:07:14 firma Exp $
 
 BEGIN;
 
@@ -314,6 +314,7 @@ INSERT INTO TBL_CONFIGURATION VALUES ('DATE_FORMAT','m-d-Y','See the <a href="ht
 INSERT INTO TBL_CONFIGURATION VALUES ('TIME_FORMAT','g:i A','See the <a href="http://www.php.net/date" target="_new">date page</a> in the PHP manual for more info','string');
 INSERT INTO TBL_CONFIGURATION VALUES ('LANGUAGE','en','The language file to use for warning and error messages','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('STYLE', 'default', 'The CSS file to use (color scheme)', 'multi');
+INSERT INTO TBL_CONFIGURATION VALUES ('SEND_MIME_EMAIL', '1', 'Whether to use MIME quoted-printable encoded emails or not', 'bool');
 
 INSERT INTO TBL_OS VALUES (1,'All',1,'');
 INSERT INTO TBL_OS VALUES (2,'Windows 3.1',2,'/Mozilla.*\\(Win16.*\\)/');

@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.27 2002/05/17 15:31:11 firma Exp $
+# $Id: mysql.in,v 1.28 2002/05/18 16:07:14 firma Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id int(10) unsigned NOT NULL default '0',
@@ -320,6 +320,7 @@ INSERT INTO TBL_CONFIGURATION VALUES ('DATE_FORMAT','m-d-Y','See the <a href="ht
 INSERT INTO TBL_CONFIGURATION VALUES ('TIME_FORMAT','g:i A','See the <a href="http://www.php.net/date" target="_new">date page</a> in the PHP manual for more info','string');
 INSERT INTO TBL_CONFIGURATION VALUES ('LANGUAGE','en','The language file to use for warning and error messages','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('STYLE', 'default', 'The CSS file to use (color scheme)', 'multi');
+INSERT INTO TBL_CONFIGURATION VALUES ('SEND_MIME_EMAIL', '1', 'Whether to use MIME quoted-printable encoded emails or not', 'bool');
 
 INSERT INTO TBL_OS VALUES (1,'All',1,'');
 INSERT INTO TBL_OS VALUES (2,'Windows 3.1',2,'/Mozilla.*\\(Win16.*\\)/');
