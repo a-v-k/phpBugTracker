@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.28 2002/06/17 15:55:05 firma Exp $
+// $Id: en.php,v 1.29 2002/06/18 12:38:56 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'us-ascii',
@@ -176,7 +176,7 @@ $STRING = array(
 		'ResolutionNone' => 'None',
 		'AddCC' => 'Add CC',
 		'RemoveSelectedCC' => 'Remove selected CCs',
-		'Addiditional Comments' => 'Additional Comments',
+		'AdditionalComments' => 'Additional Comments',
 		'Attachments' => 'Attachments',
 		'CreateAttachment' => 'Create Attachment',
 		'SureDeleteAttachment' => 'Are you sure you want to delete this attachment?',
