@@ -6,46 +6,54 @@
     <META http-equiv="Content-Type" content="text/html; charset={$STRING.lang_charset}">
 </head>
 <body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0">
-    <table width="100%" cellspacing="0" cellpadding="0" height="100%">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+	<td class="nav" valign="middle"><img name="title" src="{$template_path}/images/title.gif" width="500" height="50" border="0" alt="" hspace="0" vspace="0"></td>
+	<td align="right" valign="middle" class="nav">
+		<form action="bug.php">
+		<input type="hidden" name="op" value="show">
+		{$STRING.WRAP.FindBug}
+		<input name="bugid" type="text" id="bugid" size="4">
+		&nbsp;
+		</form>
+	</td>
+  </tr>
+  <tr>
+	<td bgcolor="#9999FF" height="4" colspan="2"><img src="images/spacer.gif" height="1" width="1"></td>
+  </tr>
+  <tr>
+	<td bgcolor="#9999FF" colspan="2">
+	  <table border="0" cellspacing="0" cellpadding="4">
+			<tr>
+			  <td><a href="index.php"><font class="navlink">{$STRING.WRAP.Home}</font></a></td>
+			  <td>|</td>
+			  <td><a href="bug.php?op=add"><font class="navlink">{$STRING.WRAP.AddNewBug}</font></a></td>
+			  <td>|</td>
+			  <td><a href="query.php?op=query"><font class="navlink">{$STRING.WRAP.QueryBugs}</font></a></td>
+			  <td>|</td>
+			  <td><a href="report.php"><font class="navlink">{$STRING.WRAP.ViewReports}</font></a></td>
+				{if not NEW_ACCOUNTS_DISABLED and not $smarty.session.uid}
+			  <td>|</td>
+			  <td><a href="newaccount.php"><font class="navlink">{$STRING.WRAP.CreateNewAccount}</font></a></td>
+				{/if}
+			  <td>|</td>
+			  <td><a href="docs/html/userguide.html"><font class="navlink">{$STRING.WRAP.Documentation}</font></a></td>
+				{if isset($perm) and $perm->have_perm('Administrator')}
+			  <td>|</td>
+			  <td><a href="admin/project.php"><font class="navlink">{$STRING.WRAP.AdminTools}</font></a></td>
+				{/if}
+			</tr>
+		</table>
+	</td>
+  </tr>
+  <tr>
+	<td bgcolor="#9999FF" height="4" colspan="2"><img src="images/spacer.gif" height="1" width="1"></td>
+  </tr>
+  <tr>
+	<td bgcolor="#000000" height="1" colspan="2"><img src="images/spacer.gif" height="1" width="1"></td>
+  </tr>
 	<tr>
-	    <td width="150" height="30" class="nav">&nbsp;&nbsp;phpBugTracker</td>
-	    <td height="30" class="nav" align="right"><form action="bug.php">
-		    <input type="hidden" name="op" value="show">
-		    {$STRING.WRAP.FindBug} <input type="text" name="bugid" size="4" class="navinput">
-		    &nbsp;
-		</form></td>
-	</tr><tr>
-	    <td width="150" class="sidenav">
-		<!-- Nav Links -->
-		<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='index.php'">
-		    <a href="index.php" class="sidenavlink">{$STRING.WRAP.Home}</a>
-		</div>
-		<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='bug.php?op=add'">
-		    <a href="bug.php?op=add" class="sidenavlink">{$STRING.WRAP.AddNewBug}</a>
-		</div>
-		<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='query.php?op=query'">
-		    <a href="query.php?op=query" class="sidenavlink">{$STRING.WRAP.QueryBugs}</a>
-		</div>
-		<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='report.php'">
-		    <a href="report.php" class="sidenavlink">{$STRING.WRAP.ViewReports}</a>
-		</div>
-{if not NEW_ACCOUNTS_DISABLED and not $smarty.session.uid}
-		<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='newaccount.php'">
-		    <a href="newaccount.php" class="sidenavlink">{$STRING.WRAP.CreateNewAccount}</a>
-		</div>
-{/if}
-		<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='docs/html/userguide.html'">
-		    <a href="docs/html/userguide.html" class="sidenavlink">{$STRING.WRAP.Documentation}</a>
-		</div>
-{if isset($perm) and $perm->have_perm('Administrator')}
-		<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='admin/project.php'">
-		    <a href="admin/project.php" class="sidenavlink">{$STRING.WRAP.AdminTools}</a>
-		</div>
-{/if}
-	    </td><td class="maincontent">{include file=$content_template}</td>
-	</tr><tr>
-	    <td width="150" height="30" class="sidenav">&nbsp</td>
-	    <td height="30" class="bottomnav">
+	    <td colspan="2" height="20" class="bottomnav">
 		<form method="post" action="{$smarty.server.REQUEST_URI}">
 		&nbsp;
 {if not $smarty.session.uid}
@@ -64,15 +72,24 @@
 		<input type="checkbox" name="savecookie" value="1" {if !empty($smarty.cookies.phpbt_user)}checked{/if} class="bottomnavinput" title="Remember {$loginlabel} for next time"> Remember me   				  
     {/if}
 {else}
-		[ Bugs assigned to me: <a href="query.php?op=mybugs&assignedto=1&open=1" title="Open">{$owner_open}</a> / <a href="query.php?op=mybugs&assignedto=1&open=0" title="Closed">{$owner_closed}</a> 
+		Bugs assigned to me: <a href="query.php?op=mybugs&assignedto=1&open=1" title="Open">{$owner_open}</a> / <a href="query.php?op=mybugs&assignedto=1&open=0" title="Closed">{$owner_closed}</a> 
 		| Bugs reported by me: <a href="query.php?op=mybugs&reportedby=1&open=1" title="Open">{$reporter_open}</a> / <a href="query.php?op=mybugs&reportedby=1&open=0" title="Closed">{$reporter_closed}</a> 
 		| <a href="user.php">Personal Page</a> 
-		| <a href="logout.php">Logout {$smarty.session.uname}</a> ]
+		| <a href="logout.php">Logout {$smarty.session.uname}</a>
 {/if}
 		&nbsp;
 		</form>
 	    </td>
 	</tr>
-    </table>
+  <tr>
+	<td bgcolor="#000000" height="1" colspan="2"><img src="images/spacer.gif" height="1" width="1"></td>
+  </tr>
+  <tr>
+	<td bgcolor="#ffffff" height="20" colspan="2"><img src="images/spacer.gif" height="1" width="1"></td>
+  </tr>
+</table>
+    
+{include file=$content_template}
+    
 </body>
 </html>
