@@ -1,3 +1,26 @@
+<script language="JavaScript">
+<!-- 
+versions = new Array();
+components = new Array();
+versions['All'] = new Array(new Array('','All'));
+components['All'] = new Array(new Array('','All'));
+{js}
+
+function updateMenus(f) {
+  sel = f.project_id[f.project_id.selectedIndex].text;
+  f.version_id.length = versions[sel].length;
+  for (var x = 0; x < versions[sel].length; x++) {
+    f.version_id.options[x].value = versions[sel][x][0];
+    f.version_id.options[x].text = versions[sel][x][1];
+  }
+  f.component_id.length = components[sel].length;
+  for (var x = 0; x < components[sel].length; x++) {
+    f.component_id.options[x].value = components[sel][x][0];
+    f.component_id.options[x].text = components[sel][x][1];
+  }
+}
+//-->
+</script>
 <form action="bug.php" method="post">
 <input type="hidden" name="op" value="update">
 <input type="hidden" name="bugid" value="{bugid}">
@@ -24,7 +47,7 @@
 			Product:
 		</td>
 		<td>
-			<select name="project_id">{project}</select>
+			<select name="project_id" onChange="updateMenus(this.form)">{project}</select>
 		</td>
 		<td>
 			Component: 

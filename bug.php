@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.72 2002/01/05 20:34:49 bcurtis Exp $
+// $Id: bug.php,v 1.73 2002/01/23 14:25:24 bcurtis Exp $
 
 include 'include.php';
 
@@ -677,6 +677,7 @@ function show_bug($bugid = 0, $error = array()) {
       $t->parse('reopenrow','rerow',true);
       break;
   }
+	$t->set_var('js', build_project_js());
 
   // Show the attachments
   $q->query("select * from ".TBL_ATTACHMENT." where bug_id = $bugid");
