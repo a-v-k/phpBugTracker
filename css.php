@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: css.php,v 1.2 2001/10/10 04:40:47 bcurtis Exp $
+// $Id: css.php,v 1.3 2001/10/30 04:04:38 bcurtis Exp $
 
 $colors['default'] = array(
 	'link' => '',
@@ -136,4 +136,18 @@ input[type="text"].login-box {
 	padding-top: 0.1em; 
 	padding-left: 0.2em; 
 	padding-right: 0.2em; 
+	}
+
+.banner { 
+	text-align: center; 
+	font-weight: bold;
+	padding: 1.5em;
+	font-size: 16px;
+}
+	
+.error {
+	text-align: center;
+	font-weight: bold;
+	color: #ff0000;
+	padding-bottom: 0.1em;
 	}
