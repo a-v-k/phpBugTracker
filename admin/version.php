@@ -3,9 +3,10 @@
 include '../include.php';
 
 page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
+$u = $auth->auth['uid'];
 
 function do_form($versionid = 0) {
-  global $q, $me, $projectid, $version, $active, $STRING;
+  global $q, $me, $projectid, $version, $active, $STRING, $now, $u;
   
   // Validation
   if (!$version = trim($version)) 
@@ -14,11 +15,9 @@ function do_form($versionid = 0) {
   
   if (!$active) $active = 0;
   if (!$versionid) {
-    $q->query("insert into Version (VersionID, ProjectID, Name, Active) values 
-      (".$q->nextid('Version').", $projectid, '$version', '$active')");
+    $q->query("insert into Version (VersionID, ProjectID, Name, Active, CreatedBy, CreatedDate) values (".$q->nextid('Version').", $projectid, '$version', '$active', $u, $now)");
   } else {
-    $q->query("update Version set ProjectID=$projectid, Name='$version', 
-      Active='$active' where VersionID = '$versionid'");
+    $q->query("update Version set ProjectID=$projectid, Name='$version', Active='$active' where VersionID = '$versionid'");
   }
   header("Location: project.php?op=edit&id=$projectid");
 }  
