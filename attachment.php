@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.22 2004/10/25 12:06:54 bcurtis Exp $
+// $Id: attachment.php,v 1.23 2004/10/25 12:39:56 bcurtis Exp $
 
 include 'include.php';
 
@@ -75,7 +75,7 @@ function add_attachment($bugid, $description) {
 	// Check the upload size.  If the size was greater than the max in
 	// php.ini, the file won't even be set and will fail at the check above
 	if ($_FILES['attachment']['size'] > ATTACHMENT_MAX_SIZE) {
-		show_attachment_form($bugid, printf(translate("The file you specified is larger than %d bytes"), number_format(ATTACHMENT_MAX_SIZE)));
+		show_attachment_form($bugid, printf(translate("The file you specified is larger than %s bytes"), number_format(ATTACHMENT_MAX_SIZE)));
 		return;
 	}
 
@@ -175,9 +175,11 @@ if (isset($_GET['del'])) {
 		@readfile($filename);
 		exit;
 	}
-} else {
+} elseif (isset($_GET['bugid'])) {
 	$perm->check('Editbug');
 	show_attachment_form($_GET['bugid']);
+} else {
+	show_text(translate("You tried to post an attachment that is larger than the server's maximum upload file size."));
 }
 
 ?>
