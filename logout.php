@@ -25,7 +25,7 @@ include 'include.php';
 
 $auth->unauth();
 
-include 'templates/'.THEME.'logout.html';
+include 'templates/'.THEME.'/logout.html';
 
 page_close();
 
