@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.79 2002/06/13 14:26:34 firma Exp $
+// $Id: query.php,v 1.80 2002/06/13 15:07:10 firma Exp $
 
 include 'include.php';
 
@@ -75,18 +75,30 @@ function build_query($assignedto, $reportedby, $open) {
 		$flags = array();
 		// Need to check $array[0] for Opera -- 
 		// it passes non-empty arrays for every multi-choice select box
-		if (!empty($status) and $status[0])
+		if (!empty($status) and $status[0]) {
 			$flags[] = 'b.status_id in ('.delimit_list(',',$status).')';
-		if (!empty($resolution) and $resolution[0]) 
+		}
+		if (!empty($resolution) and $resolution[0]) {
 			$flags[] = 'b.resolution_id in ('.delimit_list(',',$resolution).')';
-		if (!empty($os) and $os[0]) 
+		}
+		if (!empty($os) and $os[0]) {
 			$flags[] = 'b.os_id in ('.delimit_list(',',$os).')';
-		if (!empty($priority) and $priority[0]) 
+		}
+		if (!empty($priority) and $priority[0]) {
 			$flags[] = 'b.priority in ('.delimit_list(',',$priority).')';
-		if (!empty($severity) and $severity[0]) 
+		}
+		if (!empty($severity) and $severity[0]) {
 			$flags[] = 'b.severity_id in ('.delimit_list(',',$severity).')';
-		if (!empty($flags)) 
+		}
+		if (!empty($database) and $database[0]) {
+			$flags[] = 'b.database_id in ('.delimit_list(',',$database).')';
+		}
+		if (!empty($site) and $site[0]) {
+			$flags[] = 'b.site_id in ('.delimit_list(',',$site).')';
+		}
+		if (!empty($flags)) {
 			$query[] = '('.delimit_list(' or ',$flags).')';
+		}
 
 		// Email field(s)
 		if (!empty($email1)) {
