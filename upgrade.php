@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.35 2003/07/24 04:47:13 kennyt Exp $
+// $Id: upgrade.php,v 1.36 2003/07/25 19:22:26 kennyt Exp $
 
 define ('NO_AUTH', 1);
 
@@ -30,7 +30,7 @@ function upgrade() {
 	global $db;
 
 	$thisvers = $db->getOne('select varvalue from '.TBL_CONFIGURATION.' where varname = \'DB_VERSION\'');
-	if ($thisvers == DB_VERSION) $upgraded = 1;
+	if ($thisvers == CUR_DB_VERSION) $upgraded = 1;
 	if (!$upgraded or DB::isError($thisvers)) {
 		if (!@is_writeable('c_templates')) {
 			include('templates/default/base/templatesperm.html');
@@ -68,7 +68,7 @@ function upgrade() {
 			$db->query("UPDATE ".TBL_AUTH_GROUP." SET assignable = 1 WHERE group_id = 3");
 			$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('EMAIL_DISABLED', '0', 'Whether to disable all mail sent from the system', 'bool');");
 			/* add db-version attribute */
-			$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('DB_VERSION', '".DB_VERSION."', 'Database Version <b>Warning:</b> Changing this might make things go horribly wrong.', 'string')");
+			$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('DB_VERSION', '".CUR_DB_VERSION."', 'Database Version <b>Warning:</b> Changing this might make things go horribly wrong.', 'string')");
 		}
 
 		if ($thisvers < 4) {
@@ -77,7 +77,7 @@ function upgrade() {
 		}
 
 		/* update to current DB_VERSION */
-		$db->query("UPDATE ".TBL_CONFIGURATION." SET varvalue = '".DB_VERSION."' WHERE varname = 'DB_VERSION'");
+		$db->query("UPDATE ".TBL_CONFIGURATION." SET varvalue = '".CUR_DB_VERSION."' WHERE varname = 'DB_VERSION'");
 
 	}
 	include 'templates/default/upgrade-finished.html';
