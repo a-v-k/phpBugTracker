@@ -1,6 +1,6 @@
 <?php
 
-// status.php - Interface to the Status table
+// severity.php - Interface to the severity table
 // ------------------------------------------------------------------------
 // Copyright (c) 2001 The phpBugTracker Group
 // ------------------------------------------------------------------------
@@ -24,7 +24,7 @@
 include '../include.php';
 
 function do_form($severityid = 0) {
-  global $q, $me, $fname, $fdescription, $fsortorder,$fcolor, $STRING;
+  global $q, $me, $fname, $fdescription, $fsortorder, $fcolor, $STRING;
 
   // Validation
   if (!$fname = trim($fname))
@@ -34,9 +34,9 @@ function do_form($severityid = 0) {
   if ($error) { list_items($severityid, $error); return; }
 
   if (!$severityid) {
-    $q->query("insert into severity (severity_id, severity_name, severity_desc, sort_order, severity_color) values (".$q->nextid('severity').", '$fname', '$fdescription', '$fsortorder','$fcolor')");
+    $q->query("insert into severity (severity_id, severity_name, severity_desc, sort_order, severity_color) values (".$q->nextid('severity').", '$fname', '$fdescription', '$fsortorder', '$fcolor')");
   } else {
-    $q->query("update severity set severity_name = '$fname', severity_desc = '$fdescription', sort_order = '$fsortorder', severity_color = '$fcolor'  where severity_id = '$severityid'");
+    $q->query("update severity set severity_name = '$fname', severity_desc = '$fdescription', sort_order = '$fsortorder', severity_color = '$fcolor' where severity_id = '$severityid'");
   }
   header("Location: $me?");
 }
@@ -66,7 +66,7 @@ function show_form($severityid = 0, $error = '') {
 }
 
 
-function list_items($statusid = 0, $error = '') {
+function list_items($severityid = 0, $error = '') {
   global $q, $t, $selrange, $order, $sort, $STRING, $TITLE;
 
   $t->set_file('content','severitylist.html');
@@ -87,7 +87,7 @@ function list_items($statusid = 0, $error = '') {
   $q->query("select * from severity order by $order $sort limit $llimit, $selrange");
 
   if (!$q->num_rows()) {
-    $t->set_var('rows',"<tr><td>{$STRING['nostatuses']}</td></tr>");
+    $t->set_var('rows',"<tr><td>{$STRING['noseverities']}</td></tr>");
     return;
   }
 
@@ -102,16 +102,15 @@ function list_items($statusid = 0, $error = '') {
 
   while ($row = $q->grab()) {
     $t->set_var(array(
-      'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
+      'bgcolor' => $row['severity_color'],
       'severityid' => $row['severity_id'],
       'name' => $row['severity_name'],
       'description' => $row['severity_desc'],
-      'sortorder' => $row['sort_order'],
-      'color' => $row['severity_color']));
+      'sortorder' => $row['sort_order']));
     $t->parse('rows','row',true);
   }
 
-  show_form($statusid, $error);
+  show_form($severityid, $error);
   $t->set_var('TITLE',$TITLE['severity']);
 }
 
