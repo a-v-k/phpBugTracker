@@ -2,7 +2,7 @@
 -- PostgreSQL database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.41 2003/04/09 12:25:21 bcurtis Exp $
+-- $Id: pgsql.in,v 1.42 2003/05/14 00:13:27 kennyt Exp $
 
 BEGIN;
 
@@ -333,7 +333,6 @@ INSERT INTO TBL_CONFIGURATION VALUES ('BUG_PROMOTED','2','The status to assign a
 INSERT INTO TBL_CONFIGURATION VALUES ('BUG_ASSIGNED','3','The status to assign a bug when it is assigned.','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('BUG_REOPENED','4','The status to assign a bug when it is reopened.','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('BUG_CLOSED','7','The status to assign a bug when it is closed.','multi');
-INSERT INTO TBL_CONFIGURATION VALUES ('GROUP_ASSIGN_TO', '3', 'The group to whom bugs can be assigned', 'multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('EMAIL_DISABLED', '0', 'Whether to disable all mail sent from the system', 'bool');
 
 INSERT INTO TBL_OS VALUES (1,'All',1,'');
