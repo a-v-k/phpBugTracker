@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.18 2002/05/21 09:50:19 firma Exp $
+// $Id: en.php,v 1.19 2002/06/12 12:42:12 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'us-ascii',
@@ -117,6 +117,7 @@ $TITLE = array(
 	'accountcreated' => 'Account Created',
 	'changessaved' => 'Changes Saved',
 	'preferences' => 'User Preferences',
+	'usertools' => 'User Tools',
 	'edituser' => 'Edit User',
 	'adduser' => 'Add User',
 	'editstatus' => 'Edit Status',
@@ -132,7 +133,8 @@ $TITLE = array(
 	'configuration' => 'Configuration',
 	'adddatabase' => 'Add Database',
 	'editdatabase' => 'Edit Database',
-	'database' => 'Databases'
+	'database' => 'Databases',
+	'documentation' => 'Read documentation'
 	);
 	
 ?>

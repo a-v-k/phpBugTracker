@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz_iso-8859-2.php,v 1.6 2002/05/21 09:50:19 firma Exp $
+// $Id: cz_iso-8859-2.php,v 1.7 2002/06/12 12:42:12 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'ISO-8859-2',
@@ -117,6 +117,7 @@ $TITLE = array(
 	'accountcreated' => 'Úèet vytvoøen',
 	'changessaved' => 'Zmìny ulo¾eny',
 	'preferences' => 'U¾ivatelská nastavení',
+	'usertools' => 'U¾ivatelská nástroje',
 	'edituser' => 'Zmìnit U¾ivatele',
 	'adduser' => 'Pøidat U¾ivatele',
 	'editstatus' => 'Zmìnit Status',
@@ -132,6 +133,7 @@ $TITLE = array(
 	'configuration' => 'Nastavení',
 	'adddatabase' => 'Pøidat databázi',
 	'editdatabase' => 'Upravit databázi',
-	'database' => 'Databáze'
+	'database' => 'Databáze',
+	'documentation' => 'Dokumentace'
 	);
 ?>
