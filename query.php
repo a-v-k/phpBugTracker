@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.52 2002/01/05 19:49:35 bcurtis Exp $
+// $Id: query.php,v 1.53 2002/01/19 15:11:25 bcurtis Exp $
 
 include 'include.php';
 
@@ -234,7 +234,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	$nr = $q->grab_field('select count(*) from '.TBL_BUG.' b 
 		left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id
 		left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
-		($_sv['queryinfo']['query'] != '' ? "where {$_sv['queryinfo']['query']}": ''));
+		(!empty($_sv['queryinfo']['query']) ? "where {$_sv['queryinfo']['query']}": ''));
 
 	$_sv['queryinfo']['numrows'] = $nr;
 	list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
@@ -260,7 +260,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		where b.severity_id = severity.severity_id and b.status_id = status.status_id 
 		and b.os_id = os.os_id and b.version_id = version.version_id 
 		and b.component_id = component.component_id and b.project_id = project.project_id '.
-		($_sv['queryinfo']['query'] != '' ? "and {$_sv['queryinfo']['query']} " : '').
+		(!empty($_sv['queryinfo']['query']) ? "and {$_sv['queryinfo']['query']} " : '').
 		"order by $order $sort, bug_id asc", $selrange, $llimit);
 				
 	$headers = array(
