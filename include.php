@@ -20,7 +20,9 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.96 2002/03/11 18:22:17 bcurtis Exp $
+// $Id: include.php,v 1.97 2002/03/13 17:44:02 bcurtis Exp $
+
+ini_set("magic_quotes_runtime", 0); 
 
 // Where are we?
 define ('INSTALL_PATH', dirname(__FILE__));
@@ -121,7 +123,8 @@ while (list($k, $v) = $q->grab()) {
 include INSTALL_PATH.'/languages/'.LANGUAGE.'.php';
 
 $me = $HTTP_SERVER_VARS['PHP_SELF'];
-$me2 = $HTTP_SERVER_VARS['REQUEST_URI'];
+$me2 = !empty($HTTP_SERVER_VARS['REQUEST_URI']) ? $HTTP_SERVER_VARS['REQUEST_URI'] : 
+	$HTTP_SERVER_VARS['SCRIPT_NAME'].'?'.$HTTP_SERVER_VARS['QUERY_STRING'];
 $selrange = 30;
 $now = time();
 $_gv =& $HTTP_GET_VARS;
