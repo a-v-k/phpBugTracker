@@ -67,7 +67,7 @@ function build_image() {
 	}
 	
 	// Create the Pie Graph. 
-	$graph = new PieGraph(300,200,"bug_cat_summary");
+	$graph = new PieGraph(350,200,"bug_cat_summary");
 	$graph->SetShadow();
 
 	// Set A title for the plot
