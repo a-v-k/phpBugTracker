@@ -17,12 +17,12 @@ Stylesheet//EN" CDATA dsssl>
 ;; Texts, and with no Back-Cover Texts. A copy of the license can
 ;; be found at http://www.fsf.org/copyleft/fdl.html.
 ;;
-;; $Id: docs.dsl,v 1.2 2001/09/29 18:35:34 bcurtis Exp $
+;; $Id: docs.dsl,v 1.3 2001/10/01 01:12:38 bcurtis Exp $
 
 
 (define (toc-depth nd)
   (if (string=? (gi nd) (normalize "book"))
-      3
+      2
       2))
 
 

@@ -123,6 +123,158 @@ CLASS="FILENAME"
 >bug.php</TT
 >).  This is for links to files in CVS generated from the comments attached to bugs.</P
 ></DD
+><DT
+>DB_TYPE</DT
+><DD
+><P
+>The type of database server you are using, according to PHPlib's naming convention.  Possible choices are msql, mssql, mysql, oci8, odbc, oracle, pgsql, and sybase.  Note that only MySQL and PostgreSQL have been tested with phpBugTracker</P
+></DD
+><DT
+>DB_HOST</DT
+><DD
+><P
+>The hostname of the database server.</P
+></DD
+><DT
+>DB_DATABASE</DT
+><DD
+><P
+>The name of the database to be used.</P
+></DD
+><DT
+>DB_USER</DT
+><DD
+><P
+>Username to use for connecting to the database.</P
+></DD
+><DT
+>DB_PASSWORD</DT
+><DD
+><P
+>The password to use for connecting to the database.</P
+></DD
+><DT
+>ADMINEMAIL</DT
+><DD
+><P
+>The email address that will be used for all correspondence to and from the bug tracker.</P
+></DD
+><DT
+>ENCRYPTPASS</DT
+><DD
+><P
+>When true, passwords will be stored as an <TT
+CLASS="FUNCTION"
+>md5()</TT
+> hash in the database.  When false, they will be stored as plaintext.</P
+><P
+>If this is set to true, a new password will be generated for users if they request their password to be emailed to them, as the encryption is not reversible.</P
+></DD
+><DT
+>THEME</DT
+><DD
+><P
+>The directory below the <TT
+CLASS="FILENAME"
+>templates</TT
+> directory (both in the top directory and the <TT
+CLASS="FILENAME"
+>admin</TT
+> directory) where the <SPAN
+CLASS="ACRONYM"
+>HTML</SPAN
+> template files are located.  This makes it easy to wrap the bug tracker in a completely different look.</P
+></DD
+><DT
+>USE_JPGRAPH</DT
+><DD
+><P
+>Whether to use the <A
+HREF="http://www.aditus.nu/jpgraph/"
+TARGET="_top"
+>JpGraph</A
+> graphing class for some reports.</P
+></DD
+><DT
+>MASK_EMAIL</DT
+><DD
+><P
+>If true, then email addresses will be shown as <TT
+CLASS="COMPUTEROUTPUT"
+>example at example dot com</TT
+>.  Otherwise, email addresses will be shown as <TT
+CLASS="COMPUTEROUTPUT"
+>example@example.com</TT
+>.</P
+></DD
+><DT
+>HIDE_EMAIL</DT
+><DD
+><P
+>If true, email addresses will be shown as <TT
+CLASS="COMPUTEROUTPUT"
+>******</TT
+> to users who are not logged in (to help avoid spam bots on public bug trackers).  If false, email addresses will be shown according the setting of <TT
+CLASS="VARNAME"
+>MASK_EMAIL</TT
+>, above.</P
+></DD
+><DT
+>USE_SEVERITY_COLOR</DT
+><DD
+><P
+>Whether to color the rows of the bug list according to the severity of the bugs.  The severity colors can be set via the admin interface.  If this is false, the bugs will be listed with alternating background colors of white and gray.</P
+></DD
+><DT
+>EMAIL_IS_LOGIN</DT
+><DD
+><P
+>If true, then users login with their email address, and the email address is shown for fields such as Assigned To and Reported By.  If false, the login is not tied to the user's email address.</P
+></DD
+><DT
+>ATTACHMENT_PATH</DT
+><DD
+><P
+>The subdirectory in which to store bug attachments.  This directory needs to writeable by the web server.</P
+></DD
+><DT
+>ATTACHMENT_MAX_SIZE</DT
+><DD
+><P
+>Maximum size (in bytes) of an attachment.  This will not override the settings in <TT
+CLASS="FILENAME"
+>php.ini</TT
+> if <TT
+CLASS="FILENAME"
+>php.ini</TT
+> has a lower limit.</P
+></DD
+><DT
+>DATEFORMAT</DT
+><DD
+><P
+>The format for displaying the date, according to PHP's <A
+HREF="http://www.php.net/manual/function.date.php"
+TARGET="_top"
+><TT
+CLASS="FUNCTION"
+>date()</TT
+></A
+> function.</P
+></DD
+><DT
+>TIMEFORMAT</DT
+><DD
+><P
+>The format for displaying the date, according to PHP's <A
+HREF="http://www.php.net/manual/function.date.php"
+TARGET="_top"
+><TT
+CLASS="FUNCTION"
+>date()</TT
+></A
+> function.</P
+></DD
 ></DL
 ></DIV
 ></DIV

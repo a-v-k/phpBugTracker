@@ -13,8 +13,8 @@ REL="PREVIOUS"
 TITLE="Configuration Options"
 HREF="configuration.html"><LINK
 REL="NEXT"
-TITLE="Dependencies"
-HREF="dependencies.html"><LINK
+TITLE="Development Standards"
+HREF="devstandards.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="docs.css"></HEAD
@@ -59,7 +59,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="dependencies.html"
+HREF="devstandards.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -84,28 +84,28 @@ CLASS="TOC"
 ></DT
 ><DT
 >3.1. <A
-HREF="devguide.html#DEVSTANDARDS"
+HREF="devguide.html#DEPENDENCIES"
+>Dependencies</A
+></DT
+><DT
+>3.2. <A
+HREF="devstandards.html"
 >Development Standards</A
 ></DT
 ><DD
 ><DL
 ><DT
->3.1.1. <A
-HREF="devguide.html#DEVSTANDARDS-CODE"
+>3.2.1. <A
+HREF="devstandards.html#DEVSTANDARDS-CODE"
 >Coding Standards</A
 ></DT
 ><DT
->3.1.2. <A
-HREF="devguide.html#OTHERCONVENTIONS"
+>3.2.2. <A
+HREF="devstandards.html#OTHERCONVENTIONS"
 >Other Conventions</A
 ></DT
 ></DL
 ></DD
-><DT
->3.2. <A
-HREF="dependencies.html"
->Dependencies</A
-></DT
 ></DL
 ></DIV
 ><BLOCKQUOTE
@@ -113,7 +113,7 @@ CLASS="ABSTRACT"
 ><DIV
 CLASS="ABSTRACT"
 ><A
-NAME="AEN85"
+NAME="AEN169"
 ></A
 ><P
 >Adding on to or extending phpBugTracker should be easy for those with a knowledge of PHP and SQL.  New developers are always welcome to join the project at <A
@@ -128,20 +128,18 @@ CLASS="SECT1"
 ><H1
 CLASS="SECT1"
 ><A
-NAME="DEVSTANDARDS"
->3.1. Development Standards</A
+NAME="DEPENDENCIES"
+>3.1. Dependencies</A
 ></H1
 ><BLOCKQUOTE
 CLASS="ABSTRACT"
 ><DIV
 CLASS="ABSTRACT"
 ><A
-NAME="AEN90"
+NAME="AEN174"
 ></A
 ><P
->			This section details the coding and process standards to be 
-			followed by the developers working on phpBugTracker.
-		</P
+>phpBugTracker requires one external package, PHPlib, and can optionally use JpGraph.  Of course a web server and a database are also necessary.</P
 ></DIV
 ></BLOCKQUOTE
 ><DIV
@@ -149,301 +147,108 @@ CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
-NAME="DEVSTANDARDS-CODE"
->3.1.1. Coding Standards</A
+NAME="DEP-PHPLIB"
+>3.1.1. PHPlib</A
 ></H2
-><DIV
-CLASS="SECT3"
-><H3
-CLASS="SECT3"
-><A
-NAME="DEVSTANDARDS-INDENTING"
->3.1.1.1. Indenting</A
-></H3
 ><P
->				Use an indent of one tab per indent.
-			</P
-></DIV
-><DIV
-CLASS="SECT3"
-><H3
-CLASS="SECT3"
-><A
-NAME="DEVSTANDARDS-CONTROL"
->3.1.1.2. Control Structures</A
-></H3
-><P
->				These include if, for, while, switch, etc. Here is an example if 
-				statement, since it is the most complicated of them:
-			</P
-><TABLE
-BORDER="0"
-BGCOLOR="#EEEEEE"
-WIDTH="100%"
-><TR
-><TD
-><PRE
-CLASS="PROGRAMLISTING"
->  if ((condition1) || (condition2)) {
-    action1;
-  } elseif ((condition3) &amp;&amp; (condition4)) {
-    action2;
-  } else {
-    defaultaction;
-  }
-			</PRE
-></TD
-></TR
-></TABLE
-><P
->				Control statements should have one space between the control keyword 
-				and opening parenthesis, to distinguish them from function calls.
-			</P
-><P
->				You are strongly encouraged to always use curly braces even in 
-				situations where they are technically optional. Having them increases 
-				readability and decreases the likelihood of logic errors being 
-				introduced when new lines are added.
-			</P
-></DIV
-><DIV
-CLASS="SECT3"
-><H3
-CLASS="SECT3"
-><A
-NAME="DEVSTANDARDS-FUNCCALLS"
->3.1.1.3. Function Calls</A
-></H3
-><P
->				Functions should be called with no spaces between the function name, 
-				the opening parenthesis, and the first parameter; spaces between 
-				commas and each parameter, and no space between the last parameter, 
-				the closing parenthesis, and the semicolon. Here's an example:
-			</P
-><TABLE
-BORDER="0"
-BGCOLOR="#EEEEEE"
-WIDTH="100%"
-><TR
-><TD
-><PRE
-CLASS="PROGRAMLISTING"
->  $var = foo($bar, $baz, $quux);
-			</PRE
-></TD
-></TR
-></TABLE
-><P
->				As displayed above, there should be one space on either side of an 
-				equals sign used to assign the return value of a function to a variable.
-			</P
-></DIV
-><DIV
-CLASS="SECT3"
-><H3
-CLASS="SECT3"
-><A
-NAME="DEVSTANDARDS-FUNCDEFS"
->3.1.1.4. Function Definitions</A
-></H3
-><P
->				Function definitions follow the format of function calls, with the 
-				opening brace at the end of the line of the function declaration. The 
-				global variable list (if used) should be placed on the line immediately 
-				following the opening brace, with a blank line between the variable 
-				list and the first line of function code. If the global variable list 
-				is not neccessary, include a blank line between the opening brace and 
-				the first line of function code.
-			</P
-><TABLE
-BORDER="0"
-BGCOLOR="#EEEEEE"
-WIDTH="100%"
-><TR
-><TD
-><PRE
-CLASS="PROGRAMLISTING"
->  function fooFunction($arg1, $arg2 = '') {
-    global $foo1, $foo2;
-
-    if (condition) {
-      statement;
-    }
-    return $val;
-  }
-			</PRE
-></TD
-></TR
-></TABLE
-><P
->				Arguments with default values go at the end of the argument list.  
-				Always attempt to return a meaningful value from a function if one is 
-				appropriate. Here is a slightly longer example:
-			</P
-><TABLE
-BORDER="0"
-BGCOLOR="#EEEEEE"
-WIDTH="100%"
-><TR
-><TD
-><PRE
-CLASS="PROGRAMLISTING"
->  function connect(&amp;$dsn, $persistent = false) {
-
-    if (is_array($dsn)) {
-      $dsninfo = &amp;$dsn;
-    } else {
-      $dsninfo = DB::parseDSN($dsn);
-    }
-
-    if (!$dsninfo || !$dsninfo['phptype']) {
-      return $this-&gt;raiseError();
-    }
-
-    return true;
-  }
-			</PRE
-></TD
-></TR
-></TABLE
-></DIV
-><DIV
-CLASS="SECT3"
-><H3
-CLASS="SECT3"
-><A
-NAME="DEVSTANDARDS-COMMENTS"
->3.1.1.5. Comments</A
-></H3
-><P
->				Non-documentation comments are strongly encouraged. A general rule of 
-				thumb is that if you look at a section of code and think "Wow, I don't 
-				want to try and describe that", you need to comment it before you 
-				forget how it works.
-			</P
-></DIV
-><DIV
-CLASS="SECT3"
-><H3
-CLASS="SECT3"
-><A
-NAME="DEVSTANDARDS-INCLUDING"
->3.1.1.6. Including Code</A
-></H3
-><P
->				Anywhere you are unconditionally including a class file, use 
-				<A
-HREF="http://php.net/manual/en/html/function.require-once.html"
+>PHPlib can be found at <A
+HREF="http://phplib.sourceforge.net/"
 TARGET="_top"
->				<TT
-CLASS="FUNCTION"
->require_once()</TT
-></A
->. Anywhere you are 
-				conditionally including a class file (for example, factory methods), 
-				use <A
-HREF="http://php.net/manual/en/html/function.include-once.html"
-TARGET="_top"
->				<TT
-CLASS="FUNCTION"
->include_once()</TT
-></A
->. Either of these will 
-				ensure that class files are included only once. They share the same file 
-				list, so you don't need to worry about mixing them - a file included 
-				with <TT
-CLASS="FUNCTION"
->require_once()</TT
-> will not be included again by 
-				<TT
-CLASS="FUNCTION"
->include_once()</TT
->.
-			</P
-></DIV
+>http://phplib.sourceforge.net</A
+>.  It provides the database abstraction layer, html templates, and session and authentication management.</P
 ><DIV
 CLASS="SECT3"
 ><H3
 CLASS="SECT3"
 ><A
-NAME="DEVSTANDARDS-PHPTAGS"
->3.1.1.7. PHP Tags</A
+NAME="AEN180"
+>3.1.1.1. Database Abstraction</A
 ></H3
 ><P
->				Always use <TT
-CLASS="COMPUTEROUTPUT"
->&lt;?php ?&gt;</TT
-> 
-				to delimit PHP code, not the <TT
-CLASS="COMPUTEROUTPUT"
->&lt;? ?&gt;</TT
-> 
-				shorthand.
-			</P
-></DIV
-><DIV
-CLASS="SECT3"
-><H3
-CLASS="SECT3"
-><A
-NAME="DEVSTANDARDS-CONSTANTS"
->3.1.1.8. Naming Constants</A
-></H3
+>Instead of using PHP's database functions directly, interactions are done via database objects, which extend PHPlib's <TT
+CLASS="CLASSNAME"
+>DB_Sql</TT
+> class.</P
 ><P
->				Constants should always be uppercase, with underscores to separate 
-				words.
-			</P
-></DIV
-></DIV
-><DIV
-CLASS="SECT2"
-><H2
-CLASS="SECT2"
-><A
-NAME="OTHERCONVENTIONS"
->3.1.2. Other Conventions</A
-></H2
-><DIV
-CLASS="SECT3"
-><H3
-CLASS="SECT3"
-><A
-NAME="DEVSTANDARDS-FILENAMING"
->3.1.2.1. File Naming</A
-></H3
-><P
->				File names should be all lowercase and contain no spaces. HTML files 
-				should have <TT
-CLASS="FILENAME"
->.html</TT
-> as the extension, and PHP files 
-				should have <TT
-CLASS="FILENAME"
->.php</TT
-> as the extension. Where possible, 
-				template files should match the name of the PHP file that will be using 
-				it, e. g., <TT
-CLASS="FILENAME"
->index.html</TT
-> would be the template file 
-				for <TT
-CLASS="FILENAME"
->index.php</TT
->. Where one PHP file uses more than one 
-				template, the templates should be similarly named: 
-				<TT
-CLASS="FILENAME"
->user.php</TT
-> could use 
-				<TT
-CLASS="FILENAME"
->userlist.html</TT
+>The global variable <TT
+CLASS="VARNAME"
+>$q</TT
+> is available as an instance of the class <TT
+CLASS="CLASSNAME"
+>dbclass</TT
+>.  This class adds two functions to the <TT
+CLASS="CLASSNAME"
+>DB_Sql</TT
+> class, <TT
+CLASS="FUNCTION"
+>grab()</TT
 > and <TT
-CLASS="FILENAME"
->userform.html</TT
-> 
-				for a list of users and editing a user, respectively.
-			</P
+CLASS="FUNCTION"
+>grab_field()</TT
+>.  If they are called with an argument, the argument is passed as a query to the database and the results are returned from that query.  If no argument is passed, they return results from the previous call to <TT
+CLASS="FUNCTION"
+>query()</TT
+>.  Here are some examples:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#EEEEEE"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>  // Grab one field from one record in the database
+  $user_email = $q-&gt;grab_field(&quot;select email from &quot;.TBL_AUTH_USER.&quot; where user_id = 1&quot;);
+  echo $user_email;
+
+  // Stuff all the fields from a user record into an array
+  $user_info = $q-&gt;grab(&quot;select * from &quot;.TBL_AUTH_USER.&quot; where user_id = 1&quot;);
+  echo $user_info['email'];
+
+  // Work with a set of records
+  $q-&gt;query(&quot;select * from &quot;.TBL_AUTH_USER);
+  while ($row = $q-&gt;grab()) {
+    echo $row['email'].'&lt;br&gt;';
+  }
+      </PRE
+></TD
+></TR
+></TABLE
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN192"
+>3.1.1.2. Templates</A
+></H3
+><P
+>Instead of outputting HTML from the scripts, templates are used to separate the code from the HTML.  The templates contain tokens that are replaced by the scripts with values.  The general process for using templates is as follows:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#EEEEEE"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>  // Set up the file to be used
+  $t-&gt;set_file('content', 'bugdisplay.html');
+
+  // Substitute the tokens with data
+  $t-&gt;set_var(array(
+    'title' =&gt; $buginfo['title'],
+    'description' =&gt; $buginfo['description'],
+    ....
+    ));
+  
+  // Parse the template and print it out (inside a wrap template)
+  $t-&gt;pparse('main', array('content', 'wrap', 'main');
+      </PRE
+></TD
+></TR
+></TABLE
 ></DIV
 ></DIV
 ></DIV
@@ -482,7 +287,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="dependencies.html"
+HREF="devstandards.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -502,7 +307,7 @@ VALIGN="top"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Dependencies</TD
+>Development Standards</TD
 ></TR
 ></TABLE
 ></DIV
