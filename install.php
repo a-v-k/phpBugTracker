@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.26 2002/04/11 21:58:06 bcurtis Exp $
+// $Id: install.php,v 1.27 2002/04/11 22:15:17 bcurtis Exp $
 
 // Location of smarty templates class
 define ('SMARTY_PATH', '');
@@ -183,7 +183,7 @@ function create_tables() {
 		if ($_pv['db_type'] == 'oci8' ) {
 		    $do_query = substr($do_query, 0, -1);
 		}
-		$db->query($do_query);
+		$db->query(stripslashes($do_query));
 		$do_query = '';
 	}
 }
