@@ -1,11 +1,17 @@
 #!/bin/bash
 # Script to generate database-creation-scripts
-# $Id: configure_db,v 1.5 2001/09/22 16:55:33 bcurtis Exp $
+# $Id: configure_db,v 1.6 2001/09/23 21:20:00 mohni Exp $
 
 # prefix for tablenames
 #TBL_PREFIX="phpbt_"
 TBL_PREFIX=''
 DB_TYPE='mysql'
+
+#------------------------------------------------------------------------------
+help() {
+  echo "usage	$0 -h|--help"
+  echo "	$0 [-t <db-type>] [-p <table-prefix>]"
+} #end help()
 
 #------------------------------------------------------------------------------
 #parameters:
@@ -38,8 +44,33 @@ generate_sql() {
     s/^#\ TEMPLATE:.*$/#/
     s/^--\ TEMPLATE:.*$/--/
   " > $2
-}
+} #end generate_sql()
 
 #------------------------------------------------------------------------------
+#parse commandline arguments
+while [ $# -gt 0 ]; do
+  case $1
+  in
+    '-t')
+      if [ $# -gt 1 ]; then
+	DB_TYPE=$2
+	shift
+      fi
+      shift;;
 
+    '-p')
+      if [ $# -gt 1 ]; then
+	TBL_PREFIX=$2
+	shift
+      fi
+      shift;;
+
+    '-h'|'--help')
+      help
+      exit 0;;
+  esac
+done
+
+#------------------------------------------------------------------------------
+#generate SQL file
 generate_sql schemas/$DB_TYPE.in createdb.sql

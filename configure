@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script to edit configuration settings
-# $Id: configure,v 1.12 2001/09/16 15:12:44 bcurtis Exp $
+# $Id: configure,v 1.13 2001/09/23 21:20:00 mohni Exp $
 
 DIALOG=${DIALOG=dialog}
 tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/test$$
@@ -268,12 +268,8 @@ show_menu() {
 				echo "/TBL_PREFIX/s|, '.*'|, '$DB_TBL_PREFIX'|" >> $tempfile
 				sed -f $tempfile config.php.bak > config.php
 				
-				# Change and run the configure_db script
-				cat configure_db | sed "
-					/TBL_PREFIX/s/'.*'/'$DB_TBL_PREFIX'/
-					/DB_TYPE/s/'.*'/'$DB_TYPE'/
-				" > configure_db
-				./configure_db
+				# run the configure_db script
+				./configure_db -t $DB_TYPE -p $DB_TBL_PREFIX 
 				
 				$DIALOG --backtitle "phpBT Configuration" \
 					--msgbox "Your changes have been saved, and your database creation file is createdb.sql" 0 0
