@@ -7,6 +7,8 @@
 : Prettied up the default template
 : Fixed some bugginess with the restricted projects
 : Fixed a bug in the multi-page listing of the project admin
+: Allow Statuses, Severities, Resolutions, and OSes to be deleted that aren't
+  referenced by bugs.
 
 -- 0.6.2 -- 27 Dec 2001
 : Improved compatibility with Opera and IIS.
