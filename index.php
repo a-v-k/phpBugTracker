@@ -42,15 +42,18 @@ if (USE_JPGRAPH) {
 	while ($row = $q->grab()) {
 		$stats[$row['status_id']]['count'] = $row['count'];
 	}
-	foreach ($stats as $stat) {
+	$total = 0;
+	foreach ($stats as $statid => $stat) {
 		$t->set_var(array(
+			'statid' => $statid,
 			'status' => $stat['name'],
-			'count' => $stat['count'] ? $stat['count'] : 0
+			'count' => isset($stat['count']) ? $stat['count'] : 0
 			));
-		$total += $stat['count'];
+		$total += isset($stat['count']) ? $stat['count'] : 0;
 		$t->parse('rows','row',true);
 	}
 	$t->set_var(array(
+		'statid' => delimit_list('&status[]=', array_keys($stats)),
 		'status' => "<b>{$STRING['totalbugs']}</b>",
 		'count' => $total ? "<b>$total</b>" : 0
 		));
