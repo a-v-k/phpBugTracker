@@ -23,7 +23,7 @@
 				<b>Saved Queries</b>
 				<br>
 				{section name=query loop=$queries}
-					<a href="{$smarty.server.PHP_SELF}?{$queries[query].saved_query_string}">{$queries[query].saved_query_name}</a><br>
+					<a href="query.php?{$queries[query].saved_query_string}">{$queries[query].saved_query_name}</a><br>
 				{/section}
 			{/if}
 		</td>
