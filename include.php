@@ -20,27 +20,27 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.89 2002/01/05 20:34:50 bcurtis Exp $
+// $Id: include.php,v 1.90 2002/01/16 09:43:17 javyer Exp $
 
 // Where are we?
 if (!empty($HTTP_SERVER_VARS['SCRIPT_FILENAME'])) {
-	define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
+  define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 } else {
-	define ('INSTALL_PATH', '.');
+  define ('INSTALL_PATH', '.');
 }
 
 // Handle being included from admin files
 if (!defined('INCLUDE_PATH')) {
-	define('INCLUDE_PATH', '');
+  define('INCLUDE_PATH', '');
 }
 
 if (!@include (INSTALL_PATH.'/'.INCLUDE_PATH.'config.php')) {
-	header("Location: install.php");
-	exit();
+  header("Location: install.php");
+  exit();
 }
 if (!defined('DB_HOST')) { // Installation hasn't been completed
-	header("Location: install.php");
-	exit();
+  header("Location: install.php");
+  exit();
 }
 
 class dbclass extends DB_Sql {
@@ -49,33 +49,33 @@ class dbclass extends DB_Sql {
   var $Database = DB_DATABASE;
   var $User = DB_USER;
   var $Password = DB_PASSWORD;
-	var $Seq_Table = TBL_DB_SEQUENCE;
-  var $Seq_ID_Col    = "nextid";    
-  var $Seq_Name_Col  = "seq_name";  
-	
-	// Attempt to handle different limit syntax
-	function limit_query($q_string, $limit, $offset = 0) {
-		if ($offset) {
-			if (DB_TYPE == 'pgsql') {
-				$this->query("$q_string limit $limit offset $offset");
-			} else {
-				$this->query("$q_string limit $offset, $limit");
-			}
-		} else {
-			$this->query("$q_string limit $limit");
-		}
-	}		
+  var $Seq_Table = TBL_DB_SEQUENCE;
+  var $Seq_ID_Col    = "nextid";
+  var $Seq_Name_Col  = "seq_name";
 
-	// Handle the different types of concats
-	function concat() {
-		$pieces = func_get_args();
-		if (DB_TYPE == 'pgsql') {
-			return delimit_list(' || ', $pieces);
-		} else {
-			return 'concat('. delimit_list(', ', $pieces).')';
-		}
-	}
-	
+  // Attempt to handle different limit syntax
+  function limit_query($q_string, $limit, $offset = 0) {
+    if ($offset) {
+      if (DB_TYPE == 'pgsql') {
+        $this->query("$q_string limit $limit offset $offset");
+      } else {
+        $this->query("$q_string limit $offset, $limit");
+      }
+    } else {
+      $this->query("$q_string limit $limit");
+    }
+  }
+
+  // Handle the different types of concats
+  function concat() {
+    $pieces = func_get_args();
+    if (DB_TYPE == 'pgsql') {
+      return delimit_list(' || ', $pieces);
+    } else {
+      return 'concat('. delimit_list(', ', $pieces).')';
+    }
+  }
+
   function grab($q_string = '') {
     if ($q_string) $this->query($q_string);
     $this->next_record();
@@ -86,33 +86,33 @@ class dbclass extends DB_Sql {
     list($retval) = $this->grab($q_string);
     return $retval;
   }
-	
-	function grab_set($q_string = '') {
-		$retary = array();
-		if ($q_string) $this->query($q_string);
-		while ($row = $this->grab()) { $retary[] = $row; }
-		return $retary;
-	}
 
-	function grab_field_set($q_string = '') {
-		$retary = array();
-		if ($q_string) $this->query($q_string);
-		while ($item = $this->grab_field()) { $retary[] = $item; }
-		return $retary;
-	}
-	function nextid($seq_name) {
-		global $auth;
-		
-		if ($seq_name == TBL_SAVED_QUERY) {
-			if ($id = $this->grab_field("select max(saved_query_id)+1 from ".TBL_SAVED_QUERY." where user_id = ".$auth->auth['uid'])) {
-				return $id;
-			} else {
-				return 1;
-			}
-		} else {
-			return DB_Sql::nextid($seq_name);
-		}
-	}
+  function grab_set($q_string = '') {
+    $retary = array();
+    if ($q_string) $this->query($q_string);
+    while ($row = $this->grab()) { $retary[] = $row; }
+    return $retary;
+  }
+
+  function grab_field_set($q_string = '') {
+    $retary = array();
+    if ($q_string) $this->query($q_string);
+    while ($item = $this->grab_field()) { $retary[] = $item; }
+    return $retary;
+  }
+  function nextid($seq_name) {
+    global $auth;
+
+    if ($seq_name == TBL_SAVED_QUERY) {
+      if ($id = $this->grab_field("select max(saved_query_id)+1 from ".TBL_SAVED_QUERY." where user_id = ".$auth->auth['uid'])) {
+        return $id;
+      } else {
+        return 1;
+      }
+    } else {
+      return DB_Sql::nextid($seq_name);
+    }
+  }
 }
 
 $q = new dbclass;
@@ -124,7 +124,7 @@ $q = new dbclass;
 // Set up the configuration variables
 $q->query('select varname, varvalue from '.TBL_CONFIGURATION);
 while (list($k, $v) = $q->grab()) {
-	define($k, $v);
+  define($k, $v);
 }
 
 // Localization - include the file with the desired language
@@ -172,11 +172,11 @@ class templateclass extends Template {
     $this->set_block('wrap', 'adminnavblock', 'anblock');
     if ($u) {
       list($owner_open, $owner_closed) = $q->grab("SELECT sum(CASE WHEN status_name in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) ,"
-				."sum(CASE WHEN status_name not in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END )"
-				."from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) where assigned_to = $u");
+        ."sum(CASE WHEN status_name not in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END )"
+        ."from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) where assigned_to = $u");
       list($reporter_open, $reporter_closed) = $q->grab("SELECT sum(CASE WHEN status_name in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) ,"
-				."sum(CASE WHEN status_name not in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END )"
-				."from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) where created_by = $u");
+        ."sum(CASE WHEN status_name not in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END )"
+        ."from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) where created_by = $u");
       $this->set_var(array(
         'loggedinas' => $auth->auth['uname'],
         'liblock' => '',
@@ -190,7 +190,7 @@ class templateclass extends Template {
       $this->set_var(array(
         'loggedinas' => '',
         'loblock' => '',
-				'loginlabel' => EMAIL_IS_LOGIN ? 'Email' : 'Login'
+        'loginlabel' => EMAIL_IS_LOGIN ? 'Email' : 'Login'
         ));
       $this->parse('liblock', 'loginblock', true);
     }
@@ -205,9 +205,9 @@ class templateclass extends Template {
 }
 
 if (INCLUDE_PATH == '../') {
-	$t = new templateclass(INCLUDE_PATH.'templates/'.THEME.'/admin', 'keep');
+  $t = new templateclass(INCLUDE_PATH.'templates/'.THEME.'/admin', 'keep');
 } else {
-	$t = new templateclass('templates/'.THEME.'/', 'keep');
+  $t = new templateclass('templates/'.THEME.'/', 'keep');
 }
 
 $t->set_var(array(
@@ -216,7 +216,7 @@ $t->set_var(array(
   'me2' => $me2,
   'error' => '',
   'loginerror' => '',
-	'template_path' => INCLUDE_PATH.'templates/'.THEME));
+  'template_path' => INCLUDE_PATH.'templates/'.THEME));
 
 // End classes -- Begin helper functions
 
@@ -255,35 +255,35 @@ function build_select($box, $value = '', $project = 0) {
   );
 
   $text = '';
-	if (isset($cfgDatabase[$box])) {
-  	$querystart = "select {$box}_id, {$box}_name from $cfgDatabase[$box]";
-  	$queries = array(
-    	'group' => $querystart.' where group_name <> \'User\' order by group_name',
-    	'severity' => $querystart.' where sort_order > 0 order by sort_order',
-    	'status' => $querystart.' where sort_order > 0 order by sort_order',
-    	'resolution' => $querystart.' where sort_order > 0 order by sort_order',
-    	'project' => $perm->have_perm('Admin') 
-				? $querystart." where active > 0 order by {$box}_name"
-				: "select p.{$box}_id, {$box}_name from $cfgDatabase[$box] p left join ".
-					TBL_PROJECT_GROUP.' pg using(project_id) where active > 0 
-					and (pg.project_id is null or pg.group_id in ('.
-					delimit_list(',', $auth->auth['group_ids']).')) group by 
-					p.project_id, p.project_name order by project_name',
-    	'component' => $querystart." where project_id = $project order by {$box}_name",
-    	'version' => $querystart." where project_id = $project order by {$box}_name"
-    	);
-	}
+  if (isset($cfgDatabase[$box])) {
+    $querystart = "select {$box}_id, {$box}_name from $cfgDatabase[$box]";
+    $queries = array(
+      'group' => $querystart.' where group_name <> \'User\' order by group_name',
+      'severity' => $querystart.' where sort_order > 0 order by sort_order',
+      'status' => $querystart.' where sort_order > 0 order by sort_order',
+      'resolution' => $querystart.' where sort_order > 0 order by sort_order',
+      'project' => $perm->have_perm('Admin')
+        ? $querystart." where active > 0 order by {$box}_name"
+        : "select p.{$box}_id, {$box}_name from $cfgDatabase[$box] p left join ".
+          TBL_PROJECT_GROUP.' pg using(project_id) where active > 0
+          and (pg.project_id is null or pg.group_id in ('.
+          delimit_list(',', $auth->auth['group_ids']).')) group by
+          p.project_id, p.project_name order by project_name',
+      'component' => $querystart." where project_id = $project order by {$box}_name",
+      'version' => $querystart." where project_id = $project order by {$box}_id desc"
+      );
+  }
 
   switch($box) {
     case 'group' :
-			if ($project) { // If we are building for project admin page
-				if (!count($value) or (count($value) && in_array(0, $value))) {
-					$sel = ' selected';
-				} else {
-					$sel = '';
-				}
-				$text = "<option value=\"all\"$sel>All Groups</option>";
-			}
+      if ($project) { // If we are building for project admin page
+        if (!count($value) or (count($value) && in_array(0, $value))) {
+          $sel = ' selected';
+        } else {
+          $sel = '';
+        }
+        $text = "<option value=\"all\"$sel>All Groups</option>";
+      }
       $q->query($queries[$box]);
       while ($row = $q->grab()) {
         if (count($value) && in_array($row[$box.'_id'], $value)) $sel = ' selected';
@@ -325,48 +325,48 @@ function build_select($box, $value = '', $project = 0) {
         $text .= "<option value=\"{$row['user_id']}\"$sel>{$row['login']}</option>";
       }
       break;
-		case 'bug_cc' :
-			$q->query('select b.user_id, login from '.TBL_BUG_CC.' b left join '.
-				TBL_AUTH_USER." using(user_id) where bug_id = $value");
-			while (list($uid, $user) = $q->grab()) {
-				$text .= "<option value=\"$uid\">".maskemail($user).'</option>';
-			}
-			
-			// Pad the sucker
-			$text .= '<option value="" disabled>';
-			for ($i = 0; $i < 30; $i++) {
-				$text .= '&nbsp;';
-			}
-			$text .= '</option>';
-			break;
-		case 'LANGUAGE' :
-			$dir = opendir(INSTALL_PATH.'/'.INCLUDE_PATH.'languages');
-			while (false !== ($file = readdir($dir))) {
-				if ($file != '.' && $file != '..' && $file != 'CVS') {
-					$file = str_replace('.php', '', $file);
-					if ($file == $value) {
-						$sel = ' selected';
-					} else {
-						$sel = '';
-					}
-					$text .= "<option value=\"$file\"$sel>$file</option>";
-				}
-			}
-			break;
-		case 'THEME' :
-			$dir = opendir(INSTALL_PATH.'/'.INCLUDE_PATH.'templates');
-			while (false !== ($file = readdir($dir))) {
-				if ($file != '.' && $file != '..' && $file != 'CVS') {
-					$file = str_replace('.php', '', $file);
-					if ($file == $value) {
-						$sel = ' selected';
-					} else {
-						$sel = '';
-					}
-					$text .= "<option value=\"$file\"$sel>$file</option>";
-				}
-			}
-			break;
+    case 'bug_cc' :
+      $q->query('select b.user_id, login from '.TBL_BUG_CC.' b left join '.
+        TBL_AUTH_USER." using(user_id) where bug_id = $value");
+      while (list($uid, $user) = $q->grab()) {
+        $text .= "<option value=\"$uid\">".maskemail($user).'</option>';
+      }
+
+      // Pad the sucker
+      $text .= '<option value="" disabled>';
+      for ($i = 0; $i < 30; $i++) {
+        $text .= '&nbsp;';
+      }
+      $text .= '</option>';
+      break;
+    case 'LANGUAGE' :
+      $dir = opendir(INSTALL_PATH.'/'.INCLUDE_PATH.'languages');
+      while (false !== ($file = readdir($dir))) {
+        if ($file != '.' && $file != '..' && $file != 'CVS') {
+          $file = str_replace('.php', '', $file);
+          if ($file == $value) {
+            $sel = ' selected';
+          } else {
+            $sel = '';
+          }
+          $text .= "<option value=\"$file\"$sel>$file</option>";
+        }
+      }
+      break;
+    case 'THEME' :
+      $dir = opendir(INSTALL_PATH.'/'.INCLUDE_PATH.'templates');
+      while (false !== ($file = readdir($dir))) {
+        if ($file != '.' && $file != '..' && $file != 'CVS') {
+          $file = str_replace('.php', '', $file);
+          if ($file == $value) {
+            $sel = ' selected';
+          } else {
+            $sel = '';
+          }
+          $text .= "<option value=\"$file\"$sel>$file</option>";
+        }
+      }
+      break;
     default :
       $deadarray = $select[$box];
       while(list($val,$item) = each($deadarray)) {
@@ -384,7 +384,7 @@ function build_select($box, $value = '', $project = 0) {
 function multipages($nr, $page, $urlstr) {
   global $me, $selrange;
 
-	$pages = '';
+  $pages = '';
   if (!$page) $page = 1;
   if ($page == 'all') {
     $selrange = $nr;
@@ -429,7 +429,7 @@ function genpassword($length){
 
     $vowels = array("a", "e", "i", "o", "u");
     $cons = array("b", "c", "d", "g", "h", "j", "k", "l", "m", "n", "p", "r", "s", "t", "u", "v", "w", "tr", "cr", "br", "fr", "th", "dr", "ch", "ph", "wr", "st", "sp", "sw", "pr", "sl", "cl");
-		$password = '';
+    $password = '';
 
     $num_vowels = count($vowels);
     $num_cons = count($cons);
@@ -501,9 +501,9 @@ function maskemail($email) {
 // Begin every page with a page_open
 if (!defined('NO_AUTH')) {
   session_start();
-	$_sv =& $HTTP_SESSION_VARS;
+  $_sv =& $HTTP_SESSION_VARS;
   $auth = new uauth;
-	$perm = new uperm;
+  $perm = new uperm;
   $u = isset($auth->auth['uid']) ? $auth->auth['uid'] : 0;
 }
 
@@ -521,13 +521,13 @@ if (isset($_pv['dologin'])) {
       }
       mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'],
         $password),  sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMIN_EMAIL, $STRING['lang_charset']));
-      $t->set_var('loginerror', 
-				'<div class="result">Your password has been emailed to you</div>');
+      $t->set_var('loginerror',
+        '<div class="result">Your password has been emailed to you</div>');
     }
   } else {
     if (!$u = $auth->auth_validatelogin()) {
       $t->set_var('loginerror', '<div class="error">Invalid login</div>');
-		}
+    }
   }
 }
 
