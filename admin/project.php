@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.27 2001/12/06 14:28:31 bcurtis Exp $
+// $Id: project.php,v 1.28 2001/12/07 14:18:22 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -190,7 +190,7 @@ function save_project($projectid = 0) {
     $error['project'] = $STRING['givename'];
   } elseif (!$_pv['description'] = htmlspecialchars(trim($_pv['description']))) {
     $error['project'] = $STRING['givedesc'];
-  } elseif (is_array($_pv['usergroup']) and 
+  } elseif (isset($_pv['usergroup']) and is_array($_pv['usergroup']) and 
 		in_array('all', $_pv['usergroup']) and count($_pv['usergroup']) > 1) {
 		$error['project'] = $STRING['project_only_all_groups'];
 	}
@@ -231,7 +231,7 @@ function save_project($projectid = 0) {
 	// Handle project -> group relationship
 	$old_usergroup = $q->grab_field_set('select group_id from '.TBL_PROJECT_GROUP.
 		" where project_id = $projectid");
-	if (is_array($usergroup) and count($usergroup)) {
+	if (isset($usergroup) and is_array($usergroup) and count($usergroup)) {
 		if (in_array('all', $usergroup)) {
 			// User selected 'All groups'
 			if (count($old_usergroup)) {
