@@ -1,3 +1,8 @@
+-- 0.1.7 -- 31 July 2001
+: Fixed bugs with valid_email() in admin/user.php
+: Added table definition for BugHistory table in createdb.sql
+: Added option to store passwords encrypted in the database.
+
 -- 0.1.6 -- 23 July 2001
 : Fixed the bug of not setting the creation date when creating a new version
 : Fixed the bug of not displaying the correct version in bug display
