@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.30 2002/06/05 15:25:08 firma Exp $
+// $Id: functions.php,v 1.31 2002/06/12 12:43:49 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -31,7 +31,7 @@ function show_text($text, $iserror = false) {
 		'text' => $text,
 		'iserror' => $iserror
 		));
-	$t->display('error.html');
+	$t->wrap('error.html');
 }
 
 $select['priority'] = array(
@@ -364,7 +364,7 @@ function build_project_js($params) {
 	global $db, $u, $perm, $_sv, $QUERY;
 	
 	extract($params);
-	$js = '';
+	$js = ''; $js2 = '';
 	
 	// Build the javascript-powered select boxes
 	if ($perm->have_perm('Admin')) {
@@ -376,17 +376,24 @@ function build_project_js($params) {
 	}
 	while (list($pid, $pname) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 		$pname = addslashes($pname);
-		// Version array
-		$js .= "versions['$pname'] = new Array(";
-		$js .= (!isset($no_all) || !$no_all) ? "new Array('','All')," : '';
+		// Version arrays
+		$js .= "versions['$pname'] = new Array(".
+			((!isset($no_all) or !$no_all) ? "new Array('','All')," : '');
+		$js2 = "closedversions['$pname'] = new Array(".
+			((!isset($no_all) or !$no_all) ? "new Array('','All')," 
+				: "new Array(0, 'Choose One'),");
 		$rs2 = $db->query("select version_name, version_id from ".TBL_VERSION.
 			" where project_id = $pid and active = 1");
 		while (list($version,$vid) = $rs2->fetchRow(DB_FETCHMODE_ORDERED)) {
 			$version = addslashes($version);
 			$js .= "new Array($vid,'$version'),";
+			$js2 .= "new Array($vid,'$version'),";
 		}
 		if (substr($js,-1) == ',') $js = substr($js,0,-1);
 		$js .= ");\n";
+		if (substr($js2,-1) == ',') $js2 = substr($js2,0,-1);
+		$js2 .= ");\n";
+		$js .= $js2;
 		
 		// Component array
 		$js .= "components['$pname'] = new Array(";

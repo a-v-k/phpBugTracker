@@ -1,8 +1,10 @@
 <script language="JavaScript">
 <!-- 
 	versions = new Array();
+	closedversions = new Array();
 	components = new Array();
 	versions['All'] = new Array(new Array('','All'));
+	closedversions['All'] = new Array(new Array('','All'));
 	components['All'] = new Array(new Array('','All'));
 	{project_js no_all=true}
 
@@ -13,11 +15,28 @@
   	for (var x = 0; x < versions[sel].length; x++) {
     	f.version_id.options[x].value = versions[sel][x][0];
     	f.version_id.options[x].text = versions[sel][x][1];
+			f.version_id.selectedIndex = 0;
   	}
+
+  	f.to_be_closed_in_version_id.length = closedversions[sel].length;
+  	for (var x = 0; x < closedversions[sel].length; x++) {
+    	f.to_be_closed_in_version_id.options[x].value = closedversions[sel][x][0];
+    	f.to_be_closed_in_version_id.options[x].text = closedversions[sel][x][1];
+			f.to_be_closed_in_version_id.selectedIndex = 0;
+  	}
+
+  	f.closed_in_version_id.length = closedversions[sel].length;
+  	for (var x = 0; x < closedversions[sel].length; x++) {
+    	f.closed_in_version_id.options[x].value = closedversions[sel][x][0];
+    	f.closed_in_version_id.options[x].text = closedversions[sel][x][1];
+			f.closed_in_version_id.selectedIndex = 0;
+  	}
+
   	f.component_id.length = components[sel].length;
   	for (var x = 0; x < components[sel].length; x++) {
     	f.component_id.options[x].value = components[sel][x][0];
     	f.component_id.options[x].text = components[sel][x][1];
+			f.component_id.selectedIndex = 0;
   	}
 	}
 		
@@ -93,23 +112,40 @@
 			{$STRING.version}:
 		</td>
 		<td>
-			<select name="version_id">{build_select box=version selected=$version_id project=$project_id}</select> /
-			<select name="to_be_closed_in_version_id">{build_select box=version selected=$to_be_closed_in_version_id project=$project_id}</select>
+			<select name="version_id">{build_select box=version selected=$version_id project=$project_id}</select>
 		</td>
-		<td rowspan="2">
+		<td>
 			OS: 
 		</td>
-		<td rowspan="2">
+		<td>
 			<select name="os_id">{build_select box=os selected=$os_id}</select>
 		</td>
 	</tr>
 	<tr>
+		<td>To Be Closed Version</td>
+		<td>
+			<select name="to_be_closed_in_version_id">
+				<option value="0">Choose One</option>
+				{build_select box=version selected=$to_be_closed_in_version_id project=$project_id}
+			</select>
+		</td>
 		<td>
 			{$STRING.database}:
 		</td>
 		<td>
 			<select name="database_id">{build_select box=database selected=$database_id}</select>
 		</td>
+	</tr>
+	<tr>
+		<td>Closed Version</td>
+		<td>
+
+			<select name="closed_in_version_id">
+				<option value="0">Choose One</option>
+				{build_select box=version selected=$closed_in_version_id project=$project_id}
+			</select>
+		</td>
+		<td colspan="2">&nbsp;</td>
 	</tr>
 	<tr>
   	<td>Summary:</td>
