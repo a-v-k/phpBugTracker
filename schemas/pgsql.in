@@ -2,7 +2,7 @@
 -- PostgreSQL database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.28 2002/05/01 12:20:55 bcurtis Exp $
+-- $Id: pgsql.in,v 1.29 2002/05/18 15:59:20 firma Exp $
 
 BEGIN;
 
@@ -65,6 +65,7 @@ CREATE TABLE TBL_BUG (
   priority INT2  NOT NULL DEFAULT '0',
   status_id INT2  NOT NULL DEFAULT '0',
   resolution_id INT2  NOT NULL DEFAULT '0',
+  database_id INT2  NOT NULL DEFAULT '0',
   assigned_to INT4  NOT NULL DEFAULT '0',
   created_by INT4  NOT NULL DEFAULT '0',
   created_date INT8  NOT NULL DEFAULT '0',
@@ -76,6 +77,8 @@ CREATE TABLE TBL_BUG (
   os_id INT2  NOT NULL DEFAULT '0',
   browser_string varchar(255) NOT NULL DEFAULT '',
   close_date INT8  NOT NULL DEFAULT '0',
+  closed_in_version_id INT4 NOT NULL DEFAULT '0',
+  to_be_closed_in_version_id INT4 NOT NULL DEFAULT '0',
   PRIMARY KEY  (bug_id)
 );
 
@@ -248,6 +251,14 @@ CREATE TABLE TBL_VERSION (
   PRIMARY KEY  (version_id)
 );
 
+CREATE TABLE TBL_DATABASE (
+    database_id INT4 NOT NULL DEFAULT '0',
+    database_name varchar(30) NOT NULL DEFAULT '',
+    database_version varchar(10) NOT NULL DEFAULT '',
+    sort_order INT2 NOT NULL DEFAULT '0',
+    PRIMARY KEY (database_id)
+);
+
 --
 -- -- Insert initial data --
 --
@@ -363,6 +374,10 @@ INSERT INTO TBL_STATUS VALUES (6,'Verified','The resolution is confirmed by the 
 INSERT INTO TBL_STATUS VALUES (7,'Closed','The bug is officially squashed (QA)',7);
 CREATE SEQUENCE TBL_STATUS_seq START 7;
 
+INSERT INTO TBL_DATABASE VALUES (1,'Oracle','8.1.7',1);
+INSERT INTO TBL_DATABASE VALUES (2,'MySQL','3.23.49',2);
+INSERT INTO TBL_DATABASE VALUES (3,'PostgreSQL','7.1.3',3);
+CREATE SEQUENCE TBL_DATABASE_seq START 3;
 
 --
 -- Indexes for table TBL_GROUP_PERM
@@ -390,3 +405,4 @@ CREATE INDEX group_id_TBL_BUG_GROUP_index ON TBL_BUG_GROUP (group_id);
 
 
 COMMIT;
+
