@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.22 2002/05/02 13:17:57 bcurtis Exp $
+// $Id: functions.php,v 1.23 2002/05/16 10:37:37 firma Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -427,4 +427,46 @@ function bt_date($string, $format) {
 	return date($format, $string);
 }
 
-?>
+// quoted-printable encoder function
+function qp_enc($input, $line_max = 76) {
+    $hex = array('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F');
+    $lines = split("\n", str_replace("\r\n", "\n", $input));
+    $eol = "\n";
+    $escape = "=";
+    $output = "";
+    while( list(, $line) = each($lines) ) { 
+        $line = rtrim($line);
+        $linlen = strlen($line);
+        $newline = ""; 
+        for($i = 0; $i < $linlen; $i++) {
+            $c = substr($line, $i, 1);
+            $dec = ord($c);
+            if ( ($dec == 32) && ($i == ($linlen - 1)) ) {
+                $c = "=20";
+            } elseif ( ($dec == 61) || ($dec < 32 ) || ($dec > 126) ) {
+                $h2 = floor($dec/16); $h1 = floor($dec%16);
+                $c = $escape.$hex["$h2"].$hex["$h1"];
+            } 
+            if ( (strlen($newline) + strlen($c)) >= $line_max ) {
+                $output .= $newline.$escape.$eol;
+                $newline = "";
+            } 
+            $newline .= $c;
+        }
+        $output .= $newline.$eol;
+    }
+    return (trim($output)); 
+}
+
+// mailer with use of quoted-printable encoding
+function qp_mail($to, $subject = 'No subject', $body, $headers = '') {
+    global $STRING;
+
+    if ($headers != '') {
+        $headers .= "\n";
+        // There have to be no newline at the end of $headers
+    }
+    $headers .= "Content-type: text/plain; charset=\"".$STRING['lang_charset']."\"\n";
+    $headers .= "Content-Transfer-Encoding: quoted-printable\nMIME-Version: 1.0";
+    mail ($to, $subject, qp_enc($body), $headers);
+} ?>    
