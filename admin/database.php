@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: database.php,v 1.2 2002/08/26 18:11:12 bcurtis Exp $
+// $Id: database.php,v 1.3 2002/09/30 18:02:05 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -28,7 +28,7 @@ include 'include.php';
 
 function del_item($databaseid = 0) {
 	global $db, $me;
-	
+
 	if ($databaseid) {
 		// Make sure we are going after a valid record
 		$itemexists = $db->getOne('select count(*) from '.TBL_DATABASE.
@@ -51,21 +51,18 @@ function do_form($databaseid = 0) {
 	// Validation
 	if (!$database_name = trim($database_name))
 		$error = $STRING['givename'];
-	elseif (!$database_desc = trim($database_version))
-		$error = $STRING['giveversion'];
 	if ($error) { show_form($databaseid, $error); return; }
 
 	if (empty($sort_order)) $sort_order = 0;
 	if (!$databaseid) {
 		$db->query("insert into ".TBL_DATABASE.
-			" (database_id, database_name, database_version, sort_order) 
+			" (database_id, database_name, sort_order)
 			values (".$db->nextId(TBL_DATABASE).', '.
-			$db->quote(stripslashes($database_name)).', '.
-			$db->quote(stripslashes($database_desc)).", $sort_order)");
+			$db->quote(stripslashes($database_name)).
+			", $sort_order)");
 	} else {
 		$db->query("update ".TBL_DATABASE.
 			" set database_name = ".$db->quote(stripslashes($database_name)).
-			', database_version = '.$db->quote(stripslashes($database_version)).
 			", sort_order = $sort_order where database_id = $database_id");
 	}
 	if ($use_js) {
@@ -91,16 +88,16 @@ function show_form($databaseid = 0, $error = '') {
 function list_items($databaseid = 0, $error = '') {
 	global $me, $db, $t, $_gv, $STRING, $TITLE, $QUERY;
 
-	if (empty($_gv['order'])) { 
-		$order = 'sort_order'; 
-		$sort = 'asc'; 
+	if (empty($_gv['order'])) {
+		$order = 'sort_order';
+		$sort = 'asc';
 	} else {
-		$order = $_gv['order']; 
-		$sort = $_gv['sort']; 
+		$order = $_gv['order'];
+		$sort = $_gv['sort'];
 	}
-	
+
 	$page = isset($_gv['page']) ? $_gv['page'] : 0;
-	
+
 	$nr = $db->getOne("select count(*) from ".TBL_DATABASE);
 
 	list($selrange, $llimit) = multipages($nr, $page, "order=$order&sort=$sort");
@@ -111,7 +108,6 @@ function list_items($databaseid = 0, $error = '') {
 	$headers = array(
 		'databaseid' => 'database_id',
 		'name' => 'database_name',
-		'version' => 'database_version',
 		'sortorder' => 'sort_order');
 
 	sorting_headers($me, $headers, $order, $sort);

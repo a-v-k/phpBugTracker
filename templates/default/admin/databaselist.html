@@ -2,7 +2,7 @@
 <!--
 	var me = '{$SCRIPT_NAME}';
 	{literal}
-		
+
 	function popupDatabase(id) {
 		window.open(me + '?op=edit&use_js=1&database_id='+id, 'ewin', 'dependent=yes,width=350,height=300,scrollbars=1');
 	}
@@ -17,14 +17,12 @@
 			<table border="0" cellpadding="2" cellspacing="1" width="100%">
 				<tr>
 					<th class="{$headers.name.class}"><a href="{$headers.name.url}">{$STRING.name}</a></th>
-					<th class="{$headers.version.class}"><a href="{$headers.version.url}">{$STRING.version}</a></th>
 					<th class="{$headers.sortorder.class}"><a href="{$headers.sortorder.url}">{$STRING.sortorder}</a></th>
 					<th>Delete</th>
 				</tr>
 				{section name=database loop=$databases}
 				<tr{if $smarty.section.database.iteration is even} class="alt"{/if}>
 					<td><a href="{$SCRIPT_NAME}?op=edit&database_id={$databases[database].database_id}" onClick="popupDatabase({$databases[database].database_id}); return false;">{$databases[database].database_name|stripslashes}</a></td>
-					<td>&nbsp;{$databases[database].database_version}</td>
 					<td align="center">{$databases[database].sort_order}</td>
 					<td align="center">
 						{if not $databases[database].bug_count}
@@ -34,7 +32,7 @@
 				</tr>
 				{/section}
 				<tr>
-					<td colspan="4" align="center">
+					<td colspan="3" align="center">
 						<br>
   					{$first} - {$last} of {$total}
 						<br>

@@ -33,13 +33,13 @@ $QUERY = array(
 		'sort_order '.
 		'order by %s %s',
 	'admin-list-databases' => 'select d.database_id, database_name, '.
-		'database_version, sort_order, count(bug_id) as bug_count '.
+		'sort_order, count(bug_id) as bug_count '.
 		'from '.TBL_DATABASE.' d, '.TBL_BUG.' b '.
 		'where d.database_id = b.database_id(+) '.
-		'group by d.database_id, database_name, database_version, sort_order '.
+		'group by d.database_id, database_name, sort_order '.
 		'order by %s %s',
-        'admin-list-sites' => 'select s.site_id, site_name, sort_order, '.
-                'count(bug_id) as bug_count from '.TBL_SITE. ' s, '.TBL_BUG.
+	'admin-list-sites' => 'select s.site_id, site_name, sort_order, '.
+		'count(bug_id) as bug_count from '.TBL_SITE. ' s, '.TBL_BUG.
 		'where s.site_id = b.site_id(+) group by s.site_id, site_name, '.
 		'sort_order order by %s %s',
 	'admin-list-statuses' => 'select s.status_id, status_name, status_desc, '.

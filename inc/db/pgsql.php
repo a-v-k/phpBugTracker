@@ -32,19 +32,19 @@ $QUERY = array(
 		'sort_order '.
 		'order by %s %s',
 	'admin-list-databases' => 'select d.database_id, database_name, '.
-		'database_version, sort_order, count(bug_id) as bug_count '.
+		'sort_order, count(bug_id) as bug_count '.
 		'from '.TBL_DATABASE. ' d left join '.TBL_BUG.' using (database_id) '.
-		'group by d.database_id, database_name, database_version, sort_order '.
+		'group by d.database_id, database_name, sort_order '.
 		'order by %s %s',
 	'admin-list-statuses' => 'select s.status_id, status_name, status_desc, '.
 		'sort_order, count(bug_id) as bug_count '.
 		'from '.TBL_STATUS.' s left join '. TBL_BUG.' using (status_id) '.
 		'group by s.status_id, status_name, status_desc, sort_order '.
 		'order by %s %s',
-        'admin-list-sites' => 'select s.site_id, site_name, sort_order, '.
-                'count(bug_id) as bug_count from '.TBL_SITE. ' s left join '.
-                TBL_BUG.' using (site_id) group by s.site_id, site_name, sort_order '.
-                'order by %s %s',
+	'admin-list-sites' => 'select s.site_id, site_name, sort_order, '.
+		'count(bug_id) as bug_count from '.TBL_SITE. ' s left join '.
+		TBL_BUG.' using (site_id) group by s.site_id, site_name, sort_order '.
+		'order by %s %s',
 	'admin-user-groups' => 'select ug.group_id '.
 		'from '.TBL_USER_GROUP.' ug left join '.TBL_AUTH_GROUP.' g using (group_id) '.
 		'where user_id = %s and group_name <> \'User\'',
