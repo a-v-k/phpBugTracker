@@ -132,7 +132,7 @@ $QUERY = array(
 	'query-list-bugs-count' => 'select count(*) '.
 		'from '.TBL_BUG.' b, '.TBL_AUTH_USER.' owner, '.TBL_AUTH_USER.' reporter '.
 		'where b.assigned_to = owner.user_id(+) '.
-		'and b.created_by = reporter.user_id(+) ',
+		'and b.created_by = reporter.user_id(+) and ',
 	'query-list-bugs' => 'select %s '.
 		'from '.TBL_BUG.' b, '.TBL_AUTH_USER.' lastmodifier, '.
 		TBL_AUTH_USER.' owner, '.TBL_AUTH_USER.' reporter, '.

@@ -127,7 +127,7 @@ $QUERY = array(
 	'query-list-bugs-count' => 'select count(*) '.
 		'from '.TBL_BUG.' b '.
 		'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
-		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id ',
+		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id where ',
 	'query-list-bugs' => 'select %s '.
 		'from '.TBL_BUG.' b '.
 		'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
