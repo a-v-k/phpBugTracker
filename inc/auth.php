@@ -28,9 +28,21 @@ class uauth {
 	var $classname = 'uauth';
 	
 	function uauth() {
-		global $HTTP_SESSION_VARS;
+		global $HTTP_SESSION_VARS, $group_ids, $uname, $db_fields, $group, $perms,
+			$uid, $exp;
 		
 		if (!isset($HTTP_SESSION_VARS['group_ids'])) {
+			if (phpversion() <= '4.0.6') {
+				$group_ids = array(0);
+				$uname = '';
+				$db_fields = array();
+				$group = array();
+				$perms = array();
+				$uid = 0;
+				$exp = 0;
+				session_register(array('group_ids', 'uname', 'db_fields', 'group', 
+					'perms', 'uid', 'exp'));
+			}
 			$HTTP_SESSION_VARS['group_ids'] = array(0);
 		}
 		
@@ -53,7 +65,8 @@ class uauth {
 	}
 	
 	function auth_validatelogin() {
-    global $_pv, $db, $select, $emailpass, $emailsuccess, $STRING, $HTTP_SESSION_VARS;
+    global $_pv, $db, $select, $emailpass, $emailsuccess, $STRING, 
+			$HTTP_SESSION_VARS, $uid;
 
 		extract($_pv);
     if (!$username) return 0;
@@ -81,7 +94,7 @@ class uauth {
 			foreach ($perms as $perm) {				
         $HTTP_SESSION_VARS['perms'][$perm] = true;
       }
-      $HTTP_SESSION_VARS['uid'] = $u['user_id'];
+			$HTTP_SESSION_VARS['uid'] = $u['user_id'];
 
       return $u['user_id'];
     }
