@@ -1,3 +1,8 @@
+-- 0.1.2 -- 26 Dec 2000
+: Added selection of project, version, and component on the query page
+: Added user validation when updating a bug
+: Fixed "That bug does not exist" error display
+
 -- 0.1.1 -- 25 Dec 2000
 : Added localization (except for database related stuff, such as Resolutions and
   Statuses).
