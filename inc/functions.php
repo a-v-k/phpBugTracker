@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.26 2002/05/19 11:26:04 firma Exp $
+// $Id: functions.php,v 1.27 2002/05/19 12:21:10 firma Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -490,15 +490,15 @@ function qp_mail($to, $subject = 'No subject', $body, $headers = '') {
         $headers .= "\n";
         // There have to be no newline at the end of $headers
     }
-    $headers .= "Content-type: text/plain; charset=\"".$STRING['lang_charset']."\"\n";
+    $headers .= "Content-Type: text/plain; charset=\"".$STRING['lang_charset']."\"\n"Content-Transfer-Encoding: ";
     
     // If configured to send MIME encoded emails
     if (SEND_MIME_EMAIL) {
-	$headers .= "Content-Transfer-Encoding: quoted-printable\nMIME-Version: 1.0";
-	$retval = mail ($to, $subject, qp_enc($body), $headers);
+	$retval = mail ($to, $subject, qp_enc($body), $headers.
+	    "quoted-printable\nMIME-Version: 1.0");
     } else {
-	$headers .= "Content-Transfer-Encoding: 8bit";
-	$retval = mail ($to, $subject, $body, $headers);
+	$retval = mail ($to, $subject, $body, $headers.
+	    "8bit");
     }
 
     // Returns true if mail is eccepted for delivery, otherwise return false
