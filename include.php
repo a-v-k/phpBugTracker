@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.127 2004/10/25 12:06:57 bcurtis Exp $
+// $Id: include.php,v 1.128 2004/10/25 12:15:49 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0);
 ini_set("magic_quotes_sybase", 0);
@@ -110,6 +110,7 @@ class template {
 	}
 
 	function render($content_template, $page_title, $wrap_file = '', $nowrap = false) {
+		error_reporting(E_ALL ^ E_NOTICE); // Clobber notices in template output
 		extract($this->vars);
 		$path = defined('TEMPLATE_PATH')
 		? './templates/'.THEME.'/'.TEMPLATE_PATH.'/'
