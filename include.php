@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.128 2004/10/25 12:15:49 bcurtis Exp $
+// $Id: include.php,v 1.129 2004/12/05 17:01:32 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0);
 ini_set("magic_quotes_sybase", 0);
@@ -169,13 +169,17 @@ if (isset($_POST['dologin'])) {
 				$mpassword = md5($password);
 				$db->query("update ".TBL_AUTH_USER." set password = '$mpassword' where login = '$username'");
 			}
-			qp_mail($email, 
-				translate("phpBugTracker Login"),
-				sprintf(translate("Your phpBugTracker password is %s"), $password),
-				sprintf("From: %s", ADMIN_EMAIL));
-			$t->assign('loginerror',
-				'<div class="result">'.translate("Your password has been emailed to you").'</div>');
-			$emailsuccess = true;
+			if (defined('EMAIL_DISABLED') and EMAIL_DISABLED) {
+				$t->assign('loginerror','<div class="result">'.translate("Your password has not been mailed to you because all system email has been disabled.").'</div>');
+			} else {
+				qp_mail($email, 
+					translate("phpBugTracker Login"),
+					sprintf(translate("Your phpBugTracker password is %s"), $password),
+					sprintf("From: %s", ADMIN_EMAIL));
+				$t->assign('loginerror',
+					'<div class="result">'.translate("Your password has been emailed to you").'</div>');
+				$emailsuccess = true;
+			}
 		}
 	} else {
 		if (!$u = $auth->auth_validatelogin()) {

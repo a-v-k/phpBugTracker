@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.135 2004/10/25 12:06:54 bcurtis Exp $
+// $Id: bug.php,v 1.136 2004/12/05 17:01:32 bcurtis Exp $
 
 include 'include.php';
 
@@ -212,6 +212,8 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 	}
 
 	if (!empty($_POST['suppress_email'])) return; // Don't send email if silent update requested.
+
+	if (defined('EMAIL_DISABLED') and EMAIL_DISABLED) return;
 
 	// Reporter never changes
 	$reporter = $db->getOne('select email from '.TBL_AUTH_USER." u, ".TBL_USER_PREF." p where u.user_id = {$buginfo['created_by']} and u.user_id = p.user_id and email_notices = 1");
