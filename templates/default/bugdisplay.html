@@ -141,6 +141,7 @@
 	    <td colspan="2" valign="top">
 {if !empty($error.add_dep)}<div class="error">{$error.add_dep}</div>{/if}
 		{$STRING.BUGDISPLAY.BugDependency}: {$bug_dependencies}<br>
+		{$STRING.BUGDISPLAY.Blocks}: {$rev_bug_dependencies}<br>
 		{$STRING.BUGDISPLAY.AddDependency}: <input type="text" name="add_dependency" size="5" {$disabled}><br>
 		{$STRING.BUGDISPLAY.RemoveDependency}: <input type="text" name="del_dependency" size="5" {$disabled}><br><br></td>
 	    <td colspan="2" valign="top">

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz_iso-8859-2.php,v 1.18 2002/10/22 20:08:28 bcurtis Exp $
+// $Id: cz_iso-8859-2.php,v 1.19 2002/10/22 20:34:48 bcurtis Exp $
 
 $STRING = array(
     'lang_charset' => 'ISO-8859-2',
@@ -173,6 +173,7 @@ $STRING = array(
 	'AssignedTo' => 'Pøiøazeno',
 	'AssignedToNobody' => 'Nikdo',
 	'BugDependency' => 'Závislosti',
+	'Blocks' => 'Blocks',
 	'AddDependency' => 'Pøidat závislost',
 	'RemoveDependency' => 'Odebrat závislost',
         'Summary' => 'Shrnutí',

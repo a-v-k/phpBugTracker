@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.120 2002/10/18 17:38:19 bcurtis Exp $
+// $Id: bug.php,v 1.121 2002/10/22 20:34:48 bcurtis Exp $
 
 include 'include.php';
 
@@ -543,9 +543,13 @@ function show_bug_printable($bugid) {
 	$t->assign($row);
 	$t->assign(array(
 		'bug_dependencies' => delimit_list(', ', $db->getCol('select '.
-		    db_concat("'<a href=\"$me?op=show&bugid='", 'depends_on', '\'">#\'',
-		'depends_on', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY.
-		    " where bug_id = $bugid"))
+			db_concat("'<a href=\"$me?op=show&bugid='", 'depends_on', '\'">#\'',
+			'depends_on', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY.
+			" where bug_id = $bugid")),
+		'rev_bug_dependencies' => delimit_list(', ', $db->getCol('select '.
+			db_concat("'<a href=\"$me?op=show&bugid='", 'bug_id', '\'">#\'',
+			'bug_id', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY.
+			" where depends_on = $bugid"))
 		));
 
 	// Show the comments
@@ -624,9 +628,13 @@ function show_bug($bugid = 0, $error = array()) {
 		'num_votes' => $db->getOne("select count(*) from ".TBL_BUG_VOTE.
 		    " where bug_id = $bugid"),
 		'bug_dependencies' => delimit_list(', ', $db->getCol('select '.
-		    db_concat("'<a href=\"$me?op=show&bugid='", 'depends_on', '\'">#\'',
-		'depends_on', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY.
-		    " where bug_id = $bugid")),
+			db_concat("'<a href=\"$me?op=show&bugid='", 'depends_on', '\'">#\'',
+			'depends_on', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY.
+			" where bug_id = $bugid")),
+		'rev_bug_dependencies' => delimit_list(', ', $db->getCol('select '.
+			db_concat("'<a href=\"$me?op=show&bugid='", 'bug_id', '\'">#\'',
+			'bug_id', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY.
+			" where depends_on = $bugid"))
 		));
 
 	// Show the attachments

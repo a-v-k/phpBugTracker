@@ -22,7 +22,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: fr.php,v 1.13 2002/10/22 20:08:28 bcurtis Exp $
+// $Id: fr.php,v 1.14 2002/10/22 20:34:48 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -177,6 +177,7 @@ $STRING = array(
 		'AssignedTo' => 'Assigné à',
 		'AssignedToNobody' => 'Personne',
 		'BugDependency' => 'Dependances',
+		'Blocks' => 'Blocks',
 		'AddDependency' => 'Ajouter une dépendance',
 		'RemoveDependency' => 'Supprimer la dépendance',
 		'Summary' => 'Résumé',

@@ -24,7 +24,7 @@
 // Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 // MA 02111-1307, USA.
 // -------------------------------------------------------------------------
-// $Id: de.php,v 1.16 2002/10/22 20:08:28 bcurtis Exp $
+// $Id: de.php,v 1.17 2002/10/22 20:34:48 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -178,6 +178,7 @@ $STRING = array(
 		'AssignedTo' => 'Zugewiesen an',
 		'AssignedToNobody' => 'Niemand',
 		'BugDependency' => 'Abhängigkeiten',
+		'Blocks' => 'Blocks',
 		'AddDependency' => 'Abhängigkeit hinzufügen',
 		'RemoveDependency' => 'Abhängigkeit entfernen',
 		'Summary' => 'Zusammenfassung',
