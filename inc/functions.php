@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.19 2002/04/09 23:26:39 bcurtis Exp $
+// $Id: functions.php,v 1.20 2002/04/10 15:21:07 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -343,9 +343,10 @@ function maskemail($email) {
 
 ///
 /// Build the javascript for the dynamic project -> component -> version select boxes
-function build_project_js() {
+function build_project_js($params) {
 	global $db, $u, $perm, $_sv, $QUERY;
 	
+	extract($params);
 	$js = '';
 	
 	// Build the javascript-powered select boxes
@@ -359,7 +360,8 @@ function build_project_js() {
 	while (list($pid, $pname) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 		$pname = addslashes($pname);
 		// Version array
-		$js .= "versions['$pname'] = new Array(new Array('','All'),";
+		$js .= "versions['$pname'] = new Array(";
+		$js .= (!isset($no_all) || !$no_all) ? "new Array('','All')," : '';
 		$rs2 = $db->query("select version_name, version_id from ".TBL_VERSION.
 			" where project_id = $pid and active = 1");
 		while (list($version,$vid) = $rs2->fetchRow(DB_FETCHMODE_ORDERED)) {
@@ -370,7 +372,8 @@ function build_project_js() {
 		$js .= ");\n";
 		
 		// Component array
-		$js .= "components['$pname'] = new Array(new Array('','All'),";
+		$js .= "components['$pname'] = new Array(";
+		$js .= (!isset($no_all) || !$no_all) ? "new Array('','All')," : '';
 		$rs2 = $db->query("select component_name, component_id from ".TBL_COMPONENT.
 			" where project_id = $pid and active = 1");
 		while (list($comp,$cid) = $rs2->fetchRow(DB_FETCHMODE_ORDERED)) {
