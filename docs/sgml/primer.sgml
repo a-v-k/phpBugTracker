@@ -5,21 +5,18 @@
 <sect2 id="createaccount">
 <title>Creating an account</title>
 
-<para>You can create a new account by following the link labeled <emphasis role="bold">Open a new account</emphasis>.  To create a new account you will need to enter at least a valid email address (so that your password can be mailed to you).  Providing your name is optional, but if you submit it then your name will appear with bugs you submit and comments you make.  If the system has been configured to use a login separate from the email address, you will also be prompted for a login.  If you have chosen an email address (or login) that is already in use, you will be prompted to choose a different one.  After completing this form, your password will be mailed to you.  Once you have received your password you can then login with your email (or login) and password to be able to submit bugs.</para>
+<para>You can create a new account by following the link labeled <emphasis role="bold">Create a new account</emphasis>.  To create a new account you will need to enter at least a valid email address (so that your password can be mailed to you).  Providing your name is optional, but if you submit it then your name will appear with bugs you submit and comments you make.  If the system has been configured to use a login separate from the email address, you will also be prompted for a login.  If you have chosen an email address (or login) that is already in use, you will be prompted to choose a different one.  After completing this form, your password will be mailed to you.  Once you have received your password you can then login with your email (or login) and password to be able to submit bugs.</para>
 
 </sect2>
 
 <sect2 id="enterbug">
 <title>Entering a bug</title>
 
-<para>Once you have logged in to the system you can follow the <emphasis role="bold">Enter Bug</emphasis> link from the top navigation bar to create a new bug.  If there is more than one project for which you can submit a bug, you will be prompted to choose one.</para>
+<para>Once you have logged in to the system you can follow the <emphasis role="bold">Add a New Bug</emphasis> link from the top navigation bar to create a new bug.  If there is more than one project for which you can submit a bug, you will be prompted to choose one.</para>
 
 <screenshot>
 <screeninfo>Project selection</screeninfo>
 <mediaobject>
-<imageobject>
-<imagedata fileref="images/shots/user/enterbug-chooseproject.png" format="PNG">
-</imageobject>
 <imageobject>
 <imagedata fileref="images/shots/user/enterbug-chooseproject.jpg" format="JPG">
 </imageobject>
@@ -40,9 +37,6 @@
 <screenshot>
 <screeninfo>Adding a bug</screeninfo>
 <mediaobject>
-<imageobject>
-<imagedata fileref="images/shots/user/enterbug-detail.png" format="PNG">
-</imageobject>
 <imageobject>
 <imagedata fileref="images/shots/user/enterbug-detail.jpg" format="JPG">
 </imageobject>
