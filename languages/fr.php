@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: fr.php,v 1.17 2004/10/25 12:07:02 bcurtis Exp $
+// $Id: fr.php,v 1.18 2004/12/05 16:12:41 bcurtis Exp $
 
 $STRING = array(
 	"That attachment does not exist" => "Cette pièce jointe n'existe pas",
