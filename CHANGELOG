@@ -1,3 +1,7 @@
+-- 0.5.0 -- 
+: Fixed a bug with the bug history update.
+: Added web-based installation.
+
 -- 0.4.0 -- 18 Oct 2001
 : Improved the CSS file to make choosing different color schemes easier.
 : Consolidated the two separate templates directories into one tree.
