@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.22 2002/04/08 17:05:52 bcurtis Exp $
+// $Id: upgrade.php,v 1.23 2002/08/04 16:29:01 bcurtis Exp $
 
 define ('NO_AUTH', 1);
 define ('STYLE', 'default');
@@ -30,43 +30,37 @@ include 'include.php';
 function upgrade() {
 	global $db;
 	
-	// Note, no upgrades for oracle since we didn't support oracle before 0.8.0
-	$upgraded = $db->getOne('select varname from '.TBL_CONFIGURATION.' where varname = \'FORCE_LOGIN\'');
+	$upgraded = $db->getOne('select varname from '.TBL_CONFIGURATION.' where varname = \'BUG_UNCONFIRMED\'');
 	if (!$upgraded or DB::isError($upgraded)) {
 		if (!@is_writeable('c_templates')) {
 			include('templates/default/base/templatesperm.html');
 			exit;
 		}
-		// Convert the sequences
-		if (DB_TYPE == 'mysql') {
-			// Just in case we have someone who started using phpbt a long time ago...
-			$db->query('update '.TBL_DB_SEQUENCE.' set seq_name = lower(seq_name)');
+		switch(DB_TYPE) {
+			case 'pgsql' :
+				break;
+			case 'mysql' :
+				$db->query("alter table ".TBL_USER_PREF." add saved_queries tinyint(1) not null default '1' after email_notices");
+				$db->query("alter table ".TBL_BUG_HISTORY." change changed_field changed_field varchar(30) not null");
+				$db->query("alter table ".TBL_BUG." add database_id int not null after resolution_id, add site_id int not null after database_id, add closed_in_version_id int not null after version_id, add to_be_closed_in_version_id int not null after closed_in_version_id");
+				$db->query("create table ".TBL_SITE." (site_id int unsigned NOT NULL default '0', site_name varchar(50) NOT NULL default '', sort_order tinyint(3) unsigned NOT NULL default '0', PRIMARY KEY (site_id))");
+				$db->query("create table ".TBL_SITE."_seq (id int unsigned auto_increment not null primary key)");
+				$db->query("insert into ".TBL_SITE."_seq values (4)");
+				$db->query("create table ".TBL_DATABASE." (database_id int(10) unsigned NOT NULL default '0', database_name varchar(30) NOT NULL default '', database_version varchar(10) NOT NULL default '', sort_order tinyint(3) unsigned NOT NULL default '0', PRIMARY KEY (database_id))");
+				$db->query("create table ".TBL_DATABASE."_seq (id int unsigned auto_increment not null primary key)");
+				$db->query("insert into ".TBL_DATABASE."_seq values (3)");
+				break;
+			case 'oci8' :
+				break;
 		}
-		$rs = $db->query("select * from ".TBL_DB_SEQUENCE);
-		if (DB_TYPE == 'pgsql') {
-			// Set up the user prefs table
-			$db->query("CREATE TABLE ".TBL_USER_PREF." ( user_id INT4  NOT NULL DEFAULT '0', email_notices INT2  NOT NULL DEFAULT '1', PRIMARY KEY  (user_id) )");
-			$db->query("CREATE TABLE ".TBL_BUG_DEPENDENCY." ( bug_id INT4  NOT NULL DEFAULT '0', depends_on INT4  NOT NULL DEFAULT '0', PRIMARY KEY  (bug_id,depends_on) )");
-			$db->query("insert into ".TBL_USER_PREF." (user_id) select user_id from ".TBL_AUTH_USER);
-			// Move the sequences
-			while ($rs->fetchInto($row)) {
-				$db->query("create sequence {$row['seq_name']}_seq start {$row['nextid']}");
-			}
-		} else {
-			// Set up the user prefs table
-			$db->query("CREATE TABLE ".TBL_USER_PREF." ( user_id int(11) NOT NULL default '0', email_notices tinyint(1) NOT NULL default '1', PRIMARY KEY  (user_id) )");
-			$db->query("CREATE TABLE ".TBL_BUG_DEPENDENCY." ( bug_id int(10) unsigned NOT NULL default '0', depends_on int(10) unsigned NOT NULL default '0', PRIMARY KEY  (bug_id,depends_on) )");
-			$db->query("insert into ".TBL_USER_PREF." (user_id) select user_id from ".TBL_AUTH_USER);
-			// Move the sequences
-			while ($rs->fetchInto($row)) {
-				$db->query("create table {$row['seq_name']}_seq (id int unsigned auto_increment not null primary key)");
-				$db->query("insert into {$row['seq_name']}_seq values ({$row['nextid']})");
-			}
-		}
-		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('RECALL_LOGIN','0','Enable use of cookies to store username between logins','bool')");
-		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('SHOW_PROJECT_SUMMARIES', '1', 'Itemize bug stats by project on the home page', 'bool')");
-		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('FORCE_LOGIN', '0', 'Force users to login before being able to use the bug tracker', 'bool')");
-		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('STYLE', 'default', 'The CSS file to use (color scheme)', 'multi')");
+		
+		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('SEND_MIME_EMAIL', '1', 'Whether to use MIME quoted-printable encoded emails or not', 'bool')");
+		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('BUG_UNCONFIRMED', '1', 'The status to assign a bug when it is first submitted.', 'multi')");
+		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('BUG_PROMOTED', '2', 'The status to assign a bug when it is promoted (if enabled).', 'multi')");
+		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('BUG_ASSIGNED', '3', 'The status to assign a bug when it is assigned.', 'multi')");
+		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('BUG_REOPENED', '4', 'The status to assign a bug when it is reopened.', 'multi')");
+		$db->query("INSERT INTO ".TBL_SITE." VALUES (0,'All',1), (1,'Development',2), (2,'Testing',3), (3,'Staging',4), (4,'Production',5)");
+		$db->query("INSERT INTO ".TBL_DATABASE." VALUES (1,'Oracle','8.1.7',1), (2,'MySQL','3.23.49',2), (3,'PostgreSQL','7.1.3',3");
 	}
 	include 'templates/default/upgrade-finished.html';
 }
