@@ -13,29 +13,15 @@
 </step>
 
 <step>
-<para>Copy the directory tree from the tarball to a location suitable for serving web pages.</para>
+<para>Copy the directory tree from the tarball (or zip archive) to a location suitable for serving web pages.</para>
 </step>
 
 <step>
-<para>Run <command>configure_db</command>, which will create <filename>createdb.sql</filename>.  Use the <option>-h</option> option when running <command>configure_db</command> to see the options.</para>
+<para>With your web browser, go the location where you installed the package.  You will be presented with a web page that will help you configure and install the application.</para>
 </step>
 
 <step>
-<para>Edit <filename>createdb.sql</filename>, changing the admin info in the database insert.  You can search on the text <computeroutput>admin@example.com</computeroutput> (around line 240).  You can also edit the options being inserted into the configuration table or edit them later from the web interface.</para>
-</step>
-
-<step>
-<para>Use <filename>createdb.sql</filename> to create your database.  With MySQL it can be done as follows:
-</para>
-<screen><command>mysql</command> <option>-h</option> <replaceable>db host</replaceable> <option>-u</option> <replaceable>username</replaceable> <option>-p</option><replaceable>yourpassword</replaceable> &lt; <filename>createdb.sql</filename></screen>
-</step>
-
-<step>
-<para>Browse on over to the installation, choose Admin tools, login with the info you put in the database creation script, and create your first project.</para>
-</step>
-
-<step>
-<para>Start reporting bugs.</para>
+<para>After completing the installation, login and start reporting bugs.</para>
 </step>
 
 </procedure>
