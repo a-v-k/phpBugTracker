@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.27 2001/09/03 20:43:09 bcurtis Exp $
+// $Id: query.php,v 1.28 2001/09/15 23:13:48 bcurtis Exp $
 
 include 'include.php';
 
@@ -114,7 +114,7 @@ function build_query($assignedto, $reportedby, $open) {
 		// Select boxes
 		if ($status) $flags[] = 'bug.status_id in ('.delimit_list(',',$status).')';
 		if ($resolution) $flags[] = 'bug.resolution_id in ('.delimit_list(',',$resolution).')';
-		if ($os) $flags[] = 'bug.op_sys_id in ('.delimit_list(',',$os).')';
+		if ($os) $flags[] = 'bug.os_id in ('.delimit_list(',',$os).')';
 		if ($priority) $flags[] = 'bug.priority in ('.delimit_list(',',$priority).')';
 		if ($severity) $flags[] = 'bug.severity_id in ('.delimit_list(',',$severity).')';
 		if ($flags) $query[] = '('.delimit_list(' or ',$flags).')';
