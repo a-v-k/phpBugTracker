@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.13 2002/03/18 17:52:56 bcurtis Exp $
+// $Id: upgrade.php,v 1.14 2002/03/20 20:10:09 bcurtis Exp $
 
 define ('NO_AUTH', 1);
 include 'include.php';
@@ -49,6 +49,7 @@ function upgrade() {
 				$db->query("insert into {$row['seq_name']}_seq values ({$row['nextid']})");
 			}
 		}
+		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('RECALL_LOGIN','0','Enable use of cookies to store username between logins','bool')");
 	}
 	include 'templates/default/upgrade-finished.html';
 }
