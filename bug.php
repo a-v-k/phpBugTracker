@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.37 2001/09/03 15:09:46 bcurtis Exp $
+// $Id: bug.php,v 1.38 2001/09/03 17:59:11 bcurtis Exp $
 
 include 'include.php';
 
@@ -252,9 +252,9 @@ function update_bug($bugid = 0) {
 				return;
 			}
 			$q->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
-		                 ." values (".$q->nextid('comment').", $dupenum, 'Bug #$bugid is a duplicate of this bug', $u, $now)");
+		                 ." values (".$q->nextid(TBL_COMMENT).", $dupenum, 'Bug #$bugid is a duplicate of this bug', $u, $now)");
 			$q->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
-			         ." values (".$q->nextid('comment').", $bugid, 'This bug is a duplicate of bug #$dupenum', $u, $now)");
+			         ." values (".$q->nextid(TBL_COMMENT).", $bugid, 'This bug is a duplicate of bug #$dupenum', $u, $now)");
 			$statusfield = 'Duplicate'; 
 			$bugresolution = $q->grab_field("select resolution_id from ".TBL_RESOLUTION." where resolution_name = 'Duplicate'");
 			$statusfield = 'Resolved';
@@ -283,7 +283,7 @@ function update_bug($bugid = 0) {
 	if ($comments) {
 		$comments = htmlspecialchars($comments);
 		$q->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
-		         ." values (".$q->nextid('comment').", $bugid, '$comments', $u, $now)");
+		         ." values (".$q->nextid(TBL_COMMENT).", $bugid, '$comments', $u, $now)");
 	}
 
 	$q->query("update ".TBL_BUG." set title = '$title', url = '$url', severity_id = $severity_id, priority = $priority, ".($status ? "status_id = $status, " : ''). ($changeresolution ? "resolution_id = $bugresolution, " : ''). ($assignedto ? "assigned_to = $assignedto, " : '')." project_id = $project_id, version_id = $version_id, component_id = $component_id, os_id = $os_id, last_modified_by = $u, last_modified_date = $now where bug_id = $bugid");
@@ -311,7 +311,7 @@ function do_form($bugid = 0) {
 	$time = time();
 	if (!$bugid) {
 		$status = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = 'Unconfirmed'");
-		$q->query("insert into ".TBL_BUG." (bug_id, title, description, url, severity_id, priority, status_id, created_by, created_date, last_modified_by, last_modified_date, project_id, version_id, component_id, os_id, browser_string) values (".$q->nextid('bug').", '$title', '$description', '$url', $severity, $priority, $status, $u, $time, $u, $time, $project, $version, $component, '$os', '{$GLOBALS['HTTP_USER_AGENT']}')");
+		$q->query("insert into ".TBL_BUG." (bug_id, title, description, url, severity_id, priority, status_id, created_by, created_date, last_modified_by, last_modified_date, project_id, version_id, component_id, os_id, browser_string) values (".$q->nextid(TBL_BUG).", '$title', '$description', '$url', $severity, $priority, $status, $u, $time, $u, $time, $project, $version, $component, '$os', '{$GLOBALS['HTTP_USER_AGENT']}')");
 	} else {
 		$q->query("update ".TBL_BUG." set title = '$title', description = '$description', url = '$url', severity_id = '$severity', priority = '$priority', status_id = $status, assigned_to = '$assignedto', project_id = $project, version_id = $version, component_id = $component, os_id = '$os', browser_string = '{$GLOBALS['HTTP_USER_AGENT']}' last_modified_by = $u, last_modified_date = $time where bug_id = '$bugid'");
 	}

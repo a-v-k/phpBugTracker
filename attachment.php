@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.7 2001/09/01 15:44:20 mohni Exp $
+// $Id: attachment.php,v 1.8 2001/09/03 17:59:11 bcurtis Exp $
 
 include 'include.php';
 
@@ -114,7 +114,7 @@ function add_attachment($bugid, $description) {
 	}
 
 	@chmod("$filepath/$projectid/$filename", 0766);
-	$q->query("insert into ".TBL_ATTACHMENT." (attachment_id, bug_id, file_name, description, file_size, mime_type, created_by, created_date) values (".$q->nextid('attachment').", $bugid, '{$HTTP_POST_FILES['attachment']['name']}', '$description', {$HTTP_POST_FILES['attachment']['size']}, '{$HTTP_POST_FILES['attachment']['type']}', $u, $now)");
+	$q->query("insert into ".TBL_ATTACHMENT." (attachment_id, bug_id, file_name, description, file_size, mime_type, created_by, created_date) values (".$q->nextid(TBL_ATTACHMENT).", $bugid, '{$HTTP_POST_FILES['attachment']['name']}', '$description', {$HTTP_POST_FILES['attachment']['size']}, '{$HTTP_POST_FILES['attachment']['type']}', $u, $now)");
 	$t->set_file('content', 'bugattachmentsuccess.html');
 	$t->set_var('bugid', $bugid);
 }
