@@ -1,3 +1,24 @@
+-- 0.1.6 -- 
+: Fixed the bug of not setting the creation date when creating a new version
+: Fixed the bug of not displaying the correct version in bug display
+: Remove the comments from the notification email if no comments were added when the bug is changed
+: Added a link on the login page to open a new account
+: Added "Email my password" functionality
+
+-- 0.1.5 -- 13 July 2001
+: Get rid of the logout link entirely if not logged in
+: Starting on the user page - allow for password changes
+: Added link for personal bug list to query form
+: Allow users to save queries
+: Added bug history
+
+-- 0.1.4 -- 1 July 2001
+: Fixed table reference bug in bug.php
+: Added update collision checking
+: Changed	the URL field label to a link if there is a URL in the field
+: Highlight the sorted column
+: Display the currently logged in user if logged in
+
 -- 0.1.3 -- 3 Feb 2001
 : Added mail notification of changes to bugs
 : Added logout link and page
