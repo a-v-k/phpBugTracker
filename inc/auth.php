@@ -36,7 +36,9 @@ class uauth {
 			$HTTP_SESSION_VARS['auth'] = array();
 		}
 		
-		$this->auth =& $HTTP_SESSION_VARS['auth'];
+		$a =& $HTTP_SESSION_VARS['auth'];
+		$this->auth =& $a->auth;
+
 		
 		if (!isset($this->auth['group_ids'])) {
 			$this->auth['group_ids'] = array(0);
