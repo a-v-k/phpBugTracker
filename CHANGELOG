@@ -1,3 +1,8 @@
+-- 0.7.0 --
+: Removed the requirement for register_globals = on in PHP settings.
+: Added dynamic select boxes to the bug form for changing component and version
+  information when selecting a different project.
+
 -- 0.6.2 -- 27 Dec 2001
 : Improved compatibility with Opera and IIS.
 : Fixed a bug with logging in.
