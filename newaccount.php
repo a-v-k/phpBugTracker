@@ -24,11 +24,11 @@
 include 'include.php'; 
 
 function do_form() {
-	global $q, $t, $email, $firstname, $lastname, $STRING, $now;
+	global $q, $t, $email, $firstname, $lastname, $STRING, $now, $u;
 	
 	if (!$email or !valid_email($email)) 
 		$error = $STRING['giveemail'];
-	elseif ($q->grab_field("select UserID from User where Email = '$email'"))
+	elseif ($q->grab_field("select user_id from user where email = '$email'"))
 		$error = $STRING['loginused'];
 	if ($error) { 
 		show_form($error);
@@ -42,7 +42,7 @@ function do_form() {
 	} else {
 		$mpassword = $password;
 	}
-	$q->query("insert into User (UserID, FirstName, LastName, Email, Password, CreatedDate, UserLevel) values (".$q->nextid('User').", '$firstname', '$lastname', '$email', '$mpassword', $now, 1)");
+	$q->query("insert into user (user_id, first_name, last_name, email, password, user_level, created_date, last_modified_date) values (".$q->nextid('User').", '$firstname', '$lastname', '$email', '$mpassword', 1, $now, $now)");
 	mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
 		$password),	'From: '.ADMINEMAIL);
 	$t->set_file('content','newaccountsuccess.html');
