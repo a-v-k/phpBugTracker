@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.108 2002/04/03 18:54:08 bcurtis Exp $
+// $Id: include.php,v 1.109 2002/04/08 15:19:33 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -95,7 +95,7 @@ $all_db_fields = array(
 $default_db_fields = array('bug_id', 'title', 'reporter', 'owner',
   'severity_name', 'priority', 'status_name', 'resolution_name');
 
-require('Smarty.class.php'); // Template class
+require(SMARTY_PATH . 'Smarty.class.php'); // Template class
 
 // Template class
 class extSmarty extends Smarty {

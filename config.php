@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.27 2002/03/29 18:25:37 bcurtis Exp $
+// $Id: config.php,v 1.28 2002/04/08 15:19:33 bcurtis Exp $
 
 define ('PHPLIB_PATH', ''); // If PHPlib is not in your include path
 
@@ -30,6 +30,9 @@ define ('DB_HOST', 'localhost');
 define ('DB_DATABASE', 'BugTracker');
 define ('DB_USER', 'root');
 define ('DB_PASSWORD', '');
+
+// Smarty templates location (leave blank if Smarty is in include path)
+define ('SMARTY_PATH', '');
 
 // Database Table Config
 // you can change either the prefix of the table names or each table name individually

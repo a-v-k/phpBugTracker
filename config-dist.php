@@ -19,7 +19,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config-dist.php,v 1.12 2002/04/03 01:01:38 bcurtis Exp $
+// $Id: config-dist.php,v 1.13 2002/04/08 15:19:33 bcurtis Exp $
 
 // Database Config
 define ('DB_TYPE', '{db_type}');  // using PHPlib file naming (mysql | pgsql)
@@ -27,6 +27,9 @@ define ('DB_HOST', '{db_host}'); // hostname of database server
 define ('DB_DATABASE', '{db_database}'); // database name
 define ('DB_USER', '{db_user}'); // username for database connection
 define ('DB_PASSWORD', '{db_pass}'); // password for database connection
+
+// Smarty templates location (leave blank if Smarty is in include path)
+define ('SMARTY_PATH', '{smarty_path}');
 
 // Database Table Config
 // you can change either the prefix of the table names or each table name individually

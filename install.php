@@ -21,14 +21,14 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.22 2002/04/04 23:30:42 jpdw Exp $
+// $Id: install.php,v 1.23 2002/04/08 15:19:33 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname(__FILE__));
 
 // Location of smarty templates class
-  define ('SMARTY_PATH','');
-  // Example if smarty is installed within the phpBugTracker tree.
-  //define ('SMARTY_PATH','./inc/smarty/');
+define ('SMARTY_PATH','');
+// Example if smarty is installed within the phpBugTracker tree.
+//define ('SMARTY_PATH','./inc/smarty/');
 
 if (!@include(SMARTY_PATH . 'Smarty.class.php')) { // Template class
 	die('<br><br>
@@ -147,6 +147,10 @@ function grab_config_file() {
 		$patterns[] = '{'.$key.'}';
 		$replacements[] = $val;
 	}
+	// Smarty
+	$patterns[] = '{smarty_path}';
+	$replacements[] = SMARTY_PATH;
+	
 	$contents = join('', file('config-dist.php'));
 	return str_replace($patterns, $replacements, $contents);
 	
