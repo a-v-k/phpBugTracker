@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script to edit configuration settings
-# $Id: configure,v 1.14 2001/09/26 14:20:37 bcurtis Exp $
+# $Id: configure,v 1.15 2001/10/11 14:45:36 bcurtis Exp $
 
 DIALOG=${DIALOG=dialog}
 tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/test$$
@@ -182,7 +182,7 @@ change_features() {
 
 	retval=$?
 
-	read choice <$tempfile
+	choice=`cat $tempfile`
 	if [ $retval -eq 0 ]; then
     for selected in $choice
 		do
