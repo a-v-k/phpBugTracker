@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.35 2001/12/24 21:30:33 bcurtis Exp $
+// $Id: user.php,v 1.36 2002/01/19 16:09:37 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -60,11 +60,14 @@ function do_form($userid = 0) {
       '$login', '{$_pv['femail']}', '$mpassword', {$_pv['factive']}, $u, $now,
       $u, $now)");
 		// Add to the selected groups
-    foreach ($_pv['fusergroup'] as $group) {
-      $q->query("insert into ".TBL_USER_GROUP
-        ." (user_id, group_id, created_by, created_date)
-        values ('$new_user_id' ,'$group', $u, $now)");
-    }
+		if (isset($_pv['fusergroup']) and is_array($_pv['fusergroup']) and
+			$_pv['fusergroup'][0]) {
+			foreach ($_pv['fusergroup'] as $group) {
+				$q->query("insert into ".TBL_USER_GROUP
+					." (user_id, group_id, created_by, created_date)
+					values ('$new_user_id' ,'$group', $u, $now)");
+			}
+		}
 		// And add to the user group
 		$q->query("insert into ".TBL_USER_GROUP.
 			" (user_id, group_id, created_by, created_date) 
@@ -99,7 +102,8 @@ function do_form($userid = 0) {
     if (!isset($user_groups) or !is_array($user_groups)) {
       $user_groups = array();
     }
-    if (!is_array($_pv['fusergroup']) or !$_pv['fusergroup'][0]) {
+    if (!isset($_pv['fusergroup']) or !is_array($_pv['fusergroup']) or 
+			!$_pv['fusergroup'][0]) {
       $_pv['fusergroup'] = array();
     }
 
