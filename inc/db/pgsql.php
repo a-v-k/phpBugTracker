@@ -41,6 +41,10 @@ $QUERY = array(
 		'from '.TBL_STATUS.' s left join '. TBL_BUG.' using (status_id) '.
 		'group by s.status_id, status_name, status_desc, sort_order '.
 		'order by %s %s',
+        'admin-list-sites' => 'select s.site_id, site_name, sort_order, '.
+                'count(bug_id) as bug_count from '.TBL_SITE. ' s left join '.
+                TBL_BUG.' using (site_id) group by s.site_id, site_name, sort_order '.
+                'order by %s %s',
 	'admin-user-groups' => 'select ug.group_id '.
 		'from '.TBL_USER_GROUP.' ug left join '.TBL_AUTH_GROUP.' g using (group_id) '.
 		'where user_id = %s and group_name <> \'User\'',
@@ -74,12 +78,14 @@ $QUERY = array(
 		'left join '.TBL_AUTH_USER.' lastmodifier on b.last_modified_by = lastmodifier.user_id '.
 		'left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_id, '.
 		TBL_SEVERITY.' severity, '.TBL_STATUS.' status, '.TBL_OS.' os, '.
-		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.TBL_PROJECT.' project '.
+		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.
+		TBL_PROJECT.' project, '.TBL_SITE.' site'.
 		'where b.severity_id = severity.severity_id '.
 		'and b.status_id = status.status_id and b.os_id = os.os_id '.
 		'and b.version_id = version.version_id '.
 		'and b.component_id = component.component_id '.
 		'and b.project_id = project.project_id and %s '.
+		'and b.site_id = site.site_id '.
 		'and bug_id <> %s '.
 		'order by %s %s, bug_id asc',
 	'bug-show-bug' =>  'select b.*, reporter.login as reporter, '.
@@ -88,7 +94,7 @@ $QUERY = array(
 		'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
 		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
 		'left join '.TBL_RESOLUTION.' r on b.resolution_id = r.resolution_id, '.
-		TBL_SEVERITY.' sv, '.TBL_STATUS.' st '.
+		TBL_SEVERITY.' sv, '.TBL_STATUS.' st, '.TBL_SITE. ' site '.
 		'where bug_id = %s and b.project_id not in (%s) '.
 		'and b.severity_id = sv.severity_id and b.status_id = st.status_id',
 	'functions-bug-cc' => 'select b.user_id, login '.
@@ -128,11 +134,14 @@ $QUERY = array(
 		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
 		'left join '.TBL_AUTH_USER.' lastmodifier on b.last_modified_by = lastmodifier.user_id '.
 		'left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_id, '.
+		'left join '.TBL_DATABASE.' on b.database_id = '.TBL_DATABASE.'.database_id, '.
+		'left join '.TBL_VERSION.' on version2 b.to_be_closed_in_version_id = version2.version_id, '.
+		'left join '.TBL_VERSION.' on version3 b.closed_id_version_id = version3.version_id, '.
 		TBL_SEVERITY.' severity, '.TBL_STATUS.' status, '.TBL_OS.' os, '.
 		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.TBL_PROJECT.' project '.
 		'where b.severity_id = severity.severity_id '.
 		'and b.status_id = status.status_id and b.os_id = os.os_id '.
-		'and b.version_id = version.version_id '.
+		'and b.site_id = site.site_id and b.version_id = version.version_id '.
 		'and b.component_id = component.component_id '.
 		'and b.project_id = project.project_id %s '.
 		'order by %s %s, bug_id asc',

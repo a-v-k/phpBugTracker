@@ -95,6 +95,7 @@ $QUERY = array(
 		'left join '.TBL_RESOLUTION.' r on b.resolution_id = r.resolution_id, '.
 		TBL_SEVERITY.' sv, '.TBL_STATUS.' st, '.TBL_SITE.' site '.
 		'where bug_id = %s and b.project_id not in (%s) '.
+		'and b.site_id = site.site_id '.
 		'and b.severity_id = sv.severity_id and b.status_id = st.status_id',
 	'functions-bug-cc' => 'select b.user_id, login '.
 		'from '.TBL_BUG_CC.' b left join '. TBL_AUTH_USER.' using(user_id) '.
