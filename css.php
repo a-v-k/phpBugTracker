@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: css.php,v 1.1 2001/10/10 03:59:43 bcurtis Exp $
+// $Id: css.php,v 1.2 2001/10/10 04:40:47 bcurtis Exp $
 
 $colors['default'] = array(
 	'link' => '',
@@ -28,7 +28,7 @@ $colors['default'] = array(
 	'body' => '',
 	'body-bg' => '',
 	'td' => '',
-	'tr.alt-bg' => '#ddddd',
+	'tr.alt-bg' => '#dddddd',
 	'td.head-bg' => '#eeeeee',
 	'td.head-selected-bg' => '#bbbbbb',
 	'th-bg' => '#eeeeee',
@@ -45,7 +45,7 @@ $colors['black'] = array(
 	'td.head-bg' => '#4a4a4a',
 	'td.head-selected-bg' => '#6a6a6a',
 	'th-bg' => '#4a4a4a',
-	'th' => '#fffff'
+	'th' => '#ffffff'
 	);
 	
 $color = $colors['default'];
