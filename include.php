@@ -35,7 +35,8 @@ define ('USE_JPGRAPH',0); // Whether to show images or not
 define ('JPGRAPH_PATH', '/home/bcurtis/public_html/jp/'); // If it's not in the include path
 define ('MASK_EMAIL', 1); // Should email addresses be plainly visible?
 define ('HIDE_EMAIL', 1); // Should email addresses be hidden for those not logged in?
-
+// Sub-dir of the INSTALLPATH - Needs to be writeable by the web process
+define ('ATTACHMENT_PATH', 'attachments'); 
 require PHPLIBPATH.'db_mysql.inc';
 require PHPLIBPATH.'ct_sql.inc';
 require PHPLIBPATH.'session.inc';

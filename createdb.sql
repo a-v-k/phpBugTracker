@@ -283,11 +283,23 @@ CREATE TABLE active_sessions (
   KEY changed (changed)
 );
 
-CREATE TABLE `BugHistory` (
-  `BugID` int(10) unsigned NOT NULL default '0',
-  `ChangedField` char(20) NOT NULL default '',
-  `OldValue` char(255) NOT NULL default '',
-  `NewValue` char(255) NOT NULL default '',
-  `CreatedBy` int(10) unsigned NOT NULL default '0',
-  `CreatedDate` bigint(20) unsigned NOT NULL default '0'
+CREATE TABLE BugHistory (
+  BugID int(10) unsigned NOT NULL default '0',
+  ChangedField char(20) NOT NULL default '',
+  OldValue char(255) NOT NULL default '',
+  NewValue char(255) NOT NULL default '',
+  CreatedBy int(10) unsigned NOT NULL default '0',
+  CreatedDate bigint(20) unsigned NOT NULL default '0'
+);
+
+CREATE TABLE Attachment (
+  AttachmentID int(10) unsigned NOT NULL default '0',
+  BugID int(10) unsigned NOT NULL default '0',
+  FileName char(255) NOT NULL default '',
+  Description char(255) NOT NULL default '',
+  FileSize bigint(20) unsigned NOT NULL default '0',
+  MimeType char(30) NOT NULL default '',
+  CreatedBy int(10) unsigned NOT NULL default '0',
+  CreatedDate bigint(20) unsigned NOT NULL default '0',
+  PRIMARY KEY  (AttachmentID)
 );

@@ -50,7 +50,10 @@ $STRING = array(
 	'datecollision' => 'Someone has updated this bug since you viewed it.	The bug info has been reloaded with the latest changes.',
 	'passwordmatch' => 'Those passwords don\'t match -- please try again',
 	'nobughistory' => 'There is no history for that bug',
-	'logintomodify' => 'You must be logged in to modify this bug'
+	'logintomodify' => 'You must be logged in to modify this bug',
+	'no_attachment_save_path' => 'Couldn\'t find where to save the file!',
+	'attachment_path_not_writeable' => 'Couldn\'t create a file in the save path',
+	'attachment_move_error' => 'There was an error moving the uploaded file'
 	);
 	
 // Page titles
