@@ -144,7 +144,7 @@ $QUERY = array(
 		'from '.TBL_BUG . ' b, '.TBL_AUTH_USER.' u '.
 		'where b.assigned_to = u.user_id(+) %s '.
 		'group by assigned_to, u.email',
-	'report-resbyeng-where' => 'and',
+	'join-where' => 'and',
 	);
 	
 ?>

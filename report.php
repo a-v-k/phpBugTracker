@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: report.php,v 1.24 2002/04/03 01:00:52 bcurtis Exp $  
+// $Id: report.php,v 1.25 2002/04/03 19:08:47 bcurtis Exp $  
 
 include 'include.php';
 
@@ -43,9 +43,9 @@ function resolution_by_engineer($projectid = 0) {
 	$resfields[] = 'Total';
 	
 	if ($projectid && is_numeric($projectid)) {
-		$projectquery = $QUERY['report-resbyeng-where']." project_id = $projectid";
+		$projectquery = $QUERY['join-where']." project_id = $projectid";
 	} elseif (!$perm->have_perm('Admin')) {
-		$projectquery = $QUERY['report-resbyeng-where'].
+		$projectquery = $QUERY['join-where'].
 			" project_id not in ($restricted_projects)";
 	} else {
 		$projectquery = '';
