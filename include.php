@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.41 2001/08/25 18:31:27 bcurtis Exp $
+// $Id: include.php,v 1.42 2001/08/25 18:37:39 bcurtis Exp $
 
 if (defined("INCLUDE_PATH")) {
 	require INCLUDE_PATH."config.php";
@@ -452,7 +452,7 @@ if (isset($HTTP_POST_VARS['login'])) {
       if (ENCRYPTPASS) {
         $password = genpassword(10);
         $mpassword = md5($password);
-        $q->query("update user set password = '$mpassword' where login = '$username'");
+        $q->query("update auth_user set password = '$mpassword' where login = '$username'");
       }
       mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'],
         $password),  'From: '.ADMINEMAIL);
