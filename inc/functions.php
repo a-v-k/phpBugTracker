@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.37 2003/02/19 14:07:40 bcurtis Exp $
+// $Id: functions.php,v 1.38 2003/03/02 15:28:54 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -151,7 +151,7 @@ function build_select($params) {
 	    }
 		break;
 	case 'owner':
-	    $rs = $db->query("select u.user_id, login from ".TBL_AUTH_USER." u, ".TBL_USER_GROUP." ug, ".TBL_AUTH_GROUP." g where u.active > 0 and u.user_id = ug.user_id and ug.group_id = g.group_id and group_name = 'Developer' order by login");
+	    $rs = $db->query("select u.user_id, login from ".TBL_AUTH_USER." u, ".TBL_USER_GROUP." ug where u.active > 0 and u.user_id = ug.user_id and ug.group_id = ".GROUP_ASSIGN_TO." order by login");
 	    while ($rs->fetchInto($row)) {
 			if ($selected == $row['user_id']) {
 		    	$sel = ' selected';
@@ -239,6 +239,18 @@ function build_select($params) {
 				" from ".TBL_STATUS." order by status_name");
 		}
 		foreach ($bug_status_list as $id => $name) {
+			$sel = $id == $selected ? ' selected' : '';
+			$text .= "<option value=\"$id\"$sel>$name</option>";
+		}
+		break;
+	case 'GROUP_ASSIGN_TO' :
+		static $group_list = array();
+
+		if (empty($group_list)) {
+			$group_list = $db->getAssoc("select group_id, group_name".
+				" from ".TBL_AUTH_GROUP." order by group_name");
+		}
+		foreach ($group_list as $id => $name) {
 			$sel = $id == $selected ? ' selected' : '';
 			$text .= "<option value=\"$id\"$sel>$name</option>";
 		}

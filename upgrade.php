@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.28 2002/11/05 18:07:03 bcurtis Exp $
+// $Id: upgrade.php,v 1.29 2003/03/02 15:28:54 bcurtis Exp $
 
 define ('NO_AUTH', 1);
 
@@ -29,13 +29,13 @@ define ('NO_AUTH', 1);
 function upgrade() {
 	global $db;
 
-	$upgraded = $db->getOne('select varname from '.TBL_CONFIGURATION.' where varname = \'BUG_UNCONFIRMED\'');
+	$upgraded = $db->getOne('select varname from '.TBL_CONFIGURATION.' where varname = \'GROUP_ASSIGN_TO\'');
 	if (!$upgraded or DB::isError($upgraded)) {
 		if (!@is_writeable('c_templates')) {
 			include('templates/default/base/templatesperm.html');
 			exit;
 		}
-		switch(DB_TYPE) {
+		/*switch(DB_TYPE) {
 			case 'pgsql' :
 				$db->query("alter table ".TBL_USER_PREF." add saved_queries int2");
 				$db->query("alter table ".TBL_USER_PREF." alter saved_queries set default 1");
@@ -77,14 +77,9 @@ function upgrade() {
 				break;
 			case 'oci8' :
 				break;
-		}
+		}*/
 
-		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('SEND_MIME_EMAIL', '1', 'Whether to use MIME quoted-printable encoded emails or not', 'bool')");
-		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('BUG_UNCONFIRMED', '1', 'The status to assign a bug when it is first submitted.', 'multi')");
-		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('BUG_PROMOTED', '2', 'The status to assign a bug when it is promoted (if enabled).', 'multi')");
-		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('BUG_ASSIGNED', '3', 'The status to assign a bug when it is assigned.', 'multi')");
-		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('BUG_REOPENED', '4', 'The status to assign a bug when it is reopened.', 'multi')");
-		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('BUG_CLOSED', '7', 'The status to assign a bug when it is closed.', 'multi')");
+		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('ASSIGN_TO_GROUP', '3', 'The group to whom bugs can be assigned', 'multi');");
 	}
 	include 'templates/default/upgrade-finished.html';
 }
