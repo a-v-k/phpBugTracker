@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.117 2002/05/18 02:59:32 bcurtis Exp $
+// $Id: include.php,v 1.118 2002/05/19 16:59:16 firma Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -172,8 +172,8 @@ if (isset($_pv['dologin'])) {
         $mpassword = md5($password);
         $db->query("update ".TBL_AUTH_USER." set password = '$mpassword' where login = '$username'");
       }
-      mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'],
-        $password),  sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMIN_EMAIL, $STRING['lang_charset']));
+      qp_mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], $password),
+        sprintf("From: %s",ADMIN_EMAIL));
       $t->assign('loginerror',
         '<div class="result">Your password has been emailed to you</div>');
 			$emailsuccess = true;

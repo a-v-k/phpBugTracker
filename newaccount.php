@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.31 2002/05/18 02:59:32 bcurtis Exp $
+// $Id: newaccount.php,v 1.32 2002/05/19 16:59:16 firma Exp $
 
 define('NO_AUTH', 1);
 include 'include.php'; 
@@ -70,8 +70,8 @@ function do_form() {
 		" where group_name = 'User'"); 
 	$db->query("insert into ".TBL_USER_PREF." (user_id) values ($user_id)");
 	
-	mail($_pv['email'], $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
-		$password),	sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMIN_EMAIL, $STRING['lang_charset']));
+	qp_mail($_pv['email'], $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], $password),
+	    sprintf("From: %s",ADMIN_EMAIL));
 
 	$t->wrap('newaccountsuccess.html', 'accountcreated');
 }
