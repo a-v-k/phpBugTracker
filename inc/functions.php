@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.25 2002/05/17 14:35:09 firma Exp $
+// $Id: functions.php,v 1.26 2002/05/19 11:26:04 firma Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -482,7 +482,7 @@ function qp_enc($input, $line_max = 76) {
     return (trim($output));
 }
 
-// mailer with use of quoted-printable encoding
+// mailer with use of quoted-printable encoding (if configured so)
 function qp_mail($to, $subject = 'No subject', $body, $headers = '') {
     global $STRING;
 
@@ -490,9 +490,19 @@ function qp_mail($to, $subject = 'No subject', $body, $headers = '') {
         $headers .= "\n";
         // There have to be no newline at the end of $headers
     }
-    $headers .= "Content-type: Text/plain; charset=\"".$STRING['lang_charset']."\"\n";
-    $headers .= "Content-Transfer-Encoding: quoted-printable\nMIME-Version: 1.0";
-    mail ($to, $subject, qp_enc($body), $headers);
+    $headers .= "Content-type: text/plain; charset=\"".$STRING['lang_charset']."\"\n";
+    
+    // If configured to send MIME encoded emails
+    if (SEND_MIME_EMAIL) {
+	$headers .= "Content-Transfer-Encoding: quoted-printable\nMIME-Version: 1.0";
+	$retval = mail ($to, $subject, qp_enc($body), $headers);
+    } else {
+	$headers .= "Content-Transfer-Encoding: 8bit";
+	$retval = mail ($to, $subject, $body, $headers);
+    }
+
+    // Returns true if mail is eccepted for delivery, otherwise return false
+    return ($retval);
 }
 
 ?>
