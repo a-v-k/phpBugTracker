@@ -54,7 +54,7 @@
   </tr>
 	<tr>
 	    <td colspan="2" height="20" class="bottomnav">
-		<form method="post" action="{$smarty.server.REQUEST_URI}">
+		<form method="post" action="{$smarty.server.SCRIPT_NAME}{if $smarty.request.QUERY_STRING}?{$smarty.request.QUERY_STRING}{/if}">
 		&nbsp;
 {if not $smarty.session.uid}
     {if EMAIL_IS_LOGIN}
@@ -63,18 +63,18 @@
 	{assign var="loginlabel" value="Login"}
     {/if}
 		{$loginerror}
-		{$loginlabel}: <input type="text" name="username" class="bottomnavinput" value="{$smarty.cookies.phpbt_user}"> 
-		Password: <input type="password" name="password" class="bottomnavinput"> 
+		{$loginlabel}: <input type="text" name="username" class="bottomnavinput" value="{$smarty.cookies.phpbt_user}">
+		Password: <input type="password" name="password" class="bottomnavinput">
 		<input type="hidden" name="dologin" value="1">
-		<input type="submit" value="Login" class="bottomnavinput"> 
-		<input type="submit" name="sendpass" value="Email Password" class="bottomnavinput" title="Forgot your password?  Have it sent to you"> 
+		<input type="submit" value="Login" class="bottomnavinput">
+		<input type="submit" name="sendpass" value="Email Password" class="bottomnavinput" title="Forgot your password?  Have it sent to you">
     {if RECALL_LOGIN}
-		<input type="checkbox" name="savecookie" value="1" {if !empty($smarty.cookies.phpbt_user)}checked{/if} class="bottomnavinput" title="Remember {$loginlabel} for next time"> Remember me   				  
+		<input type="checkbox" name="savecookie" value="1" {if !empty($smarty.cookies.phpbt_user)}checked{/if} class="bottomnavinput" title="Remember {$loginlabel} for next time"> Remember me
     {/if}
 {else}
-		Bugs assigned to me: <a href="query.php?op=mybugs&assignedto=1&open=1" title="Open">{$owner_open}</a> / <a href="query.php?op=mybugs&assignedto=1&open=0" title="Closed">{$owner_closed}</a> 
-		| Bugs reported by me: <a href="query.php?op=mybugs&reportedby=1&open=1" title="Open">{$reporter_open}</a> / <a href="query.php?op=mybugs&reportedby=1&open=0" title="Closed">{$reporter_closed}</a> 
-		| <a href="user.php">Personal Page</a> 
+		Bugs assigned to me: <a href="query.php?op=mybugs&assignedto=1&open=1" title="Open">{$owner_open}</a> / <a href="query.php?op=mybugs&assignedto=1&open=0" title="Closed">{$owner_closed}</a>
+		| Bugs reported by me: <a href="query.php?op=mybugs&reportedby=1&open=1" title="Open">{$reporter_open}</a> / <a href="query.php?op=mybugs&reportedby=1&open=0" title="Closed">{$reporter_closed}</a>
+		| <a href="user.php">Personal Page</a>
 		| <a href="logout.php">Logout {$smarty.session.uname}</a>
 {/if}
 		&nbsp;
@@ -88,8 +88,8 @@
 	<td bgcolor="#ffffff" height="20" colspan="2"><img src="images/spacer.gif" height="1" width="1"></td>
   </tr>
 </table>
-    
+
 {include file=$content_template}
-    
+
 </body>
 </html>
