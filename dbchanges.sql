@@ -17,7 +17,7 @@ CREATE TABLE `bug` (
   `bug_desc` text NOT NULL,
   `bug_url` varchar(255) NOT NULL default '',
   `severity_id` tinyint(3) unsigned NOT NULL default '0',
-  `priority_id` tinyint(3) unsigned NOT NULL default '0',
+  `priority` tinyint(3) unsigned NOT NULL default '0',
   `status_id` tinyint(3) unsigned NOT NULL default '0',
   `resolution_id` tinyint(3) unsigned NOT NULL default '0',
   `assigned_to` int(10) unsigned NOT NULL default '0',
@@ -119,6 +119,13 @@ CREATE TABLE `severity` (
   PRIMARY KEY  (`severity_id`)
 );
 insert into severity select *, null from Severity;
+update severity set severity_color = '#dadada' where severity_id = '1';
+update severity set severity_color = '#dad0d0' where severity_id = '2';
+update severity set severity_color = '#dacaca' where severity_id = '3';
+update severity set severity_color = '#dac0c0' where severity_id = '4';
+update severity set severity_color = '#dababa' where severity_id = '5';
+update severity set severity_color = '#dab0b0' where severity_id = '6';
+update severity set severity_color = '#daaaaa' where severity_id = '7';
 
 CREATE TABLE `status` (
   `status_id` int(10) unsigned NOT NULL default '0',
