@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.47 2004/10/25 12:07:00 bcurtis Exp $
+// $Id: functions.php,v 1.48 2005/01/22 16:13:18 bcurtis Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -591,10 +591,12 @@ function qp_mail($to, $subject = 'No subject', $body, $headers = '') {
 		$headers .= "\n";
 		// There have to be no newline at the end of $headers
 	}
+	$charset = !empty($STRING['lang_charset']) ? 
+		$STRING['lang_charset'] : 'iso-8859-1';
 	if (false/*HTML_EMAIL*/) {
-		$headers .= "Content-Type: text/html; charset=\"".$STRING['lang_charset']."\"\r\nContent-Transfer-Encoding: ";
+		$headers .= "Content-Type: text/html; charset=\"$charset\"\r\nContent-Transfer-Encoding: ";
 	} else {
-		$headers .= "Content-Type: text/plain; charset=\"".$STRING['lang_charset']."\"\r\nContent-Transfer-Encoding: ";
+		$headers .= "Content-Type: text/plain; charset=\"$charset\"\r\nContent-Transfer-Encoding: ";
 	}
 
 	// If configured to send MIME encoded emails
