@@ -2,7 +2,7 @@
 -- PostgreSQL database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.43 2003/06/04 18:47:21 kennyt Exp $
+-- $Id: pgsql.in,v 1.44 2003/09/14 22:16:24 kennyt Exp $
 
 BEGIN;
 
@@ -220,6 +220,7 @@ CREATE TABLE TBL_STATUS (
   status_name varchar(30) NOT NULL DEFAULT '',
   status_desc TEXT DEFAULT '' NOT NULL,
   sort_order INT2  NOT NULL DEFAULT '0',
+  bug_open INT2 NOT NULL default '1',
   PRIMARY KEY  (status_id)
 );
 
