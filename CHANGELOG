@@ -1,1 +1,6 @@
+-- 0.1.1 -- 25 Dec 2000
+: Added localization (except for database related stuff, such as Resolutions and
+  Statuses).
+: Added form field validations on the admin side.
+
 -- 0.1.0 -- 23 Dec 2000 -- Initial Release
