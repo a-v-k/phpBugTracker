@@ -1,13 +1,17 @@
 -- 0.9.0 --
 : Replaced the mail function with one that encodes (i18n support).
-: Added four additional fields for tracking bug information: Database type 
+: Added four additional fields for tracking bug information: Database type
   and version, Environment, Closed Version, To-be-closed Version.
 : Removed English text from templates for better localization.
 : Added option for sending emails MIME-encapsulated.
-: Cleaned up HTML
-: Added list of saved queries to the home page and an option to disable that 
+: Cleaned up HTML.
+: Added list of saved queries to the home page and an option to disable that
   list.
 : Updated translations.
+: Cleaned up printing of bug detail page.
+: Added required files from PEAR (DB.php, etc.) to the distribution.
+: Improved compatibility with IIS.
+: Fixed various small bugs.
 
 -- 0.8.2 -- 8 May 2002
 : Fixed bugs with ordering by dates in the bug list, self-referencing URLs
@@ -82,9 +86,9 @@
 : Fixed a rendering problem with bug comments.
 : Added the ability to create user groups and restrict project visibility based
   on those groups.
-: When a bug is filed against a component with an owner, that owner will be 
+: When a bug is filed against a component with an owner, that owner will be
   assigned the bug and receive an email about the bug.
-: Fixed a bug preventing users from being assigned to the User group when 
+: Fixed a bug preventing users from being assigned to the User group when
   created.
 : Fixed a bug with the download option of the installation process.
 : Change the label on the login box from Email to Login if configuration
@@ -97,7 +101,7 @@
 -- 0.5.0 -- 9 Nov 2001
 : Fixed a bug with the bug history update.
 : Added web-based installation.
-: Added on option for choosing whether bugs can be changed by anyone or only by 
+: Added on option for choosing whether bugs can be changed by anyone or only by
 	the bug reporter, bug owner, managers, or admins.
 : Added a printable view for bugs.
 : Added an upgrade script to upgrade from the last major version.
@@ -115,7 +119,7 @@
 -- 0.3.3 -- 2 Oct 2001
 : Added the ability to enter cvs:filename.ext or cvs:path/filename.ext:v.vv
   into the bug comments and have that linked to a CVS web interface.
-: Fixed bugs with project administration, account creation, and the initial 
+: Fixed bugs with project administration, account creation, and the initial
   database installation.
 
 -- 0.3.2 -- 28 Sep 2001
