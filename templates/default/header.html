@@ -33,6 +33,11 @@
 				<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='report.php'">
 					<a href="report.php" class="sidenavlink">View Reports</a>
 				</div>
+				{if not NEW_ACCOUNTS_DISABLED}
+					<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='newaccount.php'">
+						<a href="newaccount.php" class="sidenavlink">Create a new account</a>
+					</div>
+				{/if}
 				<div class="navbox" onMouseOver="this.className='navboxselected'" onMouseOut="this.className='navbox'" onClick="document.location.href='docs/html/userguide.html'">
 					<a href="docs/html/userguide.html" class="sidenavlink">Read Documentation</a>
 				</div>
