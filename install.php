@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.31 2002/09/13 18:13:25 bcurtis Exp $
+// $Id: install.php,v 1.32 2002/09/27 19:24:38 bcurtis Exp $
 
 // Location of smarty templates class
 define ('SMARTY_PATH', '');
@@ -146,35 +146,38 @@ function grab_config_file() {
 	return str_replace($patterns, $replacements, $contents);
 
 }
-
-function create_tables() {
-	global $_pv, $tables;
-
+function test_database(&$params, $testonly = false) {
 	// PEAR::DB
 	chdir('inc/pear'); // Drop down to the pear directory to include pear stuff
 	require_once('DB.php');
 	$dsn = array(
-		'phptype' => $_pv['db_type'],
-		'hostspec' => $_pv['db_host'],
-		'database'  => $_pv['db_database'],
-		'username'  => $_pv['db_user'],
-		'password'  => $_pv['db_pass']
+		'phptype' => $params['db_type'],
+		'hostspec' => $params['db_host'],
+		'database'  => $params['db_database'],
+		'username'  => $params['db_user'],
+		'password'  => $params['db_pass']
 		);
 	$db = DB::Connect($dsn);
 	chdir('../..'); // Come back up from the pear directory
 
 	// Simple error checking on returned DB object to check connection to db
-	if(get_class($db)=='db_error') {
-		die('<br><br>
-		<div align="center">The installation script could not connect to the database (' . $_pv['db_database'] .
-		') on the host (' . $_pv['db_host'] . ') using the specified username and password.
-		<br>
-		Please check these details are correct and that the database already exists then retry.
-		</div>
-		<br>'.$db->message.'<br>'.$db->userinfo);
+	if (get_class($db) == 'db_error') {
+		include('templates/default/install-dbfailure.html');
+		exit;
+	} else {
+		if ($testonly) {
+			include('templates/default/install-dbsuccess.html');
+			exit;
+		} else {
+			return $db;
+		}
 	}
+}
 
+function create_tables() {
+	global $_pv, $tables;
 
+	$db = test_database($_pv);
 	$db->setOption('optimize', 'portability');
 
 	$q_temp_ary = file('schemas/'.$_pv['db_type'].'.in');
@@ -267,6 +270,10 @@ if (isset($_pv['op'])) {
 	switch ($_pv['op']) {
 		case 'save_config_file' : save_config_file(); break;
 		case 'dump_config_file' : dump_config_file(); break;
+	}
+} elseif (isset($_gv['op'])) {
+	switch ($_gv['op']) {
+		case 'dbtest' : test_database($_gv, true); break;
 	}
 } else {
 	show_front();

@@ -1,6 +1,15 @@
 <html>
+<head>
 	<title>phpBugTracker Installation</title>
 	<link rel="StyleSheet" href="styles/default.css" type="text/css">
+	<script language="JavaScript">
+		function testDB(frm) {ldelim}
+			window.open('install.php?op=dbtest&db_type=' + frm.db_type.options[frm.db_type.selectedIndex].value +
+				'&db_host=' + frm.db_host.value + '&db_database=' + frm.db_database.value +
+				'&db_user=' + frm.db_user.value + '&db_pass=' + frm.db_pass.value,
+				'iwin', 'dependent=yes,width=450,height=300,scrollbars=1');
+		{rdelim}
+	</script>
 </head>
 <body bgcolor="#ffffff" link="#006699" vlink="#006699" alink="#006699">
 <form action="{$smarty.server.PHP_SELF}" method="post">
@@ -44,6 +53,9 @@
 					<td><input type="text" name="tbl_prefix" value="{$tbl_prefix|default:phpbt_}"></td>
 				</tr>
 				<tr>
+					<td colspan="2" align="center">
+						<input type="button" value="Test Database Connection" onClick="testDB(this.form)">
+					</td>
 				</tr>
 				<tr>
 					<th colspan="2">Configuration</th>
@@ -75,8 +87,8 @@
 				<tr>
 					<td width="150">Encrypt Passwords in DB:</td>
 					<td>
-						<input type="radio" name="encrypt_pass" value="1"> Yes 
-						<input type="radio" name="encrypt_pass" value="0" checked> No 
+						<input type="radio" name="encrypt_pass" value="1"> Yes
+						<input type="radio" name="encrypt_pass" value="0" checked> No
 					</td>
 				</tr>
 				<tr>
@@ -92,10 +104,10 @@
 							submit this form you will be prompted to save config.php.  Copy
 							this file to the location of the bug tracker, and then you will
 							be able to <a href="index.php">login to the bug tracker</a>.  From
-							the home page you can go to the Admin Tools and customize your 
-							installation via the Configuration link.  Once you have 
-							completed the configuration, you will be ready to add a project and 
-							start reporting bugs! 
+							the home page you can go to the Admin Tools and customize your
+							installation via the Configuration link.  Once you have
+							completed the configuration, you will be ready to add a project and
+							start reporting bugs!
 							<input type="hidden" name="op" value="dump_config_file">
 						{/if}
 						<br>
@@ -103,7 +115,7 @@
 						<input type="submit" value="Save Options">
 					</td>
 				</tr>
-			</table>			
+			</table>
 		</td>
 	</tr>
 </table>

@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<title>DB Test Failure</title>
+		<link rel="StyleSheet" href="styles/default.css" type="text/css">
+	</head>
+	<body>
+		<br><br>
+		<div align="center">
+			The installation script could not connect to the database
+			<b><?php echo $params['db_database']?></b> on the host <b><?php echo $params['db_host']?></b>
+			using the specified username and password.
+			<br>
+			Please check these details are correct and that the database already exists then retry.
+			<br>
+			<br>
+			<?php
+				echo $db->message.'<br>'.$db->userinfo."\n";
+				if ($testonly) {
+					echo '<br><br><a href="javascript:window.close()">Close window</a>';
+				}
+			?>
+		</div>
+	</body>
+</html>
