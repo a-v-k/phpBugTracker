@@ -13,8 +13,8 @@ REL="PREVIOUS"
 TITLE="Working with Bugs"
 HREF="bugdetail.html"><LINK
 REL="NEXT"
-TITLE="Configuration Options"
-HREF="configuration.html"><LINK
+TITLE="Installation Instructions"
+HREF="installation.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="docs.css"></HEAD
@@ -59,7 +59,7 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="configuration.html"
+HREF="installation.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -82,11 +82,16 @@ CLASS="TOC"
 ></DT
 ><DT
 >2.1. <A
-HREF="adminguide.html#INSTALLATION"
->Installation Instructions</A
+HREF="adminguide.html#REQUIREMENTS"
+>Requirements</A
 ></DT
 ><DT
 >2.2. <A
+HREF="installation.html"
+>Installation Instructions</A
+></DT
+><DT
+>2.3. <A
 HREF="configuration.html"
 >Configuration Options</A
 ></DT
@@ -106,93 +111,35 @@ CLASS="SECT1"
 ><H1
 CLASS="SECT1"
 ><A
-NAME="INSTALLATION">2.1. Installation Instructions</H1
-><DIV
-CLASS="PROCEDURE"
-><A
-NAME="INSTALL-PROCEDURE"
-></A
-><OL
-TYPE="1"
+NAME="REQUIREMENTS">2.1. Requirements</H1
+><P
+>Here is a list of things you need to have installed before you can install phpBugTracker:</P
+><UL
 ><LI
 ><P
->Copy the directory tree from the tarball (or zip archive) to a location suitable for serving web pages.</P
+>A web server (Apache, IIS, etc.) configured to run PHP scripts.  The PHP version must be later than 4.0.6.</P
 ></LI
 ><LI
 ><P
->With your web browser, go the location where you installed the package.  You will be presented with a web page that will help you configure and install the application.</P
+>PEAR::DB.  This is the database abstraction layer that comes with PEAR, which is included with recent distributions of PHP.</P
 ></LI
 ><LI
 ><P
->After completing the installation, login and start reporting bugs.</P
-><DIV
-CLASS="IMPORTANT"
-><TABLE
-CLASS="IMPORTANT"
-WIDTH="100%"
-BORDER="0"
-><TR
-><TD
-WIDTH="25"
-ALIGN="CENTER"
-VALIGN="TOP"
-><IMG
-SRC="images/important.gif"
-HSPACE="5"
-ALT="Important"></TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
+>A database server.  phpBugTracker has been tested with MySQL, PostgreSQL (&gt;= 7.1 required) and Oracle 8.  If you wish to run this package on another type of database, I am more than willing to support more types of databases if you are willing to help with testing.</P
+></LI
+><LI
 ><P
->You must have <TT
-CLASS="VARNAME"
->magic_quotes_gpc</TT
-> set to On either in <TT
-CLASS="FILENAME"
->php.ini</TT
-> or in <TT
-CLASS="FILENAME"
->.htaccess</TT
-> (see <A
-HREF="http://www.php.net/manual/en/configuration.php"
+>A database created on your database server for use with phpBugTracker.  You will need to supply this database name during the installation process.</P
+></LI
+><LI
+><P
+>Smarty templates (<A
+HREF="http://smarty.php.net/"
 TARGET="_top"
->http://www.php.net/manual/en/configuration.php</A
-> for more info).</P
-></TD
-></TR
-></TABLE
-></DIV
-><DIV
-CLASS="NOTE"
-><TABLE
-CLASS="NOTE"
-WIDTH="100%"
-BORDER="0"
-><TR
-><TD
-WIDTH="25"
-ALIGN="CENTER"
-VALIGN="TOP"
-><IMG
-SRC="images/note.gif"
-HSPACE="5"
-ALT="Note"></TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
-><P
->Optional: Install JpGraph (<A
-HREF="http://www.aditus.nu/jpgraph/"
-TARGET="_top"
->http://www.aditus.nu/jpgraph</A
->) if you wish to use it for the summary bug display on the home page.</P
-></TD
-></TR
-></TABLE
-></DIV
+>http://smarty.php.net/</A
+>).  If you do not have smarty templates already installed, a package of phpBugTracker is distributed that has smarty included and ready to go.</P
 ></LI
-></OL
-></DIV
+></UL
 ></DIV
 ></DIV
 ><DIV
@@ -229,7 +176,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="configuration.html"
+HREF="installation.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -249,7 +196,7 @@ VALIGN="top"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Configuration Options</TD
+>Installation Instructions</TD
 ></TR
 ></TABLE
 ></DIV

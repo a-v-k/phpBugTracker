@@ -3,7 +3,7 @@
 <title>Configuration Options</title>
 
 <abstract>
-<para>Most of the options listed here can be configured via the Configuration page of the admin tools.  The <varname>DB_</varname> options can be found in <filename>config.php</filename>.</para>
+<para>Most of the options listed here can be configured via the Configuration page of the admin tools.  The <varname>DB_</varname> options can be found in <filename>config.php</filename> and are specified during the installation process via the installation web page.</para>
 </abstract>
 
 <variablelist>
@@ -28,7 +28,7 @@
 <varlistentry>
 <term>DB_TYPE</term>
 <listitem>
-<para>The type of database server you are using, according to PHPlib's naming convention.  Possible choices are msql, mssql, mysql, oci8, odbc, oracle, pgsql, and sybase.  Note that only MySQL and PostgreSQL have been tested with &phpbt;</para>
+<para>The type of database server you are using, according to PEAR's naming convention.  Possible choices are fbsql, ibase, ifx, msql, mssql, mysql, oci8, odbc, pgsql, and sybase.  Note that only MySQL, PostgreSQL and Oracle 8 have been tested with &phpbt;</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -72,6 +72,12 @@
 <term>THEME</term>
 <listitem>
 <para>The directory below the <filename>templates</filename> directory (both in the top directory and the <filename>admin</filename> directory) where the <acronym>HTML</acronym> template files are located.  This makes it easy to wrap the bug tracker in a completely different look.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>STYLE</term>
+<listitem>
+<para>The CSS file to be used from the <filename class="directory">styles</filename> directory.  This makes it easy to change the color scheme and other CSS properties.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -144,6 +150,42 @@
 <term>LANGUAGE</term>
 <listitem>
 <para>The language file (found in the <filename class="directory">languages</filename> sub-directory to use for error and warning messages.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>STRICT_UPDATING</term>
+<listitem>
+<para>If false, any logged-in user can make changes to a bug.  If true, only the reporter, the person to whom the bug is currently assigned, and members of the Manager or Admin group can make changes to a bug.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>PROMOTE_VOTES</term>
+<listitem>
+<para>The number of votes required to automatically promote a bug from the Unconfirmed to the New status.  A value of 0 disables auto-promotion.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>MAX_USER_VOTES</term>
+<listitem>
+<para>The total number of votes a user may file on bugs.  A value of 0 disables the limit.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>RECALL_LOGIN</term>
+<listitem>
+<para>Whether to show the "Remember Me" checkbox in the login form.  When checked, that box will cause a cookie to be set that stores the user's login name or email address and will prefill the login area with that value the next time the user attempts to log in.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>SHOW_PROJECT_SUMMARIES</term>
+<listitem>
+<para>Whether to show the detailed project stats on the home page.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>FORCE_LOGIN</term>
+<listitem>
+<para>Whether users must log in before being able to browse the bugs or reports.</para>
 </listitem>
 </varlistentry>
 </variablelist>

@@ -1,0 +1,81 @@
+<!-- -*- sgml -*- -->
+<sect1 id="manifest">
+<title>What's where?</title>
+
+<para>Following is a list of the PHP files that make up &phpbt; and the functionality contained within them:</para>
+
+<itemizedlist>
+<listitem>
+<para><filename>attachment.php</filename></para>
+<para>Adding, deleting, and viewing attachment information.</para>
+</listitem>
+<listitem>
+<para><filename>bug.php</filename></para>
+<para>Adding, displaying, and editing bugs.  This includes the detailed view of a bug, printable view, bug history, a view of the votes for a bug, and the code that emails users about bug changes.</para>
+</listitem>
+<listitem>
+<para><filename>config-dist.php</filename></para>
+<para>This file is used as a template for generating the configuration file during installation.</para>
+</listitem>
+<listitem>
+<para><filename>config.php</filename></para>
+<para>This file is empty in the distribution package.  When &phpbt; has been installed this is the main configuration file that contains the table name definitions and includes the required packages.</para>
+</listitem>
+<listitem>
+<para><filename>include.php</filename></para>
+<para>This file is included by every other script at page load, and contains page set-up such as creating the database connection, initializing the template object, and doing authentication checks.</para>
+</listitem>
+<listitem>
+<para><filename>install.php</filename></para>
+<para>This file is used during the installation process to gather configuration information from the user and to set up the database.</para>
+</listitem>
+<listitem>
+<para><filename>logout.php</filename></para>
+<para>This is used to end the user's session.</para>
+</listitem>
+<listitem>
+<para><filename>newaccount.php</filename></para>
+<para>The code for creating new accounts and emailing accout information to new sers is located here.</para>
+</listitem>
+<listitem>
+<para><filename>query.php</filename></para>
+<para>The bug search form is rendered and handled by this script, along with the resulting list of bugs from a query.</para>
+</listitem>
+<listitem>
+<para><filename>report.php</filename></para>
+<para>Various summary reports.</para>
+</listitem>
+<listitem>
+<para><filename>upgrade.php</filename></para>
+<para>Used when upgrading to a new verison of &phpbt;.  This file is changed with every release to include (mainly) the database queries required to upgrade the installation to the latest version.</para>
+</listitem>
+<listitem>
+<para><filename>user.php</filename></para>
+<para>User preferences and password changes are handled via this script.</para>
+</listitem>
+<listitem>
+<para><filename>admin/*.php</filename></para>
+<para>Each of these files handles a segment of the adminsitration.  That is, <filename>group.php</filename> handles all the group adminstration, <filename>project.php</filename> is used for the project administration, etc.</para>
+</listitem>
+<listitem>
+<para><filename>inc/auth.php</filename></para>
+<para>Authentication class.</para>
+</listitem>
+<listitem>
+<para><filename>inc/functions.php</filename></para>
+<para>Supporting functions such as <function>build_select()</function>, etc.</para>
+</listitem>
+<listitem>
+<para><filename>inc/db/*.php</filename></para>
+<para>These files, named by database type, contain queries (such as left joins) that have different syntaxes among various database types.</para>
+</listitem>
+<listitem>
+<para><filename>languages/*.php</filename></para>
+<para>Named by language code, these files contain the localization of the text used throughout &phpbt;.</para>
+</listitem>
+</itemizedlist>
+</sect1>
+
+<!-- Local Variables: -->
+<!-- sgml-parent-document: "phpbt.sgml" -->
+<!-- End: -->

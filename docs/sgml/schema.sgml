@@ -3,48 +3,6 @@
 <title>Database Schema</title>
 
 <table>
-<title>Schema for table active_sessions</title>
-<tgroup cols="4">
-<thead>
-<row>
-<entry>Field</entry>
-<entry>Type</entry>
-<entry>Key</entry>
-<entry>Description</entry>
-</row>
-</thead>
-<tbody>
-<row>
-<entry>sid</entry>
-<entry>varchar(32)</entry>
-<entry>Primary</entry>
-<entry></entry>
-</row>
-<row>
-<entry>name</entry>
-<entry>varchar(32)</entry>
-<entry>Primary</entry>
-<entry></entry>
-</row>
-<row>
-<entry>val</entry>
-<entry>text</entry>
-<entry></entry>
-<entry></entry>
-</row>
-<row>
-<entry>changed</entry>
-<entry>varchar(14)</entry>
-<entry></entry>
-<entry></entry>
-</row>
-</tbody>
-</tgroup>
-</table>
-
-<para>This table is used by PHPlib to store session information.  It is updated with every call to <function>page_close()</function>.</para>
-
-<table>
 <title>Schema for table attachment</title>
 <tgroup cols="4">
 <thead>
@@ -479,6 +437,34 @@
 </table>
 
 <table>
+<title>Schema for table bug_dependency</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>bug_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>depends_on</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
 <title>Schema for table bug_group</title>
 <tgroup cols="4">
 <thead>
@@ -494,18 +480,52 @@
 <entry>bug_id</entry>
 <entry>int(10) unsigned</entry>
 <entry>Primary</entry>
-<entry>Foreign</entry>
+<entry></entry>
 </row>
 <row>
 <entry>group_id</entry>
 <entry>int(10) unsigned</entry>
 <entry>Primary</entry>
-<entry>Foreign</entry>
+<entry></entry>
 </row>
 </tbody>
 </tgroup>
 </table>
 <para>This table isn't currently used.</para>
+
+<table>
+<title>Schema for table bug_vote</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>user_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>bug_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
 
 <table>
 <title>Schema for table bug_history</title>
@@ -721,35 +741,6 @@
 </tgroup>
 </table>
 <para>This table stores the configuration for &phpbt;</para>
-
-<table>
-<title>Schema for table db_sequence</title>
-<tgroup cols="4">
-<thead>
-<row>
-<entry>Field</entry>
-<entry>Type</entry>
-<entry>Key</entry>
-<entry>Description</entry>
-</row>
-</thead>
-<tbody>
-<row>
-<entry>seq_name</entry>
-<entry>varchar(127)</entry>
-<entry>Primary</entry>
-<entry></entry>
-</row>
-<row>
-<entry>nextid</entry>
-<entry>int(10) unsigned</entry>
-<entry></entry>
-<entry></entry>
-</row>
-</tbody>
-</tgroup>
-</table>
-<para>PHPlib uses this table in generating the incrementing primary key sequences for the other tables.</para>
 
 <table>
 <title>Schema for table group_perm</title>
@@ -1153,6 +1144,34 @@
 <entry>int(10) unsigned</entry>
 <entry>Primary</entry>
 <entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table user_pref</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>user_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>email_notices</entry>
+<entry>tinyint(1)</entry>
+<entry></entry>
+<entry>Whether the user wants to receive email notices from &phpbt;.  Values are 1 for yes (default) or 0 for no.</entry>
 </row>
 </tbody>
 </tgroup>

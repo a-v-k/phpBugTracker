@@ -13,9 +13,7 @@
 
 <step>
 <para>After completing the installation, login and start reporting bugs.</para>
-<important>
-<para>You must have <varname>magic_quotes_gpc</varname> set to On either in <filename>php.ini</filename> or in <filename>.htaccess</filename> (see <ulink url="http://www.php.net/manual/en/configuration.php">http://www.php.net/manual/en/configuration.php</ulink> for more info).</para>
-</important>
+
 <note>
 <para>Optional: Install JpGraph (<ulink url="http://www.aditus.nu/jpgraph/">http://www.aditus.nu/jpgraph</ulink>) if you wish to use it for the summary bug display on the home page.</para>
 </note>

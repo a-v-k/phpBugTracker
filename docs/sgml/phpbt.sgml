@@ -11,12 +11,13 @@
 <!ENTITY bugdetail SYSTEM "bugdetail.sgml">
 
 <!-- Administrator's Guide -->
+<!ENTITY requirements SYSTEM "requirements.sgml">
 <!ENTITY installation SYSTEM "installation.sgml">
 <!ENTITY configuration SYSTEM "configuration.sgml">
 
 <!-- Developer's Guide -->
 <!ENTITY devstandards SYSTEM "devstandards.sgml">
-<!ENTITY dependencies SYSTEM "dependencies.sgml">
+<!ENTITY manifest SYSTEM "manifest.sgml">
 <!ENTITY schema SYSTEM "schema.sgml">
 ]>
 
@@ -47,6 +48,7 @@
 <para>One of the main design goals of &phpbt; is to make installation and administration easy.  In fact, the difficulty of installing bugzilla was a key motivator for &phpbt;'s existence.</para>
 </abstract>
 
+&requirements;
 &installation;
 &configuration;
 
@@ -58,7 +60,7 @@
 <para>Adding on to or extending &phpbt; should be easy for those with a knowledge of PHP and SQL.  New developers are always welcome to join the project at <ulink url="http://www.sourceforge.net/projects/phpbt/">http://www.sourceforge.net/projects/phpbt</ulink>, or to simply submit patches, bug reports, or feature requests.</para>
 </abstract>
 
-&dependencies;
+&manifest;
 &devstandards;
 &schema;
 

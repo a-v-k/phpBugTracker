@@ -73,120 +73,9 @@ NAME="SCHEMA">3.3. Database Schema</H1
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN383"><P
+NAME="AEN435"><P
 ><B
->Table 3-1. Schema for table active_sessions</B
-></P
-><TABLE
-BORDER="1"
-CLASS="CALSTABLE"
-><THEAD
-><TR
-><TH
-ALIGN="LEFT"
-VALIGN="TOP"
->Field</TH
-><TH
-ALIGN="LEFT"
-VALIGN="TOP"
->Type</TH
-><TH
-ALIGN="LEFT"
-VALIGN="TOP"
->Key</TH
-><TH
-ALIGN="LEFT"
-VALIGN="TOP"
->Description</TH
-></TR
-></THEAD
-><TBODY
-><TR
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->sid</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->varchar(32)</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->Primary</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->&nbsp;</TD
-></TR
-><TR
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->name</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->varchar(32)</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->Primary</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->&nbsp;</TD
-></TR
-><TR
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->val</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->text</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->&nbsp;</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->&nbsp;</TD
-></TR
-><TR
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->changed</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->varchar(14)</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->&nbsp;</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->&nbsp;</TD
-></TR
-></TBODY
-></TABLE
-></DIV
-><P
->This table is used by PHPlib to store session information.  It is updated with every call to <TT
-CLASS="FUNCTION"
->page_close()</TT
->.</P
-><DIV
-CLASS="TABLE"
-><A
-NAME="AEN415"><P
-><B
->Table 3-2. Schema for table attachment</B
+>Table 3-1. Schema for table attachment</B
 ></P
 ><TABLE
 BORDER="1"
@@ -362,9 +251,9 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN465"><P
+NAME="AEN485"><P
 ><B
->Table 3-3. Schema for table auth_group</B
+>Table 3-2. Schema for table auth_group</B
 ></P
 ><TABLE
 BORDER="1"
@@ -524,9 +413,9 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN511"><P
+NAME="AEN531"><P
 ><B
->Table 3-4. Schema for table auth_perm</B
+>Table 3-3. Schema for table auth_perm</B
 ></P
 ><TABLE
 BORDER="1"
@@ -671,9 +560,9 @@ CLASS="DATABASE"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN553"><P
+NAME="AEN573"><P
 ><B
->Table 3-5. Schema for table auth_user</B
+>Table 3-4. Schema for table auth_user</B
 ></P
 ><TABLE
 BORDER="1"
@@ -921,9 +810,9 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN623"><P
+NAME="AEN643"><P
 ><B
->Table 3-6. Schema for table bug</B
+>Table 3-5. Schema for table bug</B
 ></P
 ><TABLE
 BORDER="1"
@@ -1306,9 +1195,9 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN731"><P
+NAME="AEN751"><P
 ><B
->Table 3-7. Schema for table bug_cc</B
+>Table 3-6. Schema for table bug_cc</B
 ></P
 ><TABLE
 BORDER="1"
@@ -1412,7 +1301,77 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN761"><P
+NAME="AEN781"><P
+><B
+>Table 3-7. Schema for table bug_dependency</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><THEAD
+><TR
+><TH
+ALIGN="LEFT"
+VALIGN="TOP"
+>Field</TH
+><TH
+ALIGN="LEFT"
+VALIGN="TOP"
+>Type</TH
+><TH
+ALIGN="LEFT"
+VALIGN="TOP"
+>Key</TH
+><TH
+ALIGN="LEFT"
+VALIGN="TOP"
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>bug_id</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>int(10) unsigned</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>Primary</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>&nbsp;</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>depends_on</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>int(10) unsigned</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>Primary</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>&nbsp;</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN801"><P
 ><B
 >Table 3-8. Schema for table bug_group</B
 ></P
@@ -1456,7 +1415,7 @@ VALIGN="TOP"
 ><TD
 ALIGN="LEFT"
 VALIGN="TOP"
->Foreign</TD
+>&nbsp;</TD
 ></TR
 ><TR
 ><TD
@@ -1474,7 +1433,7 @@ VALIGN="TOP"
 ><TD
 ALIGN="LEFT"
 VALIGN="TOP"
->Foreign</TD
+>&nbsp;</TD
 ></TR
 ></TBODY
 ></TABLE
@@ -1484,9 +1443,97 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN782"><P
+NAME="AEN822"><P
 ><B
->Table 3-9. Schema for table bug_history</B
+>Table 3-9. Schema for table bug_vote</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><THEAD
+><TR
+><TH
+ALIGN="LEFT"
+VALIGN="TOP"
+>Field</TH
+><TH
+ALIGN="LEFT"
+VALIGN="TOP"
+>Type</TH
+><TH
+ALIGN="LEFT"
+VALIGN="TOP"
+>Key</TH
+><TH
+ALIGN="LEFT"
+VALIGN="TOP"
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>user_id</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>int(10) unsigned</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>Primary</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>&nbsp;</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>bug_id</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>int(10) unsigned</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>Primary</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>&nbsp;</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>created_date</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>bigint(20) unsigned</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>&nbsp;</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>&nbsp;</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN847"><P
+><B
+>Table 3-10. Schema for table bug_history</B
 ></P
 ><TABLE
 BORDER="1"
@@ -1626,9 +1673,9 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN822"><P
+NAME="AEN887"><P
 ><B
->Table 3-10. Schema for table comment</B
+>Table 3-11. Schema for table comment</B
 ></P
 ><TABLE
 BORDER="1"
@@ -1750,9 +1797,9 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN857"><P
+NAME="AEN922"><P
 ><B
->Table 3-11. Schema for table component</B
+>Table 3-12. Schema for table component</B
 ></P
 ><TABLE
 BORDER="1"
@@ -1967,9 +2014,9 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN918"><P
+NAME="AEN983"><P
 ><B
->Table 3-12. Schema for table configuration</B
+>Table 3-13. Schema for table configuration</B
 ></P
 ><TABLE
 BORDER="1"
@@ -2075,79 +2122,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN949"><P
-><B
->Table 3-13. Schema for table db_sequence</B
-></P
-><TABLE
-BORDER="1"
-CLASS="CALSTABLE"
-><THEAD
-><TR
-><TH
-ALIGN="LEFT"
-VALIGN="TOP"
->Field</TH
-><TH
-ALIGN="LEFT"
-VALIGN="TOP"
->Type</TH
-><TH
-ALIGN="LEFT"
-VALIGN="TOP"
->Key</TH
-><TH
-ALIGN="LEFT"
-VALIGN="TOP"
->Description</TH
-></TR
-></THEAD
-><TBODY
-><TR
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->seq_name</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->varchar(127)</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->Primary</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->&nbsp;</TD
-></TR
-><TR
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->nextid</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->int(10) unsigned</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->&nbsp;</TD
-><TD
-ALIGN="LEFT"
-VALIGN="TOP"
->&nbsp;</TD
-></TR
-></TBODY
-></TABLE
-></DIV
-><P
->PHPlib uses this table in generating the incrementing primary key sequences for the other tables.</P
-><DIV
-CLASS="TABLE"
-><A
-NAME="AEN970"><P
+NAME="AEN1014"><P
 ><B
 >Table 3-14. Schema for table group_perm</B
 ></P
@@ -2217,7 +2192,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN990"><P
+NAME="AEN1034"><P
 ><B
 >Table 3-15. Schema for table os</B
 ></P
@@ -2323,7 +2298,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1020"><P
+NAME="AEN1064"><P
 ><B
 >Table 3-16. Schema for table project</B
 ></P
@@ -2501,7 +2476,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1070"><P
+NAME="AEN1114"><P
 ><B
 >Table 3-17. Schema for table project_group</B
 ></P
@@ -2607,7 +2582,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1100"><P
+NAME="AEN1144"><P
 ><B
 >Table 3-18. Schema for table resolution</B
 ></P
@@ -2713,7 +2688,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1130"><P
+NAME="AEN1174"><P
 ><B
 >Table 3-19. Schema for table saved_query</B
 ></P
@@ -2824,7 +2799,7 @@ CLASS="DATABASE"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1162"><P
+NAME="AEN1206"><P
 ><B
 >Table 3-20. Schema for table severity</B
 ></P
@@ -2951,7 +2926,7 @@ CLASS="VARNAME"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1198"><P
+NAME="AEN1242"><P
 ><B
 >Table 3-21. Schema for table status</B
 ></P
@@ -3057,7 +3032,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1228"><P
+NAME="AEN1272"><P
 ><B
 >Table 3-22. Schema for table user_group</B
 ></P
@@ -3163,7 +3138,7 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1258"><P
+NAME="AEN1302"><P
 ><B
 >Table 3-23. Schema for table user_perm</B
 ></P
@@ -3233,9 +3208,79 @@ VALIGN="TOP"
 ><DIV
 CLASS="TABLE"
 ><A
-NAME="AEN1278"><P
+NAME="AEN1322"><P
 ><B
->Table 3-24. Schema for table version</B
+>Table 3-24. Schema for table user_pref</B
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><THEAD
+><TR
+><TH
+ALIGN="LEFT"
+VALIGN="TOP"
+>Field</TH
+><TH
+ALIGN="LEFT"
+VALIGN="TOP"
+>Type</TH
+><TH
+ALIGN="LEFT"
+VALIGN="TOP"
+>Key</TH
+><TH
+ALIGN="LEFT"
+VALIGN="TOP"
+>Description</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>user_id</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>int(10) unsigned</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>Primary</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>&nbsp;</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>email_notices</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>tinyint(1)</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>&nbsp;</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>Whether the user wants to receive email notices from phpBugTracker.  Values are 1 for yes (default) or 0 for no.</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><DIV
+CLASS="TABLE"
+><A
+NAME="AEN1342"><P
+><B
+>Table 3-25. Schema for table version</B
 ></P
 ><TABLE
 BORDER="1"
