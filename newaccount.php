@@ -49,4 +49,6 @@ else show_form();
 
 $t->pparse('main',array('content','wrap','main'));
 
+page_close();
+
 ?>

@@ -4,8 +4,6 @@
 
 include 'include.php';
 
-page_open(array('sess' => 'usess', 'auth' => 'uauth'));
-
 $auth->unauth();
 
 include 'templates/'.THEME.'logout.html';

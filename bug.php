@@ -4,9 +4,6 @@
 
 include 'include.php';
 
-page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
-$u = $auth->auth['uid'];
-
 ///
 /// Show the activity for a bug
 function show_history($bugid) {

@@ -2,7 +2,7 @@
 
 // images.php - Draw graphs using jpgraph
 
-define ('JPGRAPH_PATH', '/home/bcurtis/public_html/jp/');
+define ('NO_AUTH',1);
 include 'include.php';
 include JPGRAPH_PATH.'jpgraph.php';
 

@@ -4,8 +4,6 @@
 
 include '../include.php';
 
-page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
-
 function do_form($osid = 0) {
 	global $q, $me, $fname, $fregex, $fsortorder, $STRING;
 	

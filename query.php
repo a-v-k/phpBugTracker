@@ -4,9 +4,6 @@
 
 include 'include.php';
 
-page_open(array('sess' => 'usess', 'auth' => 'uauth'));
-$u = $auth->auth['uid'];
-
 function delete_saved_query($queryid) {
 	global $q, $u, $me;
 	

@@ -4,9 +4,6 @@
 
 include 'include.php';
 
-page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
-$u = $auth->auth['uid'];
-
 function resolution_by_engineer($projectid = 0) {
 	global $q, $t;
 	

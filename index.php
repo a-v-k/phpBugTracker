@@ -4,8 +4,6 @@
 
 include 'include.php';
 
-page_open(array('sess' => 'usess'));
-
 $t->set_file(array(
 	'wrap' => 'wrap.html',
 	'content' => 'index.html'

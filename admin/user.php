@@ -2,8 +2,6 @@
 
 include '../include.php';
 
-page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
-
 function do_form($userid = 0) {
 	global $q, $me, $ffirstname, $flastname, $femail, $fpassword, $usertype, $STRING, $now;
 	
