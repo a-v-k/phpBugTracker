@@ -163,7 +163,7 @@ function updateMenus(f) {
         </tr>
       </table>
 
-			<hr align="left" width="640">
+			<hr align="left" width="100%">
       <table>
 				<tr>
 					<td><b>Project:</b></td>
@@ -187,7 +187,7 @@ function updateMenus(f) {
 					</td>
 				</tr>
 			</table>
-			<hr align="left" width="640">
+			<hr align="left" width="100%">
       <input type="hidden" name="op" value="doquery">
 			<nobr><b>Sort By:</b> 
 			<select name="order">
@@ -219,7 +219,7 @@ function updateMenus(f) {
 			{if $smarty.session.uid}
 				<br>
 				Save this query as: <input maxlength="40" type="text" name="savedqueryname">
-				<hr align="left" size="1" width="640">
+				<hr align="left" size="1" width="100%">
 				<b>Saved Queries</b>
 				<br>
 				{section name=query loop=$queries}
