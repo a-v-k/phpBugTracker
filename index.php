@@ -189,7 +189,7 @@ if (DB::isError($rs) or !$rs->numRows()) {
 	while (extract($rs->fetchRow())) {
 		$t->set_var(array(
 			'title' => stripslashes($title),
-			'bugid' => $bugid,
+			'bugid' => $bug_id,
 			'project' => stripslashes($project_name)
 		));
 		$t->parse('recentrows', 'recentrow', true);
@@ -207,7 +207,7 @@ if (DB::isError($rs) or !$rs->numRows()) {
 	while (extract($rs->fetchRow())) {
 		$t->set_var(array(
 			'title' => stripslashes($title),
-			'bugid' => $bugid,
+			'bugid' => $bug_id,
 			'project' => stripslashes($project_name)
 		));
 		$t->parse('closerows', 'closerow', true);
