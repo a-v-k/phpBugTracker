@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.77 2001/11/19 16:49:20 bcurtis Exp $
+// $Id: include.php,v 1.78 2001/11/23 05:10:44 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -91,6 +91,10 @@ class dbclass extends DB_Sql {
 }
 
 $q = new dbclass;
+
+//include INSTALL_PATH.'/'.INCLUDE_PATH.'inc/adodb/adodb.inc.php';
+//$db =& ADONewConnection(DB_TYPE);
+//$db->PConnect(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
 
 // Set up the configuration variables
 $q->query('select varname, varvalue from '.TBL_CONFIGURATION);
@@ -231,7 +235,7 @@ function build_select($box, $value = '', $project = 0) {
   );
 
   $text = '';
-	if (in_array($box, $cfgDatabase)) {
+	if (isset($cfgDatabase[$box])) {
   	$querystart = "select {$box}_id, {$box}_name from $cfgDatabase[$box]";
   	$queries = array(
     	'group' => $querystart.' where group_name <> \'User\' order by group_name',
@@ -390,9 +394,8 @@ function genpassword($length){
     srand((double)microtime()*1000000);
 
     $vowels = array("a", "e", "i", "o", "u");
-    $cons = array("b", "c", "d", "g", "h", "j", "k", "l", "m", "n", "p", "r", "s", "t", "u", "v", "w", "tr",
-
-    "cr", "br", "fr", "th", "dr", "ch", "ph", "wr", "st", "sp", "sw", "pr", "sl", "cl");
+    $cons = array("b", "c", "d", "g", "h", "j", "k", "l", "m", "n", "p", "r", "s", "t", "u", "v", "w", "tr", "cr", "br", "fr", "th", "dr", "ch", "ph", "wr", "st", "sp", "sw", "pr", "sl", "cl");
+		$password = '';
 
     $num_vowels = count($vowels);
     $num_cons = count($cons);
