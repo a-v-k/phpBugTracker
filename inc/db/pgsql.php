@@ -100,7 +100,7 @@ $QUERY = array(
 	'functions-bug-cc' => 'select b.user_id, login '.
 		'from '.TBL_BUG_CC.' b left join '. TBL_AUTH_USER.' using(user_id) '.
 		'where bug_id = %s',
-	'functions-project-js' => 'select p.project_id, project_name '.
+	'functions-project-js' => 'select p.project_id, p.project_name '.
 		'from '.TBL_PROJECT. ' p '.
 		'left join '.TBL_PROJECT_GROUP.' pg using(project_id) '.
 		'where active = 1 and (pg.project_id is null or pg.group_id in (%s)) '.
