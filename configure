@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script to edit configuration settings
-# $Id: configure,v 1.10 2001/09/15 15:49:42 bcurtis Exp $
+# $Id: configure,v 1.11 2001/09/15 16:22:51 bcurtis Exp $
 
 DIALOG=${DIALOG=dialog}
 tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/test$$
@@ -236,6 +236,7 @@ show_menu() {
 				change_features
 				;;
 			Save)
+				# Change the constants in config.php, saving a backup
 				mv config.php config.php.bak
 				echo "/ENCRYPTPASS/s/[[:digit:]]/$ENCRYPTPASS/" > $tempfile
 				echo "/USE_JPGRAPH/s/[[:digit:]]/$USE_JPGRAPH/" >> $tempfile
@@ -253,8 +254,16 @@ show_menu() {
 				echo "/DB_PASSWORD/s|, '.*'|, '$DB_PASS'|" >> $tempfile
 				echo "/TBL_PREFIX/s|, '.*'|, '$DB_TBL_PREFIX'|" >> $tempfile
 				sed -f $tempfile config.php.bak > config.php
+				
+				# Change and run the configure_db script
+				cat configure_db | sed "
+					/TBL_PREFIX/s/'.*'/'$DB_TBL_PREFIX'/
+					/DB_TYPE/s/'.*'/'$DB_TYPE'/
+				" > configure_db
+				./configure_db
+				
 				$DIALOG --backtitle "phpBT Configuration" \
-					--infobox "Your changes have been saved" 5 36
+					--msgbox "Your changes have been saved, and your database creation file is createdb.sql" 0 0
 				exit
 				;;
 		esac
