@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.39 2001/09/08 14:34:52 bcurtis Exp $
+// $Id: bug.php,v 1.40 2001/09/08 15:59:53 bcurtis Exp $
 
 include 'include.php';
 
@@ -256,7 +256,7 @@ function update_bug($bugid = 0) {
 			$q->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
 			         ." values (".$q->nextid(TBL_COMMENT).", $bugid, 'This bug is a duplicate of bug #$dupenum', $u, $now)");
 			$statusfield = 'Duplicate'; 
-			$bugresolution = $q->grab_field("select resolution_id from ".TBL_RESOLUTION." where resolution_name = 'Duplicate'");
+			$resolution_id = $q->grab_field("select resolution_id from ".TBL_RESOLUTION." where resolution_name = 'Duplicate'");
 			$statusfield = 'Resolved';
 			break;
 		case 'resolve' : 
@@ -266,7 +266,7 @@ function update_bug($bugid = 0) {
 		case 'reopen' :
 			$changeresolution = true;
 			$statusfield = 'Reopened';
-			$bugresolution = 0;
+			$resolution_id = 0;
 			break;
 		case 'verify' :
 			$statusfield = 'Verified';
@@ -276,17 +276,19 @@ function update_bug($bugid = 0) {
 			break;
 	}
 	if ($statusfield) {
-		$status = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = '$statusfield'");
-		$changedfields['status'] = $status; 
+		$status_id = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = '$statusfield'");
+		$changedfields['status_id'] = $status_id; 
 	}
-	
+	if ($changeresolution) {
+		$changedfields['resolution_id'] = $resolution_id;
+	}
 	if ($comments) {
 		$comments = htmlspecialchars($comments);
 		$q->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
 		         ." values (".$q->nextid(TBL_COMMENT).", $bugid, '$comments', $u, $now)");
 	}
 
-	$q->query("update ".TBL_BUG." set title = '$title', url = '$url', severity_id = $severity_id, priority = $priority, ".($status ? "status_id = $status, " : ''). ($changeresolution ? "resolution_id = $bugresolution, " : ''). ($assignedto ? "assigned_to = $assignedto, " : '')." project_id = $project_id, version_id = $version_id, component_id = $component_id, os_id = $os_id, last_modified_by = $u, last_modified_date = $now where bug_id = $bugid");
+	$q->query("update ".TBL_BUG." set title = '$title', url = '$url', severity_id = $severity_id, priority = $priority, ".($status_id ? "status_id = $status_id, " : ''). ($changeresolution ? "resolution_id = $resolution_id, " : ''). ($assignedto ? "assigned_to = $assignedto, " : '')." project_id = $project_id, version_id = $version_id, component_id = $component_id, os_id = $os_id, last_modified_by = $u, last_modified_date = $now where bug_id = $bugid");
 	
 	if ($changedfields or $comments) {
 		do_changedfields($u, $buginfo, $changedfields, $comments);
