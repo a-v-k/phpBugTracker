@@ -10,7 +10,7 @@
 	<br>
 	<div align='center'><b>User Login</b></div>
 	<br>
-	
+
 	<form action='index.php' method='post'>
 	<table border="0">
 		<?php global $username, $emailsuccess; if (isset($username)) { ?>
@@ -42,8 +42,8 @@
 		</tr>
 		<tr>
 			<td align="right">
-				<input type="submit" name="sendpass" value="Email my password">
 				<input type="submit" value="Go">
+				<input type="submit" name="sendpass" value="Email my password">
 				<input type="hidden" name="dologin" value="1">
 			</td>
 		</tr>
