@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.68 2001/10/30 05:19:53 bcurtis Exp $
+// $Id: include.php,v 1.69 2001/10/30 13:51:16 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -34,7 +34,7 @@ class dbclass extends DB_Sql {
   var $Database = DB_DATABASE;
   var $User = DB_USER;
   var $Password = DB_PASSWORD;
-	var $Seg_Table = TBL_DB_SEQUENCE;
+	var $Seq_Table = TBL_DB_SEQUENCE;
 	
 	// Attempt to handle different limit syntax
 	function limit_query($q_string, $limit, $offset = 0) {
@@ -66,7 +66,7 @@ class dbclass extends DB_Sql {
 		if ($seq_name == TBL_SAVED_QUERY) {
 			return $q->grab_field("select max(saved_query_id)+1 where user_id = ".$auth->auth['uid']);
 		} else {
-			return DB_Sql::nextid($seqname);
+			return DB_Sql::nextid($seq_name);
 		}
 	}
 }
