@@ -20,13 +20,13 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz_iso-8859-2.php,v 1.14 2002/06/18 12:54:33 firma Exp $
+// $Id: cz_iso-8859-2.php,v 1.15 2002/06/18 16:36:21 firma Exp $
 
 $STRING = array(
     'lang_charset' => 'ISO-8859-2',
     'nouser' => 'Tento u¾ivatel neexistuje',
-    'dupeofself' => 'BUG nemù¾e být shodný se sám se sebou',
-    'nobug' => 'Tento BUG neexistuje',
+    'dupeofself' => 'Bug nemù¾e být shodný se sám se sebou',
+    'nobug' => 'Tento bug neexistuje',
     'givesummary' => 'Prosím vlo¾te souhrn',
     'givedesc' => 'Prosím vlo¾te popis',
     'noprojects' => 'Projekt nebyl nalezen',
@@ -49,13 +49,13 @@ $STRING = array(
     'noseverities' => 'Dùle¾itost nenalezena',
     'givepassword' => 'Prosím vlo¾te heslo',
     'nousers' => 'U¾ivatel(é) nenalezen(i)',
-    'bugbadperm' => 'Nemù¾ete zmìnit BUG',
-    'bugbadnum' => 'Tento BUG neexistuje',
-    'datecollision' => 'Nìkdo aktualizoval BUG od Va¹í poslední náv¹tìvy.	Do informací o BUGu byli zaneseny nejnovìj¹í zmìny.',
+    'bugbadperm' => 'Nemù¾ete zmìnit bug',
+    'bugbadnum' => 'Tento bug neexistuje',
+    'datecollision' => 'Nìkdo aktualizoval bug od Va¹í poslední náv¹tìvy.	Do informací o bugu byli zaneseny nejnovìj¹í zmìny.',
     'passwordmatch' => 'Hesla nesouhlasí --prosím zadejte je znovu',
-    'nobughistory' => 'Tento BUG nemá hystorii',
-    'logintomodify' => 'Musíte být pøihlá¹en(a) pro upravu tohoto BUGu',
-    'dupe_attachment' => 'Pøíloha pro tento BUG je ji¾ nahrána',
+    'nobughistory' => 'Tento bug nemá hystorii',
+    'logintomodify' => 'Musíte být pøihlá¹en(a) pro upravu tohoto bugu',
+    'dupe_attachment' => 'Pøíloha pro tento bug je ji¾ nahrána',
     'give_attachment' => 'Prosím vyberte soubor pro upload',
     'no_attachment_save_path' => 'Cesta k ulo¾enému souboru nenalezena',
     'attachment_path_not_writeable' => 'Nelze vytvoøit soubor na zadané cestì',
@@ -66,7 +66,7 @@ $STRING = array(
     'project_only_all_groups' => 'Nelze vybrat specifickou skupinu kdy¾ jsou vybrány v¹echny skupiny',
     'previous_bug' => 'Pøedchozí',
     'next_bug' => 'Následující',
-    'already_voted' => 'Ji¾ jste hlasoval(a) k tomuto BUGu',
+    'already_voted' => 'Ji¾ jste hlasoval(a) k tomuto bugu',
     'too_many_votes' => 'Dosáhl jste maximálního poètu hlasù na jednoho u¾ivatele',
     'no_votes' => 'Nikdo je¹tì nehlasoval',
     'user_filter' => array(
@@ -105,7 +105,7 @@ $STRING = array(
 	'Summary' => 'Shrnutí',
 	'DescriptionEntry' => 'Polo¾ka popisu',
 	'SortBy' => 'Tøídit podle',
-	'SortBy_BugNumber' => 'Èísla BUGu',
+	'SortBy_BugNumber' => 'Èísla bugu',
 	'SortBy_Severity' => 'Dùle¾itosti',
 	'SortBy_Reporter' => 'Reportéra',
 	'SortBy_Priority' => 'Priority',
@@ -129,9 +129,9 @@ $STRING = array(
 	'eMail_AssignedTo' => 'pøiøazeno'
     ),
     'WRAP' => array(
-	'FindBug' => 'Hledat BUG',
+	'FindBug' => 'Hledat bug',
 	'Home' => 'Domù',
-	'AddNewBug' => 'Pøidat nový BUG',
+	'AddNewBug' => 'Pøidat nový bug',
 	'QueryBugs' => 'Prohledávání',
 	'ViewReports' => 'Hlá¹ení/Reporty',
 	'Documentation' => 'Dokumentace',
@@ -184,9 +184,9 @@ $STRING = array(
 	'Size' => 'Velikost',
 	'Type' => 'Typ',
 	'Created' => 'Vytvoøeno',
-	'VoteForThisBug' => 'Hlasovat pro tento BUG',
+	'VoteForThisBug' => 'Hlasovat pro tento bug',
 	'ViewVotes' => 'Zobrazit volby',
-	'ForThisBug' => 'pro tento BUG',
+	'ForThisBug' => 'pro tento bug',
 	'ViewBugActivity' => 'Zobrazit aktivitu',
 	'PrintableView' => 'Tisknutelné zobrazení',
 	'NoAttachments' => 'Nemá pøílohy',
@@ -199,16 +199,32 @@ $STRING = array(
 	'Database' => 'Databáze',
         'OS' => 'Operaèní systém',
 	'ChooseOne' => 'Vyberte'
+    ),
+    'USER_PREF' => array(
+	'ReceiveNotifications' => 'Zasílat upozornìní o zmìnách bugù',
+	'ShowSavedQueries' => 'Zobrazovat na ulo¾né dotazy na domovské stránce',
+	'ChangePassword' => 'Zmìnit heslo',
+	'EnterNewPassword' => 'Vyplòte dvakrát své nové heslo',
+	'Password' => 'Heslo',
+	'Verify' => 'Kontrola',
+	'ChangePreferences' => 'Zmìnit nastavení',
+	'BugListColumns' => 'Seznam zobrazovaných polí',
+	'ChooseFields' => 'Vyberte pole, která chcete zobrazovat',
+	'SureDeleteVote' => 'Opravdu chcete odstranit tuto volbu?',
+	'Votes' => 'Volby',
+	'Bug' => 'Bug',
+	'When' => 'Kdy',
+	'ColumnPreferencesSaved' => 'Vybraná pole byla ulo¾ena'
     )
 );
 
 // Page titles
 $TITLE = array(
-    'enterbug' => 'Vlo¾te BUG',
-    'editbug' => 'Upravte BUG',
+    'enterbug' => 'Vlo¾te bug',
+    'editbug' => 'Upravte bug',
     'newaccount' => 'Vytvoøit nový úèet',
-    'bugquery' => 'BUG dotaz',
-    'buglist' => 'Seznam BUGù',
+    'bugquery' => 'Bug dotaz',
+    'buglist' => 'Seznam bugù',
     'addcomponent' => 'Pøidat komponentu',
     'editcomponent' => 'Editovat komponentu',
     'addproject' => 'Pøidat projekt',

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.29 2002/06/18 12:38:56 bcurtis Exp $
+// $Id: en.php,v 1.30 2002/06/18 16:36:21 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'us-ascii',
@@ -199,6 +199,22 @@ $STRING = array(
 		'Database' => 'Database',
 		'OS' => 'OS',
 		'ChooseOne' => 'Choose One'
+	),
+	'USER_PREF' => array(
+		'ReceiveNotifications' => 'Receive notifications of bug changes via email',
+		'ShowSavedQueries' => 'Show saved queries on the homepage',
+		'ChangePassword' => 'Change password',
+		'EnterNewPassword' => 'Please enter your new password twice below',
+		'Password' => 'Password',
+		'Verify' => 'Verify',
+		'ChangePreferences' => 'ChangePreferences',
+		'BugListColumns' => 'Bug List Columns',
+		'ChooseFields' => 'Choose the fields you want to see in the bug list',
+		'SureDeleteVote' => 'Are you sure you want to delete this vote?',
+		'Votes' => 'Votes',
+		'Bug' => 'Bug',
+		'When' => 'When',
+		'ColumnPreferencesSaved' => 'Your bug list column preferences have been saved'
 	)
 
 );
