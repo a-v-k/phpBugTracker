@@ -172,7 +172,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	}
 	if (!$order) { $order = 'bug_id'; $sort = 'asc'; }
 	if (!$querystring or $op) build_query($assignedto, $reportedby, $open);
-	$nr = $q->grab_field("select count(*) from bug left join user owner on bug.assigned_to = owner.user_id left join user reporter on bug.created_by = reporter.user_id ".($querystring != '' ? "where $querystring": ''));
+	$nr = $q->grab_field("select count(*) from bug left join auth_user owner on bug.assigned_to = owner.user_id left join auth_user reporter on bug.created_by = reporter.user_id ".($querystring != '' ? "where $querystring": ''));
 
 	list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
 		"order=$order&sort=$sort");
@@ -185,7 +185,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'project' => build_select('project'),
 		'TITLE' => $TITLE['buglist']));
 	
-	$q->query("select bug.*, reporter.email as reporter, owner.email as owner, lastmodifier.email as lastmodifier, project_name, severity_name, status_name, os_name, version_name, component_name, resolution_name, severity_color from bug left join resolution using (resolution_id), severity, status, os, version, component, project left join user owner on bug.assigned_to = owner.user_id left join user reporter on bug.created_by = reporter.user_id left join user lastmodifier on bug.last_modified_by = lastmodifier.user_id where bug.severity_id = severity.severity_id and bug.status_id = status.status_id and bug.os_id = os.os_id and bug.version_id = version.version_id and bug.component_id = component.component_id and bug.project_id = project.project_id ". ($querystring != '' ? "and $querystring " : ''). "order by $order $sort limit $llimit, $selrange");
+	$q->query("select bug.*, reporter.email as reporter, owner.email as owner, lastmodifier.email as lastmodifier, project_name, severity_name, status_name, os_name, version_name, component_name, resolution_name, severity_color from bug left join resolution using (resolution_id), severity, status, os, version, component, project left join auth_user owner on bug.assigned_to = owner.user_id left join auth_user reporter on bug.created_by = reporter.user_id left join auth_user lastmodifier on bug.last_modified_by = lastmodifier.user_id where bug.severity_id = severity.severity_id and bug.status_id = status.status_id and bug.os_id = os.os_id and bug.version_id = version.version_id and bug.component_id = component.component_id and bug.project_id = project.project_id ". ($querystring != '' ? "and $querystring " : ''). "order by $order $sort limit $llimit, $selrange");
 				
 	$headers = array(
 		'bug_id' => 'bug_id',

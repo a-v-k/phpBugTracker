@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.29 2001/08/23 02:03:16 bcurtis Exp $
+// $Id: bug.php,v 1.30 2001/08/25 18:39:11 bcurtis Exp $
 
 include 'include.php';
 
@@ -34,7 +34,7 @@ function show_history($bugid) {
 		return;
 	}
 	
-	$q->query("select bh.*, email from bug_history bh left join user on created_by = user_id where bug_id = $bugid");
+	$q->query("select bh.*, email from bug_history bh left join auth_user on created_by = user_id where bug_id = $bugid");
 	if (!$q->num_rows()) {
 		show_text($STRING['nobughistory']);
 		return;
@@ -97,14 +97,14 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 	}
 	
 	// Reporter never changes;
-	$reporter = $q->grab_field("select email from user where user_id = {$buginfo['created_by']}");
+	$reporter = $q->grab_field("select email from auth_user where user_id = {$buginfo['created_by']}");
 	$reporterstat = ' ';
-	$assignedto = $q->grab_field("select email from user where user_id = ". ($cf['assigned_to'] ? $cf['assigned_to'] : $buginfo['assigned_to']));
+	$assignedto = $q->grab_field("select email from auth_user where user_id = ". ($cf['assigned_to'] ? $cf['assigned_to'] : $buginfo['assigned_to']));
 	$assignedtostat = $cf['assigned_to'] ? '!' : ' ';
 	
 	// If there are new comments grab the comments immediately before the latest
 	if ($comments) {
-		$q->query("select u.email, c.comment_text, c.created_date from comment c, user u where bug_id = {$buginfo['bug_id']} and c.created_by = u.user_id order by created_date desc limit 2");
+		$q->query("select u.email, c.comment_text, c.created_date from comment c, auth_user u where bug_id = {$buginfo['bug_id']} and c.created_by = u.user_id order by created_date desc limit 2");
 		$row = $q->grab();
 		$t->set_var(array(
 			'newpostedby' => $row['email'],
@@ -115,7 +115,7 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 		// If this comment is the first additional comment after the creation of the
 		// bug then we need to grab the bug's description as the previous comment
 		if ($q->num_rows() < 2) {
-			list($by, $on, $comments) = $q->grab("select u.email, b.created_date, b.description from bug b, user u where b.created_by = u.user_id and bug_id = {$buginfo['bug_id']}");
+			list($by, $on, $comments) = $q->grab("select u.email, b.created_date, b.description from bug b, auth_user u where b.created_by = u.user_id and bug_id = {$buginfo['bug_id']}");
 			$t->set_var(array(
 				'oldpostedby' => $by,
 				'oldpostedon' => date(TIMEFORMAT,$on).' on '.date(DATEFORMAT,$on),
@@ -187,7 +187,7 @@ function update_bug($bugid = 0) {
 	}
 		
 	if ($outcome == 'reassign' and 
-		(!$assignedto = $q->grab_field("select user_id from user where email = '$reassignto'"))) {
+		(!$assignedto = $q->grab_field("select user_id from auth_user where email = '$reassignto'"))) {
 		show_bug($bugid,array('status' => $STRING['nouser']));
 		return;
 	}
@@ -201,7 +201,7 @@ function update_bug($bugid = 0) {
 		case 'unchanged' : break;
 		case 'assign' : $assignedto = $u; $statusfield = 'Assigned'; break;
 		case 'reassign' : 
-			if (!$assignedto = $q->grab_field("select user_id from user where email = '$reassignto'")) {
+			if (!$assignedto = $q->grab_field("select user_id from auth_user where email = '$reassignto'")) {
 				show_bug($bugid,array('status' => $STRING['nouser']));
 				return;
 			} else {				
@@ -345,7 +345,7 @@ function show_form($bugid = 0, $error = '') {
 function show_bug($bugid = 0, $error = '') {
 	global $q, $me, $t, $project, $STRING, $u, $perm; 
 	
-	if (!ereg('^[0-9]+$',$bugid) or !$row = $q->grab("select b.*, reporter.email as reporter, owner.email as owner, status_name, resolution_name from bug b left join resolution r using(resolution_id), severity sv, status st left join user owner on b.assigned_to = owner.user_id left join user reporter on b.created_by = reporter.user_id where bug_id = '$bugid' and b.severity_id = sv.severity_id and b.status_id = st.status_id")) {
+	if (!ereg('^[0-9]+$',$bugid) or !$row = $q->grab("select b.*, reporter.email as reporter, owner.email as owner, status_name, resolution_name from bug b left join resolution r using(resolution_id), severity sv, status st left join auth_user owner on b.assigned_to = owner.user_id left join auth_user reporter on b.created_by = reporter.user_id where bug_id = '$bugid' and b.severity_id = sv.severity_id and b.status_id = st.status_id")) {
 		show_text($STRING['bugbadnum'],true);
 		return;
 	}
@@ -444,7 +444,7 @@ function show_bug($bugid = 0, $error = '') {
 		}
 	}
 			
-	$q->query("select comment_text, comment.created_date, email from comment, user where bug_id = $bugid and comment.created_by = user_id order by comment.created_date");
+	$q->query("select comment_text, comment.created_date, email from comment, auth_user where bug_id = $bugid and comment.created_by = user_id order by comment.created_date");
 	if (!$q->num_rows()) {
 		$t->set_var('rows','');
 	} else {

@@ -47,7 +47,7 @@ function resolution_by_engineer($projectid = 0) {
 		$projectquery = '';
 	}
 	
-	$q->query("$querystring, count(bug_id) as 'Total' from bug b left join user u on assigned_to = user_id $projectquery group by assigned_to");
+	$q->query("$querystring, count(bug_id) as 'Total' from bug b left join auth_user u on assigned_to = user_id $projectquery group by assigned_to");
 	if (!$q->num_rows()) {
 		$t->set_var('rows', 'No data to display');
 	} else {

@@ -28,7 +28,7 @@ function change_bug_list_columns($column_list) {
 	
 	$auth->auth['db_fields'] = $column_list;
 	$column_list = serialize($column_list);
-	$q->query("update user set bug_list_fields = '$column_list' where user_id = $u");
+	$q->query("update auth_user set bug_list_fields = '$column_list' where user_id = $u");
 	//$t->set_file('content', 'columnlistchanged.html');
 	show_text('Your bug list column preferences have been saved');
 }
@@ -50,7 +50,7 @@ function change_password($pass1, $pass2) {
 		$mpassword = $pass1;
 	}
 	
-	$q->query("update user set password = '$mpassword' where user_id = $u");
+	$q->query("update auth_user set password = '$mpassword' where user_id = $u");
 	$t->set_file('content', 'passwordchanged.html');
 }
 

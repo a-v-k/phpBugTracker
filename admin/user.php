@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.16 2001/08/23 01:39:03 bcurtis Exp $
+// $Id: user.php,v 1.17 2001/08/25 18:39:11 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -38,10 +38,10 @@ function do_form($userid = 0) {
   if (!$userid) {
     if (ENCRYPTPASS) $mpassword = md5($fpassword);
     else $mpassword = $fpassword;
-    $q->query("insert into user (user_id, first_name, last_name, email, password, user_level, created_date) values (".$q->nextid('user').", '$ffirstname', '$flastname', '$femail', '$mpassword', $usertype, $now)");
+    $q->query("insert into auth_user (user_id, first_name, last_name, email, password, user_level, created_date) values (".$q->nextid('user').", '$ffirstname', '$flastname', '$femail', '$mpassword', $usertype, $now)");
   } else {
     if (ENCRYPTPASS) {
-      $oldpass = $q->grab_field("select password from user where user_id = $userid");
+      $oldpass = $q->grab_field("select password from auth_user where user_id = $userid");
       if ($oldpass != $fpassword) {
         $pquery = "password = '".md5($fpassword)."',";
       } else {
@@ -50,7 +50,7 @@ function do_form($userid = 0) {
     } else {
       $pquery = "password = '$fpassword',";
     }
-    $q->query("update user set first_name = '$ffirstname', last_name = '$flastname', email = '$femail', $pquery user_level = $usertype where user_id = '$userid'");
+    $q->query("update auth_user set first_name = '$ffirstname', last_name = '$flastname', email = '$femail', $pquery user_level = $usertype where user_id = '$userid'");
   }
   header("Location: $me?");
 }
@@ -59,7 +59,7 @@ function show_form($userid = 0, $error = '') {
   global $q, $me, $t, $firstname, $lastname, $email, $password, $usertype, $STRING;
 
   if ($userid && !$error) {
-    $row = $q->grab("select * from user where user_id = '$userid'");
+    $row = $q->grab("select * from auth_user where user_id = '$userid'");
     $t->set_var(array(
       'action' => $STRING['edit'],
       'fuserid' => $row['user_id'],
@@ -102,7 +102,7 @@ function list_items($userid = 0, $error = '') {
     'records' => $nr));
 
   $q->query("select user_id, concat(first_name,'&nbsp;',last_name) as fullname, email,
-    created_date, user_level from user order by $order $sort
+    created_date, user_level from auth_user order by $order $sort
     limit $llimit, $selrange");
 
   if (!$q->num_rows()) {

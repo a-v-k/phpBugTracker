@@ -28,7 +28,7 @@ function do_form() {
 	
 	if (!$email or !valid_email($email)) 
 		$error = $STRING['giveemail'];
-	elseif ($q->grab_field("select user_id from user where email = '$email'"))
+	elseif ($q->grab_field("select user_id from auth_user where email = '$email'"))
 		$error = $STRING['loginused'];
 	if ($error) { 
 		show_form($error);
@@ -42,7 +42,7 @@ function do_form() {
 	} else {
 		$mpassword = $password;
 	}
-	$q->query("insert into user (user_id, first_name, last_name, email, password, user_level, created_date, last_modified_date) values (".$q->nextid('user').", '$firstname', '$lastname', '$email', '$mpassword', 1, $now, $now)");
+	$q->query("insert into auth_user (user_id, first_name, last_name, email, password, user_level, created_date, last_modified_date) values (".$q->nextid('user').", '$firstname', '$lastname', '$email', '$mpassword', 1, $now, $now)");
 	mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
 		$password),	'From: '.ADMINEMAIL);
 	$t->set_file('content','newaccountsuccess.html');
