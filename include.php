@@ -11,6 +11,7 @@ define ('DATEFORMAT','m-d-Y');
 define ('TIMEFORMAT','g:i A');
 define ('ADMINEMAIL','phpbt@bencurtis.com');
 define ('ENCRYPTPASS',0);  // Whether to store passwords encrypted
+define ('THEME','default/'); // Which set of templates to use
 
 require PHPLIBPATH.'db_mysql.inc';
 require PHPLIBPATH.'ct_sql.inc';
@@ -83,7 +84,7 @@ class uauth extends Auth {
 	function auth_loginform() {
 		global $sess;
 		
-		include 'templates/login.html';
+		include 'templates/'.THEME.'login.html';
 		
 	}
 	
@@ -159,7 +160,7 @@ class templateclass extends Template {
 	}
 }
 
-$t = new templateclass('templates','keep');
+$t = new templateclass('templates/'.THEME,'keep');
 $t->set_var(array(
 	'TITLE' => '', 
 	'me' => $PHP_SELF,
