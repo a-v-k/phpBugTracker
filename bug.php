@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.103 2002/05/07 15:34:03 firma Exp $
+// $Id: bug.php,v 1.104 2002/05/08 12:57:18 bcurtis Exp $
 
 include 'include.php';
 
@@ -509,7 +509,11 @@ function prev_next_links($bugid, $pos) {
 	
 	// Create a new db connection because of the limit query affecting later queries
 	$db = DB::Connect($dsn); 
+	if (DB::isError($db)) {
+		die($db->message.'<br>'.$db->userinfo);
+	}
 	$db->setOption('optimize', 'portability');
+	$db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_db_error");
 
 	if (!isset($_sv['queryinfo']['query']) || !$_sv['queryinfo']['query']) {
 		return array('', '');
