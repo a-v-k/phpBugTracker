@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: severity.php,v 1.6 2001/09/03 17:20:16 bcurtis Exp $
+// $Id: severity.php,v 1.7 2001/09/03 20:34:53 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -44,7 +44,7 @@ function do_form($severityid = 0) {
 }
 
 function show_form($severityid = 0, $error = '') {
-  global $q, $me, $t, $fname, $fdescription, $fsortorder, $STRING;
+  global $q, $me, $t, $_pv, $STRING;
 
   if ($severityid && !$error) {
     $row = $q->grab("select * from ".TBL_SEVERITY." where severity_id = '$severityid'");
@@ -60,10 +60,12 @@ function show_form($severityid = 0, $error = '') {
       'action' => $severityid ? $STRING['edit'] : $STRING['addnew'],
       'error' => $error,
       'fseverityid' => $severityid,
-      'fname' => $fname,
-      'fdescription' => $fdescription,
-      'fsortorder' => $fsortorder,
-      'fcolor' => $fcolor));
+      'fname' => $_pv['fname'] ? stripslashes($_pv['fname']) : '',
+      'fdescription' => $_pv['fdescription'] ? 
+				stripslashes($_pv['fdescription']) : '',
+      'fsortorder' => $_pv['fsortorder'] ? $_pv['fsortorder'] : '',
+      'fcolor' => $_pv['fcolor'] ? $_pv['fcolor'] : ''
+			));
   }
 }
 
@@ -104,7 +106,8 @@ function list_items($severityid = 0, $error = '') {
 
   while ($row = $q->grab()) {
     $t->set_var(array(
-      'bgcolor' => $row['severity_color'],
+      'bgcolor' => USE_SEVERITY_COLOR ? $row['severity_color'] : 
+				((++$i % 2 == 0) ? '#dddddd' : '#ffffff'),
       'severityid' => $row['severity_id'],
       'name' => $row['severity_name'],
       'description' => $row['severity_desc'],
