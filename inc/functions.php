@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.44 2003/07/24 04:57:00 kennyt Exp $
+// $Id: functions.php,v 1.45 2003/10/12 21:32:07 kennyt Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -581,7 +581,7 @@ function in_closed($column) {
 		$closed_statuses[] = (int)$row['status_id'];
 	}
 	
-	return '('.$column.' = '.(count($closed_statuses ? join(' OR '.$column.' = ', $closed_statuses) : '1')).')';
+	return '('.$column.' = '.(count($closed_statuses) ? join(' OR '.$column.' = ', $closed_statuses) : '0').')';
 }
 
 // Check whether or not a status-id means BUG_CLOSED
