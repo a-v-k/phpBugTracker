@@ -214,12 +214,14 @@ function updateMenus(f) {
 			</nobr> 
 			<br>
 			<br>
+			{if $smarty.session.uid}
+				Save this query as: <input maxlength="40" type="text" name="savedqueryname">
+				<br><br>
+			{/if}
 			<input type="reset" value="Reset back to the default query">
 			<input type="submit" value="Submit query"> 
-			{if $smarty.session.uid}
-				<br>
-				Save this query as: <input maxlength="40" type="text" name="savedqueryname">
-				<hr align="left" size="1" width="100%">
+			{if count($queries)}
+				<br><br>
 				<b>Saved Queries</b>
 				<br>
 				{section name=query loop=$queries}
