@@ -2,7 +2,7 @@
 -- Oracle database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: oci8.in,v 1.13 2002/05/18 16:07:14 firma Exp $
+-- $Id: oci8.in,v 1.14 2002/06/13 11:29:39 firma Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id number(10)   default '0' NOT NULL,
@@ -63,6 +63,7 @@ CREATE TABLE TBL_BUG (
   status_id number(3)   default '0' NOT NULL,
   resolution_id number(3)   default '0' NOT NULL,
   database_id number(3)   default '0' NOT NULL,
+  site_id number(3)	default '0' NOT NULL,
   assigned_to number(10)   default '0' NOT NULL,
   created_by number(10)   default '0' NOT NULL,
   created_date number(20)   default '0' NOT NULL,
@@ -259,11 +260,18 @@ CREATE TABLE TBL_VERSION (
 ) ;
 
 CREATE TABLE TBL_DATABASE (
-    database_id number(10) default '0' NOT NULL,
+    database_id number(3) default '0' NOT NULL,
     database_name varchar2(30) default '' NOT NULL,
     database_version varchar2(10) default '' NOT NULL,
     sort_order number(3) default '0' NOT NULL,
     PRIMARY KEY (database_id)
+);
+
+CREATE TABLE TBL_SITE (
+    site_id number(3) default '0' NOT NULL,
+    site_name varchar2(50) default '' NOT NULL,
+    sort_order number(3) default '0' NOT NULL,
+    PRIMARY KEY (site_id)
 );
 
 INSERT INTO TBL_AUTH_USER 
@@ -382,3 +390,10 @@ INSERT INTO TBL_DATABASE VALUES (1,'Oracle','8.1.7',1);
 INSERT INTO TBL_DATABASE VALUES (2,'MySQL','3.23.49',2);
 INSERT INTO TBL_DATABASE VALUES (3,'PostgreSQL','7.1.3',3);
 CREATE SEQUENCE TBL_DATABASE_seq START WITH 4 NOCACHE;
+
+INSERT INTO TBL_SITE VALUES (0,'All',1);
+INSERT INTO TBL_SITE VALUES (1,'Production - location 1',2);
+INSERT INTO TBL_SITE VALUES (2,'Production - location 2',3);
+INSERT INTO TBL_SITE VALUES (3,'Test site - location 1',4);
+INSERT INTO TBL_SITE VALUES (4,'Test site - location 2',5);
+CREATE SEQUENCE TBL_SITE_seq START WITH 5 NOCACHE;

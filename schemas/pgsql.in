@@ -2,7 +2,7 @@
 -- PostgreSQL database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.30 2002/05/18 16:07:14 firma Exp $
+-- $Id: pgsql.in,v 1.31 2002/06/13 11:29:39 firma Exp $
 
 BEGIN;
 
@@ -66,6 +66,7 @@ CREATE TABLE TBL_BUG (
   status_id INT2  NOT NULL DEFAULT '0',
   resolution_id INT2  NOT NULL DEFAULT '0',
   database_id INT2  NOT NULL DEFAULT '0',
+  site_id INT2  NOT NULL DEFAULT '0',
   assigned_to INT4  NOT NULL DEFAULT '0',
   created_by INT4  NOT NULL DEFAULT '0',
   created_date INT8  NOT NULL DEFAULT '0',
@@ -252,11 +253,18 @@ CREATE TABLE TBL_VERSION (
 );
 
 CREATE TABLE TBL_DATABASE (
-    database_id INT4 NOT NULL DEFAULT '0',
+    database_id INT2 NOT NULL DEFAULT '0',
     database_name varchar(30) NOT NULL DEFAULT '',
     database_version varchar(10) NOT NULL DEFAULT '',
     sort_order INT2 NOT NULL DEFAULT '0',
     PRIMARY KEY (database_id)
+);
+
+CREATE TABLE TBL_SITE (
+    site_id INT2 NOT NULL DEFAULT '0',
+    site_name varchar(50) NOT NULL DEFAULT '',
+    sort_order INT2 NOT NULL DEFAULT '0',
+    PRIMARY KEY (site_id)
 );
 
 --
@@ -380,6 +388,13 @@ INSERT INTO TBL_DATABASE VALUES (2,'MySQL','3.23.49',2);
 INSERT INTO TBL_DATABASE VALUES (3,'PostgreSQL','7.1.3',3);
 CREATE SEQUENCE TBL_DATABASE_seq START 3;
 
+INSERT INTO TBL_SITE VALUES (0,'All',1);
+INSERT INTO TBL_SITE VALUES (1,'Production - location 1',2);
+INSERT INTO TBL_SITE VALUES (2,'Production - location 2',3);
+INSERT INTO TBL_SITE VALUES (3,'Test site - location 1',4);
+INSERT INTO TBL_SITE VALUES (4,'Test site - location 2',5);
+CREATE SEQUENCE TBL_SITE_seq START 4;
+
 --
 -- Indexes for table TBL_GROUP_PERM
 --
@@ -403,7 +418,6 @@ CREATE INDEX perm_id_TBL_USER_PERM_index ON TBL_USER_PERM (perm_id);
 --
 
 CREATE INDEX group_id_TBL_BUG_GROUP_index ON TBL_BUG_GROUP (group_id);
-
 
 COMMIT;
 

@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.29 2002/05/19 11:48:30 firma Exp $
+# $Id: mysql.in,v 1.30 2002/06/13 11:29:39 firma Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id int(10) unsigned NOT NULL default '0',
@@ -63,6 +63,7 @@ CREATE TABLE TBL_BUG (
   status_id tinyint(3) unsigned NOT NULL default '0',
   resolution_id tinyint(3) unsigned NOT NULL default '0',
   database_id tinyint(3) unsigned NOT NULL default '0',
+  site_id tinyint(3) unsigned NOT NULL default '0',
   assigned_to int(10) unsigned NOT NULL default '0',
   created_by int(10) unsigned NOT NULL default '0',
   created_date bigint(20) unsigned NOT NULL default '0',
@@ -254,11 +255,18 @@ CREATE TABLE TBL_VERSION (
 ) TYPE=MyISAM;
 
 CREATE TABLE TBL_DATABASE (
-  database_id int(10) unsigned NOT NULL default '0',
+  database_id tinyint(3) unsigned NOT NULL default '0',
   database_name varchar(30) NOT NULL default '',
   database_version varchar(10) NOT NULL default '',
   sort_order tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY (database_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_SITE (
+  site_id tinyint(3) unsigned NOT NULL default '0',
+  site_name varchar(50) NOT NULL default '',
+  sort_order tinyint(3) unsigned NOT NULL default '0',
+  PRIMARY KEY (site_id)
 ) TYPE=MyISAM;
 
 #
@@ -388,3 +396,12 @@ INSERT INTO TBL_DATABASE VALUES (2,'MySQL','3.23.49',2);
 INSERT INTO TBL_DATABASE VALUES (3,'PostgreSQL','7.1.3',3);
 create table TBL_DATABASE_seq (id int unsigned auto_increment not null primary key);
 insert into TBL_DATABASE_seq values (3);
+
+# Examples only
+INSERT INTO TBL_SITE VALUES (0,'All',1);
+INSERT INTO TBL_SITE VALUES (1,'Production - location 1',2);
+INSERT INTO TBL_SITE VALUES (2,'Production - location 2',3);
+INSERT INTO TBL_SITE VALUES (3,'Test site - location 1',4);
+INSERT INTO TBL_SITE VALUES (4,'Test site - location 2',5);
+create table TBL_SITE_seq (id int unsigned auto_increment not null primary key);
+insert into TBL_SITE_seq values (4);
