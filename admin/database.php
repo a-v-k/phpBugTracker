@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: database.php,v 1.1 2002/05/21 08:57:15 firma Exp $
+// $Id: database.php,v 1.2 2002/08/26 18:11:12 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -55,6 +55,7 @@ function do_form($databaseid = 0) {
 		$error = $STRING['giveversion'];
 	if ($error) { show_form($databaseid, $error); return; }
 
+	if (empty($sort_order)) $sort_order = 0;
 	if (!$databaseid) {
 		$db->query("insert into ".TBL_DATABASE.
 			" (database_id, database_name, database_version, sort_order) 

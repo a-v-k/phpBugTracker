@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: os.php,v 1.27 2002/05/18 03:00:00 bcurtis Exp $
+// $Id: os.php,v 1.28 2002/08/26 18:11:13 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -53,6 +53,7 @@ function do_form($osid = 0) {
 		$error = $STRING['givename'];
 	if ($error) { show_form($osid, $error); return; }
 
+	if (empty($sort_order)) $sort_order = 0;
 	if (!$osid) {
 		$db->query("insert into ".TBL_OS." (os_id, os_name, regex, sort_order) ".
 			"values (".$db->nextId(TBL_OS).", ".$db->quote(stripslashes($os_name)).

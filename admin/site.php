@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: site.php,v 1.1 2002/06/13 14:26:34 firma Exp $
+// $Id: site.php,v 1.2 2002/08/26 18:11:13 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -53,6 +53,7 @@ function do_form($siteid = 0) {
 		$error = $STRING['givename'];
 	if ($error) { show_form($siteid, $error); return; }
 
+	if (empty($sort_order)) $sort_order = 0;
 	if (!$siteid) {
 		$db->query('insert into '.TBL_SITE.' (site_id, site_name, sort_order) '.
 			'values ('.$db->nextId(TBL_SITE).', '.$db->quote(stripslashes($site_name)).
