@@ -4,6 +4,9 @@
   information when selecting a different project.
 : Added bug voting
 : Added a filter for active and inactive users in the admin user list
+: Prettied up the default template
+: Fixed some bugginess with the restricted projects
+: Fixed a bug in the multi-page listing of the project admin
 
 -- 0.6.2 -- 27 Dec 2001
 : Improved compatibility with Opera and IIS.
