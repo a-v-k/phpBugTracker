@@ -19,20 +19,19 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config-dist.php,v 1.3 2001/12/14 14:40:19 bcurtis Exp $
-
-define ('PHPLIB_PATH', ''); // If PHPlib is not in your include path
+// $Id: config-dist.php,v 1.4 2001/12/15 18:45:48 bcurtis Exp $
 
 // Database Config
-define ('DB_TYPE', '{db_type}');  // using PHPlib file naming
-define ('DB_HOST', '{db_host}');
-define ('DB_DATABASE', '{db_database}');
-define ('DB_USER', '{db_user}');
-define ('DB_PASSWORD', '{db_pass}');
+define ('DB_TYPE', '{db_type}');  // using PHPlib file naming (mysql | pgsql)
+define ('DB_HOST', '{db_host}'); // hostname of database server
+define ('DB_DATABASE', '{db_database}'); // database name
+define ('DB_USER', '{db_user}'); // username for database connection
+define ('DB_PASSWORD', '{db_pass}'); // password for database connection
 
 // Database Table Config
 // you can change either the prefix of the table names or each table name individually
 define ('TBL_PREFIX', '{tbl_prefix}');	// the prefix for all tables, leave empty to use the old style
+
 define ('TBL_ACTIVE_SESSIONS', TBL_PREFIX.'active_sessions');
 define ('TBL_DB_SEQUENCE',     TBL_PREFIX.'db_sequence');
 define ('TBL_ATTACHMENT',      TBL_PREFIX.'attachment');
