@@ -20,10 +20,10 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz_iso-8859-2.php,v 1.3 2002/05/18 15:40:19 firma Exp $
+// $Id: cz_iso-8859-2.php,v 1.4 2002/05/19 11:00:17 firma Exp $
 
 $STRING = array(
-	'lang_charset' => 'Windows-1250',
+	'lang_charset' => 'ISO-8859-2',
 	'nouser' => 'Tento u¾ivatel neexistuje',
 	'dupeofself' => 'BUG nemù¾e být shodný se sám se sebou',
 	'nobug' => 'Tento BUG neexistuje',
