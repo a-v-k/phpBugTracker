@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.68 2002/04/08 15:05:51 bcurtis Exp $
+// $Id: query.php,v 1.69 2002/04/08 16:30:44 bcurtis Exp $
 
 include 'include.php';
 
@@ -232,16 +232,16 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 			$sort = 'asc'; 
 		}
 	}
+	if (!session_is_registered('queryinfo')) {
+		session_register('queryinfo');
+		$HTTP_SESSION_VARS['queryinfo'] = array();
+	}
+	
 	$HTTP_SESSION_VARS['queryinfo']['order'] = $order;
 	$HTTP_SESSION_VARS['queryinfo']['sort'] = $sort;
 	
 	if (empty($HTTP_SESSION_VARS['queryinfo']['query']) or isset($op)) {
 		$HTTP_SESSION_VARS['queryinfo']['query'] = build_query($assignedto, $reportedby, $open);
-	}
-	
-	if (!session_is_registered('queryinfo')) {
-		session_register('queryinfo');
-		$HTTP_SESSION_VARS['queryinfo'] = array();
 	}
 	
 	$nr = $db->getOne($QUERY['query-list-bugs-count'].
