@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.40 2003/04/19 18:12:39 kennyt Exp $
+// $Id: functions.php,v 1.41 2003/06/04 19:16:40 kennyt Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -274,7 +274,7 @@ function build_select($params) {
 ///
 /// Divide the results of a database query into multiple pages
 function multipages($nr, $page, $urlstr) {
-  global $me, $selrange, $t;
+  global $me, $selrange, $t, $u, $db, $perm;
 
   $pages = '';
   if (!$page) $page = 1;
@@ -283,7 +283,8 @@ function multipages($nr, $page, $urlstr) {
     $llimit = 0;
     $page = 0;
   } else {
-    #$selrange = 60;
+    if ($perm->check_auth('group', 'Users'))
+		$selrange = $db->getOne('select def_results from '.TBL_USER_PREF.' where user_id = '.$u);
     $llimit = ($page-1)*$selrange;
   }
   if ($nr) $npages = ceil($nr/$selrange);
