@@ -9,14 +9,14 @@ page_open(array('sess' => 'usess', 'auth' => 'uauth'));
 $u = $auth->auth[uid];
 
 function update_bug($bugid = 0) {
-	global $q, $t, $u;
+	global $q, $t, $u, $STRING;
 	
 	if ($GLOBALS[HTTP_POST_VARS]) 
 		while (list($k,$v) = each($GLOBALS[HTTP_POST_VARS])) $$k = $v;
 		
 	if ($outcome == 'reassign' and (!$assignedto = $q->grab_field("select UserID
 		from User where Email = '$reassignto'"))) {
-		show_bug($bugid,array('status' => 'That user does not exist'));
+		show_bug($bugid,array('status' => $STRING[nouser]));
 		return;
 	}
 	$now = time();
@@ -37,10 +37,10 @@ function update_bug($bugid = 0) {
 		case 'dupe' : 
 			$changeresolution = true;
 			if ($dupenum == $bugid) {
-				show_bug($bugid,array('status' => 'A bug can\'t be a duplicate of itself'));
+				show_bug($bugid,array('status' => $STRING[dupeofself]));
 				return;
 			} elseif (!$q->grab_field("select BugID from Bug where BugID = $dupenum")) {
-				show_bug($bugid,array('status' => 'That bug does not exist'));
+				show_bug($bugid,array('status' => $STRING[nobug]));
 				return;
 			}
 			$q->query("insert into Comment (CommentID, BugID, Text, CreatedBy, 
@@ -87,14 +87,14 @@ function update_bug($bugid = 0) {
 }
 
 function do_form($bugid = 0) {
-  global $q, $me, $title, $u, $another;
+  global $q, $me, $title, $u, $another, $STRING;
   
 	$pv = $GLOBALS[HTTP_POST_VARS];
   // Validation
 	if (!$pv[title] = htmlspecialchars(trim($pv[title])))
-		$error = 'Please enter a title';
+		$error = $STRING[givesummary];
 	elseif (!$pv[description] = htmlspecialchars(trim($pv[description])))
-		$error = 'Please enter a title';
+		$error = $STRING[givedesc];
   if ($error) { show_form($bugid, $error); return; }
   
 	while (list($k,$v) = each($pv)) $$k = $v;
@@ -120,7 +120,7 @@ function do_form($bugid = 0) {
 }  
 
 function show_form($bugid = 0, $error = '') {
-  global $q, $me, $t, $project;
+  global $q, $me, $t, $project, $TITLE;
   
 	if ($GLOBALS[HTTP_POST_VARS]) 
 		while (list($k,$v) = each($GLOBALS[HTTP_POST_VARS])) $$k = $v;
@@ -131,7 +131,7 @@ function show_form($bugid = 0, $error = '') {
     $row = $q->grab("select * from Bug where BugID = '$bugid'");
     $t->set_var(array(
 			'bugid' => $bugid,
-			'TITLE' => 'Edit Bug',
+			'TITLE' => $TITLE[editbug],
       'title' => stripslashes($row[Title]),
       'description' => stripslashes($row[Description]),
       'url' => $row[URL],
@@ -150,7 +150,7 @@ function show_form($bugid = 0, $error = '') {
       'browserstring' => $row[BrowserString]));
   } else {
     $t->set_var(array(
-			'TITLE' => 'Enter a Bug',
+			'TITLE' => $TITLE[enterbug],
       'error' => $error,
       'bugid' => $bugid,
       'title' => stripslashes($title),
@@ -196,7 +196,7 @@ function show_bug($bugid = 0, $error = '') {
   $t->set_var(array(
 		'statuserr' => $error[status] ? $error[status].'<br><br>' : '',
 		'bugid' => $bugid,
-		'TITLE' => "Edit Bug #$bugid",
+		'TITLE' => "$TITLE[editbug] #$bugid",
     'title' => stripslashes($row[Title]),
     'description' => nl2br(stripslashes($row[Description])),
     'url' => $row[URL],
@@ -260,12 +260,12 @@ function show_bug($bugid = 0, $error = '') {
 }
 
 function show_projects() {
-	global $me, $q, $t, $project;
+	global $me, $q, $t, $project, $STRING;
 	
 	$q->query("select * from Project where Active order by Name");
 	switch ($q->num_rows()) {
 		case 0 :
-			$t->set_var('rows','No projects found');
+			$t->set_var('rows',$STRING[noprojects]);
 			return;
 		case 1 :
 			$row = $q->grab();
@@ -285,7 +285,7 @@ function show_projects() {
 				));
 			$t->parse('rows','row',true);
 		}
-		$t->set_var('TITLE', 'Enter a bug');
+		$t->set_var('TITLE', $TITLE[enterbug]);
 	}	
 }
 

@@ -12,12 +12,12 @@ function valid_email($email) {
 }
 
 function do_form() {
-	global $q, $t, $email, $firstname, $lastname;
+	global $q, $t, $email, $firstname, $lastname, $STRING;
 	
 	if (!$email or !valid_email($email)) 
-		$error = 'Please enter a valid email address';
+		$error = $STRING[giveemail];
 	elseif ($q->grab_field("select UserID from User where Email = '$email'"))
-		$error = 'That login has already been used';
+		$error = $STRING[loginused];
 	if ($error) { 
 		show_form($error);
 		return;
@@ -28,7 +28,7 @@ function do_form() {
 	$q->query("insert into User (UserID, FirstName, LastName, Email, Password, 
 		CreatedDate, UserLevel) values (".$q->nextid('User').", '$firstname', 
 		'$lastname', '$email', '$password', ".time().", 1)");
-	mail($email,'phpBugTracker Login',"Your phpBugTracker password is $password",
+	mail($email,$STRING[newacctsubject],sprintf($STRING[newacctmessage], $password),
 		'From: '.ADMINEMAIL);
 	$t->set_file('content','newaccountsuccess.html');
 }
@@ -45,10 +45,8 @@ function show_form($error = '') {
 		));
 }
 
-
-
 $t->set_file('wrap','wrap.html');
-$t->set_var('TITLE','Add a new account');
+$t->set_var('TITLE',$TITLE[newaccount]);
 
 if ($email) do_form();
 else show_form();

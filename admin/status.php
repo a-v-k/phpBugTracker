@@ -7,10 +7,14 @@ include '../include.php';
 page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
 
 function do_form($statusid = 0) {
-  global $q, $me, $fname, $fdescription, $fsortorder;
+  global $q, $me, $fname, $fdescription, $fsortorder, $STRING;
   
   // Validation
-  //if ($error) { show_form($id, $error); return; }
+	if (!$fname = trim($fname))
+		$error = $STRING[givename];
+	elseif (!$fdescription = trim($fdescription))
+		$error = $STRING[givedesc];
+	if ($error) { list_items($statusid, $error); return; }
   
   if (!$statusid) {
     $q->query("insert into Status (StatusID, Name, Description, SortOrder) values 
@@ -23,20 +27,20 @@ function do_form($statusid = 0) {
 }  
 
 function show_form($statusid = 0, $error = '') {
-  global $q, $me, $t, $fname, $fdescription, $fsortorder;
+  global $q, $me, $t, $fname, $fdescription, $fsortorder, $STRING;
   
   #$t->set_file('content','statusform.html');
   if ($statusid && !$error) {
     $row = $q->grab("select * from Status where StatusID = '$statusid'");
     $t->set_var(array(
-      'action' => 'Edit',
+      'action' => $STRING[edit],
       'fstatusid' => $row[StatusID],
       'fname' => $row[Name],
       'fdescription' => $row[Description],
       'fsortorder' => $row[SortOrder]));
   } else {
     $t->set_var(array(
-			'action' => $statusid ? 'Edit' : 'Add new',
+			'action' => $statusid ? $STRING[edit] : $STRING[addnew],
       'error' => $error,
       'fstatusid' => $statusid,
       'fname' => $fname,
@@ -47,7 +51,7 @@ function show_form($statusid = 0, $error = '') {
 
 
 function list_items($statusid = 0, $error = '') {
-  global $q, $t, $selrange, $order, $sort;
+  global $q, $t, $selrange, $order, $sort, $STRING, $TITLE;
         
   $t->set_file('content','statuslist.html');
   $t->set_block('content','row','rows');
@@ -67,7 +71,7 @@ function list_items($statusid = 0, $error = '') {
   $q->query("select * from Status order by $order $sort limit $llimit, $selrange");
         
   if (!$q->num_rows()) {
-    $t->set_var('rows','<tr><td>Oops!</td></tr>');
+    $t->set_var('rows',"<tr><td>$STRING[nostatuses]</td></tr>");
     return;
   }
 
@@ -90,7 +94,7 @@ function list_items($statusid = 0, $error = '') {
   }
 	
 	show_form($statusid, $error);
-	$t->set_var('TITLE','Status');
+	$t->set_var('TITLE',$TITLE[status]);
 }
 
 $t->set_file('wrap','wrap.html');

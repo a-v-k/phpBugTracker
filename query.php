@@ -7,7 +7,7 @@ include 'include.php';
 page_open(array('sess' => 'usess', 'auth' => 'uauth'));
 
 function show_query() {
-	global $q, $t, $status, $resolution, $os, $priority, $severity;
+	global $q, $t, $status, $resolution, $os, $priority, $severity, $TITLE;
 	
 	$t->set_file('content','queryform.html');
 	$t->set_var(array(
@@ -17,7 +17,7 @@ function show_query() {
 		'os' => build_select('OS',-1), // Prevent the OS regex selection
 		'priority' => build_select('priority',$priority),
 		'severity' => build_select('Severity',$severity),
-		'TITLE' => 'Bug Query'
+		'TITLE' => $TITLE[bugquery]
 		));
 }
 
@@ -26,10 +26,6 @@ function build_query() {
 		$severity, $email1, $emailtype1, $emailfield1, $Title, $Description, $URL, 
 		$Title_type, $Description_type, $URL_type;
 	
-	// prime the pump if necessary
-	//if (!$status) $status[] = $q->grab_field('select StatusID from Status where 
-		//Name = "New"');
-
 	// Select boxes
 	if ($status) $flags[] = 'Status in ('.join(',',$status).')';
 	if ($resolution) $flags[] = 'Resolution in ('.join(',',$resolution).')';
@@ -69,7 +65,7 @@ function build_query() {
 
 function list_items() {
   global $querystring, $me, $q, $t, $selrange, $order, $sort, $query, 
-		$page, $op, $select;
+		$page, $op, $select, $TITLE, $STRING;
         
   $t->set_file('content','buglist.html');
   $t->set_block('content','row','rows');
@@ -89,7 +85,7 @@ function list_items() {
     'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
     'total' => $nr,
 		'project' => build_select('Project'),
-		'TITLE' => 'Bug List'));
+		'TITLE' => $TITLE[buglist]));
   
 	$q->query("select BugID, Title, Reporter.Email as Reporter, Owner.Email as Owner, 
 		Severity.Name as Severity, Bug.CreatedDate, Status.Name as Status, Priority from Bug, 
@@ -100,7 +96,7 @@ function list_items() {
 		"order by $order $sort limit $llimit, $selrange");
         
   if (!$q->num_rows()) {
-    $t->set_var('rows','<tr><td>No bugs found</td></tr>');
+    $t->set_var('rows',"<tr><td>$STRING[nobugs]</td></tr>");
     return;
   }
 

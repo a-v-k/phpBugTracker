@@ -7,10 +7,14 @@ page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
 $u = $auth->auth[uid];
 
 function do_form($componentid = 0) {
-  global $q, $me, $projectid, $name, $description, $owner, $active, $u;
+  global $q, $me, $projectid, $name, $description, $owner, $active, $u, $STRING;
   
   // Validation
-  //if ($error) { show_form($id, $error); return; }
+	if (!$name = trim($name)) 
+		$error = $STRING[givename];
+	elseif (!$description = trim($description))
+		$error = $STRING[givedesc];
+	if ($error) { show_form($componentid, $error); return; }
   
 	$time = time();
 	if (!$owner) $owner = 0;
@@ -30,7 +34,8 @@ function do_form($componentid = 0) {
 }  
 
 function show_form($componentid = 0, $error = '') {
-  global $q, $me, $t, $projectid, $name, $description, $owner, $active, $createdby, $createddate, $lastmodifiedby, $lastmodifieddate;
+  global $q, $me, $t, $projectid, $name, $description, $owner, $active, 
+		$createdby, $createddate, $lastmodifiedby, $lastmodifieddate, $TITLE;
   
 	$nq = new dbclass;
   $t->set_file('content','componentform.html');
@@ -48,7 +53,8 @@ function show_form($componentid = 0, $error = '') {
       'createdby' => $row[CreatedBy],
       'createddate' => $row[CreatedDate],
       'lastmodifiedby' => $row[LastModifiedBy],
-      'lastmodifieddate' => $row[LastModifiedDate]));
+      'lastmodifieddate' => $row[LastModifiedDate],
+			'TITLE' => $TITLE[editcomponent]));
   } else {
     $t->set_var(array(
       'me' => $me,
@@ -64,7 +70,8 @@ function show_form($componentid = 0, $error = '') {
       'createdby' => $createdby,
       'createddate' => $createddate,
       'lastmodifiedby' => $lastmodifiedby,
-      'lastmodifieddate' => $lastmodifieddate));
+      'lastmodifieddate' => $lastmodifieddate,
+			'TITLE' => $componentid ? $TITLE[editcomponent] : $TITLE[addcomponent]));
   }
 }
 

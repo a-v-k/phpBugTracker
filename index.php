@@ -30,7 +30,7 @@ foreach ($stats as $stat) {
 	$t->parse('rows','row',true);
 }
 $t->set_var(array(
-	'status' => '<b>Total Bugs</b>',
+	'status' => "<b>$STRING[totalbugs]</b>",
 	'count' => $total ? "<b>$total</b>" : 0
 	));
 $t->parse('rows','row',true);

@@ -7,15 +7,15 @@ page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
 $u = $auth->auth[uid];
 
 function do_form($projectid = 0) {
-  global $q, $me, $name, $description, $active, $version, $u;
+  global $q, $me, $name, $description, $active, $version, $u, $STRING;
   
   // Validation
 	if (!$name = htmlspecialchars(trim($name))) 
-		$error = 'Please enter a name for the project';
+		$error = $STRING[givename];
 	elseif (!$description = htmlspecialchars(trim($description)))
-		$error = 'Please enter a description for the project';
+		$error = $STRING[givedesc];
 	elseif (!projectid and !$version = htmlspecialchars(trim($version)))
-		$error = 'Please enter an initial version for the project';
+		$error = $STRING[giveversion];
   if ($error) { show_form($projectid, $error); return; }
   
 	if (!$active) $active = 0;
@@ -38,7 +38,7 @@ function do_form($projectid = 0) {
 }  
 
 function show_form($projectid = 0, $error = '') {
-  global $q, $me, $t, $name, $description, $active, $version;
+  global $q, $me, $t, $name, $description, $active, $version, $TITLE;
   
   $t->set_file('content','projectform.html');
 	$t->set_block('content','box','details');
@@ -52,7 +52,7 @@ function show_form($projectid = 0, $error = '') {
       'active' => $row[Active] ? 'checked' : '',
       'createdby' => $row[CreatedBy],
       'createddate' => $row[CreatedDate],
-			'TITLE' => 'Edit Project'
+			'TITLE' => $TITLE[editproject]
 			));
   } else {
     $t->set_var(array(
@@ -63,7 +63,7 @@ function show_form($projectid = 0, $error = '') {
       'active' => (isset($active) and !$active) ? '' : 'checked',
       'createdby' => $createdby,
       'createddate' => $createddate,
-			'TITLE' => 'Add Project'
+			'TITLE' => $projectid ? $TITLE[editproject] : $TITLE[addproject]
 			));
   }
 	if ($projectid) {
@@ -81,12 +81,12 @@ function show_form($projectid = 0, $error = '') {
 }
 
 function list_versions($projectid) {
-	global $q, $t;
+	global $q, $t, $STRING;
 	
 	$t->set_block('box','verrow','verrows');
 	$q->query("select * from Version where ProjectID = $projectid");
 	if (!$q->num_rows()) {
-    $t->set_var('verrows','<tr><td colspan="2" align="center">No versions found!</td></tr>');
+    $t->set_var('verrows',"<tr><td colspan='2' align='center'>$STRING[noversions]</td></tr>");
     return;
   }
 
@@ -104,12 +104,12 @@ function list_versions($projectid) {
       
 
 function list_components($projectid) {
-  global $q, $t;
+  global $q, $t, $STRING;
         
   $t->set_block('box','row','rows');
   $q->query("select * from Component where ProjectID = $projectid");
   if (!$q->num_rows()) {
-    $t->set_var('rows','<tr><td colspan="2" align="center">No components found!</td></tr>');
+    $t->set_var('rows',"<tr><td colspan='2' align='center'>$STRING[nocomponents]</td></tr>");
     return;
   }
 
@@ -131,7 +131,7 @@ function list_components($projectid) {
 }
 
 function list_items() {
-  global $me, $q, $t, $selrange, $order, $sort;
+  global $me, $q, $t, $selrange, $order, $sort, $STRING;
         
   $t->set_file('content','projectlist.html');
   $t->set_block('content','row','rows');
@@ -153,7 +153,7 @@ function list_items() {
   $q->query("select * from Project order by $order $sort limit $llimit, $selrange");
         
   if (!$q->num_rows()) {
-    $t->set_var('rows','<tr><td>No projects found!</td></tr>');
+    $t->set_var('rows',"<tr><td>$STRING[noprojects]</td></tr>");
     return;
   }
 

@@ -5,10 +5,14 @@ include '../include.php';
 page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
 
 function do_form($userid = 0) {
-  global $q, $me, $ffirstname, $flastname, $femail, $fpassword, $usertype;
+  global $q, $me, $ffirstname, $flastname, $femail, $fpassword, $usertype, $STRING;
   
   // Validation
-  //if ($error) { show_form($id, $error); return; }
+  if (!$femail = valid_email(femail))
+		$error = $STRING[giveemail];
+	elseif (!$fpassword = trim($fpassword))
+		$error = $STRING[givepassword];
+	if ($error) { list_items($userid, $error); return; }
   
 	if (!$userid) {
     $q->query("insert into User (UserID, FirstName, LastName, Email, 
@@ -23,13 +27,13 @@ function do_form($userid = 0) {
 }  
 
 function show_form($userid = 0, $error = '') {
-  global $q, $me, $t, $firstname, $lastname, $email, $password, $usertype;
+  global $q, $me, $t, $firstname, $lastname, $email, $password, $usertype. $STRING;
   
   #$t->set_file('content','userform.html');
   if ($userid && !$error) {
     $row = $q->grab("select * from User where UserID = '$userid'");
     $t->set_var(array(
-			'action' => 'Edit',
+			'action' => $STRING[edit],
       'fuserid' => $row[UserID],
       'ffirstname' => $row[FirstName],
       'flastname' => $row[LastName],
@@ -39,7 +43,7 @@ function show_form($userid = 0, $error = '') {
       'createddate' => $row[CreatedDate]));
   } else {
     $t->set_var(array(
-      'action' => $userid ? 'Edit' : 'Add new',
+      'action' => $userid ? $STRING[edit] : $STRING[addnew],
       'error' => $error,
       'fuserid' => $userid,
       'ffirstname' => $firstname,
@@ -53,7 +57,7 @@ function show_form($userid = 0, $error = '') {
 
 
 function list_items($userid = 0, $error = '') {
-  global $me, $q, $t, $selrange, $order, $sort, $select;
+  global $me, $q, $t, $selrange, $order, $sort, $select, $STRING, $TITLE;
         
   $t->set_file('content','userlist.html');
   $t->set_block('content','row','rows');
@@ -75,7 +79,7 @@ function list_items($userid = 0, $error = '') {
 		limit $llimit, $selrange");
         
   if (!$q->num_rows()) {
-    $t->set_var('rows','<tr><td>Oops!</td></tr>');
+    $t->set_var('rows',"<tr><td>$STRING[nousers]</td></tr>");
     return;
   }
 
@@ -101,7 +105,7 @@ function list_items($userid = 0, $error = '') {
   }
 	
 	show_form($userid, $error);
-	$t->set_var('TITLE','Users');
+	$t->set_var('TITLE',$TITLE[user]);
 }
 
 $t->set_file('wrap','wrap.html');

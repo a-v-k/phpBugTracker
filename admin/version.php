@@ -5,11 +5,11 @@ include '../include.php';
 page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
 
 function do_form($versionid = 0) {
-  global $q, $me, $projectid, $version, $active;
+  global $q, $me, $projectid, $version, $active, $STRING;
   
   // Validation
 	if (!$version = trim($version)) 
-		$error = 'Please enter a version';
+		$error = $STRING[giveversion];
 	if ($error) { show_form($versionid, $error); return; }
   
 	if (!$active) $active = 0;
@@ -24,7 +24,7 @@ function do_form($versionid = 0) {
 }  
 
 function show_form($versionid = 0, $error = '') {
-  global $q, $me, $t, $projectid, $version, $active;
+  global $q, $me, $t, $projectid, $version, $active, $TITLE;
   
   $t->set_file('content','versionform.html');
   if ($versionid && !$error) {
@@ -35,7 +35,8 @@ function show_form($versionid = 0, $error = '') {
       'project' => $q->grab_field("select Name from Project where 
 				ProjectID = $row[ProjectID]"),
       'version' => $row[Version],
-      'active' => $row[Active] ? 'checked' : ''));
+      'active' => $row[Active] ? 'checked' : '',
+			'TITLE' => $TITLE[editversion]));
   } else {
     $t->set_var(array(
       'id' => $id,
@@ -46,7 +47,8 @@ function show_form($versionid = 0, $error = '') {
       'project' => $q->grab_field("select Name from Project where 
 				ProjectID = $projectid"),
       'version' => $version,
-      'active' => $active ? ' checked' : ''));
+      'active' => $active ? ' checked' : '',
+			'TITLE' => $id ? $TITLE[editversion] : $TITLE[addversion]));
   }
 }
 

@@ -7,11 +7,13 @@ include '../include.php';
 page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
 
 function do_form($osid = 0) {
-  global $q, $me, $fname, $fregex, $fsortorder;
+  global $q, $me, $fname, $fregex, $fsortorder, $STRING;
   
   // Validation
-  //if ($error) { show_form($id, $error); return; }
-  
+  if (!$fname = trim($fname)) 
+		$error = $STRING[givename];
+	if ($error) { list_items($osid, $error); return; }
+	
   if (!$osid) {
     $q->query("insert into OS (OSID, Name, Regex, SortOrder) values 
 			(".$q->nextid('OS').", '$fname', '$fregex', '$fsortorder')");
@@ -23,20 +25,20 @@ function do_form($osid = 0) {
 }  
 
 function show_form($osid = 0, $error = '') {
-  global $q, $me, $t, $fname, $fregex, $fsortorder;
+  global $q, $me, $t, $fname, $fregex, $fsortorder, $STRING;
   
   #$t->set_file('content','osform.html');
   if ($osid && !$error) {
     $row = $q->grab("select * from OS where OSID = '$osid'");
     $t->set_var(array(
-      'action' => 'Edit',
+      'action' => $STRING[edit],
       'fosid' => $row[OSID],
       'fname' => $row[Name],
-      'fregexn' => $row[Regex],
+      'fregex' => $row[Regex],
       'fsortorder' => $row[SortOrder]));
   } else {
     $t->set_var(array(
-			'action' => $osid ? 'Edit' : 'Add new',
+			'action' => $osid ? $STRING[edit] : $STRING[addnew],
       'error' => $error,
       'fosid' => $osid,
       'fname' => $fname,
@@ -47,7 +49,7 @@ function show_form($osid = 0, $error = '') {
 
 
 function list_items($osid = 0, $error = '') {
-  global $q, $t, $selrange, $order, $sort;
+  global $q, $t, $selrange, $order, $sort, $STRING, $TITLE;
         
   $t->set_file('content','oslist.html');
   $t->set_block('content','row','rows');
@@ -67,7 +69,7 @@ function list_items($osid = 0, $error = '') {
   $q->query("select * from OS order by $order $sort limit $llimit, $selrange");
         
   if (!$q->num_rows()) {
-    $t->set_var('rows','<tr><td>Oops!</td></tr>');
+    $t->set_var('rows',"<tr><td>$STRING[nooses]</td></tr>");
     return;
   }
 
@@ -90,7 +92,7 @@ function list_items($osid = 0, $error = '') {
   }
 	
 	show_form($osid, $error);
-	$t->set_var('TITLE','OS');
+	$t->set_var('TITLE',$TITLE[os]);
 }
 
 $t->set_file('wrap','wrap.html');

@@ -2,8 +2,12 @@
 
 // include.php - Set up global variables and functions
 
+define(INSTALLPATH,'/home/bcurtis/public_html/phpbt');
+
 include 'prepend.php3';
 include 'template.inc';
+// Localization - include the file with the desired language
+include INSTALLPATH.'/strings-en.php';
 
 $cssfile = 'global.css';
 

@@ -7,10 +7,14 @@ include '../include.php';
 page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
 
 function do_form($resolutionid = 0) {
-  global $q, $me, $fname, $fdescription, $fsortorder;
+  global $q, $me, $fname, $fdescription, $fsortorder, $STRING;
   
   // Validation
-  //if ($error) { show_form($id, $error); return; }
+  if (!$fname = trim($fname))
+		$error = $STRING[givename];
+	elseif (!$fdescription = trim($fdescription))
+		$error = $STRING[givedesc];
+	if ($error) { list_items($resolutionid, $error); return; }
   
   if (!$resolutionid) {
     $q->query("insert into Resolution (ResolutionID, Name, Description, 
@@ -24,20 +28,20 @@ function do_form($resolutionid = 0) {
 }  
 
 function show_form($resolutionid = 0, $error = '') {
-  global $q, $me, $t, $fname, $fdescription, $fsortorder;
+  global $q, $me, $t, $fname, $fdescription, $fsortorder, $STRING;
   
   #$t->set_file('content','resolutionform.html');
   if ($resolutionid && !$error) {
     $row = $q->grab("select * from Resolution where ResolutionID = '$resolutionid'");
     $t->set_var(array(
-      'action' => 'Edit',
+      'action' => $STRING[edit],
       'fresolutionid' => $row[ResolutionID],
       'fname' => $row[Name],
       'fdescription' => $row[Description],
       'fsortorder' => $row[SortOrder]));
   } else {
     $t->set_var(array(
-			'action' => $resolutionid ? 'Edit' : 'Add new',
+			'action' => $resolutionid ? $STRING[edit] : $STRING[addnew],
       'error' => $error,
       'fresolutionid' => $resolutionid,
       'fname' => $fname,
@@ -48,7 +52,7 @@ function show_form($resolutionid = 0, $error = '') {
 
 
 function list_items($resolutionid = 0, $error = '') {
-  global $q, $t, $selrange, $order, $sort;
+  global $q, $t, $selrange, $order, $sort, $STRING, $TITLE;
         
   $t->set_file('content','resolutionlist.html');
   $t->set_block('content','row','rows');
@@ -68,7 +72,7 @@ function list_items($resolutionid = 0, $error = '') {
   $q->query("select * from Resolution order by $order $sort limit $llimit, $selrange");
         
   if (!$q->num_rows()) {
-    $t->set_var('rows','<tr><td>Oops!</td></tr>');
+    $t->set_var('rows',"<tr><td>$STRING[noresolutions]</td></tr>");
     return;
   }
 
@@ -91,7 +95,7 @@ function list_items($resolutionid = 0, $error = '') {
   }
 	
 	show_form($resolutionid, $error);
-	$t->set_var('TITLE','Resolution');
+	$t->set_var('TITLE',$TITLE[resolution]);
 }
 
 $t->set_file('wrap','wrap.html');
