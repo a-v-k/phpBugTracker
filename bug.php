@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.64 2001/12/05 04:21:19 bcurtis Exp $
+// $Id: bug.php,v 1.65 2001/12/07 14:01:26 bcurtis Exp $
 
 include 'include.php';
 
@@ -80,7 +80,7 @@ function show_history($bugid) {
 ///
 /// Send the email about changes to the bug and log the changes in the DB
 function do_changedfields($userid, $buginfo, $cf, $comments) {
-  global $q, $t, $u, $select, $now;
+  global $q, $t, $u, $select, $now, $STRING;
 
   $t->set_file('emailout','bugemail.txt');
   $t->set_block('emailout','commentblock', 'cblock');
