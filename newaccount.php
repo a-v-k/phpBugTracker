@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.20 2001/11/06 04:40:18 bcurtis Exp $
+// $Id: newaccount.php,v 1.21 2001/11/13 03:53:04 bcurtis Exp $
 
 include 'include.php'; 
 
@@ -98,7 +98,5 @@ if ($_pv['createaccount']) do_form();
 else show_form();
 
 $t->pparse('main',array('content','wrap','main'));
-
-page_close();
 
 ?>

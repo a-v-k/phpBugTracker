@@ -20,14 +20,14 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.73 2001/11/08 05:13:15 bcurtis Exp $
+// $Id: include.php,v 1.74 2001/11/13 03:53:02 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
 	define('INCLUDE_PATH', '');
 }
 
-@require (INSTALL_PATH.'/'.INCLUDE_PATH.'config.php');
+include (INSTALL_PATH.'/'.INCLUDE_PATH.'config.php');
 if (!defined('DB_HOST')) { // Installation hasn't been completed
 	header("Location: install.php");
 	exit();
@@ -133,123 +133,10 @@ $all_db_fields = array(
 $default_db_fields = array('bug_id', 'title', 'reporter', 'owner',
   'severity_name', 'priority', 'status_name', 'resolution_name');
 
-class sqlclass extends CT_Sql {
-  var $database_class = 'dbclass';
-  var $database_table = TBL_ACTIVE_SESSIONS;
-}
-
 class usess extends Session {
   var $classname = 'usess';
-  var $magic = 'gerdisbad';
-  var $mode = 'cookie';
-  #var $fallback_mode = 'get';
   var $lifetime = 0;
-  var $that_class = 'sqlclass';
-  var $allowcache = 'jl';
-}
-
-class uauth extends Auth {
-  var $classname = 'uauth';
-  var $lifetime = 0;
-  var $magic = 'looneyville';
-  var $nobody = true;
-
-  function auth_loginform() {
-    global $sess;
-
-    include 'templates/'.THEME.'/login.html';
-
-  }
-
-  function auth_validatelogin() {
-    global $username, $password, $q, $select, $emailpass, $emailsuccess, $STRING;
-
-    if (!$username) return 'nobody';
-    $this->auth['uname'] = $username;
-    if (ENCRYPT_PASS) {
-      $password = md5($password);
-    }
-    $u = $q->grab("select * from ".TBL_AUTH_USER." where login = '$username' and password = '$password' and active > 0");
-    if (!$q->num_rows()) {
-      return 'nobody';
-    } else {
-      $this->auth['db_fields'] = unserialize($u['bug_list_fields']);
-
-      // Grab group assignments and permissions based on groups
-      $q->query("select group_name, perm_name"
-      	." from ".TBL_AUTH_PERM." ap, ".TBL_GROUP_PERM." gp, ".TBL_AUTH_GROUP." ag, ".TBL_USER_GROUP." ug"
-      	." where ap.perm_id = gp.perm_id and gp.group_id = ag.group_id"
-      	."  and ag.group_id = ug.group_id and ug.user_id = {$u['user_id']}");
-      while (list($group, $perm) = $q->grab()) {
-        $this->auth['perm'][$perm] = true;
-        $this->auth['group'][$group] = true;
-      }
-
-      return $u['user_id'];
-    }
-  }
-
-  function unauth($nobody = false) {
-    Auth::unauth($nobody);
-    $this->auth['group'] = '';
-    $this->auth['db_fields'] = '';
-  }
-}
-
-class uperm extends Perm {
-  var $classname = 'uperm';
-
-  function check_auth($auth_var, $reqs) {
-    global $auth;
-
-    // Administrators always pass
-    if ($auth->auth[$auth_var]['Admin']) {
-      return true;
-    }
-
-    if (is_array($reqs)) {
-      foreach ($reqs as $req) {
-        if (!$auth->auth[$auth_var][$req]) {
-          return false;
-        }
-      }
-    } else {
-      if (!$auth->auth[$auth_var][$reqs]) {
-        return false;
-      }
-    }
-
-    // Didn't fail on any requirements?  Then the user passes the check
-    return true;
-  }
-
-
-  function in_group($req_groups) {
-    return $this->check_auth('group', $req_groups);
-  }
-
-
-  function have_perm($req_perms) {
-    return $this->check_auth('perm', $req_perms);
-  }
-
-
-  function perm_invalid() {
-    global $t, $auth;
-    $t->set_file('content','badperm.html');
-    $t->pparse('main',array('content','wrap','main'));
-  }
-
-	function check_group($group) {
-		global $t;
-
-		if (!$this->check_auth('group', $group)) {		
-			$t->set_file('content', 'badgroup.html');
-			$t->set_var('group', $group);
-			$t->pparse('main',array('content','wrap','main'));
-			exit();
-		}
-	}
+  var $allowcache = '';
 }
 
 class templateclass extends Template {
@@ -260,7 +147,7 @@ class templateclass extends Template {
     $this->set_block('wrap', 'logoutblock', 'loblock');
     $this->set_block('wrap', 'loginblock', 'liblock');
     $this->set_block('wrap', 'adminnavblock', 'anblock');
-    if ($u && $u != 'nobody') {
+    if ($u) {
       list($owner_open, $owner_closed) = $q->grab("SELECT sum(CASE WHEN status_name in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END ) ,"
 				."sum(CASE WHEN status_name not in ('Unconfirmed','New','Assigned','Reopened') THEN 1 ELSE 0 END )"
 				."from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) where assigned_to = $u");
@@ -562,7 +449,7 @@ function valid_email($email) {
 function maskemail($email) {
   global $auth;
 
-  if (HIDE_EMAIL && $auth->auth['uid'] == 'nobody') {
+  if (HIDE_EMAIL && !$auth->auth['uid']) {
     return '******';
   } elseif (MASK_EMAIL) {
     return str_replace('@', ' at ', str_replace('.', ' dot ', $email));
@@ -601,7 +488,7 @@ if (isset($HTTP_POST_VARS['dologin'])) {
     }
   } else {
     $auth->auth['uid'] = $auth->auth_validatelogin();
-    if ($auth->auth['uid'] == 'nobody') {
+    if (!$auth->auth['uid']) {
       $t->set_var(array(
         'loginerrorcolor' => '#ff0000',
         'loginerror' => 'Invalid login<br>'

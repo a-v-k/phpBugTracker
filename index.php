@@ -60,6 +60,4 @@ if (USE_JPGRAPH) {
 	
 $t->pparse('main',array('content','wrap','main'));
 
-page_close();
-
 ?>

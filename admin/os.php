@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: os.php,v 1.15 2001/10/30 05:19:54 bcurtis Exp $
+// $Id: os.php,v 1.16 2001/11/13 03:53:04 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -126,7 +126,5 @@ if ($op) switch($op) {
 } else list_items();
 
 $t->pparse('main',array('content','wrap','main'));
-
-page_close();
 
 ?>

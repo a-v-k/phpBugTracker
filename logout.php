@@ -27,6 +27,4 @@ $auth->unauth();
 
 include 'templates/'.THEME.'/logout.html';
 
-page_close();
-
 ?>

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.10 2001/10/12 04:19:31 bcurtis Exp $
+// $Id: attachment.php,v 1.11 2001/11/13 03:52:59 bcurtis Exp $
 
 include 'include.php';
 
@@ -167,7 +167,5 @@ if (isset($_gv['del'])) {
 }
 
 $t->pparse('main',array('content','wrap','main'));
-
-page_close();
 
 ?>

@@ -95,6 +95,4 @@ resolution_by_engineer($projectid);
 
 $t->pparse('main',array('content','wrap','main'));
 
-page_close();
-
 ?>

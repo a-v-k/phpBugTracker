@@ -93,6 +93,4 @@ else show_preferences_form();
 
 $t->pparse('main', array('content', 'wrap', 'main'));
 
-page_close();
-
 ?>
