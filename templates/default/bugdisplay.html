@@ -13,34 +13,34 @@
 	<?php build_project_js(true); ?>
 
 	function updateMenus(f) {
-	  	sel = f.project_id[f.project_id.selectedIndex].text;
-	  	f.version_id.length = versions[sel].length;
-	  	for (var x = 0; x < versions[sel].length; x++) {
-	    	f.version_id.options[x].value = versions[sel][x][0];
-	    	f.version_id.options[x].text = versions[sel][x][1];
+		sel = f.project_id[f.project_id.selectedIndex].text;
+		f.version_id.length = versions[sel].length;
+		for (var x = 0; x < versions[sel].length; x++) {
+			f.version_id.options[x].value = versions[sel][x][0];
+			f.version_id.options[x].text = versions[sel][x][1];
 				f.version_id.selectedIndex = 0;
-	  	}
+		}
 
-	  	f.to_be_closed_in_version_id.length = closedversions[sel].length;
-	  	for (var x = 0; x < closedversions[sel].length; x++) {
-	    	f.to_be_closed_in_version_id.options[x].value = closedversions[sel][x][0];
-	    	f.to_be_closed_in_version_id.options[x].text = closedversions[sel][x][1];
+		f.to_be_closed_in_version_id.length = closedversions[sel].length;
+		for (var x = 0; x < closedversions[sel].length; x++) {
+			f.to_be_closed_in_version_id.options[x].value = closedversions[sel][x][0];
+			f.to_be_closed_in_version_id.options[x].text = closedversions[sel][x][1];
 				f.to_be_closed_in_version_id.selectedIndex = 0;
-	  	}
+		}
 
-	  	f.closed_in_version_id.length = closedversions[sel].length;
-	  	for (var x = 0; x < closedversions[sel].length; x++) {
-	    	f.closed_in_version_id.options[x].value = closedversions[sel][x][0];
-	    	f.closed_in_version_id.options[x].text = closedversions[sel][x][1];
+		f.closed_in_version_id.length = closedversions[sel].length;
+		for (var x = 0; x < closedversions[sel].length; x++) {
+			f.closed_in_version_id.options[x].value = closedversions[sel][x][0];
+			f.closed_in_version_id.options[x].text = closedversions[sel][x][1];
 				f.closed_in_version_id.selectedIndex = 0;
-	  	}
+		}
 
-	  	f.component_id.length = components[sel].length;
-	  	for (var x = 0; x < components[sel].length; x++) {
-	    	f.component_id.options[x].value = components[sel][x][0];
-	    	f.component_id.options[x].text = components[sel][x][1];
+		f.component_id.length = components[sel].length;
+		for (var x = 0; x < components[sel].length; x++) {
+			f.component_id.options[x].value = components[sel][x][0];
+			f.component_id.options[x].text = components[sel][x][1];
 				f.component_id.selectedIndex = 0;
-	  	}
+		}
 	}
 
 	function popupAtt(id) {
@@ -57,205 +57,205 @@
 //-->
 </script>
 <form action="bug.php" method="post">
-    <input type="hidden" name="op" value="update">
-    <input type="hidden" name="bugid" value="<?php echo $bug_id ?>">
-    <input type="hidden" name="projectid" value="<?php echo $project_id ?>">
-    <input type="hidden" name="last_modified_date" value="<?php echo $last_modified_date ?>">
-    <input type="hidden" name="pos" value="<?php echo isset($_REQUEST['pos']) ? $_REQUEST['pos'] : ''; ?>">
-    <table border="0" width="100%">
+	<input type="hidden" name="op" value="update">
+	<input type="hidden" name="bugid" value="<?php echo $bug_id ?>">
+	<input type="hidden" name="projectid" value="<?php echo $project_id ?>">
+	<input type="hidden" name="last_modified_date" value="<?php echo $last_modified_date ?>">
+	<input type="hidden" name="pos" value="<?php echo isset($_REQUEST['pos']) ? $_REQUEST['pos'] : ''; ?>">
+	<table border="0" width="100%">
 	<tr>
-	    <td>Bug <b>#<?php echo $bug_id ?></b> - <?php echo stripslashes($title) ?> - <a href="query.php"><?php echo translate("Return to bug list"); ?></a></td>
+		<td>Bug <b>#<?php echo $bug_id ?></b> - <?php echo stripslashes($title) ?> - <a href="query.php"><?php echo translate("Return to bug list"); ?></a></td>
 		<td align="right">
-        <?php if (!empty($prevbug)) { ?>
-		    <b><a href="bug.php?op=show&bugid=<?php echo $prevbug ?>&pos=<?php echo $prevpos ?>"><?php echo translate("Previous bug"); ?></a></b>
-        <?php } ?>
-        <?php if (!empty($prevbug) && !empty($nextbug)) echo ' | '; ?>
-        <?php if (!empty($nextbug)) { ?>
-		    <b><a href="bug.php?op=show&bugid=<?php echo $nextbug ?>&pos=<?php echo $nextpos ?>"><?php echo translate("Next bug"); ?></a></b>
-        <?php } ?>
-	    </td>
+		<?php if (!empty($prevbug)) { ?>
+			<b><a href="bug.php?op=show&bugid=<?php echo $prevbug ?>&pos=<?php echo $prevpos ?>"><?php echo translate("Previous bug"); ?></a></b>
+		<?php } ?>
+		<?php if (!empty($prevbug) && !empty($nextbug)) echo ' | '; ?>
+		<?php if (!empty($nextbug)) { ?>
+			<b><a href="bug.php?op=show&bugid=<?php echo $nextbug ?>&pos=<?php echo $nextpos ?>"><?php echo translate("Next bug"); ?></a></b>
+		<?php } ?>
+		</td>
 	</tr>
-    <?php if (!empty($error['status'])) echo "<tr><td class=\"error\">{$error['status']}</td></tr>"; ?>
-    </table>
+	<?php if (!empty($error['status'])) echo "<tr><td class=\"error\">{$error['status']}</td></tr>"; ?>
+	</table>
 	<?php if (!empty($error['add_dep'])) echo "<div class=\"error\">{$error['add_dep']}</div>"; ?>
 	<?php if (!empty($error['vote'])) echo "<div class=\"error\">{$error['vote']}</div>" ?>
-    <table border="0" width="100%" cellspacing="0" cellpadding="2">
+	<table border="0" width="100%" cellspacing="0" cellpadding="2">
 	<tr>
-	    <td><?php echo translate("Reporter"); ?>:</td>
-	    <td><b><?php echo maskemail($reporter) ?></b></td>
-	    <td><?php echo translate("Created"); ?>:</td>
-	    <td><b><?php echo date(DATE_FORMAT, $created_date) ?></b></td>
+		<td><?php echo translate("Reporter"); ?>:</td>
+		<td><b><?php echo maskemail($reporter) ?></b></td>
+		<td><?php echo translate("Created"); ?>:</td>
+		<td><b><?php echo date(DATE_FORMAT, $created_date) ?></b></td>
 	</tr><tr>
-	    <td><?php echo translate("Project"); ?>:</td>
-	    <td><select name="project_id" onChange="updateMenus(this.form)" <?php echo $disabled ?>><?php build_select('project', $project_id) ?></select></td>
-	    <td><?php echo translate("Priority"); ?>:</td>
-	    <td><select name="priority" <?php echo $disabled ?>><?php build_select('priority', $priority) ?></select></td>
+		<td><?php echo translate("Project"); ?>:</td>
+		<td><select name="project_id" onChange="updateMenus(this.form)" <?php echo $disabled ?>><?php build_select('project', $project_id) ?></select></td>
+		<td><?php echo translate("Priority"); ?>:</td>
+		<td><select name="priority" <?php echo $disabled ?>><?php build_select('priority', $priority) ?></select></td>
 	</tr><tr>
-	    <td><?php echo translate("Component"); ?>:</td>
-	    <td><select name="component_id" <?php echo $disabled ?>><?php build_select('component', $component_id, $project_id) ?></select></td>
-	    <td><?php echo translate("Severity"); ?>:</td>
-	    <td><select name="severity_id" <?php echo $disabled ?>><?php build_select('severity', $severity_id) ?></select></td>
+		<td><?php echo translate("Component"); ?>:</td>
+		<td><select name="component_id" <?php echo $disabled ?>><?php build_select('component', $component_id, $project_id) ?></select></td>
+		<td><?php echo translate("Severity"); ?>:</td>
+		<td><select name="severity_id" <?php echo $disabled ?>><?php build_select('severity', $severity_id) ?></select></td>
 	</tr><tr>
-	    <td><?php echo translate("Version"); ?>:</td>
-	    <td><select name="version_id" <?php echo $disabled ?>><?php build_select('version', $version_id, $project_id) ?></select></td>
-	    <td><?php echo translate("Operating System"); ?>:</td>
-	    <td><select name="os_id" <?php echo $disabled ?>><?php build_select('os', $os_id) ?></select></td>
+		<td><?php echo translate("Version"); ?>:</td>
+		<td><select name="version_id" <?php echo $disabled ?>><?php build_select('version', $version_id, $project_id) ?></select></td>
+		<td><?php echo translate("Operating System"); ?>:</td>
+		<td><select name="os_id" <?php echo $disabled ?>><?php build_select('os', $os_id) ?></select></td>
 	</tr><tr>
-	    <td><?php echo translate("To be closed in version"); ?></td>
-	    <td><select name="to_be_closed_in_version_id" <?php echo $disabled ?>>
-		    <option value="0"><?php echo translate("Choose one"); ?></option>
-		    <?php build_select('version', $to_be_closed_in_version_id, $project_id) ?>
+		<td><?php echo translate("To be closed in version"); ?></td>
+		<td><select name="to_be_closed_in_version_id" <?php echo $disabled ?>>
+			<option value="0"><?php echo translate("Choose one"); ?></option>
+			<?php build_select('version', $to_be_closed_in_version_id, $project_id) ?>
 		</select></td>
-	    <td><?php echo translate("Database"); ?>:</td>
-	    <td><select name="database_id" <?php echo $disabled ?>><?php build_select('database', $database_id) ?></select></td>
+		<td><?php echo translate("Database"); ?>:</td>
+		<td><select name="database_id" <?php echo $disabled ?>><?php build_select('database', $database_id) ?></select></td>
 	</tr><tr>
-	    <td><?php echo translate("Closed in version"); ?></td>
-	    <td><select name="closed_in_version_id" <?php echo $disabled ?>>
-		    <option value="0"><?php echo translate("Choose one"); ?></option>
-		    <?php build_select('version', $closed_in_version_id, $project_id) ?>
+		<td><?php echo translate("Closed in version"); ?></td>
+		<td><select name="closed_in_version_id" <?php echo $disabled ?>>
+			<option value="0"><?php echo translate("Choose one"); ?></option>
+			<?php build_select('version', $closed_in_version_id, $project_id) ?>
 		</select></td>
-	    <td><?php echo translate("Site"); ?></td>
-	    <td><select name="site_id" <?php echo $disabled ?>><?php build_select('site', $site_id) ?></select></td>
+		<td><?php echo translate("Site"); ?></td>
+		<td><select name="site_id" <?php echo $disabled ?>><?php build_select('site', $site_id) ?></select></td>
 	</tr><tr>
-	    <td><?php echo translate("Summary"); ?>:</td>
-	    <td><input type="text" size="30" maxlength="100" name="title" value="<?php echo stripslashes(htmlspecialchars($title)) ?>" <?php echo $disabled ?>></td>
-	    <td><?php echo translate("Status"); ?>:</td>
-	    <td><select name="status_id" <?php echo $disabled ?>><?php build_select('status', $status_id) ?></select></td>
+		<td><?php echo translate("Summary"); ?>:</td>
+		<td><input type="text" size="30" maxlength="100" name="title" value="<?php echo stripslashes(get_htmlspecialchars($title)) ?>" <?php echo $disabled ?>></td>
+		<td><?php echo translate("Status"); ?>:</td>
+		<td><select name="status_id" <?php echo $disabled ?>><?php build_select('status', $status_id) ?></select></td>
 	</tr><tr>
-	    <td><?php if($url) echo "<a href=\"$url\">URL</a>"; else echo 'URL'; ?>:</td>
-	    <td><input type="text" size="30" maxlength="255" name="url" value="<?php echo $url ?>" <?php echo $disabled ?>></td>
-	    <td><?php echo translate("Resolution"); ?>:</td>
-	    <td><select name="resolution_id" <?php echo $disabled ?>><option value="0"><?php echo translate("None"); ?></option><?php build_select('resolution', $resolution_id) ?></select></td>
+		<td><?php if($url) echo "<a href=\"$url\">URL</a>"; else echo 'URL'; ?>:</td>
+		<td><input type="text" size="30" maxlength="255" name="url" value="<?php echo $url ?>" <?php echo $disabled ?>></td>
+		<td><?php echo translate("Resolution"); ?>:</td>
+		<td><select name="resolution_id" <?php echo $disabled ?>><option value="0"><?php echo translate("None"); ?></option><?php build_select('resolution', $resolution_id) ?></select></td>
 	</tr><tr>
-	    <td><?php echo translate("Assigned to"); ?>:</td>
-        <?php if (isset($perm) && $perm->have_perm('EditAssignment')) { ?>
-	    <td><select name="assigned_to" <?php echo $disabled ?>><option value="0"><?php echo translate("None"); ?></option><?php build_select('owner', $assigned_to) ?></select></td>
-        <?php } else { ?>
-        <td>
-            <?php echo lookup('assigned_to', $assigned_to); ?>
-            <input type="hidden" name="assigned_to" value="<?php echo $assigned_to ?>">
-        </td>
-        <?php } ?>
-	    <td><?php echo translate("Add CC"); ?>:</td>
-	    <td><input type="text" name="add_cc" <?php echo $disabled ?>></td>
+		<td><?php echo translate("Assigned to"); ?>:</td>
+		<?php if (isset($perm) && $perm->have_perm('EditAssignment')) { ?>
+		<td><select name="assigned_to" <?php echo $disabled ?>><option value="0"><?php echo translate("None"); ?></option><?php build_select('owner', $assigned_to) ?></select></td>
+		<?php } else { ?>
+		<td>
+			<?php echo lookup('assigned_to', $assigned_to); ?>
+			<input type="hidden" name="assigned_to" value="<?php echo $assigned_to ?>">
+		</td>
+		<?php } ?>
+		<td><?php echo translate("Add CC"); ?>:</td>
+		<td><input type="text" name="add_cc" <?php echo $disabled ?>></td>
 	</tr><tr>
-	    <td colspan="2" valign="top">
-        <?php if (!empty($error['add_dep'])) echo "<div class=\"error\">{$error['add_dep']}</div>"; ?>
+		<td colspan="2" valign="top">
+		<?php if (!empty($error['add_dep'])) echo "<div class=\"error\">{$error['add_dep']}</div>"; ?>
 		<?php echo translate("Depends on bugs"); ?>: 
-            <?php for ($i = 0, $count = count($bug_dependencies); $i < $count; $i++) {
-                printf('<a href="bug.php?op=show&bugid=%d" class="%s">#%d</a>%s', 
-                    $bug_dependencies[$i]['bug_id'], 
-                    ($bug_dependencies[$i]['bug_open'] ? 'open_bug_number' : 'closed_bug_number'),
-                    $bug_dependencies[$i]['bug_id'],
-                    ($i < $count - 1 ? ', ' : ''));
-            } ?>
-            <br>
+			<?php for ($i = 0, $count = count($bug_dependencies); $i < $count; $i++) {
+				printf('<a href="bug.php?op=show&bugid=%d" class="%s">#%d</a>%s', 
+					$bug_dependencies[$i]['bug_id'], 
+					($bug_dependencies[$i]['bug_open'] ? 'open_bug_number' : 'closed_bug_number'),
+					$bug_dependencies[$i]['bug_id'],
+					($i < $count - 1 ? ', ' : ''));
+			} ?>
+			<br>
 		<?php echo translate("Blocks bugs"); ?>:  
-            <?php for ($i = 0, $count = count($bug_blocks); $i < $count; $i++) {
-                printf('<a href="bug.php?op=show&bugid=%d" class="%s">#%d</a>%s', 
-                    $bug_blocks[$i]['bug_id'], 
-                    ($bug_blocks[$i]['bug_open'] ? 'open_bug_number' : 'closed_bug_number'),
-                    $bug_blocks[$i]['bug_id'],
-                    ($i < $count - 1 ? ', ' : ''));
-            } ?>
-            <br>
+			<?php for ($i = 0, $count = count($bug_blocks); $i < $count; $i++) {
+				printf('<a href="bug.php?op=show&bugid=%d" class="%s">#%d</a>%s', 
+					$bug_blocks[$i]['bug_id'], 
+					($bug_blocks[$i]['bug_open'] ? 'open_bug_number' : 'closed_bug_number'),
+					$bug_blocks[$i]['bug_id'],
+					($i < $count - 1 ? ', ' : ''));
+			} ?>
+			<br>
 		<?php echo translate("Add dependency"); ?>: <input type="text" name="add_dependency" size="5" <?php echo $disabled ?>><br>
 		<?php echo translate("Remove dependency"); ?>: <input type="text" name="del_dependency" size="5" <?php echo $disabled ?>><br><br></td>
-	    <td colspan="2" valign="top">
+		<td colspan="2" valign="top">
 		<?php echo translate("Remove selected CCs"); ?>:<br>
 		<select name="remove_cc[]" size="5" style="width: 15em" multiple <?php echo $disabled ?>><?php build_select('bug_cc', $bug_id) ?></select></td>
 	</tr>
-    </table>
-    <table border="0" cellpadding="2" cellspacing="0" width="100%">
+	</table>
+	<table border="0" cellpadding="2" cellspacing="0" width="100%">
 	<tr class="noprint">
-	    <td valign="top"><?php echo translate("Additional comments"); ?>:<br><br>
+		<td valign="top"><?php echo translate("Additional comments"); ?>:<br><br>
 		<textarea name="comments" rows="6" cols="55" wrap="virtual" <?php echo $disabled ?>><?php echo isset($_POST['comments']) ? $_POST['comments'] : ''; ?></textarea>
 		<br><br>
 		<div align="right">
-        <?php if (!empty($_SESSION['uid'])) { ?>
+		<?php if (!empty($_SESSION['uid'])) { ?>
 			<?php echo translate("Supress notification email"); ?> <input type="checkbox" name="suppress_email" value="1">
-		    <input type="submit" value="Submit">
-        <?php } else echo translate("You must login to modify this bug"); ?>
+			<input type="submit" value="Submit">
+		<?php } else echo translate("You must login to modify this bug"); ?>
 		</div></td>
 	</tr><tr>
-	    <td><table border="0" cellpadding="0" width="100%">
-		    <tr>
+		<td><table border="0" cellpadding="0" width="100%">
+			<tr>
 			<td colspan="2"><?php echo translate("Attachments"); ?>:</td>
 			<td colspan="3" align="right"><a href="attachment.php?bugid=<?php echo $bug_id; ?>" onClick="return popupAtt(<?php echo $bug_id; ?>)"><?php echo translate("Create new attachment"); ?></a></td>
-		    </tr><tr>
+			</tr><tr>
 			<td colspan="5" height="2" bgcolor="#ffffff"><spacer type="block" height="2" width="2"></td>
-		    </tr><tr>
+			</tr><tr>
 			<td bgcolor="#cccccc" align="center"><b><?php echo translate("Name"); ?></b></td>
 			<td width="60" bgcolor="#cccccc" align="center"><b><?php echo translate("Size"); ?></b></a></td>
 			<td width="150" bgcolor="#cccccc" align="center"><b><?php echo translate("Type"); ?></b></a></td>
 			<td width="80" bgcolor="#cccccc" align="center"><b><?php echo translate("Created"); ?></b></a></td>
 			<td width="80" bgcolor="#cccccc" align="center">&nbsp;</a></td>
-		    </tr><tr>
+			</tr><tr>
 			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
 			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
 			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
 			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
 			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-		    </tr>
-            <?php if ($attcount = count($attachments)) { ?>
-                <?php for ($i = 0; $i < $attcount; $i++) { ?>
-                    <tr title="<?php echo stripslashes($attachments[$i]['description']); ?>"<?php if ($i % 2 != 0) echo ' class="alt" bgcolor="#dddddd"' ?>>
-                    <td><?php echo stripslashes($attachments[$i]['file_name']); ?></td>
-                    <td align="right">
-                        <?php echo $attachments[$i]['file_size'] > 1024 
-                            ? number_format((round($attachments[$i]['file_size']) / 1024 * 100) / 100).'k'
-                            : number_format($attachments[$i]['file_size']).'b';
-                        ?>
-                    </td>
-                    <td align="center"><?php echo $attachments[$i]['mime_type']; ?></td>
-                    <td align="center"><?php echo date(DATE_FORMAT, $attachments[$i]['created_date']); ?></td>
-                    <td align="center"><a href='attachment.php?attachid=<?php echo $attachments[$i]['attachment_id']; ?>'>View</a>
-                    <?php if (isset($perm) and $perm->have_perm('Administrator')) { ?>
-                        | <a href='attachment.php?del=<?php echo $attachments[$i]['attachment_id']; ?>' onClick="return confirm('<?php echo translate("Are you sure you want to delete this attachment?"); ?>');"><?php echo translate("Delete"); ?></a>
-                    <?php } ?>
-                    </td>
-                    </tr>
-                <?php } ?>
-            <?php } else { ?>
-                <tr>
-                    <td colspan="5" align="center"><?php echo translate("No attachments found for this bug"); ?></td>
-                </tr>
-            <?php } ?>
-		    <tr>
+			</tr>
+			<?php if ($attcount = count($attachments)) { ?>
+				<?php for ($i = 0; $i < $attcount; $i++) { ?>
+					<tr title="<?php echo stripslashes($attachments[$i]['description']); ?>"<?php if ($i % 2 != 0) echo ' class="alt" bgcolor="#dddddd"' ?>>
+					<td><?php echo stripslashes($attachments[$i]['file_name']); ?></td>
+					<td align="right">
+						<?php echo $attachments[$i]['file_size'] > 1024 
+							? number_format((round($attachments[$i]['file_size']) / 1024 * 100) / 100).'k'
+							: number_format($attachments[$i]['file_size']).'b';
+						?>
+					</td>
+					<td align="center"><?php echo $attachments[$i]['mime_type']; ?></td>
+					<td align="center"><?php echo date(DATE_FORMAT, $attachments[$i]['created_date']); ?></td>
+					<td align="center"><a href='attachment.php?attachid=<?php echo $attachments[$i]['attachment_id']; ?>'>View</a>
+					<?php if (isset($perm) and $perm->have_perm('Administrator')) { ?>
+						| <a href='attachment.php?del=<?php echo $attachments[$i]['attachment_id']; ?>' onClick="return confirm('<?php echo translate("Are you sure you want to delete this attachment?"); ?>');"><?php echo translate("Delete"); ?></a>
+					<?php } ?>
+					</td>
+					</tr>
+				<?php } ?>
+			<?php } else { ?>
+				<tr>
+					<td colspan="5" align="center"><?php echo translate("No attachments found for this bug"); ?></td>
+				</tr>
+			<?php } ?>
+			<tr>
 			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
 			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
 			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
 			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
 			<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-		    </tr><tr>
+			</tr><tr>
 			<td colspan="5" height="2" bgcolor="#ffffff"><spacer type="block" height="2" width="2"></td>
-		    </tr>
+			</tr>
 		</table></td>
 	</tr>
-    </table>
+	</table>
 </form>
 <div align="center" class="bugdisplaylinks">
 <?php if (!empty($error['vote'])) echo "<div class=\"error\">{$error['vote']}</div>" ?>
-    <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=vote&bugid=<?php echo $bug_id; ?>" onClick="if (<?php echo $already_voted; ?>) { alert ('<?php echo translate("You have already voted for this bug"); ?>'); return false; }"><?php echo translate("Vote for this bug"); ?></a></b> |
-    <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=viewvotes&bugid=<?php echo $bug_id; ?>"><?php echo translate("View votes"); ?> (<?php echo $num_votes; ?>)</a></b> |
-    <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=history&bugid=<?php echo $bug_id; ?>"><?php echo translate("View bug history"); ?></a></b>
+	<b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=vote&bugid=<?php echo $bug_id; ?>" onClick="if (<?php echo $already_voted; ?>) { alert ('<?php echo translate("You have already voted for this bug"); ?>'); return false; }"><?php echo translate("Vote for this bug"); ?></a></b> |
+	<b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=viewvotes&bugid=<?php echo $bug_id; ?>"><?php echo translate("View votes"); ?> (<?php echo $num_votes; ?>)</a></b> |
+	<b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=history&bugid=<?php echo $bug_id; ?>"><?php echo translate("View bug history"); ?></a></b>
 </div>
 <br><br>
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
-    <tr>
+	<tr>
 	<td><?php echo translate("Comments"); ?>:</td>
-    </tr><tr class="alt">
+	</tr><tr class="alt">
 	<td><?php echo translate("Posted by"); ?>: <?php echo maskemail($reporter); ?> <br>
-	    <?php echo translate("Date"); ?>: <?php echo date(TIME_FORMAT.' '.DATE_FORMAT, $created_date); ?></td>
-    </tr><tr>
-	<td><?php echo nl2br(stripslashes(format_comments(htmlspecialchars($description)))); ?> <br><br></td>
-    </tr>
-    <?php for ($i = 0, $ccount = count($comments); $i < $ccount; $i++) { ?>
-        <tr class="alt">
-        <td><?php echo translate("Posted by"); ?>: <?php echo maskemail($comments[$i]['login']); ?> <br>
-            <?php echo translate("Date"); ?>: <?php echo date(TIME_FORMAT.' '.DATE_FORMAT, $comments[$i]['created_date']); ?></td>
-        </tr><tr>
-        <td><?php echo nl2br(stripslashes(format_comments(htmlspecialchars($comments[$i]['comment_text'])))); ?> <br><br></td>
-        </tr>
-    <?php } ?>
+		<?php echo translate("Date"); ?>: <?php echo date(TIME_FORMAT.' '.DATE_FORMAT, $created_date); ?></td>
+	</tr><tr>
+	<td><?php echo format_comments($description); ?> <br><br></td>
+	</tr>
+	<?php for ($i = 0, $ccount = count($comments); $i < $ccount; $i++) { ?>
+		<tr class="alt">
+		<td><?php echo translate("Posted by"); ?>: <?php echo maskemail($comments[$i]['login']); ?> <br>
+			<?php echo translate("Date"); ?>: <?php echo date(TIME_FORMAT.' '.DATE_FORMAT, $comments[$i]['created_date']); ?></td>
+		</tr><tr>
+		<td><?php echo format_comments($comments[$i]['comment_text']); ?> <br><br></td>
+		</tr>
+	<?php } ?>
 </table>

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.136 2004/12/05 17:01:32 bcurtis Exp $
+// $Id: bug.php,v 1.137 2005/01/22 16:03:48 bcurtis Exp $
 
 include 'include.php';
 
@@ -61,7 +61,7 @@ function vote_bug($bug_id) {
 		// If a number of votes are required to promote a bug, check for promotion
 		if (!$bug_is_new and $db->getOne("select count(*) from ".TBL_BUG_VOTE." where bug_id = $bug_id") == PROMOTE_VOTES) {
 			$status_id = BUG_PROMOTED;
-	  		$buginfo = $db->getOne("select * from ".TBL_BUG." where bug_id = $bug_id");
+			$buginfo = $db->getOne("select * from ".TBL_BUG." where bug_id = $bug_id");
 			$changedfields = array('status_id' => $status_id);
 			do_changedfields($u, $buginfo, $changedfields);
 		}
@@ -82,14 +82,18 @@ function format_comments($comments) {
 	// Set up the regex replacements
 	$patterns = array(
 		'/(bug)[[:space:]]*(#?)([0-9]+)/i', // matches bug #nn
-		'/cvs:([^\.\s:,\?!]+(\.[^\.\s:,\?!]+)*)(:)?(\d\.[\d\.]+)?([\W\s])?/i' // matches cvs:filename.php or cvs:filename.php:n.nn
+		'/cvs:([^\.\s:,\?!]+(\.[^\.\s:,\?!]+)*)(:)?(\d\.[\d\.]+)?([\W\s])?/i', // matches cvs:filename.php or cvs:filename.php:n.nn
+		'/</',
+		'/>/',
 		);
 	$replacements = array(
 		"\\1 <a href='$me?op=show&bugid=\\3'>\\2\\3</a>", // internal link to bug
-		'<a href="'.CVS_WEB.'\\1#rev\\4" target="_new">\\1</a>\\5' // external link to cvs web interface
+		'<a href="'.CVS_WEB.'\\1#rev\\4" target="_new">\\1</a>\\5', // external link to cvs web interface
+		'&lt;',
+		'&gt;',
 		);
 
-	return preg_replace($patterns, $replacements, stripslashes($comments));
+	return nl2br(preg_replace($patterns, $replacements, stripslashes($comments)));
 }
 
 ///
@@ -152,19 +156,19 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 		if (empty($oldvalue)) $oldvalue = 'None';
 
 		if (isset($cf[$field.'_id'])) {
-		    $newvalue = $db->getOne("select ${field}_name from $table where ${field}_id = {$cf[$field.'_id']}");
-		    if (empty($newvalue)) $newvalue = 'None';
+			$newvalue = $db->getOne("select ${field}_name from $table where ${field}_id = {$cf[$field.'_id']}");
+			if (empty($newvalue)) $newvalue = 'None';
 
-		    $db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values ('. join(', ', array($buginfo['bug_id'], $db->quote(translate($field)), $db->quote(stripslashes($oldvalue)), $db->quote(stripslashes($newvalue)), $u, $now)).")");
-		    $t->assign(array(
+			$db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values ('. join(', ', array($buginfo['bug_id'], $db->quote(translate($field)), $db->quote(stripslashes($oldvalue)), $db->quote(stripslashes($newvalue)), $u, $now)).")");
+			$t->assign(array(
 				$field.'_id' => stripslashes($newvalue),
 				$field.'_id_stat' => '!'
-			    ));
+				));
 		} else {
-		    $t->assign(array(
+			$t->assign(array(
 				$field.'_id' => stripslashes($oldvalue),
 				$field.'_id_stat' => ' '
-			    ));
+				));
 		}
 	}
 
@@ -174,26 +178,26 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 
 	foreach($versions as $field => $field_name) {
 		if (isset($buginfo[$field.'_id'])) {
-		    $oldvalue = $db->getOne('select version_name from '.$cfgDatabase['version'].' where version_id = '.$buginfo[$field.'_id']);
+			$oldvalue = $db->getOne('select version_name from '.$cfgDatabase['version'].' where version_id = '.$buginfo[$field.'_id']);
 		}
 		if (empty($oldvalue)) $oldvalue = 'None';
 
 		if (isset($cf[$field.'_id'])) {
-		    $newvalue = $db->getOne('select version_name from '.$cfgDatabase['version'].' where version_id = '.$cf[$field.'_id']);
+			$newvalue = $db->getOne('select version_name from '.$cfgDatabase['version'].' where version_id = '.$cf[$field.'_id']);
 			if (empty($newvalue)) $newvalue = 'None';
 
-		    $db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values ('. join(', ', array($buginfo['bug_id'], $db->quote(translate($field_name)),
+			$db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values ('. join(', ', array($buginfo['bug_id'], $db->quote(translate($field_name)),
 				$db->quote(stripslashes($oldvalue)),
 				$db->quote(stripslashes($newvalue)), $u, $now)).")");
-		    $t->assign(array(
+			$t->assign(array(
 				$field.'_id' => stripslashes($newvalue),
 				$field.'_id_stat' => '!'
-			    ));
+				));
 		} else {
-		    $t->assign(array(
+			$t->assign(array(
 				$field.'_id' => stripslashes($oldvalue),
 				$field.'_id_stat' => ' '
-			    ));
+				));
 		}
 	}
 
@@ -224,29 +228,29 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 		$rs = $db->limitQuery('select u.login, c.comment_text, c.created_date from '.TBL_COMMENT.' c, '.TBL_AUTH_USER." u where bug_id = {$buginfo['bug_id']} and c.created_by = u.user_id order by created_date desc", 0, 2);
 		$rs->fetchInto($row);
 		$t->assign(array(
-		    'newpostedby' => $row['login'],
-		    'newpostedon' => date(TIME_FORMAT, $row['created_date']).' on '.
+			'newpostedby' => $row['login'],
+			'newpostedon' => date(TIME_FORMAT, $row['created_date']).' on '.
 			date(DATE_FORMAT, $row['created_date']),
-		    'newcomments' => textwrap('+ '.format_comments($row['comment_text']),72,"\n+ ")
+			'newcomments' => textwrap('+ '.format_comments($row['comment_text']),72,"\n+ ")
 		));
 
 		// If this comment is the first additional comment after the creation of the
 		// bug then we need to grab the bug's description as the previous comment
 		if ($rs->numRows() < 2) {
-		    list($by, $on, $comments) = $db->getRow('select u.login, b.created_date, b.description from '.TBL_BUG.' b, '.TBL_AUTH_USER." u where b.created_by = u.user_id and bug_id = {$buginfo['bug_id']}", null, DB_FETCHMODE_ORDERED);
-		    $t->assign(array(
+			list($by, $on, $comments) = $db->getRow('select u.login, b.created_date, b.description from '.TBL_BUG.' b, '.TBL_AUTH_USER." u where b.created_by = u.user_id and bug_id = {$buginfo['bug_id']}", null, DB_FETCHMODE_ORDERED);
+			$t->assign(array(
 			'oldpostedby' => $by,
 			'oldpostedon' => date(TIME_FORMAT,$on).' on '.date(DATE_FORMAT,$on),
 			'oldcomments' => textwrap(format_comments($comments),72)
-		    ));
+			));
 		} else {
-		    $rs->fetchInto($row);
-		    $t->assign(array(
+			$rs->fetchInto($row);
+			$t->assign(array(
 			'oldpostedby' => $row['login'],
 			'oldpostedon' => date(TIME_FORMAT,$row['created_date']).' on '.
-			    date(DATE_FORMAT,$row['created_date']),
+				date(DATE_FORMAT,$row['created_date']),
 			'oldcomments' => textwrap(format_comments($row['comment_text']),72)
-		    ));
+			));
 		}
 		$t->assign('showcomments', true);
 	} else {
@@ -262,7 +266,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 	}
 	if ($userid != (!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to'])
 		and !empty($assignedto) and $emailassignedto) {
-	    $maillist[] = $assignedto;
+		$maillist[] = $assignedto;
 	}
 
 	// Collect the CCs
@@ -324,8 +328,8 @@ function update_bug($bugid = 0) {
 	// Should we allow changes to be made to this bug by this user?
 	if (STRICT_UPDATING and !($u == $buginfo['assigned_to'] or
 		$u == $buginfo['created_by'] or $perm->have_perm('Manager'))) {
-	    show_bug($bugid,array('status' => translate("You can not change this bug")));
-	    return;
+		show_bug($bugid,array('status' => translate("You can not change this bug")));
+		return;
 	}
 
 	// Check for more than one person modifying the bug at the same time
@@ -342,7 +346,7 @@ function update_bug($bugid = 0) {
 		}
 		$cc_already = $db->getOne('select user_id from '.TBL_BUG_CC." where bug_id = $bugid and user_id = $cc_uid");
 		if (!$cc_already && $cc_uid != $buginfo['created_by']) {
-		    $db->query("insert into ".TBL_BUG_CC." (bug_id, user_id, created_by, created_date)  values ($bugid, $cc_uid, $u, $now)");
+			$db->query("insert into ".TBL_BUG_CC." (bug_id, user_id, created_by, created_date)  values ($bugid, $cc_uid, $u, $now)");
 		}
 	}
 
@@ -357,12 +361,12 @@ function update_bug($bugid = 0) {
 
 		// Validate the bug number
 		if (!is_numeric($add_dependency)) {
-		    show_bug($bugid, array('add_dep' => translate("That bug does not exist")));
-		    return;
+			show_bug($bugid, array('add_dep' => translate("That bug does not exist")));
+			return;
 		}
 		if (!$db->getOne('select count(*) from '.TBL_BUG." where bug_id = $add_dependency")) {
-		    show_bug($bugid, array('add_dep' => translate("That bug does not exist")));
-		    return;
+			show_bug($bugid, array('add_dep' => translate("That bug does not exist")));
+			return;
 		}
 
 		// Check if the dependency has already been added
@@ -379,7 +383,7 @@ function update_bug($bugid = 0) {
 	if (!empty($del_dependency)) {
 		$del_dependency = preg_replace('/\D/', '', $del_dependency);
 		if (is_numeric($del_dependency)) {
-		    $db->query("delete from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid and depends_on = $del_dependency");
+			$db->query("delete from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid and depends_on = $del_dependency");
 		}
 	}
 
@@ -502,9 +506,9 @@ function do_form($bugid = 0) {
 
 	// Check to see if this bug's component has an owner and should be assigned
 	if ($owner = $db->getOne("select owner from ".TBL_COMPONENT." c where component_id = $component")) {
-	    $status = BUG_ASSIGNED;
+		$status = BUG_ASSIGNED;
 	} else {
-	    $owner = 0;
+		$owner = 0;
 		// If we aren't using voting to promote, then auto-promote to New
 		$status = PROMOTE_VOTES ? BUG_UNCONFIRMED : BUG_PROMOTED;
 	}
@@ -547,7 +551,7 @@ function show_bug_printable($bugid) {
 
 	if (!is_numeric($bugid) or
 		!$row = $db->getRow(sprintf($QUERY['bug-printable'], $bugid,
-	    $restricted_projects))) {
+		$restricted_projects))) {
 		show_text(translate("That bug does not exist"), true);
 		exit;
 	}
@@ -613,7 +617,7 @@ function show_bug($bugid = 0, $error = array()) {
 
 	if (!ereg('^[0-9]+$',$bugid) or
 		!$row = $db->getRow(sprintf($QUERY['bug-show-bug'], $bugid,
-	    	$restricted_projects))) {
+			$restricted_projects))) {
 		show_text(translate("That bug does not exist"), true);
 		return;
 	}
@@ -641,9 +645,9 @@ function show_bug($bugid = 0, $error = array()) {
 	$rs = $db->query("select * from ".TBL_ATTACHMENT." where bug_id = $bugid");
 	if ($rs->numRows()) {
 		while ($rs->fetchInto($att)) {
-		    if (@is_readable(ATTACHMENT_PATH."/{$row['project_id']}/$bugid-{$att['file_name']}")) {
+			if (@is_readable(ATTACHMENT_PATH."/{$row['project_id']}/$bugid-{$att['file_name']}")) {
 				$attachments[] = $att;
-		    }
+			}
 		}
 	}
 
