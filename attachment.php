@@ -155,6 +155,7 @@ if (isset($_gv['del'])) {
 	if (list($filename, $mimetype) = grab_attachment($_gv['attachid'])) {
 		header("Content-type: $mimetype");
 		@readfile($filename);
+		exit;
 	}
 } else {
 	$perm->check('User');

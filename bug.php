@@ -420,12 +420,17 @@ function show_bug($bugid = 0, $error = '') {
 				if ($perm->have_perm('Administrator')) {
 					$action .= " | <a href='attachment.php?del={$att['AttachmentID']}'>Delete</a>";
 				}
+				if ($att['FileSize'] > 1024) {
+					$attsize = number_format((round($att['FileSize']) / 1024 * 100) / 100).'k';
+				} else {
+					$attsize = number_format($att['FileSize']).'b';
+				}
 				$t->set_var(array(
 					'bgcolor' => (++$j % 2 == 0) ? '#dddddd' : '#ffffff',
 					'attid' => $att['AttachmentID'],
 					'attname' => stripslashes($att['FileName']),
 					'attdesc' => stripslashes($att['Description']),
-					'attsize' => number_format($att['FileSize']).'k',
+					'attsize' => $attsize,
 					'atttype' => $att['MimeType'],
 					'attdate' => date(DATEFORMAT, $att['CreatedDate']),
 					'attaction' => $action
