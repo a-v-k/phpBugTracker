@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.78 2001/11/23 05:10:44 bcurtis Exp $
+// $Id: include.php,v 1.79 2001/12/01 19:51:20 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -40,6 +40,8 @@ class dbclass extends DB_Sql {
   var $User = DB_USER;
   var $Password = DB_PASSWORD;
 	var $Seq_Table = TBL_DB_SEQUENCE;
+  var $Seq_ID_Col    = "nextid";    
+  var $Seq_Name_Col  = "seq_name";  
 	
 	// Attempt to handle different limit syntax
 	function limit_query($q_string, $limit, $offset = 0) {
