@@ -44,70 +44,78 @@ function show_query() {
     'priority' => build_select('priority',$priority),
     'severity' => build_select('Severity',$severity),
     'projects' => build_select('Project'),
-    'TITLE' => $TITLE[bugquery]
+    'TITLE' => $TITLE['bugquery']
     ));
       
 }
 
-function build_query() {
-  global $q, $sess, $querystring, $status, $resolution, $os, $priority, 
+function build_query($showmybugs = false) {
+  global $q, $sess, $auth, $querystring, $status, $resolution, $os, $priority, 
     $severity, $email1, $emailtype1, $emailfield1, $Title, $Description, $URL, 
     $Title_type, $Description_type, $URL_type, $projects, $versions, $components;
 
-  // Select boxes
-  if ($status) $flags[] = 'Status in ('.join(',',$status).')';
-  if ($resolution) $flags[] = 'Resolution in ('.join(',',$resolution).')';
-  if ($os) $flags[] = 'OS in ('.join(',',$os).')';
-  if ($priority) $flags[] = 'Priority in ('.join(',',$priority).')';
-  if ($severity) $flags[] = 'Severity in ('.join(',',$severity).')';
-  if ($flags) $query[] = '('.join(' or ',$flags).')';
-  
-  // Email field(s)
-  if ($email1) {
-    switch($emailtype1) {
-      case 'like' : $econd = "like '%$email1%'"; break;
-      case 'rlike' : 
-      case 'not rlike' : 
-      case '=' : $econd = "$emailtype1 '$email1'"; break;
-    }
-    foreach($emailfield1 as $field) $equery[] = "$field.Email $econd";
-    $query[] = '('.join(' or ',$equery).')';
+	// Open bugs assigned to the user -- a hit list
+	if ($showmybugs) {
+		$q->query("select StatusID from Status where Name in ('Unconfirmed', 'New', 'Assigned', 'Reopened')");
+		while ($statusid = $q->grab_field()) $status[] = $statusid;
+		$query[] = 'Status in ('.delimit_list(',',$status).')';
+		$query[] = "AssignedTo = {$auth->auth['uid']}";
+	} else {
+  	// Select boxes
+  	if ($status) $flags[] = 'Status in ('.delimit_list(',',$status).')';
+  	if ($resolution) $flags[] = 'Resolution in ('.delimit_list(',',$resolution).')';
+  	if ($os) $flags[] = 'OS in ('.delimit_list(',',$os).')';
+  	if ($priority) $flags[] = 'Priority in ('.delimit_list(',',$priority).')';
+  	if ($severity) $flags[] = 'Severity in ('.delimit_list(',',$severity).')';
+  	if ($flags) $query[] = '('.delimit_list(' or ',$flags).')';
+
+  	// Email field(s)
+  	if ($email1) {
+    	switch($emailtype1) {
+      	case 'like' : $econd = "like '%$email1%'"; break;
+      	case 'rlike' : 
+      	case 'not rlike' : 
+      	case '=' : $econd = "$emailtype1 '$email1'"; break;
+    	}
+    	foreach($emailfield1 as $field) $equery[] = "$field.Email $econd";
+    	$query[] = '('.delimit_list(' or ',$equery).')';
+  	}
+
+  	// Text search field(s)
+  	foreach(array('Title','Description','URL') as $searchfield) {
+    	if ($$searchfield) {
+      	switch (${$searchfield."_type"}) {
+        	case 'like' : $cond = "like '%".$$searchfield."%'"; break;
+        	case 'rlike' : $cond = "rlike '".$$searchfield."'"; break;
+        	case 'not rlike' :$cond = "not rlike '".$$searchfield."'"; break;
+      	}
+      	$fields[] = "$searchfield $cond";
+    	}
+  	}
+  	if ($fields) $query[] = '('.delimit_list(' or ',$fields).')';
+
+  	// Project/Version/Component
+  	if ($projects) {
+    	$proj[] = "Bug.Project = $projects";
+    	if ($versions) $proj[] = "Bug.Version = $versions";
+    	if ($components) $proj[] = "Component = $components";
+    	$query[] = '('.delimit_list(' and ',$proj).')';
+  	}
   }
-  
-  // Text search field(s)
-  foreach(array('Title','Description','URL') as $searchfield) {
-    if ($$searchfield) {
-      switch (${$searchfield."_type"}) {
-        case 'like' : $cond = "like '%".$$searchfield."%'"; break;
-        case 'rlike' : $cond = "rlike '".$$searchfield."'"; break;
-        case 'not rlike' :$cond = "not rlike '".$$searchfield."'"; break;
-      }
-      $fields[] = "$searchfield $cond";
-    }
-  }
-  if ($fields) $query[] = '('.join(' or ',$fields).')';
-  
-  // Project/Version/Component
-  if ($projects) {
-    $proj[] = "Bug.Project = $projects";
-    if ($versions) $proj[] = "Bug.Version = $versions";
-    if ($components) $proj[] = "Component = $components";
-    $query[] = '('.join(' and ',$proj).')';
-  }
-  
-  if ($query) $querystring = join (' and ',$query);
+	
+  if ($query) $querystring = delimit_list(' and ',$query);
   if (!$sess->is_registered('querystring')) $sess->register('querystring');
 }
 
-function list_items() {
+function list_items($showmybugs = false) {
   global $querystring, $me, $q, $t, $selrange, $order, $sort, $query, 
     $page, $op, $select, $TITLE, $STRING;
-  
+
   $t->set_file('content','buglist.html');
   $t->set_block('content','row','rows');
   
   if (!$order) { $order = 'BugID'; $sort = 'asc'; }
-  if (!$querystring or $op == 'doquery') build_query();
+  if (!$querystring or $op) build_query($showmybugs);
   $nr = $q->grab_field("select count(*) from Bug left join User Owner on 
     Bug.AssignedTo = Owner.UserID left join User Reporter on 
     Bug.CreatedBy = Reporter.UserID ".($querystring != '' ? "where $querystring": ''));
@@ -184,7 +192,12 @@ function list_items() {
 
 $t->set_file('wrap','wrap.html');
 
-if ($op == 'query') show_query();
+if ($op) switch($op) {
+	case 'query' : show_query(); break;
+	case 'doquery' : list_items(); break;
+	case 'mybugs' : list_items(true); break;
+	default : show_query(); break;
+}
 else list_items();
 
 $t->pparse('main',array('content','wrap','main'));

@@ -94,7 +94,7 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
   if ($userid != ($cf['AssignedTo'] ? $cf['AssignedTo'] : $buginfo['AssignedTo']))
     $maillist[] = $assignedto;
   // Leter add a watcher (such as QA person) check here
-  $toemail = join(', ',$maillist);
+  $toemail = delimit_list(', ',$maillist);
     
   $t->set_var(array(
     'bugid' => $buginfo['BugID'],

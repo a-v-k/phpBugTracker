@@ -346,4 +346,13 @@ function textwrap($text, $wrap=72, $break="\n"){
   return $h;
 }
 
+///
+/// Return a delimited list if there is more than one element in $ary, otherwise
+/// return the lone element as the list
+function delimit_list($delimiter, $ary) {
+	if ($ary[1]) return join($delimiter, $ary);
+	elseif ($ary[0]) return ($ary[0]);
+	else return '';
+}
+
 ?>
