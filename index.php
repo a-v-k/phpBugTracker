@@ -20,7 +20,6 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: index.php,v 1.36 2003/02/06 12:43:10 bcurtis Exp $
 
 include 'include.php';
 
@@ -110,6 +109,7 @@ if (SHOW_PROJECT_SUMMARIES) {
 		db_concat($QUERY['index-projsummary-3'], 'resolution_id',
 			$QUERY['index-projsummary-4'], 'resolution_name', "'\"' ").
 		$QUERY['index-projsummary-5']);
+		
 	while (list($fieldname, $countquery) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 		$resfields[] = $fieldname;
 		$querystring .= $countquery;
@@ -117,11 +117,46 @@ if (SHOW_PROJECT_SUMMARIES) {
 	$resfields[] = 'Total';
 
 	$db->setOption('optimize', 'performance'); // For Oracle to do this loop
-	$t->assign(array(
+	$aProjects = array(
 		'resfields' => $resfields,
 		'projects' => $db->getAll(sprintf($QUERY['index-projsummary-6'],
 			$querystring, $restricted_projects))
-		));
+		);
+		
+	// Create links for the project resolutions -- Phil Davis
+	// We will need all the resolution ids to create the links
+	$rs = $db->query("select resolution_id, resolution_name from " . TBL_RESOLUTION);
+	while (list($iResolution_id, $sResolution_name) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
+		$aResolutionsToIds[$sResolution_name] = $iResolution_id;
+	}
+
+	// We will also need all of the project ids to create the links  
+	$rs = $db->query("select project_id, project_name from " . TBL_PROJECT);
+	while (list($iProject_id, $sProject_name) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
+		$aProjectsToIds[$sProject_name] = $iProject_id;
+	}
+
+	// Lastly we will need a list of all statuses so we can exclude 'closed"
+	// for the open query
+	$sOpenStatusQuery = '&status%5B%5D='.@join('&status%5B%5D=', array(BUG_UNCONFIRMED, BUG_PROMOTED,
+	BUG_ASSIGNED, BUG_REOPENED));
+	
+	foreach ($aProjects['projects'] as $iProjectNumberKey => $value1) {
+		foreach ($aProjects['projects'][$iProjectNumberKey] as $sResolutionKey => $value2) {
+			if ($sResolutionKey != "Project" && $sResolutionKey != "Total" && $sResolutionKey != "Open") {
+				$aProjects['projects'][$iProjectNumberKey][$sResolutionKey] = "<A HREF='query.php?resolution%5B%5D=" . $aResolutionsToIds[$sResolutionKey] . "&projects=" . $aProjectsToIds[$aProjects['projects'][$iProjectNumberKey]["Project"]] . "&op=doquery'>" . $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] . "</A>";
+			} elseif ($sResolutionKey == "Open") {
+				$aProjects['projects'][$iProjectNumberKey][$sResolutionKey] = "<A HREF='query.php?projects=" . $aProjectsToIds[$aProjects['projects'][$iProjectNumberKey]["Project"]] . $sOpenStatusQuery . "&op=doquery'>" . $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] . "</A>";
+			} elseif ($sResolutionKey == "Total") {
+				$aProjects['projects'][$iProjectNumberKey][$sResolutionKey] = "<A HREF='query.php?projects=" . $aProjectsToIds[$aProjects['projects'][$iProjectNumberKey]["Project"]] . "&op=doquery'>" . $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] . "</A>";
+			}
+		}
+	}
+   
+	// End Create links for the project resolutions
+	
+	$t->assign($aProjects);
+		
 	$db->setOption('optimize', 'portability');
 }
 
@@ -139,12 +174,12 @@ $t->assign('closedbugs',
 		' and b.project_id = p.project_id order by close_date desc', 0, 5)));
 
 if ($u != 'nobody') {
-    $pref = $db->GetOne('select saved_queries from '.TBL_USER_PREF." where user_id='".$u."'");
-    if ((isset($pref['saved_queries'])) && ($pref['saved_queries'])) {
+	$pref = $db->GetOne('select saved_queries from '.TBL_USER_PREF." where user_id='".$u."'");
+	if ((isset($pref['saved_queries'])) && ($pref['saved_queries'])) {
 	// Grab the saved queries if there are any and user wants them
 	$t->assign('queries',
-	    $db->getAll("select * from ".TBL_SAVED_QUERY." where user_id = '$u'"));
-    }
+	   $db->getAll("select * from ".TBL_SAVED_QUERY." where user_id = '$u'"));
+	}
 }
 
 $t->wrap('index.html', 'home');
