@@ -128,6 +128,18 @@
 <para>The format for displaying the date, according to PHP's <ulink url="http://www.php.net/manual/function.date.php"><function>date()</function></ulink> function.</para>
 </listitem>
 </varlistentry>
+<varlistentry>
+<term>LANGUAGE</term>
+<listitem>
+<para>The language file (found in the <filename class="directory">languages</filename> sub-directory to use for error and warning messages.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>STRICT_UPDATING</term>
+<listitem>
+<para>If set to true, the only people who can make changes to a bug are the reporter, the owner, and those with manager or admin permissions.</para>
+</listitem>
+</varlistentry>
 </variablelist>
 </sect1>
 
