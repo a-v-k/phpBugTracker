@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.87 2002/03/21 13:44:54 bcurtis Exp $
+// $Id: bug.php,v 1.88 2002/03/26 17:21:19 bcurtis Exp $
 
 include 'include.php';
 
@@ -554,8 +554,8 @@ function show_form($bugid = 0, $error = '') {
     $t->set_var(array(
       'bugid' => $bugid,
       'TITLE' => $TITLE['editbug'],
-      'title' => stripslashes($row['title']),
-      'description' => stripslashes($row['description']),
+      'title' => htmlentities(stripslashes($row['title'])),
+      'description' => htmlentities(stripslashes($row['description'])),
       'url' => $row['url'],
       'urllabel' => $row['url'] ? "<a href='{$row['url']}'>URL</a>" : 'URL',
       'severity' => build_select('severity',$row['severity_id']),
@@ -577,8 +577,9 @@ function show_form($bugid = 0, $error = '') {
       'TITLE' => $TITLE['enterbug'],
       'error' => $error,
       'bugid' => $bugid,
-      'title' => isset($title) ? stripslashes($title) : '',
-      'description' => isset($description) ? stripslashes($description) : '',
+      'title' => isset($title) ? htmlentities(stripslashes($title)) : '',
+      'description' => isset($description) ? 
+				htmlentities(stripslashes($description)) : '',
       'url' => isset($url) ? $url : 'http://',
       'urllabel' => isset($url) ? "<a href='$url'>URL</a>" : 'URL',
       'severity' => build_select('severity',(isset($severity) ? $severity : 0)),
@@ -754,8 +755,8 @@ function show_bug($bugid = 0, $error = array()) {
 		'vote_error' => isset($error['vote']) ? "<div class=\"error\">{$error['vote']}</div>" : '',
     'bugid' => $bugid,
     'TITLE' => "{$TITLE['editbug']} #$bugid",
-    'title' => stripslashes($row['title']),
-    'description' => nl2br(stripslashes($row['description'])),
+    'title' => htmlentities(stripslashes($row['title'])),
+    'description' => nl2br(htmlentities(stripslashes($row['description']))),
     'url' => $row['url'],
     'urllabel' => $row['url'] ? "<a href='{$row['url']}'>URL</a>" : 'URL',
     'severity' => build_select('severity',$row['severity_id']),
