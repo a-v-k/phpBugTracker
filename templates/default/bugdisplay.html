@@ -1,5 +1,11 @@
+{if not $smarty.session.uid}{assign var=disabled value='onClick="alertNoChange();"'}
+{else}{assign var=disabled value=""}
+{/if}
 <script type="text/JavaScript">
 <!--
+	warningString = '{$STRING.logintomodify}';
+	warnedAlready = false;
+
 	versions = new Array();
 	closedversions = new Array();
 	components = new Array();
@@ -10,41 +16,48 @@
 
 	{literal}
 	function updateMenus(f) {
-  	sel = f.project_id[f.project_id.selectedIndex].text;
-  	f.version_id.length = versions[sel].length;
-  	for (var x = 0; x < versions[sel].length; x++) {
-    	f.version_id.options[x].value = versions[sel][x][0];
-    	f.version_id.options[x].text = versions[sel][x][1];
-			f.version_id.selectedIndex = 0;
-  	}
+	  	sel = f.project_id[f.project_id.selectedIndex].text;
+	  	f.version_id.length = versions[sel].length;
+	  	for (var x = 0; x < versions[sel].length; x++) {
+	    	f.version_id.options[x].value = versions[sel][x][0];
+	    	f.version_id.options[x].text = versions[sel][x][1];
+				f.version_id.selectedIndex = 0;
+	  	}
 
-  	f.to_be_closed_in_version_id.length = closedversions[sel].length;
-  	for (var x = 0; x < closedversions[sel].length; x++) {
-    	f.to_be_closed_in_version_id.options[x].value = closedversions[sel][x][0];
-    	f.to_be_closed_in_version_id.options[x].text = closedversions[sel][x][1];
-			f.to_be_closed_in_version_id.selectedIndex = 0;
-  	}
+	  	f.to_be_closed_in_version_id.length = closedversions[sel].length;
+	  	for (var x = 0; x < closedversions[sel].length; x++) {
+	    	f.to_be_closed_in_version_id.options[x].value = closedversions[sel][x][0];
+	    	f.to_be_closed_in_version_id.options[x].text = closedversions[sel][x][1];
+				f.to_be_closed_in_version_id.selectedIndex = 0;
+	  	}
 
-  	f.closed_in_version_id.length = closedversions[sel].length;
-  	for (var x = 0; x < closedversions[sel].length; x++) {
-    	f.closed_in_version_id.options[x].value = closedversions[sel][x][0];
-    	f.closed_in_version_id.options[x].text = closedversions[sel][x][1];
-			f.closed_in_version_id.selectedIndex = 0;
-  	}
+	  	f.closed_in_version_id.length = closedversions[sel].length;
+	  	for (var x = 0; x < closedversions[sel].length; x++) {
+	    	f.closed_in_version_id.options[x].value = closedversions[sel][x][0];
+	    	f.closed_in_version_id.options[x].text = closedversions[sel][x][1];
+				f.closed_in_version_id.selectedIndex = 0;
+	  	}
 
-  	f.component_id.length = components[sel].length;
-  	for (var x = 0; x < components[sel].length; x++) {
-    	f.component_id.options[x].value = components[sel][x][0];
-    	f.component_id.options[x].text = components[sel][x][1];
-			f.component_id.selectedIndex = 0;
-  	}
+	  	f.component_id.length = components[sel].length;
+	  	for (var x = 0; x < components[sel].length; x++) {
+	    	f.component_id.options[x].value = components[sel][x][0];
+	    	f.component_id.options[x].text = components[sel][x][1];
+				f.component_id.selectedIndex = 0;
+	  	}
 	}
 
 	function popupAtt(id) {
 		window.open('attachment.php?use_js=1&bugid='+id, 'ewin', 'dependent=yes,width=350,height=200,scrollbars=1');
 		return false;
 	}
-{/literal}
+
+	function alertNoChange() {
+		if (!warnedAlready) {
+			alert(warningString);
+			warnedAlready = true;
+		}
+	}
+	{/literal}
 //-->
 </script>
 <form action="bug.php" method="post">
@@ -80,65 +93,65 @@
 	    <td><b>{$created_date|date:DATE_FORMAT}</b></td>
 	</tr><tr>
 	    <td>{$STRING.BUGDISPLAY.Project}:</td>
-	    <td><select name="project_id" onChange="updateMenus(this.form)">{build_select box=project selected=$project_id}</select></td>
+	    <td><select name="project_id" onChange="updateMenus(this.form)" {$disabled}>{build_select box=project selected=$project_id}</select></td>
 	    <td>{$STRING.BUGDISPLAY.Priority}:</td>
-	    <td><select name="priority">{build_select box=priority selected=$priority}</select></td>
+	    <td><select name="priority" {$disabled}>{build_select box=priority selected=$priority}</select></td>
 	</tr><tr>
 	    <td>{$STRING.BUGDISPLAY.Component}:</td>
-	    <td><select name="component_id">{build_select box=component selected=$component_id project=$project_id}</select></td>
+	    <td><select name="component_id" {$disabled}>{build_select box=component selected=$component_id project=$project_id}</select></td>
 	    <td>{$STRING.BUGDISPLAY.Severity}:</td>
-	    <td><select name="severity_id">{build_select box=severity selected=$severity_id}</select></td>
+	    <td><select name="severity_id" {$disabled}>{build_select box=severity selected=$severity_id}</select></td>
 	</tr><tr>
 	    <td>{$STRING.BUGDISPLAY.Version}:</td>
-	    <td><select name="version_id">{build_select box=version selected=$version_id project=$project_id}</select></td>
+	    <td><select name="version_id" {$disabled}>{build_select box=version selected=$version_id project=$project_id}</select></td>
 	    <td>{$STRING.BUGDISPLAY.OS}:</td>
-	    <td><select name="os_id">{build_select box=os selected=$os_id}</select></td>
+	    <td><select name="os_id" {$disabled}>{build_select box=os selected=$os_id}</select></td>
 	</tr><tr>
 	    <td>{$STRING.BUGDISPLAY.ToBeClosedInVersion}</td>
-	    <td><select name="to_be_closed_in_version_id">
+	    <td><select name="to_be_closed_in_version_id" {$disabled}>
 		    <option value="0">{$STRING.BUGDISPLAY.ChooseOne}</option>
 		    {build_select box=version selected=$to_be_closed_in_version_id project=$project_id}
 		</select></td>
 	    <td>{$STRING.BUGDISPLAY.Database}:</td>
-	    <td><select name="database_id">{build_select box=database selected=$database_id}</select></td>
+	    <td><select name="database_id" {$disabled}>{build_select box=database selected=$database_id}</select></td>
 	</tr><tr>
 	    <td>{$STRING.BUGDISPLAY.ClosedInVersion}</td>
-	    <td><select name="closed_in_version_id">
+	    <td><select name="closed_in_version_id" {$disabled}>
 		    <option value="0">{$STRING.BUGDISPLAY.ChooseOne}</option>
 		    {build_select box=version selected=$closed_in_version_id project=$project_id}
 		</select></td>
 	    <td>{$STRING.BUGDISPLAY.Site}</td>
-	    <td><select name="site_id">{build_select box=site selected=$site_id}</select></td>
+	    <td><select name="site_id" {$disabled}>{build_select box=site selected=$site_id}</select></td>
 	</tr><tr>
 	    <td>{$STRING.BUGDISPLAY.Summary}:</td>
-	    <td><input type="text" size="30" maxlength="100" name="title" value="{$title|stripslashes|htmlspecialchars}"></td>
+	    <td><input type="text" size="30" maxlength="100" name="title" value="{$title|stripslashes|htmlspecialchars}" {$disabled}></td>
 	    <td>{$STRING.BUGDISPLAY.Status}:</td>
-	    <td><select name="status_id">{build_select box=status selected=$status_id}</select></td>
+	    <td><select name="status_id" {$disabled}>{build_select box=status selected=$status_id}</select></td>
 	</tr><tr>
 	    <td>{if $url}<a href="{$url}">URL</a>{else}URL{/if}:</td>
-	    <td><input type="text" size="30" maxlength="255" name="url" value="{$url}"></td>
+	    <td><input type="text" size="30" maxlength="255" name="url" value="{$url}" {$disabled}></td>
 	    <td>{$STRING.BUGDISPLAY.Resolution}:</td>
-	    <td><select name="resolution_id"><option value="0">{$STRING.BUGDISPLAY.ResolutionNone}</option>{build_select box=resolution selected=$resolution_id}</select></td>
+	    <td><select name="resolution_id" {$disabled}><option value="0">{$STRING.BUGDISPLAY.ResolutionNone}</option>{build_select box=resolution selected=$resolution_id}</select></td>
 	</tr><tr>
 	    <td>{$STRING.BUGDISPLAY.AssignedTo}:</td>
-	    <td><select name="assigned_to"><option value="0">{$STRING.BUGDISPLAY.AssignedToNobody}</option>{build_select box=owner selected=$assigned_to}</select></td>
+	    <td><select name="assigned_to" {$disabled}><option value="0">{$STRING.BUGDISPLAY.AssignedToNobody}</option>{build_select box=owner selected=$assigned_to}</select></td>
 	    <td>{$STRING.BUGDISPLAY.AddCC}:</td>
-	    <td><input type="text" name="add_cc"></td>
+	    <td><input type="text" name="add_cc" {$disabled}></td>
 	</tr><tr>
 	    <td colspan="2" valign="top">
 {if !empty($error.add_dep)}<div class="error">{$error.add_dep}</div>{/if}
 		{$STRING.BUGDISPLAY.BugDependency}: {$bug_dependencies}<br>
-		{$STRING.BUGDISPLAY.AddDependency}: <input type="text" name="add_dependency" size="5"><br>
-		{$STRING.BUGDISPLAY.RemoveDependency}: <input type="text" name="del_dependency" size="5"><br><br></td>
+		{$STRING.BUGDISPLAY.AddDependency}: <input type="text" name="add_dependency" size="5" {$disabled}><br>
+		{$STRING.BUGDISPLAY.RemoveDependency}: <input type="text" name="del_dependency" size="5" {$disabled}><br><br></td>
 	    <td colspan="2" valign="top">
 		{$STRING.BUGDISPLAY.RemoveSelectedCC}:<br>
-		<select name="remove_cc[]" size="5" style="width: 15em" multiple>{build_select box=bug_cc selected=$bug_id}</select></td>
+		<select name="remove_cc[]" size="5" style="width: 15em" multiple {$disabled}>{build_select box=bug_cc selected=$bug_id}</select></td>
 	</tr>
     </table>
     <table border="0" cellpadding="2" cellspacing="0" width="100%">
 	<tr>
 	    <td valign="top">{$STRING.BUGDISPLAY.AdditionalComments}:<br><br>
-		<textarea name="comments" rows="6" cols="55" wrap="virtual">{$smarty.post.comments}</textarea>
+		<textarea name="comments" rows="6" cols="55" wrap="virtual" {$disabled}>{$smarty.post.comments}</textarea>
 		<br><br>
 		<div align="right">
 {if $smarty.session.uid}
