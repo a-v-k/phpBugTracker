@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.100 2002/03/20 15:09:18 bcurtis Exp $
+// $Id: include.php,v 1.101 2002/03/20 20:03:17 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -97,9 +97,9 @@ $default_db_fields = array('bug_id', 'title', 'reporter', 'owner',
 
 class templateclass extends Template {
   function pparse($target, $handle, $append = false) {
-    global $auth, $perm, $db;
+    global $_sv, $perm, $db, $HTTP_COOKIE_VARS;
 
-    $u = isset($auth->auth['uid']) ? $auth->auth['uid'] : 0;
+    $u = isset($_sv['uid']) ? $_sv['uid'] : 0;
     $this->set_block('wrap', 'logoutblock', 'loblock');
     $this->set_block('wrap', 'loginblock', 'liblock');
     $this->set_block('wrap', 'adminnavblock', 'anblock');
@@ -113,7 +113,7 @@ class templateclass extends Template {
         ."from ".TBL_BUG." b left join ".TBL_STATUS." s using(status_id) where created_by = $u",
 				DB_FETCHMODE_ORDERED);
       $this->set_var(array(
-        'loggedinas' => $auth->auth['uname'],
+        'loggedinas' => $_sv['uname'],
         'liblock' => '',
         'owner_open' => $owner_open ? $owner_open : 0,
         'owner_closed' => $owner_closed ? $owner_closed : 0,
@@ -122,11 +122,31 @@ class templateclass extends Template {
         ));
       $this->parse('loblock', 'logoutblock', true);
     } else {
+    	$this->set_block('loginblock', 'cookieblock', 'ckblock');
       $this->set_var(array(
         'loggedinas' => '',
         'loblock' => '',
         'loginlabel' => EMAIL_IS_LOGIN ? 'Email' : 'Login'
         ));
+			if (RECALL_LOGIN) {
+				if (!empty($HTTP_COOKIE_VARS['phpbt_user'])) {
+					$this->set_var(array(
+						'cookielogin' => $HTTP_COOKIE_VARS['phpbt_user'],
+						'cookiechecked' => 'checked'
+						));
+				} else {
+					$this->set_var(array(
+						'cookielogin' => '',
+						'cookiechecked' => ''
+						));
+				}
+				$this->parse('ckblock', 'cookieblock', true);
+			} else {
+				$this->set_var(array(
+					'cookielogin' => '',
+					'ckblock' => ''
+					));
+			}
       $this->parse('liblock', 'loginblock', true);
     }
     if (isset($perm) && $perm->have_perm('Administrator')) {
@@ -161,7 +181,7 @@ if (!defined('NO_AUTH')) {
   $_sv =& $HTTP_SESSION_VARS;
   $auth = new uauth;
   $perm = new uperm;
-  $u = isset($auth->auth['uid']) ? $auth->auth['uid'] : 0;
+  $u = isset($_sv['uid']) ? $_sv['uid'] : 0;
 }
 
 // Check to see if the user is trying to login
@@ -186,6 +206,17 @@ if (isset($_pv['dologin'])) {
       $t->set_var('loginerror', '<div class="error">Invalid login</div>');
     }
   }
+
+	// "Remember me" handling
+	if (RECALL_LOGIN) {
+		if (!empty($_pv["savecookie"])) {
+			setcookie('phpbt_user', $_pv["username"], $now + 18144000); // 3 week expiration
+		} elseif (!empty($HTTP_COOKIE_VARS['phpbt_user'])) {
+			// Clear the cookie if the cookie is populated and the box wasn't checked
+			setcookie('phpbt_user');
+		}
+	}
+		
 }
 
 $op = isset($_gv['op']) ? $_gv['op'] : (isset($_pv['op']) ? $_pv['op'] : '');
@@ -196,7 +227,7 @@ if (!defined('NO_AUTH')) {
 	if (!$perm->have_perm('Admin')) {
 		$viewable_projects = delimit_list(',', 
 			$db->getCol("select project_id from ".TBL_PROJECT_GROUP.
-				" where group_id in (".delimit_list(',', $auth->auth['group_ids']).")"));
+				" where group_id in (".delimit_list(',', $_sv['group_ids']).")"));
 		$viewable_projects = $viewable_projects ? $viewable_projects : '0';
 		$matching_projects = delimit_list(',', 
 			$db->getCol("select project_id from ".TBL_PROJECT_GROUP.
