@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.26 2002/03/30 19:12:27 bcurtis Exp $
+// $Id: newaccount.php,v 1.27 2002/03/30 20:06:27 bcurtis Exp $
 
 define('NO_AUTH', 1);
 include 'include.php'; 
@@ -68,6 +68,8 @@ function do_form() {
 		" (user_id, group_id, created_by, created_date)
 	  select $user_id, group_id, 0, $now from ".TBL_AUTH_GROUP.
 		" where group_name = 'User'"); 
+	$db->query("insert into ".TBL_USER_PREF." (user_id) values ($user_id)");
+	
 	mail($_pv['email'], $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
 		$password),	sprintf("From: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n",ADMIN_EMAIL, $STRING['lang_charset']));
 	$t->set_file('content','newaccountsuccess.html');
