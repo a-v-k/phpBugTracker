@@ -35,7 +35,7 @@
 			<programlisting>
   if ((condition1) || (condition2)) {
     action1;
-  } elseif ((condition3) && (condition4)) {
+  } elseif ((condition3) &amp;&amp; (condition4)) {
     action2;
   } else {
     defaultaction;
@@ -104,16 +104,16 @@
 			</para>
 			
 			<programlisting>
-  function connect(&$dsn, $persistent = false) {
+  function connect(&amp;$dsn, $persistent = false) {
 
     if (is_array($dsn)) {
-      $dsninfo = &$dsn;
+      $dsninfo = &amp;$dsn;
     } else {
       $dsninfo = DB::parseDSN($dsn);
     }
 
     if (!$dsninfo || !$dsninfo['phptype']) {
-      return $this->raiseError();
+      return $this-&gt;raiseError();
     }
 
     return true;
@@ -151,8 +151,8 @@
 		<sect2 id="devstandards-phptags" xreflabel="PHP Tags">
 			<title>PHP Tags</title>
 			<para>
-				Always use <computeroutput><![CDATA[<?php ?>]]></computeroutput> 
-				to delimit PHP code, not the <computeroutput><![CDATA[<? ?>]]></computeroutput> 
+				Always use <computeroutput>&lt;?php ?&gt;</computeroutput> 
+				to delimit PHP code, not the <computeroutput>&lt;? ?&gt;</computeroutput> 
 				shorthand.
 			</para>
 		</sect2>
