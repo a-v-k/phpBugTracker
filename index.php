@@ -141,8 +141,8 @@ if (SHOW_PROJECT_SUMMARIES) {
 
 	$rs = $db->query("$querystring, count(bug_id) as \"Total\" from ".TBL_BUG.
 		" b left join ".TBL_PROJECT." p using (project_id)".
-		" where b.project_id not in ($restricted_projects) group by b.project_id".
-		" order by project_name");
+		" where b.project_id not in ($restricted_projects) group by b.project_id,".
+		" project_name order by project_name");
 	if (!$rs->numRows()) {
 		$t->set_var('projblock', '');
 	} else {
@@ -186,11 +186,11 @@ $rs = $db->limitQuery("select bug_id, title, project_name from ".TBL_BUG.
 if (DB::isError($rs) or !$rs->numRows()) {
 	$t->set_var('recentrows', $STRING['nobugs']);
 } else {
-	while (extract($rs->fetchRow())) {
+	while ($rs->fetchInto($recent)) {
 		$t->set_var(array(
-			'title' => stripslashes($title),
-			'bugid' => $bug_id,
-			'project' => stripslashes($project_name)
+			'title' => stripslashes($recent['title']),
+			'bugid' => $recent['bug_id'],
+			'project' => stripslashes($recent['project_name'])
 		));
 		$t->parse('recentrows', 'recentrow', true);
 	}
@@ -204,11 +204,11 @@ $rs = $db->limitQuery('select b.bug_id, title, project_name from '.TBL_BUG.' b, 
 if (DB::isError($rs) or !$rs->numRows()) {
 	$t->set_var('closerows', $STRING['nobugs']);
 } else {
-	while (extract($rs->fetchRow())) {
+	while ($rs->fetchInto($closed)) {
 		$t->set_var(array(
-			'title' => stripslashes($title),
-			'bugid' => $bug_id,
-			'project' => stripslashes($project_name)
+			'title' => stripslashes($closed['title']),
+			'bugid' => $closed['bug_id'],
+			'project' => stripslashes($closed['project_name'])
 		));
 		$t->parse('closerows', 'closerow', true);
 	}

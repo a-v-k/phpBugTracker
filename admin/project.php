@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.33 2002/03/28 17:12:46 bcurtis Exp $
+// $Id: project.php,v 1.34 2002/03/28 22:26:06 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -315,9 +315,11 @@ function list_projects() {
 
   if (!isset($_gv['order'])) { $order = '1'; $sort = 'asc'; }
 	else { $order = $_gv['order']; $sort = $_gv['sort']; }
+	$page = isset($_gv['page']) ? $_gv['page'] : 1;
+	
   $nr = $db->getOne("select count(*) from ".TBL_PROJECT);
 
-  list($selrange, $llimit, $npages, $pages) = multipages($nr,$_gv['page'],
+  list($selrange, $llimit, $npages, $pages) = multipages($nr, $page,
     "order=$order&sort=$sort");
 
   $t->set_var(array(
