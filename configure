@@ -1,0 +1,136 @@
+#! /bin/sh
+DIALOG=${DIALOG=dialog}
+tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/test$$
+trap "rm -f $tempfile" 0 1 2 5 15
+
+menuitem='Administrivia'
+
+# Strings
+ADMINEMAIL=phpbt@`hostname -d`
+INSTALLPATH=`pwd`
+INSTALLURL=http://`hostname -f`/phpbt
+PHPLIBPATH=''
+
+# Booleans
+ENCRYPTPASS=1
+USE_JPGRAPH=0
+
+administrivia() {
+	$DIALOG --backtitle "phpBT Configuration" \
+		--title "Admin Email (1 of 4)" \
+		--inputbox "Enter the email address of the administrator of this installation. \
+			All emails from phpBugTracker will come from this address" 0 0 $ADMINEMAIL \
+		2> $tempfile
+	if [ $? -gt 0 ]; then
+		return
+	fi
+	ADMINEMAIL=`<$tempfile`
+
+	$DIALOG --backtitle "phpBT Configuration" \
+		--title "Installation Path (2 of 4)" \
+		--inputbox "Enter the directory where the files will be stored." 0 0 $INSTALLPATH \
+		2> $tempfile
+	if [ $? -gt 0 ]; then
+		return
+	fi
+	INSTALLPATH=`<$tempfile`
+
+	$DIALOG --backtitle "phpBT Configuration" \
+		--title "Installation URL (3 of 4)" \
+		--inputbox "Enter the web site where phpBugTracker will be accessable" 0 0 $INSTALLURL \
+		2> $tempfile
+	if [ $? -gt 0 ]; then
+		return
+	fi
+	INSTALLURL=`<$tempfile`
+
+	$DIALOG --backtitle "phpBT Configuration" \
+		--title "PHPlib Path (4 of 4)" \
+		--inputbox "If PHPlib is not in PHP's include path, specify the location of PHPlib." 0 0 $PHPLIBPATH \
+		2> $tempfile
+	if [ $? -gt 0 ]; then
+		return
+	fi
+	
+	PHPLIBPATH=`<$tempfile`
+	menuitem='Features'
+	show_menu
+}
+
+change_features() {
+	if [ $ENCRYPTPASS -eq 1 ]; then
+		OLD_ENCRYPTPASS=on
+	else 
+		OLD_ENCRYPTPASS=off
+	fi
+	if [ $USE_JPGRAPH -eq 1 ]; then
+		OLD_USE_JPGRAPH=on
+	else
+		OLD_USE_JPGRAPH=off
+	fi
+
+	$DIALOG --backtitle "phpBT Configuration" \
+		--title "Optional Features" \
+		--separate-output \
+  	--checklist "Choose the features below you would like to enable" 10 72 3 \
+    	"ENCRYPTPASS" "Store passwords encrypted in the database" $OLD_ENCRYPTPASS \
+    	"USE_JPGRAPH" "Use the JP Graph class for charting some reports" $OLD_USE_JPGRAPH \
+  	2> $tempfile
+
+	retval=$?
+
+	choice=`<$tempfile`
+	if [ $retval -eq 0 ]; then
+    for selected in $choice
+		do
+			case $selected in
+				ENCRYPTPASS)
+					NEW_ENCRYPTPASS=1;;
+				USE_JPGRAPH)
+					NEW_USE_JPGRAPH=1;;
+			esac
+		done
+
+		ENCRYPTPASS=${NEW_ENCRYPTPASS:-0}
+		USE_JPGRAPH=${NEW_USE_JPGRAPH:-0}
+	fi
+	
+	menuitem='Save'
+	show_menu
+}
+
+show_menu() {
+	$DIALOG --clear --backtitle "phpBT Configuration" \
+		--title "Configuration Menu" \
+		--default-item $menuitem \
+  	--menu "Choose from the options below to configure your phpBugTracker installation." 15 68 4 \
+			"Administrivia" "Parameters that must be configured" \
+  		"Features"  "Optional features" \
+			"Save" "Save configuration changes" \
+		2> $tempfile
+
+	retval=$?
+
+	choice=`<$tempfile`
+	if [ $retval -eq 0 ]; then
+    case $choice in
+			Administrivia)
+				administrivia
+				;;
+			Features)
+				change_features
+				;;
+			Save)
+				#echo $ENCRYPTPASS
+				#echo $USE_JPGRAPH
+				$DIALOG --backtitle "phpBT Configuration" \
+					--infobox "Your changes have been saved" 5 36
+				;;
+		esac
+	else
+  	$DIALOG --backtitle "phpBT Configuration" \
+			--infobox "Quitting without saving changes" 5 36
+	fi
+}
+
+show_menu
