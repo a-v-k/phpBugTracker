@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.1 2002/01/23 14:22:06 bcurtis Exp $
+// $Id: functions.php,v 1.2 2002/01/26 16:46:52 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -142,7 +142,7 @@ function build_select($box, $value = '', $project = 0) {
       $text .= '</option>';
       break;
     case 'LANGUAGE' :
-      $dir = opendir(INSTALL_PATH.'/'.INCLUDE_PATH.'languages');
+      $dir = opendir(INSTALL_PATH.'/languages');
       while (false !== ($file = readdir($dir))) {
         if ($file != '.' && $file != '..' && $file != 'CVS') {
           $file = str_replace('.php', '', $file);
@@ -156,7 +156,7 @@ function build_select($box, $value = '', $project = 0) {
       }
       break;
     case 'THEME' :
-      $dir = opendir(INSTALL_PATH.'/'.INCLUDE_PATH.'templates');
+      $dir = opendir(INSTALL_PATH.'/templates');
       while (false !== ($file = readdir($dir))) {
         if ($file != '.' && $file != '..' && $file != 'CVS') {
           $file = str_replace('.php', '', $file);

@@ -20,17 +20,12 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.92 2002/01/26 14:48:29 bcurtis Exp $
+// $Id: include.php,v 1.93 2002/01/26 16:46:52 bcurtis Exp $
 
 // Where are we?
 define ('INSTALL_PATH', dirname(__FILE__));
 
-// Handle being included from admin files
-if (!defined('INCLUDE_PATH')) {
-  define('INCLUDE_PATH', '');
-}
-
-if (!@include (INSTALL_PATH.'/'.INCLUDE_PATH.'config.php')) {
+if (!@include (INSTALL_PATH.'/config.php')) {
   header("Location: install.php");
   exit();
 }
@@ -40,7 +35,7 @@ if (!defined('DB_HOST')) { // Installation hasn't been completed
 }
 
 // Grab the global functions
-include (INSTALL_PATH.'/'.INCLUDE_PATH.'inc/functions.php');
+include (INSTALL_PATH.'/inc/functions.php');
 
 class dbclass extends DB_Sql {
   var $classname = 'dbclass';
@@ -116,10 +111,6 @@ class dbclass extends DB_Sql {
 
 $q = new dbclass;
 
-//include INSTALL_PATH.'/'.INCLUDE_PATH.'inc/adodb/adodb.inc.php';
-//$db =& ADONewConnection(DB_TYPE);
-//$db->PConnect(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
-
 // Set up the configuration variables
 $q->query('select varname, varvalue from '.TBL_CONFIGURATION);
 while (list($k, $v) = $q->grab()) {
@@ -127,7 +118,7 @@ while (list($k, $v) = $q->grab()) {
 }
 
 // Localization - include the file with the desired language
-include INSTALL_PATH.'/'.INCLUDE_PATH.'languages/'.LANGUAGE.'.php';
+include INSTALL_PATH.'/languages/'.LANGUAGE.'.php';
 
 $me = $HTTP_SERVER_VARS['PHP_SELF'];
 $me2 = $HTTP_SERVER_VARS['REQUEST_URI'];
@@ -203,10 +194,12 @@ class templateclass extends Template {
   }
 }
 
-if (INCLUDE_PATH == '../') {
-  $t = new templateclass(INCLUDE_PATH.'templates/'.THEME.'/admin', 'keep');
+if (defined('TEMPLATE_PATH')) {
+  $t = new templateclass(INSTALL_PATH.'/templates/'.THEME.'/'.TEMPLATE_PATH, 'keep');
+	$t->set_var('template_path', '../templates/'.THEME.'/'.TEMPLATE_PATH);
 } else {
-  $t = new templateclass('templates/'.THEME.'/', 'keep');
+  $t = new templateclass(INSTALL_PATH.'/templates/'.THEME, 'keep');
+	$t->set_var('template_path', 'templates/'.THEME);
 }
 
 $t->set_var(array(
@@ -214,8 +207,7 @@ $t->set_var(array(
   'me' => $me,
   'me2' => $me2,
   'error' => '',
-  'loginerror' => '',
-  'template_path' => INCLUDE_PATH.'templates/'.THEME));
+  'loginerror' => ''));
 
 // End classes -- Begin page
 

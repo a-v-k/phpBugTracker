@@ -20,10 +20,10 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: os.php,v 1.19 2001/12/19 13:36:29 bcurtis Exp $
+// $Id: os.php,v 1.20 2002/01/26 16:46:52 bcurtis Exp $
 
-define('INCLUDE_PATH', '../');
-include INCLUDE_PATH.'include.php';
+define('TEMPLATE_PATH', 'admin');
+include '../include.php';
 
 function do_form($osid = 0) {
 	global $q, $me, $_pv, $STRING;
