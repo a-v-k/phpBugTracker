@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.29 2002/04/03 01:00:52 bcurtis Exp $
+// $Id: newaccount.php,v 1.30 2002/04/11 07:32:25 bcurtis Exp $
 
 define('NO_AUTH', 1);
 include 'include.php'; 
@@ -62,8 +62,8 @@ function do_form() {
 	$db->query("insert into ".TBL_AUTH_USER." (user_id, login, first_name, last_name, email, password, active, created_date, last_modified_date)"
 		." values (".join(', ', array($user_id, $db->quote(stripslashes($login)), 
 			$db->quote(stripslashes($firstname)), 
-			$db->quote(stripslashes($lastname)), $_pv['email'], $mpassword, 1, 
-			$now, $now)).")");
+			$db->quote(stripslashes($lastname)), $db->quote($_pv['email']), 
+			$mpassword, 1, $now, $now)).")");
 	$db->query("insert into ".TBL_USER_GROUP.
 		" (user_id, group_id, created_by, created_date)
 	  select $user_id, group_id, 0, $now from ".TBL_AUTH_GROUP.
