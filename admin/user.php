@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.24 2001/09/07 08:47:04 javyer Exp $
+// $Id: user.php,v 1.25 2001/09/07 13:09:49 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -76,8 +76,9 @@ function do_form($userid = 0) {
       $pquery = "password = '{$_pv['fpassword']}',";
     }
     $q->query("update ".TBL_AUTH_USER." set first_name = '{$_pv['ffirstname']}',
-      last_name = '{$_pv['flastname']}',login = '$login',  email = '{$_pv['femail']}', $pquery
-      active = {$_pv['factive']} where user_id = '$userid'");
+      last_name = '{$_pv['flastname']}', login = '$login', 
+			email = '{$_pv['femail']}', $pquery active = {$_pv['factive']} 
+			where user_id = '$userid'");
 
     // Update group memberships
     // Get user's groups (without dropping the user group)
@@ -210,8 +211,7 @@ function list_items($userid = 0, $error = '') {
       'name' => stripslashes($row['fullname']),
       'email' => $row['email'],
       'active' => $row['active'] ? 'Yes' : 'No',
-      //'usergroup' => $q->grab_field('select group_name from '.TBL_AUTH_GROUP.' ag, '.TBL_USER_GROUP.' ug  where user_id='.$row['user_id'].' and ag.group_id = ug.group_id limit 1'),
-      'date' => date(DATEFORMAT,$row['created_date'])));
+      'date' => date(DATEFORMAT, $row['created_date'])));
     $t->parse('rows','row',true);
   }
 
