@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.109 2002/06/13 16:03:29 firma Exp $
+// $Id: bug.php,v 1.110 2002/06/14 15:26:05 firma Exp $
 
 include 'include.php';
 
@@ -159,16 +159,39 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
     );
 
     foreach($cfgDatabase as $field => $table) {
-	$oldvalue = $db->getOne("select ${field}_name from $table".
-	    " where ${field}_id = {$buginfo[$field.'_id']}");
+	switch ($field) {
+	    case 'database':
+		if ($buginfo[$field.'_id']) {
+		    $db_oldvalue = $db->getRow('select '.$field.'_name, '.$field.'_version from '.$table.
+			' where '.$field.'_id = '.$buginfo[$field.'_id']);
+		    $oldvalue = $db_oldvalue[$field.'_name'].' '.$db_oldvalue[$field.'_version'];
+		} else {
+		    $oldvalue = 'None';
+		}
+		
+		if (!empty($cf[$field.'_id'])) {
+		    $db_newvalue = $db->getRow('select '.$field.'_name, '.$field.'_version from '.$table.
+			' where '.$field.'_id = '.$cf[$field.'_id']);
+		    $newvalue = $db_newvalue[$field.'_name'].' '.$db_newvalue[$field.'_version'];
+		} else {
+		    $newvalue = 'None';
+		}
+	    break;
+	    default:
+		$oldvalue = $db->getOne("select ${field}_name from $table".
+		    " where ${field}_id = {$buginfo[$field.'_id']}");
+		if (!empty($cf[$field.'_id'])) {
+		    $newvalue = $db->getOne("select ${field}_name from $table".
+			" where ${field}_id = {$cf[$field.'_id']}");
+		}
+	    break;
+	}
 	if (!empty($cf[$field.'_id'])) {
-	    $newvalue = $db->getOne("select ${field}_name from $table".
-		" where ${field}_id = {$cf[$field.'_id']}");
 	    $db->query('insert into '.TBL_BUG_HISTORY.
 		' (bug_id, changed_field, old_value, new_value, created_by, created_date)'.
-		" values (". join(', ', array($buginfo['bug_id'], $db->quote($field), 
-		    $db->quote(stripslashes($oldvalue)), 
-		    $db->quote(stripslashes($newvalue)), $u, $now)).")");
+		    " values (". join(', ', array($buginfo['bug_id'], $db->quote($field), 
+		$db->quote(stripslashes($oldvalue)), 
+		$db->quote(stripslashes($newvalue)), $u, $now)).")");
 	    $t->assign(array(
 		$field.'_id' => stripslashes($newvalue),
 		$field.'_id_stat' => '!'
@@ -181,7 +204,37 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 	}
     }
 
-    // Reporter never changes;
+    // Handle versions other than version
+    $versions = array ('to_be_closed_in_version' => 'to be closed in version',
+	'closed_in_version' => 'closed in version');
+
+    foreach($versions as $field => $field_name) {
+	if ($buginfo[$field.'_id']) {
+	    $oldvalue = $db->getOne('select version_name from '.$cfgDatabase['version'].
+		' where version_id = '.$buginfo[$field.'_id']);
+	}
+
+	if (!empty($cf[$field.'_id'])) {
+	    $newvalue = $db->getOne('select version_name from '.$cfgDatabase['version'].
+		' where version_id = '.$cf[$field.'_id']);
+	    $db->query('insert into '.TBL_BUG_HISTORY.
+		' (bug_id, changed_field, old_value, new_value, created_by, created_date)'.
+		    " values (". join(', ', array($buginfo['bug_id'], $db->quote($field_name), 
+		$db->quote(stripslashes($oldvalue)), 
+		$db->quote(stripslashes($newvalue)), $u, $now)).")");
+	    $t->assign(array(
+		$field.'_id' => stripslashes($newvalue),
+		$field.'_id_stat' => '!'
+	    ));
+	} else {
+	    $t->assign(array(
+		$field.'_id' => stripslashes($oldvalue),
+		$field.'_id_stat' => ' '
+	    ));
+	}
+    }
+
+    // Reporter never changes
     $reporter = $db->getOne('select email from '.TBL_AUTH_USER.
 	" u, ".TBL_USER_PREF." p where u.user_id = {$buginfo['created_by']} ".
 	"and u.user_id = p.user_id and email_notices = 1");

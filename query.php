@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.80 2002/06/13 15:07:10 firma Exp $
+// $Id: query.php,v 1.81 2002/06/14 15:26:05 firma Exp $
 
 include 'include.php';
 
@@ -90,7 +90,8 @@ function build_query($assignedto, $reportedby, $open) {
 		if (!empty($severity) and $severity[0]) {
 			$flags[] = 'b.severity_id in ('.delimit_list(',',$severity).')';
 		}
-		if (!empty($database) and $database[0]) {
+		if (!empty($database) and isset($database[0])) {
+		    // $database[0] can be 0, which stands for no database reported
 			$flags[] = 'b.database_id in ('.delimit_list(',',$database).')';
 		}
 		if (!empty($site) and $site[0]) {

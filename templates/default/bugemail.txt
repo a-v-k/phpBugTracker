@@ -10,11 +10,15 @@ INSTEAD FOLLOW BUG'S URL BELOW IN ORDER TO DETAIL BUG:
 {$url_stat}          URL: {$url}
 {$project_id_stat}      Product: {$project_id}
 {$version_id_stat}      Version: {$version_id}
+{$to_be_closed_in_version_id_stat} To be Closed in Version: {$to_be_closed_in_version_id}
+{$closed_in_version_id_stat}       Closed in Version: {$closed_in_version_id}
 {$component_id_stat}    Component: {$component_id}
+{$site_id_stat}      Site(s): {$site_id}
 {$status_id_stat}       Status: {$status_id}
 {$resolution_id_stat}   Resolution: {$resolution_id}
 {$severity_id_stat}     Severity: {$severity_id}
 {$os_id_stat}   OS/Version: {$os_id}
+{$database_id_stat}     Database: {$database_id}
 {$priority_stat}     Priority: {$priority}
 {$assignedto_stat}  Assigned To: {$assignedto}
 ============================================================================
