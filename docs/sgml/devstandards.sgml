@@ -1,31 +1,24 @@
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook V4.1//EN"
-
-[
-<!ENTITY phpbt "phpBugTracker">
-]>
-
-<article id="index" xreflabel="Development Standards">
-	<articleinfo>
-		<title>Development Standards</title>
-		<abstract>
-			<para>
-				This document will contain the coding and process standards to be 
-				followed by the developers working on &phpbt;.
-			</para>
-		</abstract>
-	</articleinfo>
+<!-- -*- sgml -*- -->
+<sect1 id="devstandards">
+	<title>Development Standards</title>
+	<abstract>
+		<para>
+			This section details the coding and process standards to be 
+			followed by the developers working on &phpbt;.
+		</para>
+	</abstract>
 	
-	<sect1 id="devstandards-code" xreflabel="Coding Standards">
+	<sect2 id="devstandards-code" xreflabel="Coding Standards">
 		<title>Coding Standards</title>
 		
-		<sect2 id="devstandards-indenting" xreflabel="Indenting">
+		<sect3 id="devstandards-indenting" xreflabel="Indenting">
 			<title>Indenting</title>
 			<para>
 				Use an indent of one tab per indent.
 			</para>
-		</sect2>
+		</sect3>
 
-		<sect2 id="devstandards-control" xreflabel="Control Structures">
+		<sect3 id="devstandards-control" xreflabel="Control Structures">
 			<title>Control Structures</title>
 			<para>
 				These include if, for, while, switch, etc. Here is an example if 
@@ -53,9 +46,9 @@
 				readability and decreases the likelihood of logic errors being 
 				introduced when new lines are added.
 			</para>
-		</sect2>
+		</sect3>
 		
-		<sect2 id="devstandards-funccalls" xreflabel="Function Calls">
+		<sect3 id="devstandards-funccalls" xreflabel="Function Calls">
 			<title>Function Calls</title>
 			<para>
 				Functions should be called with no spaces between the function name, 
@@ -72,9 +65,9 @@
 				As displayed above, there should be one space on either side of an 
 				equals sign used to assign the return value of a function to a variable.
 			</para>
-		</sect2>
+		</sect3>
 		
-		<sect2 id="devstandards-funcdefs" xreflabel="Function Definitions">
+		<sect3 id="devstandards-funcdefs" xreflabel="Function Definitions">
 			<title>Function Definitions</title>
 			<para>
 				Function definitions follow the format of function calls, with the 
@@ -120,9 +113,9 @@
   }
 			</programlisting>
 			
-		</sect2>
+		</sect3>
 		
-		<sect2 id="devstandards-comments" xreflabel="Comments">
+		<sect3 id="devstandards-comments" xreflabel="Comments">
 			<title>Comments</title>
 			<para>
 				Non-documentation comments are strongly encouraged. A general rule of 
@@ -130,9 +123,9 @@
 				want to try and describe that", you need to comment it before you 
 				forget how it works.
 			</para>
-		</sect2>
+		</sect3>
 
-		<sect2 id="devstandards-including" xreflabel="Including Code">
+		<sect3 id="devstandards-including" xreflabel="Including Code">
 			<title>Including Code</title>
 			<para>
 				Anywhere you are unconditionally including a class file, use 
@@ -146,31 +139,31 @@
 				with <function>require_once()</function> will not be included again by 
 				<function>include_once()</function>.
 			</para>
-		</sect2>
+		</sect3>
 
-		<sect2 id="devstandards-phptags" xreflabel="PHP Tags">
+		<sect3 id="devstandards-phptags" xreflabel="PHP Tags">
 			<title>PHP Tags</title>
 			<para>
 				Always use <computeroutput>&lt;?php ?&gt;</computeroutput> 
 				to delimit PHP code, not the <computeroutput>&lt;? ?&gt;</computeroutput> 
 				shorthand.
 			</para>
-		</sect2>
+		</sect3>
 
-		<sect2 id="devstandards-constants" xreflabel="Naming Constants">
+		<sect3 id="devstandards-constants" xreflabel="Naming Constants">
 			<title>Naming Constants</title>
 			<para>
 				Constants should always be uppercase, with underscores to separate 
 				words.
 			</para>
-		</sect2>
+		</sect3>
 
-	</sect1>
+	</sect2>
 	
-	<sect1 id="otherconventions" xreflabel="Other Conventions">
+	<sect2 id="otherconventions" xreflabel="Other Conventions">
 		<title>Other Conventions</title>
 		
-		<sect2 id="devstandards-filenaming" xreflabel="File Naming">
+		<sect3 id="devstandards-filenaming" xreflabel="File Naming">
 			<title>File Naming</title>
 			<para>
 				File names should be all lowercase and contain no spaces. HTML files 
@@ -179,13 +172,19 @@
 				template files should match the name of the PHP file that will be using 
 				it, e. g., <filename>index.html</filename> would be the template file 
 				for <filename>index.php</filename>. Where one PHP file uses more than one 
-				templates, the templates should be similarly named: 
+				template, the templates should be similarly named: 
 				<filename>user.php</filename> could use 
 				<filename>userlist.html</filename> and <filename>userform.html</filename> 
 				for a list of users and editing a user, respectively.
 			</para>
-		</sect2>
+		</sect3>
 
-	</sect1>
+	</sect2>
 
-</article>
+</sect1>
+
+<!-- Local Variables: -->
+<!-- sgml-indent-step: 2 -->
+<!-- sgml-indent-data: 2 -->
+<!-- sgml-parent-document: "phpbt.sgml" -->
+<!-- End: -->

@@ -1,0 +1,21 @@
+<!-- -*- sgml -*- -->
+<sect1 id="dependencies">
+  <title>Dependencies</title>
+
+  <abstract>
+    <para>&phpbt; requires one external package, PHPlib, and can optionally use JpGraph.</para>
+  </abstract>
+
+  <sect2 id="dep-phplib">
+    <title>PHPlib</title>
+
+    <para>PHPlib can be found at <ulink url="http://phplib.sourceforge.net/">http://phplib.sourceforge.net</ulink>.  It provides the database abstraction layer, html templates, and session and authentication management.</para>
+
+  </sect2>
+</sect1>
+
+<!-- Local Variables: -->
+<!-- sgml-indent-step: 2 -->
+<!-- sgml-indent-data: 2 -->
+<!-- sgml-parent-document: "phpbt.sgml" -->
+<!-- End: -->

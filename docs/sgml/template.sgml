@@ -1,0 +1,22 @@
+<!-- -*- sgml -*- -->
+<sect1 id="uniquesectionid">
+  <title>Example Documentation Section</title>
+
+  <abstract>
+    <para>Summary of what this section is about.</para>
+  </abstract>
+
+  <sect2 id="subsectid">
+    <title>Subsection title</title>
+
+    <para>Subsection content</para>
+
+    <para>More content</para>
+  </sect2>
+</sect1>
+
+<!-- Local Variables: -->
+<!-- sgml-indent-step: 2 -->
+<!-- sgml-indent-data: 2 -->
+<!-- sgml-parent-document: "phpbt.sgml" -->
+<!-- End: -->
