@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.42 2001/11/14 14:28:06 bcurtis Exp $
+// $Id: query.php,v 1.43 2001/11/23 05:08:59 bcurtis Exp $
 
 include 'include.php';
 
@@ -126,7 +126,7 @@ function build_query($assignedto, $reportedby, $open) {
 		if (!empty($flags)) $query[] = '('.delimit_list(' or ',$flags).')';
 
 		// Email field(s)
-		if ($email1) {
+		if (isset($email1)) {
 			switch($emailtype1) {
 				case 'like' : $econd = "like '%$email1%'"; break;
 				case 'rlike' : 
@@ -139,7 +139,7 @@ function build_query($assignedto, $reportedby, $open) {
 
 		// Text search field(s)
 		foreach(array('title','description','url') as $searchfield) {
-			if ($$searchfield) {
+			if (isset($$searchfield)) {
 				switch (${$searchfield."_type"}) {
 					case 'like' : $cond = "like '%".$$searchfield."%'"; break;
 					case 'rlike' : $cond = "rlike '".$$searchfield."'"; break;
@@ -151,9 +151,9 @@ function build_query($assignedto, $reportedby, $open) {
 		if (!empty($fields)) $query[] = '('.delimit_list(' or ',$fields).')';
 
 		// Project/Version/Component
-		if ($projects) {
-			$proj[] = "bug.project_id = $projects";
-			if ($versions) $proj[] = "bug.version_id = $versions";
+		if (isset($projects)) {
+			$proj[] = "b.project_id = $projects";
+			if ($versions) $proj[] = "b.version_id = $versions";
 			if ($components) $proj[] = "component_id = $components";
 			$query[] = '('.delimit_list(' and ',$proj).')';
 		}
@@ -240,7 +240,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'description' => 'description',
 		'url' => 'url',
 		'severity_name' => 'severity.sort_order',
-		'priority' => 'bug.priority',
+		'priority' => 'b.priority',
 		'status_name' => 'status.sort_order',
 		'owner' => 'owner',
 		'reporter' => 'reporter',
