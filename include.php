@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.40 2001/08/25 18:28:47 bcurtis Exp $
+// $Id: include.php,v 1.41 2001/08/25 18:31:27 bcurtis Exp $
 
 if (defined("INCLUDE_PATH")) {
 	require INCLUDE_PATH."config.php";
@@ -296,7 +296,7 @@ function build_select($box, $value = '', $project = 0) {
       }
       break;
     case 'owner' :
-      $q->query("Select user_id, email from user where user_level > 1 order by email");
+      $q->query("select user_id, email from auth_user where user_level > 1 order by email");
       while ($row = $q->grab()) {
         if ($value == $row['user_id']) $sel = ' selected';
         else $sel = '';
@@ -442,7 +442,7 @@ if (!defined('NO_AUTH')) {
 // Check to see if the user is trying to login
 if (isset($HTTP_POST_VARS['login'])) {
   if (isset($HTTP_POST_VARS['sendpass'])) {
-    list($email, $password) = $q->grab("select email, password from user where email = '$username' and user_level > 0");
+    list($email, $password) = $q->grab("select email, password from auth_user where login = '$username' and active > 0");
     if (!$q->num_rows()) {
       $t->set_var(array(
         'loginerrorcolor' => '#ff0000',
@@ -452,7 +452,7 @@ if (isset($HTTP_POST_VARS['login'])) {
       if (ENCRYPTPASS) {
         $password = genpassword(10);
         $mpassword = md5($password);
-        $q->query("update user set password = '$mpassword' where email = '$username'");
+        $q->query("update user set password = '$mpassword' where login = '$username'");
       }
       mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'],
         $password),  'From: '.ADMINEMAIL);
