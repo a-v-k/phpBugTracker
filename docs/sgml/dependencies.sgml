@@ -45,7 +45,7 @@
     ));
   
   // Parse the template and print it out (inside a wrap template)
-  $t-&gt;pparse('main', array('content', 'wrap', 'main');
+  $t-&gt;pparse('main', array('content', 'wrap', 'main'));
       </programlisting>
     </sect3>
 
