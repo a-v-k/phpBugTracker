@@ -20,8 +20,10 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
+// $Id: project.php,v 1.11 2001/08/23 01:32:05 bcurtis Exp $
 
-include '../include.php';
+ini_set('include_path', '../'.ini_get('include_path'));
+include 'include.php';
 
 function do_form($projectid = 0) {
   global $q, $me, $name, $description, $active, $version, $u, $STRING, $now;
