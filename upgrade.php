@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.31 2003/04/09 12:11:44 bcurtis Exp $
+// $Id: upgrade.php,v 1.32 2003/04/09 12:25:18 bcurtis Exp $
 
 define ('NO_AUTH', 1);
 
@@ -48,6 +48,7 @@ function upgrade() {
 		}
 
 		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('GROUP_ASSIGN_TO', '3', 'The group to whom bugs can be assigned', 'multi');");
+		$db->query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('EMAIL_DISABLED', '0', 'Whether to disable all mail sent from the system', 'bool');");
 	}
 	include 'templates/default/upgrade-finished.html';
 }

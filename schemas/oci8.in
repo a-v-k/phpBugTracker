@@ -2,7 +2,7 @@
 -- Oracle database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: oci8.in,v 1.22 2003/04/09 12:11:43 bcurtis Exp $
+-- $Id: oci8.in,v 1.23 2003/04/09 12:25:20 bcurtis Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id number(10)   default '0' NOT NULL,
@@ -336,7 +336,8 @@ INSERT INTO TBL_CONFIGURATION VALUES ('BUG_PROMOTED','2','The status to assign a
 INSERT INTO TBL_CONFIGURATION VALUES ('BUG_ASSIGNED','3','The status to assign a bug when it is assigned.','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('BUG_REOPENED','4','The status to assign a bug when it is reopened.','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('BUG_CLOSED','7','The status to assign a bug when it is closed.','multi');
-INSERT INTO TBL_CONFIGURATION VALUES ('ASSIGN_TO_GROUP', '3', 'The group to whom bugs can be assigned', 'multi');
+INSERT INTO TBL_CONFIGURATION VALUES ('GROUP_ASSIGN_TO', '3', 'The group to whom bugs can be assigned', 'multi');
+INSERT INTO TBL_CONFIGURATION VALUES ('EMAIL_DISABLED', '0', 'Whether to disable all mail sent from the system', 'bool');
 
 INSERT INTO TBL_OS VALUES (1,'All',1,'');
 INSERT INTO TBL_OS VALUES (2,'Windows 3.1',2,'/Mozilla.*\\(Win16.*\\)/');
