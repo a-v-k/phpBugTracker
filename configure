@@ -21,7 +21,7 @@ HIDE_EMAIL=1
 
 administrivia() {
 	$DIALOG --backtitle "phpBT Configuration" \
-		--title "Admin Email (1 of 4)" \
+		--title "Admin Email (1 of 5)" \
 		--inputbox "Enter the email address of the administrator of this installation. \
 			All emails from phpBugTracker will come from this address" 0 0 $ADMINEMAIL \
 		2> $tempfile
@@ -31,7 +31,7 @@ administrivia() {
 	ADMINEMAIL=`<$tempfile`
 
 	$DIALOG --backtitle "phpBT Configuration" \
-		--title "Installation Path (2 of 4)" \
+		--title "Installation Path (2 of 5)" \
 		--inputbox "Enter the directory where the files will be stored.\n\n\
 NOTE -- This does not move the files to the directory you specify; it only changes include.php.  \
 If you specify a directory other than the current one, you'll need to move the files there yourself!\n\n" 0 0 $INSTALLPATH \
@@ -42,7 +42,7 @@ If you specify a directory other than the current one, you'll need to move the f
 	INSTALLPATH=`<$tempfile`
 
 	$DIALOG --backtitle "phpBT Configuration" \
-		--title "Attachment Path (2 of 4)" \
+		--title "Attachment Path (3 of 5)" \
 		--inputbox "Enter the sub-directory where the attachments will be stored.\n\n\
 NOTE -- This does not create the directory you specify; it only changes include.php.  \
 If you don't use the default directory, you must make sure the permissions on
@@ -54,7 +54,7 @@ that directory allow the web server to create and read files in it!\n\n" 0 0 $AT
 	ATTACHMENT_PATH=`<$tempfile`
 
 	$DIALOG --backtitle "phpBT Configuration" \
-		--title "Installation URL (3 of 4)" \
+		--title "Installation URL (4 of 5)" \
 		--inputbox "Enter the web site where phpBugTracker will be accessable" 0 0 $INSTALLURL \
 		2> $tempfile
 	if [ $? -gt 0 ]; then
@@ -63,7 +63,7 @@ that directory allow the web server to create and read files in it!\n\n" 0 0 $AT
 	INSTALLURL=`<$tempfile`
 
 	$DIALOG --backtitle "phpBT Configuration" \
-		--title "PHPlib Path (4 of 4)" \
+		--title "PHPlib Path (5 of 5)" \
 		--inputbox "If PHPlib is not in PHP's include path, specify the location of PHPlib." 0 0 $PHPLIBPATH \
 		2> $tempfile
 	if [ $? -gt 0 ]; then
