@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz.php,v 1.10 2002/06/12 12:42:11 firma Exp $
+// $Id: cz.php,v 1.11 2002/06/13 09:09:14 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'Windows-1250',
@@ -86,7 +86,7 @@ $STRING = array(
 	'suredeletedb' => 'Opravdu chcete odstranit tuto databázi?',
 	'delete' => 'Odstranit',
 	'version' => 'Verze'
-	);
+    );
 
 // Page titles
 $TITLE = array(
@@ -117,23 +117,44 @@ $TITLE = array(
 	'accountcreated' => 'Úèet vytvoøen',
 	'changessaved' => 'Zmìny uloženy',
 	'preferences' => 'Uživatelská nastavení',
-	'usertools' => 'Uživatelská nástroje',
-	'edituser' => 'Zmìnit Uživatele',
-	'adduser' => 'Pøidat Uživatele',
-	'editstatus' => 'Zmìnit Status',
-	'addstatus' => 'Pøidat Status',
-	'editseverity' => 'Zmìnit Dùležitost',
-	'addseverity' => 'Pøidat Dùležitost',
-	'editresolution' => 'Zmìnit Rozhodnutí',
-	'addresolution' => 'Pøidat Rozhodnutí',
-	'editos' => 'Zmìnit Operaèní systém',
-	'addos' => 'Pøidat Operaèní systém',
-	'editgroup' => 'Zmìnit Skupinu',
-	'addgroup' => 'Pøidat Skupinu',
+	'usertools' => 'Uživatelské nástroje',
+	'edituser' => 'Zmìnit uživatele',
+	'adduser' => 'Pøidat uživatele',
+	'editstatus' => 'Zmìnit status',
+	'addstatus' => 'Pøidat status',
+	'editseverity' => 'Zmìnit dùležitost',
+	'addseverity' => 'Pøidat dùležitost',
+	'editresolution' => 'Zmìnit rozhodnutí',
+	'addresolution' => 'Pøidat rozhodnutí',
+	'editos' => 'Zmìnit operaèní systém',
+	'addos' => 'Pøidat operaèní systém',
+	'editgroup' => 'Zmìnit skupinu',
+	'addgroup' => 'Pøidat skupinu',
 	'configuration' => 'Nastavení',
 	'adddatabase' => 'Pøidat databázi',
 	'editdatabase' => 'Upravit databázi',
 	'database' => 'Databáze',
-	'documentation' => 'Dokumentace'
-	);
+	'documentation' => 'Dokumentace',
+	'_opt_All' => 'Vše',
+        '_Project' => 'Projekt',
+        '_Version' => 'Verze',
+        '_Component' => 'Komponenta',
+        '_Status' => 'Status',
+        '_SortBy' => 'Tøídit podle',
+	    '_SortBy_BugNumber' => 'Èísla BUGu',
+	    '_SortBy_Severity' => 'Dùležitosti',
+	    '_SortBy_Reporter' => 'Reportéra',
+	    '_SortBy_Priority' => 'Priority',
+	    '_SortBy_Status' => 'Statutu',
+	    '_SortAsc' => 'Vzestupnì',
+	    '_SortDesc' => 'Sestupnì',
+        '_SaveThisQueryAs' => 'Uložit tento dotaz jako',
+        '_ResetBackToDefaultQuery' => 'Zpìt k pùvodnímu dotazu',
+        '_SubmitQuery' => 'Odeslat dotaz',
+        '_SavedQueries' => 'Uložené dotazy',
+	'_1GoToThe' => 'Pøejít na',
+	'_1AdvancedQueryPage' => 'stránku pokroèilého vyhledávání',
+	'_SureDeleteSavedQuery' => 'Jste si jisti, že chcete odstranit tento uložený dotaz?'
+    );
 ?>
+
