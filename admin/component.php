@@ -37,9 +37,9 @@ function do_form($componentid = 0) {
 	if (!$owner) $owner = 0;
 	if (!$active) $active = 0;
 	if (!$componentid) {
-		$q->query("insert into Component (ComponentID, ProjectID, Name, Description, Owner, Active, CreatedBy, CreatedDate, LastModifiedBy, LastModifiedDate) values (".$q->nextid('Component').", $projectid, '$name', '$description', $owner, $active, $u, $time, $u, $time)");
+		$q->query("insert into component (component_id, project_id, component_name, component_desc, owner, active, created_by, created_date, last_modified_by, last_modified_date) values (".$q->nextid('component ').", $projectid, '$name', '$description', $owner, $active, $u, $time, $u, $time)");
 	} else {
-		$q->query("update Component set Name = '$name', Description = '$description', Owner = $owner, Active = $active, LastModifiedBy = $u, LastModifiedDate = $time where ComponentID = '$componentid'");
+		$q->query("update component  set component_name = '$name', component_desc = '$description', owner = $owner, active = $active, last_modified_by = $u, last_modified_date = $time where component_id = '$componentid'");
 	}
 	header("Location: project.php?op=edit&id=$projectid");
 }	
@@ -50,19 +50,19 @@ function show_form($componentid = 0, $error = '') {
 	
 	$t->set_file('content','componentform.html');
 	if ($componentid && !$error) {
-		$row = $q->grab("select c.*, p.Name as ProjectName from Component c left join Project p using (ProjectID) where ComponentID = '$componentid'");
+		$row = $q->grab("select c.*, p.project_name as project_name from component c left join project p using (project_id) where component_id = '$componentid'");
 		$t->set_var(array(
-			'componentid' => $row['ComponentID'],
-			'projectid' => $row['ProjectID'],
-			'project' => $row['ProjectName'],
-			'name' => $row['Name'],
-			'description' => $row['Description'],
-			'owner' => build_select('owner',$row['Owner']),
-			'active' => $row['Active'] ? 'checked' : '',
-			'createdby' => $row['CreatedBy'],
-			'createddate' => $row['CreatedDate'],
-			'lastmodifiedby' => $row['LastModifiedBy'],
-			'lastmodifieddate' => $row['LastModifiedDate'],
+			'componentid' => $row['component_id'],
+			'projectid' => $row['project_id'],
+			'project' => $row['project_name'],
+			'name' => $row['component_name'],
+			'description' => $row['component_desc'],
+			'owner' => build_select('owner',$row['owner']),
+			'active' => $row['active'] ? 'checked' : '',
+			'createdby' => $row['created_by'],
+			'createddate' => $row['created_date'],
+			'lastmodifiedby' => $row['last_modified_by'],
+			'lastmodifieddate' => $row['last_modified_date'],
 			'TITLE' => $TITLE['editcomponent']));
 	} else {
 		$t->set_var(array(
@@ -70,7 +70,7 @@ function show_form($componentid = 0, $error = '') {
 			'error' => $error,
 			'componentid' => $componentid,
 			'projectid' => $projectid,
-			'project' => $q->grab_field("select Name from Project where ProjectID = $projectid"),
+			'project' => $q->grab_field("select project_name from project where project_id = $projectid"),
 			'name' => $name,
 			'description' => $description,
 			'owner' => build_select('owner',$owner),
