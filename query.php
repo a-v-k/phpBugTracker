@@ -135,11 +135,6 @@ function list_items() {
     ($querystring != '' ? "and $querystring " : '').
     "order by $order $sort limit $llimit, $selrange");
         
-  if (!$q->num_rows()) {
-    $t->set_var('rows',"<tr><td>$STRING[nobugs]</td></tr>");
-    return;
-  }
-
   $headers = array(
     'bugid' => 'BugID',
     'title' => 'Title',
@@ -159,6 +154,11 @@ function list_items() {
 
   sorting_headers($me, $headers, $order, $sort, "page=$page");
         
+  if (!$q->num_rows()) {
+    $t->set_var('rows',"<tr><td>$STRING[nobugs]</td></tr>");
+    return;
+  }
+
   while ($row = $q->grab()) {
     $t->set_var(array(
       'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
