@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.13 2002/03/13 16:34:50 bcurtis Exp $
+// $Id: install.php,v 1.14 2002/03/13 17:40:18 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname(__FILE__));
 
@@ -30,6 +30,8 @@ $t = new Template('templates/default', 'keep');
 $t->set_var('me', $HTTP_SERVER_VARS['PHP_SELF']);
 $_gv =& $HTTP_GET_VARS;
 $_pv =& $HTTP_POST_VARS;
+
+ini_set("magic_quotes_runtime", 0); // runtime quotes will kill the included sql
 
 if (!empty($_pv)) {
 	$tables = array(
