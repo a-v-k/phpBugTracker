@@ -4,7 +4,7 @@
 		<td valign="top">
 			<b>&nbsp;Severity List</b>
 			<hr size="1">
-			<table border="0">
+			<table border="0" cellpadding="2" cellspacing="1">
 				<tr>
 					<th><a href="{nameurl}">Name</a></th>
 					<th><a href="{descriptionurl}">Description</a></th>
@@ -24,13 +24,12 @@
 				</tr>
 				<!-- END row -->
 			</table>
-			<center>
-				<font size="-1">
-					Severities with a Sort Order = 0 will not be selectable by users
-					<br>
-					Only those Severities that have no bugs referencing them can be deleted
-				</font>
-			</center>
+			<br>
+			<div class="info">
+				Severities with a Sort Order = 0 will not be selectable by users
+				<br>
+				Only those Severities that have no bugs referencing them can be deleted
+			</div>
 		</td>
 		<td valign="top">
 			<div align="right"><b>{action} severity&nbsp;</b></div>

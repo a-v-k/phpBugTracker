@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: css.php,v 1.5 2002/03/02 18:49:50 bcurtis Exp $
+// $Id: css.php,v 1.6 2002/03/06 00:04:09 bcurtis Exp $
 
 $colors['default'] = array(
 	'link' => '#006699',
@@ -261,3 +261,14 @@ a.sidenavlink {
 	font-size: 12px;
 	padding: 5px;
 	}
+	
+.info {
+	font-size: 10px;
+	color: <?php echo $color['th'] ?>;
+	background:  <?php echo $color['th-bg'] ?>;
+	border-width: 1px 1px 1px 1px;
+	border-color: #000000;
+	border-style: solid;
+	padding: 5px;
+	text-align: center;
+}
