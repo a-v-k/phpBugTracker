@@ -17,7 +17,7 @@
 // |          Stig Bakken <ssb@fast.no>                                   |
 // +----------------------------------------------------------------------+
 //
-// $Id: pgsql.php,v 1.1 2002/09/13 18:07:51 bcurtis Exp $
+// $Id: pgsql.php,v 1.2 2002/10/03 15:18:57 bcurtis Exp $
 //
 // Database independent query interface definition for PHP's PostgreSQL
 // extension.
@@ -91,7 +91,7 @@ class DB_pgsql extends DB_common
             if ($dsninfo['hostspec']) {
                 $connstr = 'host=' . $dsninfo['hostspec'];
             }
-            if ($dsninfo['port']) {
+            if (!empty($dsninfo['port'])) {
                 $connstr .= ' port=' . $dsninfo['port'];
             }
         }
