@@ -114,7 +114,7 @@ $QUERY = array(
 		"sum(decode( s.status_id, ".BUG_UNCONFIRMED.", 0, ".BUG_PROMOTED.", 0, ".BUG_ASSIGNED.", 0, ".BUG_REOPENED.", 0, 1 )), ".
 		'from '.TBL_BUG.' b, '.TBL_STATUS.' s '.
 		'where  b.status_id = s.status_id (+) and b.assigned_to = %s',
-	'include-template-reporter' => "SELECT sum(decode( s.status_name, ".BUG_UNCONFIRMED.", 1, ".BUG_PROMOTED.", 1, ".BUG_ASSIGNED.", 1, ".BUG_REOPENED.", 1, 0 )), ".
+	'include-template-reporter' => "SELECT sum(decode( s.status_id, ".BUG_UNCONFIRMED.", 1, ".BUG_PROMOTED.", 1, ".BUG_ASSIGNED.", 1, ".BUG_REOPENED.", 1, 0 )), ".
 		"sum(decode( s.status_id, ".BUG_UNCONFIRMED.", 0, ".BUG_PROMOTED.", 0, ".BUG_ASSIGNED.", 0, ".BUG_REOPENED.", 0, 1 )), ".
 		'from '.TBL_BUG.' b, ' . TBL_STATUS.' s '.
 		'where  b.status_id = s.status_id (+) and b.created_by = %s',
