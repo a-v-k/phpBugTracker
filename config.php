@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.17 2001/11/23 05:04:15 bcurtis Exp $
+// $Id: config.php,v 1.18 2001/11/30 06:07:27 bcurtis Exp $
 
 define ('PHPLIB_PATH', ''); // If PHPlib is not in your include path
 
@@ -61,7 +61,7 @@ define ('TBL_PROJECT_GROUP', TBL_PREFIX.'project_group');
 
 define ('ONEDAY', 86400);
 
-require_once (PHPLIB_PATH.'db_'.DB_TYPE.'.inc');
+require_once (INSTALL_PATH.'/'.INCLUDE_PATH.'inc/db/'.DB_TYPE.'.php');
 require_once (INSTALL_PATH.'/'.INCLUDE_PATH.'inc/session.php');
 require_once (INSTALL_PATH.'/'.INCLUDE_PATH.'inc/auth.php');
 require_once (INSTALL_PATH.'/'.INCLUDE_PATH.'inc/template.php');
