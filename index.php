@@ -120,6 +120,63 @@ if (USE_JPGRAPH) {
 	$t->parse('sblock', 'statsblock', true);
 }
 
+// Project summaries
+$t->set_block('content', 'projectsummaryblock', 'projblock');
+$t->set_block('projectsummaryblock', 'projectrow', 'prows');
+$t->set_block('projectrow', 'col', 'cols');
+if (SHOW_PROJECT_SUMMARIES) {
+	$querystring = 'select project_name as "Project", sum(case when resolution_id = 0 then 1 else 0 end) as "Open"';
+	$resfields = array('Project','Open');
+
+	// Grab the resolutions from the database
+	$rs = $db->query("select resolution_name, ".
+		db_concat("', sum(case when resolution_id = '", 'resolution_id', 
+			"' then 1 else 0 end) as \"'", 'resolution_name' ,"'\"'").
+		" from ".TBL_RESOLUTION);
+	while (list($fieldname, $countquery) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
+		$resfields[] = $fieldname;
+		$querystring .= $countquery;
+	}
+	$resfields[] = 'Total';
+
+	$rs = $db->query("$querystring, count(bug_id) as \"Total\" from ".TBL_BUG.
+		" b left join ".TBL_PROJECT." p using (project_id)".
+		" where b.project_id not in ($restricted_projects) group by b.project_id".
+		" order by project_name");
+	if (!$rs->numRows()) {
+		$t->set_var('projblock', '');
+	} else {
+		foreach ($resfields as $col) {
+			$t->set_var('coldata', stripslashes($col));
+			$t->set_var('colclass', 'header-col');
+			$t->parse('cols', 'col', true);
+		}
+		$t->set_var('bgcolor', '#eeeeee');
+		$t->parse('prows', 'projectrow', true);
+		$t->set_var('cols', '');
+		$i = 0;
+		while ($rs->fetchInto($row)) {
+			foreach ($resfields as $col) {
+				$t->set_var(array(
+					'coldata' => stripslashes($row[$col]),
+					'colclass' => $col == 'Project' ? '' : 'center-col'
+					));
+				$t->parse('cols', 'col', true);
+			}
+			$t->set_var('trclass', $i % 2 ? 'alt' : '');
+			$i++;
+			$t->parse('prows', 'projectrow', true);
+			$t->set_var('cols', '');
+			//for header default
+			$t->set_var('trclass','alt');
+		}
+		$t->parse('projblock', 'projectsummaryblock', true);
+		$rs->free();
+	}
+} else {
+	$t->set_var('projblock', '');
+}
+
 // Show the recently added and closed bugs
 $rs = $db->limitQuery("select bug_id, title, project_name from ".TBL_BUG.
 	' b, '.TBL_PROJECT." p where b.project_id not in ($restricted_projects)".
@@ -136,6 +193,7 @@ if (DB::isError($rs) or !$rs->numRows()) {
 		$t->parse('recentrows', 'recentrow', true);
 	}
 }
+$rs->free();
 $rs = $db->limitQuery('select b.bug_id, title, project_name from '.TBL_BUG.' b, '.
 	TBL_BUG_HISTORY.' h, '.TBL_PROJECT.' p'.
 	" where b.project_id not in ($restricted_projects) and b.bug_id = h.bug_id".
@@ -153,6 +211,7 @@ if (DB::isError($rs) or !$rs->numRows()) {
 		$t->parse('closerows', 'closerow', true);
 	}
 }
+$rs->free();
 
 	
 $t->pparse('main',array('content','wrap','main'));
