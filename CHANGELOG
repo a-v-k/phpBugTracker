@@ -1,4 +1,7 @@
--- 0.7.0 --
+-- 0.7.1 -- 13 Mar 2002
+: Bugs were fixed with installation and upgrading.
+
+-- 0.7.0 -- 11 Mar 2002
 : Removed the requirement for register_globals = on in PHP settings.
 : Added dynamic select boxes to the bug form for changing component and version
   information when selecting a different project.
