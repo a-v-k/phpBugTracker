@@ -20,8 +20,9 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.24 2002/03/17 01:44:24 bcurtis Exp $
+// $Id: newaccount.php,v 1.25 2002/03/28 22:14:44 bcurtis Exp $
 
+define('NO_AUTH', 1);
 include 'include.php'; 
 
 function do_form() {

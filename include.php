@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.103 2002/03/28 20:47:06 bcurtis Exp $
+// $Id: include.php,v 1.104 2002/03/28 22:14:44 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -222,8 +222,7 @@ if (isset($_pv['dologin'])) {
 		
 }
 
-if (FORCE_LOGIN and !$u and 
-	!strstr($HTTP_SERVER_VARS['SCRIPT_NAME'], 'newaccount.php')) {
+if (defined('FORCE_LOGIN') and FORCE_LOGIN and !$u and !defined('NO_AUTH')) {
 	include(INSTALL_PATH.'/templates/'.THEME.'/login.html');
 	exit;
 }
