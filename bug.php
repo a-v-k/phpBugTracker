@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.49 2001/10/12 04:19:31 bcurtis Exp $
+// $Id: bug.php,v 1.50 2001/10/17 13:19:19 bcurtis Exp $
 
 include 'include.php';
 
@@ -302,7 +302,7 @@ function update_bug($bugid = 0) {
         return;
       }
       $q->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
-                     ." values (".$q->nextid(TBL_COMMENT).", $dupenum, 'Bug #$bugid is a duplicate of this bug', $u, $now)");
+                     ." values (".$q->nextid(TBL_COMMENT).", $dupenum, 'Bug #$bugid has been marked a duplicate of this bug', $u, $now)");
       $q->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
                ." values (".$q->nextid(TBL_COMMENT).", $bugid, 'This bug is a duplicate of bug #$dupenum', $u, $now)");
       $statusfield = 'Duplicate';
@@ -333,7 +333,7 @@ function update_bug($bugid = 0) {
     $changedfields['resolution_id'] = $resolution_id;
   }
   if ($comments) {
-    $comments = $comments;
+    $comments = strip_tags($comments);
     $q->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)"
              ." values (".$q->nextid(TBL_COMMENT).", $bugid, '$comments', $u, $now)");
   }
