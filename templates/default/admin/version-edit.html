@@ -1,14 +1,14 @@
 {if $version_id}
-	{assign var="action" value=$STRING.edit}
+	{assign var="page_title" value=$TITLE.editversion}
 {else}
-	{assign var="action" value="$STRING.addnew}
+	{assign var="page_title" value=$TITLE.addversion}
 {/if}
 {if $smarty.request.use_js}
-	{include file="admin/header-popup.html" page_title="$action Version"}
+	{include file="admin/header-popup.html" page_title=$page_title}
 {else}
-	{include file="admin/header.html" page_title="$action Version"}
+	{include file="admin/header.html" page_title=$page_title}
 {/if}	
-		&nbsp;<b>{$action} Version</b>
+		&nbsp;<b>{$page_title}</b>
 		<hr size="1">
 		{if $error}<div class="error">{$error}</div>{/if}
 		<form action="{$SCRIPT_NAME}" method="post">

@@ -1,14 +1,14 @@
 {if $component_id}
-	{assign var="action" value=$STRING.edit}
+	{assign var="page_title" value=$TITLE.editcomponent}
 {else}
-	{assign var="action" value=$STRING.addnew}
+	{assign var="page_title" value=$TITLE.addcomponent}
 {/if}
 {if $smarty.request.use_js}
-	{include file="admin/header-popup.html" page_title="$action Component"}
+	{include file="admin/header-popup.html" page_title=$page_title}
 {else}
-	{include file="admin/header.html" page_title="$action Component"}
+	{include file="admin/header.html" page_title=$page_title}
 {/if}	
-		&nbsp;<b>{$action} Component</b>
+		&nbsp;<b>{$page_title}</b>
 		<hr size="1">
 		{if $error}<div class="error">{$error}</div>{/if}
 		<form action="{$SCRIPT_NAME}" method="post">
