@@ -2,7 +2,7 @@
 -- Oracle database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: oci8.in,v 1.21 2003/03/02 15:28:54 bcurtis Exp $
+-- $Id: oci8.in,v 1.22 2003/04/09 12:11:43 bcurtis Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id number(10)   default '0' NOT NULL,
@@ -188,6 +188,11 @@ CREATE TABLE TBL_PROJECT_GROUP (
 ) ;
 
 CREATE INDEX GROUPPROJIDX ON TBL_PROJECT_GROUP ( group_id );
+
+CREATE TABLE TBL_PROJECT_PERM (
+  project_id number(10) default '0' NOT NULL,
+  user_id number(10) default '0' NOT NULL
+);
 
 CREATE TABLE TBL_RESOLUTION (
   resolution_id number(10)   default '0' NOT NULL,
