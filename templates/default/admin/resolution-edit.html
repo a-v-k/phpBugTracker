@@ -1,6 +1,26 @@
+<script language="JavaScript">
+	var nameString = '{$STRING.givename}';
+	var descString = '{$STRING.givedesc}';
+
+	{literal}
+	function checkForm(frm) {
+		if (frm.resolution_name.value == '') {
+			alert(nameString);
+			frm.resolution_name.focus();
+			return false;
+		}
+		if (frm.resolution_desc.value == '') {
+			alert(descString);
+			frm.resolution_desc.focus();
+			return false;
+		}
+		return true;
+	}
+	{/literal}
+</script>
 <b>{$page_title}&nbsp;</b>
 <hr size="1">
-<form action="{$smarty.server.PHP_SELF}" method="post">
+<form action="{$smarty.server.PHP_SELF}" method="post" onSubmit="return checkForm(this)">
 <input type="hidden" name="resolution_id" value="{$resolution_id}">
 <input type="hidden" name="use_js" value="{$smarty.request.use_js}">
 <table border='0'>

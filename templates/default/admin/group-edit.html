@@ -1,6 +1,20 @@
+<script language="JavaScript">
+	var nameString = '{$STRING.givename}';
+
+	{literal}
+	function checkForm(frm) {
+		if (frm.group_name.value == '') {
+			alert(nameString);
+			frm.group_name.focus();
+			return false;
+		}
+		return true;
+	}
+	{/literal}
+</script>
 <b>{$page_title}&nbsp;</b>
 <hr size="1">
-<form action="{$smarty.server.PHP_SELF}" method="post">
+<form action="{$smarty.server.PHP_SELF}" method="post" onSubmit="return checkForm(this)">
 <input type="hidden" name="group_id" value="{$group_id}">
 <input type="hidden" name="use_js" value="{$smarty.request.use_js}">
 <table border='0'>
