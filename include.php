@@ -2,7 +2,12 @@
 
 // include.php - Set up global variables and functions
 
-define(INSTALLPATH,'/home/bcurtis/public_html/phpbt');
+define ('INSTALLPATH','/home/bcurtis/public_html/phpbt');
+define ('INSTALLURL','http://localhost/~bcurtis/phpbt');
+define ('ONEDAY',86400);
+define ('DATEFORMAT','m-d-Y');
+define ('TIMEFORMAT','g:i A');
+define ('ADMINEMAIL','phpbt@bencurtis.com');
 
 include 'prepend.php3';
 include 'template.inc';
@@ -30,10 +35,6 @@ $select['authlevels'] = array(
   15 => 'Administrator'
   );
 
-define ('ONEDAY',86400);
-define ('DATEFORMAT','m-d-Y');
-define ('TIMEFORMAT','g:i A');
-define ('ADMINEMAIL','phpbt@your.com');
 
 class dbclass extends DB_Sql {
   var $classname = 'dbclass';
@@ -73,7 +74,7 @@ class usess extends Session {
 
 class uauth extends Auth {
   var $classname = 'uauth';
-  var $lifetime = 30;
+  var $lifetime = 0;
   var $magic = 'looneyville';
   
   function auth_loginform() {
@@ -120,9 +121,9 @@ class uperm extends Perm {
 ///
 /// Show text to the browser - escape hatch
 function show_text($text, $iserror = false) {
-	global $t;
-	
-	$t->set_file('content','error.html');
+  global $t;
+  
+  $t->set_file('content','error.html');
   if (!$iserror) $t->set_var('text',$text);
   else $t->set_var('text',"<font color=red>$text</font>");
 }
@@ -180,11 +181,11 @@ function build_select($box, $value='',$project=0) {
       }
       break;
     case 'Version' :
-      $q->query("Select {$box}ID, Version from $box where ProjectID = $project order by Version");
+      $q->query("Select {$box}ID, Name from $box where ProjectID = $project order by Name");
       while ($row = $q->grab()) {
         if ($value == $row[$box.'ID']) $sel = ' selected';
         else $sel = '';
-        $text .= '<option value="'.$row[$box.'ID']."\"$sel>$row[Version]</option>";
+        $text .= '<option value="'.$row[$box.'ID']."\"$sel>$row[Name]</option>";
       }
       break;
     case 'owner' :
@@ -286,5 +287,32 @@ function genpassword($length){
 
     return substr($password, 0, $length); 
 } 
+
+///
+/// Wrap text - Picked up somewhere on the net - probably zend.com
+function textwrap($text, $wrap=72, $break="\n"){
+  $len = strlen($text);
+  if ($len > $wrap) {
+    $h = '';
+    $lastWhite = 0;
+    $lastChar = 0;
+    $lastBreak = 0;
+    while ($lastChar < $len) {
+      $char = substr($text, $lastChar, 1);
+      if (($lastChar - $lastBreak > $wrap) && ($lastWhite > $lastBreak)) {
+        $h .= substr($text, $lastBreak, ($lastWhite - $lastBreak)) . $break;
+        $lastChar = $lastWhite + 1;
+        $lastBreak = $lastChar;
+      }
+      /* You may wish to include other characters as  valid whitespace... */
+      if ($char == ' ' || $char == chr(13) || $char == chr(10))
+        $lastWhite = $lastChar;
+      $lastChar = $lastChar + 1;
+    }
+    $h .= substr($text, $lastBreak);
+  }
+  else $h = $text;
+  return $h;
+}
 
 ?>

@@ -10,18 +10,18 @@ function do_form($statusid = 0) {
   global $q, $me, $fname, $fdescription, $fsortorder, $STRING;
   
   // Validation
-	if (!$fname = trim($fname))
-		$error = $STRING[givename];
-	elseif (!$fdescription = trim($fdescription))
-		$error = $STRING[givedesc];
-	if ($error) { list_items($statusid, $error); return; }
+  if (!$fname = trim($fname))
+    $error = $STRING[givename];
+  elseif (!$fdescription = trim($fdescription))
+    $error = $STRING[givedesc];
+  if ($error) { list_items($statusid, $error); return; }
   
   if (!$statusid) {
     $q->query("insert into Status (StatusID, Name, Description, SortOrder) values 
-			(".$q->nextid('Status').", '$fname', '$fdescription', '$fsortorder')");
+      (".$q->nextid('Status').", '$fname', '$fdescription', '$fsortorder')");
   } else {
     $q->query("update Status set Name='$fname', Description='$fdescription', 
-			SortOrder='$fsortorder' where StatusID = '$statusid'");
+      SortOrder='$fsortorder' where StatusID = '$statusid'");
   }
   header("Location: $me?");
 }  
@@ -39,7 +39,7 @@ function show_form($statusid = 0, $error = '') {
       'fsortorder' => $row[SortOrder]));
   } else {
     $t->set_var(array(
-			'action' => $statusid ? $STRING[edit] : $STRING[addnew],
+      'action' => $statusid ? $STRING[edit] : $STRING[addnew],
       'error' => $error,
       'fstatusid' => $statusid,
       'fname' => $fname,
@@ -91,9 +91,9 @@ function list_items($statusid = 0, $error = '') {
       'sortorder' => $row[SortOrder]));
     $t->parse('rows','row',true);
   }
-	
-	show_form($statusid, $error);
-	$t->set_var('TITLE',$TITLE[status]);
+  
+  show_form($statusid, $error);
+  $t->set_var('TITLE',$TITLE[status]);
 }
 
 $t->set_file('wrap','wrap.html');

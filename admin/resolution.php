@@ -11,18 +11,18 @@ function do_form($resolutionid = 0) {
   
   // Validation
   if (!$fname = trim($fname))
-		$error = $STRING[givename];
-	elseif (!$fdescription = trim($fdescription))
-		$error = $STRING[givedesc];
-	if ($error) { list_items($resolutionid, $error); return; }
+    $error = $STRING[givename];
+  elseif (!$fdescription = trim($fdescription))
+    $error = $STRING[givedesc];
+  if ($error) { list_items($resolutionid, $error); return; }
   
   if (!$resolutionid) {
     $q->query("insert into Resolution (ResolutionID, Name, Description, 
-			SortOrder) values (".$q->nextid('Resolution').", '$fname', '$fdescription',
-			'$fsortorder')");
+      SortOrder) values (".$q->nextid('Resolution').", '$fname', '$fdescription',
+      '$fsortorder')");
   } else {
     $q->query("update Resolution set Name='$fname', Description='$fdescription', 
-			SortOrder='$fsortorder' where ResolutionID = '$resolutionid'");
+      SortOrder='$fsortorder' where ResolutionID = '$resolutionid'");
   }
   header("Location: $me?");
 }  
@@ -40,7 +40,7 @@ function show_form($resolutionid = 0, $error = '') {
       'fsortorder' => $row[SortOrder]));
   } else {
     $t->set_var(array(
-			'action' => $resolutionid ? $STRING[edit] : $STRING[addnew],
+      'action' => $resolutionid ? $STRING[edit] : $STRING[addnew],
       'error' => $error,
       'fresolutionid' => $resolutionid,
       'fname' => $fname,
@@ -92,9 +92,9 @@ function list_items($resolutionid = 0, $error = '') {
       'sortorder' => $row[SortOrder]));
     $t->parse('rows','row',true);
   }
-	
-	show_form($resolutionid, $error);
-	$t->set_var('TITLE',$TITLE[resolution]);
+  
+  show_form($resolutionid, $error);
+  $t->set_var('TITLE',$TITLE[resolution]);
 }
 
 $t->set_file('wrap','wrap.html');

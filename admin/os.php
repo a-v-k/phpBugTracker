@@ -11,15 +11,15 @@ function do_form($osid = 0) {
   
   // Validation
   if (!$fname = trim($fname)) 
-		$error = $STRING[givename];
-	if ($error) { list_items($osid, $error); return; }
-	
+    $error = $STRING[givename];
+  if ($error) { list_items($osid, $error); return; }
+  
   if (!$osid) {
     $q->query("insert into OS (OSID, Name, Regex, SortOrder) values 
-			(".$q->nextid('OS').", '$fname', '$fregex', '$fsortorder')");
+      (".$q->nextid('OS').", '$fname', '$fregex', '$fsortorder')");
   } else {
     $q->query("update OS set Name='$fname', Regex='$fregex', 
-			SortOrder='$fsortorder' where OSID = '$osid'");
+      SortOrder='$fsortorder' where OSID = '$osid'");
   }
   header("Location: $me?");
 }  
@@ -38,7 +38,7 @@ function show_form($osid = 0, $error = '') {
       'fsortorder' => $row[SortOrder]));
   } else {
     $t->set_var(array(
-			'action' => $osid ? $STRING[edit] : $STRING[addnew],
+      'action' => $osid ? $STRING[edit] : $STRING[addnew],
       'error' => $error,
       'fosid' => $osid,
       'fname' => $fname,
@@ -90,9 +90,9 @@ function list_items($osid = 0, $error = '') {
       'sortorder' => $row[SortOrder]));
     $t->parse('rows','row',true);
   }
-	
-	show_form($osid, $error);
-	$t->set_var('TITLE',$TITLE[os]);
+  
+  show_form($osid, $error);
+  $t->set_var('TITLE',$TITLE[os]);
 }
 
 $t->set_file('wrap','wrap.html');

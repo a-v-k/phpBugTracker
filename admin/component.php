@@ -10,42 +10,42 @@ function do_form($componentid = 0) {
   global $q, $me, $projectid, $name, $description, $owner, $active, $u, $STRING;
   
   // Validation
-	if (!$name = trim($name)) 
-		$error = $STRING[givename];
-	elseif (!$description = trim($description))
-		$error = $STRING[givedesc];
-	if ($error) { show_form($componentid, $error); return; }
+  if (!$name = trim($name)) 
+    $error = $STRING[givename];
+  elseif (!$description = trim($description))
+    $error = $STRING[givedesc];
+  if ($error) { show_form($componentid, $error); return; }
   
-	$time = time();
-	if (!$owner) $owner = 0;
-	if (!$active) $active = 0;
+  $time = time();
+  if (!$owner) $owner = 0;
+  if (!$active) $active = 0;
   if (!$componentid) {
     $q->query("insert into Component (ComponentID, ProjectID, Name, Description, 
-			Owner, Active, CreatedBy, CreatedDate, LastModifiedBy, LastModifiedDate) 
-			values (".$q->nextid('Component').", $projectid, '$name', '$description', 
-			$owner, $active, $u, $time, $u, $time)");
+      Owner, Active, CreatedBy, CreatedDate, LastModifiedBy, LastModifiedDate) 
+      values (".$q->nextid('Component').", $projectid, '$name', '$description', 
+      $owner, $active, $u, $time, $u, $time)");
   } else {
     $q->query("update Component set Name='$name', 
-			Description='$description', Owner=$owner, Active=$active, 
-			LastModifiedBy=$u, LastModifiedDate=$time where 
-			ComponentID = '$componentid'");
+      Description='$description', Owner=$owner, Active=$active, 
+      LastModifiedBy=$u, LastModifiedDate=$time where 
+      ComponentID = '$componentid'");
   }
   header("Location: project.php?op=edit&id=$projectid");
 }  
 
 function show_form($componentid = 0, $error = '') {
   global $q, $me, $t, $projectid, $name, $description, $owner, $active, 
-		$createdby, $createddate, $lastmodifiedby, $lastmodifieddate, $TITLE;
+    $createdby, $createddate, $lastmodifiedby, $lastmodifieddate, $TITLE;
   
-	$nq = new dbclass;
+  $nq = new dbclass;
   $t->set_file('content','componentform.html');
   if ($componentid && !$error) {
     $row = $q->grab("select * from Component where ComponentID = '$componentid'");
     $t->set_var(array(
       'componentid' => $row[ComponentID],
-			'projectid' => $row[ProjectID],
+      'projectid' => $row[ProjectID],
       'project' => $nq->grab_field("select Name from Project 
-				where ProjectID = $row[ProjectID]"),
+        where ProjectID = $row[ProjectID]"),
       'name' => $row[Name],
       'description' => $row[Description],
       'owner' => build_select('owner',$row[Owner]),
@@ -54,15 +54,15 @@ function show_form($componentid = 0, $error = '') {
       'createddate' => $row[CreatedDate],
       'lastmodifiedby' => $row[LastModifiedBy],
       'lastmodifieddate' => $row[LastModifiedDate],
-			'TITLE' => $TITLE[editcomponent]));
+      'TITLE' => $TITLE[editcomponent]));
   } else {
     $t->set_var(array(
       'me' => $me,
       'error' => $error,
       'componentid' => $componentid,
-			'projectid' => $projectid,
+      'projectid' => $projectid,
       'project' => $nq->grab_field("select Name from Project 
-				where ProjectID = $projectid"),
+        where ProjectID = $projectid"),
       'name' => $name,
       'description' => $description,
       'owner' => build_select('owner',$owner),
@@ -71,7 +71,7 @@ function show_form($componentid = 0, $error = '') {
       'createddate' => $createddate,
       'lastmodifiedby' => $lastmodifiedby,
       'lastmodifieddate' => $lastmodifieddate,
-			'TITLE' => $componentid ? $TITLE[editcomponent] : $TITLE[addcomponent]));
+      'TITLE' => $componentid ? $TITLE[editcomponent] : $TITLE[addcomponent]));
   }
 }
 
