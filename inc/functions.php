@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.7 2002/03/17 01:36:43 bcurtis Exp $
+// $Id: functions.php,v 1.8 2002/03/17 01:46:38 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -371,7 +371,7 @@ function db_concat() {
 		case 'fbsql' : $retstr = 'CONCAT('. delimit_list(', ', $pieces).')'; break;
 		default : $retstr = delimit_list(' + ', $pieces); break;
   }
-  return $retstr
+  return $retstr;
 }
 
 ?>
