@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.118 2002/09/17 18:14:19 bcurtis Exp $
+// $Id: bug.php,v 1.119 2002/09/23 20:16:30 bcurtis Exp $
 
 include 'include.php';
 
@@ -416,6 +416,11 @@ function update_bug($bugid = 0) {
 	$os_id = $os_id ? $os_id : 0;
 	$severity_id = $severity_id ? $severity_id : 0;
 
+	if ($status_id == BUG_CLOSED) {
+		$closed_query = ", close_date = $now";
+	} else {
+		$closed_query = '';
+	}
 	$db->query("update ".TBL_BUG." set title = ".$db->quote(stripslashes($title)).
 		', url = '.$db->quote(stripslashes($url)).", severity_id = $severity_id, ".
 	    "priority = $priority, status_id = $status_id, ".
@@ -425,7 +430,7 @@ function update_bug($bugid = 0) {
 	    "resolution_id = $resolution_id, assigned_to = $assigned_to, ".
 	    "project_id = $project_id, version_id = $version_id, ".
 	    "component_id = $component_id, os_id = $os_id, last_modified_by = $u, ".
-	    "last_modified_date = $now where bug_id = $bugid");
+	    "last_modified_date = $now $closed_query where bug_id = $bugid");
 
 	if (count($changedfields) or !empty($comments)) {
 		do_changedfields($u, $buginfo, $changedfields, $comments);
