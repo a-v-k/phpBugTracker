@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.17 2002/05/18 15:40:19 firma Exp $
+// $Id: en.php,v 1.18 2002/05/21 09:50:19 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'us-ascii',
@@ -77,6 +77,15 @@ $STRING = array(
 	'image_path_not_writeable' => 'The subdirectory "jpgimages" is not writeable by the web process, so the summary image can not be rendered',
 	'password_changed' => 'Your password has been changed',
 	'prefs_changed' => 'Your preferences have been changed',
+	'databaselist' => 'Database list',
+	'database' => 'Database',
+	'databases' => 'Databases',
+	'name' => 'Name',
+	'description' => 'Description',
+	'sortorder' => 'Sort order',
+	'suredeletedb' => 'Are you sure to delete this database?',
+	'delete' => 'Delete',
+	'version' => 'Version'
 	);
 	
 // Page titles
@@ -121,6 +130,9 @@ $TITLE = array(
 	'editgroup' => 'Edit Group',
 	'addgroup' => 'Add Group',
 	'configuration' => 'Configuration',
+	'adddatabase' => 'Add Database',
+	'editdatabase' => 'Edit Database',
+	'database' => 'Databases'
 	);
 	
 ?>

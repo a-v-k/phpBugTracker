@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz.php,v 1.8 2002/05/19 12:06:56 firma Exp $
+// $Id: cz.php,v 1.9 2002/05/21 09:50:19 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'Windows-1250',
@@ -77,6 +77,15 @@ $STRING = array(
 	'image_path_not_writeable' => 'Webprocess nemùže zapisovat do podadresáøe "jpgimages", pøehledový obrázek nemùže být vygenerován.',
 	'password_changed' => 'Vaše heslo bylo zmìnìno',
 	'prefs_changed' => 'Vaše nastavení byla zmìnìna',
+	'databaselist' => 'Seznam databází',
+	'database' => 'Databáze',
+	'databases' => 'Databáze',
+	'name' => 'Název',
+	'description' => 'Popis',
+	'sortorder' => 'Poøadí tøídìní',
+	'suredeletedb' => 'Opravdu chcete odstranit tuto databázi?',
+	'delete' => 'Odstranit',
+	'version' => 'Verze'
 	);
 
 // Page titles
@@ -121,5 +130,8 @@ $TITLE = array(
 	'editgroup' => 'Zmìnit Skupinu',
 	'addgroup' => 'Pøidat Skupinu',
 	'configuration' => 'Nastavení',
+	'adddatabase' => 'Pøidat databázi',
+	'editdatabase' => 'Upravit databázi',
+	'database' => 'Databáze'
 	);
 ?>
