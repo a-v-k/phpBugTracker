@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.54 2001/09/07 13:17:37 bcurtis Exp $
+// $Id: include.php,v 1.55 2001/09/18 03:36:33 bcurtis Exp $
 
 if (defined("INCLUDE_PATH")) {
   require INCLUDE_PATH."config.php";
@@ -188,6 +188,17 @@ class uperm extends Perm {
     $t->set_file('content','badperm.html');
     $t->pparse('main',array('content','wrap','main'));
   }
+
+	function check_group($group) {
+		global $t;
+
+		if (!$this->check_auth('group', $group)) {		
+			$t->set_file('content', 'badgroup.html');
+			$t->set_var('group', $group);
+			$t->pparse('main',array('content','wrap','main'));
+			exit();
+		}
+	}
 }
 
 class templateclass extends Template {

@@ -82,7 +82,7 @@ function show_preferences_form($error = '') {
 }
 
 $t->set_file('wrap', 'wrap.html');
-$perm->check('User');
+$perm->check_group('User');
 
 if ($do) switch ($do) {
 	case 'changepassword' : change_password($_pv['pass1'], $_pv['pass2']); break;

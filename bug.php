@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.41 2001/09/11 13:02:51 bcurtis Exp $
+// $Id: bug.php,v 1.42 2001/09/18 03:36:33 bcurtis Exp $
 
 include 'include.php';
 
@@ -544,7 +544,7 @@ if ($op) {
 	switch($op) {
 		case 'history' : show_history($bugid); break;
 		case 'add' : 
-			$perm->check('User');
+			$perm->check('Editbug');
 			if ($project) show_form(); 
 			else show_projects();
 			break;

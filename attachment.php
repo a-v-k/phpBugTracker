@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.8 2001/09/03 17:59:11 bcurtis Exp $
+// $Id: attachment.php,v 1.9 2001/09/18 03:36:33 bcurtis Exp $
 
 include 'include.php';
 
@@ -153,7 +153,7 @@ if (isset($_gv['del'])) {
 		del_attachment($_gv['del']);
 	}
 } elseif (isset($HTTP_POST_FILES['attachment'])) {
-	$perm->check('User');
+	$perm->check('Editbug');
 	add_attachment($_pv['bugid'],	$_pv['description']);
 } elseif (isset($_gv['attachid'])) {
 	if (list($filename, $mimetype) = grab_attachment($_gv['attachid'])) {
@@ -162,7 +162,7 @@ if (isset($_gv['del'])) {
 		exit;
 	}
 } else {
-	$perm->check('User');
+	$perm->check('Editbug');
 	show_attachment_form($_gv['bugid']);
 }
 
