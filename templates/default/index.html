@@ -1,21 +1,18 @@
-<h2>Welcome to phpBugTracker</h2>
-<TABLE BORDER=0 WIDTH="640">
+<table border=0 width="100%">
 	<tr>
 		<td valign="top">
-			<b>Here's what you can do:</b>
+			<b>Five most recently submitted bugs:</b>
+			<br>
+			<!-- BEGIN recentrow -->
+			<a href="bug.php?op=show&bugid={bugid}">{title}</a><br>
+			<!-- END recentrow -->
 			<br>
 			<br>
-			<a href="query.php?op=query">Query existing bug reports</a><br>
-			<a href="bug.php?op=add">Enter a new bug report</a><br>
-			<a href="report.php">Get summary reports</a><br>
-			<p>
-			<a href="newaccount.php">Open a new account</a><br>
-			<a href="user.php">Change password or user preferences</a><br>
-			<a href="logout.php">Forget currently stored login</a><br>
+			<b>Five most recently closed bugs:</b>
 			<br>
-			<FORM METHOD=GET ACTION="bug.php">
-			<input type="hidden" name="op" value="show">
-			<INPUT TYPE=SUBMIT VALUE="Find"> bug # <INPUT NAME=bugid SIZE=6></FORM>
+			<!-- BEGIN closerow -->
+			<a href="bug.php?op=show&bugid={bugid}">{title}</a><br>			
+			<!-- END closerow -->
 		</td>
 		<td valign="top"> 
 		<!-- BEGIN statsblock -->
