@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.92 2002/04/03 01:00:52 bcurtis Exp $
+// $Id: bug.php,v 1.93 2002/04/03 18:45:27 bcurtis Exp $
 
 include 'include.php';
 
@@ -522,66 +522,18 @@ function do_form($bugid = 0) {
 function show_form($bugid = 0, $error = '') {
   global $db, $me, $t, $_gv, $_pv, $TITLE;
 
-	if (isset($_gv['project'])) {
-		$project = $_gv['project'];
-	}
-	
-  if (isset($_pv)) {
-    foreach ($_pv as $k => $v) $$k = $v;
-	}
-
-  $t->set_file('content','bugform.html');
-  $projectname = $db->getOne("select project_name from ".TBL_PROJECT." where project_id = $project");
+  $projectname = $db->getOne("select project_name from ".TBL_PROJECT." where project_id = {$_gv['project']}");
   if ($bugid && !$error) {
-    $row = $db->getRow("select * from ".TBL_BUG." where bug_id = '$bugid'");
-    $t->set_var(array(
-      'bugid' => $bugid,
-      'TITLE' => $TITLE['editbug'],
-      'title' => htmlentities(stripslashes($row['title'])),
-      'description' => htmlentities(stripslashes($row['description'])),
-      'url' => $row['url'],
-      'urllabel' => $row['url'] ? "<a href='{$row['url']}'>URL</a>" : 'URL',
-      'severity' => build_select('severity',$row['severity_id']),
-      'priority' => build_select('priority',$row['priority']),
-      'status' => build_select('status',$row['status_id']),
-      'resolution' => build_select('resolution',$row['resolution_id']),
-      'assignedto' => $row['assigned_to'],
-      'createdby' => $row['created_by'],
-      'createddate' => date(DATE_FORMAT,$row['created_date']),
-      'lastmodifieddate' => $row['last_modified_date'],
-      'project' => $row['project_id'],
-      'projectname' => $projectname,
-      'version' => build_select('version',$row['version_id'],$row['project_id']),
-      'component' => build_select('component',$row['component_id'],$row['project_id']),
-      'os' => build_select('os',$row['os_id']),
-      'browserstring' => $row['browser_string']));
+    $t->assign($db->getRow("select * from ".TBL_BUG." where bug_id = '$bugid'"));
   } else {
-    $t->set_var(array(
-      'TITLE' => $TITLE['enterbug'],
-      'error' => $error,
-      'bugid' => $bugid,
-      'title' => isset($title) ? htmlentities(stripslashes($title)) : '',
-      'description' => isset($description) ? 
-				htmlentities(stripslashes($description)) : '',
-      'url' => isset($url) ? $url : 'http://',
-      'urllabel' => isset($url) ? "<a href='$url'>URL</a>" : 'URL',
-      'severity' => build_select('severity',(isset($severity) ? $severity : 0)),
-      'priority' => build_select('priority',(isset($priority) ? $priority : 0)),
-      'status' => build_select('status',(isset($status) ? $status : 0)),
-      'resolution' => build_select('resolution',
-				(isset($resolution) ? $resolution : 0)),
-      'assignedto' => isset($assignedto) ? $assignedto : '',
-      'createdby' => isset($createdby),
-      'createddate' => isset($createddate),
-      'lastmodifieddate' => isset($lastmodifieddate),
-      'project' => $project,
-      'projectname' => $projectname,
-      'version' => build_select('version',
-				(isset($version) ? $version : 0),$project),
-      'component' => build_select('component',
-				(isset($component) ? $component : 0),$project),
-      'os' => build_select('os',(isset($os) ? $os : 0))));
+		$t->assign($_pv);
+		$t->assign(array(
+			'error' => $error,
+			'project' => $_gv['project'],
+			'projectname' => $projectname
+			));
   }
+  $t->display('bugform.html');
 }
 
 function show_bug_printable($bugid) {
