@@ -450,8 +450,7 @@ if ($op) {
   }
 } else header("Location: query.php");
 
-$t->parse('main',array('content','wrap','main'));
-$t->p('main');
+$t->pparse('main',array('content','wrap','main'));
 
 page_close();
 

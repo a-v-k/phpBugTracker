@@ -16,12 +16,6 @@ include INSTALLPATH.'/strings-en.php';
 
 $cssfile = 'global.css';
 
-$t = new Template('templates','keep');
-$t->set_var(array(
-  'TITLE' => '', 
-  'me' => $PHP_SELF,
-  'error' => '',
-  'cssfile' => $cssfile));
 
 $me = $PHP_SELF;
 $me2 = $REQUEST_URI;
@@ -118,6 +112,25 @@ class uperm extends Perm {
   }
 }
 
+class templateclass extends Template {
+	function pparse($target, $handle, $append = false) {
+		global $auth;
+		
+		$this->set_var('loggedinas', $auth->auth['uid'] ? $auth->auth['email'] : '');
+		print $this->finish($this->parse($target, $handle, $append));
+		return false;
+	}
+}
+
+$t = new templateclass('templates','keep');
+$t->set_var(array(
+  'TITLE' => '', 
+  'me' => $PHP_SELF,
+  'error' => '',
+  'cssfile' => $cssfile));
+	
+// End classes -- Begin helper functions 
+	
 ///
 /// Show text to the browser - escape hatch
 function show_text($text, $iserror = false) {
