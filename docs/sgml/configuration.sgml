@@ -105,6 +105,18 @@
 </listitem>
 </varlistentry>
 <varlistentry>
+<term>STRICT_UPDATING</term>
+<listitem>
+<para>If set to true, the only people who can make changes to a bug are the reporter, the owner, and those with manager or admin permissions.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>NEW_ACCOUNTS_DISABLED</term>
+<listitem>
+<para>If set to true, newaccount.php is disabled and only admins can create new accounts.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
 <term>ATTACHMENT_PATH</term>
 <listitem>
 <para>The subdirectory in which to store bug attachments.  This directory needs to writeable by the web server.</para>
@@ -132,12 +144,6 @@
 <term>LANGUAGE</term>
 <listitem>
 <para>The language file (found in the <filename class="directory">languages</filename> sub-directory to use for error and warning messages.</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term>STRICT_UPDATING</term>
-<listitem>
-<para>If set to true, the only people who can make changes to a bug are the reporter, the owner, and those with manager or admin permissions.</para>
 </listitem>
 </varlistentry>
 </variablelist>
