@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.36 2001/10/30 14:23:12 bcurtis Exp $
+// $Id: query.php,v 1.37 2001/11/12 01:13:33 bcurtis Exp $
 
 include 'include.php';
 
@@ -202,7 +202,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'TITLE' => $TITLE['buglist']));
 	
 	$q->limit_query('select b.*, reporter.login as reporter, owner.login as owner, 
-		lastmodifier.login as lastmodifier, project_name, severity_name, status_name, 
+		lastmodifier.login as lastmodifier, project_name, severity_name, severity_color, status_name, 
 		os_name, version_name, component_name, resolution_name from '.TBL_BUG.' b 
 		left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id 
 		left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id 
