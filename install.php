@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.16 2002/03/20 15:09:18 bcurtis Exp $
+// $Id: install.php,v 1.17 2002/03/26 17:30:20 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname(__FILE__));
 
@@ -44,6 +44,7 @@ if (!empty($_pv)) {
 		'/TBL_AUTH_PERM/' => $_pv['tbl_prefix'].'auth_perm',
 		'/TBL_AUTH_USER/' => $_pv['tbl_prefix'].'auth_user',
 		'/TBL_BUG_CC/' => $_pv['tbl_prefix'].'bug_cc',
+		'/TBL_BUG_DEPENDENCY/' => $_pv['tbl_prefix'].'bug_dependency',
 		'/TBL_BUG_GROUP/' => $_pv['tbl_prefix'].'bug_group',
 		'/TBL_BUG_HISTORY/' => $_pv['tbl_prefix'].'bug_history',
 		'/TBL_BUG_VOTE/' => $_pv['tbl_prefix'].'bug_vote',
@@ -61,6 +62,7 @@ if (!empty($_pv)) {
 		'/TBL_STATUS/' => $_pv['tbl_prefix'].'status',
 		'/TBL_USER_GROUP/' => $_pv['tbl_prefix'].'user_group',
 		'/TBL_USER_PERM/' => $_pv['tbl_prefix'].'user_perm',
+		'/TBL_USER_PREF/' => $_pv['tbl_prefix'].'user_pref',
 		'/TBL_VERSION/' => $_pv['tbl_prefix'].'version',
 		'/TBL_PROJECT_GROUP/' => $_pv['tbl_prefix'].'project_group',
 		'/OPTION_ADMIN_EMAIL/' => $_pv['admin_login'],
