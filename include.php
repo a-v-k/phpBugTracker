@@ -50,7 +50,7 @@ require PHPLIBPATH.'page.inc';
 require PHPLIBPATH.'template.inc';
 
 // Localization - include the file with the desired language
-include INSTALLPATH.'/strings-en.php';
+include INSTALLPATH.'/languages/en.php';
 
 // Edit this class with your database information
 class dbclass extends DB_Sql {
