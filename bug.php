@@ -5,17 +5,49 @@
 include 'include.php';
 
 page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
-
 $u = $auth->auth['uid'];
+
+///
+/// Show the activity for a bug
+function show_history($bugid) {
+	global $q, $t;
+	
+	if (!is_numeric($bugid)) {
+		show_text($STRING['nobughistory']);
+		return;
+	}
+	
+	$q->query("select bh.*, Email from BugHistory bh left join User on CreatedBy = UserID where BugID = $bugid");
+	if (!$q->num_rows()) {
+		show_text($STRING['nobughistory']);
+		return;
+	}
+	
+	$t->set_file('content','bughistory.html');
+	$t->set_block('content', 'row', 'rows');
+	$t->set_var('bugid', $bugid);
+	while ($row = $q->grab()) {
+		$t->set_var(array(
+      'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
+			'field' => stripslashes($row['ChangedField']),
+			'oldvalue' => stripslashes($row['OldValue']),
+			'newvalue' => stripslashes($row['NewValue']),
+			'createdby' => stripslashes($row['Email']),
+			'date' => date(DATEFORMAT.' '.TIMEFORMAT, $row['CreatedDate'])
+			));
+		$t->parse('rows', 'row', true);
+	}
+}
 
 ///
 /// Send the email about changes to the bug and (later) log the changes in the DB
 function do_changedfields($userid, $buginfo, $cf, $comments) {
-  global $q, $t, $u, $select;
+  global $q, $t, $u, $select, $now;
   
   $t->set_file('emailout','bugemail.txt');
   foreach(array('Title','URL') as $field) {
-    if ($cf[$field]) {
+    if (isset($cf[$field])) {
+			$q->query("insert into BugHistory (BugID, ChangedField, OldValue, NewValue, CreatedBy, CreatedDate) values ({$buginfo['BugID']}, '$field', '$buginfo[$field]', '$cf[$field]', $u, $now)");
       $t->set_var(array(
         $field => $cf[$field],
         $field.'Stat' => '!'
@@ -30,16 +62,17 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
   
   foreach(array('Project','Component','Status','Resolution','Severity','OS',
     'Version') as $field) {
+		$oldvalue = $q->grab_field("select Name from $field where ${field}ID = $buginfo[$field]");
     if ($cf[$field]) {
-      $t->set_var(array(
-        $field => $q->grab_field("select Name from $field where ${field}ID = 
-          $cf[$field]"),
+      $newvalue = $q->grab_field("select Name from $field where ${field}ID = $cf[$field]");
+			$q->query("insert into BugHistory (BugID, ChangedField, OldValue, NewValue, CreatedBy, CreatedDate) values ({$buginfo['BugID']}, '$field', '$oldvalue', '$newvalue', $u, $now)");
+			$t->set_var(array(
+        $field => $newvalue,
         $field.'Stat' => '!'
         ));
     } else {
       $t->set_var(array(
-        $field => $q->grab_field("select Name from $field where ${field}ID = 
-          $buginfo[$field]"),
+        $field => $oldvalue,
         $field.'Stat' => ' '
         ));
     }
@@ -123,7 +156,12 @@ function update_bug($bugid = 0) {
   if ($pv = $GLOBALS['HTTP_POST_VARS']) {
     while (list($k,$v) = each($GLOBALS['HTTP_POST_VARS'])) {
       $$k = $v;
-      if ($buginfo[$k] and $buginfo[$k] != $v) $changedfields[$k] = $v;
+			if ($k == 'URL') {
+  			if ($v == 'http://') $v = '';
+  			elseif ($v and substr($v,0,7) != 'http://') $v = 'http://'.$v;
+				$URL = $v;
+			}
+      if ($buginfo[$k] != $v) { $changedfields[$k] = $v; }
     }
   }
   
@@ -209,8 +247,6 @@ function update_bug($bugid = 0) {
       from Status where Name = '$statusfield'");
     $changedfields['Status'] = $status; 
   }
-  if ($URL == 'http://') $URL = '';
-  elseif ($URL and substr($URL,0,7) != 'http://') $URL = 'http://'.$URL;
   
   $q->query("Update Bug set Title = '$Title', URL = '$URL', Severity = $Severity,
     Priority = $Priority, ".($status ? "Status = $status, " : '').
@@ -440,6 +476,7 @@ $t->set_file('wrap','wrap.html');
 
 if ($op) {
   switch($op) {
+		case 'history' : show_history($bugid); break;
     case 'add' : 
       if ($project) show_form(); 
       else show_projects();

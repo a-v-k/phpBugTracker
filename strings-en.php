@@ -29,7 +29,8 @@ $STRING = array(
   'bugbadperm' => 'You cannot change this bug',
   'bugbadnum' => 'That bug does not exist',
   'datecollision' => 'Someone has updated this bug since you viewed it.  The bug info has been reloaded with the latest changes.',
-  'passwordmatch' => 'Those passwords don\'t match -- please try again'
+  'passwordmatch' => 'Those passwords don\'t match -- please try again',
+  'nobughistory' => 'There is no history for that bug'
   );
   
 // Page titles
