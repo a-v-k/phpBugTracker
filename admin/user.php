@@ -20,13 +20,13 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.18 2001/09/01 15:44:20 mohni Exp $
+// $Id: user.php,v 1.19 2001/09/03 17:02:40 javyer Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
 
 function do_form($userid = 0) {
-  global $q, $me, $ffirstname, $flastname, $femail, $fpassword, $usertype, $STRING, $now;
+  global $q, $me, $flogin, $ffirstname, $flastname, $femail, $fpassword, $fusergroup, $STRING, $now;
 
   // Validation
   if (!valid_email($femail))
@@ -38,7 +38,9 @@ function do_form($userid = 0) {
   if (!$userid) {
     if (ENCRYPTPASS) $mpassword = md5($fpassword);
     else $mpassword = $fpassword;
-    $q->query("insert into ".TBL_AUTH_USER." (user_id, first_name, last_name, email, password, user_level, created_date) values (".$q->nextid('user').", '$ffirstname', '$flastname', '$femail', '$mpassword', $usertype, $now)");
+    $new_user_id = $q->nextid('user');
+    $q->query("insert into ".TBL_AUTH_USER." (user_id, login, first_name, last_name, email, password, created_date) values ($new_user_id, '$flogin','$ffirstname', '$flastname', '$femail', '$mpassword', $now)");
+    $q->query("insert into ".TBL_USER_GROUP." (user_id, group_id) values ('$new_user_id' ,'$fusergroup')");
   } else {
     if (ENCRYPTPASS) {
       $oldpass = $q->grab_field("select password from ".TBL_AUTH_USER." where user_id = $userid");
@@ -50,35 +52,42 @@ function do_form($userid = 0) {
     } else {
       $pquery = "password = '$fpassword',";
     }
-    $q->query("update ".TBL_AUTH_USER." set first_name = '$ffirstname', last_name = '$flastname', email = '$femail', $pquery user_level = $usertype where user_id = '$userid'");
+    $q->query("update ".TBL_AUTH_USER." set first_name = '$ffirstname', last_name = '$flastname', email = '$femail' where user_id = '$userid'");
+    $q->query("update ".TBL_USER_GROUP." set group_id = '$fusergroup' where user_id = '$userid'");
   }
   header("Location: $me?");
 }
 
 function show_form($userid = 0, $error = '') {
-  global $q, $me, $t, $firstname, $lastname, $email, $password, $usertype, $STRING;
+  global $q, $me, $t, $login,$firstname, $lastname, $email, $password, $usertype, $STRING;
+
 
   if ($userid && !$error) {
     $row = $q->grab("select * from ".TBL_AUTH_USER." where user_id = '$userid'");
+    //Get User's group id
+    $user_group_id=$q->grab_field('select group_id from '.TBL_USER_GROUP.' where user_id='.$row['user_id'].' limit 1');
+
     $t->set_var(array(
       'action' => $STRING['edit'],
       'fuserid' => $row['user_id'],
+      'flogin' => $row['login'],
       'ffirstname' => stripslashes($row['first_name']),
       'flastname' => stripslashes($row['last_name']),
       'femail' => $row['email'],
       'fpassword' => $row['password'],
-      'usertype' => build_select('authlevels',$row['user_level']),
+      'fusergroup' => build_select('group',$user_group_id),
       'createddate' => $row['created_date']));
   } else {
     $t->set_var(array(
       'action' => $userid ? $STRING['edit'] : $STRING['addnew'],
       'error' => $error,
       'fuserid' => $userid,
+      'flogin' => $login,
       'ffirstname' => stripslashes($firstname),
       'flastname' => stripslashes($lastname),
       'femail' => $email,
       'fpassword' => $password ? $password : genpassword(10),
-      'usertype' => build_select('authlevels',$usertype),
+      'fusergroup' => build_select('group'),
       'createddate' => $createddate));
   }
 }
@@ -102,7 +111,7 @@ function list_items($userid = 0, $error = '') {
     'records' => $nr));
 
   $q->query("select user_id, concat(first_name,'&nbsp;',last_name) as fullname, email,
-    created_date, user_level from ".TBL_AUTH_USER." order by $order $sort
+    created_date from ".TBL_AUTH_USER." order by $order $sort
     limit $llimit, $selrange");
 
   if (!$q->num_rows()) {
@@ -115,7 +124,6 @@ function list_items($userid = 0, $error = '') {
     'name' =>  'last_name',
     'login' => 'email',
     'password' => 'password',
-    'userlevel' => 'user_level',
     'date' => 'created_date');
 
   sorting_headers($me, $headers, $order, $sort);
@@ -124,9 +132,10 @@ function list_items($userid = 0, $error = '') {
     $t->set_var(array(
       'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
       'userid' => $row['user_id'],
+      'login' =>  $row['login'],
       'name' => stripslashes($row['fullname']),
       'email' => $row['email'],
-      'userlevel' => $select['authlevels'][$row['user_level']],
+      //'usergroup' => $q->grab_field('select group_name from '.TBL_AUTH_GROUP.' ag, '.TBL_USER_GROUP.' ug  where user_id='.$row['user_id'].' and ag.group_id = ug.group_id limit 1'),
       'date' => date(DATEFORMAT,$row['created_date'])));
     $t->parse('rows','row',true);
   }
