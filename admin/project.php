@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.18 2001/09/18 03:26:15 bcurtis Exp $
+// $Id: project.php,v 1.19 2001/10/02 03:41:19 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -187,7 +187,7 @@ function save_project($projectid = 0) {
   } 
 	if ($error) { show_project($projectid, $error); return; }
 	
-	if (!$_pv['projectid']) {
+	if (!$projectid) {
 		if (!$_pv['vf_version'] = htmlspecialchars(trim($_pv['vf_version']))) {
     	$error['version'] = $STRING['giveversion'];
   	} elseif (!$_pv['cf_name'] = trim($_pv['cf_name'])) {
