@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.7 2001/09/01 16:17:10 bcurtis Exp $
+// $Id: config.php,v 1.8 2001/09/03 15:04:49 bcurtis Exp $
 
 define ('INSTALLPATH', '/home/bcurtis/public_html/phpbt');
 define ('INSTALLURL', 'http://localhost/~bcurtis/phpbt');
@@ -79,13 +79,13 @@ define ('TBL_GROUP_PERM',    TBL_PREFIX.'group_perm');
 define ('TBL_BUG_GROUP',     TBL_PREFIX.'bug_group');
 define ('TBL_PROJECT_GROUP', TBL_PREFIX.'project_group');
 
-require PHPLIBPATH.'db_'.DB_TYPE.'.inc';
-require PHPLIBPATH.'ct_sql.inc';
-require PHPLIBPATH.'session.inc';
-require PHPLIBPATH.'auth.inc';
-require PHPLIBPATH.'perm.inc';
-require PHPLIBPATH.'page.inc';
-require PHPLIBPATH.'template.inc';
+require_once (PHPLIBPATH.'db_'.DB_TYPE.'.inc');
+require_once (PHPLIBPATH.'ct_sql.inc');
+require_once (PHPLIBPATH.'session.inc');
+require_once (PHPLIBPATH.'auth.inc');
+require_once (PHPLIBPATH.'perm.inc');
+require_once (PHPLIBPATH.'page.inc');
+require_once (PHPLIBPATH.'template.inc');
 
 // Localization - include the file with the desired language
 include INSTALLPATH.'/languages/en.php';
