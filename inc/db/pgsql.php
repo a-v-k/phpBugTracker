@@ -136,7 +136,7 @@ $QUERY = array(
 		'left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_id '.
 		'left join '.TBL_DATABASE.' on b.database_id = '.TBL_DATABASE.'.database_id '.
 		'left join '.TBL_VERSION.' version2 on b.to_be_closed_in_version_id = version2.version_id '.
-		'left join '.TBL_VERSION.' version3 on b.closed_id_version_id = version3.version_id, '.
+		'left join '.TBL_VERSION.' version3 on b.closed_in_version_id = version3.version_id, '.
 		TBL_SEVERITY.' severity, '.TBL_STATUS.' status, '.TBL_OS.' os, '.
 		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.TBL_PROJECT.' project '.
 		'where b.severity_id = severity.severity_id '.
