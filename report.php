@@ -20,6 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
+// $Id: report.php,v 1.18 2002/01/16 11:12:33 javyer Exp $  
 
 include 'include.php';
 
@@ -76,9 +77,12 @@ function resolution_by_engineer($projectid = 0) {
 					));
 				$t->parse('cols', 'col', true);
 			}
-			$t->set_var('bgcolor', (++$i % 2 == 0) ? '#dddddd' : '#ffffff');
+			$t->set_var('trclass', $i % 2 ? 'alt' : '');
+			$i++;
 			$t->parse('rows', 'row', true);
 			$t->set_var('cols', '');
+			//for header default
+			$t->set_var('trclass','alt');
 		}
 	}
 }
