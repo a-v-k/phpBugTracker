@@ -29,7 +29,6 @@ function do_form($userid = 0) {
 function show_form($userid = 0, $error = '') {
   global $q, $me, $t, $firstname, $lastname, $email, $password, $usertype. $STRING;
   
-  #$t->set_file('content','userform.html');
   if ($userid && !$error) {
     $row = $q->grab("select * from User where UserID = '$userid'");
     $t->set_var(array(

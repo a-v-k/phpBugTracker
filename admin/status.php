@@ -29,7 +29,6 @@ function do_form($statusid = 0) {
 function show_form($statusid = 0, $error = '') {
   global $q, $me, $t, $fname, $fdescription, $fsortorder, $STRING;
   
-  #$t->set_file('content','statusform.html');
   if ($statusid && !$error) {
     $row = $q->grab("select * from Status where StatusID = '$statusid'");
     $t->set_var(array(

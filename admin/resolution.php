@@ -30,7 +30,6 @@ function do_form($resolutionid = 0) {
 function show_form($resolutionid = 0, $error = '') {
   global $q, $me, $t, $fname, $fdescription, $fsortorder, $STRING;
   
-  #$t->set_file('content','resolutionform.html');
   if ($resolutionid && !$error) {
     $row = $q->grab("select * from Resolution where ResolutionID = '$resolutionid'");
     $t->set_var(array(
