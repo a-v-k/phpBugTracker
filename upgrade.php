@@ -20,12 +20,11 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.26 2002/09/27 18:40:00 bcurtis Exp $
+// $Id: upgrade.php,v 1.27 2002/10/19 19:02:10 bcurtis Exp $
 
 define ('NO_AUTH', 1);
-define ('STYLE', 'default');
 
-include 'include.php';
+@include 'include.php';
 
 function upgrade() {
 	global $db;
