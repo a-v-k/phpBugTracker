@@ -263,6 +263,7 @@ function sorting_headers($url, $headers, $order, $sort, $urlstr = '') {
     $t->set_var($k.'url', "$url?order=$v&sort=".
       ($order == $v ? ($sort == 'asc' ? 'desc' : 'asc') : 'asc').
       ($urlstr ? '&'.$urlstr : ''));
+    $t->set_var($k.'color', $order == $v ? '#bbbbbb' : '#eeeeee');
   }
 }
 
