@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.50 2001/09/03 20:16:34 bcurtis Exp $
+// $Id: include.php,v 1.51 2001/09/05 13:16:55 javyer Exp $
 
 if (defined("INCLUDE_PATH")) {
   require INCLUDE_PATH."config.php";
@@ -162,7 +162,7 @@ class uperm extends Perm {
         }
       }
     } else {
-      if (!$auth->auth[$auth_var][$req]) {
+      if (!$auth->auth[$auth_var][$reqs]) {
         return false;
       }
     }
