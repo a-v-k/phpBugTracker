@@ -14,7 +14,9 @@
 : Added the ability to create user groups and restrict project visibility based
   on those groups.
 : When a bug is filed against a component with an owner, that owner will be 
-  assigned the bug and receive an email about the bug
+  assigned the bug and receive an email about the bug.
+: Fixed a bug preventing users from being assigned to the User group when 
+  created.
 
 -- 0.5.1 -- 11 Nov 2001
 : Fixed a bug (introduced in 0.5.0) with severity color not being pulled in
