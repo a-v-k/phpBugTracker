@@ -24,11 +24,13 @@
 include 'include.php';
 
 function change_bug_list_columns($column_list) {
-	global $q, $u, $t;
+	global $q, $u, $t, $auth;
 	
+	$auth->auth['db_fields'] = $column_list;
 	$column_list = serialize($column_list);
 	$q->query("update user set bug_list_fields = '$column_list' where user_id = $u");
-	$t->set_file('content', 'columnlistchanged.html');
+	//$t->set_file('content', 'columnlistchanged.html');
+	show_text('Your bug list column preferences have been saved');
 }
 
 function change_password($pass1, $pass2) {
@@ -79,9 +81,9 @@ function show_preferences_form($error = '') {
 $t->set_file('wrap', 'wrap.html');
 $perm->check('User');
 
-if ($do) switch ($op) {
-	case 'changepassword' : change_password($_gv['pass1'], $_gv['pass2']); break;
-	case 'changecolumnlist' : change_bug_list_columns($_gv['column_list']); break;
+if ($do) switch ($do) {
+	case 'changepassword' : change_password($_pv['pass1'], $_pv['pass2']); break;
+	case 'changecolumnlist' : change_bug_list_columns($_pv['column_list']); break;
 	default : show_preferences_form();
 }
 else show_preferences_form();

@@ -169,6 +169,7 @@ class uauth extends Auth {
 			$this->auth['lname'] = $u['last_name'];
 			$this->auth['email'] = $u['email'];
 			$this->auth['perm'] = $select['authlevels'][$u['user_level']];
+			$this->auth['db_fields'] = unserialize($u['bug_list_fields']);
 			return $u['user_id'];
 		}
 	}

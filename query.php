@@ -158,7 +158,8 @@ function build_query($assignedto, $reportedby, $open) {
 
 function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	global $querystring, $me, $q, $t, $selrange, $order, $sort, $query, 
-		$page, $op, $select, $TITLE, $STRING, $savedqueryname, $u, $default_db_fields;
+		$page, $op, $select, $TITLE, $STRING, $savedqueryname, $u, $auth, 
+		$default_db_fields;
 
 	$t->set_file('content','buglist.html');
 	$t->set_block('content','row','rows');
@@ -214,7 +215,9 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	}
 	
 	// Header row 
-	foreach ($default_db_fields as $field => $title) {
+	$db_fields = $auth->auth['db_fields'] ? $auth->auth['db_fields'] :
+		$default_db_fields;
+	foreach ($db_fields as $field => $title) {
 		$t->set_var(array(
 			'coldata' => "<a href='{{$field}url}'>$title</a>",
 			'td-extra' => "class=\"header-col\" bgcolor=\"{{$field}color}\""
@@ -229,7 +232,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	while ($row = $q->grab()) {
 		$bgcolor = USE_SEVERITY_COLOR ? $row['severity_color'] : 
 			((++$i % 2 == 0) ? '#dddddd' : '#ffffff');
-		foreach ($default_db_fields as $field => $title) {
+		foreach ($db_fields as $field => $title) {
 			switch ($field) {
 				case 'url' : 
 					$coldata = "<a href='{$row[$field]}'>{$row[$field]}</a>"; 
@@ -270,7 +273,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		$t->parse('rows','row',true);
 		$t->set_var('cols', '');
 	}
-	$t->set_var('numcols', count($default_db_fields));
+	$t->set_var('numcols', count($db_fields));
 }
 
 $t->set_file('wrap','wrap.html');
