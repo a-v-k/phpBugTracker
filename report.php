@@ -43,6 +43,8 @@ function resolution_by_engineer($projectid = 0) {
 	
 	if ($projectid && is_numeric($projectid)) {
 		$projectquery = "where Project = $projectid";
+	} else {
+		$projectquery = '';
 	}
 	
 	$q->query("$querystring, count(BugID) as Total from Bug b left join User u on AssignedTo = UserID $projectquery group by AssignedTo");
@@ -57,9 +59,10 @@ function resolution_by_engineer($projectid = 0) {
 		$t->set_var('bgcolor', '#eeeeee');
 		$t->parse('rows', 'row', true);
 		$t->set_var('cols', '');
+		$i = 0;
 		while ($row = $q->grab()) {
 			foreach ($resfields as $col) {
-				if ($row[$col] == '') {
+				if (!isset($row[$col]) || $row[$col] == '') {
 					$coldata = 'Unassigned';
 				} elseif ($col == 'Assigned To') {
 					$coldata = maskemail($row[$col]);
@@ -79,6 +82,7 @@ function resolution_by_engineer($projectid = 0) {
 	}
 }
 
+$projectid = isset($_gv['projectid']) ? $_gv['projectid'] : 0;
 $t->set_file('wrap','wrap.html');
 $t->set_file('content','report.html');
 $t->set_var(array(
