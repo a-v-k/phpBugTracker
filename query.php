@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.53 2002/01/19 15:11:25 bcurtis Exp $
+// $Id: query.php,v 1.54 2002/01/19 17:20:11 bcurtis Exp $
 
 include 'include.php';
 
@@ -33,8 +33,7 @@ function delete_saved_query($queryid) {
 }
 
 function show_query() {
-	global $q, $t, $status, $resolution, $os, $priority, $severity, $TITLE, $u,
-		$perm, $auth;
+	global $q, $t, $TITLE, $u, $perm, $auth;
 	
 	$nq = new dbclass;
 	$js = '';
@@ -101,11 +100,11 @@ function show_query() {
 	
 	$t->set_var(array(
 		'js' => $js,
-		'status' => build_select('status',$status),
-		'resolution' => build_select('resolution',$resolution),
+		'status' => build_select('status'),
+		'resolution' => build_select('resolution'),
 		'os' => build_select('os',-1), // Prevent the OS regex selection
-		'priority' => build_select('priority',$priority),
-		'severity' => build_select('severity',$severity),
+		'priority' => build_select('priority'),
+		'severity' => build_select('severity'),
 		'projects' => build_select('project'),
 		'TITLE' => $TITLE['bugquery']
 		));
@@ -195,17 +194,20 @@ function build_query($assignedto, $reportedby, $open) {
 }
 
 function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
-	global $me, $q, $t, $selrange, $order, $sort, $query, 
-		$page, $op, $select, $TITLE, $STRING, $savedqueryname, $u, $auth, 
-		$default_db_fields, $all_db_fields, $_sv;
+	global $me, $q, $t, $select, $TITLE, $STRING, $_gv, $u, $auth, 
+		$default_db_fields, $all_db_fields, $_sv, $HTTP_SERVER_VARS;
 
 	$t->set_file('content','buglist.html');
 	$t->set_block('content','row','rows');
 	$t->set_block('row','col','cols');
 	
+	extract($_gv);
+	if (!isset($page)) {
+		$page = 1;
+	}
 	// Save the query if requested
-	if ($savedqueryname) {
-		$savedquerystring = ereg_replace('&savedqueryname=.*(&?)', '\\1', $GLOBALS['QUERY_STRING']);
+	if (!empty($savedqueryname)) {
+		$savedquerystring = ereg_replace('&savedqueryname=.*(&?)', '\\1', $HTTP_SERVER_VARS['QUERY_STRING']);
 		$q->query("insert into ".TBL_SAVED_QUERY.
 			" (saved_query_id, user_id, saved_query_name, saved_query_string) 
 			values (".$q->nextid(TBL_SAVED_QUERY).", $u, '$savedqueryname', '$savedquerystring')");
@@ -368,8 +370,8 @@ $open = !empty($_gv['open']) ? $_gv['open'] : 0;
 if (isset($_gv['op'])) switch($_gv['op']) {
 	case 'query' : show_query(); break;
 	case 'doquery' : $_sv['queryinfo'] = array(); list_items(); break;
-	case 'delquery' : delete_saved_query($queryid); break;
-	case 'mybugs' : list_items($assignedto, $reportedby, $open); break;
+	case 'delquery' : delete_saved_query($_gv['queryid']); break;
+	case 'mybugs' : list_items($_gv['assignedto'], $_gv['reportedby'], $_gv['open']); break;
 	default : show_query(); break;
 }
 else list_items($assignedto, $reportedby, $open);
