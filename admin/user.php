@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.43 2002/03/30 19:12:30 bcurtis Exp $
+// $Id: user.php,v 1.44 2002/03/30 20:37:47 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -42,6 +42,7 @@ function do_form($userid = 0) {
 		return;
 	}
 	if (!isset($_pv['factive'])) $_pv['factive'] = 0;
+	if (!isset($_pv['fe_notice'])) $_pv['fe_notice'] = 0;
 
 	if (EMAIL_IS_LOGIN) {
 		$login = $_pv['femail'];
@@ -70,6 +71,10 @@ function do_form($userid = 0) {
 					values ('$new_user_id' ,'$group', $u, $now)");
 			}
 		}
+		// Add to prefs
+		$db->query("INSERT INTO ".TBL_USER_PREF." (user_id, email_notices) 
+			    VALUES ($new_user_id, '{$_pv['fe_notice']}')");
+
 		// And add to the user group
 		$db->query("insert into ".TBL_USER_GROUP.
 			" (user_id, group_id, created_by, created_date) 
@@ -92,7 +97,11 @@ function do_form($userid = 0) {
 			", last_name = ".$db->quote(stripslashes($_pv['flastname'])).
 			", login = ".$db->quote(stripslashes($login)).
 			", email = '{$_pv['femail']}', $pquery active = {$_pv['factive']} ".
-			"where user_id = '$userid'");
+			"where user_id = $userid");
+			
+		// Update preferences
+		$db->query("update ".TBL_USER_PREF.
+			" set email_notices = {$_pv['fe_notice']}	where user_id = $userid");
 
 		// Update group memberships
 		// Get user's groups (without dropping the user group)
@@ -132,7 +141,8 @@ function show_form($userid = 0, $error = '') {
 
 
 	if ($userid && !$error) {
-		$row = $db->getRow("select * from ".TBL_AUTH_USER." where user_id = '$userid'");
+		$row = $db->getRow('select * from '.TBL_AUTH_USER." u, ".
+			TBL_USER_PREF." p where u.user_id = $userid and u.user_id = p.user_id");
 
 		// Get user's groups
 		$user_groups = $db->getCol('select group_id from '.TBL_USER_GROUP.
@@ -147,10 +157,11 @@ function show_form($userid = 0, $error = '') {
 			'femail' => $row['email'],
 			'fpassword' => $row['password'],
 			'factive' => $row['active'] ? 'checked' : '',
+			'fe_notice' => $row['email_notices'] ? 'checked' : '',
 			'fusergroup' => build_select('group', $user_groups),
 			// Whether or not this user has admin rights
 			'hadadmin' => $db->getOne('select count(*) from '.TBL_USER_GROUP.
-				" where user_id = {$row['user_id']} and group_id = 1")
+				" where user_id = $userid and group_id = 1")
 			));
 	} else {
 		$t->set_var(array(
@@ -166,6 +177,8 @@ function show_form($userid = 0, $error = '') {
 			'fpassword' => isset($_pv['fpassword']) ? $_pv['fpassword'] : 
 				genpassword(10),
 			'factive' => isset($_pv['factive']) ? ($_pv['factive'] ? 'checked' : '')
+				: 'checked',
+			'fe_notice' => isset($_pv['fe_notice']) ? ($_pv['fe_notice'] ? 'checked' : '')
 				: 'checked',
 			'fusergroup' => build_select('group', (isset($_pv['fusergroup']) ? 
 				$_pv['fusergroup'] : array())),
