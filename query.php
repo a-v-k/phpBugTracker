@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.32 2001/10/12 04:19:31 bcurtis Exp $
+// $Id: query.php,v 1.33 2001/10/16 04:19:47 bcurtis Exp $
 
 include 'include.php';
 
@@ -96,10 +96,10 @@ function show_query() {
 }
 
 function build_query($assignedto, $reportedby, $open) {
-	global $q, $sess, $auth, $querystring, $status, $resolution, $os, $priority, 
-		$severity, $email1, $emailtype1, $emailfield1, $Title, $Description, $URL, 
-		$Title_type, $Description_type, $URL_type, $projects, $versions, $components;
+	global $q, $sess, $auth, $querystring, $_gv;
 
+	foreach ($_gv as $k => $v) { $$k = $v; }
+	
 	// Open bugs assigned to the user -- a hit list
 	if ($assignedto || $reportedby) {
 		$q->query("select status_id from ".TBL_STATUS." where status_name ".($open ? '' : 'not ')."in ('Unconfirmed', 'New', 'Assigned', 'Reopened')");
@@ -127,7 +127,7 @@ function build_query($assignedto, $reportedby, $open) {
 				case 'not rlike' : 
 				case '=' : $econd = "$emailtype1 '$email1'"; break;
 			}
-			foreach($emailfield1 as $field) $equery[] = "$field.email $econd";
+			foreach($emailfield1 as $field) $equery[] = "$field.$emailsearch1 $econd";
 			$query[] = '('.delimit_list(' or ',$equery).')';
 		}
 
@@ -172,8 +172,13 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		$q->query("insert into ".TBL_SAVED_QUERY." (user_id, saved_query_name, saved_query_string)"
 			." values ($u, '$savedqueryname', '$savedquerystring')");
 	}
-	if (!$order) { $order = 'bug_id'; $sort = 'asc'; }
-	if (!$querystring or $op) build_query($assignedto, $reportedby, $open);
+	if (!$order) { 
+		$order = 'bug_id'; 
+		$sort = 'asc'; 
+	}
+	if (!$querystring or $op) {
+		build_query($assignedto, $reportedby, $open);
+	}
 	$nr = $q->grab_field("select count(*) from ".TBL_BUG." bug"
 		." left join ".TBL_AUTH_USER." owner on bug.assigned_to = owner.user_id"
 		." left join ".TBL_AUTH_USER." reporter on bug.created_by = reporter.user_id "

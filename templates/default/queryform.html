@@ -60,7 +60,11 @@ function updateMenus(f) {
                   <table cellspacing="0" cellpadding="0">
                     <tr>
                       <td rowspan="2" valign="top">
-                      Email: <input name="email1" size="30" value="">&nbsp;matching
+                      <select name="emailsearch1">
+												<option value="email">Email</option>
+												<option value="login">Login</option>
+											</select>
+											: <input name="email1" size="30" value="">&nbsp;matching
                       as <select name="emailtype1">
                         <option value="rlike">
                           regexp
