@@ -340,7 +340,7 @@ function sorting_headers($url, $headers, $order, $sort, $urlstr = '') {
 
 ///
 /// Generates a somewhat random pronounceable password $length letters long
-/// (From zend.com)
+/// (From zend.com user Rival7)
 function genpassword($length){ 
 
 		srand((double)microtime()*1000000); 
@@ -398,7 +398,7 @@ function delimit_list($delimiter, $ary) {
 
 ///
 /// Check the validity of an email address
-/// (From zend.com)
+/// (From zend.com user russIndr)
 function valid_email($email) {		 
 	return eregi('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$', $email); 
 }
