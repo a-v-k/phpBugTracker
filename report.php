@@ -12,7 +12,7 @@ function resolution_by_engineer($projectid = 0) {
 	
 	$t->set_block('content', 'row', 'rows');
 	$t->set_block('row', 'col', 'cols');
-	$t->set_var('reporttitle', 'Status of Assigned bugs');
+	$t->set_var('reporttitle', 'Bug resolutions');
 	
 	// Start off our query
 	$querystring = 'select Email as "Assigned To", sum(if(Resolution = "0",1,0)) as "Open"';
@@ -25,10 +25,11 @@ function resolution_by_engineer($projectid = 0) {
 	}
 	$resfields[] = 'Total';
 	
-	if ($projectid && is_numeric($projectid)) 
-		$projectquery = "and Project = $projectid";
-		
-	$q->query("$querystring, count(BugID) as Total from Bug b, User u where AssignedTo = UserID $projectquery group by AssignedTo");
+	if ($projectid && is_numeric($projectid)) {
+		$projectquery = "where Project = $projectid";
+	}
+	
+	$q->query("$querystring, count(BugID) as Total from Bug b left join User u on AssignedTo = UserID $projectquery group by AssignedTo");
 	if (!$q->num_rows()) {
 		$t->set_var('rows', 'No data to display');
 	} else {
@@ -42,11 +43,16 @@ function resolution_by_engineer($projectid = 0) {
 		$t->set_var('cols', '');
 		while ($row = $q->grab()) {
 			foreach ($resfields as $col) {
+				if ($row[$col] == '') {
+					$coldata = 'Unassigned';
+				} elseif ($col == 'Assigned To') {
+					$coldata = sprintf("<a href='mailto:%s'>%s</a>", 
+						stripslashes($row[$col]), stripslashes($row[$col]));
+				} else {
+					$coldata = stripslashes($row[$col]);
+				}
 				$t->set_var(array(
-					'coldata' => $col == 'Assigned To' 
-						? sprintf("<a href='mailto:%s'>%s</a>", stripslashes($row[$col]),
-							stripslashes($row[$col]))
-						: stripslashes($row[$col]),
+					'coldata' => $coldata,
 					'colclass' => $col == 'Assigned To' ? '' : 'center-col'
 					));
 				$t->parse('cols', 'col', true);
