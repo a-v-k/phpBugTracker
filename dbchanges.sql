@@ -13,7 +13,7 @@ insert into attachment select * from Attachment;
 
 CREATE TABLE `bug` (
   `bug_id` int(10) unsigned NOT NULL default '0',
-  `bug_title` varchar(30) NOT NULL default '',
+  `bug_title` varchar(100) NOT NULL default '',
   `bug_desc` text NOT NULL,
   `bug_url` varchar(255) NOT NULL default '',
   `severity_id` tinyint(3) unsigned NOT NULL default '0',
@@ -30,9 +30,10 @@ CREATE TABLE `bug` (
   `component_id` int(10) unsigned NOT NULL default '0',
   `op_sys_id` tinyint(3) unsigned NOT NULL default '0',
   `browser_string` varchar(255) NOT NULL default '',
+	`close_date` bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (`bug_id`)
 );
-insert into bug select * from Bug;
+insert into bug select *, 0 from Bug;
 
 CREATE TABLE `bug_history` (
   `bug_id` int(10) unsigned NOT NULL default '0',
