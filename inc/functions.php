@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.35 2002/09/23 20:08:59 bcurtis Exp $
+// $Id: functions.php,v 1.36 2002/10/19 20:10:13 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -176,7 +176,7 @@ function build_select($params) {
 	case 'LANGUAGE' :
 	    $dir = opendir('languages');
 	    while (false !== ($file = readdir($dir))) {
-			if ($file != '.' && $file != '..' && $file != 'CVS') {
+			if ($file != '.' && $file != '..' && $file != 'CVS' && substr($file, -3) == 'php') {
 		    	$filelist[] = str_replace('.php', '', $file);
 			}
 	    }
