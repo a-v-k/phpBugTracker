@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.63 2001/11/24 17:51:56 bcurtis Exp $
+// $Id: bug.php,v 1.64 2001/12/05 04:21:19 bcurtis Exp $
 
 include 'include.php';
 
@@ -35,8 +35,8 @@ function format_comments($comments) {
 		'/cvs:([^\.\s:,\?!]+(\.[^\.\s:,\?!]+)*)(:)?(\d\.[\d\.]+)?([\W\s])?/i' // matches cvs:filename.php or cvs:filename.php:n.nn 
 		);
 	$replacements = array(
-		"\1 <a href='$me?op=show&bugid=\3'>\2\3<\/a>", // internal link to bug
-		'<a href="'.CVS_WEB.'\1#rev\4" target="_new">\1</a>\5' // external link to cvs web interface
+		"\\1 <a href='$me?op=show&bugid=\\3'>\\2\\3</a>", // internal link to bug
+		'<a href="'.CVS_WEB.'\\1#rev\\4" target="_new">\\1</a>\\5' // external link to cvs web interface
 		);
 	
 	return preg_replace($patterns, $replacements, 
