@@ -61,7 +61,7 @@ class uauth {
 	}
 	
 	function auth_validatelogin() {
-    global $_pv, $q, $select, $emailpass, $emailsuccess, $STRING;
+    global $_pv, $db, $select, $emailpass, $emailsuccess, $STRING;
 
 		extract($_pv);
     if (!$username) return 0;
@@ -69,24 +69,24 @@ class uauth {
     if (ENCRYPT_PASS) {
       $password = md5($password);
     }
-    $u = $q->grab("select * from ".TBL_AUTH_USER." where login = '$username' and password = '$password' and active > 0");
-    if (!$q->num_rows()) {
+    $u = $db->getRow("select * from ".TBL_AUTH_USER." where login = '$username' and password = '$password' and active > 0");
+    if (!$u or DB::isError($u)) {
       return 0;
     } else {
 			$this->auth['db_fields'] = @unserialize($u['bug_list_fields']);
 
       // Grab group assignments and permissions based on groups
-			$q->query("select u.group_id, group_name from ".TBL_USER_GROUP." u, ".
-				TBL_AUTH_GROUP." a where user_id = {$u['user_id']} ".
+			$rs = $db->query("select u.group_id, group_name from ".TBL_USER_GROUP.
+				" u, ".TBL_AUTH_GROUP." a where user_id = {$u['user_id']} ".
 				'and u.group_id = a.group_id');
-			while (list($groupid, $groupname) = $q->grab()) {
+			while (list($groupid, $groupname) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 				$this->auth['group_ids'][] = $groupid;
 				$this->auth['group'][$groupname] = true;
 			}
-			$q->query("select perm_name from ".TBL_AUTH_PERM." ap, ".
+			$perms = $db->getCol("select perm_name from ".TBL_AUTH_PERM." ap, ".
 				TBL_GROUP_PERM." gp where group_id in (".
 				delimit_list(',', $this->auth['group_ids']).") and gp.perm_id = ap.perm_id");
-			while ($perm = $q->grab_field()) {				
+			foreach ($perms as $perm) {				
         $this->auth['perm'][$perm] = true;
       }
       $this->auth['uid'] = $u['user_id'];

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.8 2002/03/17 01:46:38 bcurtis Exp $
+// $Id: functions.php,v 1.9 2002/03/18 16:21:42 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -43,7 +43,7 @@ $select['priority'] = array(
 ///
 /// Build a select box with the item matching $value selected
 function build_select($box, $value = '', $project = 0) {
-  global $q, $select, $perm, $auth, $STRING, $restricted_projects;
+  global $db, $select, $perm, $auth, $STRING, $restricted_projects;
 
   //create hash to map tablenames
   $cfgDatabase = array(
@@ -89,8 +89,8 @@ function build_select($box, $value = '', $project = 0) {
         }
         $text = "<option value=\"all\"$sel>All Groups</option>";
       }
-      $q->query($queries[$box]);
-      while ($row = $q->grab()) {
+      $rs = $db->query($queries[$box]);
+      while ($rs->fetchInto($row)) {
         if (count($value) && in_array($row[$box.'_id'], $value)) $sel = ' selected';
         else $sel = '';
         $text .= '<option value="'.
@@ -103,8 +103,8 @@ function build_select($box, $value = '', $project = 0) {
     case 'project' :
     case 'component' :
     case 'version' :
-      $q->query($queries[$box]);
-      while ($row = $q->grab()) {
+      $rs = $db->query($queries[$box]);
+      while ($rs->fetchInto($row)) {
         if ($value == $row[$box.'_id'] and $value != '') $sel = ' selected';
         else $sel = '';
         $text .= '<option value="'.
@@ -112,8 +112,8 @@ function build_select($box, $value = '', $project = 0) {
       }
       break;
     case 'os' :
-      $q->query("select {$box}_id, {$box}_name, regex from ".TBL_OS." where sort_order > 0 order by sort_order");
-      while ($row = $q->grab()) {
+      $rs = $db->query("select {$box}_id, {$box}_name, regex from ".TBL_OS." where sort_order > 0 order by sort_order");
+      while ($rs->fetchInto($row)) {
         if ($value == '' and isset($row['Regex']) and
           preg_match($row['Regex'],$GLOBALS['HTTP_USER_AGENT'])) $sel = ' selected';
         elseif ($value == $row[$box.'_id']) $sel = ' selected';
@@ -123,17 +123,17 @@ function build_select($box, $value = '', $project = 0) {
       }
       break;
     case 'owner' :
-      $q->query("select u.user_id, login from ".TBL_AUTH_USER." u, ".TBL_USER_GROUP." ug, ".TBL_AUTH_GROUP." g where u.active > 0 and u.user_id = ug.user_id and ug.group_id = g.group_id and group_name = 'Developer' order by login");
-      while ($row = $q->grab()) {
+      $rs = $db->query("select u.user_id, login from ".TBL_AUTH_USER." u, ".TBL_USER_GROUP." ug, ".TBL_AUTH_GROUP." g where u.active > 0 and u.user_id = ug.user_id and ug.group_id = g.group_id and group_name = 'Developer' order by login");
+      while ($rs->fetchInto($row)) {
         if ($value == $row['user_id']) $sel = ' selected';
         else $sel = '';
         $text .= "<option value=\"{$row['user_id']}\"$sel>{$row['login']}</option>";
       }
       break;
     case 'bug_cc' :
-      $q->query('select b.user_id, login from '.TBL_BUG_CC.' b left join '.
+      $rs = $db->query('select b.user_id, login from '.TBL_BUG_CC.' b left join '.
         TBL_AUTH_USER." using(user_id) where bug_id = $value");
-      while (list($uid, $user) = $q->grab()) {
+      while (list($uid, $user) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
         $text .= "<option value=\"$uid\">".maskemail($user).'</option>';
       }
 
@@ -314,29 +314,28 @@ function maskemail($email) {
 ///
 /// Build the javascript for the dynamic project -> component -> version select boxes
 function build_project_js() {
-	global $q, $u, $perm, $auth;
+	global $db, $u, $perm, $auth;
 	
-	$nq = new dbclass;
 	$js = '';
 	
 	// Build the javascript-powered select boxes
 	if ($perm->have_perm('Admin')) {
-		$q->query("select project_id, project_name from ".TBL_PROJECT.
+		$rs = $db->query("select project_id, project_name from ".TBL_PROJECT.
 			" where active = 1 order by project_name");
 	} else {
-		$q->query('select p.project_id, project_name from '.TBL_PROJECT.
+		$rs = $db->query('select p.project_id, project_name from '.TBL_PROJECT.
 			' p left join '.TBL_PROJECT_GROUP.' pg using(project_id) 
 			where active = 1 and (pg.project_id is null or pg.group_id in ('.
 			delimit_list(',', $auth->auth['group_ids']).')) group by 
 			p.project_id, p.project_name order by project_name');
 	}
-	while (list($pid, $pname) = $q->grab()) {
+	while (list($pid, $pname) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 		$pname = addslashes($pname);
 		// Version array
 		$js .= "versions['$pname'] = new Array(new Array('','All'),";
-		$nq->query("select version_name, version_id from ".TBL_VERSION.
+		$rs2 = $db->query("select version_name, version_id from ".TBL_VERSION.
 			" where project_id = $pid and active = 1");
-		while (list($version,$vid) = $nq->grab()) {
+		while (list($version,$vid) = $rs2->fetchRow(DB_FETCHMODE_ORDERED)) {
 			$version = addslashes($version);
 			$js .= "new Array($vid,'$version'),";
 		}
@@ -345,9 +344,9 @@ function build_project_js() {
 		
 		// Component array
 		$js .= "components['$pname'] = new Array(new Array('','All'),";
-		$nq->query("select component_name, component_id from ".TBL_COMPONENT.
+		$rs2 = $db->query("select component_name, component_id from ".TBL_COMPONENT.
 			" where project_id = $pid and active = 1");
-		while (list($comp,$cid) = $nq->grab()) {
+		while (list($comp,$cid) = $rs2->fetchRow(DB_FETCHMODE_ORDERED)) {
 			$comp = addslashes($comp);
 			$js .= "new Array($cid,'$comp'),";
 		}
