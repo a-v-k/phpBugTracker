@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.61 2001/10/12 04:19:31 bcurtis Exp $
+// $Id: include.php,v 1.62 2001/10/12 13:43:29 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -51,7 +51,7 @@ class dbclass extends DB_Sql {
 $q = new dbclass;
 
 // Set up the configuration variables
-$q->query("select varname, varvalue from configuration");
+$q->query('select varname, varvalue from '.TBL_CONFIGURATION);
 while (list($k, $v) = $q->grab()) {
 	define($k, $v);
 }

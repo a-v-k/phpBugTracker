@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.13 2001/10/12 04:19:31 bcurtis Exp $
+// $Id: config.php,v 1.14 2001/10/12 13:43:29 bcurtis Exp $
 
 define ('PHPLIB_PATH', ''); // If PHPlib is not in your include path
 
@@ -44,6 +44,7 @@ define ('TBL_BUG_GROUP',     TBL_PREFIX.'bug_group');
 define ('TBL_BUG_HISTORY',   TBL_PREFIX.'bug_history');
 define ('TBL_COMMENT',       TBL_PREFIX.'comment');
 define ('TBL_COMPONENT',     TBL_PREFIX.'component');
+define ('TBL_CONFIGURATION', TBL_PREFIX.'configuration');
 define ('TBL_GROUP_PERM',    TBL_PREFIX.'group_perm');
 define ('TBL_OS',            TBL_PREFIX.'os');
 define ('TBL_PROJECT',       TBL_PREFIX.'project');
