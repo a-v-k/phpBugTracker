@@ -1,4 +1,8 @@
--- 0.9.0 --
+-- 1.0 --
+: Added display of the bug ids a bug blocks.
+: Allow users to suppress the update email when changing a bug.
+
+-- 0.9.0 -- 25 Oct 2002
 : Replaced the mail function with one that encodes (i18n support).
 : Added four additional fields for tracking bug information: Database type
   and version, Environment, Closed Version, To-be-closed Version.
