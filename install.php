@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.4 2001/11/03 17:17:40 bcurtis Exp $
+// $Id: install.php,v 1.5 2001/11/09 17:53:37 bcurtis Exp $
 
 include_once('template.inc');
 $t = new Template('templates/default', 'keep');
@@ -197,6 +197,8 @@ function show_front($error = '') {
 	$db_types = array(
 		'mysql' => 'MySQL',
 		'pgsql' => 'PostgreSQL');
+		
+	foreach ($_pv as $k => $v) $$k = $v;
 	
 	$t->set_file('content', 'install.html');
 	$t->set_block('content', 'writeableblock', 'writeable');
