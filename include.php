@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.71 2001/11/02 04:21:41 bcurtis Exp $
+// $Id: include.php,v 1.72 2001/11/02 13:38:16 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -74,7 +74,11 @@ class dbclass extends DB_Sql {
 		global $auth;
 		
 		if ($seq_name == TBL_SAVED_QUERY) {
-			return $q->grab_field("select max(saved_query_id)+1 where user_id = ".$auth->auth['uid']);
+			if ($id = $this->grab_field("select max(saved_query_id)+1 from ".TBL_SAVED_QUERY." where user_id = ".$auth->auth['uid'])) {
+				return $id;
+			} else {
+				return 1;
+			}
 		} else {
 			return DB_Sql::nextid($seq_name);
 		}
