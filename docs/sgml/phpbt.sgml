@@ -7,6 +7,7 @@
 
 <!-- User's Guide -->
 <!ENTITY primer SYSTEM "primer.sgml">
+<!ENTITY bugsearch SYSTEM "bugsearch.sgml">
 
 <!-- Administrator's Guide -->
 <!ENTITY installation SYSTEM "installation.sgml">
@@ -19,60 +20,48 @@
 
 
 <book id="index">
-  <bookinfo>
-    <title>&phpbt;</title>
-    <abstract>
-      <para>&phpbt; is a web-based bug reporting and tracking system.  It helps development teams to manage the testing and debugging segments of the development cycle.</para>
-    </abstract>
-    <!--<mediaobject>
-      <imageobject>
-	<imagedata fileref="images/logo.jpg" format="JPG" align="left">
-      </imageobject>
-      <imageobject>
-	<imagedata fileref="images/logo.eps" format="EPS" align="left">
-      </imageobject>
-      <textobject>
-	<phrase>&phpbt; logo</phrase>
-      </textobject>
-    </mediaobject>-->
-  </bookinfo>
-	
-  <chapter id="userguide">
-    <title>User's Guide</title>
-    <abstract>
-      <para>Currently all interactions with &phpbt; are done via the web interface.  Users can submit bugs, communicate with developers and testers about bugs, and search through the bug database.</para>
-    </abstract>
-		
-    &primer;
-		
-  </chapter>
+<bookinfo>
+<title>&phpbt;</title>
+<abstract>
+<para>&phpbt; is a web-based bug reporting and tracking system.  It helps development teams to manage the testing and debugging segments of the development cycle.</para>
+</abstract>
+</bookinfo>
 
-  <chapter id="adminguide">
-    <title>Administrator's Guide</title>
-    <abstract>
-      <para>One of the main design goals of &phpbt; is to make installation and administration easy.  In fact, the difficulty of installing bugzilla was a key motivator for &phpbt;'s existence.</para>
-    </abstract>
+<chapter id="userguide">
+<title>User's Guide</title>
+<abstract>
+<para>Currently all interactions with &phpbt; are done via the web interface.  Users can submit bugs, communicate with developers and testers about bugs, and search through the bug database.</para>
+</abstract>
 
-    &installation;
-    &configuration;
+&primer;
+&bugsearch;
 
-  </chapter>
+</chapter>
 
-  <chapter id="devguide">
-    <title>Developer's Guide</title>
-    <abstract>
-      <para>Adding on to or extending &phpbt; should be easy for those with a knowledge of PHP and SQL.  New developers are always welcome to join the project at <ulink url="http://www.sourceforge.net/projects/phpbt/">http://www.sourceforge.net/projects/phpbt</ulink>, or to simply submit patches, bug reports, or feature requests.</para>
-    </abstract>
+<chapter id="adminguide">
+<title>Administrator's Guide</title>
+<abstract>
+<para>One of the main design goals of &phpbt; is to make installation and administration easy.  In fact, the difficulty of installing bugzilla was a key motivator for &phpbt;'s existence.</para>
+</abstract>
 
-    &dependencies;
-    &devstandards;
+&installation;
+&configuration;
 
-  </chapter>
+</chapter>
+
+<chapter id="devguide">
+<title>Developer's Guide</title>
+<abstract>
+<para>Adding on to or extending &phpbt; should be easy for those with a knowledge of PHP and SQL.  New developers are always welcome to join the project at <ulink url="http://www.sourceforge.net/projects/phpbt/">http://www.sourceforge.net/projects/phpbt</ulink>, or to simply submit patches, bug reports, or feature requests.</para>
+</abstract>
+
+&dependencies;
+&devstandards;
+
+</chapter>
 </book>
 
 <!-- Local Variables: -->
-<!-- sgml-indent-step: 2 -->
-<!-- sgml-indent-data: 2 -->
 <!-- End: -->
 
 
