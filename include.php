@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.115 2002/04/14 23:51:26 bcurtis Exp $
+// $Id: include.php,v 1.116 2002/05/09 02:53:14 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -63,8 +63,6 @@ while (list($k, $v) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 include 'languages/'.LANGUAGE.'.php';
 
 $me = $HTTP_SERVER_VARS['PHP_SELF'];
-$me2 = !empty($HTTP_SERVER_VARS['REQUEST_URI']) ? $HTTP_SERVER_VARS['REQUEST_URI'] : 
-	$HTTP_SERVER_VARS['SCRIPT_NAME'].'?'.$HTTP_SERVER_VARS['QUERY_STRING'];
 $selrange = 30;
 $now = time();
 $_gv =& $HTTP_GET_VARS;
@@ -108,7 +106,25 @@ class extSmarty extends Smarty {
 		error_reporting(E_ALL ^ E_NOTICE); // Clobber Smarty warnings
 		return Smarty::fetch($_smarty_tpl_file, $_smarty_cache_id, $_smarty_compile_id, $_smarty_display);
 	}
-
+	
+	function wrap($template, $title = '', $dir = '') {
+		global $TITLE, $_gv, $_pv;
+		
+		$this->assign(array(
+			'content_template' => $template,
+			'page_title' => isset($TITLE[$title]) ? $TITLE[$title] : ''
+			));
+			
+		// Use a popup wrap?
+		if ((isset($_gv['use_js']) and $_gv['use_js']) or
+			(isset($_pv['use_js']) and $_pv['use_js'])) {
+			$wrap = 'wrap-popup.html';
+		} else {
+			$wrap = 'wrap.html';
+		}
+		
+		$this->display($dir . $wrap);
+	}
 }
 
 $t = new extSmarty;
