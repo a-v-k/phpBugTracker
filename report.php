@@ -68,7 +68,7 @@ $t->set_file('wrap','wrap.html');
 $t->set_file('content','report.html');
 $t->set_var(array(
 	'projects' => build_select('Project', $projectid),
-	'TITLE' => 'Reporting'
+	'TITLE' => $TITLE['reporting']
 	));
 
 resolution_by_engineer($projectid);

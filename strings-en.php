@@ -49,7 +49,9 @@ $TITLE = array(
 	'os' => 'Operating Systems',
 	'resolution' => 'Resolutions',
 	'status' => 'Statuses',
-	'user' => 'Users'
+	'user' => 'Users',
+	'home' => 'Home',
+	'reporting' => 'Reporting'
 	);
 	
 ?>

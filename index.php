@@ -12,7 +12,7 @@ $t->set_file(array(
 	));
 $t->set_block('content', 'statsblock', 'sblock');
 $t->set_block('statsblock','row','rows');
-$t->set_var('TITLE','Home');
+$t->set_var('TITLE',$TITLE['home']);
 
 if (USE_JPGRAPH) {
 	$t->set_var('sblock', '<img src="images.php" align="right">');
