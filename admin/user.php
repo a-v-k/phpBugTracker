@@ -8,7 +8,7 @@ function do_form($userid = 0) {
 	global $q, $me, $ffirstname, $flastname, $femail, $fpassword, $usertype, $STRING;
 	
 	// Validation
-	if (!$femail = valid_email($femail))
+	if (!valid_email($femail))
 		$error = $STRING['giveemail'];
 	elseif (!$fpassword = trim($fpassword))
 		$error = $STRING['givepassword'];
