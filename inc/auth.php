@@ -33,6 +33,7 @@ class uauth {
 		
 		if (!$sess->is_registered('auth')) {
 			$sess->register('auth');
+			$this->auth['group_ids'] = array(0);
 		}
 		
 		if ($this->is_authenticated()) {
