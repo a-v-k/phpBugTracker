@@ -1,17 +1,17 @@
 
-BEGIN;
-
-
 -- PostgreSQL database creation script
 -- If you change the database name, make sure you change the DB_DATABASE 
 -- constant in config.php.  Make sure you edit the TBL_AUTH_USER insert below.
 --
 -- TEMPLATE: This is a template for configure_db -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.6 2001/10/13 23:15:22 bcurtis Exp $
+-- $Id: pgsql.in,v 1.7 2001/10/24 23:50:45 javyer Exp $
 
 create database BugTracker;
 use BugTracker;
+
+BEGIN;
+
 
 CREATE TABLE active_sessions (
   sid varchar(32) NOT NULL DEFAULT '',
