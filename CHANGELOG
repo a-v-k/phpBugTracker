@@ -1,4 +1,5 @@
 -- 1.0 --
+: Added links from project summary on home page (Phil Davis).
 : Added display of the bug ids a bug blocks.
 : Allow users to suppress the update email when changing a bug.
 : Use localized strings in bug history.
