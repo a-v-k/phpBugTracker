@@ -4,13 +4,21 @@
 
 define ('INSTALLPATH','/home/bcurtis/public_html/phpbt');
 define ('INSTALLURL','http://localhost/~bcurtis/phpbt');
+// Location of phplib -- only necessary if you can't define your include path
+define ('PHPLIBPATH',''); 
 define ('ONEDAY',86400);
 define ('DATEFORMAT','m-d-Y');
 define ('TIMEFORMAT','g:i A');
 define ('ADMINEMAIL','phpbt@bencurtis.com');
 
-include 'prepend.php3';
-include 'template.inc';
+require PHPLIBPATH.'db_mysql.inc';
+require PHPLIBPATH.'ct_sql.inc';
+require PHPLIBPATH.'session.inc';
+require PHPLIBPATH.'auth.inc';
+require PHPLIBPATH.'perm.inc';
+require PHPLIBPATH.'page.inc';
+require PHPLIBPATH.'template.inc';
+
 // Localization - include the file with the desired language
 include INSTALLPATH.'/strings-en.php';
 
