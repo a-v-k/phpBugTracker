@@ -1,7 +1,7 @@
 <HTML
 ><HEAD
 ><TITLE
->User's Guide</TITLE
+>Configuration Options</TITLE
 ><META
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.72
@@ -9,17 +9,20 @@ CONTENT="Modular DocBook HTML Stylesheet Version 1.72
 REL="HOME"
 TITLE="phpBugTracker"
 HREF="index.html"><LINK
-REL="PREVIOUS"
-TITLE="phpBugTracker"
-HREF="index.html"><LINK
-REL="NEXT"
+REL="UP"
 TITLE="Administrator's Guide"
 HREF="adminguide.html"><LINK
+REL="PREVIOUS"
+TITLE="Administrator's Guide"
+HREF="adminguide.html"><LINK
+REL="NEXT"
+TITLE="Developer's Guide"
+HREF="devguide.html"><LINK
 REL="STYLESHEET"
 TYPE="text/css"
 HREF="docs.css"></HEAD
 ><BODY
-CLASS="CHAPTER"
+CLASS="SECT1"
 BGCOLOR="#FFFFFF"
 TEXT="#000000"
 LINK="#0000FF"
@@ -45,7 +48,7 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="index.html"
+HREF="adminguide.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -53,13 +56,13 @@ ACCESSKEY="P"
 WIDTH="80%"
 ALIGN="center"
 VALIGN="bottom"
-></TD
+>Chapter 2. Administrator's Guide</TD
 ><TD
 WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="adminguide.html"
+HREF="devguide.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -69,23 +72,59 @@ ACCESSKEY="N"
 ALIGN="LEFT"
 WIDTH="100%"></DIV
 ><DIV
-CLASS="CHAPTER"
+CLASS="SECT1"
 ><H1
+CLASS="SECT1"
 ><A
-NAME="USERGUIDE"
->Chapter 1. User's Guide</A
+NAME="CONFIGURATION"
+>2.2. Configuration Options</A
 ></H1
 ><BLOCKQUOTE
 CLASS="ABSTRACT"
 ><DIV
 CLASS="ABSTRACT"
 ><A
-NAME="AEN8"
+NAME="AEN64"
 ></A
 ><P
->Currently all interactions with phpBugTracker are done via the web interface.  Users can submit bugs, communicate with developers and testers about bugs, and search through the bug database.</P
+>The options listed in this section can be configured by the <TT
+CLASS="FILENAME"
+>configure</TT
+> script and can be found in <TT
+CLASS="FILENAME"
+>config.php</TT
+>.</P
 ></DIV
 ></BLOCKQUOTE
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>INSTALLPATH</DT
+><DD
+><P
+>Location on disk of the phpBugTracker installation.</P
+></DD
+><DT
+>INSTALLURL</DT
+><DD
+><P
+>URL that is the home of the installation.</P
+></DD
+><DT
+>CVS_WEB</DT
+><DD
+><P
+>Location of your cvs web interface (see <TT
+CLASS="FUNCTION"
+>format_comments()</TT
+> in <TT
+CLASS="FILENAME"
+>bug.php</TT
+>).  This is for links to files in CVS generated from the comments attached to bugs.</P
+></DD
+></DL
+></DIV
 ></DIV
 ><DIV
 CLASS="NAVFOOTER"
@@ -103,7 +142,7 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="index.html"
+HREF="adminguide.html"
 ACCESSKEY="P"
 >Prev</A
 ></TD
@@ -121,7 +160,7 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="adminguide.html"
+HREF="devguide.html"
 ACCESSKEY="N"
 >Next</A
 ></TD
@@ -131,17 +170,21 @@ ACCESSKEY="N"
 WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
->phpBugTracker</TD
+>Administrator's Guide</TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
->&nbsp;</TD
+><A
+HREF="adminguide.html"
+ACCESSKEY="U"
+>Up</A
+></TD
 ><TD
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->Administrator's Guide</TD
+>Developer's Guide</TD
 ></TR
 ></TABLE
 ></DIV

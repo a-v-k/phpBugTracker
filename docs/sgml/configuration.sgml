@@ -1,0 +1,35 @@
+<!-- -*- sgml -*- -->
+<sect1 id="configuration">
+  <title>Configuration Options</title>
+
+  <abstract>
+    <para>The options listed in this section can be configured by the <filename>configure</filename> script and can be found in <filename>config.php</filename>.</para>
+  </abstract>
+
+  <variablelist>
+    <varlistentry>
+      <term>INSTALLPATH</term>
+      <listitem>
+	<para>Location on disk of the &phpbt; installation.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>INSTALLURL</term>
+      <listitem>
+	<para>URL that is the home of the installation.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>CVS_WEB</term>
+      <listitem>
+	<para>Location of your cvs web interface (see <function>format_comments()</function> in <filename>bug.php</filename>).  This is for links to files in CVS generated from the comments attached to bugs.</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</sect1>
+
+<!-- Local Variables: -->
+<!-- sgml-indent-step: 2 -->
+<!-- sgml-indent-data: 2 -->
+<!-- sgml-parent-document: "phpbt.sgml" -->
+<!-- End: -->
