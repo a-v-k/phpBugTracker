@@ -4,10 +4,16 @@
 : Added Oracle 8.1.x support.
 : Added "Remember me" functionality.
 : Fixed bugs with losing login info.
-: Added detailed project stats to the home page.
+: Added detailed project stats to the home page (configurable by the admin).
 : Added Estonian translation (Alvar Soome) and Italian translation 
   (Gaetano Giunta).
 : Added the ability for users to choose not to receive bug update emails.
+: Added ability to configure color schemes from the configuration page and
+  updated the "black" scheme.
+: Switched template class to smarty templates.
+: Fixed a bug with being able to go directly to a bug that should not be
+  available because of project group restrictions.
+: Added the ability to delete components and versions not referenced by bugs.
 : Fixed other minor bugs.
 
 -- 0.7.2 -- 14 Mar 2002
