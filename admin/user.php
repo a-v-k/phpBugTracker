@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.47 2002/04/09 20:44:52 bcurtis Exp $
+// $Id: user.php,v 1.48 2002/04/12 12:01:22 bcurtis Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -61,7 +61,7 @@ function do_form($userid = 0) {
 			values (".join(', ', array($new_user_id, 
 				$db->quote(stripslashes($_pv['first_name'])), 
 				$db->quote(stripslashes($_pv['last_name'])),
-				$db->quote(stripslashes($login)), $_pv['email'], $mpassword, 
+				$db->quote(stripslashes($login)), $db->quote($_pv['email']), $mpassword, 
 				$_pv['active'], $u, $now, $u, $now)).')');
 		// Add to the selected groups
 		if (isset($_pv['fusergroup']) and is_array($_pv['fusergroup']) and
