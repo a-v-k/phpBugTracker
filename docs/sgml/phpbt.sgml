@@ -17,6 +17,7 @@
 <!-- Developer's Guide -->
 <!ENTITY devstandards SYSTEM "devstandards.sgml">
 <!ENTITY dependencies SYSTEM "dependencies.sgml">
+<!ENTITY schema SYSTEM "schema.sgml">
 ]>
 
 
@@ -59,6 +60,7 @@
 
 &dependencies;
 &devstandards;
+&schema;
 
 </chapter>
 </book>

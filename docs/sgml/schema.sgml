@@ -1,0 +1,1187 @@
+<!-- -*- sgml -*- -->
+<sect1 id="schema">
+<title>Database Schema</title>
+
+<table>
+<title>Schema for table active_sessions</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>sid</entry>
+<entry>varchar(32)</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>name</entry>
+<entry>varchar(32)</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>val</entry>
+<entry>text</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>changed</entry>
+<entry>varchar(14)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<para>This table is used by PHPlib to store session information.  It is updated with every call to <function>page_close()</function>.</para>
+
+<table>
+<title>Schema for table attachment</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>attachment_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>bug_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Foreign</entry>
+<entry></entry>
+</row>
+<row>
+<entry>file_name</entry>
+<entry>char(255)</entry>
+<entry></entry>
+<entry>The name of the file supplied by the user and the name as it is stored on disk.</entry>
+</row>
+<row>
+<entry>description</entry>
+<entry>char(255)</entry>
+<entry></entry>
+<entry>The description of the file as entered by the user.</entry>
+</row>
+<row>
+<entry>file_size</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>mime_type</entry>
+<entry>char(30)</entry>
+<entry></entry>
+<entry>The MIME type as obtained by PHP when the file was uploaded</entry>
+</row>
+<row>
+<entry>created_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table auth_group</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>group_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>group_name</entry>
+<entry>varchar(80)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>last_modified_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>last_modified_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+<para>This table defines the various groups to which a user may belong.  The initial groups are Admin, User, and Developer.</para>
+
+<table>
+<title>Schema for table auth_perm</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>perm_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>perm_name</entry>
+<entry>varchar(80)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>last_modified_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>last_modified_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+<para><database class="table">auth_perm</database> stores the various permissions that can be assigned to users.</para>
+
+<table>
+<title>Schema for table auth_user</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>user_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>login</entry>
+<entry>char(40)</entry>
+<entry>Unique</entry>
+<entry></entry>
+</row>
+<row>
+<entry>first_name</entry>
+<entry>char(40)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>last_name</entry>
+<entry>char(40)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>email</entry>
+<entry>char(60)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>password</entry>
+<entry>char(40)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>active</entry>
+<entry>tinyint(3) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>bug_list_fields</entry>
+<entry>char(255)</entry>
+<entry></entry>
+<entry>This contains a serialized array of the fields the user has selected to see in the bug list.  If this field is empty the default fields will be shown.</entry>
+</row>
+<row>
+<entry>created_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>last_modified_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>last_modified_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table bug</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>bug_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>title</entry>
+<entry>varchar(100)</entry>
+<entry></entry>
+<entry>The short summary.</entry>
+</row>
+<row>
+<entry>description</entry>
+<entry>text</entry>
+<entry></entry>
+<entry>The longer, more detailed description of a bug.</entry>
+</row>
+<row>
+<entry>url</entry>
+<entry>varchar(255)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>severity_id</entry>
+<entry>tinyint(3) unsigned</entry>
+<entry>Foreign</entry>
+<entry></entry>
+</row>
+<row>
+<entry>priority</entry>
+<entry>tinyint(3) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>status_id</entry>
+<entry>tinyint(3) unsigned</entry>
+<entry>Foreign</entry>
+<entry></entry>
+</row>
+<row>
+<entry>resolution_id</entry>
+<entry>tinyint(3) unsigned</entry>
+<entry>Foreign</entry>
+<entry></entry>
+</row>
+<row>
+<entry>assigned_to</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry>The <database class="field">user_id</database> of the user to whom the bug is assigned.</entry>
+</row>
+<row>
+<entry>created_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry>The <database class="field">user_id</database> of the user who reported the bug.</entry>
+</row>
+<row>
+<entry>created_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>last_modified_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>last_modified_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>project_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Foreign</entry>
+<entry></entry>
+</row>
+<row>
+<entry>version_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Foreign</entry>
+<entry></entry>
+</row>
+<row>
+<entry>component_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Foreign</entry>
+<entry></entry>
+</row>
+<row>
+<entry>os_id</entry>
+<entry>tinyint(3) unsigned</entry>
+<entry>Foreign</entry>
+<entry></entry>
+</row>
+<row>
+<entry>browser_string</entry>
+<entry>varchar(255)</entry>
+<entry></entry>
+<entry>The value obtained from <varname>$HTTP_USER_AGENT</varname>.</entry>
+</row>
+<row>
+<entry>close_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table bug_cc</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>bug_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Foreign</entry>
+<entry></entry>
+</row>
+<row>
+<entry>user_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Foreign</entry>
+<entry>The user to whom to send carbon copies of the emails sent due to changes in the bug status.</entry>
+</row>
+<row>
+<entry>created_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table bug_group</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>bug_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry>Foreign</entry>
+</row>
+<row>
+<entry>group_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry>Foreign</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+<para>This table isn't currently used.</para>
+
+<table>
+<title>Schema for table bug_history</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>bug_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Foreign</entry>
+<entry></entry>
+</row>
+<row>
+<entry>changed_field</entry>
+<entry>char(20)</entry>
+<entry></entry>
+<entry>The field, such as version, component, etc., that changed.</entry>
+</row>
+<row>
+<entry>old_value</entry>
+<entry>char(255)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>new_value</entry>
+<entry>char(255)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table comment</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>comment_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>bug_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Foreign</entry>
+<entry></entry>
+</row>
+<row>
+<entry>comment_text</entry>
+<entry>text</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table component</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>component_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>project_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Foreign</entry>
+<entry></entry>
+</row>
+<row>
+<entry>component_name</entry>
+<entry>varchar(30)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>component_desc</entry>
+<entry>text</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>owner</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry>This is the <database class="field">user_id</database> of the developer who should receive initial email notifications of bugs created for this component.</entry>
+</row>
+<row>
+<entry>active</entry>
+<entry>tinyint(1)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>last_modified_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>last_modified_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table configuration</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>varname</entry>
+<entry>char(40)</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>varvalue</entry>
+<entry>char(255)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>description</entry>
+<entry>char(255)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>vartype</entry>
+<entry>char(20)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+<para>This table stores the configuration for &phpbt;</para>
+
+<table>
+<title>Schema for table db_sequence</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>seq_name</entry>
+<entry>varchar(127)</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>nextid</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+<para>PHPlib uses this table in generating the incrementing primary key sequences for the other tables.</para>
+
+<table>
+<title>Schema for table group_perm</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>group_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>perm_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table os</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>os_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>os_name</entry>
+<entry>char(30)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>sort_order</entry>
+<entry>tinyint(3) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>regex</entry>
+<entry>char(40)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table project</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>project_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>project_name</entry>
+<entry>varchar(30)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>project_desc</entry>
+<entry>text</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>active</entry>
+<entry>tinyint(1)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>last_modified_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>last_modified_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table resolution</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>resolution_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>resolution_name</entry>
+<entry>varchar(30)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>resolution_desc</entry>
+<entry>text</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>sort_order</entry>
+<entry>tinyint(3) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table saved_query</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>saved_query_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>user_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>saved_query_name</entry>
+<entry>varchar(40)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>saved_query_string</entry>
+<entry>text</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+<para>The <database class="table">saved_query</database> table stores the queries saved by the users from the query page.</para>
+
+<table>
+<title>Schema for table severity</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>severity_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>severity_name</entry>
+<entry>varchar(30)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>severity_desc</entry>
+<entry>text</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>sort_order</entry>
+<entry>tinyint(3) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>severity_color</entry>
+<entry>varchar(10)</entry>
+<entry></entry>
+<entry>The background color displayed for a row in the bug list if the <varname>USE_SEVERITY_COLOR</varname> configuration option is enabled.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table status</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>status_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>status_name</entry>
+<entry>varchar(30)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>status_desc</entry>
+<entry>text</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>sort_order</entry>
+<entry>tinyint(3) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table user_group</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>user_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>group_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table user_perm</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>user_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>perm_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<table>
+<title>Schema for table version</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Type</entry>
+<entry>Key</entry>
+<entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>version_id</entry>
+<entry>int(10) unsigned</entry>
+<entry>Primary</entry>
+<entry></entry>
+</row>
+<row>
+<entry>project_id</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>version_name</entry>
+<entry>char(10)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>active</entry>
+<entry>tinyint(1)</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>created_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>last_modified_by</entry>
+<entry>int(10) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>last_modified_date</entry>
+<entry>bigint(20) unsigned</entry>
+<entry></entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+</sect1>
+
+<!-- Local Variables: -->
+<!-- sgml-parent-document: "phpbt.sgml" -->
+<!-- End: -->
+
+
+
+

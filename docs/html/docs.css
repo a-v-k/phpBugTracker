@@ -23,6 +23,6 @@ H1.TITLE {
 	text-align: center;
 	}
 
-TT {
-	font-family: "Tahoma", "Lucida", "Helvetica", "Arial", "Sans-Serif";
-	}
+thead { background-color: #dddddd; }
+
+.TABLE { padding: .5em; }

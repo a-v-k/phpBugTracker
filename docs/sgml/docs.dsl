@@ -17,7 +17,7 @@ Stylesheet//EN" CDATA dsssl>
 ;; Texts, and with no Back-Cover Texts. A copy of the license can
 ;; be found at http://www.fsf.org/copyleft/fdl.html.
 ;;
-;; $Id: docs.dsl,v 1.3 2001/10/01 01:12:38 bcurtis Exp $
+;; $Id: docs.dsl,v 1.4 2001/10/25 13:00:21 bcurtis Exp $
 
 
 (define (toc-depth nd)
@@ -149,6 +149,12 @@ Stylesheet//EN" CDATA dsssl>
 (define %spacing-paras%
   ;; Block-element spacing hack
   #f)
+
+(define ($generate-book-lot-list$)
+  ;; Which Lists of Titles should be produced for Books?
+  (list (normalize "figure")
+(normalize "example")
+(normalize "equation")))
 
 </style-specification-body>
 </style-specification>
