@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.17 2002/04/10 15:07:39 bcurtis Exp $
+// $Id: attachment.php,v 1.18 2002/04/11 15:49:58 bcurtis Exp $
 
 include 'include.php';
 
@@ -58,7 +58,7 @@ function grab_attachment($attachid) {
 }
 
 function add_attachment($bugid, $description) {
-	global $db, $HTTP_POST_FILES, $now, $u, $STRING, $t;
+	global $db, $HTTP_POST_FILES, $now, $u, $STRING, $t, $_pv;
 	
 	if (!isset($HTTP_POST_FILES['attachment']) || 
 		$HTTP_POST_FILES['attachment']['tmp_name'] == 'none') {
@@ -122,8 +122,12 @@ function add_attachment($bugid, $description) {
 			$db->quote(stripslashes($description)), 
 			$HTTP_POST_FILES['attachment']['size'], 
 			$db->quote($HTTP_POST_FILES['attachment']['type']), $u, $now)).")");
-	$t->assign('bugid', $bugid);
-	$t->display('bugattachmentsuccess.html');
+
+	if ($_pv['use_js']) {
+		$t->display('admin/edit-submit.html');
+	} else {
+		header("Location: bug.php?op=show&bugid=$bugid");
+	}
 }
 
 function show_attachment_form($bugid, $error = '') {
@@ -158,7 +162,7 @@ if (isset($_gv['del'])) {
 	} else {
 		del_attachment($_gv['del']);
 	}
-} elseif (isset($HTTP_POST_FILES['attachment'])) {
+} elseif (isset($_pv['submit'])) {
 	$perm->check('Editbug');
 	add_attachment($_pv['bugid'],	$_pv['description']);
 } elseif (isset($_gv['attachid'])) {
@@ -169,7 +173,7 @@ if (isset($_gv['del'])) {
 	}
 } else {
 	$perm->check('Editbug');
-	show_attachment_form($_gv['bug_id']);
+	show_attachment_form($_gv['bugid']);
 }
 
 ?>

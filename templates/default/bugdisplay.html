@@ -1,26 +1,31 @@
 {include file="header.html" page_title="Edit Bug #$bug_id"}
 <script language="JavaScript">
 <!-- 
-versions = new Array();
-components = new Array();
-versions['All'] = new Array(new Array('','All'));
-components['All'] = new Array(new Array('','All'));
-{project_js no_all=true}
+	versions = new Array();
+	components = new Array();
+	versions['All'] = new Array(new Array('','All'));
+	components['All'] = new Array(new Array('','All'));
+	{project_js no_all=true}
 
-{literal}
-function updateMenus(f) {
-  sel = f.project_id[f.project_id.selectedIndex].text;
-  f.version_id.length = versions[sel].length;
-  for (var x = 0; x < versions[sel].length; x++) {
-    f.version_id.options[x].value = versions[sel][x][0];
-    f.version_id.options[x].text = versions[sel][x][1];
-  }
-  f.component_id.length = components[sel].length;
-  for (var x = 0; x < components[sel].length; x++) {
-    f.component_id.options[x].value = components[sel][x][0];
-    f.component_id.options[x].text = components[sel][x][1];
-  }
-}
+	{literal}
+	function updateMenus(f) {
+  	sel = f.project_id[f.project_id.selectedIndex].text;
+  	f.version_id.length = versions[sel].length;
+  	for (var x = 0; x < versions[sel].length; x++) {
+    	f.version_id.options[x].value = versions[sel][x][0];
+    	f.version_id.options[x].text = versions[sel][x][1];
+  	}
+  	f.component_id.length = components[sel].length;
+  	for (var x = 0; x < components[sel].length; x++) {
+    	f.component_id.options[x].value = components[sel][x][0];
+    	f.component_id.options[x].text = components[sel][x][1];
+  	}
+	}
+		
+	function popupAtt(id) {
+		window.open('attachment.php?use_js=1&bugid='+id, 'ewin', 'dependent=yes, width=350, height=200, scrollbars=auto');
+		return false;
+	}
 {/literal}
 //-->
 </script>
@@ -157,7 +162,7 @@ function updateMenus(f) {
 			<table border="0" cellpadding="0">
 				<tr>
 					<td colspan="2">Attachments:</td>
-					<td colspan="3" align="right"><a href="attachment.php?bug_id={$bug_id}">Create attachment</a></td>
+					<td colspan="3" align="right"><a href="attachment.php?bugid={$bug_id}" onClick="return popupAtt({$bug_id})">Create attachment</a></td>
 				</tr>
 				<tr><td colspan="5" height="2" bgcolor="#ffffff"><spacer type="block" height="2" width="2"></td></tr>
 				<tr>

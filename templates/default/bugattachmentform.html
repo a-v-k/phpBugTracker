@@ -1,16 +1,25 @@
+{if $smarty.request.use_js}
+	{include file="header-popup.html" page_title="Add Attachment"}
+{else}
+	{include file="header.html" page_title="Add Attachment"}
+{/if}	
 <form enctype="multipart/form-data" action="{$SCRIPT_NAME}" method="post">
 <input type="hidden" name="bugid" value="{$bugid}">
-<table border="0" width="640">
+<input type="hidden" name="use_js" value="{$smarty.request.use_js}">
+<table border="0" align="center">
 	<tr>
-		<td colspan="2">
+		<td colspan="2" align="center">
 			Please choose a file to upload and enter a one-line description.  
+			<br>
 			Maximum file size: {$max_size} bytes
+			<br>
+			<br>
 		</td>
 	</tr>
 	{if $error}
-	<tr>
-		<td colspan="2" class="error">{$error}</td>
-	</tr>
+		<tr>
+			<td colspan="2" class="error">{$error}</td>
+		</tr>
 	{/if}
 	<tr>
 		<td>
@@ -29,9 +38,14 @@
 		</td>
 	</tr>
 	<tr>
-		<td colspan="2">
-			<input type="submit" value="Upload attachment">
+		<td colspan="2" align="center">
+			<input type="submit" name="submit" value="Upload attachment">
 		</td>
 	</tr>
 </table>
 </form>			
+{if $smarty.request.use_js}
+	{include file="admin/footer-popup.html"}
+{else}
+	{include file="admin/footer.html"}
+{/if}	
