@@ -31,17 +31,69 @@ $t->set_block('content', 'statsblock', 'sblock');
 $t->set_block('statsblock','row','rows');
 $t->set_var('TITLE',$TITLE['home']);
 
-if (USE_JPGRAPH) {
-	$t->set_var('sblock', '<img src="images.php" align="right">');
-} else {
-	$q->query("select * from ".TBL_STATUS." order by sort_order");
+function grab_data() {
+	global $q;
+	
+	// Grab the legend
+	$q->query("select status_id, status_name from ".TBL_STATUS." order by sort_order");
 	while ($row = $q->grab()) {
 		$stats[$row['status_id']]['name'] = $row['status_name'];
 	}
+	
+	// Grab the data
 	$q->query("select status_id, count(status_id) as count from ".TBL_BUG." group by status_id");
 	while ($row = $q->grab()) {
 		$stats[$row['status_id']]['count'] = $row['count'];
 	}
+	
+	return $stats;
+}
+
+function build_image() {
+	error_reporting(0); // Force this, just in case
+	include_once JPGRAPH_PATH.'jpgraph.php';
+	include_once JPGRAPH_PATH.'jpgraph_pie.php';
+	
+	$stats = grab_data();
+	$totalbugs = 0;
+	foreach ($stats as $statid => $stat) {
+		if ($stat['count']) {
+			$data[] = $stat['count'];
+			$legend[] = "{$stat['name']} ({$stat['count']})";
+			$targ[] = "query.php?op=doquery&status[]=$statid";
+			$alts[] = $stat['name'];
+			$totalbugs += $stat['count'];
+		}
+	}
+	
+	// Create the Pie Graph. 
+	$graph = new PieGraph(300,200,"bug_cat_summary");
+	$graph->SetShadow();
+
+	// Set A title for the plot
+	$graph->title->Set(sprintf("Bug Summary (%d bug%s)",
+		$totalbugs, $totalbugs == 1 ? '' : 's'));
+	$graph->title->SetFont(FF_FONT1,FS_BOLD);
+
+	$graph->legend->Pos(0.03, 0.5, 'right', 'center');
+	// Create
+	$p1 = new PiePlot($data);
+	$p1->SetLegends($legend);
+	$p1->SetCSIMTargets($targ,$alts);
+	$p1->SetCenter(0.25);
+	$p1->SetPrecision(0);
+	$graph->Add($p1);
+	$graph->Stroke('jpgimages/'.GenImgName());
+
+	return $graph->GetHTMLImageMap("myimagemap").
+		"<img align=\"right\" src=\"jpgimages/".GenImgName()."\" ISMAP USEMAP=\"#myimagemap\" border=0>";
+}
+
+
+if (USE_JPGRAPH) {
+	$t->set_var('sblock', build_image());
+} else {
+	$stats = grab_data();
 	$total = 0;
 	foreach ($stats as $statid => $stat) {
 		$t->set_var(array(
