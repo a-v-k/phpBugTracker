@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.132 2003/06/20 01:10:20 kennyt Exp $
+// $Id: bug.php,v 1.133 2003/07/06 22:57:33 bcurtis Exp $
 
 include 'include.php';
 
@@ -249,7 +249,6 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 	$reporter = $db->getOne('select email from '.TBL_AUTH_USER.
 		" u, ".TBL_USER_PREF." p where u.user_id = {$buginfo['created_by']} ".
 		"and u.user_id = p.user_id and email_notices = 1");
-
 	$reporterstat = ' ';
 
 	// If there are new comments grab the comments immediately before the latest
@@ -294,9 +293,13 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 
 	$maillist = array();
 
-	$maillist[] = $reporter;
-
-	if (!empty($assignedto) and $emailassignedto) {
+	// Don't email the person who just made the changes (later, make this
+	// behavior toggable by the user)
+	if ($userid != $buginfo['created_by'] and !empty($reporter)) {
+		$maillist[] = $reporter;
+	}
+	if ($userid != (!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to'])
+		and !empty($assignedto) and $emailassignedto) {
 	    $maillist[] = $assignedto;
 	}
 
