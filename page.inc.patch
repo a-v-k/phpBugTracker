@@ -1,0 +1,11 @@
+--- page.inc	Fri Sep 28 06:23:14 2001
++++ page.inc	Fri Sep 28 06:22:56 2001
+@@ -64,7 +64,7 @@
+ 
+   if (isset($sess)) {
+     $sess->freeze();
+-    if (isset($user)) {
++    if (isset($user) && $user) {
+       $user->freeze();
+     }
+   }

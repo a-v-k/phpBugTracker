@@ -1,12 +1,18 @@
 Ok, here's the quick and dirty install instructions:
 
-1. Edit the database creation script, changing the info for the Admin user.
-2. Run the database creation script (currently only MySQL) by running
-     "mysql -u <user> -p<password> < createdb.sql"
 1. Install PHPlib (http://sourceforge.net/projects/phplib/) if it's not already
-   installed.
+   installed.  Note that with recent versions of PHP, PHPlib needs to be 
+	 patched.  Please do the following with the patch file in this directory:
+	   cat page.inc.patch | patch -p0 -b /path/to/phplib/page.inc
+		 
+	 Make sure you replace /path/to/phplib with the actual path to the installation
+	 of phplib.  On windows systems you can edit page.inc and change line 67
+	 from 'if (isset($user)) {' to 'if (isset($user) && $user) {' (without the 
+	 quotes).
+	 
 2. Copy the directory tree from the tarball to a location suitable for serving
    web pages.
+	 
 3. Run the configure script.  This will change config.php (creating a backup) 
    and run configure_db which creates createdb.sql.
 
@@ -15,13 +21,18 @@ Ok, here's the quick and dirty install instructions:
 3. Configure manually.
    a. Edit the constants in config.php.
    b. Edit the variables in configure_db and run it to get createdb.sql.
+	 
 4. If you want to use jpgraph (http://www.aditus.nu/jpgraph/) 
    to display the bug summary info, you will also need to edit 
 	 jpgraph.php from the jpgraph disribution.
+	 
 5. Edit createdb.sql, changing the admin info in the database insert.  You can 
    search on the text admin@example.com (around line 240).
+	 
 6. Use createdb.sql to create your database.  With MySQL it can be done like
      mysql -h <db host> -u <username> -p<yourpassword> < createdb.sql
+		 
 7. Browse on over to the installation, choose Admin tools, login with the info
    you put in the database creation script, and create your first project.
+	 
 8. Start reporting bugs
