@@ -21,11 +21,11 @@ insert into group_perm (group_id, perm_id) values (2, 2, 0, 0);
 
 # And user_id 1 is the admin and a user
 insert into user_group (user_id, group_id) values (1, 1, 0, 0);
-insert into user_group (user_id, group_id) values (1, 2, 0, 0);
+insert into user_group select user_id, 2, created_by, created_date from auth_user;
 
 # You can use these queries to convert the post 0.2.x / pre 0.3.0 schema
-alter table user rename auth_user;
-alter table auth_user change user_level active tinyint unsigned not null;
-alter table auth_user add login char(40) not null after user_id;
-update auth_user set active = 1 where active > 0;
-update auth_user set login = email;
+#alter table user rename auth_user;
+#alter table auth_user change user_level active tinyint unsigned not null;
+#alter table auth_user add login char(40) not null after user_id;
+#update auth_user set active = 1 where active > 0;
+#update auth_user set login = email;
