@@ -5,7 +5,7 @@
 include 'include.php'; 
 
 function do_form() {
-	global $q, $t, $email, $firstname, $lastname, $STRING;
+	global $q, $t, $email, $firstname, $lastname, $STRING, $now;
 	
 	if (!$email or !valid_email($email)) 
 		$error = $STRING['giveemail'];
@@ -18,7 +18,12 @@ function do_form() {
 	$firstname = htmlspecialchars($firstname);
 	$lastname = htmlspecialchars($lastname);
 	$password = genpassword(10);
-	$q->query("insert into User (UserID, FirstName, LastName, Email, Password, CreatedDate, UserLevel) values (".$q->nextid('User').", '$firstname', '$lastname', '$email', '$password', ".time().", 1)");
+	if (ENCRYPTPASS) {
+		$mpassword = md5($password);
+	} else {
+		$mpassword = $password;
+	}
+	$q->query("insert into User (UserID, FirstName, LastName, Email, Password, CreatedDate, UserLevel) values (".$q->nextid('User').", '$firstname', '$lastname', '$email', '$mpassword', $now, 1)");
 	mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
 		$password),	'From: '.ADMINEMAIL);
 	$t->set_file('content','newaccountsuccess.html');

@@ -5,7 +5,7 @@ include '../include.php';
 page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
 
 function do_form($userid = 0) {
-	global $q, $me, $ffirstname, $flastname, $femail, $fpassword, $usertype, $STRING;
+	global $q, $me, $ffirstname, $flastname, $femail, $fpassword, $usertype, $STRING, $now;
 	
 	// Validation
 	if (!valid_email($femail))
@@ -15,9 +15,21 @@ function do_form($userid = 0) {
 	if ($error) { list_items($userid, $error); return; }
 	
 	if (!$userid) {
-		$q->query("insert into User (UserID, FirstName, LastName, Email, Password, UserLevel, CreatedDate) values (".$q->nextid('User').", '$ffirstname', '$flastname', '$femail', '$fpassword', $usertype, ".time().")");
+		if (ENCRYPTPASS) $mpassword = md5($fpassword);
+		else $mpassword = $fpassword;
+		$q->query("insert into User (UserID, FirstName, LastName, Email, Password, UserLevel, CreatedDate) values (".$q->nextid('User').", '$ffirstname', '$flastname', '$femail', '$mpassword', $usertype, $now)");
 	} else {
-		$q->query("update User set FirstName = '$ffirstname', LastName = '$flastname', Email = '$femail', Password = '$fpassword', UserLevel = $usertype where UserID = '$userid'");
+		if (ENCRYPTPASS) {
+			$oldpass = $q->grab_field("select Password from User where UserID = $userid");
+			if ($oldpass != $fpassword) {
+				$pquery = ", Password = '".md5($fpassword)."'";
+			} else {
+				$pquery = '';
+			}
+		} else {
+			$pquery = ", Password = '$fpassword'";
+		}
+		$q->query("update User set FirstName = '$ffirstname', LastName = '$flastname', Email = '$femail', $pquery UserLevel = $usertype where UserID = '$userid'");
 	}
 	header("Location: $me?");
 }	
@@ -51,7 +63,7 @@ function show_form($userid = 0, $error = '') {
 }
 
 function list_items($userid = 0, $error = '') {
-	global $me, $q, $t, $selrange, $order, $sort, $select, $STRING, $TITLE;
+	global $me, $q, $t, $selrange, $order, $sort, $select, $STRING, $TITLE, $page;
 				
 	$t->set_file('content','userlist.html');
 	$t->set_block('content','row','rows');

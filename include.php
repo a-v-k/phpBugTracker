@@ -10,6 +10,7 @@ define ('ONEDAY',86400);
 define ('DATEFORMAT','m-d-Y');
 define ('TIMEFORMAT','g:i A');
 define ('ADMINEMAIL','phpbt@bencurtis.com');
+define ('ENCRYPTPASS',0);  // Whether to store passwords encrypted
 
 require PHPLIBPATH.'db_mysql.inc';
 require PHPLIBPATH.'ct_sql.inc';
@@ -92,16 +93,27 @@ class uauth extends Auth {
 		if (!$username) return false;
 		if ($emailpass) {
 			list($email, $password) = $q->grab("select Email, Password from User where Email = '$username' and UserLevel > 0");
-			if (!$q->num_rows()) {echo 'bob'; return false;}
+			if (!$q->num_rows()) { 
+				return false;
+			}
+			if (ENCRYPTPASS) {
+				$password = genpassword(10);
+				$mpassword = md5($password);
+				$q->query("update User set Password = '$mpassword' where Email = '$username'");
+			}
 			mail($email, $STRING['newacctsubject'], sprintf($STRING['newacctmessage'], 
 				$password),	'From: '.ADMINEMAIL);
 			$emailsuccess = true;
 			return false;
 		}
 		$this->auth['uname'] = $username;
+		if (ENCRYPTPASS) {
+			$password = md5($password);
+		}
 		$u = $q->grab("select * from User where Email = '$username' and Password = '$password' and UserLevel > 0");
-		if (!$q->num_rows()) return false;
-		else {
+		if (!$q->num_rows()) {
+			return false;
+		} else {
 			$this->auth['fname'] = $u['FirstName'];
 			$this->auth['lname'] = $u['LastName'];
 			$this->auth['email'] = $u['Email'];
