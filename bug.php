@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.122 2002/10/22 21:13:16 bcurtis Exp $
+// $Id: bug.php,v 1.123 2002/10/28 21:39:54 bcurtis Exp $
 
 include 'include.php';
 
@@ -220,6 +220,25 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 		}
 	}
 
+	// See if the assignment has changed -- grab the email for notifications either way
+	list($assignedto, $emailassignedto) = $db->getRow('select email, email_notices from '.
+		TBL_AUTH_USER." u, ".TBL_USER_PREF.' p where u.user_id = '.
+		(!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to']).
+		" and u.user_id = p.user_id", DB_FETCHMODE_ORDERED);
+
+	if (!empty($cf['assigned_to'])) {
+		$assignedtostat = '!';
+		$oldassignedto = $db->getOne('select email from '.
+			TBL_AUTH_USER.' u where u.user_id = '.$buginfo['assigned_to']);
+		$db->query('insert into '.TBL_BUG_HISTORY.
+			' (bug_id, changed_field, old_value, new_value, created_by, created_date)'.
+			" values (". join(', ', array($buginfo['bug_id'],
+			$db->quote($STRING['BUGDISPLAY']['AssignedTo']),
+			$db->quote($oldassignedto), $db->quote($assignedto), $u, $now)).")");
+	} else {
+		$assignedtostat = ' ';
+	}
+
 	if (!empty($_pv['suppress_email'])) return; // Don't send email if silent update requested.
 
 	// Reporter never changes
@@ -227,11 +246,6 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 		" u, ".TBL_USER_PREF." p where u.user_id = {$buginfo['created_by']} ".
 		"and u.user_id = p.user_id and email_notices = 1");
 	$reporterstat = ' ';
-	$assignedto = $db->getOne('select email from '.TBL_AUTH_USER." u, ".
-		TBL_USER_PREF.' p where u.user_id = '.
-		(!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to']).
-		" and u.user_id = p.user_id and email_notices = 1");
-	$assignedtostat = !empty($cf['assigned_to']) ? '!' : ' ';
 
 	// If there are new comments grab the comments immediately before the latest
 	if ($comments or $newbug) {
@@ -281,7 +295,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 		$maillist[] = $reporter;
 	}
 	if ($userid != (!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to'])
-		and !empty($assignedto)) {
+		and !empty($assignedto) and $emailassignedto) {
 	    $maillist[] = $assignedto;
 	}
 
