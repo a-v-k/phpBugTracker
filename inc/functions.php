@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.31 2002/06/12 12:43:49 bcurtis Exp $
+// $Id: functions.php,v 1.32 2002/06/13 14:26:36 firma Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -45,190 +45,213 @@ $select['priority'] = array(
 ///
 /// Build a select box with the item matching $value selected
 function build_select($params) {
-  global $db, $select, $perm, $STRING, $restricted_projects, $QUERY;
+    global $db, $select, $perm, $STRING, $restricted_projects, $QUERY;
 
-  extract($params);
-	if (!isset($selected)) $selected = '';
+    extract($params);
+    if (!isset($selected)) {
+	$selected = '';
+    }
 	
-	//create hash to map tablenames
-  $cfgDatabase = array(
-    'group' => TBL_AUTH_GROUP,
-    'project' => TBL_PROJECT,
-    'component' => TBL_COMPONENT,
-    'status' => TBL_STATUS,
-    'resolution' => TBL_RESOLUTION,
-    'severity' => TBL_SEVERITY,
-    'version' => TBL_VERSION,
-    'database' => TBL_DATABASE,
-  );
+    // create hash to map tablenames
+    $cfgDatabase = array(
+	'group' => TBL_AUTH_GROUP,
+	'project' => TBL_PROJECT,
+	'component' => TBL_COMPONENT,
+	'status' => TBL_STATUS,
+	'resolution' => TBL_RESOLUTION,
+	'severity' => TBL_SEVERITY,
+	'version' => TBL_VERSION,
+	'database' => TBL_DATABASE,
+	'site' => TBL_SITE
+    );
 
-  $text = '';
-  if (isset($cfgDatabase[$box])) {
-    $querystart = "select {$box}_id, {$box}_name from $cfgDatabase[$box]";
-    $querymid = ' where sort_order > 0 order by sort_order';
-    $queries = array(
-      'group' => $querystart.' where group_name <> \'User\' order by group_name',
-      'severity' => $querystart.$querymid,
-      'status' => $querystart.$querymid,
-      'resolution' => $querystart.$querymid,
-      'project' => $perm->have_perm('Admin')
-        ? $querystart." where ".
-					($selected ? "(active > 0 or project_id in ($selected))" : 'active > 0').
-					" order by {$box}_name"
-        : $querystart." where project_id not in ($restricted_projects)".
-					" and ".
-					($selected ? " (active > 0 or project_id in ($selected))" : 'active > 0').
-					" order by {$box}_name",
-      'component' => $querystart." where project_id = $project and active = 1 order by {$box}_name",
-      'version' => $querystart." where project_id = $project and active = 1 order by {$box}_id desc",
-      'database' => "select {$box}_id, {$box}_name, {$box}_version from $cfgDatabase[$box]".$querymid
-      );
-  }
+    $text = '';
 
-  switch($box) {
-		case 'user_filter' : 
-			foreach ($STRING['user_filter'] as $k => $v) {
-				$text .= sprintf("<option value=\"%d\"%s>%s</option>",
-					$k, ($k == $selected ? ' selected' : ''), $v);
-			}
-			break;
-    case 'group' :
-      if ($project) { // If we are building for project admin page
-        if (!count($selected) or (count($selected) && in_array(0, $selected))) {
-          $sel = ' selected';
-        } else {
-          $sel = '';
-        }
-        $text = "<option value=\"all\"$sel>All Groups</option>";
-      }
-      $rs = $db->query($queries[$box]);
-      while ($rs->fetchInto($row)) {
-        if (count($selected) && in_array($row[$box.'_id'], $selected)) $sel = ' selected';
-        else $sel = '';
-        $text .= '<option value="'.
-          $row[$box.'_id']."\"$sel>".$row[$box.'_name'].'</option>';
-      }
-      break;
-    case 'severity' :
-    case 'status' :
-    case 'resolution' :
-    case 'project' :
-    case 'component' :
-    case 'version' :
-      $rs = $db->query($queries[$box]);
-      while ($rs->fetchInto($row)) {
-        if ($selected == $row[$box.'_id'] and $selected != '') $sel = ' selected';
-        else $sel = '';
-        $text .= '<option value="'.
-          $row[$box.'_id']."\"$sel>".$row[$box.'_name'].'</option>';
-      }
-      break;
-    case 'database' :
-	$text = '<option value="0">None</option>';
-	$rs = $db->query($queries[$box]);
-	while ($rs->fetchInto($row)) {
-        if ($selected == $row[$box.'_id'] and $selected != '') $sel = ' selected';
-        else $sel = '';
-        $text .= '<option value="'.
-          $row[$box.'_id'].'"'.$sel.'>'.$row[$box.'_name'].' '.$row[$box.'_version'].'</option>';
-	}
+    if (isset($cfgDatabase[$box])) {
+	$querystart = "select {$box}_id, {$box}_name from $cfgDatabase[$box]";
+	$querymid = ' where sort_order > 0 order by sort_order';
+	$queries = array(
+	    'group' => $querystart.' where group_name <> \'User\' order by group_name',
+	    'severity' => $querystart.$querymid,
+	    'site' => $querystart.$querymid,
+	    'status' => $querystart.$querymid,
+	    'resolution' => $querystart.$querymid,
+	    'project' => $perm->have_perm('Admin')
+		? $querystart." where ".
+		    ($selected ? "(active > 0 or project_id in ($selected))" : 'active > 0').
+		    " order by {$box}_name"
+		: $querystart." where project_id not in ($restricted_projects)".
+		    " and ".
+		    ($selected ? " (active > 0 or project_id in ($selected))" : 'active > 0').
+		    " order by {$box}_name",
+	    'component' => $querystart." where project_id = $project and active = 1 order by {$box}_name",
+	    'version' => $querystart." where project_id = $project and active = 1 order by {$box}_id desc",
+	    'database' => "select {$box}_id, {$box}_name, {$box}_version from $cfgDatabase[$box]".$querymid
+	);
+    }
+    
+    switch($box) {
+	case 'user_filter': 
+	    foreach ($STRING['user_filter'] as $k => $v) {
+		$text .= sprintf("<option value=\"%d\"%s>%s</option>",
+		$k, ($k == $selected ? ' selected' : ''), $v);
+	    }
 	break;
-    case 'os' :
-      $rs = $db->query("select {$box}_id, {$box}_name, regex from ".TBL_OS." where sort_order > 0 order by sort_order");
-      while ($rs->fetchInto($row)) {
-        if ($selected == '' and isset($row['Regex']) and
-          preg_match($row['Regex'],$GLOBALS['HTTP_USER_AGENT'])) $sel = ' selected';
-        elseif ($selected == $row[$box.'_id']) $sel = ' selected';
-        else $sel = '';
-        $text .= '<option value="'.
-          $row[$box.'_id']."\"$sel>".$row[$box.'_name']."</option>";
-      }
-      break;
-    case 'owner' :
-      $rs = $db->query("select u.user_id, login from ".TBL_AUTH_USER." u, ".TBL_USER_GROUP." ug, ".TBL_AUTH_GROUP." g where u.active > 0 and u.user_id = ug.user_id and ug.group_id = g.group_id and group_name = 'Developer' order by login");
-      while ($rs->fetchInto($row)) {
-        if ($selected == $row['user_id']) $sel = ' selected';
-        else $sel = '';
-        $text .= "<option value=\"{$row['user_id']}\"$sel>{$row['login']}</option>";
-      }
-      break;
-    case 'bug_cc' :
-      $rs = $db->query(sprintf($QUERY['functions-bug-cc'], $selected));
-      while (list($uid, $user) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
-        $text .= "<option value=\"$uid\">".maskemail($user).'</option>';
-      }
-
-      // Pad the sucker
-      $text .= '<option value="" disabled>';
-      for ($i = 0; $i < 30; $i++) {
-        $text .= '&nbsp;';
-      }
-      $text .= '</option>';
-      break;
-    case 'LANGUAGE' :
-      $dir = opendir('languages');
-      while (false !== ($file = readdir($dir))) {
-        if ($file != '.' && $file != '..' && $file != 'CVS') {
-          $filelist[] = str_replace('.php', '', $file);
-				}
-			}
-			closedir($dir);
-			sort($filelist);
-			foreach ($filelist as $file) {
-        if ($file == $selected) {
-          $sel = ' selected';
-        } else {
-          $sel = '';
-        }
-        $text .= "<option value=\"$file\"$sel>$file</option>";
-      }
-      break;
-    case 'THEME' :
-      $dir = opendir('templates');
-      while (false !== ($file = readdir($dir))) {
-        if ($file != '.' && $file != '..' && $file != 'CVS') {
-          $filelist[] = str_replace('.php', '', $file);
-				}
-			}
-			closedir($dir);
-			sort($filelist);
-			foreach ($filelist as $file) {
-        if ($file == $selected) {
-          $sel = ' selected';
-        } else {
-          $sel = '';
-        }
-        $text .= "<option value=\"$file\"$sel>$file</option>";
-      }
-      break;
-    case 'STYLE' :
-      $dir = opendir('styles');
-      while (false !== ($file = readdir($dir))) {
-        if ($file != '.' && $file != '..' && $file != 'CVS') {
-          $filelist[] = str_replace('.css', '', $file);
-				}
-			}
-			closedir($dir);
-			sort($filelist);
-			foreach ($filelist as $file) {
-        if ($file == $selected) {
-          $sel = ' selected';
-        } else {
-          $sel = '';
-        }
-        $text .= "<option value=\"$file\"$sel>$file</option>";
-      }
-      break;
-    default :
-      $deadarray = $select[$box];
-      while(list($val,$item) = each($deadarray)) {
-        if ($selected == $val and $selected != '') $sel = ' selected';
-        else $sel = '';
-        $text .= "<option value=\"$val\"$sel>$item</option>";
-      }
-      break;
-  }
-  echo $text;
+	case 'group':
+	    if ($project) { // If we are building for project admin page
+		if (!count($selected) or (count($selected) && in_array(0, $selected))) {
+		    $sel = ' selected';
+		} else {
+		    $sel = '';
+		}
+		$text = "<option value=\"all\"$sel>All Groups</option>";
+	    }
+	    $rs = $db->query($queries[$box]);
+	    while ($rs->fetchInto($row)) {
+		if (count($selected) && in_array($row[$box.'_id'], $selected)) {
+		    $sel = ' selected';
+		} else {
+		    $sel = '';
+		}
+		$text .= '<option value="'.
+		$row[$box.'_id']."\"$sel>".$row[$box.'_name'].'</option>';
+	    }
+	break;
+	case 'severity':
+	case 'status':
+	case 'resolution':
+	case 'project':
+	case 'site':
+	case 'component':
+	case 'version':
+	    $rs = $db->query($queries[$box]);
+	    while ($rs->fetchInto($row)) {
+		if ($selected == $row[$box.'_id'] and $selected != '') {
+		    $sel = ' selected';
+		} else {
+		    $sel = '';
+		}
+		$text .= '<option value="'.
+		$row[$box.'_id']."\"$sel>".$row[$box.'_name'].'</option>';
+	    }
+	break;
+	case 'database':
+	    $text = '<option value="0">None</option>';
+	    $rs = $db->query($queries[$box]);
+	    while ($rs->fetchInto($row)) {
+		if ($selected == $row[$box.'_id'] and $selected != '') {
+		    $sel = ' selected';
+		} else {
+		    $sel = '';
+		}
+		$text .= '<option value="'.
+		$row[$box.'_id'].'"'.$sel.'>'.$row[$box.'_name'].' '.$row[$box.'_version'].'</option>';
+	    }
+	break;
+	case 'os':
+	    $rs = $db->query("select {$box}_id, {$box}_name, regex from ".TBL_OS." where sort_order > 0 order by sort_order");
+	    while ($rs->fetchInto($row)) {
+		if ($selected == '' and isset($row['Regex']) and
+		    preg_match($row['Regex'],$GLOBALS['HTTP_USER_AGENT'])) {
+		    $sel = ' selected';
+		} elseif ($selected == $row[$box.'_id']) {
+		    $sel = ' selected';
+		} else {
+		    $sel = '';
+		}
+		$text .= '<option value="'.$row[$box.'_id']."\"$sel>".$row[$box.'_name']."</option>";
+	    }
+	break;
+	case 'owner':
+	    $rs = $db->query("select u.user_id, login from ".TBL_AUTH_USER." u, ".TBL_USER_GROUP." ug, ".TBL_AUTH_GROUP." g where u.active > 0 and u.user_id = ug.user_id and ug.group_id = g.group_id and group_name = 'Developer' order by login");
+	    while ($rs->fetchInto($row)) {
+		if ($selected == $row['user_id']) {
+		    $sel = ' selected';
+		} else {
+		    $sel = '';
+		}
+		$text .= "<option value=\"{$row['user_id']}\"$sel>{$row['login']}</option>";
+	    }
+	break;
+	case 'bug_cc':
+	    $rs = $db->query(sprintf($QUERY['functions-bug-cc'], $selected));
+	    while (list($uid, $user) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
+		$text .= "<option value=\"$uid\">".maskemail($user).'</option>';
+	    }
+	    // Pad the sucker
+	    $text .= '<option value="" disabled>';
+	    for ($i = 0; $i < 30; $i++) {
+		$text .= '&nbsp;';
+	    }
+	    $text .= '</option>';
+	break;
+	case 'LANGUAGE' :
+	    $dir = opendir('languages');
+	    while (false !== ($file = readdir($dir))) {
+		if ($file != '.' && $file != '..' && $file != 'CVS') {
+		    $filelist[] = str_replace('.php', '', $file);
+		}
+	    }
+	    closedir($dir);
+	    sort($filelist);
+	    foreach ($filelist as $file) {
+		if ($file == $selected) {
+		    $sel = ' selected';
+		} else {
+		    $sel = '';
+		}
+		$text .= "<option value=\"$file\"$sel>$file</option>";
+	    }
+	break;
+	case 'THEME' :
+	    $dir = opendir('templates');
+	    while (false !== ($file = readdir($dir))) {
+		if ($file != '.' && $file != '..' && $file != 'CVS') {
+		    $filelist[] = str_replace('.php', '', $file);
+		}
+	    }
+	    closedir($dir);
+	    sort($filelist);
+	    foreach ($filelist as $file) {
+		if ($file == $selected) {
+		    $sel = ' selected';
+		} else {
+		    $sel = '';
+		}
+		$text .= "<option value=\"$file\"$sel>$file</option>";
+	    }
+	break;
+	case 'STYLE' :
+	    $dir = opendir('styles');
+	    while (false !== ($file = readdir($dir))) {
+		if ($file != '.' && $file != '..' && $file != 'CVS') {
+		    $filelist[] = str_replace('.css', '', $file);
+		}
+	    }
+	    closedir($dir);
+	    sort($filelist);
+	    foreach ($filelist as $file) {
+		if ($file == $selected) {
+		    $sel = ' selected';
+		} else {
+		    $sel = '';
+		}
+		$text .= "<option value=\"$file\"$sel>$file</option>";
+	    }
+	break;
+	default :
+	    $deadarray = $select[$box];
+	    while(list($val,$item) = each($deadarray)) {
+		if ($selected == $val and $selected != '') {
+		    $sel = ' selected';
+		} else {
+		    $sel = '';
+		}
+		$text .= "<option value=\"$val\"$sel>$item</option>";
+	    }
+	break;
+    }
+    echo ($text);
 }
 
 ///

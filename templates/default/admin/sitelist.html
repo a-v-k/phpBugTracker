@@ -1,0 +1,47 @@
+<script language="JavaScript">
+<!--
+	var me = '{$SCRIPT_NAME}';
+	{literal}
+		
+	function popupSite(id) {
+		window.open(me + '?op=edit&use_js=1&site_id='+id, 'ewin', 'dependent=yes,width=350,height=300,scrollbars=1');
+	}
+	{/literal}
+// -->
+</script>
+<table border="0" width="100%">
+	<tr>
+		<td valign="top">
+			<b>&nbsp;{$STRING.sitelist'}</b> - <a href="{$SCRIPT_NAME}?op=edit&site_id=0" onClick="popupSite(0); return false;">{$STRING.addnewsite}</a>
+			<hr size="1">
+			<table border="0" cellpadding="2" cellspacing="1" width="100%">
+				<tr>
+					<th class="{$headers.name.class}"><a href="{$headers.name.url}">{$STRING.name}</a></th>
+					<th class="{$headers.sortorder.class}"><a href="{$headers.sortorder.url}">{$STRING.sortorder}</a></th>
+					<th>{$STRING.delete}</th>
+				</tr>
+				{section name=site loop=$sites}
+				<tr{if $smarty.section.site.iteration is even} class="alt"{/if}>
+					<td><a href="{$SCRIPT_NAME}?op=edit&site_id={$sites[site].site_id}" onClick="popupSite({$sites[site].site_id}); return false;">{$sites[site].site_name|stripslashes|htmlspecialchars}</a></td>
+					<td align="center">{$sites[site].sort_order}</td>
+					<td align="center">
+						{if not $sites[site].bug_count}
+							<a href="{$SCRIPT_NAME}?op=del&site_id={$sites[site].site_id}" onClick="return confirm('{$STRING.suredeletesite}')">{$STRING.delete}</a>
+						{/if}
+					</td>
+				</tr>
+				{/section}
+				<tr>
+					<td colspan="4" align="center">
+						<br>
+  					{$first} - {$last} of {$total}
+						<br>
+						{if $pages ne "1"}[ {$pages} ]{/if}
+  					<br>
+					</td>
+				</tr>
+			</table>
+			<br>
+		</td>
+	</tr>
+</table>

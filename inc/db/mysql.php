@@ -35,6 +35,10 @@ $QUERY = array(
 		'from '.TBL_DATABASE. ' d left join '.TBL_BUG.' using (database_id) '.
 		'group by d.database_id, database_name, database_version, sort_order '.
 		'order by %s %s',
+	'admin-list-sites' => 'select s.site_id, site_name, sort_order, '.
+		'count(bug_id) as bug_count from '.TBL_SITE. ' s left join '.
+		TBL_BUG.' using (site_id) group by s.site_id, site_name, sort_order '.
+		'order by %s %s',
 	'admin-list-statuses' => 'select s.status_id, status_name, status_desc, '.
 		'sort_order, count(bug_id) as bug_count '.
 		'from '.TBL_STATUS.' s left join '. TBL_BUG.' using (status_id) '.
@@ -130,11 +134,11 @@ $QUERY = array(
 		'left join '.TBL_DATABASE.' on b.database_id = '.TBL_DATABASE.'.database_id '.
 		'left join '.TBL_VERSION.' version2 on b.to_be_closed_in_version_id = version2.version_id '.
 		'left join '.TBL_VERSION.' version3 on b.closed_in_version_id = version3.version_id, '.
-		TBL_SEVERITY.' severity, '.TBL_STATUS.' status, '.TBL_OS.' os, '.
+		TBL_SEVERITY.' severity, '.TBL_STATUS.' status, '.TBL_OS.' os, '.TBL_SITE.' site, '.
 		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.TBL_PROJECT.' project '.
 		'where b.severity_id = severity.severity_id '.
 		'and b.status_id = status.status_id and b.os_id = os.os_id '.
-		'and b.version_id = version.version_id '.
+		'and b.site_id = site.site_id and b.version_id = version.version_id '.
 		'and b.component_id = component.component_id '.
 		'and b.project_id = project.project_id %s '.
 		'order by %s %s, bug_id asc',

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.20 2002/06/13 09:09:14 firma Exp $
+// $Id: en.php,v 1.21 2002/06/13 14:26:37 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'us-ascii',
@@ -84,8 +84,48 @@ $STRING = array(
 	'description' => 'Description',
 	'sortorder' => 'Sort order',
 	'suredeletedb' => 'Are you sure to delete this database?',
+	'suredeletesite' => 'Are you sure to delete this site?',
 	'delete' => 'Delete',
-	'version' => 'Version'
+	'version' => 'Version',
+	'addnewsite' => 'Add new Site',
+	'sitelist' => 'Site list',
+	'sites' => 'Sites',
+	'_opt_All' => 'All',
+	'_Project' => 'Project',
+	'_Version' => 'Version',
+	'_Component' => 'Component',
+	'_Status' => 'Status',
+	'_Resolution' => 'Resolution',
+	'_OpSys' => 'OpSys',
+	'_Priority' => 'Priority',
+	'_Severity' => 'Severity',
+	'_Database' => 'Database',
+	'_ReportedOnSite' => 'Reported on Site',
+	'_Summary' => 'Summary',
+	'_DescriptionEntry' => 'A description entry',
+	'_SortBy' => 'Sort By',
+	    '_SortBy_BugNumber' => 'Bug Number',
+	    '_SortBy_Severity' => 'Severity',
+	    '_SortBy_Reporter' => 'Reporter',
+	    '_SortBy_Priority' => 'Priority',
+	    '_SortBy_Status' => 'Status',
+	    '_SortAsc' => 'Ascending',
+	    '_SortDesc' => 'Descending',
+	'_SaveThisQueryAs' => 'Save this query as',
+	'_ResetBackToDefaultQuery' => 'Reset back to default query',
+	'_SubmitQuery' => 'Submit query',
+	'_SavedQueries' => 'Saved Queries',
+	'_1GoToThe' => 'Go to the',
+	'_1AdvancedQueryPage' => 'advanced query page',
+	'_1SimpleQueryPage' => 'simple query page',
+	'_SureDeleteSavedQuery' => 'Are you sure to delete this saved query?',
+	'_MatchingAs' => 'matching as',
+	    '_MatchingAs_Regexp' => 'regexp',
+	    '_MatchingAs_NotRegexp' => 'not regexp',
+	    '_MatchingAs_Substring' => 'substring',
+	    '_MatchingAs_Exact' => 'exact',
+	'_eMail_Reporter' => 'Reporter',
+	'_eMail_AssignedTo' => 'Assigned To'
     );
 	
 // Page titles
@@ -101,6 +141,8 @@ $TITLE = array(
 	'editproject' => 'Edit Project',
 	'addversion' => 'Add Version',
 	'editversion' => 'Edit Version',
+	'addsite' => 'Add Site',
+	'editsite' => 'Edit Site',
 	'project' => 'Projects',
 	'os' => 'Operating Systems',
 	'resolution' => 'Resolutions',
@@ -134,26 +176,7 @@ $TITLE = array(
 	'adddatabase' => 'Add Database',
 	'editdatabase' => 'Edit Database',
 	'database' => 'Databases',
-	'documentation' => 'Read documentation',
-	'_opt_All' => 'All',
-	'_Project' => 'Project',
-	'_Version' => 'Version',
-	'_Component' => 'Component',
-	'_Status' => 'Status',
-	'_SortBy' => 'Sort By',
-	    '_SortBy_BugNumber' => 'Bug Number',
-	    '_SortBy_Severity' => 'Severity',
-	    '_SortBy_Reporter' => 'Reporter',
-	    '_SortBy_Priority' => 'Priority',
-	    '_SortBy_Status' => 'Status',
-	    '_SortAsc' => 'Ascending',
-	    '_SortDesc' => 'Descending',
-	'_SaveThisQueryAs' => 'Save this query as',
-	'_ResetBackToDefaultQuery' => 'Reset back to default query',
-	'_SubmitQuery' => 'Submit query',
-	'_SavedQueries' => 'Saved Queries',
-	'_1GoToThe' => 'Go to the',
-	'_1AdvancedQueryPage' => 'Advanced query page',
-	'_SureDeleteSavedQuery' => 'Are you sure to delete this saved query?'
+	'site' => 'Sites',
+	'documentation' => 'Read documentation'
     );
 ?>

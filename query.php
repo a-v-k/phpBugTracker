@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.78 2002/06/12 13:50:49 firma Exp $
+// $Id: query.php,v 1.79 2002/06/13 14:26:34 firma Exp $
 
 include 'include.php';
 
@@ -195,6 +195,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	    'closed_in_version_name' => 'version3.version_name as v3',
 	    'database_provider' => TBL_DATABASE.'.database_name',
 	    'database_version' => TBL_DATABASE.'.database_version',
+	    'site_name' => 'site.site_name',
 	    'component_name' => 'component.component_name',
 	    'os_name' => 'os.os_name',
 	    'browser_string' => 'browser_string',
@@ -222,6 +223,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	    'closed_in_version_name' => 'v3',
 	    'database_provider' => TBL_DATABASE.'.database_name',
 	    'database_version' => TBL_DATABASE.'.database_version',
+	    'site_name' => 'site.sort_order',
 	    'browser_string' => 'browser_string',
 	    'resolution_name' => 'resolution.sort_order',
 	    'close_date' => 'close_date'

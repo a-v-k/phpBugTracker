@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.119 2002/06/12 11:39:11 firma Exp $
+// $Id: include.php,v 1.120 2002/06/13 14:26:34 firma Exp $
 
 ini_set("magic_quotes_runtime", 0); 
 
@@ -81,6 +81,7 @@ $all_db_fields = array(
   'to_be_closed_in_version_name' => 'To be Closed in Version',
   'database_version' => 'Database Version',
   'database_provider' => 'Database Provider',
+  'site_name' => 'Site',
   'reporter' => 'Reporter',
   'owner' => 'Owner',
   'created_date' => 'Created Date',

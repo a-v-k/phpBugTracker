@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz.php,v 1.11 2002/06/13 09:09:14 firma Exp $
+// $Id: cz.php,v 1.12 2002/06/13 14:26:36 firma Exp $
 
 $STRING = array(
 	'lang_charset' => 'Windows-1250',
@@ -84,8 +84,48 @@ $STRING = array(
 	'description' => 'Popis',
 	'sortorder' => 'Poøadí tøídìní',
 	'suredeletedb' => 'Opravdu chcete odstranit tuto databázi?',
+	'suredeletesite' => 'Opravdu chcete odstranit toto prostøedí?',
 	'delete' => 'Odstranit',
-	'version' => 'Verze'
+	'version' => 'Verze',
+	'addnewsite' => 'Pøidat nové prostøedí',
+	'sitelist' => 'Seznam prostøedí',
+	'sites' => 'Prostøedí',
+	'_opt_All' => 'Vše',
+        '_Project' => 'Projekt',
+        '_Version' => 'Verze',
+        '_Component' => 'Komponenta',
+        '_Status' => 'Status',
+	'_Resolution' => 'Rozhodnutí',
+	'_OpSys' => 'Operaèní systém',
+	'_Priority' => 'Priorita',
+	'_Severity' => 'Dùležitost',
+	'_Database' => 'Databáze',
+	'_ReportedOnSite' => 'Prostøedí výskytu',
+	'_Summary' => 'Shrnutí',
+	'_DescriptionEntry' => 'Položka popisu',
+        '_SortBy' => 'Tøídit podle',
+	    '_SortBy_BugNumber' => 'Èísla BUGu',
+	    '_SortBy_Severity' => 'Dùležitosti',
+	    '_SortBy_Reporter' => 'Reportéra',
+	    '_SortBy_Priority' => 'Priority',
+	    '_SortBy_Status' => 'Statutu',
+	    '_SortAsc' => 'Vzestupnì',
+	    '_SortDesc' => 'Sestupnì',
+        '_SaveThisQueryAs' => 'Uložit tento dotaz jako',
+        '_ResetBackToDefaultQuery' => 'Zpìt k pùvodnímu dotazu',
+        '_SubmitQuery' => 'Odeslat dotaz',
+        '_SavedQueries' => 'Uložené dotazy',
+	'_1GoToThe' => 'Pøejít na',
+	'_1AdvancedQueryPage' => 'stránku pokroèilého vyhledávání',
+	'_1SimpleQueryPage' => 'stránku jednoduchého vyhledávání',
+	'_SureDeleteSavedQuery' => 'Jste si jisti, že chcete odstranit tento uložený dotaz?',
+	'_MatchingAs' => 'odpovídá (vyhledat jako)',
+	    '_MatchingAs_Regexp' => 'regulárním výrazem',
+	    '_MatchingAs_NotRegexp' => 'není regulárním výrazem',
+	    '_MatchingAs_Substring' => 'podøetìzec',
+	    '_MatchingAs_Exact' => 'pøesnì',
+	'_eMail_Reporter' => 'reportér',
+	'_eMail_AssignedTo' => 'pøiøazeno',
     );
 
 // Page titles
@@ -101,6 +141,8 @@ $TITLE = array(
 	'editproject' => 'Editovat projekt',
 	'addversion' => 'Pøidat verzi',
 	'editversion' => 'Upravit verzi',
+	'addsite' => 'Pøidat prostøedí',
+	'editsite' => 'Upravit prostøedí',
 	'project' => 'Projekty',
 	'os' => 'Operaèní systémy',
 	'resolution' => 'Rozhodnutí',
@@ -134,27 +176,8 @@ $TITLE = array(
 	'adddatabase' => 'Pøidat databázi',
 	'editdatabase' => 'Upravit databázi',
 	'database' => 'Databáze',
-	'documentation' => 'Dokumentace',
-	'_opt_All' => 'Vše',
-        '_Project' => 'Projekt',
-        '_Version' => 'Verze',
-        '_Component' => 'Komponenta',
-        '_Status' => 'Status',
-        '_SortBy' => 'Tøídit podle',
-	    '_SortBy_BugNumber' => 'Èísla BUGu',
-	    '_SortBy_Severity' => 'Dùležitosti',
-	    '_SortBy_Reporter' => 'Reportéra',
-	    '_SortBy_Priority' => 'Priority',
-	    '_SortBy_Status' => 'Statutu',
-	    '_SortAsc' => 'Vzestupnì',
-	    '_SortDesc' => 'Sestupnì',
-        '_SaveThisQueryAs' => 'Uložit tento dotaz jako',
-        '_ResetBackToDefaultQuery' => 'Zpìt k pùvodnímu dotazu',
-        '_SubmitQuery' => 'Odeslat dotaz',
-        '_SavedQueries' => 'Uložené dotazy',
-	'_1GoToThe' => 'Pøejít na',
-	'_1AdvancedQueryPage' => 'stránku pokroèilého vyhledávání',
-	'_SureDeleteSavedQuery' => 'Jste si jisti, že chcete odstranit tento uložený dotaz?'
+	'site' => 'Prostøedí',
+	'documentation' => 'Dokumentace'
     );
 ?>
 

@@ -25,212 +25,132 @@ function updateMenus(f) {
 {/literal}
 //-->
 </script>
-    <form method="get" action="query.php" name="query">
-      <table>
-        <tr>
-          <th align="left">{$TITLE._Status}:</th>
-          <th align="left">Resolution:</th>
-          <th align="left">OpSys:</th>
-          <th align="left">Priority:</th>
-          <th align="left">Severity:</th>
-        </tr>
-
-        <tr>
-          <td align="left" valign="top">
-						<select name="status[]" multiple size="7">{build_select box=status}</select>
-					</td>
-          <td align="left" valign="top">
-						<select name="resolution[]" multiple size="7">{build_select box=resolution}</select>
-					</td>
-          <td align="left" valign="top">
-						<select name="os[]" multiple size="7">{build_select box=os}</select>
-					</td>
-          <td align="left" valign="top">
-						<select name="priority[]" multiple size="7">{build_select box=priority}</select>
-					</td>
-          <td align="left" valign="top">
-						<select name="severity[]" multiple size="7">{build_select box=severity}</select>
-					</td>
-        </tr>
-      </table>
-			<br>
-			<br>
-     	<table>
-        <tr>
-          <td>
-            <table border="1" cellspacing="0" cellpadding="0">
-              <tr>
-                <td>
-                  <table cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td rowspan="2" valign="top">
-                      <select name="emailsearch1">
-												<option value="email">Email</option>
-												<option value="login">Login</option>
-											</select>
-											: <input name="email1" size="30" value="">&nbsp;matching
-                      as <select name="emailtype1">
-                        <option value="rlike">
-                          regexp
-                        </option>
-
-                        <option value="not rlike">
-                          not regexp
-                        </option>
-
-                        <option selected value="like">
-                          substring
-                        </option>
-
-                        <option value="=">
-                          exact
-                        </option>
-                      </select> </td>
-
-                      <td><input type="checkbox" name="emailfield1[]" value="owner"
-                      checked>Assigned To</td>
-                    </tr>
-
-                    <tr>
-                      <td><input type="checkbox" name="emailfield1[]" value="reporter">
-                      Reporter</td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-			</table>
-
-      <table border="0">
-        <tr>
-          <td align="right">Summary:</td>
-
-          <td><input name="title" size="30" value=""></td>
-
-          <td><select name="title_type">
-            <option value="like" selected>
-              substring
-            </option>
-
-            <option value="rlike">
-              regular expression
-            </option>
-
-            <option value="not rlike">
-              not ( regular expression )
-            </option>
-          </select></td>
-        </tr>
-
-        <tr>
-          <td align="right">A description entry:</td>
-
-          <td><input name="description" size="30" value=""></td>
-
-          <td><select name="description_type">
-            <option value="like" selected>
-              substring
-            </option>
-
-            <option value="rlike">
-              regular expression
-            </option>
-
-            <option value="not rlike">
-              not ( regular expression )
-            </option>
-          </select></td>
-        </tr>
-
-        <tr>
-          <td align="right">URL:</td>
-
-          <td><input name="url" size="30" value=""></td>
-
-          <td><select name="url_type">
-            <option value="like" selected>
-              substring
-            </option>
-
-            <option value="rlike">
-              regular expression
-            </option>
-
-            <option value="not rlike">
-              not ( regular expression )
-            </option>
-          </select></td>
-        </tr>
-      </table>
-
-			<hr align="left" width="100%">
-      <table>
+<form method="get" action="query.php" name="query">
+    <table>
+	<tr>
+	    <th align="left">{$STRING._Status}:</th>
+	    <th align="left">{$STRING._Resolution}:</th>
+	    <th align="left">{$STRING._OpSys}:</th>
+	    <th align="left">{$STRING._Priority}:</th>
+	    <th align="left">{$STRING._Severity}:</th>
+	    <th align="left">{$STRING._Database}:</th>
+	    <th align="left">{$STRING._ReportedOnSite}:</th>
+	</tr><tr>
+	    <td align="left" valign="top"><select name="status[]"
+		multiple size="7">{build_select box=status}</select></td>
+	    <td align="left" valign="top"><select name="resolution[]"
+		multiple size="7">{build_select box=resolution}</select></td>
+	    <td align="left" valign="top"><select name="os[]"
+		multiple size="7">{build_select box=os}</select></td>
+	    <td align="left" valign="top"><select name="priority[]"
+		multiple size="7">{build_select box=priority}</select></td>
+	    <td align="left" valign="top"><select name="severity[]"
+		multiple size="7">{build_select box=severity}</select></td>
+	    <td align="left" valign="top"><select name="database[]"
+		multiple size="7">{build_select box=database}</select></td>
+	    <td align="left" valign="top"><select name="site[]"
+		multiple size="7">{build_select box=site}</select></td>
+	</tr>
+    </table>
+    <br><br>
+    <table>
+	<tr>
+	    <td><table border="1" cellspacing="0" cellpadding="0">
+		    <tr>
+			<td><table cellspacing="0" cellpadding="0" border="0">
 				<tr>
-					<td><b>{$TITLE._Project}:</b></td>
-					<td>
-						<select name="projects" onChange="updateMenus(this.form)">
-							<option value=''>{$TITLE._opt_All}</option>
-							{build_select box=project}
-						</select>
-					</td>
+				    <td rowspan="2" valign="top"><select
+					name="emailsearch1">
+					    <option value="email">Email</option>
+					    <option value="login">Login</option>
+					</select>: <input name="email1"
+					    size="30" value="">&nbsp;{$STRING._MatchingAs}&nbsp;
+					<select name="emailtype1">
+					    <option value="rlike">{$STRING._MatchingAs_Regexp}</option>
+					    <option value="not rlike">{$STRING._MatchingAs_NotRegexp}</option>
+					    <option selected value="like">{$STRING._MatchingAs_Substring}</option>
+					    <option value="=">{$STRING._MatchingAs_Exact}</option>
+					</select></td>
+				    <td><input type="checkbox"
+					name="emailfield1[]" value="owner"
+					checked>{$STRING._eMail_AssignedTo}</td>
+				</tr><tr>
+				    <td><input type="checkbox" name="emailfield1[]"
+					value="reporter">{$STRING._eMail_Reporter}</td>
 				</tr>
-				<tr>
-					<td><b>{$TITLE._Version}:</b></td>
-					<td>
-						<select name="versions"><option value=''>{$TITLE._opt_All}</option></select>
-					</td>
-				</tr>
-				<tr>
-					<td><b>{$TITLE._Component}:</b></td>
-					<td>
-						<select name="components"><option value=''>{$TITLE._opt_All}</option></select>
-					</td>
-				</tr>
-			</table>
-			<hr align="left" width="100%">
-      <input type="hidden" name="op" value="doquery">
-			<nobr><b>{$TITLE._SortBy}:</b> 
-			<select name="order">
-        <option value="bug_id">
-          {$TITLE._SortBy_BugNumber}
-        </option>
-        <option selected value="severity.sort_order">
-          {$TITLE._SortBy_Severity}
-        </option>
-        <option value="reporter.login">
-          {$TITLE._SortBy_Reporter}
-        </option>
-        <option value="status.sort_order">
-          {$TITLE._SortBy_Status}
-        </option>
-        <option value="priority">
-          {$TITLE._SortBy_Priority}
-        </option>
-      </select>
-			<select name="sort">
-				<option selected value="asc">{$TITLE._SortAsc}</option>
-				<option value="desc">{$TITLE._SortDesc}</option>
-			</select>
-			</nobr> 
-			<br>
-			<br>
-			{if $smarty.session.uid}
-				{$TITLE._SaveThisQueryAs}: <input maxlength="40" type="text" name="savedqueryname">
-				<br><br>
-			{/if}
-			<input type="reset" value="{$TITLE._ResetBackToDefaultQuery}">
-			<input type="submit" value="{$TITLE._SubmitQuery}"> 
-			{if count($queries)}
-				<br><br>
-				<b>{$TITLE._SavedQueries}</b>
-				<br>
-				{section name=query loop=$queries}
-					<a href="{$smarty.server.PHP_SELF}?{$queries[query].saved_query_string}">{$queries[query].saved_query_name}</a> (<a href="{$smarty.server.PHP_SELF}?op=delquery&queryid={$queries[query].saved_query_id}&form=advanced" onClick="return confirm('Are you sure you want to delete this saved query?');">Delete</a>)<br>
-				{/section}
-			{/if}
-    </form>
-		<br>
-		{$TITLE._1GoToThe} <a href="{$smarty.server.PHP_SELF}?op=query">simple query page</a>
-
+			    </table></td>
+		    </tr>
+	    </table></td>
+	</tr>
+    </table>
+    <table border="0">
+	<tr>
+	    <td align="right">{$STRING._Summary}:</td>
+	    <td><input name="title" size="30" value=""></td>
+	    <td><select name="title_type">
+		    <option value="like" selected>{$STRING._MatchingAs_Substring}</option>
+		    <option value="rlike">{$STRING._MatchingAs_Regexp}</option>
+		    <option value="not rlike">{$STRING._MatchingAs_NotRegexp}</option>
+	    </select></td>
+	</tr><tr>
+	    <td align="right">{$STRING._DescriptionEntry}:</td>
+	    <td><input name="description" size="30" value=""></td>
+	    <td><select name="description_type">
+		    <option value="like" selected>{$STRING._MatchingAs_Substring}</option>
+		    <option value="rlike">{$STRING._MatchingAs_Regexp}</option>
+		    <option value="not rlike">{$STRING._MatchingAs_NotRegexp}</option>
+	    </select></td>
+	</tr><tr>
+	    <td align="right">URL:</td>
+	    <td><input name="url" size="30" value=""></td>
+	    <td><select name="url_type">
+		    <option value="like" selected>{$STRING._MatchingAs_Substring}</option>
+		    <option value="rlike">{$STRING._MatchingAs_Regexp}</option>
+		    <option value="not rlike">{$STRING._MatchingAs_NotRegexp}</option>
+	    </select></td>
+	</tr>
+    </table>
+    <hr align="left" width="100%">
+    <table>
+	<tr>
+	    <td><b>{$STRING._Project}:</b></td>
+	    <td><select name="projects" onChange="updateMenus(this.form)">
+		    <option value=''>{$STRING._opt_All}</option>{build_select box=project}</select></td>
+	</tr><tr>
+	    <td><b>{$STRING._Version}:</b></td>
+	    <td><select name="versions"><option value=''>{$STRING._opt_All}</option></select></td>
+	</tr><tr>
+	    <td><b>{$STRING._Component}:</b></td>
+	    <td><select name="components"><option value=''>{$STRING._opt_All}</option></select></td>
+	</tr>
+    </table>
+    <hr align="left" width="100%">
+    <input type="hidden" name="op" value="doquery">
+    <b>{$STRING._SortBy}:</b>
+    <select name="order">
+	<option value="bug_id">{$STRING._SortBy_BugNumber}</option>
+        <option selected value="severity.sort_order">{$STRING._SortBy_Severity}</option>
+        <option value="reporter.login">{$STRING._SortBy_Reporter}</option>
+        <option value="status.sort_order">{$STRING._SortBy_Status}</option>
+        <option value="priority">{$STRING._SortBy_Priority}</option>
+    </select>
+    <select name="sort">
+	<option selected value="asc">{$STRING._SortAsc}</option>
+	<option value="desc">{$STRING._SortDesc}</option>
+    </select>
+    </nobr>
+    <br><br>
+{if $smarty.session.uid}
+    {$STRING._SaveThisQueryAs}: <input maxlength="40" type="text" name="savedqueryname">
+    <br><br>
+{/if}
+    <input type="reset" value="{$STRING._ResetBackToDefaultQuery}">
+    <input type="submit" value="{$STRING._SubmitQuery}"> 
+{if count($queries)}
+    <br><br><b>{$STRING._SavedQueries}</b><br>
+    {section name=query loop=$queries}
+    <a href="{$smarty.server.PHP_SELF}?{$queries[query].saved_query_string}">{$queries[query].saved_query_name}</a> (<a href="{$smarty.server.PHP_SELF}?op=delquery&queryid={$queries[query].saved_query_id}&form=advanced" onClick="return confirm('Are you sure you want to delete this saved query?');">Delete</a>)<br>
+    {/section}
+{/if}
+</form>
+<br>{$STRING._1GoToThe} <a href="{$smarty.server.PHP_SELF}?op=query">{$STRING._1SimpleQueryPage}</a>

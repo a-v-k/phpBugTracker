@@ -1,0 +1,23 @@
+<b>{$page_title}&nbsp;</b>
+<hr size="1">
+<form action="{$smarty.server.PHP_SELF}" method="post">
+    <input type="hidden" name="site_id" value="{$site_id}">
+    <input type="hidden" name="use_js" value="{$smarty.request.use_js}">
+    <table border='0'>
+{if $error}
+	<tr>
+	    <td colspan="2" class="error">{$error}</td>
+	</tr>
+{/if}
+	<tr>
+	    <td align="right" valign="top">{$STRING.name}:</td>
+	    <td><input type="text" size="20" maxlength="50" name="site_name" value="{$site_name|stripslashes|htmlspecialchars}"></td>
+	</tr>
+	<tr>
+	    <td align="right" valign="top">{$STRING.sortorder}:</td>
+	    <td><input type="text" size="3" maxlength="3" name="sort_order" value="{$sort_order}"></td>
+	</tr>
+    </table>
+    <br>
+    <input type="submit" name="submit">
+</form>
