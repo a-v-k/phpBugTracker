@@ -11,24 +11,24 @@
 		<tr>
 			<td align="right">Login: </td>
 			<td>
-				<input type="text" name="login" value="{$smarty.post.login|stripslashes|htmlentities}">
+				<input type="text" name="login" value="{$smarty.post.login|stripslashes|htmlspecialchars}">
 			</td>
 		</tr>
 	{/if}
 	<tr>
 		<td align="right">Email: </td>
-		<td><input type="text" name="email" value="{$smarty.post.email|stripslashes|htmlentities}"></td>
+		<td><input type="text" name="email" value="{$smarty.post.email|stripslashes|htmlspecialchars}"></td>
 	</tr>
 	<tr>
 		<td align="right">First Name (optional):</td>
 		<td>
-			<input type="text" name="firstname" value="{$smarty.post.firstname|stripslashes|htmlentities}">
+			<input type="text" name="firstname" value="{$smarty.post.firstname|stripslashes|htmlspecialchars}">
 		</td>
 	</tr>
 	<tr>
 		<td align="right">Last Name (optional):</td>
 		<td>
-			<input type="text" name="lastname" value="{$smarty.post.lastname|stripslashes|htmlentities}">
+			<input type="text" name="lastname" value="{$smarty.post.lastname|stripslashes|htmlspecialchars}">
 		</td>
 	</tr>
 </table>

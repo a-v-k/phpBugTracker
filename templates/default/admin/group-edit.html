@@ -11,7 +11,7 @@
 {/if}
 <tr>
   <td align="right" valign="top">Name:</td>
-  <td><input type="text" size="20" maxlength="40" name="group_name" value="{$group_name|stripslashes|htmlentities}"></td>
+  <td><input type="text" size="20" maxlength="40" name="group_name" value="{$group_name|stripslashes|htmlspecialchars}"></td>
 </tr>
 </table>
 <br>

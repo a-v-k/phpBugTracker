@@ -16,14 +16,14 @@
         	<td valign="top">
 						Name:
 						<br>
-						<input type="text" size="30" maxlength="30" name="project_name" value="{$project_name|stripslashes|htmlentities}">
+						<input type="text" size="30" maxlength="30" name="project_name" value="{$project_name|stripslashes|htmlspecialchars}">
 					</td>
 				</tr>
 				<tr>
         	<td valign="top">
 						Description:
 						<br>
-        		<textarea name="project_desc" cols=40 rows=5 wrap=virtual>{$project_desc|stripslashes|htmlentities}</textarea>
+        		<textarea name="project_desc" cols=40 rows=5 wrap=virtual>{$project_desc|stripslashes|htmlspecialchars}</textarea>
 					</td>
 				</tr>
 				<tr>
@@ -48,7 +48,7 @@
         	<td valign="top">
 						Initial Version:
 						<br>
-        		<input type="text" size="30" maxlength="30" name="version_name" value="{$version_name|stripslashes|htmlentities}">
+        		<input type="text" size="30" maxlength="30" name="version_name" value="{$version_name|stripslashes|htmlspecialchars}">
 					</td>
 				</tr>
 			</table>
@@ -68,14 +68,14 @@
         	<td valign="top">
 						Initial Component Name:
 						<br>
-        		<input type="text" size="30" maxlength="30" name="component_name" value="{$component_name|stripslashes|htmlentities}">
+        		<input type="text" size="30" maxlength="30" name="component_name" value="{$component_name|stripslashes|htmlspecialchars}">
 					</td>
 				</tr>
 				<tr>
         	<td valign="top">
 						Description:
 						<br>
-        		<textarea name="component_desc" cols="30">{$component_desc|stripslashes|htmlentities}</textarea>
+        		<textarea name="component_desc" cols="30">{$component_desc|stripslashes|htmlspecialchars}</textarea>
 					</td>
 				</tr>
 				<tr>

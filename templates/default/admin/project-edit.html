@@ -3,7 +3,7 @@
 	var me = '{$smarty.server.PHP_SELF}';
 	var projectId = '{$project_id}';
 	{literal}
-		
+
 	function popupComponent(id) {
 		window.open(me + '?op=edit_component&project_id='+projectId+'&use_js=1&id='+id, 'ewin', 'dependent=yes,width=450,height=300,scrollbars=1');
 		return false;
@@ -30,7 +30,7 @@
 		<td valign="top" width="360">
 			Name:
 			<br>
-			<input type="text" size="30" maxlength="30" name="project_name" value="{$project_name|stripslashes|htmlentities}">
+			<input type="text" size="30" maxlength="30" name="project_name" value="{$project_name|stripslashes|htmlspecialchars}">
 		</td>
 		<td valign="top" rowspan="3">
 			Only users in the following groups can see this project:
@@ -44,7 +44,7 @@
 		<td valign="top">
 			Description:
 			<br>
-			<textarea name="project_desc" cols=40 rows=5 wrap=virtual>{$project_desc|stripslashes|htmlentities}</textarea>
+			<textarea name="project_desc" cols=40 rows=5 wrap=virtual>{$project_desc|stripslashes|htmlspecialchars}</textarea>
 		</td>
 	</tr>
 	<tr>

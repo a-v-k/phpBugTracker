@@ -12,7 +12,7 @@
 					Name:
 				</td>
 				<td valign="top">
-					<input type="text" name="version_name" value="{$version_name|stripslashes|htmlentities}">
+					<input type="text" name="version_name" value="{$version_name|stripslashes|htmlspecialchars}">
 				</td>
 			</tr>
 			<tr>
@@ -30,4 +30,4 @@
 			</tr>
 		</table>
 		</form>
- 
+

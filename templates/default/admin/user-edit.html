@@ -2,11 +2,11 @@
 <!--
 	var hadAdmin = {$hadadmin};
 	var numAdmins = {$numadmins};
-	
+
 	{literal}
 	function checkAdmin(slct) {
 		var adminSelected = false;
-		
+
 		if (hadAdmin && numAdmins == 1) {
 			for (current = 0; current < slct.options.length; current++ ) {
 				if (slct.options[current].selected && slct.options[current].value == 1) {
@@ -45,11 +45,11 @@
 </tr>
 <tr>
   <td align="right" valign="top">FirstName:</td>
-  <td><input type="text" size="20" maxlength="40" name="first_name" value="{$first_name|stripslashes|htmlentities}"></td>
+  <td><input type="text" size="20" maxlength="40" name="first_name" value="{$first_name|stripslashes|htmlspecialchars}"></td>
 </tr>
 <tr>
   <td align="right" valign="top">LastName:</td>
-  <td><input type="text" size="20" maxlength="40" name="last_name" value="{$last_name|stripslashes|htmlentities}"></td>
+  <td><input type="text" size="20" maxlength="40" name="last_name" value="{$last_name|stripslashes|htmlspecialchars}"></td>
 </tr>
 <tr>
   <td align="right" valign="top">Password:</td>

@@ -11,11 +11,11 @@
 {/if}
 <tr>
   <td align="right" valign="top">Name:</td>
-  <td><input type="text" size="20" maxlength="40" name="status_name" value="{$status_name|stripslashes|htmlentities}"></td>
+  <td><input type="text" size="20" maxlength="40" name="status_name" value="{$status_name|stripslashes|htmlspecialchars}"></td>
 </tr>
 <tr>
   <td align="right" valign="top">Description:</td>
-  <td><textarea name="status_desc" cols=20 rows=5 wrap=virtual>{$status_desc|stripslashes|htmlentities}</textarea></td>
+  <td><textarea name="status_desc" cols=20 rows=5 wrap=virtual>{$status_desc|stripslashes|htmlspecialchars}</textarea></td>
 </tr>
 <tr>
   <td align="right" valign="top">Sort Order:</td>
