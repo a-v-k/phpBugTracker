@@ -4,8 +4,13 @@
 		<link rel="stylesheet" href="styles/default.css" type="text/css">
 	</head>
 	<body>
-		<div class="error">
-			The Smarty templates class is not in your include path.
+		<div class="error">An error has occurred</div>
+		<div align="center">
+			<?php if (SMARTY_PATH == '') { ?>
+				The Smarty templates class is not in your include path.
+			<?php } else { ?>
+				The Smarty templates class could not be found at <?php echo SMARTY_PATH.'Smarty.class.php'; ?>.
+			<?php } ?>
 			Without this class being available, phpBugTracker will not be able to work.
 			Please visit <a href="http://www.phpinsider.com/php/code/Smarty/">the smarty
 			website</a> and install the package.  Please reload this page when smarty 
