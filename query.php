@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.83 2002/07/18 13:02:14 bcurtis Exp $
+// $Id: query.php,v 1.84 2002/08/26 14:32:15 firma Exp $
 
 include 'include.php';
 
@@ -278,7 +278,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	
 	$nr = $db->getOne($QUERY['query-list-bugs-count'].
 		(!empty($HTTP_SESSION_VARS['queryinfo']['query']) 
-			? "where {$HTTP_SESSION_VARS['queryinfo']['query']}": ''));
+			? "and {$HTTP_SESSION_VARS['queryinfo']['query']}": ''));
 
 	$HTTP_SESSION_VARS['queryinfo']['numrows'] = $nr;
 	list($selrange, $llimit) = multipages($nr, $page, "order=$order&sort=$sort");
