@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.44 2001/09/18 03:43:45 bcurtis Exp $
+// $Id: bug.php,v 1.45 2001/09/22 16:54:58 bcurtis Exp $
 
 include 'include.php';
 
@@ -169,6 +169,14 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
 		$maillist[] = $reporter;
 	if ($userid != ($cf['assigned_to'] ? $cf['assigned_to'] : $buginfo['assigned_to']))
 		$maillist[] = $assignedto;
+		
+	// Collect the CCs
+	$q->query('select email from '.TBL_BUG_CC.' left join '.TBL_AUTH_USER.
+		" using(user_id) where bug_id = {$buginfo['bug_id']}");
+	while ($cc_email = $q->grab_field()) {
+		$maillist[] = $cc_email;
+	}
+	
 	// Later add a watcher (such as QA person) check here
 	$toemail = delimit_list(', ',$maillist);
 		
@@ -204,7 +212,8 @@ function update_bug($bugid = 0) {
 				elseif ($v and substr($v,0,7) != 'http://') $v = 'http://'.$v;
 				$url = $v;
 			}
-			if (stripslashes($buginfo[$k]) != stripslashes($v)) { 
+			if (isset($buginfo[$k]) && stripslashes($buginfo[$k]) != stripslashes($v) 
+				&& $k != 'resolution_id') { 
 				$changedfields[$k] = $v; 
 			}
 		}
@@ -227,6 +236,28 @@ function update_bug($bugid = 0) {
 		return;
 	}
 	
+	// Add CC if specified
+	if ($add_cc) {
+		if (!$cc_uid = $q->grab_field("select user_id from ".TBL_AUTH_USER.
+			" where login = '$add_cc'")) {
+			show_bug($bugid,array('status' => $STRING['nouser']));
+			return;
+		}
+		$cc_already = $q->grab_field('select user_id from '.TBL_BUG_CC.
+			" where bug_id = $bugid and user_id = $cc_uid");
+		if (!$cc_already && $cc_uid != $buginfo['created_by']) {
+			$q->query("insert into ".TBL_BUG_CC." (bug_id, user_id, created_by, 
+				created_date)	values ($bugid, $cc_uid, $u, $now)");
+		}
+	}
+	
+	// Remove CCs if requested
+	if (count($remove_cc)) {
+		$q->query('delete from '.TBL_BUG_CC." where bug_id = $bugid 
+			and user_id in (".delimit_list(',', $remove_cc).')');
+	}
+	
+	$changeresolution = false;
 	switch($outcome) {
 		case 'unchanged' : break;
 		case 'assign' : $assignedto = $u; $statusfield = 'Assigned'; break;
@@ -422,6 +453,7 @@ function show_bug($bugid = 0, $error = '') {
 		'os' => build_select('os',$row['os_id']),
 		'browserstring' => $row['browser_string'],
 		'bugresolution' => build_select('resolution'),
+		'cclist' => build_select('bug_cc', $bugid),
 		'submit' => $u == 'nobody' ? $STRING['logintomodify'] : 
 			'<input type="submit" value="Submit">'
 		));
