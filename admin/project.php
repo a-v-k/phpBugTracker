@@ -20,16 +20,16 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.45 2003/04/09 18:27:44 kennyt Exp $
+// $Id: project.php,v 1.46 2003/06/07 02:52:24 kennyt Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
 include 'include.php';
 
 function del_version($versionid, $projectid) {
-	global $db, $me;
+	global $db, $me, $perm;
 
-        $perm->check_proj($projectid);
+	$perm->check_proj($projectid);
 
 	if (!$db->getOne('select count(*) from '.TBL_BUG." where version_id = $versionid")) {
 		$db->query("delete from ".TBL_VERSION." where version_id = $versionid");
@@ -40,7 +40,7 @@ function del_version($versionid, $projectid) {
 function save_version($version_id = 0) {
 	global $db, $me, $_pv, $STRING, $now, $u, $t, $perm;
 
-        $perm->check_proj($projectid);
+	$perm->check_proj($projectid);
 
 	$error = '';
 	// Validation
@@ -88,7 +88,7 @@ function show_version($versionid = 0, $error = '') {
 function del_component($componentid, $projectid) {
 	global $db, $me, $perm;
 
-        $perm->check_proj($projectid);
+	$perm->check_proj($projectid);
 
 	if (!$db->getOne('select count(*) from '.TBL_BUG." where component_id = $componentid")) {
 		$db->query("delete from ".TBL_COMPONENT." where component_id = $componentid");
@@ -99,7 +99,7 @@ function del_component($componentid, $projectid) {
 function save_component($component_id = 0) {
 	global $db, $me, $_pv, $u, $STRING, $now, $t, $perm;
 
-        $perm->check_proj($projectid);
+	$perm->check_proj($projectid);
 
 	$error = '';
 	// Validation
@@ -150,7 +150,7 @@ function show_component($componentid = 0, $error = '') {
 function save_project($projectid = 0) {
   global $db, $me, $u, $STRING, $now, $_pv, $perm;
 
-  $perm->check_proj($projectid);
+	$perm->check_proj($projectid);
 
 	$error = '';
   // Validation
