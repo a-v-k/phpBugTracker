@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz_iso-8859-2.php,v 1.13 2002/06/17 15:55:05 firma Exp $
+// $Id: cz_iso-8859-2.php,v 1.14 2002/06/18 12:54:33 firma Exp $
 
 $STRING = array(
     'lang_charset' => 'ISO-8859-2',
@@ -176,7 +176,7 @@ $STRING = array(
 	'ResolutionNone' => 'Zatím není',
 	'AddCC' => 'Pøidat kopii',
 	'RemoveSelectedCC' => 'Odebrat vybranou kopii',
-	'Addiditional Comments' => 'Dal¹í komentáøe',
+	'AdditionalComments' => 'Dal¹í komentáøe',
 	'Attachments' => 'Pøílohy',
 	'CreateAttachment' => 'Vytvoøit pøílohu',
 	'SureDeleteAttachment' => 'Opravdu chcete odtranit tuto pøílohu?',

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cz.php,v 1.16 2002/06/17 15:55:04 firma Exp $
+// $Id: cz.php,v 1.17 2002/06/18 12:54:33 firma Exp $
 
 $STRING = array(
     'lang_charset' => 'Windows-1250',
@@ -176,7 +176,7 @@ $STRING = array(
 	'ResolutionNone' => 'Zatím není',
 	'AddCC' => 'Pøidat kopii',
 	'RemoveSelectedCC' => 'Odebrat vybranou kopii',
-	'Addiditional Comments' => 'Další komentáøe',
+	'AdditionalComments' => 'Další komentáøe',
 	'Attachments' => 'Pøílohy',
 	'CreateAttachment' => 'Vytvoøit pøílohu',
 	'SureDeleteAttachment' => 'Opravdu chcete odtranit tuto pøílohu?',
