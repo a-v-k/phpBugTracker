@@ -20,12 +20,12 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: report.php,v 1.19 2002/03/05 22:14:00 bcurtis Exp $  
+// $Id: report.php,v 1.20 2002/03/17 01:42:40 bcurtis Exp $  
 
 include 'include.php';
 
 function resolution_by_engineer($projectid = 0) {
-	global $q, $t, $restricted_projects, $perm;
+	global $db, $t, $restricted_projects, $perm;
 	
 	$t->set_block('content', 'row', 'rows');
 	$t->set_block('row', 'col', 'cols');
@@ -36,8 +36,11 @@ function resolution_by_engineer($projectid = 0) {
 	$resfields = array('Assigned To','Open');
 
 	// Grab the resolutions from the database
-	$q->query("select resolution_name, ".$q->concat("', sum(case when resolution_id = '", 'resolution_id', "' then 1 else 0 end) as \"'", 'resolution_name' ,"'\"'")." from ".TBL_RESOLUTION);
-	while (list($fieldname, $countquery) = $q->grab()) {
+	$rs = $db->query("select resolution_name, ".
+		db_concat("', sum(case when resolution_id = '", 'resolution_id', 
+			"' then 1 else 0 end) as \"'", 'resolution_name' ,"'\"'").
+		" from ".TBL_RESOLUTION);
+	while (list($fieldname, $countquery) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 		$resfields[] = $fieldname;
 		$querystring .= $countquery;
 	}
@@ -51,8 +54,10 @@ function resolution_by_engineer($projectid = 0) {
 		$projectquery = '';
 	}
 	
-	$q->query("$querystring, count(bug_id) as \"Total\" from ".TBL_BUG." b left join ".TBL_AUTH_USER." u on assigned_to = user_id $projectquery group by assigned_to, u.email");
-	if (!$q->num_rows()) {
+	$rs = $db->query("$querystring, count(bug_id) as \"Total\" from ".TBL_BUG.
+		" b left join ".TBL_AUTH_USER." u on assigned_to = user_id $projectquery ".
+		"group by assigned_to, u.email");
+	if (!$rs->numRows()) {
 		$t->set_var('rows', 'No data to display');
 	} else {
 		foreach ($resfields as $col) {
@@ -64,7 +69,7 @@ function resolution_by_engineer($projectid = 0) {
 		$t->parse('rows', 'row', true);
 		$t->set_var('cols', '');
 		$i = 0;
-		while ($row = $q->grab()) {
+		while ($rs->fetchInto($row)) {
 			foreach ($resfields as $col) {
 				if (!isset($row[$col]) || $row[$col] == '') {
 					$coldata = 'Unassigned';
@@ -89,6 +94,98 @@ function resolution_by_engineer($projectid = 0) {
 	}
 }
 
+function new_bugs_by_date($date_range) {
+	global $db, $t, $now, $_gv;
+	
+	include ("jpgraph.php");
+	include ("jpgraph_bar.php");
+	
+	$colors = array('red', 'cadetblue', 'gold', 'darkmagenta');
+	
+	$graph = new Graph(450,300);
+	$graph->SetShadow();
+	$graph->SetScale("textlin");
+	$graph->title->Set("Bug Counts by Date");
+	$graph->title->SetFont(FF_FONT1,FS_BOLD);
+	$graph->img->SetMargin(40,140,40,80);
+	if ($date_range > 30) {
+		$graph->xaxis->SetTextTickInterval(14);
+	} elseif ($date_range > 14) {
+		$graph->xaxis->SetTextTickInterval(7);
+	} elseif ($date_range > 7) {
+		$graph->xaxis->SetTextTickInterval(2);
+	}
+	
+	$dates = array();
+	$then = $now - (ONEDAY * $date_range);
+	
+	// New bugs
+	$dates = $db->getCol("select created_date from bug where created_date between $then and $now order by 1");
+	if ($date_range == 365) {
+		$date_format = 'M Y';
+	} else {
+		$date_format = 'j M';
+		for ($i = $date_range - 1; $i >= 0; $i--) {
+			$dates[date($date_format, ($now - (ONEDAY * $i)))] = 0.00000001;
+		}
+	}
+	foreach ($dates as $date) {
+		//$date = date($date_format, $date);
+		$dates[date($date_format, $date)] += 1;
+	}
+	foreach ($dates as $date => $count) {
+		#echo "$date:$count<br>";
+		$xlabel[] = $date;
+		$xvalue[] = $count;
+	}
+	$p1 = new BarPlot($xvalue);
+	$p1->SetLegend("Created");
+	$p1->SetColor("blue");
+	$p1->SetFillColor("blue");
+	#$p1->SetCenter();
+	$graph->xaxis->SetTickLabels($xlabel);
+	#$graph->xaxis->SetLabelAngle(90);
+	$graph->SetTickDensity(TICKD_SPARSE);
+	#$graph->yscale->SetGrace(50);
+	$graph->Add($p1);
+	
+	// Resolutions
+	if (isset($_gv['resolutions'])) {
+		$color = 0;
+		foreach ($_gv['resolutions'] as $resolution) {
+			$stats = array(
+				'dates' => array(), 
+				'labels' => array(), 
+				'values' => array(),
+				'plot' => null);
+			if ($date_range == 365) {
+				$date_format = 'M Y';
+			} else {
+				$date_format = 'j M';
+				for ($i = $date_range - 1; $i >= 0; $i--) {
+					$stats['dates'][date($date_format, ($now - (ONEDAY * $i)))] = 0.00000001;
+				}
+			}
+			$dates = $db->getCol("select created_date from bug_history where changed_field = 'resolution' and new_value = '$resolution' and created_date between $then and $now order by 1");
+			foreach ($dates as $date) {
+				//$date = date($date_format, $date);
+				$stats['dates'][date($date_format, $date)] += 1;
+			}
+			foreach ($stats['dates'] as $date => $count) {
+				#echo "$date:$count<br>";
+				array_push($stats['labels'], $date);
+				array_push($stats['values'], $count);
+			}
+			$stats['plot'] = new BarPlot($stats['values']);
+			$stats['plot']->SetLegend($resolution);
+			$stats['plot']->SetColor($colors[$color]);
+			$stats['plot']->SetFillColor($colors[$color++]);
+			$graph->Add($stats['plot']);
+		}
+	}
+	$graph->Stroke();
+}
+
 $projectid = isset($_gv['projectid']) ? $_gv['projectid'] : 0;
 $t->set_file('wrap','wrap.html');
 $t->set_file('content','report.html');
@@ -97,7 +194,15 @@ $t->set_var(array(
 	'TITLE' => $TITLE['reporting']
 	));
 
-resolution_by_engineer($projectid);
+if (isset($_gv['op'])) {
+	switch ($_gv['op']) {
+		case 'bugsbydate' : 
+			new_bugs_by_date(isset($_gv['date_range']) ? $_gv['date_range'] : 7);
+			break;
+	}
+} else {
+	resolution_by_engineer($projectid);
+}
 
 $t->pparse('main',array('content','wrap','main'));
 
