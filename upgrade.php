@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.18 2002/03/28 22:11:45 bcurtis Exp $
+// $Id: upgrade.php,v 1.19 2002/03/28 22:18:44 bcurtis Exp $
 
 define ('NO_AUTH', 1);
 include 'include.php';
@@ -29,7 +29,7 @@ function upgrade() {
 	global $db;
 	
 	// Note, no upgrades for oracle since we didn't support oracle before 0.8.0
-	$upgraded = $db->getOne('select count(*) from '.TBL_BUG.'_seq');
+	$upgraded = $db->getOne('select varname from '.TBL_CONFIGURATION.' where varname = \'FORCE_LOGIN\'');
 	if (!$upgraded or DB::isError($upgraded)) {
 		// Convert the sequences
 		if (DB_TYPE == 'mysql') {
