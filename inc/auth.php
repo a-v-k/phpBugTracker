@@ -89,7 +89,7 @@ class uauth {
 				TBL_GROUP_PERM." gp where group_id in (".
 				delimit_list(',', $HTTP_SESSION_VARS['group_ids']).") and gp.perm_id = ap.perm_id");
 			foreach ($perms as $perm) {				
-        $HTTP_SESSION_VARS['perm'][$perm] = true;
+        $HTTP_SESSION_VARS['perms'][$perm] = true;
       }
       $HTTP_SESSION_VARS['uid'] = $u['user_id'];
 
@@ -101,7 +101,7 @@ class uauth {
 		global $HTTP_SESSION_VARS;
 		
     $HTTP_SESSION_VARS['uid'] = 0;
-		$HTTP_SESSION_VARS['perm'] = array();
+		$HTTP_SESSION_VARS['perms'] = array();
 		$HTTP_SESSION_VARS['exp']   = 0;
     $HTTP_SESSION_VARS['group'] = array();
     $HTTP_SESSION_VARS['group_ids'] = array(0);
@@ -117,10 +117,10 @@ class uperm {
     global $HTTP_SESSION_VARS;
 
     if (!$this->have_perm($p)) {    
-      if (!isset($HTTP_SESSION_VARS['perm']) ) {
-        $HTTP_SESSION_VARS['perm'] = '';
+      if (!isset($HTTP_SESSION_VARS['perms']) ) {
+        $HTTP_SESSION_VARS['perms'] = '';
       }
-      $this->perm_invalid($HTTP_SESSION_VARS['perm'], $p);
+      $this->perm_invalid($HTTP_SESSION_VARS['perms'], $p);
       exit();
     }
   }
@@ -156,12 +156,12 @@ class uperm {
 
 
   function have_perm($req_perms) {
-    return $this->check_auth('perm', $req_perms);
+    return $this->check_auth('perms', $req_perms);
   }
 
 
-  function perm_invalid() {
-    global $t, $HTTP_SESSION_VARS;
+  function perm_invalid($actual_perms, $required_perms) {
+    global $t;
 		
     $t->set_file('content','badperm.html');
     $t->pparse('main',array('content','wrap','main'));
