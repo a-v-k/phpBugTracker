@@ -31,10 +31,11 @@ function resolution_by_engineer($projectid = 0) {
 	$t->set_var('reporttitle', 'Bug resolutions');
 	
 	// Start off our query
-	$querystring = 'select email as "Assigned To", sum(if(resolution_id = "0",1,0)) as "Open"';
+	$querystring = 'select email as "Assigned To", sum(case when resolution_id = 0 then 1 else 0 end) as "Open"';
 	$resfields = array('Assigned To','Open');
+
 	// Grab the resolutions from the database
-	$q->query("select resolution_name, concat(', sum(if(resolution_id = \"',resolution_id,'\",1,0)) as \"',resolution_name,'\"') from ".TBL_RESOLUTION);
+	$q->query("select resolution_name, ".$q->concat("', sum(case when resolution_id = '", 'resolution_id', "' then 1 else 0 end) as \"'", 'resolution_name' ,"'\"'")." from ".TBL_RESOLUTION);
 	while (list($fieldname, $countquery) = $q->grab()) {
 		$resfields[] = $fieldname;
 		$querystring .= $countquery;
@@ -47,7 +48,7 @@ function resolution_by_engineer($projectid = 0) {
 		$projectquery = '';
 	}
 	
-	$q->query("$querystring, count(bug_id) as 'Total' from ".TBL_BUG." b left join ".TBL_AUTH_USER." u on assigned_to = user_id $projectquery group by assigned_to");
+	$q->query("$querystring, count(bug_id) as \"Total\" from ".TBL_BUG." b left join ".TBL_AUTH_USER." u on assigned_to = user_id $projectquery group by assigned_to, u.email");
 	if (!$q->num_rows()) {
 		$t->set_var('rows', 'No data to display');
 	} else {
