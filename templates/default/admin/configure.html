@@ -1,0 +1,42 @@
+<br>
+<form action="{me}" method="post">
+<table border="0" width="640">
+	<tr>
+		<td valign="top">
+			<b>&nbsp;Configuration</b>
+			<hr size="1">
+			<table border="0">
+				<tr>
+					<th>Variable</th>
+					<th>Value</th>
+					<th>Information</th>
+				</tr>
+				<!-- BEGIN row -->
+				<tr class="{trclass}">
+					<td>{varname}</td>
+					<td>
+						<!-- BEGIN inputblock -->
+						<input type="{input_type}" name="{varname}" value="{varvalue}"{checked}>
+						<!-- END inputblock -->
+						<!-- BEGIN selectblock -->
+						<select name="varname">{options}</select>
+						<!-- END selectblock -->
+						<!-- BEGIN radioblock -->
+						<input type="radio" name="{varname}" value="1"{yes}> Yes 
+						<input type="radio" name="{varname}" value="0"{no}> No 
+						<!-- END radioblock -->
+					</td>
+					<td>{description}</td>
+				</tr>
+				<!-- END row -->
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<input type="reset" value="Reset Form">
+			<input type="submit" name="submit" value="Submit Changes">
+		</td>
+	</tr>
+</table>
+</form>

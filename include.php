@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.62 2001/10/12 13:43:29 bcurtis Exp $
+// $Id: include.php,v 1.63 2001/10/13 23:15:52 bcurtis Exp $
 
 define ('INSTALL_PATH', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']));
 if (!defined('INCLUDE_PATH')) {
@@ -372,6 +372,34 @@ function build_select($box, $value = '', $project = 0) {
 				$text .= '&nbsp;';
 			}
 			$text .= '</option>';
+			break;
+		case 'LANGUAGE' :
+			$dir = opendir(INSTALL_PATH.'/'.INCLUDE_PATH.'languages');
+			while (false !== ($file = readdir($dir))) {
+				if ($file != '.' && $file != '..' && $file != 'CVS') {
+					$file = str_replace('.php', '', $file);
+					if ($file == $value) {
+						$sel = ' selected';
+					} else {
+						$sel = '';
+					}
+					$text .= "<option value=\"$file\"$sel>$file</option>";
+				}
+			}
+			break;
+		case 'THEME' :
+			$dir = opendir(INSTALL_PATH.'/'.INCLUDE_PATH.'templates');
+			while (false !== ($file = readdir($dir))) {
+				if ($file != '.' && $file != '..' && $file != 'CVS') {
+					$file = str_replace('.php', '', $file);
+					if ($file == $value) {
+						$sel = ' selected';
+					} else {
+						$sel = '';
+					}
+					$text .= "<option value=\"$file\"$sel>$file</option>";
+				}
+			}
 			break;
     default :
       $deadarray = $select[$box];
