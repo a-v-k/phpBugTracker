@@ -79,7 +79,7 @@ $QUERY = array(
 		'left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_id, '.
 		TBL_SEVERITY.' severity, '.TBL_STATUS.' status, '.TBL_OS.' os, '.
 		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.
-		TBL_PROJECT.' project, '.TBL_SITE.' site'.
+		TBL_PROJECT.' project, '.TBL_SITE.' site '.
 		'where b.severity_id = severity.severity_id '.
 		'and b.status_id = status.status_id and b.os_id = os.os_id '.
 		'and b.version_id = version.version_id '.
