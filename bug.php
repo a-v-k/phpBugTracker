@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.117 2002/09/14 19:31:22 bcurtis Exp $
+// $Id: bug.php,v 1.118 2002/09/17 18:14:19 bcurtis Exp $
 
 include 'include.php';
 
@@ -69,9 +69,9 @@ function vote_bug($bug_id) {
 		if (!$bug_is_new and $db->getOne("select count(*) from ".
 			TBL_BUG_VOTE." where bug_id = $bug_id") == PROMOTE_VOTES) {
 			$status_id = BUG_PROMOTED;
-  		$buginfo = $db->getOne("select * from ".TBL_BUG." where bug_id = $bug_id");
-			$changedfields = array('status_id' => $status_id);
-		do_changedfields($u, $buginfo, $changedfields);
+	  		$buginfo = $db->getOne("select * from ".TBL_BUG." where bug_id = $bug_id");
+				$changedfields = array('status_id' => $status_id);
+			do_changedfields($u, $buginfo, $changedfields);
 		}
 	}
 	if (isset($_pv['pos'])) {
@@ -105,15 +105,15 @@ function format_comments($comments) {
 ///
 /// Show the activity for a bug
 function show_history($bugid) {
-  global $db, $t, $STRING, $QUERY;
+	global $db, $t, $STRING, $QUERY;
 
-  if (!is_numeric($bugid)) {
-	show_text($STRING['nobughistory']);
-	return;
-  }
+	if (!is_numeric($bugid)) {
+		show_text($STRING['nobughistory']);
+		return;
+	}
 
-  $t->assign('history', $db->getAll(sprintf($QUERY['bug-history'], $bugid)));
-  $t->wrap('bughistory.html', 'bughistory');
+	$t->assign('history', $db->getAll(sprintf($QUERY['bug-history'], $bugid)));
+	$t->wrap('bughistory.html', 'bughistory');
 }
 
 ///
@@ -133,14 +133,14 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 			    $db->quote(stripslashes($buginfo[$field])),
 			    $db->quote(stripslashes($cf[$field])), $u, $now)).")");
 		    $t->assign(array(
-			$field => stripslashes($cf[$field]),
-			$field.'_stat' => '!'
-		    ));
+				$field => stripslashes($cf[$field]),
+				$field.'_stat' => '!'
+			    ));
 		} else {
 		    $t->assign(array(
-			$field => stripslashes($buginfo[$field]),
-			$field.'_stat' => ' '
-		    ));
+				$field => stripslashes($buginfo[$field]),
+				$field.'_stat' => ' '
+			    ));
 		}
 	}
 
@@ -159,7 +159,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 	);
 
 	foreach($cfgDatabase as $field => $table) {
-    	if (isset($buginfo[$field.'_id'])) {
+		if (isset($buginfo[$field.'_id'])) {
 			$oldvalue = $db->getOne("select ${field}_name from $table".
 			    " where ${field}_id = {$buginfo[$field.'_id']}");
 		}
@@ -319,19 +319,19 @@ function update_bug($bugid = 0) {
 
 	if (isset($_pv)) {
 		foreach ($_pv as $k => $v) {
-		    $$k = $v;
-		    if ($k == 'url') {
-			if (($v == 'http://') || ($v == 'https://')) {
-			    $v = '';
-			} elseif (($v) && (strtolower(substr($v,0,7)) != 'http://') && (strtolower(substr($v,0,8)) != 'https://') && (strtolower(substr($v,0,6)) != 'ftp://')) {
-			    $v = 'http://'.$v;
+			$$k = $v;
+			if ($k == 'url') {
+				if (($v == 'http://') || ($v == 'https://')) {
+					$v = '';
+				} elseif (($v) && (strtolower(substr($v,0,7)) != 'http://') && (strtolower(substr($v,0,8)) != 'https://') && (strtolower(substr($v,0,6)) != 'ftp://')) {
+					$v = 'http://'.$v;
+				}
+				$url = $v;
 			}
-			$url = $v;
-		    }
 
-		    if (isset($buginfo[$k]) && stripslashes($buginfo[$k]) != stripslashes($v)) {
-			$changedfields[$k] = $v;
-		    }
+			if (isset($buginfo[$k]) && stripslashes($buginfo[$k]) != stripslashes($v)) {
+				$changedfields[$k] = $v;
+			}
 		}
 	}
 
@@ -405,10 +405,10 @@ function update_bug($bugid = 0) {
 	}
 
 	if ($comments) {
-	// $comments = strip_tags($comments); -- Uncomment this if you want no <> content in the comments
-	$db->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)".
-	    " values (".$db->nextId(TBL_COMMENT).", $bugid, ".
-	    $db->quote(stripslashes($comments)).", $u, $now)");
+		// $comments = strip_tags($comments); -- Uncomment this if you want no <> content in the comments
+		$db->query("insert into ".TBL_COMMENT." (comment_id, bug_id, comment_text, created_by, created_date)".
+		    " values (".$db->nextId(TBL_COMMENT).", $bugid, ".
+		    $db->quote(stripslashes($comments)).", $u, $now)");
 	}
 
 	// Allow for removing of some items from the bug page
