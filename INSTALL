@@ -5,15 +5,20 @@ Ok, here's the quick and dirty install instructions:
      "mysql -u <user> -p<password> < createdb.sql"
 3. Install PHPlib (http://sourceforge.net/projects/phplib/) if it's not already
    installed.
-4. Edit include.php as follows: 
+4. Copy the directory tree from the tarball to a location suitable for serving
+   web pages.
+5. Run the configure script (somewhat experimental, but it should work)
+
+				-- or --
+				
+5. Edit include.php as follows: 
    a. Change the ADMINEMAIL constant to what you want
    b. Change the database login info in class dbclass.  
    c. Change the ENCRYPTPASS constant to 1 if you want to have passwords stored
       encrypted in the database.
    d. Change the USE_JPGRAPH constant to 1 if you want to use the jpgraph class
 	    (http://www.aditus.nu/jpgraph/) to display the bug summary info.  If you
-			enable this you'll also need to edit the JPGRAPH_PATH constant in 
-			images.php.
-5. Browse on over to the installation, choose Admin tools, login with the info
+			enable this you'll also need to edit the JPGRAPH_PATH constant.
+6. Browse on over to the installation, choose Admin tools, login with the info
    you put in the database creation script, and create your first project.
-6. Start reporting bugs
+7. Start reporting bugs
