@@ -5,8 +5,8 @@
 : Added "Remember me" functionality.
 : Fixed bugs with losing login info.
 : Added detailed project stats to the home page (configurable by the admin).
-: Added Estonian translation (Alvar Soome) and Italian translation 
-  (Gaetano Giunta).
+: New translations: Estonian (Alvar Soome), Italian (Gaetano Giunta), and
+  Slovenian (Klemen Zagar).
 : Added the ability for users to choose not to receive bug update emails.
 : Added ability to configure color schemes from the configuration page and
   updated the "black" scheme.
