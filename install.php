@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.36 2003/04/09 12:11:44 bcurtis Exp $
+// $Id: install.php,v 1.37 2003/05/12 23:18:37 kennyt Exp $
 
 // Location of smarty templates class
 define ('SMARTY_PATH','./inc/smarty/');
@@ -84,6 +84,7 @@ if (!empty($_pv)) {
 		'/TBL_OS/' => $_pv['tbl_prefix'].'os',
 		'/TBL_PROJECT_GROUP/' => $_pv['tbl_prefix'].'project_group',
 		'/TBL_PROJECT/' => $_pv['tbl_prefix'].'project',
+		'/TBL_PROJECT_PERM/' => $_pv['tbl_prefix'].'project_perm',
 		'/TBL_RESOLUTION/'  => $_pv['tbl_prefix'].'resolution',
 		'/TBL_SAVED_QUERY/' => $_pv['tbl_prefix'].'saved_query',
 		'/TBL_SEVERITY/' => $_pv['tbl_prefix'].'severity',
