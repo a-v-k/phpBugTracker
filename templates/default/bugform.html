@@ -1,83 +1,59 @@
 <form action="bug.php" method="post">
-<input type="hidden" name="bugid" value="0">
-<input type="hidden" name="project" value="{$project}">
-<input type="hidden" name="op" value="do">
-<table border="0">
-	{if $error}
+    <input type="hidden" name="bugid" value="0">
+    <input type="hidden" name="project" value="{$project}">
+    <input type="hidden" name="op" value="do">
+    <table border="0">
+{if $error}
 	<tr>
-  	<td colspan="2" class="error">{$error}</td>
+	    <td colspan="2" class="error">{$error}</td>
 	</tr>
-	{/if}
+{/if}
 	<tr>
-  	<td align="right" valign="top">Project:</td>
-  	<td>{$projectname|stripslashes}</td>
+	    <td align="right" valign="top">{$STRING.BUGFORM.Project}:</td>
+	    <td>{$projectname|stripslashes|htmlspecialchars}</td>
+	</tr><tr>
+	    <td align="right" valign="top">{$STRING.BUGFORM.Version}:</td>
+	    <td><select name="version">{build_select box=version selected=$version project=$project}
+		</select></td>
+	</tr><tr>
+	    <td align="right" valign="top">{$STRING.BUGFORM.Summary}:</td>
+	    <td><input type="text" size="50" maxlength="100" name="title"
+		value="{$title|stripslashes|htmlentities}"></td>
+	</tr><tr>
+	    <td align="right" valign="top">{$STRING.BUGFORM.Description}:</td>
+	    <td><textarea name="description" cols="50" rows="8"
+		wrap=virtual>{$description|stripslashes|htmlentities}</textarea></td>
+	</tr><tr>
+	    <td align="right" valign="top">URL:</td>
+	    <td><input type="text" size="30" maxlength="255" name="url" value="{$url}"></td>
+	</tr><tr>
+	    <td align="right" valign="top">{$STRING.BUGFORM.Severity}:</td>
+	    <td><select name="severity">{build_select box=severity selected=$severity}
+		</select></td>
+	</tr><tr>
+	    <td align="right" valign="top">{$STRING.BUGFORM.Priority}:</td>
+	    <td><select name="priority">{build_select box=priority selected=$priority}
+		</select></td>
+	</tr><tr>
+	    <td align="right" valign="top">{$STRING.BUGFORM.Component}:</td>
+	    <td><select name="component">{build_select box=component selected=$component project=$project}
+		</select></td>
+	</tr><tr>
+	    <td align="right" valign="top">{$STRING.BUGFORM.Database}:</td>
+	    <td><select name="database">{build_select box=database selected=$database}
+		</select></td>
+	</tr><tr>
+	    <td align="right" valign="top">{$STRING.BUGFORM.Site}:</td>
+	    <td><select name="site">{build_select box=site selected=$site}
+		</select></td>
+	</tr><tr>
+	    <td align="right" valign="top">{$STRING.BUGFORM.OS}:</td>
+	    <td><select name="os">{build_select box=os selected=$os}
+		</select></td>
+	</tr><tr>
+	    <td align="right" valign="top">{$STRING.BUGFORM.AddAnother}:</td>
+		<td valign="top"><input type="checkbox" name="another" value="1"></td>
 	</tr>
-	<tr>
-  	<td align="right" valign="top">Version:</td>
-  	<td>
-    	<select name="version">
-    	{build_select box=version selected=$version project=$project}
-    	</select>
-  	</td>
-	</tr>
-
-	<tr>
-  	<td align="right" valign="top">Summary:</td>
-  	<td><input type="text" size="50" maxlength="100" name="title" value="{$title|stripslashes|htmlentities}"></td>
-	</tr>
-	<tr>
-  	<td align="right" valign="top">Description:</td>
-  	<td><textarea name="description" cols="50" rows="8" wrap=virtual>{$description|stripslashes|htmlentities}</textarea></td>
-	</tr>
-	<tr>
-  	<td align="right" valign="top">URL:</td>
-  	<td><input type="text" size="30" maxlength="255" name="url" value="{$url}"></td>
-	</tr>
-
-	<tr>
-  	<td align="right" valign="top">Severity:</td>
-  	<td>
-    	<select name="severity">
-    	{build_select box=severity selected=$severity}
-    	</select>
-  	</td>
-	</tr>
-
-	<tr>
-  	<td align="right" valign="top">Priority:</td>
-  	<td>
-    	<select name="priority">
-    	{build_select box=priority selected=$priority}
-    	</select>
-  	</td>
-	</tr>
-
-	<tr>
-  	<td align="right" valign="top">Component:</td>
-  	<td>
-    	<select name="component">
-    	{build_select box=component selected=$component project=$project}
-    	</select>
-  	</td>
-	</tr>
-
-	<tr>
-  	<td align="right" valign="top">OS:</td>
-  	<td>
-    	<select name="os">
-    	{build_select box=os selected=$os}
-    	</select>
-  	</td>
-	</tr>
-	<tr>
-		<td align="right" valign="top">
-			Add another: 
-		</td>
-		<td valign="top">
-			<input type="checkbox" name="another" value="1">
-		</td>
-	</tr>
-
-</table>
-<input type="submit" name="submit" value="Submit">
+    </table>
+    <input type="submit" name="submit" value="Submit">
 </form>
