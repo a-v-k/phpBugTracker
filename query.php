@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.54 2002/01/19 17:20:11 bcurtis Exp $
+// $Id: query.php,v 1.55 2002/01/23 14:24:23 bcurtis Exp $
 
 include 'include.php';
 
@@ -33,51 +33,12 @@ function delete_saved_query($queryid) {
 }
 
 function show_query() {
-	global $q, $t, $TITLE, $u, $perm, $auth;
-	
-	$nq = new dbclass;
-	$js = '';
+	global $q, $t, $TITLE, $u;
 	
 	$t->set_file('content','queryform.html');
 	$t->set_block('content', 'savequeryblock', 'sqblock');
 	$t->set_block('savequeryblock','row','rows');
 	 
-	// Build the javascript-powered select boxes
-	if ($perm->have_perm('Admin')) {
-		$q->query("select project_id, project_name from ".TBL_PROJECT.
-			" where active = 1 order by project_name");
-	} else {
-		$q->query('select p.project_id, project_name from '.TBL_PROJECT.
-			' p left join '.TBL_PROJECT_GROUP.' pg using(project_id) 
-			where active = 1 and (pg.project_id is null or pg.group_id in ('.
-			delimit_list(',', $auth->auth['group_ids']).')) group by 
-			p.project_id, p.project_name order by project_name');
-	}
-	while (list($pid, $pname) = $q->grab()) {
-		$pname = addslashes($pname);
-		// Version array
-		$js .= "versions['$pname'] = new Array(new Array('','All'),";
-		$nq->query("select version_name, version_id from ".TBL_VERSION.
-			" where project_id = $pid and active = 1");
-		while (list($version,$vid) = $nq->grab()) {
-			$version = addslashes($version);
-			$js .= "new Array($vid,'$version'),";
-		}
-		if (substr($js,-1) == ',') $js = substr($js,0,-1);
-		$js .= ");\n";
-		
-		// Component array
-		$js .= "components['$pname'] = new Array(new Array('','All'),";
-		$nq->query("select component_name, component_id from ".TBL_COMPONENT.
-			" where project_id = $pid and active = 1");
-		while (list($comp,$cid) = $nq->grab()) {
-			$comp = addslashes($comp);
-			$js .= "new Array($cid,'$comp'),";
-		}
-		if (substr($js,-1) == ',') $js = substr($js,0,-1);
-		$js .= ");\n";
-	}
-	
 	if ($u != 'nobody') {
 		// Grab the saved queries if there are any
 		$q->query("select * from ".TBL_SAVED_QUERY." where user_id = '$u'");
@@ -99,7 +60,7 @@ function show_query() {
 	}
 	
 	$t->set_var(array(
-		'js' => $js,
+		'js' => build_project_js(),
 		'status' => build_select('status'),
 		'resolution' => build_select('resolution'),
 		'os' => build_select('os',-1), // Prevent the OS regex selection
