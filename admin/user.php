@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.27 2001/09/18 03:26:15 bcurtis Exp $
+// $Id: user.php,v 1.28 2001/10/05 04:22:46 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -206,6 +206,7 @@ function list_items($userid = 0, $error = '') {
   while ($row = $q->grab()) {
     $t->set_var(array(
       'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
+			'trclass' => $i % 2 ? '' : 'alt',
       'userid' => $row['user_id'],
       'login' =>  $row['login'],
       'name' => stripslashes($row['fullname']),

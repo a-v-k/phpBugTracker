@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.47 2001/09/29 14:50:26 bcurtis Exp $
+// $Id: bug.php,v 1.48 2001/10/05 04:22:45 bcurtis Exp $
 
 include 'include.php';
 
@@ -66,6 +66,7 @@ function show_history($bugid) {
   while ($row = $q->grab()) {
     $t->set_var(array(
       'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
+			'trclass' => $i % 2 ? '' : 'alt',
       'field' => stripslashes($row['changed_field']),
       'oldvalue' => stripslashes($row['old_value']),
       'newvalue' => stripslashes($row['new_value']),
@@ -517,6 +518,7 @@ function show_bug($bugid = 0, $error = '') {
         }
         $t->set_var(array(
           'bgcolor' => (++$j % 2 == 0) ? '#dddddd' : '#ffffff',
+					'trclass' => $j % 2 ? '' : 'alt',
           'attid' => $att['attachment_id'],
           'attname' => stripslashes($att['file_name']),
           'attdesc' => stripslashes($att['description']),
@@ -544,6 +546,7 @@ function show_bug($bugid = 0, $error = '') {
     while ($row = $q->grab()) {
       $t->set_var(array(
         'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
+				'trclass' => $i % 2 ? '' : 'alt',
         'rdescription' => nl2br(format_comments(
 					htmlspecialchars($row['comment_text']))),
         'rreporter' => maskemail($row['login']),
