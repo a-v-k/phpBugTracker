@@ -48,7 +48,20 @@
   $t-&gt;pparse('main', array('content', 'wrap', 'main'));
       </programlisting>
     </sect3>
-
+    <sect3>
+      <title>Session and Authentication</title>
+      <para>The session start and authentication code is included in <filename>include.php</filename>.  The session is started by a call to <function>page_open()</function>, with the arguments specifying which session elements should be created.  &phpbt; uses the <classname>Auth</classname> and <classname>Perm</classname> classes from PHPlib in addition to the base <classname>Session</classname> class.  </para>
+      <sect4>
+	<title>Session</title>
+	<para>Session variables, or variables that should be retained from page to page, are set via the <varname>$sess</varname> variable, which is an instantiation of the <classname>usess</classname> class.  </para>
+      </sect4>
+      <sect4>
+	<title>Auth</title>
+      </sect4>
+      <sect4>
+	<title>Perm</title>
+      </sect4>
+    </sect3>
   </sect2>
 </sect1>
 
