@@ -133,7 +133,7 @@ if (!$q->num_rows()) {
 }
 $q->query('select b.bug_id, title from '.TBL_BUG.' b, '.TBL_BUG_HISTORY.
 	" h where project_id not in ($restricted_projects) and b.bug_id = h.bug_id".
-	" and changed_field = 'Status' and new_value = 'Closed'".
+	" and changed_field = 'status' and new_value = 'Closed'".
 	' order by h.created_date desc limit 5');
 if (!$q->num_rows()) {
 	$t->set_var('closerows', $STRING['nobugs']);
