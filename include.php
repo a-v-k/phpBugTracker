@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.123 2002/09/23 20:48:21 bcurtis Exp $
+// $Id: include.php,v 1.124 2002/10/11 20:53:53 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0);
 
@@ -37,8 +37,8 @@ if (!defined('DB_HOST')) { // Installation hasn't been completed
 include ('inc/functions.php');
 
 // PEAR::DB
-chdir('inc/pear'); // Drop down to the pear directory to include pear stuff
-require_once('DB.php');
+define('PEAR_PATH', 'inc/pear/'); // Set this to '' to use system-wide PEAR
+require_once(PEAR_PATH.'DB.php');
 $dsn = array(
 	'phptype' => DB_TYPE,
 	'hostspec' => DB_HOST,
@@ -53,7 +53,6 @@ if (DB::isError($db)) {
 $db->setOption('optimize', 'portability');
 $db->setFetchMode(DB_FETCHMODE_ASSOC);
 $db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_db_error");
-chdir('../..'); // Come back up from the pear directory
 
 // Set up the configuration variables
 $rs = $db->query('select varname, varvalue from '.TBL_CONFIGURATION);

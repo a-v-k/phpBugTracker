@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.33 2002/10/02 18:43:46 bcurtis Exp $
+// $Id: install.php,v 1.34 2002/10/11 20:53:53 bcurtis Exp $
 
 // Location of smarty templates class
 define ('SMARTY_PATH','./inc/smarty/');
@@ -146,8 +146,8 @@ function grab_config_file() {
 }
 function test_database(&$params, $testonly = false) {
 	// PEAR::DB
-	chdir('inc/pear'); // Drop down to the pear directory to include pear stuff
-	require_once('DB.php');
+	define('PEAR_PATH', 'inc/pear/'); // Set this to '' to use system-wide PEAR
+	require_once(PEAR_PATH.'DB.php');
 	$dsn = array(
 		'phptype' => $params['db_type'],
 		'hostspec' => $params['db_host'],
@@ -156,7 +156,6 @@ function test_database(&$params, $testonly = false) {
 		'password'  => $params['db_pass']
 		);
 	$db = DB::Connect($dsn);
-	chdir('../..'); // Come back up from the pear directory
 
 	// Simple error checking on returned DB object to check connection to db
 	if (get_class($db) == 'db_error') {
