@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script to edit configuration settings
-# $Id: configure,v 1.8 2001/08/23 02:28:52 bcurtis Exp $
+# $Id: configure,v 1.9 2001/09/15 15:39:57 bcurtis Exp $
 
 DIALOG=${DIALOG=dialog}
 tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/test$$
@@ -16,6 +16,7 @@ ATTACHMENT_PATH='attachments'
 DB_HOST='localhost'
 DB_USER='root'
 DB_PASS=''
+DB_TBL_PREFIX=''
 
 # Booleans
 ENCRYPTPASS=1
@@ -80,7 +81,18 @@ that directory allow the web server to create and read files in it!\n\n" 0 0 $AT
 
 database() {
 	$DIALOG --backtitle "phpBT Configuration" \
-		--title "Database Host" \
+		--title "Database Server Software (1 of 5)" \
+		--radiolist "Enter the type database server" 0 0 3 \
+			MySQL '' on \
+			Postgres '' off
+		2> $tempfile
+	if [ $? -gt 0 ]; then
+		return
+	fi
+	DB_TYPE=`<$tempfile`
+
+	$DIALOG --backtitle "phpBT Configuration" \
+		--title "Database Host (2 of 5)" \
 		--inputbox "Enter the hostname of the server hosting the database server" 0 0 $DB_HOST \
 		2> $tempfile
 	if [ $? -gt 0 ]; then
@@ -89,7 +101,7 @@ database() {
 	DB_HOST=`<$tempfile`
 
 	$DIALOG --backtitle "phpBT Configuration" \
-		--title "Database User" \
+		--title "Database User (3 of 5)" \
 		--inputbox "Enter the username to use for connecting to the database" 0 0 $DB_USER \
 		2> $tempfile
 	if [ $? -gt 0 ]; then
@@ -98,13 +110,22 @@ database() {
 	DB_USER=`<$tempfile`
 
 	$DIALOG --backtitle "phpBT Configuration" \
-		--title "Database Password" \
+		--title "Database Password (4 of 5)" \
 		--inputbox "Enter the password to use when connecting to the database" 0 0 $DB_PASS \
 		2> $tempfile
 	if [ $? -gt 0 ]; then
 		return
 	fi
 	DB_PASS=`<$tempfile`
+
+	$DIALOG --backtitle "phpBT Configuration" \
+		--title "Database Table Prefix (5 of 5)" \
+		--inputbox "Enter the prefix to be used in creating table names (like phpbt_)" 0 0 $DB_TBL_PREFIX \
+		2> $tempfile
+	if [ $? -gt 0 ]; then
+		return
+	fi
+	DB_TBL_PREFIX=`<$tempfile`
 }
 
 change_features() {
