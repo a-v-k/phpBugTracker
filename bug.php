@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.67 2001/12/10 13:42:03 bcurtis Exp $
+// $Id: bug.php,v 1.68 2001/12/12 14:42:57 bcurtis Exp $
 
 include 'include.php';
 
@@ -79,10 +79,13 @@ function show_history($bugid) {
 
 ///
 /// Send the email about changes to the bug and log the changes in the DB
-function do_changedfields($userid, $buginfo, $cf, $comments) {
+function do_changedfields($userid, $buginfo, $cf = array(), $comments = '') {
   global $q, $t, $u, $select, $now, $STRING;
 
-  $t->set_file('emailout','bugemail.txt');
+	// It's a new bug if the changedfields array is empty and there are no comments
+	$newbug = (!count($cf) and !$comments); 
+	
+  $t->set_file('emailout', ($newbug ? 'bugemail-newbug.txt' : 'bugemail.txt'));
   $t->set_block('emailout','commentblock', 'cblock');
   foreach(array('title','url') as $field) {
     if (isset($cf[$field])) {
@@ -117,7 +120,7 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
   foreach($cfgDatabase as $field => $table) {
     $oldvalue = $q->grab_field("select ${field}_name from $table"
       ." where ${field}_id = {$buginfo[$field.'_id']}");
-    if ($cf[$field.'_id']) {
+    if (!empty($cf[$field.'_id'])) {
       $newvalue = $q->grab_field("select ${field}_name from $table"
         ." where ${field}_id = {$cf[$field.'_id']}");
       $q->query('insert into '.TBL_BUG_HISTORY
@@ -142,11 +145,11 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
   $reporterstat = ' ';
   $assignedto = $q->grab_field('select email from '.TBL_AUTH_USER
     .' where user_id = '
-    .($cf['assigned_to'] ? $cf['assigned_to'] : $buginfo['assigned_to']));
-  $assignedtostat = $cf['assigned_to'] ? '!' : ' ';
+    .(!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to']));
+  $assignedtostat = !empty($cf['assigned_to']) ? '!' : ' ';
 
   // If there are new comments grab the comments immediately before the latest
-  if ($comments) {
+  if ($comments or $newbug) {
     $q->query('select u.login, c.comment_text, c.created_date'
       .' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER.' u'
       ." where bug_id = {$buginfo['bug_id']} and c.created_by = u.user_id"
@@ -187,7 +190,7 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
   // behavior toggable by the user)
   if ($userid != $buginfo['created_by'])
     $maillist[] = $reporter;
-  if ($userid != ($cf['assigned_to'] ? $cf['assigned_to'] : $buginfo['assigned_to']))
+  if ($userid != (!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to']))
     $maillist[] = $assignedto;
 
   // Collect the CCs
@@ -203,16 +206,17 @@ function do_changedfields($userid, $buginfo, $cf, $comments) {
   $t->set_var(array(
     'bugid' => $buginfo['bug_id'],
     'bugurl' => INSTALL_URL."/bug.php?op=show&bugid={$buginfo['bug_id']}",
-    'priority' => $select['priority'][($cf['priority'] ? $cf['priority'] : $buginfo['priority'])],
-    'priority_stat' => $cf['priority'] ? '!' : ' ',
+    'priority' => $select['priority'][(!empty($cf['priority']) ? $cf['priority'] : $buginfo['priority'])],
+    'priority_stat' => !empty($cf['priority']) ? '!' : ' ',
     'reporter' => $reporter,
     'reporter_stat' => $reporterstat,
     'assignedto' => $assignedto,
     'assignedto_stat' => $assignedtostat
     ));
   if ($toemail) {
-    mail($toemail,"[Bug {$buginfo['bug_id']}] Changed - ".
-      ($cf['title'] ? $cf['title'] : $buginfo['title']), $t->parse('main','emailout'),
+    mail($toemail,"[Bug {$buginfo['bug_id']}] ".($newbug ? 'New' : 'Changed').
+			' - '.(!empty($cf['title']) ? $cf['title'] : $buginfo['title']), 
+			$t->parse('main','emailout'),
       sprintf("From: %s\nReply-To: %s\nErrors-To: %s\nContent-Type: text/plain; charset=%s\nContent-Transfer-Encoding: 8bit\n", ADMIN_EMAIL, ADMIN_EMAIL,
         ADMIN_EMAIL, $STRING['lang_charset']));
   }
@@ -223,7 +227,8 @@ function update_bug($bugid = 0) {
 
   // Pull bug from database to determine changed fields and for user validation
   $buginfo = $q->grab("select * from ".TBL_BUG." where bug_id = $bugid");
-
+	$changedfields = array();
+	
   if (isset($GLOBALS['HTTP_POST_VARS'])) {
     foreach ($GLOBALS['HTTP_POST_VARS'] as $k => $v) {
       $$k = $v;
@@ -279,7 +284,7 @@ function update_bug($bugid = 0) {
   }
 
   // Remove CCs if requested
-  if (count($remove_cc)) {
+  if (isset($remove_cc) and count($remove_cc)) {
     $q->query('delete from '.TBL_BUG_CC." where bug_id = $bugid
       and user_id in (".delimit_list(',', $remove_cc).')');
   }
@@ -334,7 +339,7 @@ function update_bug($bugid = 0) {
       $statusfield = 'Closed';
       break;
   }
-  if ($statusfield) {
+  if (isset($statusfield)) {
     $status_id = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = '$statusfield'");
     $changedfields['status_id'] = $status_id;
   }
@@ -352,18 +357,19 @@ function update_bug($bugid = 0) {
 	$os_id = $os_id ? $os_id : 0;
 	$severity_id = $severity_id ? $severity_id : 0;
 	
-  $q->query("update ".TBL_BUG." set title = '$title', url = '$url', severity_id = $severity_id, priority = $priority, ".($status_id ? "status_id = $status_id, " : ''). ($changeresolution ? "resolution_id = $resolution_id, " : ''). ($assignedto ? "assigned_to = $assignedto, " : '')." project_id = $project_id, version_id = $version_id, component_id = $component_id, os_id = $os_id, last_modified_by = $u, last_modified_date = $now where bug_id = $bugid");
+  $q->query("update ".TBL_BUG." set title = '$title', url = '$url', severity_id = $severity_id, priority = $priority, ".(isset($status_id) ? "status_id = $status_id, " : ''). ($changeresolution ? "resolution_id = $resolution_id, " : ''). (isset($assignedto) ? "assigned_to = $assignedto, " : '')." project_id = $project_id, version_id = $version_id, component_id = $component_id, os_id = $os_id, last_modified_by = $u, last_modified_date = $now where bug_id = $bugid");
 
-  if ($changedfields or $comments) {
-    do_changedfields($u, $buginfo, $changedfields, $comments);
+  if (count($changedfields) or !empty($comments)) {
+    do_changedfields($u, &$buginfo, $changedfields, $comments);
   }
   header("Location: bug.php?op=show&bugid=$bugid&pos=$pos");
 }
 
 function do_form($bugid = 0) {
-  global $q, $me, $title, $u, $another, $STRING;
+  global $q, $me, $title, $u, $another, $STRING, $now;
 
   $pv = $GLOBALS['HTTP_POST_VARS'];
+	$error = '';
   // Validation
   if (!$pv['title'] = htmlspecialchars(trim($pv['title'])))
     $error = $STRING['givesummary'];
@@ -374,7 +380,6 @@ function do_form($bugid = 0) {
   while (list($k,$v) = each($pv)) $$k = $v;
 
   if ($url == 'http://') $url = '';
-  $time = time();
 
 	// Allow for removing of some items from the bug page
 	$priority = $priority ? $priority : 0;
@@ -382,8 +387,25 @@ function do_form($bugid = 0) {
 	$severity = $severity ? $severity : 0;
 	
   if (!$bugid) {
-    $status = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = 'Unconfirmed'");
-    $q->query("insert into ".TBL_BUG." (bug_id, title, description, url, severity_id, priority, status_id, created_by, created_date, last_modified_by, last_modified_date, project_id, version_id, component_id, os_id, browser_string) values (".$q->nextid(TBL_BUG).", '$title', '$description', '$url', $severity, $priority, $status, $u, $time, $u, $time, $project, $version, $component, '$os', '{$GLOBALS['HTTP_USER_AGENT']}')");
+		$bugid = $q->nextid(TBL_BUG);
+
+		// Check to see if this bug's component has an owner and should be assigned
+		if ($owner = $q->grab_field("select owner from ".TBL_COMPONENT.
+			" c where component_id = $component")) {
+			$status = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = 'Assigned'");
+		} else {
+			$owner = 0;
+    	$status = $q->grab_field("select status_id from ".TBL_STATUS." where status_name = 'Unconfirmed'");
+		}
+    $q->query("insert into ".TBL_BUG." (bug_id, title, description, url, 
+			severity_id, priority, status_id, assigned_to, created_by, created_date, 
+			last_modified_by, last_modified_date, project_id, version_id, 
+			component_id, os_id, browser_string) values ($bugid, '$title', 
+			'$description', '$url', $severity, $priority, $status, $owner, $u, 
+			$now, $u, $now, $project, $version, $component, '$os', 
+			'{$GLOBALS['HTTP_USER_AGENT']}')");
+		$buginfo = $q->grab('select * from '.TBL_BUG." where bug_id = $bugid");
+		do_changedfields($u, &$buginfo);
   } else {
     $q->query("update ".TBL_BUG." set title = '$title', description = '$description', url = '$url', severity_id = '$severity', priority = '$priority', status_id = $status, assigned_to = '$assignedto', project_id = $project, version_id = $version, component_id = $component, os_id = '$os', browser_string = '{$GLOBALS['HTTP_USER_AGENT']}' last_modified_by = $u, last_modified_date = $time where bug_id = '$bugid'");
   }
