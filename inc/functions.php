@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.3 2002/01/26 16:53:17 bcurtis Exp $
+// $Id: functions.php,v 1.4 2002/03/01 00:41:30 bcurtis Exp $
 
 ///
 /// Show text to the browser - escape hatch
@@ -43,7 +43,7 @@ $select['priority'] = array(
 ///
 /// Build a select box with the item matching $value selected
 function build_select($box, $value = '', $project = 0) {
-  global $q, $select, $perm, $auth;
+  global $q, $select, $perm, $auth, $STRING;
 
   //create hash to map tablenames
   $cfgDatabase = array(
@@ -77,6 +77,12 @@ function build_select($box, $value = '', $project = 0) {
   }
 
   switch($box) {
+		case 'user_filter' : 
+			foreach ($STRING['user_filter'] as $k => $v) {
+				$text .= sprintf("<option value=\"%d\"%s>%s</option>",
+					$k, ($k == $value ? ' selected' : ''), $v);
+			}
+			break;
     case 'group' :
       if ($project) { // If we are building for project admin page
         if (!count($value) or (count($value) && in_array(0, $value))) {

@@ -71,7 +71,11 @@ $STRING = array(
 	'next_bug' => 'Next',
 	'already_voted' => 'You have already voted for this bug',
 	'too_many_votes' => 'You have reached the maximum number of votes per user',
-	'no_votes' => 'There are no votes for this bug'
+	'no_votes' => 'There are no votes for this bug',
+	'user_filter' => array(
+		0 => 'All users',
+		1 => 'Active users',
+		2 => 'Inactive users')
 	);
 	
 // Page titles

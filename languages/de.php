@@ -23,7 +23,7 @@
 // Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 // MA 02111-1307, USA.
 // ------------------------------------------------------------------------- 
-// $Id: de.php,v 1.10 2002/02/28 17:45:54 bcurtis Exp $
+// $Id: de.php,v 1.11 2002/03/01 00:41:31 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'iso8859-1',
@@ -71,7 +71,11 @@ $STRING = array(
 	'next_bug' => 'Next',
 	'already_voted' => 'You have already voted for this bug',
 	'too_many_votes' => 'You have reached the maximum number of votes per user',
-	'no_votes' => 'There are no votes for this bug'
+	'no_votes' => 'There are no votes for this bug',
+	'user_filter' => array(
+		0 => 'All users',
+		1 => 'Active users',
+		2 => 'Inactive users')
 	);
 	
 // Page titles

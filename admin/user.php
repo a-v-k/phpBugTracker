@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.38 2002/01/26 16:46:52 bcurtis Exp $
+// $Id: user.php,v 1.39 2002/03/01 00:41:31 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
@@ -124,7 +124,7 @@ function do_form($userid = 0) {
 			}
 		}
 	}
-	header("Location: $me?");
+	header("Location: $me?filter={$_pv['filter']}");
 }
 
 function show_form($userid = 0, $error = '') {
@@ -194,12 +194,19 @@ function list_items($userid = 0, $error = '') {
 		$sort = $_gv['sort']; 
 	}
 	
-	$page = isset($_gv['page']) ? $_gv['page'] : 0;
+	$page = isset($_gv['page']) ? $_gv['page'] : 1;
+	$user_filter = isset($_gv['filter']) ? $_gv['filter'] : 0;
 	
-	$nr = $q->grab_field("select count(*) from ".TBL_AUTH_USER);
+	$filter_query = '';
+	if (isset($_gv['filter'])) switch($_gv['filter']) {
+		case 1 : $filter_query = ' where active = 1'; break;
+		case 2 : $filter_query = ' where active = 0'; break;
+		default : $filter_query = '';
+	}
+	$nr = $q->grab_field("select count(*) from ".TBL_AUTH_USER.$filter_query);
 
 	list($selrange, $llimit, $npages, $pages) = multipages($nr, $page,
-		"order=$order&sort=$sort");
+		"order=$order&sort=$sort&filter=$user_filter");
 
 	$t->set_var(array(
 		'pages' => '[ '.$pages.' ]',
@@ -209,12 +216,7 @@ function list_items($userid = 0, $error = '') {
 
 	$q->limit_query("select user_id, first_name, last_name,
 		email, login, created_date, active from ".TBL_AUTH_USER
-		." order by $order $sort", $selrange, $llimit);
-
-	if (!$q->num_rows()) {
-		$t->set_var('rows',"<tr><td>{$STRING['nousers']}</td></tr>");
-		return;
-	}
+		."$filter_query order by $order $sort", $selrange, $llimit);
 
 	$headers = array(
 		'userid' => 'user_id',
@@ -225,22 +227,29 @@ function list_items($userid = 0, $error = '') {
 		'active' => 'active',
 		'date' => 'created_date');
 
-	sorting_headers($me, $headers, $order, $sort);
+	sorting_headers($me, $headers, $order, $sort, "page=$page&filter=$user_filter");
 
-	$i = 0;
-	while ($row = $q->grab()) {
-		$t->set_var(array(
-			'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
-			'trclass' => $i % 2 ? '' : 'alt',
-			'userid' => $row['user_id'],
-			'login' => $row['login'],
-			'name' => stripslashes("{$row['first_name']}&nbsp;{$row['last_name']}"),
-			'email' => $row['email'],
-			'active' => $row['active'] ? 'Yes' : 'No',
-			'date' => date(DATE_FORMAT, $row['created_date'])));
-		$t->parse('rows','row',true);
+	if (!$q->num_rows()) {
+		$t->set_var('rows',"<tr><td>{$STRING['nousers']}</td></tr>");
+	} else {
+		$i = 0;
+		while ($row = $q->grab()) {
+			$t->set_var(array(
+				'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
+				'trclass' => $i % 2 ? '' : 'alt',
+				'userid' => $row['user_id'],
+				'login' => $row['login'],
+				'name' => stripslashes("{$row['first_name']}&nbsp;{$row['last_name']}"),
+				'email' => $row['email'],
+				'active' => $row['active'] ? 'Yes' : 'No',
+				'date' => date(DATE_FORMAT, $row['created_date'])));
+			$t->parse('rows','row',true);
+		}
 	}
-
+	$t->set_var(array(
+		'filter_select' => build_select('user_filter', $user_filter),
+		'filter' => $user_filter));
+	
 	show_form($userid, $error);
 	$t->set_var('TITLE', $TITLE['user']);
 }
