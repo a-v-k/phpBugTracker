@@ -16,18 +16,9 @@ Ok, here's the quick and dirty install instructions:
 2. Copy the directory tree from the tarball to a location suitable for serving
    web pages.
 	 
-3. Run configure_db, which creates createdb.sql.  Use the -h option when running
-   configure_db to see the options.  You can also edit the options being 
-	 inserted into the configuration table or edit them later from the web 
-	 interface.
-	 
-4. Edit createdb.sql, changing the admin info in the database insert.  You can 
-   search on the text admin@example.com (around line 240).
-	 
-5. Use createdb.sql to create your database.  With MySQL it can be done like
-     mysql -h <db host> -u <username> -p<yourpassword> < createdb.sql
-		 
-6. Browse on over to the installation, choose Admin tools, login with the info
-   you put in the database creation script, and create your first project.
-	 
-7. Start reporting bugs
+3. With your web browser, go the location where you installed the package. 
+   You will be presented with a web page that will help you configure and 
+	 install the application.
+
+4. After completing the installation, login and start reporting bugs.
+
