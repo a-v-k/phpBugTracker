@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.63 2002/03/28 17:05:50 bcurtis Exp $
+// $Id: query.php,v 1.64 2002/03/28 19:13:21 bcurtis Exp $
 
 include 'include.php';
 
@@ -33,32 +33,37 @@ function delete_saved_query($queryid) {
 }
 
 function show_query() {
-	global $db, $t, $TITLE, $u;
+	global $db, $t, $TITLE, $u, $_gv;
 	
-	$t->set_file('content','queryform.html');
-	$t->set_block('content', 'savequeryblock', 'sqblock');
-	$t->set_block('savequeryblock','row','rows');
-	 
-	if ($u != 'nobody') {
-		// Grab the saved queries if there are any
-		$rs = $db->query("select * from ".TBL_SAVED_QUERY." where user_id = '$u'");
-		if (!$rs->numRows()) {
-			$t->set_var('rows','');
-		} else {
-			while ($rs->fetchInto($row)) {
-				$t->set_var(array(
-					'savedquerystring' => $row['saved_query_string'],
-					'savedqueryname' => stripslashes($row['saved_query_name']),
-					'savedqueryid' => $row['saved_query_id']
-					));
-				$t->parse('rows', 'row', true);
+	// Show the advanced query form
+	if (!empty($_gv['form']) and $_gv['form'] == 'advanced') {
+		$t->set_file('content','queryform.html');
+		$t->set_block('content', 'savequeryblock', 'sqblock');
+		$t->set_block('savequeryblock','row','rows');
+
+		if ($u != 'nobody') {
+			// Grab the saved queries if there are any
+			$rs = $db->query("select * from ".TBL_SAVED_QUERY." where user_id = '$u'");
+			if (!$rs->numRows()) {
+				$t->set_var('rows','');
+			} else {
+				while ($rs->fetchInto($row)) {
+					$t->set_var(array(
+						'savedquerystring' => $row['saved_query_string'],
+						'savedqueryname' => stripslashes($row['saved_query_name']),
+						'savedqueryid' => $row['saved_query_id']
+						));
+					$t->parse('rows', 'row', true);
+				}
 			}
+			$t->parse('sqblock', 'savequeryblock', true);
+		} else {
+			$t->set_var('sqblock', '');
 		}
-		$t->parse('sqblock', 'savequeryblock', true);
-	} else {
-		$t->set_var('sqblock', '');
+	} else { // or show the simple one
+		$t->set_file('content','queryform-simple.html');
 	}
-	
+	 
 	$t->set_var(array(
 		'js' => build_project_js(),
 		'status' => build_select('status'),

@@ -1,0 +1,90 @@
+<script language="JavaScript">
+<!-- 
+versions = new Array();
+components = new Array();
+versions['All'] = new Array(new Array('','All'));
+components['All'] = new Array(new Array('','All'));
+{js}
+
+function updateMenus(f) {
+  sel = f.projects[f.projects.selectedIndex].text;
+  f.versions.length = versions[sel].length;
+  for (var x = 0; x < versions[sel].length; x++) {
+    f.versions.options[x].value = versions[sel][x][0];
+    f.versions.options[x].text = versions[sel][x][1];
+  }
+  f.components.length = components[sel].length;
+  for (var x = 0; x < components[sel].length; x++) {
+    f.components.options[x].value = components[sel][x][0];
+    f.components.options[x].text = components[sel][x][1];
+  }
+}
+//-->
+</script>
+    <form method="get" action="query.php" name="query">
+      <table>
+				<tr>
+					<td valign="top"><b>Project:</b></td>
+					<td valign="top">
+						<select name="projects" onChange="updateMenus(this.form)">
+							<option value=''>All</option>
+							{projects}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top"><b>Version:</b></td>
+					<td valign="top">
+						<select name="versions"><option value=''>All</option></select>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top"><b>Component:</b></td>
+					<td valign="top">
+						<select name="components"><option value=''>All</option></select>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top"><b>Status:</b></td>
+					<td valign="top">
+						<select name="status[]" multiple size="7">{status}</select>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top"><b>Sort By:</b></td>
+					<td valign="top">
+						<select name="order">
+        			<option value="bug_id">
+          			Bug Number
+        			</option>
+        			<option selected value="severity.sort_order">
+          			Severity
+        			</option>
+        			<option value="reporter">
+          			Reporter
+        			</option>
+        			<option value="status.sort_order">
+          			Status
+        			</option>
+        			<option value="priority">
+          			Priority
+        			</option>
+      			</select>
+						<select name="sort">
+							<option selected value="asc">Ascending</option>
+							<option value="desc">Descending</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<br>
+      <input type="hidden" name="op" value="doquery">
+			<input type="reset" value="Reset back to the default query">
+			<input type="submit" value="Submit query"> 
+    </form>
+		<br>
+		Go to the <a href="{me}?op=query&form=advanced">advanced query page</a>
+  </body>
+</html>
+
