@@ -4,15 +4,23 @@
 
 include 'include.php';
 
-page_open(array('sess' => 'usess', 'auth' => 'uauth'));
+page_open(array('sess' => 'usess', 'auth' => 'uauth', 'perm' => 'uperm'));
 
 $u = $auth->auth[uid];
 
 function update_bug($bugid = 0) {
-	global $q, $t, $u, $STRING;
+	global $q, $t, $u, $STRING, $perm;
 	
 	if ($GLOBALS[HTTP_POST_VARS]) 
 		while (list($k,$v) = each($GLOBALS[HTTP_POST_VARS])) $$k = $v;
+	
+	// Pull bug from database for user validation and (later) to determine changed fields
+	$buginfo = $q->grab("select * from Bug where BugID = $bugid");
+	if (!($u == $buginfo[AssignedTo] or $u == $buginfo[CreatedBy] or 
+		$perm->have_perm('Manager'))) {
+			show_bug($bugid,array('status' => $STRING[bugbadperm]));
+			return;
+	}
 		
 	if ($outcome == 'reassign' and (!$assignedto = $q->grab_field("select UserID
 		from User where Email = '$reassignto'"))) {
@@ -172,16 +180,8 @@ function show_form($bugid = 0, $error = '') {
 }
 
 function show_bug($bugid = 0, $error = '') {
-  global $q, $me, $t, $project; # $title, $description, $url, $severity, $priority, $status, $assignedto, $createdby, $createddate, $project, $component, $os, $browserstring;
+  global $q, $me, $t, $project, $STRING; 
   
-	$t->set_file('content','bugdisplay.html');
-	$t->set_block('content','row','rows');
-  $t->set_block('content','arow','assignrow');
-  $t->set_block('content','rrow','resolverow');
-  $t->set_block('content','rerow','reopenrow');
-  $t->set_block('content','vrow','verifyrow');
-  $t->set_block('content','crow','closerow');
-	$t->set_unknowns('remove');
   if (!ereg('^[0-9]+$',$bugid) or !$row = $q->grab("select BugID, Title, 
 		Reporter.Email as Reporter, Owner.Email as Owner, Project,
 		Severity, Bug.CreatedDate, Status.Name as Status, Priority, 
@@ -190,9 +190,17 @@ function show_bug($bugid = 0, $error = '') {
 		User Reporter on Bug.CreatedBy = Reporter.UserID left join Resolution on 
 		Resolution = ResolutionID where BugID = '$bugid'  
 		and Severity = SeverityID and Status = StatusID")) {
-		show_text('That bug is not available');
+		show_text($STRING[bugbadnum],true);
 		return;
 	}
+	$t->set_file('content','bugdisplay.html');
+	$t->set_block('content','row','rows');
+  $t->set_block('content','arow','assignrow');
+  $t->set_block('content','rrow','resolverow');
+  $t->set_block('content','rerow','reopenrow');
+  $t->set_block('content','vrow','verifyrow');
+  $t->set_block('content','crow','closerow');
+	$t->set_unknowns('remove');
   $t->set_var(array(
 		'statuserr' => $error[status] ? $error[status].'<br><br>' : '',
 		'bugid' => $bugid,
