@@ -21,12 +21,10 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.24 2002/04/08 17:06:50 bcurtis Exp $
-
-define ('INSTALL_PATH', dirname(__FILE__));
+// $Id: install.php,v 1.25 2002/04/11 20:16:11 bcurtis Exp $
 
 // Location of smarty templates class
-define ('SMARTY_PATH','');
+define ('SMARTY_PATH', '');
 // Example if smarty is installed within the phpBugTracker tree.
 //define ('SMARTY_PATH','./inc/smarty/');
 

@@ -8,12 +8,6 @@
 
 <variablelist>
 <varlistentry>
-<term>INSTALL_PATH</term>
-<listitem>
-<para>Location on disk of the &phpbt; installation.  This variable is obtained by getting the working directory of the scripts.</para>
-</listitem>
-</varlistentry>
-<varlistentry>
 <term>INSTALL_URL</term>
 <listitem>
 <para>URL that is the home of the installation.</para>
