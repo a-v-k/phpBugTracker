@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.92 2003/02/18 12:43:38 bcurtis Exp $
+// $Id: query.php,v 1.93 2003/03/27 13:25:40 bcurtis Exp $
 
 include 'include.php';
 
@@ -107,7 +107,7 @@ function build_query($assignedto, $reportedby, $open) {
 			$flags[] = 'b.site_id in ('.@join(',',$site).')';
 		}
 		if (!empty($flags)) {
-			$query[] = '('.@join(' or ',$flags).')';
+			$query[] = '('.@join(' and ',$flags).')';
 		}
 
 		// Email field(s)
@@ -316,7 +316,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'db_fields' => $desired_fields,
 		'field_titles' => $field_titles
 		));
-
+	
 	$t->assign('bugs', $db->getAll($db->modifyLimitQuery(
 		sprintf($QUERY['query-list-bugs'], join(', ', $query_fields),
 			(!empty($HTTP_SESSION_VARS['queryinfo']['query'])
