@@ -1,6 +1,6 @@
 <?php
 
-// include.php - Set up global variables and functions
+// config.php - Set up configuration options
 // ------------------------------------------------------------------------
 // Copyright (c) 2001 The phpBugTracker Group
 // ------------------------------------------------------------------------
@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.1 2001/08/22 16:34:48 javyer Exp $
+// $Id: config.php,v 1.2 2001/08/23 01:20:49 bcurtis Exp $
 
 define ('INSTALLPATH','/home/bcurtis/public_html/phpbt');
 define ('INSTALLURL','http://localhost/~bcurtis/phpbt');
@@ -65,8 +65,5 @@ require PHPLIBPATH.'template.inc';
 
 // Localization - include the file with the desired language
 include INSTALLPATH.'/languages/en.php';
-
-
-
 
 ?>

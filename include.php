@@ -20,6 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
+// $Id: include.php,v 1.38 2001/08/23 01:20:49 bcurtis Exp $
 
 require "config.php";
 
