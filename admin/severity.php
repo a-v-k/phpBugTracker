@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: severity.php,v 1.5 2001/09/01 15:44:20 mohni Exp $
+// $Id: severity.php,v 1.6 2001/09/03 17:20:16 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -36,7 +36,7 @@ function do_form($severityid = 0) {
   if ($error) { list_items($severityid, $error); return; }
 
   if (!$severityid) {
-    $q->query("insert into ".TBL_SEVERITY." (severity_id, severity_name, severity_desc, sort_order, severity_color) values (".$q->nextid('severity').", '$fname', '$fdescription', '$fsortorder', '$fcolor')");
+    $q->query("insert into ".TBL_SEVERITY." (severity_id, severity_name, severity_desc, sort_order, severity_color) values (".$q->nextid(TBL_SEVERITY).", '$fname', '$fdescription', '$fsortorder', '$fcolor')");
   } else {
     $q->query("update ".TBL_SEVERITY." set severity_name = '$fname', severity_desc = '$fdescription', sort_order = '$fsortorder', severity_color = '$fcolor' where severity_id = '$severityid'");
   }

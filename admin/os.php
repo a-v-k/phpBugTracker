@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: os.php,v 1.11 2001/09/01 15:44:20 mohni Exp $
+// $Id: os.php,v 1.12 2001/09/03 17:20:16 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -34,7 +34,7 @@ function do_form($osid = 0) {
   if ($error) { list_items($osid, $error); return; }
 
   if (!$osid) {
-    $q->query("insert into ".TBL_OS." (os_id, os_name, regex, sort_order) values (".$q->nextid('os').", '$fname', '$fregex', '$fsortorder')");
+    $q->query("insert into ".TBL_OS." (os_id, os_name, regex, sort_order) values (".$q->nextid(TBL_OS).", '$fname', '$fregex', '$fsortorder')");
   } else {
     $q->query("update ".TBL_OS." set os_name = '$fname', regex = '$fregex', sort_order = '$fsortorder' where os_id = '$osid'");
   }

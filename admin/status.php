@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: status.php,v 1.12 2001/09/01 15:44:20 mohni Exp $
+// $Id: status.php,v 1.13 2001/09/03 17:20:16 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -36,7 +36,7 @@ function do_form($statusid = 0) {
   if ($error) { list_items($statusid, $error); return; }
 
   if (!$statusid) {
-    $q->query("insert into ".TBL_STATUS." (status_id, status_name, status_desc, sort_order) values (".$q->nextid('status').", '$fname', '$fdescription', '$fsortorder')");
+    $q->query("insert into ".TBL_STATUS." (status_id, status_name, status_desc, sort_order) values (".$q->nextid(TBL_STATUS).", '$fname', '$fdescription', '$fsortorder')");
   } else {
     $q->query("update ".TBL_STATUS." set status_name = '$fname', status_desc = '$fdescription', sort_order = '$fsortorder' where status_id = '$statusid'");
   }

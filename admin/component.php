@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: component.php,v 1.11 2001/09/01 15:44:20 mohni Exp $
+// $Id: component.php,v 1.12 2001/09/03 17:20:16 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -39,7 +39,7 @@ function do_form($componentid = 0) {
 	if (!$owner) $owner = 0;
 	if (!$active) $active = 0;
 	if (!$componentid) {
-		$q->query("insert into component (component_id, project_id, component_name, component_desc, owner, active, created_by, created_date, last_modified_by, last_modified_date) values (".$q->nextid('component ').", $projectid, '$name', '$description', $owner, $active, $u, $time, $u, $time)");
+		$q->query("insert into ".TBL_COMPONENT." (component_id, project_id, component_name, component_desc, owner, active, created_by, created_date, last_modified_by, last_modified_date) values (".$q->nextid(TBL_COMPONENT).", $projectid, '$name', '$description', $owner, $active, $u, $time, $u, $time)");
 	} else {
 		$q->query("update ".TBL_COMPONENT." set component_name = '$name', component_desc = '$description', owner = $owner, active = $active, last_modified_by = $u, last_modified_date = $time where component_id = '$componentid'");
 	}

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: version.php,v 1.12 2001/09/01 15:44:20 mohni Exp $
+// $Id: version.php,v 1.13 2001/09/03 17:20:16 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -35,7 +35,7 @@ function do_form($versionid = 0) {
 
   if (!$active) $active = 0;
   if (!$versionid) {
-    $q->query("insert into ".TBL_VERSION." (version_id, project_id, version_name, active, created_by, created_date) values (".$q->nextid('version').", $projectid, '$version', '$active', $u, $now)");
+    $q->query("insert into ".TBL_VERSION." (version_id, project_id, version_name, active, created_by, created_date) values (".$q->nextid(TBL_VERSION).", $projectid, '$version', '$active', $u, $now)");
   } else {
     $q->query("update ".TBL_VERSION." set project_id = $projectid, version_name = '$version', active = '$active' where version_id = '$versionid'");
   }

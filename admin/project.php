@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.14 2001/09/01 15:44:20 mohni Exp $
+// $Id: project.php,v 1.15 2001/09/03 17:20:16 bcurtis Exp $
 
 define('INCLUDE_PATH', '../');
 include INCLUDE_PATH.'include.php';
@@ -39,11 +39,11 @@ function do_form($projectid = 0) {
 
   if (!$active) $active = 0;
   if (!$projectid) {
-    $projectid = $q->nextid('project');
+    $projectid = $q->nextid(TBL_PROJECT);
     $q->query("insert into ".TBL_PROJECT." (project_id, project_name, project_desc, active, created_by, created_date)"
              ." values ($projectid , '$name', '$description', $active, $u, $now)");
     $q->query("insert into ".TBL_VERSION." (version_id, project_id, version_name, active, created_by, created_date)"
-             ." values (".$q->nextid('version').", $projectid, '$version', $active, $u, $now)");
+             ." values (".$q->nextid(TBL_VERSION).", $projectid, '$version', $active, $u, $now)");
     $location = "component.php?op=add&projectid=$projectid";
   } else {
     $q->query("update ".TBL_PROJECT." set project_name = '$name', project_desc = '$description', active = $active where project_id = $projectid");
