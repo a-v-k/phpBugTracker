@@ -87,6 +87,20 @@ CLASS="TOC"
 HREF="devguide.html#DEPENDENCIES"
 >Dependencies</A
 ></DT
+><DD
+><DL
+><DT
+>3.1.1. <A
+HREF="devguide.html#DEP-PHPLIB"
+>PHPlib</A
+></DT
+><DT
+>3.1.2. <A
+HREF="devguide.html#DEP-JPGRAPH"
+>JpGraph</A
+></DT
+></DL
+></DD
 ><DT
 >3.2. <A
 HREF="devstandards.html"
@@ -139,7 +153,7 @@ CLASS="ABSTRACT"
 NAME="AEN218"
 ></A
 ><P
->phpBugTracker requires one external package, PHPlib, and can optionally use JpGraph.  Of course a web server and a database are also necessary.</P
+>phpBugTracker requires one external package, PHPlib, and can optionally use JpGraph.  Of course a web server running a version of PHP later than 4.0 and a database server are also necessary.</P
 ></DIV
 ></BLOCKQUOTE
 ><DIV
@@ -342,9 +356,60 @@ CLASS="FORMALPARA"
 ><P
 ><B
 >Perm. </B
+>There are two types of checks that are made in phpBugTracker: permission and group membership.  These checks can be made two different ways -- one that exits and displays an access denied message (useful for protecting an entire page) or one that returns whether the user passed the check (useful for determining whether to display a piece of information).</P
+></DIV
+><DIV
+CLASS="EXAMPLE"
+><A
+NAME="AEN269"
+></A
+><P
+><B
+>Example 3-3. Permission and Group Checking</B
 ></P
+><TABLE
+BORDER="0"
+BGCOLOR="#EEEEEE"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>  // Non-failing checks
+  if ($perm-&gt;have_perm('EditBug')) {
+    echo 'You can edit a bug!';
+  }
+  if ($perm-&gt;in_group('User')) {
+    echo 'You are logged in and belong to the User group';
+  }
+  
+  // Failing checks -- the script exits at this point if the check fails
+  $perm-&gt;check('Admin');
+  $perm-&gt;check_group('Developer');
+	</PRE
+></TD
+></TR
+></TABLE
 ></DIV
 ></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="DEP-JPGRAPH"
+>3.1.2. JpGraph</A
+></H2
+><P
+>This section will not cover the usage of JpGraph in any detail, since it is not an integral part of phpBugTracker.  Developers who are interested in using this class for generating bug reports or charting activity can see <TT
+CLASS="FILENAME"
+>images.php</TT
+> for an example and are encouraged to visit JpGraph's web site at <A
+HREF="http://www.aditus.nu/jpgraph/"
+TARGET="_top"
+>http://www.aditus.nu/jpgraph</A
+>.</P
 ></DIV
 ></DIV
 ></DIV

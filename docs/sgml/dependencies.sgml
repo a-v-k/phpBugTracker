@@ -3,7 +3,7 @@
   <title>Dependencies</title>
 
   <abstract>
-    <para>&phpbt; requires one external package, PHPlib, and can optionally use JpGraph.  Of course a web server and a database are also necessary.</para>
+    <para>&phpbt; requires one external package, PHPlib, and can optionally use JpGraph.  Of course a web server running a version of PHP later than 4.0 and a database server are also necessary.</para>
   </abstract>
 
   <sect2 id="dep-phplib">
@@ -67,9 +67,29 @@
       </formalpara>
       <formalpara>
 	<title>Perm</title>
-	<para></para>
+	<para>There are two types of checks that are made in &phpbt;: permission and group membership.  These checks can be made two different ways -- one that exits and displays an access denied message (useful for protecting an entire page) or one that returns whether the user passed the check (useful for determining whether to display a piece of information).</para>
       </formalpara>
+      <example>
+	<title>Permission and Group Checking</title>
+	<programlisting>
+  // Non-failing checks
+  if ($perm-&gt;have_perm('EditBug')) {
+    echo 'You can edit a bug!';
+  }
+  if ($perm-&gt;in_group('User')) {
+    echo 'You are logged in and belong to the User group';
+  }
+  
+  // Failing checks -- the script exits at this point if the check fails
+  $perm-&gt;check('Admin');
+  $perm-&gt;check_group('Developer');
+	</programlisting>
+      </example>
     </sect3>
+  </sect2>
+  <sect2 id="dep-jpgraph">
+    <title>JpGraph</title>
+    <para>This section will not cover the usage of JpGraph in any detail, since it is not an integral part of &phpbt;.  Developers who are interested in using this class for generating bug reports or charting activity can see <filename>images.php</filename> for an example and are encouraged to visit JpGraph's web site at <ulink url="http://www.aditus.nu/jpgraph/">http://www.aditus.nu/jpgraph</ulink>.</para>
   </sect2>
 </sect1>
 
