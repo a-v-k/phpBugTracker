@@ -1,3 +1,9 @@
+-- 0.6.0 --
+: Fixed a bug with old queries being retained when submitting a new query.
+: Moved session and auth classes into the package.
+: Added Previous and Next links for moving to other bugs in the bug list
+  from the bug display page.
+
 -- 0.5.1 -- 11 Nov 2001
 : Fixed a bug (introduced in 0.5.0) with severity color not being pulled in
   with the bug list database query.

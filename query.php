@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.39 2001/11/13 05:20:49 bcurtis Exp $
+// $Id: query.php,v 1.40 2001/11/14 04:11:02 bcurtis Exp $
 
 include 'include.php';
 
@@ -100,7 +100,7 @@ function show_query() {
 }
 
 function build_query($assignedto, $reportedby, $open) {
-	global $q, $sess, $auth, $querystring, $_gv;
+	global $q, $auth, $_gv;
 
 	foreach ($_gv as $k => $v) { $$k = $v; }
 	
@@ -159,13 +159,14 @@ function build_query($assignedto, $reportedby, $open) {
 	}
 	
 	if ($query) $querystring = delimit_list(' and ',$query);
+	return $querystring;
 	if (!$sess->is_registered('querystring')) $sess->register('querystring');
 }
 
 function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
-	global $querystring, $me, $q, $t, $selrange, $order, $sort, $query, 
+	global $queryinfo, $me, $q, $t, $selrange, $order, $sort, $query, 
 		$page, $op, $select, $TITLE, $STRING, $savedqueryname, $u, $auth, 
-		$default_db_fields, $all_db_fields;
+		$default_db_fields, $all_db_fields, $sess;
 
 	$t->set_file('content','buglist.html');
 	$t->set_block('content','row','rows');
@@ -179,17 +180,31 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 			values (".$q->nextid(TBL_SAVED_QUERY).", $u, '$savedqueryname', '$savedquerystring')");
 	}
 	if (!$order) { 
-		$order = 'bug_id'; 
-		$sort = 'asc'; 
+		if (isset($queryinfo['order'])) {
+			$order = $queryinfo['order'];
+			$sort = $queryinfo['sort'];
+		} else {
+			$order = 'bug_id'; 
+			$sort = 'asc'; 
+		}
 	}
-	if (!$querystring or $op) {
-		build_query($assignedto, $reportedby, $open);
+	$queryinfo['order'] = $order;
+	$queryinfo['sort'] = $sort;
+	
+	if (!$queryinfo['query'] or $op) {
+		$queryinfo['query'] = build_query($assignedto, $reportedby, $open);
 	}
+	
+	if (!$sess->is_registered('queryinfo')) {
+		$sess->register('queryinfo');
+	}
+	
 	$nr = $q->grab_field('select count(*) from '.TBL_BUG.' b 
 		left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id
 		left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
-		($querystring != '' ? "where $querystring": ''));
+		($queryinfo['query'] != '' ? "where {$queryinfo['query']}": ''));
 
+	$queryinfo['numrows'] = $nr;
 	list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
 		"order=$order&sort=$sort");
 								
@@ -213,7 +228,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		where b.severity_id = severity.severity_id and b.status_id = status.status_id 
 		and b.os_id = os.os_id and b.version_id = version.version_id 
 		and b.component_id = component.component_id and b.project_id = project.project_id '.
-		($querystring != '' ? "and $querystring " : '').
+		($queryinfo['query'] != '' ? "and {$queryinfo['query']} " : '').
 		"order by $order $sort", $selrange, $llimit);
 				
 	$headers = array(
@@ -260,6 +275,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	$t->parse('rows', 'row', true);
 	$t->set_var('cols', '');
 	
+	$pos = 0;
 	// Data rows 
 	while ($row = $q->grab()) {
 		$bgcolor = USE_SEVERITY_COLOR ? $row['severity_color'] : 
@@ -279,7 +295,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 					break;
 				case 'bug_id' :
 				case 'title' :
-					$coldata = "<a href='bug.php?op=show&bugid={$row['bug_id']}'>{$row[$field]}</a>"; 
+					$coldata = "<a href='bug.php?op=show&bugid={$row['bug_id']}&pos=$pos'>{$row[$field]}</a>"; 
 					$td_extra = '';
 					break;
 				case 'reporter' :
@@ -306,6 +322,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		$t->set_var('tr-extra', "class='$trclass' bgcolor='$bgcolor' onClick=\"document.location.href='bug.php?op=show&bugid={$row['bug_id']}'\" onMouseOver=\"this.style.fontWeight='bold'\" onMouseOut=\"this.style.fontWeight='normal'\"");
 		$t->parse('rows','row',true);
 		$t->set_var('cols', '');
+		++$pos;
 	}
 	$t->set_var('numcols', count($db_fields));
 }
@@ -314,7 +331,7 @@ $t->set_file('wrap','wrap.html');
 
 if ($op) switch($op) {
 	case 'query' : show_query(); break;
-	case 'doquery' : $querystring = ''; list_items(); break;
+	case 'doquery' : $queryinfo['query'] = ''; list_items(); break;
 	case 'delquery' : delete_saved_query($queryid); break;
 	case 'mybugs' : list_items($assignedto, $reportedby, $open); break;
 	default : show_query(); break;

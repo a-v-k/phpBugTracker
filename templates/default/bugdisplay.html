@@ -1,12 +1,15 @@
 <form action="bug.php?op=update&bugid={bugid}" method="post">
 <input type="hidden" name="projectid" value="{projectid}">
 <input type="hidden" name="last_modified_date" value="{lastmodifieddate}">
-<table border='0' width="640">
+<table border="0" width="640">
 	<tr>
-		<td width="210" colspan="2">
-			Bug <b>#{bugid}</b>
-		</td>
-		<td width="210" colspan="2">
+		<td>Bug <b>#{bugid}</b></td>
+		<td align="right"><b>{prevlink}</b>{prevnextsep}<b>{nextlink}</b></td>
+	</tr>
+</table>
+<table border="0" width="640">
+	<tr>
+		<td width="420" colspan="4">
 			Reporter: <b>{reporter}</b>
 		</td>
 		<td width="210" colspan="2">

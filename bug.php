@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.58 2001/11/13 03:53:00 bcurtis Exp $
+// $Id: bug.php,v 1.59 2001/11/14 04:11:02 bcurtis Exp $
 
 include 'include.php';
 
@@ -512,10 +512,58 @@ function show_bug_printable($bugid) {
     }
   }
 }
+
+///
+/// Grab the links for the previous and next bugs in the list
+function prev_next_links($bugid, $pos) {
+	global $q, $queryinfo;
 	
+	if (!isset($queryinfo['query']) || !$queryinfo['query']) {
+		return array('', '');
+	}
+	
+	$prevlink = $nextlink = '';
+	if ($pos) {
+		$offset = $pos - 1;
+		$limit = 2;
+	} else {
+		$offset = $pos;
+		$limit = 1;
+	}
+	$q->limit_query('select bug_id from '.TBL_BUG.' b
+		left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id
+		left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id 
+		left join '.TBL_AUTH_USER.' lastmodifier on b.last_modified_by = lastmodifier.user_id 
+		left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_id, '.
+		TBL_SEVERITY.' severity, '.TBL_STATUS.' status, '.TBL_OS.' os, '.
+		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.TBL_PROJECT.' project 
+		where b.severity_id = severity.severity_id and b.status_id = status.status_id 
+		and b.os_id = os.os_id and b.version_id = version.version_id 
+		and b.component_id = component.component_id and b.project_id = project.project_id '.
+		"and {$queryinfo['query']} and bug_id <> $bugid 
+		order by {$queryinfo['order']} {$queryinfo['sort']}", $limit, $offset);
+		
+	$firstid = $q->grab_field();
+	$secondid = $q->grab_field();
+	
+	if ($pos) {
+		if ($firstid) {
+			$prevlink = "<a href='bug.php?op=show&bugid=$firstid&pos=".($pos - 1).'\'>Previous</a>';
+		}
+		if ($secondid) {
+			$nextlink = "<a href='bug.php?op=show&bugid=$secondid&pos=".($pos + 1).'\'>Next</a>';
+		}
+	} else {
+		if ($firstid) {
+			$nextlink = "<a href='bug.php?op=show&bugid=$firstid&pos=".($pos + 1).'\'>Next</a>';
+		}
+	}
+	
+	return array($prevlink, $nextlink);
+}
 
 function show_bug($bugid = 0, $error = '') {
-  global $q, $me, $t, $project, $STRING, $u, $perm;
+  global $q, $me, $t, $project, $STRING, $u, $perm, $_gv;
 
   if (!ereg('^[0-9]+$',$bugid) or
     !$row = $q->grab('select b.*, reporter.login as reporter, owner.login as owner, status_name, resolution_name 
@@ -538,6 +586,8 @@ function show_bug($bugid = 0, $error = '') {
   $t->set_block('content','crow','closerow');
   $t->set_block('content','attrow','attrows');
   $t->set_unknowns('remove');
+	
+	list($prevlink, $nextlink) = prev_next_links($bugid, $_gv['pos']);
   $t->set_var(array(
     'statuserr' => $error['status'] ? $error['status'].'<br><br>' : '',
     'bugid' => $bugid,
@@ -565,7 +615,10 @@ function show_bug($bugid = 0, $error = '') {
     'cclist' => build_select('bug_cc', $bugid),
     'submit' => $u == 'nobody' ? $STRING['logintomodify'] :
       '<input type="submit" value="Submit">',
-		'developer_list' => build_select('owner')
+		'developer_list' => build_select('owner'),
+		'prevlink' => $prevlink,
+		'nextlink' => $nextlink,
+		'prevnextsep' => $prevlink && $nextlink ? ' | ' : ''
     ));
   switch($row['status_name']) {
     case 'Unconfirmed' :
