@@ -10,23 +10,23 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
 // (at your option) any later version.
-// 
+//
 // phpBugTracker is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.19 2002/05/18 02:59:32 bcurtis Exp $
+// $Id: attachment.php,v 1.20 2002/10/28 22:03:21 bcurtis Exp $
 
 include 'include.php';
 
 function del_attachment($attachid) {
 	global $db, $HTTP_SERVER_VARS;
-	
+
 	if (list($filename, $mimetype) = grab_attachment($attachid)) {
 		$db->query("delete from ".TBL_ATTACHMENT." where attachment_id = $attachid");
 		unlink($filename);
@@ -36,7 +36,7 @@ function del_attachment($attachid) {
 
 function grab_attachment($attachid) {
 	global $db, $STRING;
-	
+
 	if (!is_numeric($attachid)) {
 		show_text($STRING['bad_attachment'], true);
 		return false;
@@ -48,7 +48,7 @@ function grab_attachment($attachid) {
 		show_text($STRING['bad_attachment'], true);
 		return false;
 	}
-	$filename = join('/',array(ATTACHMENT_PATH, 
+	$filename = join('/',array(ATTACHMENT_PATH,
 		$ainfo['project_id'], "{$ainfo['bug_id']}-{$ainfo['file_name']}"));
 	if (!is_readable($filename)) {
 		show_text($STRING['bad_attachment'], true);
@@ -59,8 +59,8 @@ function grab_attachment($attachid) {
 
 function add_attachment($bugid, $description) {
 	global $db, $HTTP_POST_FILES, $now, $u, $STRING, $t, $_pv;
-	
-	if (!isset($HTTP_POST_FILES['attachment']) || 
+
+	if (!isset($HTTP_POST_FILES['attachment']) ||
 		$HTTP_POST_FILES['attachment']['tmp_name'] == 'none') {
 		show_attachment_form($bugid, $STRING['give_attachment']);
 		return;
@@ -72,7 +72,7 @@ function add_attachment($bugid, $description) {
 		show_attachment_form($bugid, $STRING['attachment_too_large']);
 		return;
 	}
-	
+
 	$projectid = $db->getOne("select project_id from ".TBL_BUG." where bug_id = $bugid");
 	if (!$projectid) {
 		show_text($STRING['nobug'], true);
@@ -89,7 +89,7 @@ function add_attachment($bugid, $description) {
 			return;
 		}
 	}
-	
+
 	$filepath = ATTACHMENT_PATH;
 	$tmpfilename = $HTTP_POST_FILES['attachment']['tmp_name'];
 	$filename = "$bugid-{$HTTP_POST_FILES['attachment']['name']}";
@@ -118,9 +118,9 @@ function add_attachment($bugid, $description) {
 	$db->query("insert into ".TBL_ATTACHMENT." (attachment_id, bug_id, file_name, ".
 		"description, file_size, mime_type, created_by, created_date) values (".
 		join(', ', array($db->nextId(TBL_ATTACHMENT), $bugid,
-			$db->quote($HTTP_POST_FILES['attachment']['name']), 
-			$db->quote(stripslashes($description)), 
-			$HTTP_POST_FILES['attachment']['size'], 
+			$db->quote($HTTP_POST_FILES['attachment']['name']),
+			$db->quote(stripslashes($description)),
+			$HTTP_POST_FILES['attachment']['size'],
 			$db->quote($HTTP_POST_FILES['attachment']['type']), $u, $now)).")");
 
 	if ($_pv['use_js']) {
@@ -132,29 +132,29 @@ function add_attachment($bugid, $description) {
 
 function show_attachment_form($bugid, $error = '') {
 	global $db, $t, $STRING;
-	
-	if (!is_numeric($bugid)) { 
+
+	if (!is_numeric($bugid)) {
 		show_text($STRING['nobug'], true);
 		return;
 	}
-	
+
 	$bugexists = $db->getOne("select count(*) from ".TBL_BUG." where bug_id = $bugid");
-	if (!$bugexists) { 
+	if (!$bugexists) {
 		show_text($STRING['nobug'], true);
 		return;
 	}
-	
+
 	$t->assign(array(
 		'error' => $error,
 		'bugid' => $bugid,
-		'description' => isset($description) 
+		'description' => isset($description)
 			? htmlspecialchars(stripslashes($description)) : '',
-		'max_size' => ini_get('upload_max_filesize') < ATTACHMENT_MAX_SIZE 
+		'max_size' => ini_get('upload_max_filesize') < ATTACHMENT_MAX_SIZE
 			? number_format(ini_get('upload_max_filesize'))
 			: number_format(ATTACHMENT_MAX_SIZE)
 		));
 	$t->wrap('bugattachmentform.html', 'addattachment');
-}		
+}
 
 if (isset($_gv['del'])) {
 	if (!$perm->have_perm('Administrator')) {
