@@ -2,7 +2,7 @@ BEGIN;
 
 -- Host: localhost    Database: bugtracker
 ----------------------------------------------------------
--- $Id: createdb_pg.sql,v 1.2 2001/08/29 13:44:57 bcurtis Exp $
+-- $Id: createdb_pg.sql,v 1.3 2001/08/30 20:44:40 bcurtis Exp $
 -- Table structure for table 'active_sessions'
 --
 
@@ -50,7 +50,7 @@ CREATE TABLE "bug" (
   "project_id" INT4  NOT NULL DEFAULT '0',
   "version_id" INT4  NOT NULL DEFAULT '0',
   "component_id" INT4  NOT NULL DEFAULT '0',
-  "op_sys_id" INT2  NOT NULL DEFAULT '0',
+  "os_id" INT2  NOT NULL DEFAULT '0',
   "browser_string" varchar(255) NOT NULL DEFAULT '',
   "close_date" INT8  NOT NULL DEFAULT '0',
   PRIMARY KEY  (bug_id)

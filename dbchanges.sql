@@ -28,7 +28,7 @@ CREATE TABLE `bug` (
   `project_id` int(10) unsigned NOT NULL default '0',
   `version_id` int(10) unsigned NOT NULL default '0',
   `component_id` int(10) unsigned NOT NULL default '0',
-  `op_sys_id` tinyint(3) unsigned NOT NULL default '0',
+  `os_id` tinyint(3) unsigned NOT NULL default '0',
   `browser_string` varchar(255) NOT NULL default '',
 	`close_date` bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (`bug_id`)
