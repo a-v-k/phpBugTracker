@@ -8,7 +8,7 @@ page_open(array('sess' => 'usess', 'auth' => 'uauth'));
 
 $auth->unauth();
 
-include 'templates/logout.html';
+include 'templates/'.THEME.'logout.html';
 
 page_close();
 
