@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.22 2002/06/17 09:21:52 firma Exp $
+// $Id: en.php,v 1.23 2002/06/17 12:49:11 bcurtis Exp $
 
 $STRING = array(
 	'lang_charset' => 'us-ascii',
@@ -192,4 +192,3 @@ $TITLE = array(
 	'documentation' => 'Read documentation'
     );
 ?>
-
