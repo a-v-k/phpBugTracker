@@ -20,21 +20,21 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: configure.php,v 1.4 2002/01/26 16:46:52 bcurtis Exp $
+// $Id: configure.php,v 1.5 2002/03/17 01:38:31 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
 
 function save_options() {
-	global $q, $HTTP_POST_VARS;
+	global $db, $HTTP_POST_VARS;
 	
 	foreach ($HTTP_POST_VARS as $k => $v) {
-		$q->query('update '.TBL_CONFIGURATION." set varvalue = '$v' where varname = '$k'");
+		$db->query('update '.TBL_CONFIGURATION." set varvalue = '$v' where varname = '$k'");
 	}
 }
 
 function list_options() {
-	global $q, $t;
+	global $db, $t;
 	
 	$t->set_file('content', 'configure.html');
 	$t->set_block('content', 'row', 'rows');
@@ -43,8 +43,8 @@ function list_options() {
 	$t->set_block('row', 'radioblock', 'radio');
 	
 	$i = 0;
-	$q->query('select * from '.TBL_CONFIGURATION);
-	while ($row = $q->grab()) {
+	$rs = $db->query('select * from '.TBL_CONFIGURATION);
+	while ($rs->fetchInto($row)) {
 		$t->set_var($row);
 		$t->set_var('trclass', ++$i % 2 ? '' : 'alt');
 		

@@ -20,30 +20,30 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: status.php,v 1.22 2002/03/05 23:54:15 bcurtis Exp $
+// $Id: status.php,v 1.23 2002/03/17 01:38:31 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
 
 function del_item($statusid = 0) {
-	global $q, $me;
+	global $db, $me;
 	
 	if ($statusid) {
 		// Make sure we are going after a valid record
-		$itemexists = $q->grab_field('select count(*) from '.TBL_STATUS.
+		$itemexists = $db->getOne('select count(*) from '.TBL_STATUS.
 			" where status_id = $statusid");
 		// Are there any bugs tied to this one?
-		$bugcount = $q->grab_field('select count(*) from '.TBL_BUG.
+		$bugcount = $db->getOne('select count(*) from '.TBL_BUG.
 			" where status_id = $statusid");
 		if ($itemexists and !$bugcount) {
-			$q->query('delete from '.TBL_STATUS." where status_id = $statusid");
+			$db->query('delete from '.TBL_STATUS." where status_id = $statusid");
 		}
 	}
 	header("Location: $me?");
 }
 
 function do_form($statusid = 0) {
-	global $q, $me, $_pv, $STRING;
+	global $db, $me, $_pv, $STRING;
 
 	extract($_pv);
 	$error = '';
@@ -55,11 +55,11 @@ function do_form($statusid = 0) {
 	if ($error) { list_items($statusid, $error); return; }
 
 	if (!$statusid) {
-		$q->query("insert into ".TBL_STATUS.
+		$db->query("insert into ".TBL_STATUS.
 			" (status_id, status_name, status_desc, sort_order) values (".
-			$q->nextid(TBL_STATUS).", '$fname', '$fdescription', '$fsortorder')");
+			$db->nextId(TBL_STATUS).", '$fname', '$fdescription', '$fsortorder')");
 	} else {
-		$q->query("update ".TBL_STATUS.
+		$db->query("update ".TBL_STATUS.
 			" set status_name = '$fname', status_desc = '$fdescription', 
 			sort_order = '$fsortorder' where status_id = '$statusid'");
 	}
@@ -67,11 +67,11 @@ function do_form($statusid = 0) {
 }
 
 function show_form($statusid = 0, $error = '') {
-	global $q, $me, $t, $_pv, $STRING;
+	global $db, $me, $t, $_pv, $STRING;
 
 	extract($_pv);
 	if ($statusid && !$error) {
-		$row = $q->grab("select * from ".TBL_STATUS.
+		$row = $db->getRow("select * from ".TBL_STATUS.
 			" where status_id = '$statusid'");
 		$t->set_var(array(
 			'action' => $STRING['edit'],
@@ -92,7 +92,7 @@ function show_form($statusid = 0, $error = '') {
 
 
 function list_items($statusid = 0, $error = '') {
-	global $me, $q, $t, $_gv, $STRING, $TITLE;
+	global $me, $db, $t, $_gv, $STRING, $TITLE;
 
 	$t->set_file('content','statuslist.html');
 	$t->set_block('content','row','rows');
@@ -108,7 +108,7 @@ function list_items($statusid = 0, $error = '') {
 	
 	$page = isset($_gv['page']) ? $_gv['page'] : 0;
 	
-	$nr = $q->query("select count(*) from ".TBL_STATUS);
+	$nr = $db->getOne("select count(*) from ".TBL_STATUS);
 
 	list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
 		"order=$order&sort=$sort");
@@ -119,12 +119,12 @@ function list_items($statusid = 0, $error = '') {
 		'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
 		'records' => $nr));
 
-	$q->limit_query('select s.status_id, status_name, status_desc,'.
+	$rs = $db->limitQuery('select s.status_id, status_name, status_desc,'.
 		' sort_order, count(bug_id) as bug_count from '.TBL_STATUS.' s left join '.
 		TBL_BUG.' using (status_id) group by s.status_id, status_name, status_desc,'.
-		" sort_order order by $order $sort", $selrange, $llimit);
+		" sort_order order by $order $sort", $llimit, $selrange);
 
-	if (!$q->num_rows()) {
+	if (!$rs->numRows()) {
 		$t->set_var('rows',"<tr><td>{$STRING['nostatuses']}</td></tr>");
 		return;
 	}
@@ -138,7 +138,7 @@ function list_items($statusid = 0, $error = '') {
 	sorting_headers($me, $headers, $order, $sort);
 
 	$i = 0;
-	while ($row = $q->grab()) {
+	while ($rs->fetchInto($row)) {
 		$t->set_var(array(
 			'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
 			'trclass' => $i % 2 ? '' : 'alt',

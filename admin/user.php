@@ -20,13 +20,13 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.40 2002/03/06 04:17:54 bcurtis Exp $
+// $Id: user.php,v 1.41 2002/03/17 01:38:31 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
 
 function do_form($userid = 0) {
-	global $q, $me, $_pv, $STRING, $now, $u;
+	global $db, $me, $_pv, $STRING, $now, $u;
 
 	$error = '';
 	// Validation
@@ -52,8 +52,8 @@ function do_form($userid = 0) {
 	if (!$userid) {
 		if (ENCRYPT_PASS) $mpassword = md5($_pv['fpassword']);
 		else $mpassword = $_pv['fpassword'];
-		$new_user_id = $q->nextid(TBL_AUTH_USER);
-		$q->query('insert into '.TBL_AUTH_USER
+		$new_user_id = $db->nextId(TBL_AUTH_USER);
+		$db->query('insert into '.TBL_AUTH_USER
 			." (user_id, first_name, last_name, login, email, password, active,
 			created_by, created_date, last_modified_by, last_modified_date)
 			values ($new_user_id, '{$_pv['ffirstname']}', '{$_pv['flastname']}',
@@ -63,19 +63,19 @@ function do_form($userid = 0) {
 		if (isset($_pv['fusergroup']) and is_array($_pv['fusergroup']) and
 			$_pv['fusergroup'][0]) {
 			foreach ($_pv['fusergroup'] as $group) {
-				$q->query("insert into ".TBL_USER_GROUP
+				$db->query("insert into ".TBL_USER_GROUP
 					." (user_id, group_id, created_by, created_date)
 					values ('$new_user_id' ,'$group', $u, $now)");
 			}
 		}
 		// And add to the user group
-		$q->query("insert into ".TBL_USER_GROUP.
+		$db->query("insert into ".TBL_USER_GROUP.
 			" (user_id, group_id, created_by, created_date) 
 			select $new_user_id, group_id, $u, $now from ".TBL_AUTH_GROUP.
 			" where group_name = 'User'");
 	} else {
 		if (ENCRYPT_PASS) {
-			$oldpass = $q->grab_field("select password from ".TBL_AUTH_USER
+			$oldpass = $db->getOne("select password from ".TBL_AUTH_USER
 				." where user_id = $userid");
 			if ($oldpass != $_pv['fpassword']) {
 				$pquery = "password = '".md5($_pv['fpassword'])."',";
@@ -85,19 +85,17 @@ function do_form($userid = 0) {
 		} else {
 			$pquery = "password = '{$_pv['fpassword']}',";
 		}
-		$q->query("update ".TBL_AUTH_USER." set first_name = '{$_pv['ffirstname']}',
+		$db->query("update ".TBL_AUTH_USER." set first_name = '{$_pv['ffirstname']}',
 			last_name = '{$_pv['flastname']}', login = '$login', 
 			email = '{$_pv['femail']}', $pquery active = {$_pv['factive']} 
 			where user_id = '$userid'");
 
 		// Update group memberships
 		// Get user's groups (without dropping the user group)
-		$q->query('select ug.group_id from '.TBL_USER_GROUP.' ug left join '
-			.TBL_AUTH_GROUP.' g using (group_id) '
+		$user_groups = $db->getCol('select ug.group_id from '.
+			TBL_USER_GROUP.' ug left join '.TBL_AUTH_GROUP.' g using (group_id) '
 			." where user_id = $userid and group_name <> 'User'");
-		while ($group_id = $q->grab_field()) {
-			$user_groups[] = $group_id;
-		}
+
 		// Compute differences between old and new
 		if (!isset($user_groups) or !is_array($user_groups)) {
 			$user_groups = array();
@@ -112,13 +110,13 @@ function do_form($userid = 0) {
 
 		if (count($remove_from)) {
 			foreach ($remove_from as $group) {
-				$q->query('delete from '.TBL_USER_GROUP
+				$db->query('delete from '.TBL_USER_GROUP
 					." where user_id = $userid and group_id = $group");
 			}
 		}
 		if (count($add_to)) {
 			foreach ($add_to as $group) {
-				$q->query("insert into ".TBL_USER_GROUP
+				$db->query("insert into ".TBL_USER_GROUP
 					." (user_id, group_id, created_by, created_date)
 					values ('$userid' ,'$group', $u, $now)");
 			}
@@ -128,17 +126,15 @@ function do_form($userid = 0) {
 }
 
 function show_form($userid = 0, $error = '') {
-	global $q, $me, $t, $_pv, $STRING;
+	global $db, $me, $t, $_pv, $STRING;
 
 
 	if ($userid && !$error) {
-		$row = $q->grab("select * from ".TBL_AUTH_USER." where user_id = '$userid'");
+		$row = $db->getRow("select * from ".TBL_AUTH_USER." where user_id = '$userid'");
 
 		// Get user's groups
-		$q->query('select group_id from '.TBL_USER_GROUP." where user_id = {$row['user_id']}");
-		while ($group_id = $q->grab_field()) {
-			$user_groups[] = $group_id;
-		}
+		$user_groups = $db->getCol('select group_id from '.TBL_USER_GROUP.
+			" where user_id = {$row['user_id']}");
 
 		$t->set_var(array(
 			'action' => $STRING['edit'],
@@ -151,7 +147,7 @@ function show_form($userid = 0, $error = '') {
 			'factive' => $row['active'] ? 'checked' : '',
 			'fusergroup' => build_select('group', $user_groups),
 			// Whether or not this user has admin rights
-			'hadadmin' => $q->grab_field('select count(*) from '.TBL_USER_GROUP.
+			'hadadmin' => $db->getOne('select count(*) from '.TBL_USER_GROUP.
 				" where user_id = {$row['user_id']} and group_id = 1")
 			));
 	} else {
@@ -176,7 +172,7 @@ function show_form($userid = 0, $error = '') {
 			));
 	}
 	// The number of admins in the system
-	$t->set_var('numadmins', $q->grab_field('select count(*) from '.TBL_USER_GROUP.
+	$t->set_var('numadmins', $db->getOne('select count(*) from '.TBL_USER_GROUP.
 		' where group_id = 1'));
 
 	// Show the login field only if login is not tied to email address
@@ -188,7 +184,7 @@ function show_form($userid = 0, $error = '') {
 }
 
 function list_items($userid = 0, $error = '') {
-	global $me, $q, $t, $_gv, $STRING, $TITLE;
+	global $me, $db, $t, $_gv, $STRING, $TITLE;
 
 	$t->set_file('content', 'userlist.html');
 	$t->set_block('content', 'row', 'rows');
@@ -211,7 +207,7 @@ function list_items($userid = 0, $error = '') {
 		case 2 : $filter_query = ' where active = 0'; break;
 		default : $filter_query = '';
 	}
-	$nr = $q->grab_field("select count(*) from ".TBL_AUTH_USER.$filter_query);
+	$nr = $db->getOne("select count(*) from ".TBL_AUTH_USER.$filter_query);
 
 	list($selrange, $llimit, $npages, $pages) = multipages($nr, $page,
 		"order=$order&sort=$sort&filter=$user_filter");
@@ -222,9 +218,9 @@ function list_items($userid = 0, $error = '') {
 		'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
 		'records' => $nr));
 
-	$q->limit_query("select user_id, first_name, last_name,
+	$rs = $db->limitQuery("select user_id, first_name, last_name,
 		email, login, created_date, active from ".TBL_AUTH_USER
-		."$filter_query order by $order $sort", $selrange, $llimit);
+		."$filter_query order by $order $sort", $llimit, $selrange);
 
 	$headers = array(
 		'userid' => 'user_id',
@@ -237,11 +233,11 @@ function list_items($userid = 0, $error = '') {
 
 	sorting_headers($me, $headers, $order, $sort, "page=$page&filter=$user_filter");
 
-	if (!$q->num_rows()) {
+	if (!$rs->numRows()) {
 		$t->set_var('rows',"<tr><td>{$STRING['nousers']}</td></tr>");
 	} else {
 		$i = 0;
-		while ($row = $q->grab()) {
+		while ($rs->fetchInto($row)) {
 			$t->set_var(array(
 				'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
 				'trclass' => $i % 2 ? '' : 'alt',

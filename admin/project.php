@@ -20,13 +20,13 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.31 2002/03/02 18:08:55 bcurtis Exp $
+// $Id: project.php,v 1.32 2002/03/17 01:38:31 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
 
 function save_version($versionid = 0) {
-  global $q, $me, $_pv, $STRING, $now, $u;
+  global $db, $me, $_pv, $STRING, $now, $u;
 
 	$error = '';
   // Validation
@@ -37,11 +37,11 @@ function save_version($versionid = 0) {
 	foreach ($_pv as $k => $v) $$k = $v;
   if (!$vf_active) $vf_active = 0;
   if (!$versionid) {
-    $q->query('insert into '.TBL_VERSION
+    $db->query('insert into '.TBL_VERSION
 			." (version_id, project_id, version_name, active, created_by, created_date) 
-			values (".$q->nextid(TBL_VERSION).", $projectid, '$vf_version', $vf_active, $u, $now)");
+			values (".$db->nextId(TBL_VERSION).", $projectid, '$vf_version', $vf_active, $u, $now)");
   } else {
-    $q->query('update '.TBL_VERSION
+    $db->query('update '.TBL_VERSION
 			." set project_id = $projectid, version_name = '$vf_version', 
 			active = $vf_active where version_id = '$versionid'");
   }
@@ -49,12 +49,12 @@ function save_version($versionid = 0) {
 }
 
 function show_version($versionid = 0, $error = '') {
-  global $q, $t, $_pv, $STRING;
+  global $db, $t, $_pv, $STRING;
 
 	foreach ($_pv as $k => $v) $$k = $v;
 	
   if ($versionid && !$error) {
-    $row = $q->grab("select v.*, p.project_name as project_name"
+    $row = $db->getRow("select v.*, p.project_name as project_name"
     	." from ".TBL_VERSION." v left join ".TBL_PROJECT." p using(project_id)"
 			." where version_id = '$versionid'");
     $t->set_var(array(
@@ -74,16 +74,16 @@ function show_version($versionid = 0, $error = '') {
 }
 
 function list_versions($projectid) {
-  global $q, $t, $STRING;
+  global $db, $t, $STRING;
 
-  $q->query("select * from ".TBL_VERSION." where project_id = $projectid");
-  if (!$q->num_rows()) {
+  $rs = $db->query("select * from ".TBL_VERSION." where project_id = $projectid");
+  if (!$rs->numRows()) {
     $t->set_var('verrows',"<tr><td colspan='2' align='center'>{$STRING['noversions']}</td></tr>");
     return;
   }
 
 	$i = 0;
-  while ($row = $q->grab()) {
+  while ($rs->fetchInto($row)) {
     $t->set_var(array(
       'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
 			'trclass' => $i % 2 ? '' : 'alt',
@@ -97,7 +97,7 @@ function list_versions($projectid) {
 }
 
 function save_component($componentid = 0) {
-	global $q, $me, $_pv, $u, $STRING, $now;
+	global $db, $me, $_pv, $u, $STRING, $now;
 	
 	$error = '';
 	// Validation
@@ -111,13 +111,13 @@ function save_component($componentid = 0) {
 	if (!$cf_owner) $cf_owner = 0;
 	if (!$cf_active) $cf_active = 0;
 	if (!$componentid) {
-		$q->query('insert into '.TBL_COMPONENT
+		$db->query('insert into '.TBL_COMPONENT
 			." (component_id, project_id, component_name, component_desc, owner, 
 			active, created_by, created_date, last_modified_by, last_modified_date) 
-			values (".$q->nextid(TBL_COMPONENT).", $projectid, '$cf_name', 
+			values (".$db->nextId(TBL_COMPONENT).", $projectid, '$cf_name', 
 			'$cf_description', $cf_owner, $cf_active, $u, $now, $u, $now)");
 	} else {
-		$q->query('update '.TBL_COMPONENT
+		$db->query('update '.TBL_COMPONENT
 			." set component_name = '$cf_name', component_desc = '$cf_description', 
 			owner = $cf_owner, active = $cf_active, last_modified_by = $u, 
 			last_modified_date = $now where component_id = '$componentid'");
@@ -126,12 +126,12 @@ function save_component($componentid = 0) {
 }	
 
 function show_component($componentid = 0, $error = '') {
-	global $q, $t, $_pv, $STRING;
+	global $db, $t, $_pv, $STRING;
 	
 	foreach ($_pv as $k => $v) $$k = $v;
 	
 	if ($componentid && !$error) {
-		$row = $q->grab('select c.*, p.project_name as project_name
+		$row = $db->getRow('select c.*, p.project_name as project_name
 			from '.TBL_COMPONENT.' c  left join '.TBL_PROJECT." p using (project_id)
 			where component_id = '$componentid'");
 		$t->set_var(array(
@@ -155,16 +155,16 @@ function show_component($componentid = 0, $error = '') {
 }
 
 function list_components($projectid) {
-  global $q, $t, $STRING;
+  global $db, $t, $STRING;
 
-  $q->query("select * from ".TBL_COMPONENT." where project_id = $projectid");
-  if (!$q->num_rows()) {
+  $rs = $db->query("select * from ".TBL_COMPONENT." where project_id = $projectid");
+  if (!$rs->numRows()) {
     $t->set_var('rows',"<tr><td colspan='2' align='center'>{$STRING['nocomponents']}</td></tr>");
     return;
   }
 
 	$i = 0;
-  while ($row = $q->grab()) {
+  while ($rs->fetchInto($row)) {
     $t->set_var(array(
       'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
 			'trclass' => $i % 2 ? '' : 'alt',
@@ -182,7 +182,7 @@ function list_components($projectid) {
 }
 
 function save_project($projectid = 0) {
-  global $q, $me, $u, $STRING, $now, $_pv;
+  global $db, $me, $u, $STRING, $now, $_pv;
 
 	$error = '';
   // Validation
@@ -210,32 +210,32 @@ function save_project($projectid = 0) {
 	foreach ($_pv as $k => $v) $$k = $v;
   if (!isset($active)) $active = 0;
   if (!$projectid) {
-    $projectid = $q->nextid(TBL_PROJECT);
-    $q->query('insert into '.TBL_PROJECT
+    $projectid = $db->nextId(TBL_PROJECT);
+    $db->query('insert into '.TBL_PROJECT
 			." (project_id, project_name, project_desc, active, created_by, created_date)
       values ($projectid , '$name', '$description', $active, $u, $now)");
-    $q->query('insert into '.TBL_VERSION
+    $db->query('insert into '.TBL_VERSION
 			." (version_id, project_id, version_name, active, created_by, created_date) 
-			values (".$q->nextid(TBL_VERSION).", $projectid, '$vf_version', 1, $u, $now)");
-		$q->query('insert into '.TBL_COMPONENT
+			values (".$db->nextId(TBL_VERSION).", $projectid, '$vf_version', 1, $u, $now)");
+		$db->query('insert into '.TBL_COMPONENT
 			." (component_id, project_id, component_name, component_desc, owner, 
 			active, created_by, created_date, last_modified_by, last_modified_date) 
-			values (".$q->nextid(TBL_COMPONENT).", $projectid, '$cf_name', 
+			values (".$db->nextId(TBL_COMPONENT).", $projectid, '$cf_name', 
 			'$cf_description', $cf_owner, 1, $u, $now, $u, $now)");
   } else {
-    $q->query('update '.TBL_PROJECT
+    $db->query('update '.TBL_PROJECT
 			." set project_name = '$name', project_desc = '$description', 
 			active = $active where project_id = $projectid");
   }
 	
 	// Handle project -> group relationship
-	$old_usergroup = $q->grab_field_set('select group_id from '.TBL_PROJECT_GROUP.
+	$old_usergroup = $db->getCol('select group_id from '.TBL_PROJECT_GROUP.
 		" where project_id = $projectid");
 	if (isset($usergroup) and is_array($usergroup) and count($usergroup)) {
 		if (in_array('all', $usergroup)) {
 			// User selected 'All groups'
 			if (count($old_usergroup)) {
-				$q->query('delete from '.TBL_PROJECT_GROUP." where project_id = $projectid");
+				$db->query('delete from '.TBL_PROJECT_GROUP." where project_id = $projectid");
 			}
 		} else {
 			// Compute differences between old and new
@@ -244,13 +244,13 @@ function save_project($projectid = 0) {
 			
 			if (count($remove_from)) {
 				foreach ($remove_from as $group) {
-					$q->query('delete from '.TBL_PROJECT_GROUP." where project_id = $projectid
+					$db->query('delete from '.TBL_PROJECT_GROUP." where project_id = $projectid
 					 and group_id = $group");
 				}
 			}
 			if (count($add_to)) {
       	foreach ($add_to as $group) {
-        	$q->query("insert into ".TBL_PROJECT_GROUP
+        	$db->query("insert into ".TBL_PROJECT_GROUP
           	." (project_id, group_id, created_by, created_date)
           	values ('$projectid' ,'$group', $u, $now)");
       	}
@@ -258,19 +258,19 @@ function save_project($projectid = 0) {
 		}
 	} elseif (count($old_usergroup)) {
 		// User selected nothing, so consider it 'All groups'
-		$q->query('delete from '.TBL_PROJECT_GROUP." where project_id = $projectid");
+		$db->query('delete from '.TBL_PROJECT_GROUP." where project_id = $projectid");
 	}
 		
   header("Location: $me?op=edit&id=$projectid");
 }
 
 function show_project($projectid = 0, $error = array()) {
-  global $q, $me, $t, $name, $description, $active, $TITLE, $_gv;
+  global $db, $me, $t, $name, $description, $active, $TITLE, $_gv;
 
-	$proj_groups = $q->grab_field_set('select group_id from '.TBL_PROJECT_GROUP.
+	$proj_groups = $db->getCol('select group_id from '.TBL_PROJECT_GROUP.
 		" where project_id = $projectid");
   if ($projectid && !$error) {
-    $row = $q->grab('select * from '.TBL_PROJECT
+    $row = $db->getRow('select * from '.TBL_PROJECT
 			." where project_id = $projectid");
     $t->set_var(array(
       'projectid' => $row['project_id'],
@@ -308,13 +308,13 @@ function show_project($projectid = 0, $error = array()) {
 }
 
 function list_projects() {
-  global $me, $q, $t, $selrange, $order, $sort, $STRING, $TITLE, $page;
+  global $me, $db, $t, $selrange, $order, $sort, $STRING, $TITLE, $page;
 
   $t->set_file('content','projectlist.html');
   $t->set_block('content','row','rows');
 
   if (!$order) { $order = '1'; $sort = 'asc'; }
-  $nr = $q->grab_field("select count(*) from ".TBL_PROJECT);
+  $nr = $db->getOne("select count(*) from ".TBL_PROJECT);
 
   list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
     "order=$order&sort=$sort");
@@ -327,10 +327,10 @@ function list_projects() {
     'TITLE' => $TITLE['project']
     ));
 
-  $q->limit_query("select * from ".TBL_PROJECT." order by $order $sort", 
-		$selrange, $llimit);
+  $rs = $db->limitQuery("select * from ".TBL_PROJECT." order by $order $sort", 
+		$llimit, $selrange);
 
-  if (!$q->num_rows()) {
+  if (!$rs->numRows()) {
     $t->set_var('rows',"<tr><td>{$STRING['noprojects']}</td></tr>");
     return;
   }
@@ -346,7 +346,7 @@ function list_projects() {
 
   sorting_headers($me, $headers, $order, $sort);
   $i = 0;
-  while ($row = $q->grab()) {
+  while ($rs->fetchInto($row)) {
     $t->set_var(array(
       'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
 			'trclass' => $i % 2 ? '' : 'alt',

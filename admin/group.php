@@ -20,26 +20,26 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: group.php,v 1.4 2002/01/26 16:46:52 bcurtis Exp $
+// $Id: group.php,v 1.5 2002/03/17 01:38:31 bcurtis Exp $
 
 define('TEMPLATE_PATH', 'admin');
 include '../include.php';
 
 function purge_group($groupid = 0) {
-	global $q;
+	global $db;
 	
-	$q->query("delete from ".TBL_USER_GROUP." where group_id = $groupid");
+	$db->query("delete from ".TBL_USER_GROUP." where group_id = $groupid");
 }
 
 function del_group($groupid = 0) {
-	global $q;
+	global $db;
 	
 	purge_group($groupid);
-	$q->query("delete from ".TBL_AUTH_GROUP." where group_id = $groupid");
+	$db->query("delete from ".TBL_AUTH_GROUP." where group_id = $groupid");
 }
 
 function do_form($groupid = 0) {
-	global $q, $me, $_pv, $STRING, $u, $now;
+	global $db, $me, $_pv, $STRING, $u, $now;
 
 	extract($_pv);
 	$error = '';
@@ -49,11 +49,11 @@ function do_form($groupid = 0) {
 	if ($error) { list_items($groupid, $error); return; }
 
 	if (!$groupid) {
-		$q->query("insert into ".TBL_AUTH_GROUP.
+		$db->query("insert into ".TBL_AUTH_GROUP.
 			" (group_id, group_name, created_by, created_date, last_modified_by, last_modified_date)"
-			." values (".$q->nextid(TBL_AUTH_GROUP).", '$fname', $u, $now, $u, $now)");
+			." values (".$db->nextId(TBL_AUTH_GROUP).", '$fname', $u, $now, $u, $now)");
 	} else {
-		$q->query("update ".TBL_AUTH_GROUP.
+		$db->query("update ".TBL_AUTH_GROUP.
 			" set group_name = '$fname', last_modified_by = $u, 
 			last_modified_date = $now where group_id = '$groupid'");
 	}
@@ -61,10 +61,10 @@ function do_form($groupid = 0) {
 }
 
 function show_form($groupid = 0, $error = '') {
-	global $q, $me, $t, $_pv, $STRING;
+	global $db, $me, $t, $_pv, $STRING;
 
 	if ($groupid && !$error) {
-		$row = $q->grab("select * from ".TBL_AUTH_GROUP.
+		$row = $db->getRow("select * from ".TBL_AUTH_GROUP.
 			" where group_id = '$groupid'");
 		$t->set_var(array(
 			'action' => $STRING['edit'],
@@ -81,7 +81,7 @@ function show_form($groupid = 0, $error = '') {
 
 
 function list_items($groupid = 0, $error = '') {
-	global $me, $q, $t, $_gv, $STRING, $TITLE;
+	global $me, $db, $t, $_gv, $STRING, $TITLE;
 
 	$t->set_file('content','grouplist.html');
 	$t->set_block('content','row','rows');
@@ -98,7 +98,7 @@ function list_items($groupid = 0, $error = '') {
 	
 	$page = isset($_gv['page']) ? $_gv['page'] : 0;
 	
-	$nr = $q->grab_field("select count(*) from ".TBL_AUTH_GROUP);
+	$nr = $db->getOne("select count(*) from ".TBL_AUTH_GROUP);
 
 	list($selrange, $llimit, $npages, $pages) = multipages($nr,$page,
 		"order=$order&sort=$sort");
@@ -109,12 +109,12 @@ function list_items($groupid = 0, $error = '') {
 		'last' => $llimit+$selrange > $nr ? $nr : $llimit+$selrange,
 		'records' => $nr));
 
-	$q->limit_query("select ag.group_id, group_name, locked, count(ug.group_id) as count from ".
+	$rs = $db->limitQuery("select ag.group_id, group_name, locked, count(ug.group_id) as count from ".
 		TBL_AUTH_GROUP." ag left join ".TBL_USER_GROUP." ug using (group_id) left join ".
 		TBL_AUTH_USER." using (user_id) group by ag.group_id, group_name, locked order by $order $sort", 
-		$selrange, $llimit);
+		$llimit, $selrange);
 
-	if (!$q->num_rows()) {
+	if (!$rs->numRows()) {
 		// This should never happen, as admin, user, and developer groups must exist
 		$t->set_var('rows',"");
 		return;
@@ -128,7 +128,7 @@ function list_items($groupid = 0, $error = '') {
 	sorting_headers($me, $headers, $order, $sort);
 
 	$i = 0;
-	while ($row = $q->grab()) {
+	while ($rs->fetchInto($row)) {
 		$t->set_var(array(
 			'bgcolor' => (++$i % 2 == 0) ? '#dddddd' : '#ffffff',
 			'trclass' => $i % 2 ? '' : 'alt',
