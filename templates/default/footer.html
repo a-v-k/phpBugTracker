@@ -5,7 +5,11 @@
 				&nbsp
 			</td>
 			<td height="30" class="bottomnav">
-				<form method="post" action="{$smarty.server.REQUEST_URI}">
+				{if NO_AUTH}
+					<form method="post" action="index.php">
+				{else}
+					<form method="post" action="{$smarty.server.REQUEST_URI}">
+				{/if}
 					&nbsp;
 					{if not $smarty.session.uid}
 						{if EMAIL_IS_LOGIN}
