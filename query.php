@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.45 2001/11/30 17:27:28 bcurtis Exp $
+// $Id: query.php,v 1.46 2001/12/08 14:28:16 bcurtis Exp $
 
 include 'include.php';
 
@@ -322,7 +322,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 				));
 			$t->parse('cols', 'col', true);
 		}
-		$t->set_var('tr-extra', "class='$trclass' bgcolor='$bgcolor' onClick=\"document.location.href='bug.php?op=show&bugid={$row['bug_id']}'\" onMouseOver=\"this.style.fontWeight='bold'\" onMouseOut=\"this.style.fontWeight='normal'\"");
+		$t->set_var('tr-extra', "class='$trclass' bgcolor='$bgcolor' onClick=\"document.location.href='bug.php?op=show&bugid={$row['bug_id']}'\"");
 		$t->parse('rows','row',true);
 		$t->set_var('cols', '');
 		++$pos;
