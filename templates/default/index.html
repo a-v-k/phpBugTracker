@@ -1,21 +1,28 @@
+{include file="header.html" page_title="Home"}
 <table border=0 width="100%">
 	<tr>
 		<td valign="top" width="250">
 			<b>Five most recently submitted bugs:</b>
 			<br>
-			<!-- BEGIN recentrow -->
-			<a href="bug.php?op=show&bugid={bugid}">{title}</a> &nbsp;&nbsp;(<i>{project}</i>)<br>
-			<!-- END recentrow -->
+			{section name=bug loop=$recentbugs}
+				<a href="bug.php?op=show&bugid={$recentbugs[bug].bug_id}">{$recentbugs[bug].title|stripslashes}</a> &nbsp;&nbsp;(<i>{$recentbugs[bug].project_name|stripslashes}</i>)<br>
+			{sectionelse}
+				{$STRING.nobugs}
+			{/section}
 			<br>
 			<br>
 			<b>Five most recently closed bugs:</b>
 			<br>
-			<!-- BEGIN closerow -->
-			<a href="bug.php?op=show&bugid={bugid}">{title}</a> &nbsp;&nbsp;(<i>{project}</i>)<br>			
-			<!-- END closerow -->
+			{section name=bug loop=$closedbugs}
+				<a href="bug.php?op=show&bugid={$closedbugs[bug].bug_id}">{$closedbugs[bug].title|stripslashes}</a> &nbsp;&nbsp;(<i>{$closedbugs[bug].project_name|stripslashes}</i>)<br>
+			{sectionelse}
+				{$STRING.nobugs}
+			{/section}
 		</td>
 		<td valign="top"> 
-		<!-- BEGIN statsblock -->
+		{if USE_JPGRAPH}
+			{$summary_image}
+		{else}
 			<b>Quick stats</b>
 			<br>
 			<br>
@@ -24,29 +31,33 @@
 					<th>Status</th>
 					<th># bugs</th>
 				</tr>
-				<!-- BEGIN row -->
+				{foreach name=outer key=key item=item from=$stats}
 				<tr>
-					<td><a href="query.php?op=doquery&status[]={statid}">{status}</a></td>
-					<td align="center">{count}</td>
+					<td><a href="query.php?op=doquery&status[]={$key}">{$item.name}</a></td>
+					<td align="center">{$item.count|default:0}</td>
 				</tr>
-				<!-- END row -->
+				{/foreach}
 			</table>
-		<!-- END statsblock -->
+		{/if}
 		</td>
 	</tr>
 </table>
 <br>
 <br>
-<!-- BEGIN projectsummaryblock -->
+{if SHOW_PROJECT_SUMMARIES}
 <table border="0" cellpadding="4">
-	<!-- BEGIN projectrow -->
-	<tr class="{trclass}">
-		<!-- BEGIN col -->
-		<td class="{colclass}">
-			{coldata}
-		</td>
-		<!-- END col -->
+	<tr>
+		{section name=col loop=$resfields}
+			<th>{$resfields[col]}</th>
+		{/section}
 	</tr>
-	<!-- END projectrow -->
+	{section name=project loop=$projects}
+		<tr{if $smarty.section.project.iteration is even} class="alt"{/if}>
+			{foreach key=key item=item from=$projects[project]}
+				<td{if $key ne "Project"} align="center"{/if}>{$item|stripslashes}</td>
+			{/foreach}
+		</tr>
+	{/section}
 </table>
-<!-- END projectsummaryblock -->
+{/if}
+{include file="footer.html"}

@@ -1,3 +1,4 @@
+{include file="header.html" page_title="Bug History"}
 <table border="0" cellspacing="2" cellpadding="2">
 	<tr bgcolor="#eeeeee">
 		<th>Who</th>
@@ -6,17 +7,22 @@
 		<th>New Value</th>
 		<th>When</th>
 	</tr>
-	<!-- BEGIN row -->
-	<tr>
-		<td bgcolor="{bgcolor}">{createdby}</td>
-		<td bgcolor="{bgcolor}">{field}</td>
-		<td bgcolor="{bgcolor}">&nbsp;{oldvalue}</td>
-		<td bgcolor="{bgcolor}">&nbsp;{newvalue}</td>
-		<td bgcolor="{bgcolor}">{date}</td>
-	</tr>
-	<!-- END row -->
+	{section name=event loop=$history}
+		<tr{if $smarty.section.event.iteration is even} class="alt" bgcolor="#dddddd"{/if}>
+			<td>{$history[event].login|maskemail}</td>
+			<td>{$history[event].changed_field}</td>
+			<td>&nbsp;{$history[event].old_value}</td>
+			<td>&nbsp;{$history[event].new_value}</td>
+			<td>{$history[event].created_date|date:DATE_FORMAT} {$history[event].created_date|date:TIME_FORMAT}</td>
+		</tr>
+	{sectionelse}
+		<tr>
+			<td colspan="5" align="center">{$STRING.nobughistory}</td>
+		</tr>
+	{/section}
 </table>
 <br>
-<a href="{me}?op=show&bugid={bugid}">Back to bug #{bugid}</a>
+<a href="{$SCRIPT_NAME}?op=show&bugid={$smarty.get.bugid}">Back to bug #{$smarty.get.bugid}</a>
 <br>
 <br>
+{include file="footer.html"}

@@ -1,0 +1,39 @@
+			</td>
+		</tr>
+		<tr>
+			<td width="150" height="30" class="sidenav">
+				&nbsp
+			</td>
+			<form method="post" action="{$smarty.server.REQUEST_URI}">
+			<td height="30" class="bottomnav">
+				&nbsp;
+				{if not $smarty.session.uid}
+					{if EMAIL_IS_LOGIN}
+						{assign var="loginlabel" value="Email"}
+					{else}
+						{assign var="loginlabel" value="Login"}
+					{/if}
+					{$loginerror}
+					{$loginlabel}: <input type="text" name="username" class="bottomnavinput" value="{$smarty.cookies.phpbt_user}"> 
+					Password: <input type="password" name="password" class="bottomnavinput"> 
+					<input type="hidden" name="dologin" value="1">
+					<input type="submit" value="Login" class="bottomnavinput"> 
+					<input type="submit" name="sendpass" value="Email Password" class="bottomnavinput" title="Forgot your password?  Have it sent to you"> 
+          {if RECALL_LOGIN}
+            <input type="checkbox" name="savecookie" value="1" {if !empty($smarty.cookies.phpbt_user)}checked{/if} class="bottomnavinput" title="Remember {$loginlabel} for next time"> Remember me   				  
+    			{/if}
+				{else}
+					[ Bugs assigned to me: <a href="query.php?op=mybugs&assignedto=1&open=1" title="Open">{$owner_open}</a> / <a href="query.php?op=mybugs&assignedto=1&open=0" title="Closed">{$owner_closed}</a> 
+					| Bugs reported by me: <a href="query.php?op=mybugs&reportedby=1&open=1" title="Open">{$reporter_open}</a> / <a href="query.php?op=mybugs&reportedby=1&open=0" title="Closed">{$reporter_closed}</a> 
+					| <a href="user.php">Personal Page</a> 
+					| <a href="logout.php">Logout {$smarty.session.uname}</a> 
+					]
+				{/if}
+				&nbsp;
+			</td>
+			</form>
+		</tr>
+	</table>
+</body>
+</html>
+<head><meta HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE"></head>

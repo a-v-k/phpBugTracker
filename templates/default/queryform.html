@@ -1,11 +1,13 @@
+{include file="header.html" page_title="Bug Query"}
 <script language="JavaScript">
 <!-- 
 versions = new Array();
 components = new Array();
 versions['All'] = new Array(new Array('','All'));
 components['All'] = new Array(new Array('','All'));
-{js}
+{project_js}
 
+{literal}
 function updateMenus(f) {
   sel = f.projects[f.projects.selectedIndex].text;
   f.versions.length = versions[sel].length;
@@ -19,6 +21,7 @@ function updateMenus(f) {
     f.components.options[x].text = components[sel][x][1];
   }
 }
+{/literal}
 //-->
 </script>
     <form method="get" action="query.php" name="query">
@@ -33,19 +36,19 @@ function updateMenus(f) {
 
         <tr>
           <td align="left" valign="top">
-						<select name="status[]" multiple size="7">{status}</select>
+						<select name="status[]" multiple size="7">{build_select box=status}</select>
 					</td>
           <td align="left" valign="top">
-						<select name="resolution[]" multiple size="7">{resolution}</select>
+						<select name="resolution[]" multiple size="7">{build_select box=resolution}</select>
 					</td>
           <td align="left" valign="top">
-						<select name="os[]" multiple size="7">{os}</select>
+						<select name="os[]" multiple size="7">{build_select box=os}</select>
 					</td>
           <td align="left" valign="top">
-						<select name="priority[]" multiple size="7">{priority}</select>
+						<select name="priority[]" multiple size="7">{build_select box=priority}</select>
 					</td>
           <td align="left" valign="top">
-						<select name="severity[]" multiple size="7">{severity}</select>
+						<select name="severity[]" multiple size="7">{build_select box=severity}</select>
 					</td>
         </tr>
       </table>
@@ -168,7 +171,7 @@ function updateMenus(f) {
 					<td>
 						<select name="projects" onChange="updateMenus(this.form)">
 							<option value=''>All</option>
-							{projects}
+							{build_select box=project}
 						</select>
 					</td>
 				</tr>
@@ -214,19 +217,19 @@ function updateMenus(f) {
 			<br>
 			<input type="reset" value="Reset back to the default query">
 			<input type="submit" value="Submit query"> 
-			<!-- BEGIN savequeryblock -->
-			<br>
-			Save this query as: <input maxlength="40" type="text" name="savedqueryname">
-			<hr align="left" size="1" width="640">
-			<b>Saved Queries</b>
-			<br>
-			<!-- BEGIN row -->
-			<a href="{me}?{savedquerystring}">{savedqueryname}</a> (<a href="{me}?op=delquery&queryid={savedqueryid}" onClick="return confirm('Are you sure you want to delete this saved query?');">Delete</a>)<br>
-			<!-- END row -->
-			<!-- END savequeryblock -->
+			{if $smarty.session.uid}
+				<br>
+				Save this query as: <input maxlength="40" type="text" name="savedqueryname">
+				<hr align="left" size="1" width="640">
+				<b>Saved Queries</b>
+				<br>
+				{section name=query loop=$queries}
+					<a href="{$SCRIPT_NAME}?{$queries[query].saved_query_string}">{$queries[query].saved_query_name}</a> (<a href="{$SCRIPT_NAME}?op=delquery&queryid={$queries[query].saved_query_id}" onClick="return confirm('Are you sure you want to delete this saved query?');">Delete</a>)<br>
+				{/section}
+			{/if}
     </form>
 		<br>
-		Go to the <a href="{me}?op=query">simple query page</a>
-  </body>
-</html>
+		Go to the <a href="{$SCRIPT_NAME}?op=query">simple query page</a>
+
+{include file="footer.html"}
 

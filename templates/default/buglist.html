@@ -1,19 +1,35 @@
-<h2>Bug List</h2>
+{include file="header.html" page_title="Bug List"}
 <table cellpadding="2">
-	<!-- BEGIN row -->
-	<tr {tr-extra}>
-		<!-- BEGIN col -->
-		<td {td-extra}>
-			{coldata}
-		</td>
-		<!-- END col -->
-  </tr>
-	<!-- END row -->
 	<tr>
-		<td colspan="{numcols}" align="center">
+		{section name=col loop=$db_fields}
+			<th class={$headers[col].class} bgcolor={$headers[col].color}><a href="{$headers[col].url}">{$field_titles[col]}</a></th>
+		{/section}
+	</tr>
+	{section name=bug loop=$bugs}
+		<tr{if $smarty.section.bug.iteration is even} class="alt" bgcolor="#dddddd"{/if}>
+			{foreach key=key item=item from=$bugs[bug]}
+				{if $key eq "bug_link_id"}
+					{assign var=bug_id value=$item}
+				{elseif $key eq "severity_color"}
+					{assign var=bgcolor value=$item}
+				{else}
+					<td {if USE_SEVERITY_COLOR}bgcolor="{$bgcolor}"{/if}>{$item|modify_bug_col:$key:$bug_id:$smarty.section.bug.iteration}</td>
+				{/if}
+			{/foreach}
+		</tr>
+	{sectionelse}
+		<tr>
+			<td colspan="{$smarty.section.col.loop}" align="center">
+				{$STRING.nobugs}
+			</td>
+		</tr>
+	{/section}
+	<tr>
+		<td colspan="{$smarty.section.col.loop}" align="center">
 			<br>
-  		{first} - {last} of {total}<br>[ {pages} ]<!-- <a href="bugs.php?page=all">Show all</a>-->
+  		{$first} - {$last} of {$total}<br>[ {$pages} ]<!-- <a href="bugs.php?page=all">Show all</a>-->
   		<br>
 		</td>
 	</tr>
 </table>
+{include file="footer.html"}

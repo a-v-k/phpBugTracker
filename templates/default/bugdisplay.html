@@ -1,11 +1,13 @@
+{include file="header.html" page_title="Edit Bug #$bug_id"}
 <script language="JavaScript">
 <!-- 
 versions = new Array();
 components = new Array();
 versions['All'] = new Array(new Array('','All'));
 components['All'] = new Array(new Array('','All'));
-{js}
+{project_js}
 
+{literal}
 function updateMenus(f) {
   sel = f.project_id[f.project_id.selectedIndex].text;
   f.version_id.length = versions[sel].length;
@@ -19,27 +21,38 @@ function updateMenus(f) {
     f.component_id.options[x].text = components[sel][x][1];
   }
 }
+{/literal}
 //-->
 </script>
 <form action="bug.php" method="post">
 <input type="hidden" name="op" value="update">
-<input type="hidden" name="bugid" value="{bugid}">
-<input type="hidden" name="projectid" value="{projectid}">
-<input type="hidden" name="last_modified_date" value="{lastmodifieddate}">
-<input type="hidden" name="pos" value="{pos}">
+<input type="hidden" name="bug_id" value="{$bug_id}">
+<input type="hidden" name="projectid" value="{$project_id}">
+<input type="hidden" name="last_modified_date" value="{$lastmodifieddate}">
+<input type="hidden" name="pos" value="{$smarty.request.pos}">
 <table border="0" width="640">
 	<tr>
-		<td>Bug <b>#{bugid}</b> - Return to <a href="query.php">bug list</a></td>
-		<td align="right"><b>{prevlink}</b>{prevnextsep}<b>{nextlink}</b></td>
+		<td>Bug <b>#{$bug_id}</b> - Return to <a href="query.php">bug list</a></td>
+		<td align="right">
+			{if $prevbug}
+				<b><a href="bug.php?op=show&bugid={$prevbug}&pos={$prevpos}">{$STRING.previous_bug}</a></b>
+			{/if}
+			{if $prevbug and $nextbug}
+				|
+			{/if}
+			{if $nextbug}
+				<b><a href="bug.php?op=show&bugid={$nextbug}&pos={$nextpos}">{$STRING.next_bug}</a></b>
+			{/if}
+		</td>
 	</tr>
 </table>
 <table border="0" width="640">
 	<tr>
 		<td width="420" colspan="4">
-			Reporter: <b>{reporter}</b>
+			Reporter: <b>{$reporter|maskemail}</b>
 		</td>
 		<td width="210" colspan="2">
-			Created: <b>{createddate}</b>
+			Created: <b>{$created_date|date:DATE_FORMAT}</b>
 		</td>
 	</tr>
 	<tr>
@@ -47,19 +60,19 @@ function updateMenus(f) {
 			Project:
 		</td>
 		<td>
-			<select name="project_id" onChange="updateMenus(this.form)">{project}</select>
+			<select name="project_id" onChange="updateMenus(this.form)">{build_select box=project selected=$project_id}</select>
 		</td>
 		<td>
 			Component: 
 		</td>
 		<td>
-			<select name="component_id">{component}</select>
+			<select name="component_id">{build_select box=component selected=$component_id project=$project_id}</select>
 		</td>
 		<td>
 			Version: 
 		</td>
 		<td>
-			<select name="version_id">{version}</select>
+			<select name="version_id">{build_select box=version selected=$version_id project=$project_id}</select>
 		</td>
 	</tr>
 	<tr>
@@ -67,19 +80,19 @@ function updateMenus(f) {
 			Severity: 
 		</td>
 		<td>
-			<select name="severity_id">{severity}</select>
+			<select name="severity_id">{build_select box=severity selected=$severity_id}</select>
 		</td>
 		<td>
 			Priority: 
 		</td>
 		<td>
-			<select name="priority">{priority}</select>
+			<select name="priority">{build_select box=priority selected=$priority}</select>
 		</td>
 		<td>
 			OS: 
 		</td>
 		<td>
-			<select name="os_id">{os}</select>
+			<select name="os_id">{build_select box=os selected=$os_id}</select>
 		</td>
 	</tr>
 	<tr>
@@ -91,22 +104,22 @@ function updateMenus(f) {
 <table border="0" cellpadding="2" cellspacing="0" width="640">
 	<tr>
 		<td>Assigned To:</td>
-		<td><b>{owner}</td>
+		<td><b>{$owner|maskemail}</td>
 		<td colspan="2">
 			&nbsp;
 		</td>
 	</tr>
 	<tr>
   	<td>Status:</td>
-  	<td><b>{status}</b></td>
+  	<td><b>{$status_name}</b></td>
   	<td>Summary:</td>
-  	<td><input type="text" size="30" maxlength="100" name="title" value="{title}"></td>
+  	<td><input type="text" size="30" maxlength="100" name="title" value="{$title|stripslashes|htmlentities}"></td>
 	</tr>
 	<tr>
   	<td>Resolution:</td>
-  	<td><b>{resolution}</b></td>
-  	<td>{urllabel}:</td>
-  	<td><input type="text" size="30" maxlength="255" name="url" value="{url}"></td>
+  	<td><b>{$resolution_name}</b></td>
+  	<td>{if $url}<a href="{$url}">URL</a>{else}URL{/if}:</td>
+  	<td><input type="text" size="30" maxlength="255" name="url" value="{$url}"></td>
 	</tr>
 	<tr>
   	<td colspan="4">
@@ -118,42 +131,42 @@ function updateMenus(f) {
 			Update Bug Status:
 			<br>
 			<br>
-			<font color="#ff0000">{statuserr}</font>
+			{if !empty($error.status)}<div class="error">{$error.status}</div>{/if}
 			<input type="radio" name="outcome" value="unchanged" checked> 
-				Leave as <b>{status} {resolution}</b><br>
-			<!-- BEGIN arow -->
-			<input type="radio" name="outcome" value="assign"> 
-				Accept bug (change status to <b>Assigned</b>)<br>
-			<!-- END arow -->
-			<!-- BEGIN rrow -->
-			<input type="radio" name="outcome" value="resolve"> 
-				Resolve bug, changing resolution to <select name="resolution_id">{bugresolution}</select><br>
-			<input type="radio" name="outcome" value="dupe"> 
-				Resolve bug, mark it as a duplicate of bug #<input type="text" name="dupenum" size="5"><br>
-			<input type="radio" name="outcome" value="reassign"> 
-				Reassign bug to 
-				<!-- 
-				Uncomment the text box and remove the select box if you want users
-				to type in the login for assignment (e.g., to hide developer email addresses)
-				<input type="text" name="reassignto">
-				-->
-				<select name="reassignto"><option value="0">Choose one</option>{developer_list}</select>
-				<br>
-			<input type="radio" name="outcome" value="reassigntocomponent"> 
-				Reassign bug to owner of selected component<br>
-			<!-- END rrow -->
-			<!-- BEGIN rerow -->
-			<input type="radio" name="outcome" value="reopen"> 
-				Reopen bug<br>
-			<!-- END rerow -->
-			<!-- BEGIN vrow -->
-			<input type="radio" name="outcome" value="verify"> 
-				Mark bug as verified<br>
-			<!-- END vrow -->
-			<!-- BEGIN crow -->
-			<input type="radio" name="outcome" value="close"> 
-				Mark bug as closed<br>
-			<!-- END crow -->
+				Leave as <b>{$status_name} {$resolution_name}</b><br>
+			{if in_array($status_name, array('Unconfirmed', 'New', 'Reopened'))}
+				<input type="radio" name="outcome" value="assign"> 
+					Accept bug (change status to <b>Assigned</b>)<br>
+			{/if}
+			{if $status_name == 'Assigned'}
+				<input type="radio" name="outcome" value="resolve"> 
+					Resolve bug, changing resolution to <select name="resolution_id">{build_select box=resolution}</select><br>
+				<input type="radio" name="outcome" value="dupe"> 
+					Resolve bug, mark it as a duplicate of bug #<input type="text" name="dupenum" size="5"><br>
+				<input type="radio" name="outcome" value="reassign"> 
+					Reassign bug to 
+					<!-- 
+					Uncomment the text box and remove the select box if you want users
+					to type in the login for assignment (e.g., to hide developer email addresses)
+					<input type="text" name="reassignto">
+					-->
+					<select name="reassignto"><option value="0">Choose one</option>{build_select box=owner}</select>
+					<br>
+				<input type="radio" name="outcome" value="reassigntocomponent"> 
+					Reassign bug to owner of selected component<br>
+			{/if}
+			{if in_array($status_name, array('Resolved', 'Verified', 'Closed'))}
+				<input type="radio" name="outcome" value="reopen"> 
+					Reopen bug<br>
+			{/if}
+			{if $status_name == 'Verified'}
+				<input type="radio" name="outcome" value="verify"> 
+					Mark bug as verified<br>
+			{/if}
+			{if in_array($status_name, array('Resolved', 'Verified'))}
+				<input type="radio" name="outcome" value="close"> 
+					Mark bug as closed<br>
+			{/if}
 		</td>
 		<td valign="top" colspan="2">
 			Add CC:
@@ -165,15 +178,15 @@ function updateMenus(f) {
 			Remove selected CCs:
 			<br>
 			<br>
-			<select name="remove_cc[]" size="5" multiple>{cclist}</select>
+			<select name="remove_cc[]" size="5" multiple>{build_select box=cclist selected=$bug_id}</select>
 		</td>
 	</tr>
 </table>
 <table border="0" cellpadding="2" cellspacing="0" width="640">
 	<tr>
 		<td>
-			{dependency_error}
-			Bug Dependencies: {bug_dependencies}
+			{if !empty($error.add_dep)}<div class="error">{$error.add_dep}</div>{/if}
+			Bug Dependencies: {$bug_dependencies}
 			<br>
 			Add Dependency: <input type="text" name="add_dependency" size="5">
 			<br>
@@ -191,7 +204,11 @@ function updateMenus(f) {
 			<br>
 			<br>
 			<div align="right">
-				{submit}
+				{if $smarty.session.uid}
+					<input type="submit" value="Submit">
+				{else}
+					{$STRING.logintomodify}
+				{/if}
 			</div>
 		</td>
 	</tr>
@@ -200,7 +217,7 @@ function updateMenus(f) {
 			<table border="0" cellpadding="0">
 				<tr>
 					<td colspan="2">Attachments:</td>
-					<td colspan="3" align="right"><a href="attachment.php?bugid={bugid}">Create attachment</a></td>
+					<td colspan="3" align="right"><a href="attachment.php?bug_id={$bug_id}">Create attachment</a></td>
 				</tr>
 				<tr><td colspan="5" height="2" bgcolor="#ffffff"><spacer type="block" height="2" width="2"></td></tr>
 				<tr>
@@ -217,15 +234,31 @@ function updateMenus(f) {
 					<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
 					<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
 				</tr>
-				<!-- BEGIN attrow -->
-				<tr title="{attdesc}">
-					<td bgcolor="{bgcolor}">{attname}</td>
-					<td bgcolor="{bgcolor}" align="right">{attsize}</td>
-					<td bgcolor="{bgcolor}" align="center">{atttype}</td>
-					<td bgcolor="{bgcolor}" align="center">{attdate}</td>
-					<td bgcolor="{bgcolor}" align="center">{attaction}</td>
-				</tr>
-				<!-- END attrow -->
+				{section name=attachment loop=$attachments}
+					<tr title="{$attachments[attachment].description|stripslashes}"{if $smarty.section.attachment.iteration is even} class="alt" bgcolor="#dddddd"{/if}>
+						<td>{$attachments[attachment].file_name|stripslashes}</td>
+						<td align="right">
+							{if $attachments[attachment].file_size > 1024}
+								{math equation="(round(x) / 1024 * 100) / 100" x=$attachments[attachment].file_size assign=file_size}
+								{$file_size|number_format}k
+							{else}
+								{$attachments[attachment].file_size|number_format}b
+							{/if}
+						</td>
+						<td align="center">{$attachments[attachment].mime_type}</td>
+						<td align="center">{$attachments[attachment].created_date|date:DATE_FORMAT}</td>
+						<td align="center">
+							<a href='attachment.php?attachid={$attachments[attachment].attachment_id}'>View</a>
+							{if $perm->have_perm('Administrator')}
+								| <a href='attachment.php?del={$attachments[attachment].attachment_id}' onClick="return confirm('Are you sure you want to delete this attachment?');">Delete</a>
+							{/if}
+						</td>
+					</tr>
+				{sectionelse}
+					<tr>
+						<td colspan="5" align="center">No attachments</td>
+					</tr>
+				{/section}
 				<tr>
 					<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
 					<td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
@@ -239,11 +272,11 @@ function updateMenus(f) {
 	</tr>
 </table>
 </form>
-{vote_error}
-<b><a href="{me}?op=vote&bugid={bugid}" onClick="if ({already_voted}) { alert ('{already_voted_string}'); return false; }">Vote for this bug</a></b> | 
-<b><a href="{me}?op=viewvotes&bugid={bugid}">View votes ({num_votes}) for this bug</a></b> | 
-<b><a href="{me}?op=history&bugid={bugid}">View bug activity</a></b> | 
-<b><a href="{me}?op=print&&bugid={bugid}">Printable view</a></b>
+{if !empty($error.vote)}<div class="error">{$error.vote}</div>{/if}
+<b><a href="{$SCRIPT_NAME}?op=vote&bugid={$bug_id}" onClick="if ({$already_voted}) {literal}{ alert ('{/literal}{$STRING.already_voted}{literal}'); return false; }{/literal}">Vote for this bug</a></b> | 
+<b><a href="{$SCRIPT_NAME}?op=viewvotes&bugid={$bug_id}">View votes ({$num_votes}) for this bug</a></b> | 
+<b><a href="{$SCRIPT_NAME}?op=history&bugid={$bug_id}">View bug activity</a></b> | 
+<b><a href="{$SCRIPT_NAME}?op=print&bugid={$bug_id}">Printable view</a></b>
 
 <br>
 <br>
@@ -257,30 +290,31 @@ function updateMenus(f) {
 	<tr>
 		<td>
 			<div align="center">
-				<i>----- Posted by {reporter} at {createdtime} on {createddate} -----</i>
+				<i>----- Posted by {$reporter|maskemail} at {$created_date|date:TIME_FORMAT} on {$created_date|date:DATE_FORMAT} -----</i>
 				<br>
 				<br>
 			</div>
-			{description}
+			{$description|stripslashes|format_comments|nl2br}
 			<br>
 			<br>
 			<br>
 		</td>
 	</tr>
-	<!-- BEGIN row -->
+	{section name=comment loop=$comments}
 	<tr>
 		<td>
 			<div align="center">
-				<i>----- Posted by {rreporter} at {rcreateddate} -----</i>
+				<i>----- Posted by {$comments[comment].rreporter|maskemail} at {$comments[comment].created_date|date:TIME_FORMAT} on {$comments[comment].created_date|date:DATE_FORMAT}-----</i>
 				<br>
 				<br>
 			</div>
-			{rdescription}
+			{$comments[comment].rdescription|stripslashes|format_comments|nl2br}
 			<br>
 			<br>
 			<br>
 		</td>
 	</tr>
-	<!-- END row -->
+	{/section}
 </table>
 			
+{include file="footer.html"}

@@ -1,21 +1,30 @@
-<form action="{me}">
+{include file="header.html" page_title="Home"}
+<form action="{$SCRIPT_NAME}">
 Bug statistics for 
-<select name="projectid" onChange="document.location.href='{me}?projectid='+this.options[this.selectedIndex].value">
+<select name="projectid" onChange="document.location.href='{$SCRIPT_NAME}?projectid='+this.options[this.selectedIndex].value">
 	<option value="0">All projects</option>
-	{projects}
+	{build_select box=project selected=$smarty.get.projectid}
 </select>
 <input type="submit" value="Go">
 </form>
 
-<h3>{reporttitle}</h3>
+<h3>Bug Resolutions</h3>
 <table border="0" cellpadding="4">
-	<!-- BEGIN row -->
-	<tr class="{trclass}">
-		<!-- BEGIN col -->
-		<td class="{colclass}">
-			{coldata}
-		</td>
-		<!-- END col -->
+	<tr>
+		{section name=col loop=$resfields}
+			<th>{$resfields[col]}</th>
+		{/section}
 	</tr>
-	<!-- END row -->
+	{section name=developer loop=$developers}
+		<tr{if $smarty.section.developer.iteration is even} class="alt"{/if}>
+			{foreach key=key item=item from=$developers[developer]}
+				{if $key eq "Assigned To"}
+					<td>{$item|maskemail|default:Unassigned}</td>
+				{else}
+					<td align="center">{$item|stripslashes|default:0}</td>
+				{/if}
+			{/foreach}
+		</tr>
+	{/section}
 </table>
+{include file="footer.html"}

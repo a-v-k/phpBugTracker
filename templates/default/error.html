@@ -1,10 +1,16 @@
+{include file="header.html" page_title="Error"}
 <table width="640">
 	<tr>
 		<td align="center">
-			{text}
+			{if $iserror}
+				<div class="error">{$text}</div>
+			{else}
+				{$text}
+			{/if}
 			<br>
 			<br>
 			<a href="javascript:history.go(-1)">Back</a>
 		</td>
 	</tr>
 </table>
+{include file="footer.html"}

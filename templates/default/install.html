@@ -3,44 +3,45 @@
 	<link rel="StyleSheet" href="css.php" type="text/css">
 </head>
 <body bgcolor="#ffffff" link="#006699" vlink="#006699" alink="#006699">
-<form action="{me}" method="post">
+<form action="{$SCRIPT_NAME}" method="post">
 <table border="0" cellpadding="0" cellspacing="0" width="640">
 	<tr>
 		<td width="200" valign="top"><br><img src="logo.jpg"></td>
 		<td valign="top" align="center">
 			<div class="banner">phpBugTracker Installation</div>
-			{error}
+			{if $error}<div class="error">{$error}</div>{/if}
 			<table border="0" cellpadding="0" cellspacing="3">
 				<tr>
 					<th colspan="2">Database Options</th>
 				</tr>
 				<tr>
 					<td width="150">Type:</td>
-					<td><select name="db_type">{db_type}</select></td>
+					<td><select name="db_type">{build_select selected=$db_type}</select></td>
 				</tr>
 				<tr>
 					<td width="150">Host:</td>
-					<td><input type="text" name="db_host" value="{db_host}"></td>
+					<td><input type="text" name="db_host" value="{$db_host|default:localhost}"></td>
 				</tr>
 				<tr>
 					<td width="150">
 						Database Name:
-						<br>
-						(This database must already exist)
 					</td>
-					<td valign="top"><input type="text" name="db_database" value="{db_database}"></td>
+					<td valign="top"><input type="text" name="db_database" value="{$db_database|default:bug_tracker}"></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center"><b>(This database must already exist)</b></td>
 				</tr>
 				<tr>
 					<td width="150">User:</td>
-					<td><input type="text" name="db_user" value="{db_user}"></td>
+					<td><input type="text" name="db_user" value="{$db_user|default:root}"></td>
 				</tr>
 				<tr>
 					<td width="150">Password:</td>
-					<td><input type="password" name="db_pass" value="{db_pass}"></td>
+					<td><input type="password" name="db_pass" value="{$db_pass}"></td>
 				</tr>
 				<tr>
 					<td width="150">Table Prefix:</td>
-					<td><input type="text" name="tbl_prefix" value="{tbl_prefix}"></td>
+					<td><input type="text" name="tbl_prefix" value="{$tbl_prefix|default:phpbt_}"></td>
 				</tr>
 				<tr>
 				</tr>
@@ -53,7 +54,7 @@
 						<br>
 						(The email address used for sending bug updates, etc.)
 					</td>
-					<td valign="top"><input type="text" name="phpbt_email" value="{phpbt_email}"></td>
+					<td valign="top"><input type="text" name="phpbt_email" value="{$phpbt_email|default:$default_email}"></td>
 				</tr>
 				<tr>
 					<td width="150">
@@ -61,7 +62,7 @@
 						<br>
 						(Must be a valid email address)
 					</td>
-					<td valign="top"><input type="text" name="admin_login" value="{admin_login}"></td>
+					<td valign="top"><input type="text" name="admin_login" value="{$admin_login}"></td>
 				</tr>
 				<tr>
 					<td width="150">Admin Password:</td>
@@ -81,23 +82,22 @@
 				<tr>
 					<td colspan="2" align="center">
 						<hr size="1" width="220">
-						<!-- BEGIN writeableblock -->
-						When you submit the form, the database tables will be created
-						and config.php will be saved to disk.  You will then be able
-						to login and use the bug tracker.
-						<input type="hidden" name="op" value="save_config_file">
-						<!-- END writeableblock -->
-						<!-- BEGIN unwriteableblock -->
-						Since config.php is not writeable by this script, when you
-						submit this form you will be prompted to save config.php.  Copy
-						this file to the location of the bug tracker, and then you will
-						be able to <a href="index.php">login to the bug tracker</a>.  From
-						the home page you can go to the Admin Tools and customize your 
-						installation via the Configuration link.  Once you have 
-						completed the configuration, you will be ready to add a project and 
-						start reporting bugs! 
-						<input type="hidden" name="op" value="dump_config_file">
-						<!-- END unwriteableblock -->
+						{if @is_writeable('config.php')}
+							When you submit the form, the database tables will be created
+							and config.php will be saved to disk.  You will then be able
+							to login and use the bug tracker.
+							<input type="hidden" name="op" value="save_config_file">
+						{else}
+							Since config.php is not writeable by this script, when you
+							submit this form you will be prompted to save config.php.  Copy
+							this file to the location of the bug tracker, and then you will
+							be able to <a href="index.php">login to the bug tracker</a>.  From
+							the home page you can go to the Admin Tools and customize your 
+							installation via the Configuration link.  Once you have 
+							completed the configuration, you will be ready to add a project and 
+							start reporting bugs! 
+							<input type="hidden" name="op" value="dump_config_file">
+						{/if}
 						<br>
 						<br>
 						<input type="submit" value="Save Options">

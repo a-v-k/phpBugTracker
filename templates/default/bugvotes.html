@@ -1,16 +1,22 @@
+{include file="header.html" page_title="Bug Votes"}
 <table border="0" cellspacing="2" cellpadding="2">
 	<tr bgcolor="#eeeeee">
 		<th>Who</th>
 		<th>When</th>
 	</tr>
-	<!-- BEGIN row -->
-	<tr>
-		<td bgcolor="{bgcolor}">{login}</td>
-		<td bgcolor="{bgcolor}">{date}</td>
-	</tr>
-	<!-- END row -->
+	{section name=vote loop=$votes}
+		<tr{if $smarty.section.vote.iteration is even} class="alt" bgcolor="#dddddd"{/if}>
+			<td>{$votes[vote].login|maskemail}</td>
+			<td>{$votes[vote].created_date|date:DATE_FORMAT} {$votes[vote].created_date|date:TIME_FORMAT}</td>
+		</tr>
+	{sectionelse}
+		<tr>
+			<td colspan="2" align="center">{$STRING.no_votes}</td>
+		</tr>
+	{/section}
 </table>
 <br>
-<a href="{me}?op=show&bugid={bugid}">Back to bug #{bugid}</a>
+<a href="{$SCRIPT_NAME}?op=show&bugid={$smarty.get.bugid}">Back to bug #{$smarty.get.bugid}</a>
 <br>
 <br>
+{include file="footer.html"}

@@ -1,15 +1,17 @@
+{include file="header.html" page_title="Add Bug"}
 <H2>First, you must pick a product on which to enter
 a bug.</H2>
 
 <table>
-	<!-- BEGIN row -->
+	{section name=project loop=$projects}
 	<tr>
 		<td align="right" valign="top">
-			<a href="bug.php?op=add&project={id}">{name}</a>:
+			<a href="bug.php?op=add&project={$projects[project].project_id}">{$projects[project].project_name|stripslashes}</a>:
 		</td>
 		<td valign="top">
-			{description}
+			{$projects[project].project_desc|stripslashes|nl2br}
 		</td>
 	</tr>
-	<!-- END row -->
+	{/section}
 </table>
+{include file="footer.html"}

@@ -1,11 +1,13 @@
+{include file="header.html" page_title="Bug Query"}
 <script language="JavaScript">
 <!-- 
 versions = new Array();
 components = new Array();
 versions['All'] = new Array(new Array('','All'));
 components['All'] = new Array(new Array('','All'));
-{js}
+{project_js}
 
+{literal}
 function updateMenus(f) {
   sel = f.projects[f.projects.selectedIndex].text;
   f.versions.length = versions[sel].length;
@@ -19,6 +21,7 @@ function updateMenus(f) {
     f.components.options[x].text = components[sel][x][1];
   }
 }
+{/literal}
 //-->
 </script>
     <form method="get" action="query.php" name="query">
@@ -28,7 +31,7 @@ function updateMenus(f) {
 					<td valign="top">
 						<select name="projects" onChange="updateMenus(this.form)">
 							<option value=''>All</option>
-							{projects}
+							{build_select box=project}
 						</select>
 					</td>
 				</tr>
@@ -47,7 +50,7 @@ function updateMenus(f) {
 				<tr>
 					<td valign="top"><b>Status:</b></td>
 					<td valign="top">
-						<select name="status[]" multiple size="7">{status}</select>
+						<select name="status[]" multiple size="7">{build_select box=status}</select>
 					</td>
 				</tr>
 				<tr>
@@ -84,7 +87,6 @@ function updateMenus(f) {
 			<input type="submit" value="Submit query"> 
     </form>
 		<br>
-		Go to the <a href="{me}?op=query&form=advanced">advanced query page</a>
-  </body>
-</html>
+		Go to the <a href="{$SCRIPT_NAME}?op=query&form=advanced">advanced query page</a>
 
+{include file="footer.html"}

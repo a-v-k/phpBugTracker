@@ -1,17 +1,17 @@
-<form enctype="multipart/form-data" action="{me}" method="post">
+<form enctype="multipart/form-data" action="{$SCRIPT_NAME}" method="post">
 <input type="hidden" name="bugid" value="{bugid}">
 <table border="0" width="640">
 	<tr>
 		<td colspan="2">
 			Please choose a file to upload and enter a one-line description.  
-			Maximum file size: {max_size} bytes
+			Maximum file size: {$max_size} bytes
 		</td>
 	</tr>
+	{if $error}
 	<tr>
-		<td colspan="2" align="center">
-			<font color="#ff0000">{error}</font>
-		</td>
+		<td colspan="2" class="error">{error}</td>
 	</tr>
+	{/if}
 	<tr>
 		<td>
 			File:
@@ -25,7 +25,7 @@
 			Description:
 		</td>
 		<td>
-			<input type="text" name="description" maxlength="255" value="{description}">
+			<input type="text" name="description" maxlength="255" value="{$description}">
 		</td>
 	</tr>
 	<tr>

@@ -1,37 +1,39 @@
+{include file="header.html" page_title="Create a New Account"}
 <h2>Create a new account</h2>
 <form action="{me}" method="post">
 <input type="hidden" name="createaccount" value="1">
 <table border="0">
-	<tr>
-		<td align="center" colspan="2">
-			<font color="#ff0000">{error}</font>
-		</td>
-	</tr>
-	<!-- BEGIN loginentryarea -->
-	<tr>
-		<td align="right">Login: </td>
-		<td>
-			<input type="text" name="login" value="{login}">
-		</td>
-	</tr>
-	<!-- END loginentryarea -->
+	{if $error}
+		<tr>
+			<td class="error" colspan="2">{$error}</td>
+		</tr>
+	{/if}
+	{if !EMAIL_IS_LOGIN}
+		<tr>
+			<td align="right">Login: </td>
+			<td>
+				<input type="text" name="login" value="{$smarty.post.login|stripslashes|htmlentities}">
+			</td>
+		</tr>
+	{/if}
 	<tr>
 		<td align="right">Email: </td>
-		<td><input type="text" name="email" value="{email}"></td>
+		<td><input type="text" name="email" value="{$smarty.post.email|stripslashes|htmlentities}"></td>
 	</tr>
 	<tr>
 		<td align="right">First Name (optional):</td>
 		<td>
-			<input type="text" name="firstname" value="{firstname}">
+			<input type="text" name="firstname" value="{$smarty.post.firstname|stripslashes|htmlentities}">
 		</td>
 	</tr>
 	<tr>
 		<td align="right">Last Name (optional):</td>
 		<td>
-			<input type="text" name="lastname" value="{lastname}">
+			<input type="text" name="lastname" value="{$smarty.post.lastname|stripslashes|htmlentities}">
 		</td>
 	</tr>
 </table>
 <input type="submit" value="Create new account">
 </form>
+{include file="footer.html"}
 		
