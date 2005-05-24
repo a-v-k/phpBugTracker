@@ -4,7 +4,11 @@
 		<link rel="StyleSheet" href="styles/default.css" type="text/css">
 	</head>
 	<body>
-		<br><br>
+		<br>
+		<div align="center">
+			<?php echo translate("DB Test Success"); ?>
+		</div>
+		<br>
 		<div align="center">
 			<?php printf(translate("The installation script successfully connected to the database <b>%s</b> on the host <b>%s</b> using the specified username and password.<br>Congratulations!"), $params['db_database'], $params['db_host']); ?>
 			<br>
