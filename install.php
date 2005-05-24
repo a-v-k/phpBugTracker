@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.40 2004/10/25 12:06:57 bcurtis Exp $
+// $Id: install.php,v 1.41 2005/05/24 20:49:55 ulferikson Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -148,7 +148,7 @@ function test_database(&$params, $testonly = false) {
 	$db = DB::Connect($dsn);
 
 	// Simple error checking on returned DB object to check connection to db
-	if (get_class($db) == 'db_error') {
+	if (DB::isError($db)) {
 		include('templates/default/install-dbfailure.html');
 		exit;
 	} else {
@@ -184,7 +184,7 @@ function create_tables() {
 	/*!! BAD! Must figure out how to get db_version from config-dist.php... */
 	$query = preg_replace(array_keys($tables), array_values($tables), 'INSERT INTO '.TBL_CONFIGURATION.' (varname,varvalue,description,vartype) VALUES (\'DB_VERSION\', './*!!!*/4/*!!!*/.', \'Database Version <b>Warning:</b> Changing this might make things go horribly wrong, so don\\\'t change it.\', \'mixed\')');
 	$res = $db->query($query);
-	if (PEAR::isError($res)) {
+	if (DB::isError($res)) {
 		echo 'DB_VERSION not set!';
 	}
 }
