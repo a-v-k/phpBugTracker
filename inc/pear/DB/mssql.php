@@ -1,90 +1,228 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// | PHP Version 4                                                        |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 1997-2002 The PHP Group                                |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.02 of the PHP license,      |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available at through the world-wide-web at                           |
-// | http://www.php.net/license/2_02.txt.                                 |
-// | If you did not receive a copy of the PHP license and are unable to   |
-// | obtain it through the world-wide-web, please send a note to          |
-// | license@php.net so we can mail you a copy immediately.               |
-// +----------------------------------------------------------------------+
-// | Author: Sterling Hughes <sterling@php.net>                           |
-// +----------------------------------------------------------------------+
-//
-// $Id: mssql.php,v 1.3 2002/10/16 21:06:30 bcurtis Exp $
-//
-// Database independent query interface definition for PHP's Microsoft SQL Server
-// extension.
-//
 
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
+/**
+ * The PEAR DB driver for PHP's mssql extension
+ * for interacting with Microsoft SQL Server databases
+ *
+ * PHP versions 4 and 5
+ *
+ * LICENSE: This source file is subject to version 3.0 of the PHP license
+ * that is available through the world-wide-web at the following URI:
+ * http://www.php.net/license/3_0.txt.  If you did not receive a copy of
+ * the PHP License and are unable to obtain it through the web, please
+ * send a note to license@php.net so we can mail you a copy immediately.
+ *
+ * @category   Database
+ * @package    DB
+ * @author     Sterling Hughes <sterling@php.net>
+ * @author     Daniel Convissor <danielc@php.net>
+ * @copyright  1997-2005 The PHP Group
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @version    CVS: $Id: mssql.php,v 1.4 2005/05/24 20:47:49 ulferikson Exp $
+ * @link       http://pear.php.net/package/DB
+ */
+
+/**
+ * Obtain the DB_common class so it can be extended from
+ */
 require_once PEAR_PATH.'DB/common.php';
 
+/**
+ * The methods PEAR DB uses to interact with PHP's mssql extension
+ * for interacting with Microsoft SQL Server databases
+ *
+ * These methods overload the ones declared in DB_common.
+ *
+ * @category   Database
+ * @package    DB
+ * @author     Sterling Hughes <sterling@php.net>
+ * @author     Daniel Convissor <danielc@php.net>
+ * @copyright  1997-2005 The PHP Group
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @version    Release: @package_version@
+ * @link       http://pear.php.net/package/DB
+ */
 class DB_mssql extends DB_common
 {
+    // {{{ properties
+
+    /**
+     * The DB driver type (mysql, oci8, odbc, etc.)
+     * @var string
+     */
+    var $phptype = 'mssql';
+
+    /**
+     * The database syntax variant to be used (db2, access, etc.), if any
+     * @var string
+     */
+    var $dbsyntax = 'mssql';
+
+    /**
+     * The capabilities of this DB implementation
+     *
+     * The 'new_link' element contains the PHP version that first provided
+     * new_link support for this DBMS.  Contains false if it's unsupported.
+     *
+     * Meaning of the 'limit' element:
+     *   + 'emulate' = emulate with fetch row by number
+     *   + 'alter'   = alter the query
+     *   + false     = skip rows
+     *
+     * @var array
+     */
+    var $features = array(
+        'limit'         => 'emulate',
+        'new_link'      => false,
+        'numrows'       => true,
+        'pconnect'      => true,
+        'prepare'       => false,
+        'ssl'           => false,
+        'transactions'  => true,
+    );
+
+    /**
+     * A mapping of native error codes to DB error codes
+     * @var array
+     */
+    // XXX Add here error codes ie: 'S100E' => DB_ERROR_SYNTAX
+    var $errorcode_map = array(
+        110   => DB_ERROR_VALUE_COUNT_ON_ROW,
+        155   => DB_ERROR_NOSUCHFIELD,
+        170   => DB_ERROR_SYNTAX,
+        207   => DB_ERROR_NOSUCHFIELD,
+        208   => DB_ERROR_NOSUCHTABLE,
+        245   => DB_ERROR_INVALID_NUMBER,
+        515   => DB_ERROR_CONSTRAINT_NOT_NULL,
+        547   => DB_ERROR_CONSTRAINT,
+        1913  => DB_ERROR_ALREADY_EXISTS,
+        2627  => DB_ERROR_CONSTRAINT,
+        2714  => DB_ERROR_ALREADY_EXISTS,
+        3701  => DB_ERROR_NOSUCHTABLE,
+        8134  => DB_ERROR_DIVZERO,
+    );
+
+    /**
+     * The raw database connection created by PHP
+     * @var resource
+     */
     var $connection;
-    var $phptype, $dbsyntax;
-    var $prepare_tokens = array();
-    var $prepare_types = array();
-    var $transaction_opcount = 0;
+
+    /**
+     * The DSN information for connecting to a database
+     * @var array
+     */
+    var $dsn = array();
+
+
+    /**
+     * Should data manipulation queries be committed automatically?
+     * @var bool
+     * @access private
+     */
     var $autocommit = true;
 
+    /**
+     * The quantity of transactions begun
+     *
+     * {@internal  While this is private, it can't actually be designated
+     * private in PHP 5 because it is directly accessed in the test suite.}}
+     *
+     * @var integer
+     * @access private
+     */
+    var $transaction_opcount = 0;
+
+    /**
+     * The database specified in the DSN
+     *
+     * It's a fix to allow calls to different databases in the same script.
+     *
+     * @var string
+     * @access private
+     */
+    var $_db = null;
+
+
+    // }}}
+    // {{{ constructor
+
+    /**
+     * This constructor calls <kbd>$this->DB_common()</kbd>
+     *
+     * @return void
+     */
     function DB_mssql()
     {
         $this->DB_common();
-        $this->phptype = 'mssql';
-        $this->dbsyntax = 'mssql';
-        $this->features = array(
-            'prepare' => false,
-            'pconnect' => true,
-            'transactions' => true,
-            'limit' => 'emulate'
-        );
-        // XXX Add here error codes ie: 'S100E' => DB_ERROR_SYNTAX
-        $this->errorcode_map = array(
-
-        );
     }
 
-    function connect($dsninfo, $persistent = false)
+    // }}}
+    // {{{ connect()
+
+    /**
+     * Connect to the database server, log in and open the database
+     *
+     * Don't call this method directly.  Use DB::connect() instead.
+     *
+     * @param array $dsn         the data source name
+     * @param bool  $persistent  should the connection be persistent?
+     *
+     * @return int  DB_OK on success. A DB_Error object on failure.
+     */
+    function connect($dsn, $persistent = false)
     {
-        if (!DB::assertExtension('mssql') && !DB::assertExtension('sybase')
-            && !DB::assertExtension('sybase_ct'))
+        if (!PEAR::loadExtension('mssql') && !PEAR::loadExtension('sybase')
+            && !PEAR::loadExtension('sybase_ct'))
         {
             return $this->raiseError(DB_ERROR_EXTENSION_NOT_FOUND);
         }
-        $this->dsn = $dsninfo;
-        $user = $dsninfo['username'];
-        $pw = $dsninfo['password'];
-        $dbhost = $dsninfo['hostspec'] ? $dsninfo['hostspec'] : 'localhost';
+
+        $this->dsn = $dsn;
+        if ($dsn['dbsyntax']) {
+            $this->dbsyntax = $dsn['dbsyntax'];
+        }
+
+        $params = array(
+            $dsn['hostspec'] ? $dsn['hostspec'] : 'localhost',
+            $dsn['username'] ? $dsn['username'] : null,
+            $dsn['password'] ? $dsn['password'] : null,
+        );
+        if ($dsn['port']) {
+            $params[0] .= ((substr(PHP_OS, 0, 3) == 'WIN') ? ',' : ':')
+                        . $dsn['port'];
+        }
 
         $connect_function = $persistent ? 'mssql_pconnect' : 'mssql_connect';
 
-        if ($dbhost && $user && $pw) {
-            $conn = @$connect_function($dbhost, $user, $pw);
-        } elseif ($dbhost && $user) {
-            $conn = @$connect_function($dbhost, $user);
-        } else {
-            $conn = @$connect_function($dbhost);
+        $this->connection = @call_user_func_array($connect_function, $params);
+
+        if (!$this->connection) {
+            return $this->raiseError(DB_ERROR_CONNECT_FAILED,
+                                     null, null, null,
+                                     @mssql_get_last_message());
         }
-        if (!$conn) {
-            return $this->raiseError(DB_ERROR_CONNECT_FAILED, null, null,
-                                         null, mssql_get_last_message());
-        }
-        if ($dsninfo['database']) {
-            if (!@mssql_select_db($dsninfo['database'], $conn)) {
-                return $this->raiseError(DB_ERROR_NODBSELECTED, null, null,
-                                         null, mssql_get_last_message());
+        if ($dsn['database']) {
+            if (!@mssql_select_db($dsn['database'], $this->connection)) {
+                return $this->raiseError(DB_ERROR_NODBSELECTED,
+                                         null, null, null,
+                                         @mssql_get_last_message());
             }
+            $this->_db = $dsn['database'];
         }
-        $this->connection = $conn;
         return DB_OK;
     }
 
+    // }}}
+    // {{{ disconnect()
+
+    /**
+     * Disconnects from the database server
+     *
+     * @return bool  TRUE on success, FALSE on failure
+     */
     function disconnect()
     {
         $ret = @mssql_close($this->connection);
@@ -92,10 +230,25 @@ class DB_mssql extends DB_common
         return $ret;
     }
 
+    // }}}
+    // {{{ simpleQuery()
+
+    /**
+     * Sends a query to the database server
+     *
+     * @param string  the SQL query string
+     *
+     * @return mixed  + a PHP result resrouce for successful SELECT queries
+     *                + the DB_OK constant for other successful queries
+     *                + a DB_Error object on failure
+     */
     function simpleQuery($query)
     {
         $ismanip = DB::isManip($query);
         $this->last_query = $query;
+        if (!@mssql_select_db($this->_db, $this->connection)) {
+            return $this->mssqlRaiseError(DB_ERROR_NODBSELECTED);
+        }
         $query = $this->modifyQuery($query);
         if (!$this->autocommit && $ismanip) {
             if ($this->transaction_opcount == 0) {
@@ -115,6 +268,7 @@ class DB_mssql extends DB_common
         return $ismanip ? DB_OK : $result;
     }
 
+    // }}}
     // {{{ nextResult()
 
     /**
@@ -128,24 +282,33 @@ class DB_mssql extends DB_common
      */
     function nextResult($result)
     {
-        return mssql_next_result($result);
+        return @mssql_next_result($result);
     }
 
     // }}}
+    // {{{ fetchInto()
 
-    function &fetchRow($result, $fetchmode = DB_FETCHMODE_DEFAULT, $rownum=null)
-    {
-        if ($fetchmode == DB_FETCHMODE_DEFAULT) {
-            $fetchmode = $this->fetchmode;
-        }
-        $res = $this->fetchInto ($result, $arr, $fetchmode, $rownum);
-        if ($res !== DB_OK) {
-            return $res;
-        }
-        return $arr;
-    }
-
-    function fetchInto($result, &$ar, $fetchmode, $rownum=null)
+    /**
+     * Places a row from the result set into the given array
+     *
+     * Formating of the array and the data therein are configurable.
+     * See DB_result::fetchInto() for more information.
+     *
+     * This method is not meant to be called directly.  Use
+     * DB_result::fetchInto() instead.  It can't be declared "protected"
+     * because DB_result is a separate object.
+     *
+     * @param resource $result    the query result resource
+     * @param array    $arr       the referenced array to put the data in
+     * @param int      $fetchmode how the resulting array should be indexed
+     * @param int      $rownum    the row number to fetch (0 = first row)
+     *
+     * @return mixed  DB_OK on success, NULL when the end of a result set is
+     *                 reached or on failure
+     *
+     * @see DB_result::fetchInto()
+     */
+    function fetchInto($result, &$arr, $fetchmode, $rownum = null)
     {
         if ($rownum !== null) {
             if (!@mssql_data_seek($result, $rownum)) {
@@ -153,35 +316,62 @@ class DB_mssql extends DB_common
             }
         }
         if ($fetchmode & DB_FETCHMODE_ASSOC) {
-            $ar = @mssql_fetch_array($result);
-        } else {
-            $ar = @mssql_fetch_row($result);
-        }
-        if (!$ar) {
-            /* This throws informative error messages,
-               don't use it for now
-            if ($msg = mssql_get_last_message()) {
-                return $this->raiseError($msg);
+            $arr = @mssql_fetch_array($result, MSSQL_ASSOC);
+            if ($this->options['portability'] & DB_PORTABILITY_LOWERCASE && $arr) {
+                $arr = array_change_key_case($arr, CASE_LOWER);
             }
-            */
+        } else {
+            $arr = @mssql_fetch_row($result);
+        }
+        if (!$arr) {
             return null;
+        }
+        if ($this->options['portability'] & DB_PORTABILITY_RTRIM) {
+            $this->_rtrimArrayValues($arr);
+        }
+        if ($this->options['portability'] & DB_PORTABILITY_NULL_TO_EMPTY) {
+            $this->_convertNullArrayValuesToEmpty($arr);
         }
         return DB_OK;
     }
 
+    // }}}
+    // {{{ freeResult()
+
+    /**
+     * Deletes the result set and frees the memory occupied by the result set
+     *
+     * This method is not meant to be called directly.  Use
+     * DB_result::free() instead.  It can't be declared "protected"
+     * because DB_result is a separate object.
+     *
+     * @param resource $result  PHP's query result resource
+     *
+     * @return bool  TRUE on success, FALSE if $result is invalid
+     *
+     * @see DB_result::free()
+     */
     function freeResult($result)
     {
-        if (is_resource($result)) {
-            return @mssql_free_result($result);
-        }
-        if (!isset($this->prepare_tokens[$result])) {
-            return false;
-        }
-        unset($this->prepare_tokens[$result]);
-        unset($this->prepare_types[$result]);
-        return true;
+        return @mssql_free_result($result);
     }
 
+    // }}}
+    // {{{ numCols()
+
+    /**
+     * Gets the number of columns in a result set
+     *
+     * This method is not meant to be called directly.  Use
+     * DB_result::numCols() instead.  It can't be declared "protected"
+     * because DB_result is a separate object.
+     *
+     * @param resource $result  PHP's query result resource
+     *
+     * @return int  the number of columns.  A DB_Error object on failure.
+     *
+     * @see DB_result::numCols()
+     */
     function numCols($result)
     {
         $cols = @mssql_num_fields($result);
@@ -191,6 +381,22 @@ class DB_mssql extends DB_common
         return $cols;
     }
 
+    // }}}
+    // {{{ numRows()
+
+    /**
+     * Gets the number of rows in a result set
+     *
+     * This method is not meant to be called directly.  Use
+     * DB_result::numRows() instead.  It can't be declared "protected"
+     * because DB_result is a separate object.
+     *
+     * @param resource $result  PHP's query result resource
+     *
+     * @return int  the number of rows.  A DB_Error object on failure.
+     *
+     * @see DB_result::numRows()
+     */
     function numRows($result)
     {
         $rows = @mssql_num_rows($result);
@@ -200,8 +406,16 @@ class DB_mssql extends DB_common
         return $rows;
     }
 
+    // }}}
+    // {{{ autoCommit()
+
     /**
-     * Enable/disable automatic commits
+     * Enables or disables automatic commits
+     *
+     * @param bool $onoff  true turns it on, false turns it off
+     *
+     * @return int  DB_OK on success.  A DB_Error object if the driver
+     *               doesn't support auto-committing transactions.
      */
     function autoCommit($onoff = false)
     {
@@ -215,11 +429,16 @@ class DB_mssql extends DB_common
     // {{{ commit()
 
     /**
-     * Commit the current transaction.
+     * Commits the current transaction
+     *
+     * @return int  DB_OK on success.  A DB_Error object on failure.
      */
     function commit()
     {
         if ($this->transaction_opcount > 0) {
+            if (!@mssql_select_db($this->_db, $this->connection)) {
+                return $this->mssqlRaiseError(DB_ERROR_NODBSELECTED);
+            }
             $result = @mssql_query('COMMIT TRAN', $this->connection);
             $this->transaction_opcount = 0;
             if (!$result) {
@@ -233,11 +452,16 @@ class DB_mssql extends DB_common
     // {{{ rollback()
 
     /**
-     * Roll back (undo) the current transaction.
+     * Reverts the current transaction
+     *
+     * @return int  DB_OK on success.  A DB_Error object on failure.
      */
     function rollback()
     {
         if ($this->transaction_opcount > 0) {
+            if (!@mssql_select_db($this->_db, $this->connection)) {
+                return $this->mssqlRaiseError(DB_ERROR_NODBSELECTED);
+            }
             $result = @mssql_query('ROLLBACK TRAN', $this->connection);
             $this->transaction_opcount = 0;
             if (!$result) {
@@ -251,10 +475,11 @@ class DB_mssql extends DB_common
     // {{{ affectedRows()
 
     /**
-     * Gets the number of rows affected by the last query.
-     * if the last query was a select, returns 0.
+     * Determines the number of rows affected by a data maniuplation query
      *
-     * @return number of rows affected by the last query or DB_ERROR
+     * 0 is returned for queries that don't manipulate data.
+     *
+     * @return int  the number of rows.  A DB_Error object on failure.
      */
     function affectedRows()
     {
@@ -275,24 +500,29 @@ class DB_mssql extends DB_common
         }
         return $result;
     }
+
+    // }}}
     // {{{ nextId()
 
     /**
-     * Get the next value in a sequence.  We emulate sequences
-     * for MSSQL.  Will create the sequence if it does not exist.
+     * Returns the next free id in a sequence
      *
-     * @access public
+     * @param string  $seq_name  name of the sequence
+     * @param boolean $ondemand  when true, the seqence is automatically
+     *                            created if it does not exist
      *
-     * @param $seq_name the name of the sequence
+     * @return int  the next id number in the sequence.
+     *               A DB_Error object on failure.
      *
-     * @param $ondemand whether to create the sequence table on demand
-     * (default is true)
-     *
-     * @return a sequence integer, or a DB error
+     * @see DB_common::nextID(), DB_common::getSequenceName(),
+     *      DB_mssql::createSequence(), DB_mssql::dropSequence()
      */
     function nextId($seq_name, $ondemand = true)
     {
         $seqname = $this->getSequenceName($seq_name);
+        if (!@mssql_select_db($this->_db, $this->connection)) {
+            return $this->mssqlRaiseError(DB_ERROR_NODBSELECTED);
+        }
         $repeat = 0;
         do {
             $this->pushErrorHandling(PEAR_ERROR_RETURN);
@@ -304,11 +534,13 @@ class DB_mssql extends DB_common
                 $repeat = 1;
                 $result = $this->createSequence($seq_name);
                 if (DB::isError($result)) {
-                    return $result;
+                    return $this->raiseError($result);
                 }
-            } else {
-                $result = $this->query("SELECT @@IDENTITY FROM $seqname");
+            } elseif (!DB::isError($result)) {
+                $result =& $this->query("SELECT @@IDENTITY FROM $seqname");
                 $repeat = 0;
+            } else {
+                $repeat = false;
             }
         } while ($repeat);
         if (DB::isError($result)) {
@@ -318,183 +550,365 @@ class DB_mssql extends DB_common
         return $result[0];
     }
 
-    // }}}
-    // {{{ createSequence()
-
+    /**
+     * Creates a new sequence
+     *
+     * @param string $seq_name  name of the new sequence
+     *
+     * @return int  DB_OK on success.  A DB_Error object on failure.
+     *
+     * @see DB_common::createSequence(), DB_common::getSequenceName(),
+     *      DB_mssql::nextID(), DB_mssql::dropSequence()
+     */
     function createSequence($seq_name)
     {
-        $seqname = $this->getSequenceName($seq_name);
-        return $this->query("CREATE TABLE $seqname ".
-                            '([id] [int] IDENTITY (1, 1) NOT NULL ,' .
-                            '[vapor] [int] NULL)');
+        return $this->query('CREATE TABLE '
+                            . $this->getSequenceName($seq_name)
+                            . ' ([id] [int] IDENTITY (1, 1) NOT NULL,'
+                            . ' [vapor] [int] NULL)');
     }
+
     // }}}
     // {{{ dropSequence()
 
+    /**
+     * Deletes a sequence
+     *
+     * @param string $seq_name  name of the sequence to be deleted
+     *
+     * @return int  DB_OK on success.  A DB_Error object on failure.
+     *
+     * @see DB_common::dropSequence(), DB_common::getSequenceName(),
+     *      DB_mssql::nextID(), DB_mssql::createSequence()
+     */
     function dropSequence($seq_name)
     {
-        $seqname = $this->getSequenceName($seq_name);
-        return $this->query("DROP TABLE $seqname");
+        return $this->query('DROP TABLE ' . $this->getSequenceName($seq_name));
     }
+
     // }}}
+    // {{{ quoteIdentifier()
 
-    function errorCode()
+    /**
+     * Quotes a string so it can be safely used as a table or column name
+     *
+     * @param string $str  identifier name to be quoted
+     *
+     * @return string  quoted identifier string
+     *
+     * @see DB_common::quoteIdentifier()
+     * @since Method available since Release 1.6.0
+     */
+    function quoteIdentifier($str)
     {
-        $this->pushErrorHandling(PEAR_ERROR_RETURN);
-        $error_code = $this->getOne('select @@ERROR as ErrorCode');
-        $this->popErrorHandling();
-        // XXX Debug
-        if (!isset($this->errorcode_map[$error_code])) {
-            return DB_ERROR;
-        }
-        return $error_code;
+        return '[' . str_replace(']', ']]', $str) . ']';
     }
 
+    // }}}
+    // {{{ mssqlRaiseError()
+
+    /**
+     * Produces a DB_Error object regarding the current problem
+     *
+     * @param int $errno  if the error is being manually raised pass a
+     *                     DB_ERROR* constant here.  If this isn't passed
+     *                     the error information gathered from the DBMS.
+     *
+     * @return object  the DB_Error object
+     *
+     * @see DB_common::raiseError(),
+     *      DB_mssql::errorNative(), DB_mssql::errorCode()
+     */
     function mssqlRaiseError($code = null)
     {
-        if ($code !== null) {
-            $code = $this->errorCode();
-            if (DB::isError($code)) {
-                return $this->raiseError($code);
-            }
+        $message = @mssql_get_last_message();
+        if (!$code) {
+            $code = $this->errorNative();
         }
-        return $this->raiseError($code, null, null, null,
-                        mssql_get_last_message());
+        return $this->raiseError($this->errorCode($code, $message),
+                                 null, null, null, "$code - $message");
     }
 
-  /**
+    // }}}
+    // {{{ errorNative()
 
+    /**
+     * Gets the DBMS' native error code produced by the last query
+     *
+     * @return int  the DBMS' error code
+     */
+    function errorNative()
+    {
+        $res = @mssql_query('select @@ERROR as ErrorCode', $this->connection);
+        if (!$res) {
+            return DB_ERROR;
+        }
+        $row = @mssql_fetch_row($res);
+        return $row[0];
+    }
+
+    // }}}
+    // {{{ errorCode()
+
+    /**
+     * Determines PEAR::DB error code from mssql's native codes.
+     *
+     * If <var>$nativecode</var> isn't known yet, it will be looked up.
+     *
+     * @param  mixed  $nativecode  mssql error code, if known
+     * @return integer  an error number from a DB error constant
+     * @see errorNative()
+     */
+    function errorCode($nativecode = null, $msg = '')
+    {
+        if (!$nativecode) {
+            $nativecode = $this->errorNative();
+        }
+        if (isset($this->errorcode_map[$nativecode])) {
+            if ($nativecode == 3701
+                && preg_match('/Cannot drop the index/i', $msg))
+            {
+                return DB_ERROR_NOT_FOUND;
+            }
+            return $this->errorcode_map[$nativecode];
+        } else {
+            return DB_ERROR;
+        }
+    }
+
+    // }}}
+    // {{{ tableInfo()
+
+    /**
      * Returns information about a table or a result set
      *
-     * NOTE: doesn't support table name and flags if called from a db_result
+     * NOTE: only supports 'table' and 'flags' if <var>$result</var>
+     * is a table name.
      *
-     * @param  mixed $resource SQL Server result identifier or table name
-     * @param  int $mode A valid tableInfo mode (DB_TABLEINFO_ORDERTABLE or
-     *                   DB_TABLEINFO_ORDER)
+     * @param object|string  $result  DB_result object from a query or a
+     *                                 string containing the name of a table.
+     *                                 While this also accepts a query result
+     *                                 resource identifier, this behavior is
+     *                                 deprecated.
+     * @param int            $mode    a valid tableInfo mode
      *
-     * @return array An array with all the information
+     * @return array  an associative array with the information requested.
+     *                 A DB_Error object on failure.
+     *
+     * @see DB_common::tableInfo()
      */
-
     function tableInfo($result, $mode = null)
     {
-
-        $count = 0;
-        $id    = 0;
-        $res   = array();
-
-        /*
-         * depending on $mode, metadata returns the following values:
-         *
-         * - mode is false (default):
-         * $result[]:
-         *   [0]["table"]  table name
-         *   [0]["name"]   field name
-         *   [0]["type"]   field type
-         *   [0]["len"]    field length
-         *   [0]["flags"]  field flags
-         *
-         * - mode is DB_TABLEINFO_ORDER
-         * $result[]:
-         *   ["num_fields"] number of metadata records
-         *   [0]["table"]  table name
-         *   [0]["name"]   field name
-         *   [0]["type"]   field type
-         *   [0]["len"]    field length
-         *   [0]["flags"]  field flags
-         *   ["order"][field name]  index of field named "field name"
-         *   The last one is used, if you have a field name, but no index.
-         *   Test:  if (isset($result['meta']['myfield'])) { ...
-         *
-         * - mode is DB_TABLEINFO_ORDERTABLE
-         *    the same as above. but additionally
-         *   ["ordertable"][table name][field name] index of field
-         *      named "field name"
-         *
-         *      this is, because if you have fields from different
-         *      tables with the same field name * they override each
-         *      other with DB_TABLEINFO_ORDER
-         *
-         *      you can combine DB_TABLEINFO_ORDER and
-         *      DB_TABLEINFO_ORDERTABLE with DB_TABLEINFO_ORDER |
-         *      DB_TABLEINFO_ORDERTABLE * or with DB_TABLEINFO_FULL
-         */
-
-        // if $result is a string, then we want information about a
-        // table without a resultset
-
         if (is_string($result)) {
-            $id = mssql_query("SELECT * FROM $result", $this->connection);
-            if (empty($id)) {
-                return $this->mssqlRaiseError();
+            /*
+             * Probably received a table name.
+             * Create a result resource identifier.
+             */
+            if (!@mssql_select_db($this->_db, $this->connection)) {
+                return $this->mssqlRaiseError(DB_ERROR_NODBSELECTED);
             }
-        } else { // else we want information about a resultset
+            $id = @mssql_query("SELECT * FROM $result WHERE 1=0",
+                               $this->connection);
+            $got_string = true;
+        } elseif (isset($result->result)) {
+            /*
+             * Probably received a result object.
+             * Extract the result resource identifier.
+             */
+            $id = $result->result;
+            $got_string = false;
+        } else {
+            /*
+             * Probably received a result resource identifier.
+             * Copy it.
+             * Deprecated.  Here for compatibility only.
+             */
             $id = $result;
-            if (empty($id)) {
-                return $this->mssqlRaiseError();
-            }
+            $got_string = false;
+        }
+
+        if (!is_resource($id)) {
+            return $this->mssqlRaiseError(DB_ERROR_NEED_MORE_DATA);
+        }
+
+        if ($this->options['portability'] & DB_PORTABILITY_LOWERCASE) {
+            $case_func = 'strtolower';
+        } else {
+            $case_func = 'strval';
         }
 
         $count = @mssql_num_fields($id);
+        $res   = array();
 
-        // made this IF due to performance (one if is faster than $count if's)
-        if (empty($mode)) {
+        if ($mode) {
+            $res['num_fields'] = $count;
+        }
 
-            for ($i=0; $i<$count; $i++) {
-                $res[$i]['table'] = (is_string($result)) ? $result : '';
-                $res[$i]['name']  = @mssql_field_name($id, $i);
-                $res[$i]['type']  = @mssql_field_type($id, $i);
-                $res[$i]['len']   = @mssql_field_length($id, $i);
-                $res[$i]['flags'] = '';
+        for ($i = 0; $i < $count; $i++) {
+            $res[$i] = array(
+                'table' => $got_string ? $case_func($result) : '',
+                'name'  => $case_func(@mssql_field_name($id, $i)),
+                'type'  => @mssql_field_type($id, $i),
+                'len'   => @mssql_field_length($id, $i),
+                // We only support flags for table
+                'flags' => $got_string
+                           ? $this->_mssql_field_flags($result,
+                                                       @mssql_field_name($id, $i))
+                           : '',
+            );
+            if ($mode & DB_TABLEINFO_ORDER) {
+                $res['order'][$res[$i]['name']] = $i;
             }
-
-        } else { // full
-            $res['num_fields']= $count;
-
-            for ($i=0; $i<$count; $i++) {
-                $res[$i]['table'] = (is_string($result)) ? $result : '';
-                $res[$i]['name']  = @mssql_field_name($id, $i);
-                $res[$i]['type']  = @mssql_field_type($id, $i);
-                $res[$i]['len']   = @mssql_field_length($id, $i);
-                $res[$i]['flags'] = '';
-                if ($mode & DB_TABLEINFO_ORDER) {
-                    $res['order'][$res[$i]['name']] = $i;
-                }
-                if ($mode & DB_TABLEINFO_ORDERTABLE) {
-                    $res['ordertable'][$res[$i]['table']][$res[$i]['name']] = $i;
-                }
+            if ($mode & DB_TABLEINFO_ORDERTABLE) {
+                $res['ordertable'][$res[$i]['table']][$res[$i]['name']] = $i;
             }
         }
 
         // free the result only if we were called on a table
-        if (is_string($result)) {
+        if ($got_string) {
             @mssql_free_result($id);
         }
         return $res;
     }
 
+    // }}}
+    // {{{ _mssql_field_flags()
+
+    /**
+     * Get a column's flags
+     *
+     * Supports "not_null", "primary_key",
+     * "auto_increment" (mssql identity), "timestamp" (mssql timestamp),
+     * "unique_key" (mssql unique index, unique check or primary_key) and
+     * "multiple_key" (multikey index)
+     *
+     * mssql timestamp is NOT similar to the mysql timestamp so this is maybe
+     * not useful at all - is the behaviour of mysql_field_flags that primary
+     * keys are alway unique? is the interpretation of multiple_key correct?
+     *
+     * @param string $table   the table name
+     * @param string $column  the field name
+     *
+     * @return string  the flags
+     *
+     * @access private
+     * @author Joern Barthel <j_barthel@web.de>
+     */
+    function _mssql_field_flags($table, $column)
+    {
+        static $tableName = null;
+        static $flags = array();
+
+        if ($table != $tableName) {
+
+            $flags = array();
+            $tableName = $table;
+
+            // get unique and primary keys
+            $res = $this->getAll("EXEC SP_HELPINDEX[$table]", DB_FETCHMODE_ASSOC);
+
+            foreach ($res as $val) {
+                $keys = explode(', ', $val['index_keys']);
+
+                if (sizeof($keys) > 1) {
+                    foreach ($keys as $key) {
+                        $this->_add_flag($flags[$key], 'multiple_key');
+                    }
+                }
+
+                if (strpos($val['index_description'], 'primary key')) {
+                    foreach ($keys as $key) {
+                        $this->_add_flag($flags[$key], 'primary_key');
+                    }
+                } elseif (strpos($val['index_description'], 'unique')) {
+                    foreach ($keys as $key) {
+                        $this->_add_flag($flags[$key], 'unique_key');
+                    }
+                }
+            }
+
+            // get auto_increment, not_null and timestamp
+            $res = $this->getAll("EXEC SP_COLUMNS[$table]", DB_FETCHMODE_ASSOC);
+
+            foreach ($res as $val) {
+                $val = array_change_key_case($val, CASE_LOWER);
+                if ($val['nullable'] == '0') {
+                    $this->_add_flag($flags[$val['column_name']], 'not_null');
+                }
+                if (strpos($val['type_name'], 'identity')) {
+                    $this->_add_flag($flags[$val['column_name']], 'auto_increment');
+                }
+                if (strpos($val['type_name'], 'timestamp')) {
+                    $this->_add_flag($flags[$val['column_name']], 'timestamp');
+                }
+            }
+        }
+
+        if (array_key_exists($column, $flags)) {
+            return(implode(' ', $flags[$column]));
+        }
+        return '';
+    }
+
+    // }}}
+    // {{{ _add_flag()
+
+    /**
+     * Adds a string to the flags array if the flag is not yet in there
+     * - if there is no flag present the array is created
+     *
+     * @param array  &$array  the reference to the flag-array
+     * @param string $value   the flag value
+     *
+     * @return void
+     *
+     * @access private
+     * @author Joern Barthel <j_barthel@web.de>
+     */
+    function _add_flag(&$array, $value)
+    {
+        if (!is_array($array)) {
+            $array = array($value);
+        } elseif (!in_array($value, $array)) {
+            array_push($array, $value);
+        }
+    }
+
+    // }}}
     // {{{ getSpecialQuery()
 
     /**
-    * Returns the query needed to get some backend info
-    * @param string $type What kind of info you want to retrieve
-    * @return string The SQL query string
-    */
+     * Obtains the query string needed for listing a given type of objects
+     *
+     * @param string $type  the kind of objects you want to retrieve
+     *
+     * @return string  the SQL query string or null if the driver doesn't
+     *                  support the object type requested
+     *
+     * @access protected
+     * @see DB_common::getListOf()
+     */
     function getSpecialQuery($type)
     {
         switch ($type) {
             case 'tables':
-                $sql = "select name from sysobjects where type = 'U' order by name";
-                break;
+                return "SELECT name FROM sysobjects WHERE type = 'U'"
+                       . ' ORDER BY name';
             case 'views':
-                $sql = "select name from sysobjects where type = 'V'";
-                break;
+                return "SELECT name FROM sysobjects WHERE type = 'V'";
             default:
                 return null;
         }
-        return $sql;
     }
 
     // }}}
-
 }
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * c-basic-offset: 4
+ * End:
+ */
+
 ?>
