@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.49 2005/02/15 13:34:20 bcurtis Exp $
+// $Id: functions.php,v 1.50 2005/05/25 18:07:43 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -36,6 +36,11 @@ if (false && is_callable('gettext')) {
 /// Show text to the browser - escape hatch
 function show_text($text, $iserror = false) {
 	global $t;
+
+	if (!is_object($t)) {
+		echo "<div class=\"error\">$text</div>";
+		exit;
+	}
 
 	$t->assign(array(
 		'text' => $text,
