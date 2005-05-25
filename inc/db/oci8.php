@@ -2,10 +2,10 @@
 
 $QUERY = array(
 	'admin-list-groups' => 'select ag.group_id, ag.group_name, ag.locked, '.
-		'count(ug.group_id) as count, asssignable '.
+		'count(ug.group_id) as count, assignable '.
 		'from '.TBL_AUTH_GROUP.' ag, '.TBL_USER_GROUP.' ug,'.TBL_AUTH_USER.' au '.
 		'where ag.group_id = ug.group_id(+) and ug.user_id = au.user_id(+) '.
-		'group by ag.group_id, ag.group_name, ag.locked '.
+		'group by ag.group_id, ag.group_name, ag.locked, ag.assignable '.
 		'order by %s %s',
 	'admin-list-oses' => 'select s.os_id, s.os_name, s.regex, s.sort_order, '.
 		'count(b.bug_id) as bug_count '.

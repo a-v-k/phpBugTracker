@@ -5,7 +5,7 @@ $QUERY = array(
 		'from '.TBL_AUTH_GROUP.' ag '.
 		'left join '.TBL_USER_GROUP.' ug using (group_id) '.
 		'left join '.TBL_AUTH_USER.' using (user_id) '.
-		'group by ag.group_id, group_name, locked '.
+		'group by ag.group_id, group_name, locked, assignable '.
 		'order by %s %s',
 	'admin-list-oses' => 'select s.os_id, os_name, regex, sort_order, '.
 		'count(bug_id) as bug_count '.

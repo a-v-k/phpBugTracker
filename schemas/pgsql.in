@@ -2,7 +2,7 @@
 -- PostgreSQL database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.46 2004/10/25 12:27:57 bcurtis Exp $
+-- $Id: pgsql.in,v 1.47 2005/05/25 18:04:48 ulferikson Exp $
 
 BEGIN;
 
@@ -433,32 +433,15 @@ CREATE INDEX perm_id_TBL_USER_PERM_index ON TBL_USER_PERM (perm_id);
 
 CREATE INDEX group_id_TBL_BUG_GROUP_index ON TBL_BUG_GROUP (group_id);
 
-CREATE SEQUENCE phpbt_auth_user_seq;
-CREATE SEQUENCE phpbt_auth_group_seq;
-CREATE SEQUENCE phpbt_os_seq;
-CREATE SEQUENCE phpbt_resolution_seq;
-CREATE SEQUENCE phpbt_severity_seq;
-CREATE SEQUENCE phpbt_status_seq;
-CREATE SEQUENCE phpbt_database_server_seq;
-CREATE SEQUENCE phpbt_site_seq;
-CREATE SEQUENCE phpbt_version_seq;
-CREATE SEQUENCE phpbt_component_seq;
-CREATE SEQUENCE phpbt_bug_seq;
-CREATE SEQUENCE phpbt_attachment_seq;
-CREATE SEQUENCE phpbt_auth_perm_seq;
-CREATE SEQUENCE phpbt_bug_cc_seq;
-CREATE SEQUENCE phpbt_bug_dependency_seq;
-CREATE SEQUENCE phpbt_bug_group_seq;
-CREATE SEQUENCE phpbt_bug_history_seq;
-CREATE SEQUENCE phpbt_bug_vote_seq;
-CREATE SEQUENCE phpbt_comment_seq;
-CREATE SEQUENCE phpbt_group_perm_seq;
-CREATE SEQUENCE phpbt_project_seq;
-CREATE SEQUENCE phpbt_project_group_seq;
-CREATE SEQUENCE phpbt_saved_query_seq;
-CREATE SEQUENCE phpbt_user_group_seq;
-CREATE SEQUENCE phpbt_user_perm_seq;
-CREATE SEQUENCE phpbt_user_pref_seq;
+-- Sequences for the tables with no initial entries
+--
+CREATE SEQUENCE TBL_BUG_seq;
+CREATE SEQUENCE TBL_COMMENT_seq;
+CREATE SEQUENCE TBL_COMPONENT_seq;
+CREATE SEQUENCE TBL_PROJECT_seq;
+CREATE SEQUENCE TBL_VERSION_seq;
+
+--
 
 COMMIT;
 
