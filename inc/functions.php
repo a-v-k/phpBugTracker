@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.50 2005/05/25 18:07:43 ulferikson Exp $
+// $Id: functions.php,v 1.51 2005/05/28 17:53:37 bcurtis Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -88,14 +88,14 @@ function build_select($box, $selected = '', $project = 0) {
 			'resolution' => $querystart.$querymid,
 			'project' => $perm->have_perm('Admin')
 					? $querystart." where ".
-					($selected ? "(active > 0 or project_id in ($selected))" : 'active > 0').
+					($selected ? "(active > 0 or project_id in (".$db->quote($selected)."))" : 'active > 0').
 					" order by {$box}_name"
-					: $querystart." where project_id not in ($restricted_projects)".
+					: $querystart." where project_id not in (".$db->quote($restricted_projects).")".
 					" and ".
-					($selected ? " (active > 0 or project_id in ($selected))" : 'active > 0').
+					($selected ? " (active > 0 or project_id in (".$db->quote($selected)."))" : 'active > 0').
 					" order by {$box}_name",
-			'component' => $querystart." where project_id = $project and active = 1 order by {$box}_name",
-			'version' => $querystart." where project_id = $project and active = 1 order by {$box}_id desc",
+			'component' => $querystart." where project_id = ".$db->quote($project)." and active = 1 order by {$box}_name",
+			'version' => $querystart." where project_id = ".$db->quote($project)." and active = 1 order by {$box}_id desc",
 			'database' => $querystart.$querymid
 			);
 	}
@@ -194,7 +194,7 @@ function build_select($box, $selected = '', $project = 0) {
 			}
 			break;
 		case 'bug_cc':
-			$rs = $db->query(sprintf($QUERY['functions-bug-cc'], $selected));
+			$rs = $db->query(sprintf($QUERY['functions-bug-cc'], $db->quote($selected)));
 			while (list($uid, $user) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 				$text .= "<option value=\"$uid\">".maskemail($user).'</option>';
 			}
@@ -307,7 +307,7 @@ function lookup($var, $val) {
 
 	switch($var) {
 		case 'assigned_to' :
-			return maskemail($db->getOne("select login from ".TBL_AUTH_USER." where user_id = $val"));
+			return maskemail($db->getOne("select login from ".TBL_AUTH_USER." where user_id = ".$db->quote($val)));
 			break;
 	}
 }
@@ -326,7 +326,7 @@ function multipages($nr, $page, $urlstr) {
 		$page = 0;
 	} else {
 		if ($perm->check_auth('group', 'Users'))
-			$selrange = $db->getOne('select def_results from '.TBL_USER_PREF.' where user_id = '.$u);
+			$selrange = $db->getOne('select def_results from '.TBL_USER_PREF.' where user_id = '.$db->quote($u));
 		$llimit = ($page-1)*$selrange;
 	}
 	if ($nr) $npages = ceil($nr/$selrange);
@@ -452,7 +452,7 @@ function build_project_js($no_all = false) {
 		$rs = $db->query("select project_id, project_name from ".TBL_PROJECT." where active = 1 order by project_name");
 	} else {
 		$rs = $db->query(sprintf($QUERY['functions-project-js'],
-			@join(',', $_SESSION['group_ids'])));
+			$db->quote(@join(',', $_SESSION['group_ids']))));
 	}
 	while (list($pid, $pname) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 		$pname = addslashes($pname);
@@ -462,7 +462,7 @@ function build_project_js($no_all = false) {
 		$js2 = "closedversions['$pname'] = new Array(".
 			((!isset($no_all) or !$no_all) ? "new Array('','All'),"
 				: "new Array(0, 'Choose One'),");
-		$rs2 = $db->query("select version_name, version_id from ".TBL_VERSION." where project_id = $pid and active = 1");
+		$rs2 = $db->query("select version_name, version_id from ".TBL_VERSION." where project_id = ".$db->quote($pid)." and active = 1");
 		while (list($version,$vid) = $rs2->fetchRow(DB_FETCHMODE_ORDERED)) {
 			$version = addslashes($version);
 			$js .= "new Array($vid,'$version'),";
@@ -477,7 +477,7 @@ function build_project_js($no_all = false) {
 		// Component array
 		$js .= "components['$pname'] = new Array(";
 		$js .= (!isset($no_all) || !$no_all) ? "new Array('','All')," : '';
-		$rs2 = $db->query("select component_name, component_id from ".TBL_COMPONENT." where project_id = $pid and active = 1");
+		$rs2 = $db->query("select component_name, component_id from ".TBL_COMPONENT." where project_id = ".$db->quote($pid)." and active = 1");
 		while (list($comp,$cid) = $rs2->fetchRow(DB_FETCHMODE_ORDERED)) {
 			$comp = addslashes($comp);
 			$js .= "new Array($cid,'$comp'),";
@@ -644,7 +644,7 @@ function in_closed($column) {
 function is_closed($status_id) {
 	global $db;
 
-	if ($db->getOne('SELECT status_id FROM '.TBL_STATUS.' WHERE bug_open = 0 AND status_id = '.$status_id)) {
+	if ($db->getOne('SELECT status_id FROM '.TBL_STATUS.' WHERE bug_open = 0 AND status_id = '.$db->quote($status_id))) {
 		return true;
 	} else {
 		return false;
@@ -658,6 +658,40 @@ function check_id($id) {
 		exit;
 	}
 	return $id;
+}
+
+// Delete a bug and all associated records from the database
+function delete_bug($bug_id) {
+	global $db;
+	
+	// Attachments
+	$attary = $db->getAll("select file_name, project_id".
+		" from ".TBL_ATTACHMENT." a, ".TBL_BUG." b".
+		" where a.bug_id = b.bug_id and b.bug_id = ".$db->quote($bug_id));
+	foreach ($attary as $att) {
+		unlink(join('/', array(ATTACHMENT_PATH,
+			$att['project_id'], "$bug_id-{$att['file_name']}")));
+	}
+	$db->query("delete from ".TBL_ATTACHMENT." where bug_id = ".$db->quote($bug_id));
+	
+	// CCs
+	$db->query("delete from ".TBL_BUG_CC." where bug_id = ".$db->quote($bug_id));
+	
+	// Comments
+	$db->query("delete from ".TBL_COMMENT." where bug_id = ".$db->quote($bug_id));
+	
+	// Dependencies
+	$db->query("delete from ".TBL_BUG_DEPENDENCY.
+		" where bug_id = ".$db->quote($bug_id)." or depends_on = ".$db->quote($bug_id));
+		
+	// Groups
+	$db->query("delete from ".TBL_GROUP." where bug_id = ".$db->quote($bug_id));
+	
+	// Histories
+	$db->query("delete from ".TBL_BUG_HISTORY." where bug_id = ".$db->quote($bug_id));
+	
+	// Votes
+	$db->query("delete from ".TBL_BUG_VOTE." where bug_id = ".$db->quote($bug_id));
 }
 
 ?>
