@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.51 2005/05/28 17:53:37 bcurtis Exp $
+// $Id: functions.php,v 1.52 2005/05/28 18:09:39 bcurtis Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -525,6 +525,7 @@ function handle_db_error(&$obj) {
 	} else {
 		show_text(htmlentities($obj->message).'<br>'.htmlentities($obj->userinfo));
 	}
+	error_log($obj->message." -- ".htmlentities($obj->userinfo));
 	exit;
 }
 
@@ -669,7 +670,7 @@ function delete_bug($bug_id) {
 		" from ".TBL_ATTACHMENT." a, ".TBL_BUG." b".
 		" where a.bug_id = b.bug_id and b.bug_id = ".$db->quote($bug_id));
 	foreach ($attary as $att) {
-		unlink(join('/', array(ATTACHMENT_PATH,
+		@unlink(join('/', array(ATTACHMENT_PATH,
 			$att['project_id'], "$bug_id-{$att['file_name']}")));
 	}
 	$db->query("delete from ".TBL_ATTACHMENT." where bug_id = ".$db->quote($bug_id));
@@ -685,13 +686,16 @@ function delete_bug($bug_id) {
 		" where bug_id = ".$db->quote($bug_id)." or depends_on = ".$db->quote($bug_id));
 		
 	// Groups
-	$db->query("delete from ".TBL_GROUP." where bug_id = ".$db->quote($bug_id));
+	$db->query("delete from ".TBL_BUG_GROUP." where bug_id = ".$db->quote($bug_id));
 	
 	// Histories
 	$db->query("delete from ".TBL_BUG_HISTORY." where bug_id = ".$db->quote($bug_id));
 	
 	// Votes
 	$db->query("delete from ".TBL_BUG_VOTE." where bug_id = ".$db->quote($bug_id));
+	
+	// And the bug itself
+	$db->query("delete from ".TBL_BUG." where bug_id = ".$db->quote($bug_id));
 }
 
 ?>
