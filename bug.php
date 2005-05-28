@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.137 2005/01/22 16:03:48 bcurtis Exp $
+// $Id: bug.php,v 1.138 2005/05/28 18:11:52 bcurtis Exp $
 
 include 'include.php';
 
@@ -39,7 +39,7 @@ function vote_bug($bug_id) {
 	global $u, $db, $now;
 
 	// Check to see if the user already voted on this bug
-	if ($db->getOne("select count(*) from ".TBL_BUG_VOTE." where bug_id = $bug_id and user_id = $u")) {
+	if ($db->getOne("select count(*) from ".TBL_BUG_VOTE." where bug_id = ".$db->quote($bug_id)." and user_id = $u")) {
 		show_bug($bug_id, array('vote' => translate("You have already voted for this bug")));
 		return;
 	}
@@ -51,17 +51,17 @@ function vote_bug($bug_id) {
 	}
 
 	// Record the vote
-	$db->query("insert into ".TBL_BUG_VOTE." (user_id, bug_id, created_date) values ($u, $bug_id, $now)");
+	$db->query("insert into ".TBL_BUG_VOTE." (user_id, bug_id, created_date) values ($u, ".$db->quote($bug_id).", $now)");
 
 	// Proceed only if promoting by votes is turned on
 	if (PROMOTE_VOTES) {
 		// Has this bug already been promoted?
-		$bug_is_new = $db->getOne("select count(*) from ".TBL_BUG." b, ".TBL_STATUS." s where bug_id = $bug_id and b.status_id = s.status_id and status_name = 'New'");
+		$bug_is_new = $db->getOne("select count(*) from ".TBL_BUG." b, ".TBL_STATUS." s where bug_id = ".$db->quote($bug_id)." and b.status_id = s.status_id and status_name = 'New'");
 
 		// If a number of votes are required to promote a bug, check for promotion
-		if (!$bug_is_new and $db->getOne("select count(*) from ".TBL_BUG_VOTE." where bug_id = $bug_id") == PROMOTE_VOTES) {
+		if (!$bug_is_new and $db->getOne("select count(*) from ".TBL_BUG_VOTE." where bug_id = ".$db->quote($bug_id)) == PROMOTE_VOTES) {
 			$status_id = BUG_PROMOTED;
-			$buginfo = $db->getOne("select * from ".TBL_BUG." where bug_id = $bug_id");
+			$buginfo = $db->getOne("select * from ".TBL_BUG." where bug_id = ".$db->quote($bug_id));
 			$changedfields = array('status_id' => $status_id);
 			do_changedfields($u, $buginfo, $changedfields);
 		}
@@ -106,7 +106,7 @@ function show_history($bugid) {
 		return;
 	}
 
-	$t->assign('history', $db->getAll(sprintf($QUERY['bug-history'], $bugid)));
+	$t->assign('history', $db->getAll(sprintf($QUERY['bug-history'], $db->quote($bugid))));
 	$t->render('bughistory.html', translate("Bug History"));
 }
 

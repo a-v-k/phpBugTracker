@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.23 2004/10/25 12:39:56 bcurtis Exp $
+// $Id: attachment.php,v 1.24 2005/05/28 18:11:52 bcurtis Exp $
 
 include 'include.php';
 
@@ -28,7 +28,7 @@ function del_attachment($attachid) {
 	global $db;
 
 	if (list($filename, $mimetype) = grab_attachment($attachid)) {
-		$db->query("delete from ".TBL_ATTACHMENT." where attachment_id = $attachid");
+		$db->query("delete from ".TBL_ATTACHMENT." where attachment_id = ".$db->quote($attachid));
 		unlink($filename);
 		header("Location: {$_SERVER['HTTP_REFERER']}");
 	}
@@ -86,7 +86,7 @@ function add_attachment($bugid, $description) {
 	}
 
 	// Check for a previously-uploaded attachment with the same name, bug, and project
-	$rs = $db->query("select a.bug_id, project_id from ".TBL_ATTACHMENT." a, ".TBL_BUG." b where file_name = '{$_FILES['attachment']['name']}' and a.bug_id = b.bug_id");
+	$rs = $db->query("select a.bug_id, project_id from ".TBL_ATTACHMENT." a, ".TBL_BUG." b where file_name = ".$db->quote($_FILES['attachment']['name'])." and a.bug_id = b.bug_id");
 	while ($rs->fetchInto($ainfo)) {
 		if ($bugid == $ainfo['bug_id'] && $projectid == $ainfo['project_id']) {
 			show_attachment_form($bugid, translate("That attachment already exists for this bug"));
@@ -119,7 +119,7 @@ function add_attachment($bugid, $description) {
 	}
 
 	@chmod("$filepath/$projectid/$filename", 0766);
-	$db->query("insert into ".TBL_ATTACHMENT." (attachment_id, bug_id, file_name, description, file_size, mime_type, created_by, created_date) values (".join(', ', array($db->nextId(TBL_ATTACHMENT), $bugid, $db->quote($_FILES['attachment']['name']), $db->quote(stripslashes($description)), $_FILES['attachment']['size'], $db->quote($_FILES['attachment']['type']), $u, $now)).")");
+	$db->query("insert into ".TBL_ATTACHMENT." (attachment_id, bug_id, file_name, description, file_size, mime_type, created_by, created_date) values (".join(', ', array($db->nextId(TBL_ATTACHMENT), $db->quote($bugid), $db->quote($_FILES['attachment']['name']), $db->quote(stripslashes($description)), $db->quote($_FILES['attachment']['size']), $db->quote($_FILES['attachment']['type']), $u, $now)).")");
 
 	if ($_POST['use_js']) {
 		$t->render('admin/edit-submit.html');
