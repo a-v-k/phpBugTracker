@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.43 2005/05/30 19:32:26 ulferikson Exp $
+// $Id: install.php,v 1.44 2005/05/30 20:02:19 ulferikson Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -270,7 +270,14 @@ if (isset($_POST['op'])) {
 		case 'dbtest' : test_database($_GET, true); break;
 	}
 } else {
-	show_front();
+	if (!get_magic_quotes_gpc()) {
+	        echo "<p>magic_quotes_gpc is OFF!</p>";
+	        echo "<p>You must have magic_quotes_gpc set to On either in php.ini or in ";
+	        echo ".htaccess (see <a href=\"http://www.php.net/manual/en/configuration.php\">http://www.php.net/manual/en/configuration.php</a> for more info).</p>";
+	}
+	else {
+		show_front();
+	}
 }
 // Any whitespace below the end tag will disrupt config.php
 ?>
