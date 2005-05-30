@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.42 2005/05/24 20:53:33 ulferikson Exp $
+// $Id: install.php,v 1.43 2005/05/30 19:32:26 ulferikson Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -57,7 +57,8 @@ $t = new template(array(
 	'template_path' => 'templates/default'));
 
 $db_types = array(
-	'mysql' => 'MySQL',
+	'mysql' => 'MySQL < 4.1',
+	'mysqli' => 'MySQL >= 4.1',
 	'oci8' => 'Oracle 8.1.x',
 	'pgsql' => 'PostgreSQL');
 

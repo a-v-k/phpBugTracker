@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.37 2004/10/25 12:06:58 bcurtis Exp $
+// $Id: upgrade.php,v 1.38 2005/05/30 19:32:27 ulferikson Exp $
 
 define ('NO_AUTH', 1);
 $upgrading = true;
@@ -54,6 +54,7 @@ function upgrade() {
 					$db->query("ALTER TABLE ".TBL_STATUS." alter bug_open set NOT NULL");
 				}
 				break;
+			case 'mysqli' :
 			case 'mysql' :
 				$db->query("create table if not exists ".TBL_PROJECT_PERM." ( project_id int(11) NOT NULL default '0', user_id int(11) NOT NULL default '0' )");
 				if ($thisvers < 2) {
