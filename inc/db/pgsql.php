@@ -37,7 +37,7 @@ $QUERY = array(
 		'group by d.database_id, database_name, sort_order '.
 		'order by %s %s',
 	'admin-list-statuses' => 'select s.status_id, status_name, status_desc, '.
-		'sort_order, count(bug_id) as bug_count '.
+		'sort_order, bug_open, count(bug_id) as bug_count '.
 		'from '.TBL_STATUS.' s left join '. TBL_BUG.' using (status_id) '.
 		'group by s.status_id, status_name, status_desc, sort_order '.
 		'order by %s %s',
@@ -99,6 +99,7 @@ $QUERY = array(
 		'left join '.TBL_RESOLUTION.' r on b.resolution_id = r.resolution_id, '.
 		TBL_SEVERITY.' sv, '.TBL_STATUS.' st, '.TBL_SITE. ' site '.
 		'where bug_id = %s and b.project_id not in (%s) '.
+		'and b.site_id = site.site_id '.
 		'and b.severity_id = sv.severity_id and b.status_id = st.status_id',
 	'functions-bug-cc' => 'select b.user_id, login '.
 		'from '.TBL_BUG_CC.' b left join '. TBL_AUTH_USER.' using(user_id) '.
