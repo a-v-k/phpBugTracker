@@ -43,7 +43,7 @@ $QUERY = array(
 		'where s.site_id = b.site_id(+) group by s.site_id, site_name, '.
 		'sort_order order by %s %s',
 	'admin-list-statuses' => 'select s.status_id, status_name, status_desc, '.
-		'sort_order, count(bug_id) as bug_count '.
+		'sort_order, bug_open, count(bug_id) as bug_count '.
 		'from '.TBL_STATUS.' s, '.TBL_BUG.' b '.
 		'where s.status_id = b.status_id(+) '.
 		'group by s.status_id, status_name, status_desc, sort_order '.
@@ -115,12 +115,12 @@ $QUERY = array(
 		'where p.project_id = pg.project_id(+) and active = 1 '.
 		'and (pg.project_id is null or pg.group_id in (%s)) '.
 		'group by p.project_id, p.project_name order by project_name',
-	'include-template-owner' => "SELECT sum(decode( s.status_id, ".BUG_UNCONFIRMED.", 1, ".BUG_PROMOTED.", 1, ".BUG_ASSIGNED.", 1, ".BUG_REOPENED.", 1, 0 )), ".
-		"sum(decode( s.status_id, ".BUG_UNCONFIRMED.", 0, ".BUG_PROMOTED.", 0, ".BUG_ASSIGNED.", 0, ".BUG_REOPENED.", 0, 1 )) ".
+	'include-template-owner' => SELECT sum(decode( s.status_id in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )), ".
+		"sum(decode( s.status_id not in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )), ".
 		'from '.TBL_BUG.' b, '.TBL_STATUS.' s '.
 		'where  b.status_id = s.status_id (+) and b.assigned_to = %s',
-	'include-template-reporter' => "SELECT sum(decode( s.status_id, ".BUG_UNCONFIRMED.", 1, ".BUG_PROMOTED.", 1, ".BUG_ASSIGNED.", 1, ".BUG_REOPENED.", 1, 0 )), ".
-		"sum(decode( s.status_id, ".BUG_UNCONFIRMED.", 0, ".BUG_PROMOTED.", 0, ".BUG_ASSIGNED.", 0, ".BUG_REOPENED.", 0, 1 )) ".
+	'include-template-reporter' => SELECT sum(decode( s.status_id in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )) , ".
+		"sum(decode( s.status_id not in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )) ".
 		'from '.TBL_BUG.' b, ' . TBL_STATUS.' s '.
 		'where  b.status_id = s.status_id (+) and b.created_by = %s',
 	'index-projsummary-1' => 'select b.project_id, p.project_name as "Project", '.

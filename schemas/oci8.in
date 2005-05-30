@@ -2,7 +2,7 @@
 -- Oracle database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: oci8.in,v 1.26 2005/05/25 18:04:48 ulferikson Exp $
+-- $Id: oci8.in,v 1.27 2005/05/30 19:59:35 ulferikson Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id number(10)   default '0' NOT NULL,
@@ -20,11 +20,11 @@ CREATE TABLE TBL_AUTH_GROUP (
   group_id number(10)   default '0' NOT NULL,
   group_name varchar2(80)  default '' NOT NULL,
   locked number(1)   default '0' NOT NULL,
-  assignable number(1) default '0' NOT NULL,
   created_by number(10)   default '0' NOT NULL,
   created_date number(20)   default '0' NOT NULL,
   last_modified_by number(10)   default '0' NOT NULL,
   last_modified_date number(20)   default '0' NOT NULL,
+  assignable number(1) default '0' NOT NULL,
   PRIMARY KEY  (group_id)
 ) ;
 
@@ -225,6 +225,7 @@ CREATE TABLE TBL_STATUS (
   status_name varchar2(30)  default '' NOT NULL,
   status_desc varchar2(4000) NOT NULL ,
   sort_order number(3)   default '0' NOT NULL,
+  bug_open number(1) default '1' NOT NULL,
   PRIMARY KEY  (status_id)
 ) ;
 

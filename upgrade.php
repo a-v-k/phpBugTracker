@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.38 2005/05/30 19:32:27 ulferikson Exp $
+// $Id: upgrade.php,v 1.39 2005/05/30 19:59:35 ulferikson Exp $
 
 define ('NO_AUTH', 1);
 $upgrading = true;
@@ -69,10 +69,21 @@ function upgrade() {
 				break;
 			case 'oci8' :
 				echo "Oracle is not supported in version 1.0";
+
+				echo "<p>An attempt to restore Oracle support has been made (by copy-paste-and-edit), but it is completely UNTESTED! Proceed At Your Own Risk...</p>";
+				echo "<p>Don't forget to report your success (or failure) story to <a href=\"mailto:phpbt-dev@lists.sourceforge.net\">phpbt-dev@lists.sourceforge.net</a> if you do proceed. We have interest in detailed error reports and patches from people who use Oracle.</p>";
 				exit;
+
 				$db->query("create table ".TBL_PROJECT_PERM." ( project_id number(10) default '0' NOT NULL, user_id number(10) default '0' NOT NULL )");
-				//! TBL_AUTH_GROUP
-				//! TBL_USER_PERM.def_results (see mysql)
+				if ($thisvers < 2) {
+					$db->query("alter table ".TBL_AUTH_GROUP." ADD (assignable number(1) default '0' NOT NULL)");
+				}
+				if ($thisvers < 3) {
+					$db->query("ALTER TABLE ".TBL_USER_PREF." ADD (def_results number(10) default '20' NOT NULL)");
+				}
+				if ($thisvers < 4) {
+					$db->query("ALTER TABLE ".TBL_STATUS." ADD (bug_open number(1) default '1' NOT NULL)");
+				}
 				break;
 		}
 
