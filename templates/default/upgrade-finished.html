@@ -1,15 +1,24 @@
 <html>
 	<head>
-		<title><?php echo translate("Upgade phpBugTracker"); ?></title>
+		<title><?php echo translate("Upgrade phpBugTracker"); ?></title>
+		<style>.error { font-weight: bold; color: #ff0000; } </style>
 	</head>
 	<body>
-		<div align="center">
-			<br>
-			<br>
-			<?php echo translate("Your database has been updated."); ?>
-			<br>
-			<br>
-			<a href="index.php"><?php echo translate("phpBugTracker home"); ?></a>
-		</div>
+		<h3>Upgrade phpBugTracker</h3>
+		<p>
+		<?php echo $comment_text; ?>
+		</p>
+		<?php if ($num_errors > 0) { ?>
+			<hr>
+			<h4>Error log</h4>
+			<p>
+			<?php echo $log_text; ?>
+			</p>
+			<hr>
+		<?php } ?>
+		<p>
+		<?php echo translate("Your database has been updated."); ?>
+		</p>
+		<a href="index.php"><?php echo translate("phpBugTracker home"); ?></a>
 	</body>
 </html>
