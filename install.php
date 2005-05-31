@@ -21,10 +21,34 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.44 2005/05/30 20:02:19 ulferikson Exp $
+// $Id: install.php,v 1.45 2005/05/31 18:49:39 ulferikson Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
+define('RAWERROR', true);
+
+$log_text = "";
+$num_errors = 0;
+
+// Handle a database error
+function handle_install_error(&$obj) {
+	global $log_text;
+
+	$log_text .= "<div class=\"error\">";
+	$log_text .= htmlentities($obj->message).'<br>'.htmlentities($obj->userinfo);
+	$log_text .= "</div>\n";
+}
+
+function log_query($str) {
+	global $db, $log_text, $num_errors;
+
+	$log_text .= "SQL: " . $str . "<br>\n";
+	$result = $db->query($str);
+	if (DB::isError($result)) {
+		$num_errors = $num_errors + 1;
+	}
+	$log_text .= "<br>\n";
+}
 
 // Template class
 class template {
@@ -164,9 +188,12 @@ function test_database(&$params, $testonly = false) {
 
 function create_tables() {
 	global $_POST, $tables;
+	global $db, $log_text, $num_errors;
 
 	$db = test_database($_POST);
 	$db->setOption('optimize', 'portability');
+
+	$db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_install_error");
 
 	$q_temp_ary = file('schemas/'.$_POST['db_type'].'.in');
 	$queries = preg_replace(array_keys($tables), array_values($tables),
@@ -179,14 +206,16 @@ function create_tables() {
 		if ($_POST['db_type'] == 'oci8' ) {
 			$do_query = substr($do_query, 0, -1);
 		}
-		$db->query(stripslashes($do_query));
+		log_query(stripslashes($do_query));
 		$do_query = '';
 	}
 	/*!! BAD! Must figure out how to get db_version from config-dist.php... */
 	$query = preg_replace(array_keys($tables), array_values($tables), 'INSERT INTO TBL_CONFIGURATION (varname,varvalue,description,vartype) VALUES (\'DB_VERSION\', './*!!!*/4/*!!!*/.', \'Database Version <b>Warning:</b> Changing this might make things go horribly wrong, so don\\\'t change it.\', \'mixed\')');
-	$res = $db->query($query);
-	if (DB::isError($res)) {
-		echo 'DB_VERSION not set!';
+	log_query($query);
+
+	if ($num_errors > 0) {
+		include('templates/default/install-failure.html');
+		exit;
 	}
 }
 
