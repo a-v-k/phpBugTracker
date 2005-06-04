@@ -19,7 +19,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config-dist.php,v 1.28 2004/10/25 12:06:57 bcurtis Exp $
+// $Id: config-dist.php,v 1.29 2005/06/04 19:07:38 bcurtis Exp $
 
 // Database Config
 define ('DB_TYPE', '{db_type}');  // using PEAR::DB naming (mysql, pgsql, etc.)
@@ -65,8 +65,7 @@ define ('TBL_DATABASE',	       TBL_PREFIX.'database_server');
 define ('TBL_SITE',	       TBL_PREFIX.'site');
 
 define ('ONEDAY', 86400);
-define ('PHPBT_VERSION', '1.0');
 
-require_once ('./inc/auth.php');
+require_once (dirname(__FILE__).'/inc/auth.php');
 
 ?>
