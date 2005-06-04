@@ -74,7 +74,7 @@ class uauth {
 			$_SESSION['db_fields'] = @unserialize($u['bug_list_fields']);
 
 			// Grab group assignments and permissions based on groups
-			$rs = $db->query("select u.group_id, group_name from ".TBL_USER_GROUP." u, ".TBL_AUTH_GROUP." a where user_id = {$u['user_id']} and u.group_id = a.group_id");
+			$rs = $db->query("select u.group_id, group_name from ".TBL_USER_GROUP." u, ".TBL_AUTH_GROUP." a where user_id = ".$db->quote($u['user_id'])." and u.group_id = a.group_id");
 			while (list($groupid, $groupname) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 				$_SESSION['group_ids'][] = $groupid;
 				$_SESSION['group'][$groupname] = true;
