@@ -1,5 +1,9 @@
 Ok, here's the quick and dirty install instructions:
 
+Required: You must have PEAR and PEAR DB installed. If PEAR is not in the
+include path, edit install.php in the test_database function, supplying the full
+path to PEAR for the PEAR_PATH constant.
+   
 Optional: Install JpGraph (http://www.aditus.nu/jpgraph/) if you wish to use it.
 	 
 1. Copy the directory tree from the tarball to a location suitable for serving
@@ -7,7 +11,7 @@ Optional: Install JpGraph (http://www.aditus.nu/jpgraph/) if you wish to use it.
 	 
 2. With your web browser, go the location where you installed the package. 
    You will be presented with a web page that will help you configure and 
-	 install the application.
+   install the application.
 
 3. After completing the installation, login and start reporting bugs.
 

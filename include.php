@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.132 2005/06/04 19:02:43 bcurtis Exp $
+// $Id: include.php,v 1.133 2005/06/04 21:48:26 bcurtis Exp $
 
 define('PHPBT_VERSION', '1.0rc6');
 ini_set("magic_quotes_runtime", 0);
@@ -40,7 +40,6 @@ if (!defined('DB_HOST')) { // Installation hasn't been completed
 include ('inc/functions.php');
 
 // PEAR::DB
-define('PEAR_PATH', ''); // Set this to '/some/path/' to not use system-wide PEAR
 require_once(PEAR_PATH.'DB.php');
 $dsn = array(
 	'phptype' => DB_TYPE,

@@ -19,7 +19,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.41 2005/06/04 19:02:43 bcurtis Exp $
+// $Id: config.php,v 1.42 2005/06/04 21:48:26 bcurtis Exp $
 
 // Database Config
 define ('DB_TYPE', 'mysql');  // using PEAR::DB naming (mysql, pgsql, etc.)
@@ -66,6 +66,7 @@ define ('TBL_SITE',            TBL_PREFIX.'site');
 
 define ('ONEDAY', 86400);
 
+define('PEAR_PATH', ''); // Set this to '/some/path/' to not use system-wide PEAR
 require_once (dirname(__FILE__).'/inc/auth.php');
 
 ?>

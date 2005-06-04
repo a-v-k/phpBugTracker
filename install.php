@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.45 2005/05/31 18:49:39 ulferikson Exp $
+// $Id: install.php,v 1.46 2005/06/04 21:48:26 bcurtis Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -154,6 +154,8 @@ function grab_config_file() {
 		$patterns[] = '{'.$key.'}';
 		$replacements[] = $val;
 	}
+	$patterns[] = '{PEAR_PATH}';
+	$replacements[] = PEAR_PATH;
 
 	$contents = join('', file('config-dist.php'));
 	return str_replace($patterns, $replacements, $contents);
@@ -161,7 +163,7 @@ function grab_config_file() {
 }
 function test_database(&$params, $testonly = false) {
 	// PEAR::DB
-	define('PEAR_PATH', 'inc/pear/'); // Set this to '' to use system-wide PEAR
+	define('PEAR_PATH', ''); // Set this to '/some/path' to not use system-wide PEAR
 	require_once(PEAR_PATH.'DB.php');
 	$dsn = array(
 		'phptype' => $params['db_type'],

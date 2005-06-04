@@ -1,8 +1,12 @@
+First, backup your database!  This upgrade should go smoothly, but
+if it doesn't, it's better to be safe than sorry.
+
 Upgrading from 0.9.1 to 1.0
 ---------------------------
 
-First, backup your database!  This upgrade should go smoothly, but
-if it doesn't, it's better to be safe than sorry.
+PEAR and PEAR DB have been removed from the distribution, so they must either
+be available in the include path (system-wide install of PEAR) or their location
+should be specified in the PEAR_PATH constant definition in config-dist.php
 
 Following the steps below will upgrade your installation of phpBT.
 
@@ -14,3 +18,19 @@ Using the directory where you unpacked the new set of files...
 3. After running that script your installation has been upgraded.
 4. Either copy the files from the new installation over the old one, or
    point your users to the new location.
+
+Upgrading from 1.0 RCx to 1.0 RC6
+---------------------------------
+
+PEAR and PEAR DB have been removed as of RC 6, so they must either be available
+in the include path (system-wide install of PEAR) or their location should be
+specified in the PEAR_PATH constant definition in config-dist.php.
+
+Using the directory where you unpacked the new set of files...
+1. Edit config-dist.php, changing the database settings to match those from
+   your old config.php (DB_* and TBL_PREFIX constants).  Save
+   config-dist.php as config.php.
+2. Either copy the files from the new installation over the old one, or
+   point your users to the new location.
+   
+There is no need to run the upgrade script.  The upgrade is complete.
