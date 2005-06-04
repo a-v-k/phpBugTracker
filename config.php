@@ -1,8 +1,7 @@
 <?php
-
 // config.php - Set up configuration options
 // ------------------------------------------------------------------------
-// Copyright (c) 2001 - 2003 The phpBugTracker Group
+// Copyright (c) 2001 - 2004 The phpBugTracker Group
 // ------------------------------------------------------------------------
 // This file is part of phpBugTracker
 //
@@ -20,25 +19,20 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.40 2004/10/25 12:06:57 bcurtis Exp $
-
-define ('PHPLIB_PATH', ''); // If PHPlib is not in your include path
+// $Id: config.php,v 1.41 2005/06/04 19:02:43 bcurtis Exp $
 
 // Database Config
-define ('DB_TYPE', 'mysql');  // using PHPlib file naming
-define ('DB_HOST', 'localhost');
-define ('DB_DATABASE', 'BugTracker');
-define ('DB_USER', 'root');
-define ('DB_PASSWORD', '');
-
-// Smarty templates location (leave blank if Smarty is in include path)
-// If not blank, make sure the trailing slash is present.
-define ('SMARTY_PATH', '');
+define ('DB_TYPE', 'mysql');  // using PEAR::DB naming (mysql, pgsql, etc.)
+define ('DB_HOST', 'localhost'); // hostname of database server
+define ('DB_DATABASE', 'bug_tracker'); // database name
+define ('DB_USER', ''); // username for database connection
+define ('DB_PASSWORD', ''); // password for database connection
 
 // Database Table Config
 // you can change either the prefix of the table names or each table name individually
 define ('CUR_DB_VERSION', 4); // the version of the database
 define ('TBL_PREFIX', '');	// the prefix for all tables, leave empty to use the old style
+
 define ('TBL_ACTIVE_SESSIONS', TBL_PREFIX.'active_sessions');
 define ('TBL_DB_SEQUENCE',     TBL_PREFIX.'db_sequence');
 define ('TBL_ATTACHMENT',      TBL_PREFIX.'attachment');
@@ -67,11 +61,11 @@ define ('TBL_USER_PREF',       TBL_PREFIX.'user_pref');
 define ('TBL_VERSION',         TBL_PREFIX.'version');
 define ('TBL_PROJECT_GROUP',   TBL_PREFIX.'project_group');
 define ('TBL_PROJECT_PERM',    TBL_PREFIX.'project_perm');
-define ('TBL_DATABASE',        TBL_PREFIX.'database_server');
+define ('TBL_DATABASE',	       TBL_PREFIX.'database_server');
 define ('TBL_SITE',            TBL_PREFIX.'site');
 
 define ('ONEDAY', 86400);
 
-require_once ('inc/auth.php');
+require_once (dirname(__FILE__).'/inc/auth.php');
 
 ?>
