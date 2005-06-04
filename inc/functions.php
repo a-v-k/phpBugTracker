@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.52 2005/05/28 18:09:39 bcurtis Exp $
+// $Id: functions.php,v 1.53 2005/06/04 16:11:16 bcurtis Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -696,6 +696,19 @@ function delete_bug($bug_id) {
 	
 	// And the bug itself
 	$db->query("delete from ".TBL_BUG." where bug_id = ".$db->quote($bug_id));
+}
+
+/**
+ * Determine whether include files are available
+ *
+ * @param string $file The name of the file to be included, with full path
+ * @return bool
+ */
+function find_include($file) {
+	foreach (explode(PATH_SEPARATOR, get_include_path()) as $path) { 
+		if (file_exists("$path/$file")) return true; 
+	}
+	return false;
 }
 
 ?>

@@ -1,4 +1,9 @@
 <form method="post">
+<?php if (!$has_excel) { ?>
+<div class="error">
+	<?php echo translate("Install PEAR package Spreadsheet_Excel_Writer for bug list download support"); ?>
+</div>
+<?php } ?>
 <table border="0" width="100%">
 	<tr>
 		<td valign="top">

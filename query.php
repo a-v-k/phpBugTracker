@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.100 2005/01/22 16:09:30 bcurtis Exp $
+// $Id: query.php,v 1.101 2005/06/04 16:11:16 bcurtis Exp $
 
 include 'include.php';
 
@@ -357,7 +357,8 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	
 		$t->assign(array(
 			'db_fields' => $desired_fields,
-			'field_titles' => $field_titles
+			'field_titles' => $field_titles,
+			'has_excel' => find_include('Spreadsheet/Excel/Writer.php')
 			));
 		
 		$t->assign('bugs', $db->getAll($db->modifyLimitQuery(
@@ -379,10 +380,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 }
 
 function dump_spreadsheet($fields, $titles, &$data) {
-	#echo '<pre>';
-	#print_r($fields); print_r($data); exit;
-	chdir('./inc/pear/');
-	include_once('./Spreadsheet/Excel/Writer.php');
+	include_once('Spreadsheet/Excel/Writer.php');
 	$workbook = new Spreadsheet_Excel_Writer();
 	$workbook->send('buglist.xls');
 	error_reporting(0);

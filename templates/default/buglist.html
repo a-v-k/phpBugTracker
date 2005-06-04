@@ -27,6 +27,8 @@
 	<?php } ?>
 </table>
 <?php include('admin/pagination.html'); ?>
+<?php if ($has_excel) { ?>
 <div align="center">
 	<a href="query.php?xl=1"><?php echo translate("Download to spreadsheet"); ?></a>
 </div>
+<?php } ?>
