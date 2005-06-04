@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.130 2005/02/15 13:34:19 bcurtis Exp $
+// $Id: include.php,v 1.131 2005/06/04 18:55:45 bcurtis Exp $
 
 ini_set("magic_quotes_runtime", 0);
 ini_set("magic_quotes_sybase", 0);
@@ -39,7 +39,7 @@ if (!defined('DB_HOST')) { // Installation hasn't been completed
 include ('inc/functions.php');
 
 // PEAR::DB
-define('PEAR_PATH', 'inc/pear/'); // Set this to '' to use system-wide PEAR
+define('PEAR_PATH', ''); // Set this to '/some/path/' to not use system-wide PEAR
 require_once(PEAR_PATH.'DB.php');
 $dsn = array(
 	'phptype' => DB_TYPE,
