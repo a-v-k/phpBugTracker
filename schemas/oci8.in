@@ -2,7 +2,7 @@
 -- Oracle database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: oci8.in,v 1.27 2005/05/30 19:59:35 ulferikson Exp $
+-- $Id: oci8.in,v 1.28 2005/06/20 01:05:29 bcurtis Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id number(10)   default '0' NOT NULL,
@@ -291,7 +291,7 @@ CREATE SEQUENCE TBL_AUTH_USER_seq START WITH 2 NOCACHE;
 -- Start off with three user levels...
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (1, 'Admin', 1);
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (2, 'User', 1);
-INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (3, 'Developer', 1);
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked, assignable) VALUES (3, 'Developer', 1, 1);
 CREATE SEQUENCE TBL_AUTH_GROUP_seq START WITH 4 NOCACHE;
 
 -- ... and only two permissions

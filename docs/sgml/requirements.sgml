@@ -6,19 +6,16 @@
 
 <itemizedlist>
 <listitem>
-<para>A web server (Apache, IIS, etc.) configured to run PHP scripts.  The PHP version must be later than 4.0.6.</para>
+<para>A web server (Apache, IIS, etc.) configured to run PHP scripts.  The PHP version must be later than 4.3.6.</para>
 </listitem>
 <listitem>
 <para>PEAR::DB.  This is the database abstraction layer that comes with PEAR, which is included with recent distributions of PHP.</para>
 </listitem>
 <listitem>
-<para>A database server.  &phpbt; has been tested with MySQL, PostgreSQL (&gt;= 7.1 required) and Oracle 8.  If you wish to run this package on another type of database, I am more than willing to support more types of databases if you are willing to help with testing.</para>
+<para>A database server.  &phpbt; has been tested with MySQL, PostgreSQL (&gt;= 7.4 required) and Oracle 8.  If you wish to run this package on another type of database, I am more than willing to support more types of databases if you are willing to help with testing.</para>
 </listitem>
 <listitem>
 <para>A database created on your database server for use with &phpbt;.  You will need to supply this database name during the installation process.</para>
-</listitem>
-<listitem>
-<para>Smarty templates (<ulink url="http://smarty.php.net/">http://smarty.php.net/</ulink>).  If you do not have smarty templates already installed, a package of &phpbt; is distributed that has smarty included and ready to go.</para>
 </listitem>
 </itemizedlist>
 

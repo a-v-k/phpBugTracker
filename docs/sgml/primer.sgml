@@ -14,43 +14,7 @@
 
 <para>Once you have logged in to the system you can follow the <emphasis role="bold">Add a New Bug</emphasis> link from the top navigation bar to create a new bug.  If there is more than one project for which you can submit a bug, you will be prompted to choose one.</para>
 
-<screenshot>
-<screeninfo>Project selection</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="images/shots/user/enterbug-chooseproject.jpg" format="JPG">
-</imageobject>
-<imageobject>
-<imagedata fileref="images/shots/user/enterbug-chooseproject.eps" format="EPS" align="center">
-</imageobject>
-<textobject>
-<phrase>Screen shot of selecting a project for a bug report.</phrase>
-</textobject>
-<caption>
-<para>Selecting a project for a bug report.</para>
-</caption>
-</mediaobject>
-</screenshot>
-
 <para>Once you have chosen a project, or if there is only one project in the system, you will see the bug entry page.  The <emphasis role="bold">Version</emphasis> and <emphasis role="bold">Component</emphasis> fields allow you to specify details about which part or version of the product that produces this bug.  The <emphasis role="bold">Summary</emphasis> field should be a short but specific summary of the problem, while the <emphasis role="bold">Description</emphasis> field should include details about the behavior observed, how that behavior differs from expected behavior, and the steps to reproduce the problem.  If the product being tested is web-based, you can use the <emphasis role="bold">URL</emphasis> field to provide a link directly to the problem.  The <emphasis role="bold">Add another</emphasis> checkbox, if checked, will present another bug entry form when you submit a bug, instead of taking you to the bug list.</para>
-
-<screenshot>
-<screeninfo>Adding a bug</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="images/shots/user/enterbug-detail.jpg" format="JPG">
-</imageobject>
-<imageobject>
-<imagedata fileref="images/shots/user/enterbug-detail.eps" format="EPS" align="center">
-</imageobject>
-<textobject>
-<phrase>Screen shot of entering a bug report.</phrase>
-</textobject>
-<caption>
-<para>Entering a bug report.</para>
-</caption>
-</mediaobject>
-</screenshot>
 
 <para>That's it!  The bug has been entered, and it's ready to be reviewed and fixed by the developers.</para>
 </sect2>

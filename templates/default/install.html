@@ -29,7 +29,7 @@
 				</tr>
 				<tr>
 					<td width="150">Type:</td>
-					<td><select name="db_type"><?php db_type_options($db_type) ?></select></td>
+					<td><select name="db_type"><?php db_type_options(isset($db_type) ? $db_type : null) ?></select></td>
 				</tr>
 				<tr>
 					<td width="150">Host:</td>
@@ -50,7 +50,7 @@
 				</tr>
 				<tr>
 					<td width="150"><?php echo translate("Password"); ?>:</td>
-					<td><input type="password" name="db_pass" value="<?php echo $db_pass; ?>" /></td>
+					<td><input type="password" name="db_pass" value="<?php echo isset($db_pass) ? $db_pass : ''; ?>" /></td>
 				</tr>
 				<tr>
 					<td width="150"><?php echo translate("Table Prefix"); ?>:</td>
@@ -78,7 +78,7 @@
 						<br />
 						(<?php echo translate("Must be a valid email address"); ?>)
 					</td>
-					<td valign="top"><input type="text" name="admin_login" value="<?php echo $admin_login; ?>" /></td>
+					<td valign="top"><input type="text" name="admin_login" value="<?php echo isset($admin_login) ? $admin_login : ''; ?>" /></td>
 				</tr>
 				<tr>
 					<td width="150"><?php echo translate("Admin Password"); ?>:</td>

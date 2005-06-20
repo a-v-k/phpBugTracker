@@ -2,7 +2,7 @@
 -- PostgreSQL database creation script
 -- This is a template for install.php -- not for creating the database!
 --
--- $Id: pgsql.in,v 1.47 2005/05/25 18:04:48 ulferikson Exp $
+-- $Id: pgsql.in,v 1.48 2005/06/20 01:05:29 bcurtis Exp $
 
 BEGIN;
 
@@ -288,7 +288,7 @@ CREATE SEQUENCE TBL_AUTH_USER_seq START 2;
 -- Start off with three user levels...
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (1, 'Admin', 1);
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (2, 'User', 1);
-INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (3, 'Developer', 1);
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked, assignable) VALUES (3, 'Developer', 1, 1);
 CREATE SEQUENCE TBL_AUTH_GROUP_seq START 4;
 
 -- ... and only two permissions
