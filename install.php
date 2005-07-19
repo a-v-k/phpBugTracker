@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.46 2005/06/04 21:48:26 bcurtis Exp $
+// $Id: install.php,v 1.47 2005/07/19 19:25:36 ulferikson Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -132,7 +132,9 @@ if (!empty($_POST)) {
 		);
 }
 
-@include_once('config.php');
+if (file_exists('config.php')) {
+	include_once('config.php');
+}
 if (defined('DB_HOST')) { // Already configured
 	header("Location: index.php");
 }
@@ -163,8 +165,14 @@ function grab_config_file() {
 }
 function test_database(&$params, $testonly = false) {
 	// PEAR::DB
-	define('PEAR_PATH', ''); // Set this to '/some/path' to not use system-wide PEAR
-	require_once(PEAR_PATH.'DB.php');
+	define('PEAR_PATH', ''); // Set this to '/some/path/' to not use system-wide PEAR
+	// define('PEAR_PATH', 'inc/pear/'); // use a locally installed Pear (phpBT v0.9.1)
+	if (!@include_once(PEAR_PATH.'DB.php')) {
+		$error_message = translate("Failed loading Pear:DB");
+		$error_info = translate("Please check your Pear installation and the defined PEAR_PATH in install.php");
+		include('templates/default/install-dbfailure.html');
+		exit;
+	}
 	$dsn = array(
 		'phptype' => $params['db_type'],
 		'hostspec' => $params['db_host'],
@@ -176,6 +184,8 @@ function test_database(&$params, $testonly = false) {
 
 	// Simple error checking on returned DB object to check connection to db
 	if (DB::isError($db)) {
+		$error_message = $db->message;
+		$error_info = $db->user_info;
 		include('templates/default/install-dbfailure.html');
 		exit;
 	} else {

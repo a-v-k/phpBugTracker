@@ -20,13 +20,13 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.40 2005/05/31 18:50:18 ulferikson Exp $
+// $Id: upgrade.php,v 1.41 2005/07/19 19:25:37 ulferikson Exp $
 
 define ('NO_AUTH', 1);
 define ('RAWERROR', true);
 define ('THEME', 'default');
 $upgrading = true;
-@include 'include.php';
+include 'include.php';
 
 $comment_text = "";
 $log_text = "";

@@ -20,16 +20,18 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.133 2005/06/04 21:48:26 bcurtis Exp $
+// $Id: include.php,v 1.134 2005/07/19 19:25:36 ulferikson Exp $
 
 define('PHPBT_VERSION', '1.0rc6');
 ini_set("magic_quotes_runtime", 0);
 ini_set("magic_quotes_sybase", 0);
 @ini_set("session.save_handler", "files");
 
-if (!@include('config.php')) {
-	header("Location: install.php");
-	exit();
+if (file_exists('config.php')) {
+	if (!include_once('config.php')) {
+		header("Location: install.php");
+		exit();
+	}
 }
 if (!defined('DB_HOST')) { // Installation hasn't been completed
 	header("Location: install.php");
@@ -66,7 +68,7 @@ if (empty($upgrading)) {
 		$db->getCol("select status_id from " . TBL_STATUS ." where bug_open = 1")));
 	
 	// Set up translation and character set
-	@include_once('languages/'.LANGUAGE.'.php');
+	include_once('languages/'.LANGUAGE.'.php');
 	if (!defined('CHARSET')) {
 		if (!empty($STRING['charset'])) {
 			define('CHARSET', $STRING['charset']);
