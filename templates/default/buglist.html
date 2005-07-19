@@ -15,7 +15,11 @@
 		</td>
 	<?php } else { ?>
 		<?php for ($i = 0; $i < $bugcount; $i++) { ?>
-			<tr class="bugrow<?php echo ($i % 2 != 0) ? ' alt' : ''; ?>"<?php echo  USE_SEVERITY_COLOR ? ' bgcolor="'.$bugs[$i]['severity_color'].'"' : ''; ?> onclick="<?php echo "viewbug({$bugs[$i]['bug_link_id']}, $i)"; ?>">
+				<?php if (USE_SEVERITY_COLOR) { ?> 
+ 					<tr class="bugrow" bgcolor="<?php echo $bugs[$i]['severity_color']; ?>" onclick="viewbug(<?php echo "{$bugs[$i]['bug_link_id']}, $i"; ?>)"> 
+ 				<?php } else { ?> 
+ 					<tr class="bugrow<?php echo ($i % 2 != 0) ? ' alt' : ''; ?>" onclick="viewbug(<?php echo "{$bugs[$i]['bug_link_id']}, $i"; ?>)">
+				<?php } ?> 
 				<?php 
 					foreach ($bugs[$i] as $var => $val) {
 						if ($var == 'bug_link_id') $bugid = $val;
