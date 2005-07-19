@@ -51,7 +51,7 @@
 	<?php echo translate("Bugs assigned to me"); ?>: <a href="query.php?op=mybugs&assignedto=1&open=1" title="Open"><?php echo $owner_open ?></a> / <a href="query.php?op=mybugs&assignedto=1&open=0" title="Closed"><?php echo $owner_closed ?></a>
 	| <?php echo translate("Bugs reported by me"); ?>: <a href="query.php?op=mybugs&reportedby=1&open=1" title="Open"><?php echo $reporter_open ?></a> / <a href="query.php?op=mybugs&reportedby=1&open=0" title="Closed"><?php echo $reporter_closed ?></a>
 	| <a href="user.php"><?php echo translate("Personal Page"); ?></a>
-	| <a href="logout.php"><?php echo translate("Logout"); ?></a>
+	| <a href="logout.php"><?php echo translate("Logout"), " ", $_SESSION["uname"]; ?></a>
 <?php } ?>
 &nbsp;
 </form>
