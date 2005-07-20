@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.138 2005/05/28 18:11:52 bcurtis Exp $
+// $Id: bug.php,v 1.139 2005/07/20 18:12:25 ulferikson Exp $
 
 include 'include.php';
 
@@ -547,7 +547,7 @@ function show_form($bugid = 0, $error = '') {
 }
 
 function show_bug_printable($bugid) {
-	global $db, $me, $t, $select, $QUERY, $restricted_projects;
+	global $db, $me, $t, $QUERY, $restricted_projects;
 
 	if (!is_numeric($bugid) or
 		!$row = $db->getRow(sprintf($QUERY['bug-printable'], $bugid,
@@ -557,14 +557,19 @@ function show_bug_printable($bugid) {
 	}
 
 	$t->assign($row);
+
+	$bug_dependencies = $db->getAll("select b.bug_id, s.bug_open from ".TBL_BUG_DEPENDENCY." d, ".TBL_BUG." b, ".TBL_STATUS." s where d.bug_id = $bugid and d.depends_on = b.bug_id and b.status_id = s.status_id");
+
+	$bug_blocks = $db->getAll("select b.bug_id, s.bug_open from ".TBL_BUG_DEPENDENCY." d, ".TBL_BUG." b, ".TBL_STATUS." s where d.depends_on = $bugid and d.bug_id = b.bug_id and b.status_id = s.status_id");
+
 	$t->assign(array(
-		'bug_dependencies' => @join(', ', $db->getCol('select '.db_concat("'<a href=\"$me?op=show&bugid='", 'depends_on', '\'">#\'','depends_on', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY." where bug_id = $bugid")),
-		'rev_bug_dependencies' => @join(', ', $db->getCol('select '.db_concat("'<a href=\"$me?op=show&bugid='", 'bug_id', '\'">#\'','bug_id', '\'</a>\'').' from '.TBL_BUG_DEPENDENCY." where depends_on = $bugid"))
+		'bug_dependencies' => $bug_dependencies,
+		'bug_blocks' => $bug_blocks
 		));
 
 	// Show the comments
 	$t->assign('comments', $db->getAll('select comment_text, c.created_date, login from '.TBL_COMMENT.' c, '.TBL_AUTH_USER." where bug_id = $bugid and c.created_by = user_id order by c.created_date"));
-	$t->render('bugdisplay-printable.html', translate("View Bug"));
+	$t->render('bugdisplay-printable.html', translate("View Bug"), 'wrap-popup.html');
 }
 
 ///
