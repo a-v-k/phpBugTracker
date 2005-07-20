@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.24 2005/05/28 18:11:52 bcurtis Exp $
+// $Id: attachment.php,v 1.25 2005/07/20 18:48:01 ulferikson Exp $
 
 include 'include.php';
 
@@ -170,8 +170,9 @@ if (isset($_GET['del'])) {
 		header("Content-Disposition: attachment; filename=\"$base\"");
 		header("Content-Type: $mimetype");
 		header("Connection: close");
-		header("Pragma: nocache");
-		header("Expires: 0 ");
+//		header("Pragma: nocache");
+//		header("Expires: 0 ");
+		header("Cache-Control: max-age=60");
 		@readfile($filename);
 		exit;
 	}
