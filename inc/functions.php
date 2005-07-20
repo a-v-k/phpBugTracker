@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.53 2005/06/04 16:11:16 bcurtis Exp $
+// $Id: functions.php,v 1.54 2005/07/20 18:47:25 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -592,6 +592,8 @@ function qp_enc($input, $line_max = 76) {
 // mailer with use of quoted-printable encoding (if configured so)
 function qp_mail($to, $subject = 'No subject', $body, $headers = '') {
 	global $STRING;
+
+	$subject="=?".CHARSET."?B?".base64_encode($subject)."?=";
 
 	if ($headers != '') {
 		$headers .= "\n";
