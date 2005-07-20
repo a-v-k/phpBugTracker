@@ -2,7 +2,7 @@
 <?php echo translate("Show bug statistics for the selected project"); ?>:  
 <select name="projectid" onChange="document.location.href='<?php echo $_SERVER['SCRIPT_NAME']; ?>?projectid='+this.options[this.selectedIndex].value">
 	<option value="0"><?php echo translate("All projects"); ?></option>
-	<?php build_select('project', $_GET['projectid']); ?>
+	<?php build_select('project', isset($_GET['projectid']) ? $_GET['projectid'] : ''); ?>
 </select>
 <input type="submit" value="<?php echo translate("Go"); ?>">
 </form>

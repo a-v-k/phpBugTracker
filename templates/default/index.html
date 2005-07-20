@@ -52,7 +52,7 @@
 					<?php foreach ($stats as $statid => $info) { ?>
 						<tr>
 							<td><a href="query.php?op=doquery&status[]=<?php echo $statid ?>"><?php echo $info['name'] ?></a></td>
-							<td align="center"><?php echo $info['count'] ? $info['count'] : 0 ?></td>
+							<td align="center"><?php echo isset($info['count']) && $info['count'] ? $info['count'] : 0 ?></td>
 						</tr>
 					<?php } ?>
 				</table>

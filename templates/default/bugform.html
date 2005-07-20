@@ -1,3 +1,16 @@
+<?php
+	if (!isset($reporter))    $reporter = '';
+	if (!isset($version))     $version = '';
+	if (!isset($title))       $title = '';
+	if (!isset($description)) $description = '';
+	if (!isset($url))         $url = '';
+	if (!isset($severity))    $severity = '';
+	if (!isset($priority))    $priority = '';
+	if (!isset($component))   $component = '';
+	if (!isset($database))    $database = '';
+	if (!isset($site))        $site = '';
+	if (!isset($os))          $os = '';
+?>
 		<form action="bug.php" method="post" enctype="multipart/form-data">
 			<table border="0">
 				<?php if (!empty($error)) { ?>

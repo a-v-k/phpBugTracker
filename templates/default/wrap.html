@@ -32,14 +32,14 @@
 
 <?php if (basename($_SERVER['SCRIPT_NAME']) != 'newaccount.php') { ?>
 <div class="personalarea">
-<form method="post" action="<?php echo $_SERVER['SCRIPT_NAME'].($_SERVER['REQUEST_STRING'] ? '?'.$_SERVER['REQUEST_STRING'] : '') ?>">
+<form method="post" action="<?php echo $_SERVER['SCRIPT_NAME'].(isset($_SERVER['REQUEST_STRING']) ? '?'.$_SERVER['REQUEST_STRING'] : '') ?>">
 &nbsp;
 <?php if (empty($_SESSION['uid'])) { ?>
 	<?php if (EMAIL_IS_LOGIN) $loginlabel = translate("Email");
 		else $loginlabel = translate("Login");
 	?>
 	<?php echo !empty($loginerror) ? $loginerror : ''; ?>
-	<?php echo $loginlabel ?>: <input type="text" name="username" class="bottomnavinput" value="<?php echo $_COOKIE['phpbt_user'] ?>">
+	<?php echo $loginlabel ?>: <input type="text" name="username" class="bottomnavinput" value="<?php echo (isset($_COOKIE['phpbt_user']) ? $_COOKIE['phpbt_user'] : '') ?>">
 	<?php echo translate("Password") ?>: <input type="password" name="password" class="bottomnavinput">
 	<input type="hidden" name="dologin" value="1">
 	<input type="submit" value="<?php echo translate("Login"); ?>" class="bottomnavinput">
