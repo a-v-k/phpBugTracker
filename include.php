@@ -20,11 +20,11 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.134 2005/07/19 19:25:36 ulferikson Exp $
+// $Id: include.php,v 1.135 2005/07/20 18:19:54 ulferikson Exp $
 
 define('PHPBT_VERSION', '1.0rc6');
-ini_set("magic_quotes_runtime", 0);
-ini_set("magic_quotes_sybase", 0);
+@ini_set("magic_quotes_runtime", 0);
+@ini_set("magic_quotes_sybase", 0);
 @ini_set("session.save_handler", "files");
 
 if (file_exists('config.php')) {
