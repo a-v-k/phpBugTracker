@@ -11,7 +11,7 @@
 	<?php } else { ?>
 		<?php for ($i = 0; $i < $bugcount; $i++) { ?>
 				<?php if (USE_SEVERITY_COLOR) { ?> 
- 					<tr class="bugrow" bgcolor="<?php echo $bugs[$i]['severity_color']; ?>" onclick="viewbug(<?php echo "{$bugs[$i]['bug_link_id']}, $i"; ?>)"> 
+ 					<tr class="bugrow" bgcolor="<?php echo $bugs[$i]['severity_color']; ?>"> 
  				<?php } else { ?> 
  					<tr class="bugrow<?php echo ($i % 2 != 0) ? ' alt' : ''; ?>">
 				<?php } ?> 
