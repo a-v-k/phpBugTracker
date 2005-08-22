@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.50 2004/10/25 12:06:59 bcurtis Exp $
+// $Id: user.php,v 1.51 2005/08/22 20:11:49 ulferikson Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -114,7 +114,7 @@ function do_form($userid = 0) {
 	if ($_POST['use_js']) {
 		$t->render('edit-submit.html');
 	} else {
-		header("Location: $me?filter={$_POST['filter']}");
+		header("Location: $me?userfilter={$_POST['userfilter']}&groupfilter={$_POST['groupfilter']}");
 	}
 }
 
@@ -161,20 +161,28 @@ function list_items($userid = 0, $error = '') {
 	}
 	
 	$page = isset($_GET['page']) ? $_GET['page'] : 1;
-	$user_filter = isset($_GET['filter']) ? $_GET['filter'] : 0;
+	$user_filter = isset($_GET['userfilter']) ? $_GET['userfilter'] : 0;
+	$group_filter = isset($_GET['groupfilter']) ? $_GET['groupfilter'] : 0;
 	
-	$filter_query = '';
-	if (isset($_GET['filter'])) switch($_GET['filter']) {
-		case 1 : $filter_query = ' where active = 1'; break;
-		case 2 : $filter_query = ' where active = 0'; break;
-		default : $filter_query = '';
+	$filter_user = '';
+	$filter_group = '';
+	if (isset($_GET['userfilter'])) switch($_GET['userfilter']) {
+		case 1 : $filter_user = ' and u.active = 1'; break;
+		case 2 : $filter_user = ' and u.active = 0'; break;
 	}
-	$nr = $db->getOne("select count(*) from ".TBL_AUTH_USER.$filter_query);
+	if (isset($_GET['groupfilter'])) {
+		if ((int)$_GET['groupfilter'] > 0) {
+			$filter_group = ' and ug.group_id = '.(int)$_GET['groupfilter'];
+		}
+	}
+	$nr = $db->getOne("select count(distinct u.user_id) from ".TBL_AUTH_USER." u, ".TBL_USER_GROUP." ug where u.user_id = ug.user_id".$filter_user.$filter_group);
 
 	list($selrange, $llimit) = multipages($nr, $page, 
-		"order=$order&sort=$sort&filter=$user_filter");
+		"order=$order&sort=$sort&userfilter=$user_filter&groupfilter=$group_filter");
 
-	$t->assign('users', $db->getAll($db->modifyLimitQuery("select user_id, first_name, last_name,	email, login, created_date, active from ".TBL_AUTH_USER."$filter_query order by $order $sort", $llimit, $selrange)));
+	$t->assign('users', $db->getAll($db->modifyLimitQuery("select distinct u.user_id, u.first_name, u.last_name, u.email, u.login, u.created_date, u.active".
+	    " from ".TBL_AUTH_USER." u, ".TBL_USER_GROUP." ug where u.user_id = ug.user_id $filter_user $filter_group".
+	    " order by $order $sort", $llimit, $selrange)));
 
 	$headers = array(
 		'userid' => 'user_id',
@@ -185,9 +193,10 @@ function list_items($userid = 0, $error = '') {
 		'active' => 'active',
 		'date' => 'created_date');
 
-	sorting_headers($me, $headers, $order, $sort, "page=$page&filter=$user_filter");
+	sorting_headers($me, $headers, $order, $sort, "page=$page&userfilter=$user_filter&groupfilter=$group_filter");
 
-	$t->assign('filter', $user_filter);
+	$t->assign('userfilter', $user_filter);
+	$t->assign('groupfilter', $group_filter);
 	$t->render('userlist.html', translate("User List"));
 }
 

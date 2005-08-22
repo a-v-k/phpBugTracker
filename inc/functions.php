@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.56 2005/08/22 19:58:25 ulferikson Exp $
+// $Id: functions.php,v 1.57 2005/08/22 20:11:49 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -107,7 +107,8 @@ function build_select($box, $selected = '', $project = 0) {
 			break;
 		case 'group':
 			if ($project) { // If we are building for project admin page
-				if (!count($selected) or (count($selected) && in_array(0, $selected))) {
+				if (is_array($selected) && (!count($selected) or (count($selected) && in_array(0, $selected))) or
+				    !isset($selected) or $selected == 0) {
 					$sel = ' selected';
 				} else {
 					$sel = '';
@@ -116,7 +117,8 @@ function build_select($box, $selected = '', $project = 0) {
 			}
 			$rs = $db->query($queries[$box]);
 			while ($rs->fetchInto($row)) {
-				if (count($selected) && in_array($row[$box.'_id'], $selected)) {
+				if (is_array($selected) && count($selected) && in_array($row[$box.'_id'], $selected) or
+				    $selected == $row[$box.'_id'] and $selected != '') {
 					$sel = ' selected';
 				} else {
 					$sel = '';

@@ -8,12 +8,14 @@
 <table border="0" width="100%">
 	<tr>
 		<td valign="top">
-			<b>&nbsp;<?php echo $page_title; ?></b> - <a href="user.php?op=edit&user_id=0&filter=<?php echo $filter; ?>" onClick="popupUser(0); return false;"><?php echo translate("Add new user"); ?></a>
+			<b>&nbsp;<?php echo $page_title; ?></b> - <a href="user.php?op=edit&user_id=0&userfilter=<?php echo $userfilter; ?>&groupfilter=<?php echo $groupfilter; ?>" onClick="popupUser(0); return false;"><?php echo translate("Add new user"); ?></a>
 			<hr size="1">
 			<form>
 			<div align="center">
-				<select name="filter" onChange="document.location.href='user.php?filter=' + this.options[this.selectedIndex].value">
-                    <?php build_select('user_filter', $filter); ?></select> 
+				<select name="groupfilter" onChange="document.location.href='user.php?groupfilter=' + this.options[this.selectedIndex].value<?php echo " + '&userfilter=".$userfilter."'"; ?>">
+			<?php build_select('group', $groupfilter, 1); ?></select>
+				<select name="userfilter" onChange="document.location.href='user.php?<?php echo 'groupfilter='.$groupfilter; ?>&userfilter=' + this.options[this.selectedIndex].value">
+			<?php build_select('user_filter', $userfilter); ?></select>
 				<input type="submit" value="<?php echo translate("Filter"); ?>">
 			</div>
 			</form>
@@ -26,7 +28,7 @@
 				</tr>
 				<?php for ($i = 0, $count = count($users); $i < $count; $i++) { ?>
 				<tr>
-					<td><a href="user.php?op=edit&user_id=<?php echo $users[$i]['user_id']; ?>&filter=<?php echo $filter; ?>" onClick="popupUser(<?php echo $users[$i]['user_id']; ?>); return false;"><?php echo stripslashes(htmlspecialchars($users[$i]['login'])); ?></a></td>
+					<td><a href="user.php?op=edit&user_id=<?php echo $users[$i]['user_id']; ?>&userfilter=<?php echo $userfilter; ?>&groupfilter=<?php echo $groupfilter; ?>" onClick="popupUser(<?php echo $users[$i]['user_id']; ?>); return false;"><?php echo stripslashes(htmlspecialchars($users[$i]['login'])); ?></a></td>
 					<td align="center"><?php echo stripslashes(htmlspecialchars($users[$i]['first_name'].' '.$users[$i]['last_name'])); ?></td>
 					<td align="center"><?php echo $users[$i]['created_date'] ? date(DATE_FORMAT, $users[$i]['created_date']) : ''; ?></td>
 					<td align="center"><?php echo $users[$i]['active'] ? translate("Yes") : translate("No"); ?></td>
