@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.48 2005/07/20 18:19:54 ulferikson Exp $
+// $Id: install.php,v 1.49 2005/08/22 19:44:46 ulferikson Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -116,6 +116,7 @@ if (!empty($_POST)) {
 		'/TBL_RESOLUTION/'  => $_POST['tbl_prefix'].'resolution',
 		'/TBL_SAVED_QUERY/' => $_POST['tbl_prefix'].'saved_query',
 		'/TBL_SEVERITY/' => $_POST['tbl_prefix'].'severity',
+		'/TBL_PRIORITY/' => $_POST['tbl_prefix'].'priority',
 		'/TBL_STATUS/' => $_POST['tbl_prefix'].'status',
 		'/TBL_USER_GROUP/' => $_POST['tbl_prefix'].'user_group',
 		'/TBL_USER_PERM/' => $_POST['tbl_prefix'].'user_perm',

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.101 2005/06/04 16:11:16 bcurtis Exp $
+// $Id: query.php,v 1.102 2005/08/22 19:44:46 ulferikson Exp $
 
 include 'include.php';
 
@@ -196,8 +196,6 @@ function format_spreadsheet_col($colvalue, $coltype) {
 			return ($colvalue ? date(DATE_FORMAT, $colvalue) : '');
 		case 'lastmodifier' :
 			return (!empty($colvalue) ? maskemail($colvalue) : '');
-		case 'priority' :
-			return $select['priority'][$colvalue];
 		case 'reporter' :
 		case 'owner' :
 		case 'lastmodifier' :
@@ -232,9 +230,6 @@ function format_bug_col($colvalue, $coltype, $bugid, $pos) {
 			return '<div align="center">'.
 				(!empty($colvalue) ? maskemail($colvalue) : '').'</div>';
 			break;
-		case 'priority' :
-			return '<div align="center">'.$select['priority'][$colvalue].'</div>';
-			break;
 		default :
 			return '<div align="center">'.
 				(!empty($colvalue) ? $colvalue : '').'</div>';
@@ -251,7 +246,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'description' => 'description',
 		'url' => 'url',
 		'severity_name' => 'severity.severity_name',
-		'priority' => 'priority',
+		'priority_name' => 'priority.priority_name',
 		'status_name' => 'status.status_name',
 		'resolution_name' => 'resolution_name',
 		'reporter' => 'reporter.login as reporter',
@@ -277,7 +272,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 		'description' => 'description',
 		'url' => 'url',
 		'severity_name' => 'severity.sort_order',
-		'priority' => 'b.priority',
+		'priority_name' => 'priority.sort_order',
 		'status_name' => 'status.sort_order',
 		'owner' => 'owner',
 		'reporter' => 'reporter.login',
@@ -338,7 +333,8 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	$desired_fields = !empty($_SESSION['db_fields']) ?
 		$_SESSION['db_fields'] : $default_db_fields;
 
-	$query_fields = array('bug_id as bug_link_id', 'severity.severity_color');
+	$query_fields = array('bug_id as bug_link_id', 
+		'severity.severity_color', 'priority.priority_color');
 	foreach ($desired_fields as $field) {
 		$query_fields[] = $query_db_fields[$field];
 		$field_titles[] = $all_db_fields[$field];

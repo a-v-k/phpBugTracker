@@ -20,7 +20,9 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.135 2005/07/20 18:19:54 ulferikson Exp $
+// $Id: include.php,v 1.136 2005/08/22 19:44:46 ulferikson Exp $
+
+define('RAWERROR', true);
 
 define('PHPBT_VERSION', '1.0rc6');
 @ini_set("magic_quotes_runtime", 0);
@@ -90,7 +92,7 @@ $all_db_fields = array(
 	'description' => 'Description',
 	'url' => 'URL',
 	'severity_name' => 'Severity',
-	'priority' => 'Priority',
+	'priority_name' => 'Priority',
 	'status_name' => 'Status',
 	'resolution_name' => 'Resolution',
 	'closed_in_version_name' => 'Closed in Version',
@@ -111,7 +113,7 @@ $all_db_fields = array(
 	);
 
 $default_db_fields = array('bug_id', 'title', 'reporter', 'owner',
-	'severity_name', 'priority', 'status_name', 'resolution_name');
+	'severity_name', 'priority_name', 'status_name', 'resolution_name');
 
 
 // Template class

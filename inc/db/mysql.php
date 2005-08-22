@@ -30,6 +30,12 @@ $QUERY = array(
 		'group by s.severity_id, severity_name, severity_desc, severity_color, '.
 		'sort_order '.
 		'order by %s %s',
+	'admin-list-priorities' => 'select p.priority_id, priority_name, '.
+		'priority_desc, priority_color, sort_order, count(bug_id) as bug_count '.
+		'from '.TBL_PRIORITY. ' p left join '.TBL_BUG.' b on b.priority = p.priority_id '.
+		'group by p.priority_id, priority_name, priority_desc, priority_color, '.
+		'sort_order '.
+		'order by %s %s',
 	'admin-list-databases' => 'select d.database_id, database_name, '.
 		'sort_order, count(bug_id) as bug_count '.
 		'from '.TBL_DATABASE. ' d left join '.TBL_BUG.' using (database_id) '.
@@ -57,15 +63,15 @@ $QUERY = array(
 		'where bug_id = %s and u.user_id = p.user_id and email_notices = 1',
 	'bug-printable' => 'select b.*, reporter.login as reporter, '.
 		'owner.login as owner, project_name, component_name, version_name, '.
-		'severity_name, os_name, status_name, resolution_name '.
+		'severity_name, priority_name, os_name, status_name, resolution_name '.
 		'from '.TBL_BUG.' b '.
 		'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
 		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
 		'left join '.TBL_RESOLUTION.' r on b.resolution_id = r.resolution_id, '.
 		TBL_SEVERITY.' sv, '.TBL_STATUS.' st, '.TBL_OS.' os, '. TBL_VERSION.' v, '.
-		TBL_COMPONENT.' c, '.TBL_PROJECT.' p '.
-		'where bug_id = %s and b.project_id not in (%s) '.
+		TBL_PRIORITY.' priority, '.TBL_COMPONENT.' c, '.TBL_PROJECT.' p '.		'where bug_id = %s and b.project_id not in (%s) '.
 		'and b.severity_id = sv.severity_id '.
+		'and b.priority = priority.priority_id '.
 		'and b.os_id = os.os_id and b.version_id = v.version_id '.
 		'and b.component_id = c.component_id and b.project_id = p.project_id '.
 		'and b.status_id = st.status_id',
@@ -80,9 +86,10 @@ $QUERY = array(
 		'left join '.TBL_VERSION.' version2 on b.to_be_closed_in_version_id = version2.version_id '.
 		'left join '.TBL_VERSION.' version3 on b.closed_in_version_id = version3.version_id, '.
 		TBL_SEVERITY.' severity, '.TBL_STATUS.' status, '.TBL_OS.' os, '.
-		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.
+		TBL_PRIORITY.' priority, '.TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.
 		TBL_PROJECT.' project, '.TBL_SITE.' site '.
 		'where b.severity_id = severity.severity_id '.
+		'and b.priority = priority.priority_id '.
 		'and b.status_id = status.status_id and b.os_id = os.os_id '.
 		'and b.version_id = version.version_id '.
 		'and b.component_id = component.component_id '.
@@ -96,10 +103,12 @@ $QUERY = array(
 		'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
 		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
 		'left join '.TBL_RESOLUTION.' r on b.resolution_id = r.resolution_id, '.
-		TBL_SEVERITY.' sv, '.TBL_STATUS.' st, '.TBL_SITE.' site '.
+		TBL_SEVERITY.' sv, '.TBL_STATUS.' st, '.TBL_SITE.' site, '.
+		TBL_PRIORITY.' prio '.
 		'where bug_id = %s and b.project_id not in (%s) '.
 		'and b.site_id = site.site_id '.
-		'and b.severity_id = sv.severity_id and b.status_id = st.status_id',
+		'and b.severity_id = sv.severity_id and b.status_id = st.status_id ',
+		'and b.priority = prio.priority_id',
 	'functions-bug-cc' => 'select b.user_id, login '.
 		'from '.TBL_BUG_CC.' b left join '. TBL_AUTH_USER.' using(user_id) '.
 		'where bug_id = %s',
@@ -144,8 +153,10 @@ $QUERY = array(
 		'left join '.TBL_VERSION.' version2 on b.to_be_closed_in_version_id = version2.version_id '.
 		'left join '.TBL_VERSION.' version3 on b.closed_in_version_id = version3.version_id, '.
 		TBL_SEVERITY.' severity, '.TBL_STATUS.' status, '.TBL_OS.' os, '.TBL_SITE.' site, '.
-		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.TBL_PROJECT.' project '.
+		TBL_VERSION.' version, '.TBL_COMPONENT.' component, '.TBL_PROJECT.' project, '.
+		TBL_PRIORITY.' priority '.
 		'where b.severity_id = severity.severity_id '.
+		'and b.priority = priority.priority_id '.
 		'and b.status_id = status.status_id and b.os_id = os.os_id '.
 		'and b.site_id = site.site_id and b.version_id = version.version_id '.
 		'and b.component_id = component.component_id '.

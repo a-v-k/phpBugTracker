@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.54 2005/07/20 18:47:25 ulferikson Exp $
+// $Id: functions.php,v 1.55 2005/08/22 19:44:46 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -49,14 +49,6 @@ function show_text($text, $iserror = false) {
 	$t->render('error.html', '');
 }
 
-$select['priority'] = array(
-	1 => '1 - Low',
-	2 => '2',
-	3 => '3 - Medium',
-	4 => '4',
-	5 => '5 - High'
-	);
-
 ///
 /// Build a select box with the item matching $value selected
 function build_select($box, $selected = '', $project = 0) {
@@ -70,6 +62,7 @@ function build_select($box, $selected = '', $project = 0) {
 		'status' => TBL_STATUS,
 		'resolution' => TBL_RESOLUTION,
 		'severity' => TBL_SEVERITY,
+		'priority' => TBL_PRIORITY,
 		'version' => TBL_VERSION,
 		'database' => TBL_DATABASE,
 		'site' => TBL_SITE
@@ -83,6 +76,7 @@ function build_select($box, $selected = '', $project = 0) {
 		$queries = array(
 			'group' => $querystart.' where group_name <> \'User\' order by group_name',
 			'severity' => $querystart.$querymid,
+			'priority' => $querystart.$querymid,
 			'site' => $querystart.$querymid,
 			'status' => $querystart.$querymid,
 			'resolution' => $querystart.$querymid,
@@ -133,6 +127,7 @@ function build_select($box, $selected = '', $project = 0) {
 			break;
 		case 'database': $text = '<option value="0">None</option>';
 		case 'severity':
+		case 'priority': 
 		case 'status':
 		case 'resolution':
 		case 'project':

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.139 2005/07/20 18:12:25 ulferikson Exp $
+// $Id: bug.php,v 1.140 2005/08/22 19:44:46 ulferikson Exp $
 
 include 'include.php';
 
@@ -120,7 +120,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 
 	$template_ext = false/*HTML_EMAIL*/ ? 'html' : 'txt';
 	$template = $newbug ? "bugemail-newbug.$template_ext" : "bugemail.$template_ext";
-	foreach(array('title','url','priority') as $field) {
+	foreach(array('title','url') as $field) {
 		if (isset($cf[$field])) {
 			$db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values ('. join(', ', array($buginfo['bug_id'], $db->quote($field), $db->quote(stripslashes($buginfo[$field])), $db->quote(stripslashes($cf[$field])), $u, $now)).")");
 			$t->assign(array(
@@ -143,6 +143,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 		'resolution' => TBL_RESOLUTION,
 		'database' => TBL_DATABASE,
 		'severity' => TBL_SEVERITY,
+		'priority' => TBL_PRIORITY,
 		'os' => TBL_OS,
 		'version' => TBL_VERSION,
 		'database' => TBL_DATABASE,
@@ -280,9 +281,6 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 			'bugid' => $buginfo['bug_id'],
 			'siteroot' => INSTALL_URL,
 			'bugurl' => INSTALL_URL."/bug.php?op=show&bugid={$buginfo['bug_id']}",
-			'priority' => $select['priority'][(!empty($cf['priority']) 
-				? $cf['priority'] : $buginfo['priority'])],
-			'priority_stat' => !empty($cf['priority']) ? '!' : ' ',
 			'reporter' => $reporter,
 			'reporter_stat' => $reporterstat,
 			'assignedto' => $assignedto,

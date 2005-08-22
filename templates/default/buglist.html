@@ -12,6 +12,8 @@
 		<?php for ($i = 0; $i < $bugcount; $i++) { ?>
 				<?php if (USE_SEVERITY_COLOR) { ?> 
  					<tr class="bugrow" bgcolor="<?php echo $bugs[$i]['severity_color']; ?>"> 
+ 				<?php } else if (USE_PRIORITY_COLOR) { ?>
+ 					<tr class="bugrow" bgcolor="<?php echo $bugs[$i]['priority_color']; ?>"> 
  				<?php } else { ?> 
  					<tr class="bugrow<?php echo ($i % 2 != 0) ? ' alt' : ''; ?>">
 				<?php } ?> 

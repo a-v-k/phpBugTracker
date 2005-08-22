@@ -19,7 +19,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config-dist.php,v 1.30 2005/06/04 21:48:26 bcurtis Exp $
+// $Id: config-dist.php,v 1.31 2005/08/22 19:44:46 ulferikson Exp $
 
 // Database Config
 define ('DB_TYPE', '{db_type}');  // using PEAR::DB naming (mysql, pgsql, etc.)
@@ -54,6 +54,7 @@ define ('TBL_PROJECT',         TBL_PREFIX.'project');
 define ('TBL_RESOLUTION',      TBL_PREFIX.'resolution');
 define ('TBL_SAVED_QUERY',     TBL_PREFIX.'saved_query');
 define ('TBL_SEVERITY',        TBL_PREFIX.'severity');
+define ('TBL_PRIORITY',        TBL_PREFIX.'priority');
 define ('TBL_STATUS',          TBL_PREFIX.'status');
 define ('TBL_USER_GROUP',      TBL_PREFIX.'user_group');
 define ('TBL_USER_PERM',       TBL_PREFIX.'user_perm');

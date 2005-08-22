@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.45 2005/05/25 18:04:48 ulferikson Exp $
+# $Id: mysql.in,v 1.46 2005/08/22 19:44:47 ulferikson Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id int(10) unsigned NOT NULL default '0',
@@ -216,6 +216,15 @@ CREATE TABLE TBL_SEVERITY (
   PRIMARY KEY  (severity_id)
 ) TYPE=MyISAM;
 
+CREATE TABLE TBL_PRIORITY (
+  priority_id int(10) unsigned NOT NULL default '0',
+  priority_name varchar(30) NOT NULL default '',
+  priority_desc text NOT NULL,
+  sort_order tinyint(3) unsigned NOT NULL default '0',
+  priority_color varchar(10) NOT NULL default '#FFFFFF',
+  PRIMARY KEY  (priority_id)
+) TYPE=MyISAM;
+
 CREATE TABLE TBL_STATUS (
   status_id int(10) unsigned NOT NULL default '0',
   status_name varchar(30) NOT NULL default '',
@@ -320,6 +329,7 @@ INSERT INTO TBL_CONFIGURATION VALUES ('USE_JPGRAPH','','Whether to show some rep
 INSERT INTO TBL_CONFIGURATION VALUES ('MASK_EMAIL','1','Should email addresses have . changed to ''dot'' and @ change to ''at''?','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('HIDE_EMAIL','1','Should email addresses be hidden for those not logged in?','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('USE_SEVERITY_COLOR','1','Should the query list use the severity colors as the row background color (like SourceForge)','bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('USE_PRIORITY_COLOR','0','Should the query list use the priority colors as the row background color','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('EMAIL_IS_LOGIN','1','Whether to use email addresses as logins','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('STRICT_UPDATING', '0', 'Only the bug reporter, bug owner, managers, and admins can change a bug', 'bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('NEW_ACCOUNTS_DISABLED', '0', 'Only admins can create new user accounts - newaccount.php is disabled', 'bool');
@@ -394,6 +404,14 @@ INSERT INTO TBL_SEVERITY VALUES (6,'Significant','A bug affecting the intended p
 INSERT INTO TBL_SEVERITY VALUES (7,'Critical','A bug severe enough to prevent the release of the product',7,'#daaaaa');
 create table TBL_SEVERITY_seq (id int unsigned auto_increment not null primary key);
 insert into TBL_SEVERITY_seq values (7);
+
+INSERT INTO TBL_PRIORITY VALUES (1,'Low','Fix if possible',1,'#dadada');
+INSERT INTO TBL_PRIORITY VALUES (2,'Medium Low','Must fix before final',2,'#dad0d0');
+INSERT INTO TBL_PRIORITY VALUES (3,'Medium','Fix before next milestone (alpha, beta, etc.)',3,'#dac0c0');
+INSERT INTO TBL_PRIORITY VALUES (4,'Medium High','Fix as soon as possible',4,'#dab0b0');
+INSERT INTO TBL_PRIORITY VALUES (5,'High','Fix immediately',5,'#daaaaa');
+create table TBL_PRIORITY_seq (id int unsigned auto_increment not null primary key);
+insert into TBL_PRIORITY_seq values (5);
 
 INSERT INTO TBL_STATUS VALUES (1,'Unconfirmed','Reported but not confirmed',1, 1);
 INSERT INTO TBL_STATUS VALUES (2,'New','A new bug',2,1);
