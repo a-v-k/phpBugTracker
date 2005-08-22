@@ -35,6 +35,22 @@
         </tr>
         <tr>
             <td align="right" valign="top">
+                Permissions:
+            </td>
+        </tr>
+        <?php foreach($perms as $p) { ?>
+        <tr>
+            <td align="right" valign="top">
+                <input type="checkbox" name="perms[]" value="<?php echo $p['perm_id']; ?>"
+                <?php if (is_array($group_perms) && in_array($p['perm_id'], $group_perms)) echo "checked"; ?>>
+            </td>
+            <td>
+                <?php echo $p['perm_name']; ?>
+            </td>
+        </tr>
+        <?php } ?>
+        <tr>
+            <td align="right" valign="top">
                 &nbsp;
             </td>
             <td>

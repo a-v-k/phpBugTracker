@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: group.php,v 1.14 2005/08/22 19:58:25 ulferikson Exp $
+// $Id: group.php,v 1.15 2005/08/22 20:04:05 ulferikson Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -50,10 +50,17 @@ function do_form($groupid = 0) {
 	if ($error) { show_form($groupid, $error); return; }
 
 	if (!$groupid) {
-		$db->query("insert into ".TBL_AUTH_GROUP." (group_id, group_name, created_by, created_date, last_modified_by, last_modified_date) values (".$db->nextId(TBL_AUTH_GROUP).", ".$db->quote(stripslashes($group_name)).", $u, $now, $u, $now)");
+		$groupid = $db->nextId(TBL_AUTH_GROUP);
+		$db->query("insert into ".TBL_AUTH_GROUP." (group_id, group_name, created_by, created_date, last_modified_by, last_modified_date) values (".$groupid.", ".$db->quote(stripslashes($group_name)).", $u, $now, $u, $now)");
 	} else {
 		$db->query("update ".TBL_AUTH_GROUP." set group_name = ".$db->quote(stripslashes($group_name)).", last_modified_by = $u, last_modified_date = $now where group_id = '$groupid'");
 	}
+
+	$db->query("delete from ".TBL_GROUP_PERM." where group_id = '$groupid'");
+	foreach ($perms as $permid) {
+		$db->query("insert into ".TBL_GROUP_PERM." (group_id, perm_id) values ($groupid, $permid)");
+	}
+
 	if ($use_js) {
 		$t->render('edit-submit.html', '', 'wrap-popup.html');
 	} else {
@@ -64,11 +71,15 @@ function do_form($groupid = 0) {
 function show_form($groupid = 0, $error = '') {
 	global $db, $me, $t;
 
+	$group_perms = array();
 	if ($groupid && !$error) {
 		$t->assign($db->getRow("select * from ".TBL_AUTH_GROUP." where group_id = '$groupid'"));
+		$group_perms = $db->getCol("select distinct perm_id from ".TBL_GROUP_PERM." where group_id = $groupid");
 	} else {
 		$t->assign($_POST);
 	}
+	$t->assign('perms', $db->getAll("select * from ".TBL_AUTH_PERM));
+	$t->assign('group_perms', $group_perms);
 	$t->assign('error', $error);
 	$t->render('group-edit.html', translate("Edit Group"), (!empty($_GET['use_js']) ? 'wrap-popup.html' : 'wrap.html'));
 }
