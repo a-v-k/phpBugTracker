@@ -29,9 +29,6 @@
 							<a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>?op=del&group_id=<?php echo $groups[$i]['group_id']; ?>" onClick="return confirm('<?php echo translate("This will remove all user assignments to this group and the group itself.  Continue?"); ?>')"><?php echo translate("Delete"); ?></a> | 
 							<a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>?op=purge&group_id=<?php echo $groups[$i]['group_id']; ?>" onClick="return confirm('<?php echo translate("This will remove all user assignments to this group.  Continue?"); ?>')"><?php echo translate("Purge"); ?></a>
 						<?php } ?>
-						<?php if($groups[$i]['assignable']) { ?>
-							| <?php echo translate("Assignable"); ?>
-						<?php } ?>
 					</td>
         </tr>
         <?php } ?>

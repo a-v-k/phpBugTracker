@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.46 2005/08/22 19:44:47 ulferikson Exp $
+# $Id: mysql.in,v 1.47 2005/08/22 19:58:25 ulferikson Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id int(10) unsigned NOT NULL default '0',
@@ -19,7 +19,6 @@ CREATE TABLE TBL_AUTH_GROUP (
   group_id int(10) unsigned NOT NULL default '0',
   group_name varchar(80) NOT NULL default '',
   locked tinyint(1) unsigned NOT NULL default '0',
-  assignable tinyint(1) unsigned NOT NULL default '0',
   created_by int(10) unsigned NOT NULL default '0',
   created_date bigint(20) unsigned NOT NULL default '0',
   last_modified_by int(10) unsigned NOT NULL default '0',
@@ -300,7 +299,7 @@ insert into TBL_AUTH_USER_seq values (1);
 # Start off with three user levels...
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (1, 'Admin', 1);
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (2, 'User', 1);
-INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked, assignable) VALUES (3, 'Developer', 1, 1);
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (3, 'Developer', 1);
 create table TBL_AUTH_GROUP_seq (id int unsigned auto_increment not null primary key);
 insert into TBL_AUTH_GROUP_seq values (3);
 
@@ -308,14 +307,17 @@ insert into TBL_AUTH_GROUP_seq values (3);
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (1, 'Admin');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (2, 'Editbug');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (3, 'EditAssignment');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (4, 'Assignable');
 
-# Admins can do all the admin stuff and users can edit bugs
+# Admins can do all the admin stuff, users can edit bugs, and
+# developers are users who can own bugs 
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (1, 1);
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (2, 2);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 2);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 4);
 
-# And user_id 1 is an admin and a user
+# Insert user_id 1 into the admin group 
 INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 1);
-INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 2);
 
 # Add user's prefs as default values for all users defined so far (only admin)
 INSERT INTO TBL_USER_PREF (user_id) SELECT USER_ID FROM TBL_AUTH_USER;

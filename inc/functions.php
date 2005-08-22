@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.55 2005/08/22 19:44:46 ulferikson Exp $
+// $Id: functions.php,v 1.56 2005/08/22 19:58:25 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -161,7 +161,7 @@ function build_select($box, $selected = '', $project = 0) {
 			break;
 		case 'owner':
 			// Added the DISTINCT SQL modifier so we don't get duplicated users in the list. (Because of being in multiple groups with assignable rights.)
-			$rs = $db->query("select DISTINCT u.user_id, login from ".TBL_AUTH_USER." u, ".TBL_USER_GROUP." ug, ".TBL_AUTH_GROUP." g where u.active > 0 and u.user_id = ug.user_id and ug.group_id = g.group_id and g.assignable > 0 order by login");
+			$rs = $db->query("select DISTINCT u.user_id, login from ".TBL_AUTH_USER." u, ".TBL_USER_GROUP." ug, ".TBL_GROUP_PERM." gp, ".TBL_AUTH_PERM." p where u.active > 0 and u.user_id = ug.user_id and ug.group_id = gp.group_id and gp.perm_id = p.perm_id and p.perm_name = 'Assignable' order by login"); 
 			while ($rs->fetchInto($row)) {
 				// either singular matches, or array matches are acceptable
 				if (($selected == $row['user_id']) || (is_array($selected) && in_array($row['user_id'], $selected))) {

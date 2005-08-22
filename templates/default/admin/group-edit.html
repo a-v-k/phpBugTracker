@@ -1,6 +1,5 @@
 <?php
 	if (!isset($group_name)) $group_name = '';
-	if (!isset($assignable)) $assignable = '';
 	if (!isset($group_id))   $group_id = '';
 ?>
 <script type="text/javascript" language="JavaScript">
@@ -32,14 +31,6 @@
             </td>
             <td>
                 <input type="text" size="20" maxlength="40" name="group_name" value="<?php echo stripslashes(htmlspecialchars($group_name)); ?>">
-            </td>
-        </tr>
-        <tr>
-            <td align="right" valign="top">
-                Assignable:
-            </td>
-            <td>
-                <input type="checkbox" name="assignable" value="1" <?php if ($assignable > 0) echo 'checked'; ?>>
             </td>
         </tr>
         <tr>
