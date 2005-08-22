@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.59 2005/08/22 20:40:08 ulferikson Exp $
+// $Id: functions.php,v 1.60 2005/08/22 20:50:23 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -592,32 +592,38 @@ function qp_enc($input, $line_max = 76) {
 }
 
 // mailer with use of quoted-printable encoding (if configured so)
-function qp_mail($to, $subject = 'No subject', $body, $headers = '') {
+function qp_mail($to, $subject = 'No subject', $body, $from = ADMIN_EMAIL) {
 	global $STRING;
 
-	$subject="=?".CHARSET."?B?".base64_encode($subject)."?=";
+	require_once('./inc/htmlMimeMail/htmlMimeMail.php');
+	$mail = new htmlMimeMail();
+	$mail->setSubject($subject);
+	$mail->setFrom($from);
+	$recipient[] = $to;
 
-	if ($headers != '') {
-		$headers .= "\n";
-		// There have to be no newline at the end of $headers
-	}
-	
-	if (false/*HTML_EMAIL*/) {
-		$headers .= "Content-Type: text/html; charset=\"".CHARSET."\"\r\nContent-Transfer-Encoding: ";
-	} else {
-		$headers .= "Content-Type: text/plain; charset=\"".CHARSET."\"\r\nContent-Transfer-Encoding: ";
-	}
-
-	// If configured to send MIME encoded emails
 	if (SEND_MIME_EMAIL) {
-		$retval = mail ($to, $subject, qp_enc($body), $headers.
-				"quoted-printable\nMIME-Version: 1.0");
-	} else {
-		$retval = mail ($to, $subject, $body, $headers.
-				"8bit");
+		// If configured to send MIME encoded emails
+		if (false/*HTML_EMAIL*/) {
+			$mail->setHtmlEncoding("quoted-printable");
+			$mail->setHtml($body);
+		}
+		else {
+			$mail->setTextEncoding("quoted-printable");
+			$mail->setText($body);
+		}
+	}
+	else {
+		$mail->setTextEncoding("8bit");
+		$mail->setText($body);
 	}
 
-	// Returns true if mail is eccepted for delivery, otherwise return false
+	if (SMTP_EMAIL) {
+		$mail->setSMTPParams(SMTP_HOST, SMTP_PORT, SMTP_HELO, SMTP_AUTH, SMTP_AUTH_USER, SMTP_AUTH_PASS);
+	}
+
+	$retval = $mail->send($recipient, SMTP_EMAIL ? 'smtp' : 'mail');
+
+	// Returns true if mail is accepted for delivery, otherwise return false
 	return ($retval);
 }
 

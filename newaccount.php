@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.33 2004/10/25 12:06:58 bcurtis Exp $
+// $Id: newaccount.php,v 1.34 2005/08/22 20:50:23 ulferikson Exp $
 
 define('NO_AUTH', 1);
 include 'include.php'; 
@@ -64,13 +64,15 @@ function do_form() {
 	qp_mail($_POST['email'], 
 		translate("phpBugTracker Login"), 
 		sprintf(translate("Your phpBugTracker password is %s"), $password),
-		sprintf("From: %s", ADMIN_EMAIL));
+		ADMIN_EMAIL);
 
 	$t->render('newaccountsuccess.html', translate("New account created"));
 }
 
 function show_form($error = '') {
 	global $t, $_POST;
+	
+	$t->assign('error', $error);
 	
 	if (NEW_ACCOUNTS_DISABLED) {
 		$t->render('newaccount-disabled.html');

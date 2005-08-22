@@ -19,7 +19,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config-dist.php,v 1.32 2005/08/22 20:30:56 ulferikson Exp $
+// $Id: config-dist.php,v 1.33 2005/08/22 20:50:23 ulferikson Exp $
 
 // Database Config
 define ('DB_TYPE', '{db_type}');  // using PEAR::DB naming (mysql, pgsql, etc.)
@@ -70,5 +70,13 @@ define ('ONEDAY', 86400);
 
 define('PEAR_PATH', '{PEAR_PATH}'); // Set this to '/some/path/' to not use system-wide PEAR
 require_once (dirname(__FILE__).'/inc/auth.php');
+
+define('SMTP_EMAIL', false);
+define('SMTP_HOST', "localhost");
+define('SMTP_PORT', 25);
+define('SMTP_HELO', null);
+define('SMTP_AUTH', false);
+define('SMTP_AUTH_USER', "");
+define('SMTP_AUTH_PASS', "");
 
 ?>

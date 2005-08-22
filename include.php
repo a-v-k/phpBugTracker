@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.138 2005/08/22 20:44:16 ulferikson Exp $
+// $Id: include.php,v 1.139 2005/08/22 20:50:23 ulferikson Exp $
 
 define('RAWERROR', true);
 
@@ -193,7 +193,7 @@ if (isset($_POST['dologin'])) {
 				qp_mail($email, 
 					translate("phpBugTracker Login"),
 					sprintf(translate("Your phpBugTracker password is %s"), $password),
-					sprintf("From: %s", ADMIN_EMAIL));
+					ADMIN_EMAIL);
 				$t->assign('loginerror',
 					'<div class="result">'.translate("Your password has been emailed to you").'</div>');
 				$emailsuccess = true;
