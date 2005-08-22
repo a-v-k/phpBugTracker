@@ -51,7 +51,7 @@ function checkSavedQueries(frm) {
 			<td valign="top">
 				<select name="projects" onChange="updateMenus(this.form)">
 					<option value=''><?php echo translate("All"); ?></option>
-					<?php build_select('project'); ?>
+					<?php build_select('project', $project); ?>
 				</select>
 			</td>
 		</tr>
@@ -60,6 +60,7 @@ function checkSavedQueries(frm) {
 			<td valign="top">
 				<select name="versions">
 					<option value=''><?php echo translate("All"); ?></option>
+					<?php if ($project) build_select('version', $version, $project); ?>
 				</select>
 			</td>
 		</tr>
@@ -68,6 +69,7 @@ function checkSavedQueries(frm) {
 			<td valign="top">
 				<select name="components">
 					<option value=''><?php echo translate("All"); ?></option>
+					<?php if ($project) build_select('component', $component, $project); ?>
 				</select>
 			</td>
 		</tr>
@@ -75,7 +77,7 @@ function checkSavedQueries(frm) {
 			<td valign="top"><b><?php echo translate("Status"); ?>:</b></td>
 			<td valign="top">
 				<select name="status[]" multiple size="7">
-					<?php build_select('status'); ?>
+					<?php build_select('status', $status); ?>
 				</select>
 			</td>
 		</tr>
@@ -83,25 +85,25 @@ function checkSavedQueries(frm) {
 			<td valign="top"><b><?php echo translate("Sort by"); ?>:</b></td>
 			<td valign="top">
 				<select name="order">
-					<option value="bug_id">
+					<option <?php if ($order == 'bug_id') echo "selected"; ?> value="bug_id">
 					<?php echo translate("Bug number"); ?>
 					</option>
-					<option selected value="severity.sort_order">
+					<option <?php if (!$order || $order == 'severity.sort_order') echo "selected"; ?> value="severity.sort_order">
 					<?php echo translate("Severity"); ?>
 					</option>
-					<option value="reporter">
+					<option <?php if ($order == 'reporter') echo "selected"; ?> value="reporter">
 					<?php echo translate("Reporter"); ?>
 					</option>
-					<option value="status.sort_order">
+					<option <?php if ($order == 'status.sort_order') echo "selected"; ?> value="status.sort_order">
 					<?php echo translate("Status"); ?>
 					</option>
-					<option value="priority.sort_order">
+					<option <?php if ($order == 'priority') echo "selected"; ?> value="priority.sort_order">
 					<?php echo translate("Priority"); ?>
 					</option>
 				</select>
 				<select name="sort">
-					<option selected value="asc"><?php echo translate("Ascending"); ?></option>
-					<option value="desc"><?php echo translate("Descending"); ?></option>
+					<option <?php if (!$sort || $sort == 'asc') echo "selected"; ?> value="asc"><?php echo translate("Ascending"); ?></option>
+					<option <?php if ($sort == 'desc') echo "selected"; ?> value="desc"><?php echo translate("Descending"); ?></option>
 				</select>
 			</td>
 		</tr>
@@ -119,6 +121,12 @@ function checkSavedQueries(frm) {
 	<input type="hidden" name="savedqueryoverride" value="0">
 	<input type="reset" value="<?php echo translate("Reset to default query"); ?>">
 	<input type="submit">
+    </form>
+
+    <form method="get" name="clear" action="query.php">
+        <input type="hidden" name="op" value="query">
+        <input type="submit" value="<?php echo translate("Clear All Fields"); ?>">
+    </form>
 	<?php if ($querycount) { ?>
 		<br><br>
 		<b><?php echo translate("Saved Queries"); ?></b>
@@ -134,6 +142,5 @@ function checkSavedQueries(frm) {
 		?>
 		
 	<?php } ?>
-    </form>
 <br>
 <a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=query&form=advanced"><?php echo translate("Go to the advanced query page"); ?></a>

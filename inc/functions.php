@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.58 2005/08/22 20:21:42 ulferikson Exp $
+// $Id: functions.php,v 1.59 2005/08/22 20:40:08 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -107,8 +107,7 @@ function build_select($box, $selected = '', $project = 0) {
 			break;
 		case 'group':
 			if ($project) { // If we are building for project admin page
-				if (is_array($selected) && (!count($selected) or (count($selected) && in_array(0, $selected))) or
-				    !isset($selected) or $selected == 0) {
+				if (!is_array($selected) or !count($selected) or (count($selected) && in_array(0, $selected))) {
 					$sel = ' selected';
 				} else {
 					$sel = '';
@@ -138,8 +137,10 @@ function build_select($box, $selected = '', $project = 0) {
 		case 'version':
 			$rs = $db->query($queries[$box]);
 			while ($rs->fetchInto($row)) {
-				if ($selected == $row[$box.'_id'] and $selected != '') {
+				if (is_array($selected) && count($selected) && in_array($row[$box.'_id'], $selected)) {
 					$sel = ' selected';
+				} elseif ($selected == $row[$box.'_id'] and $selected != '') {
+ 					$sel = ' selected';
 				} else {
 					$sel = '';
 				}
@@ -152,6 +153,8 @@ function build_select($box, $selected = '', $project = 0) {
 			while ($rs->fetchInto($row)) {
 				if ($selected == '' and isset($row['Regex']) and
 					preg_match($row['Regex'],$GLOBALS['HTTP_USER_AGENT'])) {
+					$sel = ' selected';
+				} elseif (is_array($selected) && count($selected) && in_array($row[$box.'_id'], $selected)) {
 					$sel = ' selected';
 				} elseif ($selected == $row[$box.'_id']) {
 					$sel = ' selected';
@@ -166,7 +169,7 @@ function build_select($box, $selected = '', $project = 0) {
 			$rs = $db->query("select DISTINCT u.user_id, login from ".TBL_AUTH_USER." u, ".TBL_USER_GROUP." ug, ".TBL_GROUP_PERM." gp, ".TBL_AUTH_PERM." p where u.active > 0 and u.user_id = ug.user_id and ug.group_id = gp.group_id and gp.perm_id = p.perm_id and p.perm_name = 'Assignable' order by login"); 
 			while ($rs->fetchInto($row)) {
 				// either singular matches, or array matches are acceptable
-				if (($selected == $row['user_id']) || (is_array($selected) && in_array($row['user_id'], $selected))) {
+				if (($selected == $row['user_id']) || (is_array($selected) && count($selected) && in_array($row['user_id'], $selected))) {
 					$sel = ' selected';
 				} else {
 					$sel = '';
@@ -285,7 +288,9 @@ function build_select($box, $selected = '', $project = 0) {
 		default :
 			$deadarray = $select[$box];
 			while(list($val,$item) = each($deadarray)) {
-				if ($selected == $val and $selected != '') {
+				if (is_array($selected) && count($selected) && in_array($val, $selected)) {
+					$sel = ' selected';
+				} elseif ($selected == $val and $selected != '') {
 					$sel = ' selected';
 				} else {
 					$sel = '';

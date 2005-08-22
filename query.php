@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.103 2005/08/22 20:30:56 ulferikson Exp $
+// $Id: query.php,v 1.104 2005/08/22 20:40:08 ulferikson Exp $
 
 include 'include.php';
 
@@ -35,13 +35,46 @@ function delete_saved_query($queryid) {
 	}
 }
 
-function show_query() {
+function show_query($edit = false) {
 	global $db, $t, $u;
 
 	if ($u != 'nobody') {
 		// Grab the saved queries if there are any
 		$t->assign('queries',
 			$db->getAll("select * from ".TBL_SAVED_QUERY." where user_id = '$u'"));
+	}
+
+	if ($edit) {
+		extract($_GET);
+		$t->assign('project', isset($projects) ? $projects : null);
+		$t->assign('version', isset($versions) ? $versions : null);
+		$t->assign('component', isset($components) ? $components : null);
+		$t->assign('status', isset($status) ? $status : null);
+		$t->assign('resolution', isset($resolution) ? $resolution : null);
+		$t->assign('os', isset($os) ? $os : null);
+		$t->assign('priority', isset($priority) ? $priority : null);
+		$t->assign('severity', isset($severity) ? $severity : null);
+		$t->assign('database', isset($database) ? $database : null);
+		$t->assign('site', isset($site) ? $site : null);
+		$t->assign('emailsearch1', isset($emailsearch1) ? $emailsearch1 : null);
+		$t->assign('closedinversion', isset($closedinversion) ? $closedinversion : null);
+		$t->assign('tobeclosedinversion', isset($tobeclosedinversion) ? $tobeclosedinversion : null);
+		$t->assign('order', isset($order) ? $order : null);
+		$t->assign('sort', isset($sort) ? $sort : null);
+		$t->assign('emailsearch1', isset($emailsearch1) ? $emailsearch1 : null);
+		$t->assign('email1', isset($email1) ? $email1 : null);
+		$t->assign('emailtype1', isset($emailtype1) ? $emailtype1 : null);
+		$t->assign('emailfield1', isset($emailfield1) ? $emailfield1 : null);
+		$t->assign('title', isset($title) ? $title : null);
+		$t->assign('title_type', isset($title_type) ? $title_type : null);
+		$t->assign('description', isset($description) ? $description : null);
+		$t->assign('description_type', isset($description_type) ? $description_type : null);
+		$t->assign('url', isset($url) ? $url : null);
+		$t->assign('url_type', isset($url_type) ? $url_type : null);
+		$t->assign('start_date', isset($start_date) ? $start_date : null);
+		$t->assign('end_date', isset($end_date) ? $end_date : null);
+		$t->assign('closed_start_date', isset($closed_start_date) ? $closed_start_date : null);
+		$t->assign('closed_end_date', isset($closed_end_date) ? $closed_end_date : null);
 	}
 
 	// Show the advanced query form
@@ -125,7 +158,7 @@ function build_query($assignedto, $reportedby, $open, $bookmarked) {
 		}
 
 		// Email field(s)
-		if (!empty($email1)) {
+		if (!empty($email1) && !empty($emailfield1)) {
 			switch($emailtype1) {
 				case 'like' : $econd = "like '%$email1%'"; break;
 				case 'rlike' :
@@ -425,6 +458,7 @@ if (isset($_GET['op'])) switch($_GET['op']) {
 		if ($auth->is_authenticated()) list_items($assignedto, $reportedby, $open, $bookmarked); 
 		else show_query(); 
 		break;
+	case 'edit' : show_query(true); break;
 	default : show_query(); break;
 }
 else list_items($assignedto, $reportedby, $open, $bookmarked);

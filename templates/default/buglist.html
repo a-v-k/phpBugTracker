@@ -20,7 +20,7 @@
 				<?php 
 					foreach ($bugs[$i] as $var => $val) {
 						if ($var == 'bug_link_id') $bugid = $val;
-						elseif ($var != 'severity_color') echo '<td>'.format_bug_col($val, $var, $bugid, $i).'</td>';
+						elseif ($var != 'severity_color' && $var != 'priority_color') echo '<td>'.format_bug_col($val, $var, $bugid, $i).'</td>';
 					}
 				?>
 			</tr>
@@ -33,3 +33,19 @@
 	<a href="query.php?xl=1"><?php echo translate("Download to spreadsheet"); ?></a>
 </div>
 <?php } ?>
+<div align="left">
+	<a href="query.php?op=edit<?php
+		$paramstr = '';
+		foreach ($_GET as $k => $v) {
+			$$k = $v;
+			if ($k == 'op') continue;
+			if (is_array($v)) {
+				foreach ($v as $value) {
+					$paramstr .= "&{$k}[]=$value";
+				}
+			} else {
+				$paramstr .= "&$k=$v";
+			}
+		}
+		echo $paramstr; ?>"><?php echo translate("Edit this query"); ?></a>
+</div>

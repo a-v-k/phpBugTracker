@@ -67,35 +67,35 @@ function checkSavedQueries(frm) {
 	</tr><tr>
 	    <td align="left" valign="top">
 	    	<select name="status[]" multiple size="7">
-			<?php echo build_select('status'); ?>
+			<?php echo build_select('status', $status); ?>
 		</select>
 		</td>
 	    <td align="left" valign="top">
 	    	<select name="resolution[]" multiple size="7">
 			<option value="0"><?php echo translate("None"); ?></option>
-			<?php build_select('resolution'); ?>
+			<?php build_select('resolution', $resolution); ?>
 		</select>
 		</td>
 	    <td align="left" valign="top">
 	    	<select name="os[]" multiple size="7">
-			<?php build_select('os'); ?>
+			<?php build_select('os', $os); ?>
 		</select>
 		</td>
 	    <td align="left" valign="top">
 	    	<select name="priority[]" multiple size="7">
-			<?php build_select('priority'); ?>
+			<?php build_select('priority', $priority); ?>
 		</select></td>
 	    <td align="left" valign="top">
 	    	<select name="severity[]" multiple size="7">
-			<?php build_select('severity'); ?>
+			<?php build_select('severity', $severity); ?>
 		</select></td>
 	    <td align="left" valign="top">
 	    	<select name="database[]" multiple size="7">
-			<?php build_select('database'); ?>
+			<?php build_select('database', $database); ?>
 		</select></td>
 	    <td align="left" valign="top">
 	    	<select name="site[]" multiple size="7">
-			<?php build_select('site'); ?>
+			<?php build_select('site', $site); ?>
 		</select></td>
 	</tr>
     </table>
@@ -108,22 +108,23 @@ function checkSavedQueries(frm) {
 				<tr>
 				    <td rowspan="2" valign="top">
 				    	<select name="emailsearch1">
-					    <option value="email"><?php echo translate("Email"); ?></option>
-					    <option value="login"><?php echo translate("Login"); ?></option>
+					    <option <?php if (!$emailsearch1 || $emailsearch1 == 'email') echo "selected"; ?> value="email"><?php echo translate("Email"); ?></option>
+					    <option <?php if ($emailsearch1 == 'login') echo "selected"; ?> value="login"><?php echo translate("Login"); ?></option>
 					</select>: 
-					<input name="email1" size="30" value="">&nbsp;<?php echo translate("matching as"); ?>&nbsp;
++					<input name="email1" size="30" value="<?php echo $email1; ?>">&nbsp;<?php echo translate("matching as"); ?>&nbsp;
 					<select name="emailtype1">
-					    <option value="rlike"><?php echo translate("regexp"); ?></option>
-					    <option value="not rlike"><?php echo translate("not regexp"); ?></option>
-					    <option selected value="like"><?php echo translate("substring"); ?></option>
-					    <option value="="><?php echo translate("exact"); ?></option>
+					    <option <?php if ($emailtype1 == 'rlike') echo "selected"; ?> value="rlike"><?php echo translate("regexp"); ?></option>
+					    <option <?php if ($emailtype1 == 'not rlike') echo "selected"; ?> value="not rlike"><?php echo translate("not regexp"); ?></option>
+					    <option <?php if (!$emailtype1 || $emailtype1 == 'like') echo "selected"; ?> value="like"><?php echo translate("substring"); ?></option>
+					    <option <?php if ($emailtype1 == '=') echo "selected"; ?> value="="><?php echo translate("exact"); ?></option>
 					</select></td>
-				    <td><input type="checkbox"
-					name="emailfield1[]" value="owner"
-					checked><?php echo translate("Assigned To"); ?></td>
+				    <td><input type="checkbox" name="emailfield1[]" value="owner"
+					<?php if (!$emailfield1 || (count($emailfield1) && in_array("owner", $emailfield1))) echo "checked"; ?>>
+					<?php echo translate("Assigned To"); ?></td>
 				</tr><tr>
-				    <td><input type="checkbox" name="emailfield1[]"
-					value="reporter"><?php echo translate("Reporter"); ?></td>
+				    <td><input type="checkbox" name="emailfield1[]" value="reporter"
+					<?php if (count($emailfield1) && in_array("reporter", $emailfield1)) echo "checked"; ?>>
+					<?php echo translate("Reporter"); ?></td>
 				</tr>
 			    </table></td>
 		    </tr>
@@ -133,45 +134,45 @@ function checkSavedQueries(frm) {
     <table border="0">
 	<tr>
 	    <td align="right"><?php echo translate("Summary"); ?>:</td>
-	    <td><input name="title" size="30" value=""></td>
+	    <td><input name="title" size="30" value="<?php echo $title; ?>"></td>
 	    <td><select name="title_type">
-		    <option value="like" selected><?php echo translate("substring"); ?></option>
-		    <option value="rlike"><?php echo translate("regexp"); ?></option>
-		    <option value="not rlike"><?php echo translate("not regexp"); ?></option>
+		    <option value="like" <?php if (!$title_type || $title_type == 'like') echo "selected"; ?>><?php echo translate("substring"); ?></option>
+		    <option value="rlike" <?php if ($title_type == 'rlike') echo "selected"; ?>><?php echo translate("regexp"); ?></option>
+		    <option value="not rlike" <?php if ($title_type == 'not rlike') echo "selected"; ?>><?php echo translate("not regexp"); ?></option>
 	    </select></td>
 	</tr><tr>
 	    <td align="right"><?php echo translate("A description entry"); ?>:</td>
-	    <td><input name="description" size="30" value=""></td>
+	    <td><input name="description" size="30" value="<?php echo $description; ?>"></td>
 	    <td><select name="description_type">
-		    <option value="like" selected><?php echo translate("substring"); ?></option>
-		    <option value="rlike"><?php echo translate("regexp"); ?></option>
-		    <option value="not rlike"><?php echo translate("not regexp"); ?></option>
+		    <option value="like" <?php if (!$description_type || $description_type == 'like') echo "selected"; ?>><?php echo translate("substring"); ?></option>
+		    <option value="rlike" <?php if ($description_type == 'rlike') echo "selected"; ?>><?php echo translate("regexp"); ?></option>
+		    <option value="not rlike" <?php if ($description_type == 'not rlike') echo "selected"; ?>><?php echo translate("not regexp"); ?></option>
 	    </select></td>
 	</tr><tr>
 	    <td align="right"><?php echo translate("URL"); ?>:</td>
-	    <td><input name="url" size="30" value=""></td>
+	    <td><input name="url" size="30" value="<?php echo $url; ?>"></td>
 	    <td><select name="url_type">
-		    <option value="like" selected><?php echo translate("substring"); ?></option>
-		    <option value="rlike"><?php echo translate("regexp"); ?></option>
-		    <option value="not rlike"><?php echo translate("not regexp"); ?></option>
+		    <option value="like" <?php if (!$url_type || $url_type == 'like') echo "selected"; ?>><?php echo translate("substring"); ?></option>
+		    <option value="rlike" <?php if ($url_type == 'rlike') echo "selected"; ?>><?php echo translate("regexp"); ?></option>
+		    <option value="not rlike" <?php if ($url_type == 'not rlike') echo "selected"; ?>><?php echo translate("not regexp"); ?></option>
 	    </select></td>
 	</tr><tr>
 	<td align="right">
 		<?php echo translate("Created Date Range"); ?>:
 	</td>
 	<td colspan="2">
-		<input type="text" name="start_date" size="11"> 
+		<input type="text" name="start_date" size="11" value="<?php echo $start_date; ?>">
 		<?php echo translate("to"); ?> 
-		<input type="text" name="end_date" size="11">
+		<input type="text" name="end_date" size="11" value="<?php echo $end_date; ?>">
 	</td>
 	</tr><tr>
 	<td align="right">
 		<?php echo translate("Closed Date Range"); ?>:
 	</td>
 	<td colspan="2">
-		<input type="text" name="closed_start_date" size="11"> 
+		<input type="text" name="closed_start_date" size="11" value="<?php echo $closed_start_date; ?>">
 		<?php echo translate("to"); ?> 
-		<input type="text" name="closed_end_date" size="11">
+		<input type="text" name="closed_end_date" size="11" value="<?php echo $closed_end_date; ?>">
 	</td>
 	</tr>
     </table>
@@ -181,37 +182,64 @@ function checkSavedQueries(frm) {
 	    <td><b><?php echo translate("Project"); ?>:</b></td>
 	    <td><select name="projects" onChange="updateMenus(this.form)">
 		    <option value=''><?php echo translate("All"); ?></option>
-		    <?php build_select('project'); ?>
+		    <?php build_select('project', $project); ?>
 		</select>
 		</td>
 	</tr><tr>
 	    <td><b><?php echo translate("Version"); ?>:</b></td>
-	    <td><select name="versions"><option value=''><?php echo translate("All"); ?></option></select></td>
+	    <td><select name="versions">
+		    <option value=''><?php echo translate("All"); ?></option>
+		    <?php if ($project) build_select('version', $version, $project); ?>
+		</select>
+            </td>
 	</tr><tr>
 	    <td><b><?php echo translate("Closed in Version"); ?>:</b></td>
-	    <td><select name="closedinversion"><option value=''><?php echo translate("All"); ?></option></select></td>
+	    <td><select name="closedinversion">
+		    <option value=''><?php echo translate("All"); ?></option>
+		    <?php if ($project) build_select('version', $closedinversion, $project); ?>
+		</select>
+            </td>
 	</tr><tr>
 	    <td><b><?php echo translate("To be Closed in Version"); ?>:</b></td>
-	    <td><select name="tobeclosedinversion"><option value=''><?php echo translate("All"); ?></option></select></td>
+	    <td><select name="tobeclosedinversion">
+		    <option value=''><?php echo translate("All"); ?></option>
+		    <?php if ($project) build_select('version', $tobeclosedinversion, $project); ?>
+		</select>
+            </td>
 	</tr><tr>
 	    <td><b><?php echo translate("Component"); ?>:</b></td>
-	    <td><select name="components"><option value=''><?php echo translate("All"); ?></option></select></td>
+	    <td><select name="components">
+		    <option value=''><?php echo translate("All"); ?></option>
+		    <?php if ($project) build_select('component', $component, $project); ?>
+		</select>
+            </td>
 	</tr>
     </table>
     <hr align="left" width="100%">
     <input type="hidden" name="op" value="doquery">
+    <input type="hidden" name="form" value="advanced">
 	<input type="hidden" name="savedqueryoverride" value="0">
     <b><?php echo translate("Sort By"); ?>:</b>
     <select name="order">
-	<option value="bug_id"><?php echo translate("Bug number"); ?></option>
-        <option selected value="severity.sort_order"><?php echo translate("Severity"); ?></option>
-        <option value="reporter.login"><?php echo translate("Reporter"); ?></option>
-        <option value="status.sort_order"><?php echo translate("Status"); ?></option>
-        <option value="priority.sort_order"><?php echo translate("Priority"); ?></option>
+		<option <?php if ($order == 'bug_id') echo "selected"; ?> value="bug_id">
+		<?php echo translate("Bug number"); ?>
+		</option>
+		<option <?php if (!$order || $order == 'severity.sort_order') echo "selected"; ?> value="severity.sort_order">
+		<?php echo translate("Severity"); ?>
+		</option>
+		<option <?php if ($order == 'reporter') echo "selected"; ?> value="reporter">
+		<?php echo translate("Reporter"); ?>
+		</option>
+		<option <?php if ($order == 'status.sort_order') echo "selected"; ?> value="status.sort_order">
+		<?php echo translate("Status"); ?>
+		</option>
+		<option <?php if ($order == 'priority') echo "selected"; ?> value="priority">
+		<?php echo translate("Priority"); ?>
+		</option>
     </select>
     <select name="sort">
-	<option selected value="asc"><?php echo translate("Ascending"); ?></option>
-	<option value="desc"><?php echo translate("Descending"); ?></option>
+		<option <?php if (!$sort || $sort == 'asc') echo "selected"; ?> value="asc"><?php echo translate("Ascending"); ?></option>
+		<option <?php if ($sort == 'desc') echo "selected"; ?> value="desc"><?php echo translate("Descending"); ?></option>
     </select>
     </nobr>
     <br><br>
@@ -223,6 +251,14 @@ function checkSavedQueries(frm) {
 	<?php } ?>
     <input type="reset" value="<?php echo translate("Reset to default query"); ?>">
     <input type="submit">
+</form>
+
+<form method="get" name="clear" action="query.php">
+    <input type="hidden" name="op" value="query">
+    <input type="hidden" name="form" value="advanced">
+    <input type="submit" value="<?php echo translate("Clear All Fields"); ?>">
+</form>
+
 	<?php if ($querycount) { ?>
 		<br><br>
 		<b><?php echo translate("Saved Queries"); ?></b>
@@ -238,6 +274,5 @@ function checkSavedQueries(frm) {
 		?>
 		
 	<?php } ?>
-</form>
 <br>
 <a href="query.php?op=query"><?php echo translate("Go to the simple query page"); ?></a>
