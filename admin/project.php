@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.47 2004/10/25 12:06:59 bcurtis Exp $
+// $Id: project.php,v 1.48 2005/08/22 20:21:42 ulferikson Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -52,10 +52,11 @@ function save_version($version_id = 0) {
 
 	extract($_POST);
 	if (!isset($active)) $active = 0;
+	if (empty($sort_order)) $sort_order = 0;
 	if (!$version_id) {
-		$db->query('insert into '.TBL_VERSION." (version_id, project_id, version_name, active, created_by, created_date) values (".$db->nextId(TBL_VERSION).", $project_id, ".$db->quote(stripslashes($version_name)).", $active, $u, $now)");
+		$db->query('insert into '.TBL_VERSION." (version_id, project_id, version_name, active, sort_order, created_by, created_date) values (".$db->nextId(TBL_VERSION).", $project_id, ".$db->quote(stripslashes($version_name)).", $active, $sort_order, $u, $now)");
 	} else {
-		$db->query('update '.TBL_VERSION." set project_id = $project_id, version_name = ".$db->quote(stripslashes($version_name)).", active = $active where version_id = '$version_id'");
+		$db->query('update '.TBL_VERSION." set project_id = $project_id, version_name = ".$db->quote(stripslashes($version_name)).", active = $active, sort_order = $sort_order where version_id = '$version_id'");
 	}
 	if ($use_js) {
 		$t->render('edit-submit.html');
@@ -111,10 +112,11 @@ function save_component($component_id = 0) {
 	extract($_POST);
 	if (!$owner) $owner = 0;
 	if (!$active) $active = 0;
+	if (empty($sort_order)) $sort_order = 0;
 	if (!$component_id) {
-		$db->query('insert into '.TBL_COMPONENT." (component_id, project_id, component_name, component_desc, owner, active, created_by, created_date, last_modified_by, last_modified_date) values (".$db->nextId(TBL_COMPONENT).", $project_id, ".$db->quote(stripslashes($component_name)).", ".$db->quote(stripslashes($component_desc)).", $owner, $active, $u, $now, $u, $now)");
+		$db->query('insert into '.TBL_COMPONENT." (component_id, project_id, component_name, component_desc, owner, active, sort_order, created_by, created_date, last_modified_by, last_modified_date) values (".$db->nextId(TBL_COMPONENT).", $project_id, ".$db->quote(stripslashes($component_name)).", ".$db->quote(stripslashes($component_desc)).", $owner, $active, $sort_order, $u, $now, $u, $now)");
 	} else {
-		$db->query('update '.TBL_COMPONENT." set component_name = ".$db->quote(stripslashes($component_name)).', component_desc = '.$db->quote(stripslashes($component_desc)).", owner = $owner, active = $active, last_modified_by = $u, "."last_modified_date = $now where component_id = $component_id");
+		$db->query('update '.TBL_COMPONENT." set component_name = ".$db->quote(stripslashes($component_name)).', component_desc = '.$db->quote(stripslashes($component_desc)).", owner = $owner, active = $active, sort_order = $sort_order, last_modified_by = $u, "."last_modified_date = $now where component_id = $component_id");
 	}
 	if ($use_js) {
 		$t->render('edit-submit.html');
@@ -173,11 +175,13 @@ function save_project($projectid = 0) {
 
 	extract($_POST);
 	if (!isset($active)) $active = 0;
+	if (empty($version_sortorder)) $version_sortorder = 0;
+	if (empty($component_sortorder)) $component_sortorder = 0;
 	if (!$projectid) {
 		$projectid = $db->nextId(TBL_PROJECT);
 		$db->query('insert into '.TBL_PROJECT." (project_id, project_name, project_desc, active, created_by, created_date) values ($projectid , ".$db->quote(stripslashes($project_name)).", ".$db->quote(stripslashes($project_desc)).", $active, $u, $now)");
-		$db->query('insert into '.TBL_VERSION." (version_id, project_id, version_name, active, created_by, created_date) values (".$db->nextId(TBL_VERSION).", $projectid, ".$db->quote(stripslashes($version_name)).", 1, $u, $now)");
-		$db->query('insert into '.TBL_COMPONENT." (component_id, project_id, component_name, component_desc, owner, active, created_by, created_date, last_modified_by, last_modified_date) values (".$db->nextId(TBL_COMPONENT).", $projectid, ".$db->quote(stripslashes($component_name)).", ".$db->quote(stripslashes($component_desc)).", $owner, 1, $u, $now, $u, $now)");
+		$db->query('insert into '.TBL_VERSION." (version_id, project_id, version_name, active, sort_order, created_by, created_date) values (".$db->nextId(TBL_VERSION).", $projectid, ".$db->quote(stripslashes($version_name)).", 1, $version_sortorder, $u, $now)");
+		$db->query('insert into '.TBL_COMPONENT." (component_id, project_id, component_name, component_desc, owner, active, sort_order, created_by, created_date, last_modified_by, last_modified_date) values (".$db->nextId(TBL_COMPONENT).", $projectid, ".$db->quote(stripslashes($component_name)).", ".$db->quote(stripslashes($component_desc)).", $owner, 1, $component_sortorder, $u, $now, $u, $now)");
 	} else {
 		$db->query('update '.TBL_PROJECT." set project_name = ".$db->quote(stripslashes($project_name)).", project_desc = ".$db->quote(stripslashes($project_desc)).", active = $active where project_id = $projectid");
 	}
@@ -294,6 +298,7 @@ function list_projects() {
 		'name' => 'project_name',
 		'description' => 'project_desc',
 		'active' => 'active',
+		'sortorder' => 'sort_order',
 		'createdby' => 'created_by',
 		'createddate' => 'created_date'
 		);

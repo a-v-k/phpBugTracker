@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.47 2005/08/22 19:58:25 ulferikson Exp $
+# $Id: mysql.in,v 1.48 2005/08/22 20:21:42 ulferikson Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id int(10) unsigned NOT NULL default '0',
@@ -134,6 +134,7 @@ CREATE TABLE TBL_COMPONENT (
   component_desc text NOT NULL,
   owner int(10) unsigned NOT NULL default '0',
   active tinyint(1) NOT NULL default '1',
+  sort_order tinyint(3) unsigned NOT NULL default '0',
   created_by int(10) unsigned NOT NULL default '0',
   created_date bigint(20) unsigned NOT NULL default '0',
   last_modified_by int(10) unsigned NOT NULL default '0',
@@ -264,6 +265,7 @@ CREATE TABLE TBL_VERSION (
   project_id int(10) unsigned NOT NULL default '0',
   version_name char(30) NOT NULL default '',
   active tinyint(1) NOT NULL default '1',
+  sort_order tinyint(3) unsigned NOT NULL default '0',
   created_by int(10) unsigned NOT NULL default '0',
   created_date bigint(20) unsigned NOT NULL default '0',
   last_modified_by int(10) unsigned NOT NULL default '0',

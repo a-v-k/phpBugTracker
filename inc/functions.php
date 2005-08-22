@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.57 2005/08/22 20:11:49 ulferikson Exp $
+// $Id: functions.php,v 1.58 2005/08/22 20:21:42 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -88,8 +88,8 @@ function build_select($box, $selected = '', $project = 0) {
 					" and ".
 					($selected ? " (active > 0 or project_id in (".$db->quote($selected)."))" : 'active > 0').
 					" order by {$box}_name",
-			'component' => $querystart." where project_id = ".$db->quote($project)." and active = 1 order by {$box}_name",
-			'version' => $querystart." where project_id = ".$db->quote($project)." and active = 1 order by {$box}_id desc",
+			'component' => $querystart." where project_id = ".$db->quote($project)." and active = 1 order by sort_order, {$box}_name",
+			'version' => $querystart." where project_id = ".$db->quote($project)." and active = 1 order by sort_order, {$box}_id desc",
 			'database' => $querystart.$querymid
 			);
 	}

@@ -90,9 +90,20 @@
 				</tr>
 				<tr>
         	<td valign="top">
+				<table>
+					<tr>
+						<td>
 						<?php echo translate("Initial Version"); ?>:
 						<br>
         		<input type="text" size="30" maxlength="30" name="version_name" value="<?php echo stripslashes(htmlspecialchars($version_name)); ?>">
+					</td>
+								<td>
+								 <?php echo translate("Sort Order"); ?>:
+									<br>
+									<input type="text" size="3" maxlength="3" name="version_sortorder" value="<?php echo $version_sortorder; ?>">
+								</td>
+							</tr>
+						</table>
 					</td>
 				</tr>
 			</table>
@@ -110,10 +121,20 @@
 				</tr>
 				<tr>
         	<td valign="top">
+				<table>
+					<tr>
+						<td>
 						<?php echo translate("Initial Component Name"); ?>:
 						<br>
         		<input type="text" size="30" maxlength="30" name="component_name" value="<?php echo stripslashes(htmlspecialchars($component_name)); ?>">
 					</td>
+								<td>
+								 <?php echo translate("Sort Order"); ?>:
+									<br>
+									<input type="text" size="3" maxlength="3" name="component_sortorder" value="<?php echo $component_sortorder; ?>">
+								</td>
+							</tr>
+						</table>
 				</tr>
 				<tr>
         	<td valign="top">

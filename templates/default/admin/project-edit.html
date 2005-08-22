@@ -101,6 +101,7 @@
 					<th><?php echo translate("Version"); ?></th>
 					<th><?php echo translate("Created"); ?></th>
 					<th><?php echo translate("Active"); ?></th>
+					<th><?php echo translate("Sort Order"); ?></th>
 					<th><?php echo translate("Delete"); ?></th>
 				</tr>
 				<?php for ($i = 0, $count = count($versions); $i < $count; $i++) { ?>
@@ -108,6 +109,7 @@
 					<td><a href="project.php?op=edit_version&id=<?php echo $versions[$i]['version_id']; ?>" onClick="popupVersion(<?php echo $versions[$i]['version_id']; ?>); return false;"><?php echo stripslashes(htmlspecialchars($versions[$i]['version_name'])); ?></a></td>
 					<td align="center"><?php echo date(DATE_FORMAT, $versions[$i]['created_date']); ?></td>
 					<td align="center"><?php echo $versions[$i]['active'] ? translate("Yes") : translate("No"); ?></td>
+					<td align="center"><?php echo $versions[$i]['sort_order']; ?></td>
 					<td align="center"><?php if(!$versions[$i]['bug_count']) { ?><a href="project.php?op=del_version&id=<?php echo $versions[$i]['version_id']; ?>&project_id=<?php echo $project_id; ?>"><?php echo translate("Delete"); ?></a><?php } ?></td>
 				</tr>
                 <?php } ?>
@@ -127,6 +129,7 @@
 					<th><?php echo translate("Component"); ?></th>
 					<th><?php echo translate("Created"); ?></th>
 					<th><?php echo translate("Active"); ?></th>
+					<th><?php echo translate("Sort Order"); ?></th>
 					<th><?php echo translate("Delete"); ?></th>
 				</tr>
 				<?php for ($i = 0, $count = count($components); $i < $count; $i++) { ?>
@@ -134,6 +137,7 @@
 					<td><a href="project.php?op=edit_component&id=<?php echo $components[$i]['component_id']; ?>" onClick="popupComponent(<?php echo $components[$i]['component_id']; ?>); return false;"><?php echo stripslashes(htmlspecialchars($components[$i]['component_name'])); ?></a></td>
 					<td align="center"><?php echo date(DATE_FORMAT, $components[$i]['created_date']); ?></td>
 					<td align="center"><?php echo $components[$i]['active'] ? translate("Yes") : translate("No"); ?></td>
+					<td align="center"><?php echo $components[$i]['sort_order']; ?></td>
 					<td align="center"><?php if(!$components[$i]['bug_count']) { ?><a href="project.php?op=del_component&id=<?php echo $components[$i]['component_id']; ?>&project_id=<?php echo $project_id; ?>"><?php echo translate("Delete"); ?></a><?php } ?></td>
 				</tr>
                 <?php } ?>
