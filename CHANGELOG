@@ -1,3 +1,12 @@
+-- 1.x -- 
+: Moved priority levels into a table
+: Changed the 'Assignable' bit to a group permission
+: Added sort-order to components and versions
+: Added support to bookmark/monitor a set of bugs
+: Added a simple UI to edit group permissions
+: Added support to (re)edit a query
+: Added support for sending smtp mail
+
 -- 1.0 -- 3 Aug 2005
 : Added links from project summary on home page (Phil Davis).
 : Added display of the bug ids a bug blocks.
