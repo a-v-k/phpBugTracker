@@ -235,6 +235,11 @@
 	</table>
 </form>
 <div align="center" class="bugdisplaylinks">
+<?php if (!$already_bookmarked) { ?>
+	<b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=addbookmark&bugid=<?php echo $bug_id; ?>"><?php echo translate("Bookmark this bug"); ?></a></b> |
+<?php } else { ?>
+	<b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=delbookmark&bugid=<?php echo $bug_id; ?>"><?php echo translate("Remove bookmark for this bug"); ?></a></b> |
+<?php } ?>
 <?php if (!empty($error['vote'])) echo "<div class=\"error\">{$error['vote']}</div>" ?>
 	<b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=vote&bugid=<?php echo $bug_id; ?>" onClick="if (<?php echo $already_voted; ?>) { alert ('<?php echo translate("You have already voted for this bug"); ?>'); return false; }"><?php echo translate("Vote for this bug"); ?></a></b> |
 	<b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=viewvotes&bugid=<?php echo $bug_id; ?>"><?php echo translate("View votes"); ?> (<?php echo $num_votes; ?>)</a></b> |

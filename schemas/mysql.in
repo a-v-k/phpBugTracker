@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.48 2005/08/22 20:21:42 ulferikson Exp $
+# $Id: mysql.in,v 1.49 2005/08/22 20:30:56 ulferikson Exp $
 
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id int(10) unsigned NOT NULL default '0',
@@ -285,6 +285,11 @@ CREATE TABLE TBL_SITE (
   site_name varchar(50) NOT NULL default '',
   sort_order tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY (site_id)
+) TYPE=MyISAM;
+
+CREATE TABLE TBL_BOOKMARK (
+  user_id int(10) unsigned NOT NULL default '0',
+  bug_id int(10) unsigned NOT NULL default '0'
 ) TYPE=MyISAM;
 
 #

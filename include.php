@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.136 2005/08/22 19:44:46 ulferikson Exp $
+// $Id: include.php,v 1.137 2005/08/22 20:30:56 ulferikson Exp $
 
 define('RAWERROR', true);
 
@@ -220,11 +220,15 @@ if (!empty($u)) {
 	$db->getRow(sprintf($QUERY['include-template-owner'], $u), DB_FETCHMODE_ORDERED);
 	list($reporter_open, $reporter_closed) =
 	$db->getRow(sprintf($QUERY['include-template-reporter'], $u), DB_FETCHMODE_ORDERED);
+	list($bookmarks_open, $bookmarks_closed) =
+	$db->getRow(sprintf($QUERY['include-template-bookmark'], $u), DB_FETCHMODE_ORDERED);
 	$t->assign(array(
 		'owner_open' => $owner_open ? $owner_open : 0,
 		'owner_closed' => $owner_closed ? $owner_closed : 0,
 		'reporter_open' => $reporter_open ? $reporter_open : 0,
 		'reporter_closed' => $reporter_closed ? $reporter_closed : 0,
+		'bookmarks_open' => $bookmarks_open ? $bookmarks_open : 0,
+		'bookmarks_closed' => $bookmarks_closed ? $bookmarks_closed : 0,
 		'perm' => $perm,
 		));
 }

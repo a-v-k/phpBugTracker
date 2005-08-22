@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.49 2005/08/22 19:44:46 ulferikson Exp $
+// $Id: install.php,v 1.50 2005/08/22 20:30:56 ulferikson Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -125,6 +125,7 @@ if (!empty($_POST)) {
 		'/TBL_PROJECT_PERM/' => $_POST['tbl_prefix'].'project_perm',
 		'/TBL_DATABASE/' => $_POST['tbl_prefix'].'database_server',
 		'/TBL_SITE/' => $_POST['tbl_prefix'].'site',
+		'/TBL_BOOKMARK/' => $_POST['tbl_prefix'].'bookmark',
 		'/OPTION_ADMIN_EMAIL/' => $_POST['admin_login'],
 		'/OPTION_ADMIN_PASS/' => $_POST['encrypt_pass'] ? md5($_POST['admin_pass']) : $_POST['admin_pass'],
 		'/OPTION_PHPBT_EMAIL/' => $_POST['phpbt_email'],

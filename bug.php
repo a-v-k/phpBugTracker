@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.140 2005/08/22 19:44:46 ulferikson Exp $
+// $Id: bug.php,v 1.141 2005/08/22 20:30:56 ulferikson Exp $
 
 include 'include.php';
 
@@ -64,6 +64,33 @@ function vote_bug($bug_id) {
 			$buginfo = $db->getOne("select * from ".TBL_BUG." where bug_id = ".$db->quote($bug_id));
 			$changedfields = array('status_id' => $status_id);
 			do_changedfields($u, $buginfo, $changedfields);
+		}
+	}
+	if (isset($_POST['pos'])) {
+		$posinfo = "&pos={$_POST['pos']}";
+	} else {
+		$posinfo = '';
+	}
+	header("Location: bug.php?op=show&bugid=$bug_id$posinfo");
+}
+
+///
+/// Add (or remove) a bookmark for this bug
+function bookmark_bug($bug_id, $add) {
+	global $u, $db, $now;
+
+	if ($add) {
+		// Check that the user hasn't bookmarked this bug
+		if (!$db->getOne("select count(*) from ".TBL_BOOKMARK." where bug_id = $bug_id and user_id = $u")) {
+			// Add bookmark
+			$db->query("insert into ".TBL_BOOKMARK." (user_id, bug_id) values ($u, $bug_id)");
+		}
+	}
+	else {
+		// Check that the user has bookmarked this bug
+		if ($db->getOne("select count(*) from ".TBL_BOOKMARK." where bug_id = $bug_id and user_id = $u")) {
+			// Remove bookmark
+			$db->query("delete from ".TBL_BOOKMARK." where user_id=$u and bug_id=$bug_id");
 		}
 	}
 	if (isset($_POST['pos'])) {
@@ -638,6 +665,7 @@ function show_bug($bugid = 0, $error = array()) {
 	$t->assign(array(
 		'error' => $error,
 		'already_voted' => $db->getOne("select count(*) from ".TBL_BUG_VOTE." where bug_id = $bugid and user_id = $u"),
+		'already_bookmarked' => $db->getOne("select count(*) from ".TBL_BOOKMARK." where bug_id = $bugid and user_id = $u"),
 		'num_votes' => $db->getOne("select count(*) from ".TBL_BUG_VOTE." where bug_id = $bugid"),
 		'bug_dependencies' => $bug_dependencies,
 		'bug_blocks' => $bug_blocks
@@ -719,6 +747,12 @@ if (!empty($_REQUEST['op'])) {
 			break;
 		case 'viewvotes':
 			vote_view(check_id($_GET['bugid']));
+			break;
+		case 'addbookmark':
+			bookmark_bug(check_id($_GET['bugid']), true);
+			break;
+		case 'delbookmark':
+			bookmark_bug(check_id($_GET['bugid']), false);
 			break;
 	}
 } else {

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.102 2005/08/22 19:44:46 ulferikson Exp $
+// $Id: query.php,v 1.103 2005/08/22 20:30:56 ulferikson Exp $
 
 include 'include.php';
 
@@ -53,7 +53,7 @@ function show_query() {
 
 }
 
-function build_query($assignedto, $reportedby, $open) {
+function build_query($assignedto, $reportedby, $open, $bookmarked) {
 	global $db, $perm, $restricted_projects;
 
 	$paramstr = '';
@@ -70,11 +70,13 @@ function build_query($assignedto, $reportedby, $open) {
 	}
 
 	// Open bugs assigned to the user -- a hit list
-	if ($assignedto || $reportedby) {
+	if ($assignedto || $reportedby || $bookmarked) {
 		$query[] = 'b.status_id '.($open ? '' : 'not ').
 			'in ('.OPEN_BUG_STATUSES.')';
 		if ($assignedto) {
 			$query[] = "assigned_to = {$_SESSION['uid']}";
+		} else if ($bookmarked) {
+			$query[] = "b.bug_id = bookmark.bug_id AND bookmark.user_id = {$_SESSION['uid']}";
 		} else {
 			$query[] = "b.created_by = {$_SESSION['uid']}";
 		}
@@ -237,11 +239,11 @@ function format_bug_col($colvalue, $coltype, $bugid, $pos) {
 	}
 }
 
-function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
+function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0) {
 	global $me, $db, $t, $select, $u, $default_db_fields, $all_db_fields, $QUERY;
 
 	$query_db_fields = array(
-		'bug_id' => 'bug_id',
+		'bug_id' => 'b.bug_id',
 		'title' => 'title',
 		'description' => 'description',
 		'url' => 'url',
@@ -267,7 +269,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 	);
 
 	$db_headers = array(
-		'bug_id' => 'bug_id',
+		'bug_id' => 'b.bug_id',
 		'title' => 'title',
 		'description' => 'description',
 		'url' => 'url',
@@ -327,13 +329,13 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0) {
 
 	if (empty($_SESSION['queryinfo']['query']) or isset($op)) {
 		list($_SESSION['queryinfo']['query'], $paramstr) =
-			build_query($assignedto, $reportedby, $open);
+			build_query($assignedto, $reportedby, $open, $bookmarked);
 	}
 	
 	$desired_fields = !empty($_SESSION['db_fields']) ?
 		$_SESSION['db_fields'] : $default_db_fields;
 
-	$query_fields = array('bug_id as bug_link_id', 
+	$query_fields = array('b.bug_id as bug_link_id', 
 		'severity.severity_color', 'priority.priority_color');
 	foreach ($desired_fields as $field) {
 		$query_fields[] = $query_db_fields[$field];
@@ -400,6 +402,7 @@ function dump_spreadsheet($fields, $titles, &$data) {
 $reportedby = !empty($_GET['reportedby']) ? $_GET['reportedby'] : 0;
 $assignedto = !empty($_GET['assignedto']) ? $_GET['assignedto'] : 0;
 $open = !empty($_GET['open']) ? $_GET['open'] : 0;
+$bookmarked = !empty($_GET['bookmarked']) ? $_GET['bookmarked'] : 0;
 
 // Make sure the page variable is numeric, if it's populated
 if (!empty($_GET['page'])) $_GET['page'] =  preg_replace('/[^0-9]/', '', $_GET['page']);
@@ -419,11 +422,11 @@ if (isset($_GET['op'])) switch($_GET['op']) {
 		else show_query(); 
 		break;
 	case 'mybugs' : 
-		if ($auth->is_authenticated()) list_items($assignedto, $reportedby, $open); 
+		if ($auth->is_authenticated()) list_items($assignedto, $reportedby, $open, $bookmarked); 
 		else show_query(); 
 		break;
 	default : show_query(); break;
 }
-else list_items($assignedto, $reportedby, $open);
+else list_items($assignedto, $reportedby, $open, $bookmarked);
 
 ?>
