@@ -77,11 +77,17 @@ $QUERY = array(
 		'and b.component_id = c.component_id and b.project_id = p.project_id '.
 		'and b.status_id = st.status_id',
 	'bug-prev-next' => 'select b.bug_id, reporter.login as reporter, '.
-		'owner.login as owner '.
+		'owner.login as owner, '.
+		'count(distinct comment.comment_id) as comments, '.
+		'count(distinct attachment.attachment_id) as attachments, '.
+		'count(distinct vote.user_id) as votes '.
 		'from '.TBL_BUG.' b '.
 		'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
 		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
 		'left join '.TBL_AUTH_USER.' lastmodifier on b.last_modified_by = lastmodifier.user_id '.
+		'left join '.TBL_COMMENT.' comment on b.bug_id = comment.bug_id '.
+		'left join '.TBL_ATTACHMENT.' attachment on b.bug_id = attachment.bug_id '.
+		'left join '.TBL_BUG_VOTE.' vote on b.bug_id = vote.bug_id '.
 		'left join '.TBL_BOOKMARK.' bookmark on b.bug_id = bookmark.bug_id '.
 		'left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_id  '.
 		'left join '.TBL_DATABASE.' on b.database_id = '.TBL_DATABASE.'.database_id '.
@@ -157,6 +163,9 @@ $QUERY = array(
 		'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
 		'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
 		'left join '.TBL_AUTH_USER.' lastmodifier on b.last_modified_by = lastmodifier.user_id '.
+		'left join '.TBL_COMMENT.' comment on b.bug_id = comment.bug_id '.
+		'left join '.TBL_ATTACHMENT.' attachment on b.bug_id = attachment.bug_id '.
+		'left join '.TBL_BUG_VOTE.' vote on b.bug_id = vote.bug_id '.
 		'left join '.TBL_BOOKMARK.' bookmark on b.bug_id = bookmark.bug_id '.
 		'left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_id '.
 		'left join '.TBL_DATABASE.' on b.database_id = '.TBL_DATABASE.'.database_id '.

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.104 2005/08/22 20:40:08 ulferikson Exp $
+// $Id: query.php,v 1.105 2005/08/22 20:44:16 ulferikson Exp $
 
 include 'include.php';
 
@@ -298,7 +298,10 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 		'component_name' => 'component.component_name',
 		'os_name' => 'os.os_name',
 		'browser_string' => 'browser_string',
-		'close_date' => 'close_date'
+		'close_date' => 'close_date',
+		'comments' => 'count(distinct comment.comment_id) as comments',
+		'attachments' => 'count(distinct attachment.attachment_id) as attachments',
+		'votes' => 'count(distinct vote.user_id) as votes'
 	);
 
 	$db_headers = array(
@@ -324,7 +327,10 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 		'site_name' => 'site.sort_order',
 		'browser_string' => 'browser_string',
 		'resolution_name' => 'resolution.sort_order',
-		'close_date' => 'close_date'
+		'close_date' => 'close_date',
+		'comments' => 'comments',
+		'attachments' => 'attachments',
+		'votes' => 'votes'
 	);
 
 	extract($_GET);
@@ -348,7 +354,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 			$order = $_SESSION['queryinfo']['order'];
 			$sort = $_SESSION['queryinfo']['sort'];
 		} else {
-			$order = 'bug_id';
+			$order = 'b.bug_id';
 			$sort = 'asc';
 		}
 	}

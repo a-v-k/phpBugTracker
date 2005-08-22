@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.137 2005/08/22 20:30:56 ulferikson Exp $
+// $Id: include.php,v 1.138 2005/08/22 20:44:16 ulferikson Exp $
 
 define('RAWERROR', true);
 
@@ -109,7 +109,10 @@ $all_db_fields = array(
 	'component_name' => 'Component',
 	'os_name' => 'OS',
 	'browser_string' => 'Browser',
-	'close_date' => 'Closed Date'
+	'close_date' => 'Closed Date',
+	'comments' => 'Comments',
+	'attachments' => 'Attachments',
+	'votes' => 'Votes'
 	);
 
 $default_db_fields = array('bug_id', 'title', 'reporter', 'owner',
