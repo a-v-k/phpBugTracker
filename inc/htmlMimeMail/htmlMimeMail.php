@@ -142,6 +142,7 @@ class htmlMimeMail
 		$this->smtp_params['auth'] = false;
 		$this->smtp_params['user'] = '';
 		$this->smtp_params['pass'] = '';
+		$this->smtp_params['sender'] = null;
 
 		/**
         * Make sure the MIME version header is first.
@@ -188,7 +189,7 @@ class htmlMimeMail
 /**
 * Accessor to set the SMTP parameters
 */
-	function setSMTPParams($host = null, $port = null, $helo = null, $auth = null, $user = null, $pass = null)
+	function setSMTPParams($host = null, $port = null, $helo = null, $auth = null, $user = null, $pass = null, $sender = null)
 	{
 		if (!is_null($host)) $this->smtp_params['host'] = $host;
 		if (!is_null($port)) $this->smtp_params['port'] = $port;
@@ -196,6 +197,7 @@ class htmlMimeMail
 		if (!is_null($auth)) $this->smtp_params['auth'] = $auth;
 		if (!is_null($user)) $this->smtp_params['user'] = $user;
 		if (!is_null($pass)) $this->smtp_params['pass'] = $pass;
+		if (!is_null($sender)) $this->smtp_params['sender'] = $sender;
 	}
 
 /**

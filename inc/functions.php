@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.60 2005/08/22 20:50:23 ulferikson Exp $
+// $Id: functions.php,v 1.61 2005/08/22 20:54:43 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -618,7 +618,7 @@ function qp_mail($to, $subject = 'No subject', $body, $from = ADMIN_EMAIL) {
 	}
 
 	if (SMTP_EMAIL) {
-		$mail->setSMTPParams(SMTP_HOST, SMTP_PORT, SMTP_HELO, SMTP_AUTH, SMTP_AUTH_USER, SMTP_AUTH_PASS);
+		$mail->setSMTPParams(SMTP_HOST, SMTP_PORT, SMTP_HELO, SMTP_AUTH, SMTP_AUTH_USER, SMTP_AUTH_PASS, SMTP_SENDER);
 	}
 
 	$retval = $mail->send($recipient, SMTP_EMAIL ? 'smtp' : 'mail');
