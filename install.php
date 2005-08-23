@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.50 2005/08/22 20:30:56 ulferikson Exp $
+// $Id: install.php,v 1.51 2005/08/23 21:26:14 ulferikson Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -215,6 +215,7 @@ function create_tables() {
 	$do_query = '';
 	foreach ($queries as $query) {
 		// First, collect multi-line queries into one line, then run the query
+		if ($query{0} == '#') continue;
 		$do_query .= chop($query);
 		if (empty($do_query) or substr($do_query, -1) != ';') continue;
 		if ($_POST['db_type'] == 'oci8' ) {
