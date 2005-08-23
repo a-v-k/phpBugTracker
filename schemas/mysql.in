@@ -1,8 +1,12 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.49 2005/08/22 20:30:56 ulferikson Exp $
+# $Id: mysql.in,v 1.50 2005/08/23 21:09:42 ulferikson Exp $
 
+
+
+#--
+# TBL_ATTACHMENT
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id int(10) unsigned NOT NULL default '0',
   bug_id int(10) unsigned NOT NULL default '0',
@@ -15,6 +19,9 @@ CREATE TABLE TBL_ATTACHMENT (
   PRIMARY KEY  (attachment_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_AUTH_GROUP
 CREATE TABLE TBL_AUTH_GROUP (
   group_id int(10) unsigned NOT NULL default '0',
   group_name varchar(80) NOT NULL default '',
@@ -26,6 +33,9 @@ CREATE TABLE TBL_AUTH_GROUP (
   PRIMARY KEY  (group_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_AUTH_PERM
 CREATE TABLE TBL_AUTH_PERM (
   perm_id int(10) unsigned NOT NULL default '0',
   perm_name varchar(80) NOT NULL default '',
@@ -36,6 +46,9 @@ CREATE TABLE TBL_AUTH_PERM (
   PRIMARY KEY  (perm_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_AUTH_USER
 CREATE TABLE TBL_AUTH_USER (
   user_id int(10) unsigned NOT NULL default '0',
   login char(40) NOT NULL default '',
@@ -53,6 +66,17 @@ CREATE TABLE TBL_AUTH_USER (
   UNIQUE KEY login (login)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_BOOKMARK
+CREATE TABLE TBL_BOOKMARK (
+  user_id int(10) unsigned NOT NULL default '0',
+  bug_id int(10) unsigned NOT NULL default '0'
+) TYPE=MyISAM;
+
+
+#--
+# TBL_BUG
 CREATE TABLE TBL_BUG (
   bug_id int(10) unsigned NOT NULL default '0',
   title varchar(100) NOT NULL default '',
@@ -80,6 +104,9 @@ CREATE TABLE TBL_BUG (
   PRIMARY KEY (bug_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_BUG_CC
 CREATE TABLE TBL_BUG_CC (
   bug_id int(10) unsigned NOT NULL default '0',
   user_id int(10) unsigned NOT NULL default '0',
@@ -88,12 +115,18 @@ CREATE TABLE TBL_BUG_CC (
   PRIMARY KEY  (bug_id,user_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_BUG_DEPENDENCY
 CREATE TABLE TBL_BUG_DEPENDENCY (
   bug_id int(10) unsigned NOT NULL default '0',
   depends_on int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (bug_id,depends_on)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_BUG_GROUP
 CREATE TABLE TBL_BUG_GROUP (
   bug_id int(10) unsigned NOT NULL default '0',
   group_id int(10) unsigned NOT NULL default '0',
@@ -101,6 +134,9 @@ CREATE TABLE TBL_BUG_GROUP (
   KEY group_id (group_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_BUG_HISTORY
 CREATE TABLE TBL_BUG_HISTORY (
   bug_id int(10) unsigned NOT NULL default '0',
   changed_field varchar(30) NOT NULL default '',
@@ -110,6 +146,9 @@ CREATE TABLE TBL_BUG_HISTORY (
   created_date bigint(20) unsigned NOT NULL default '0'
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_BUG_VOTE
 CREATE TABLE TBL_BUG_VOTE (
   user_id int(10) unsigned NOT NULL default '0',
   bug_id int(10) unsigned NOT NULL default '0',
@@ -118,6 +157,9 @@ CREATE TABLE TBL_BUG_VOTE (
   KEY bug_id (bug_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_COMMENT
 CREATE TABLE TBL_COMMENT (
   comment_id int(10) unsigned NOT NULL default '0',
   bug_id int(10) unsigned NOT NULL default '0',
@@ -127,6 +169,9 @@ CREATE TABLE TBL_COMMENT (
   PRIMARY KEY  (comment_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_COMPONENT
 CREATE TABLE TBL_COMPONENT (
   component_id int(10) unsigned NOT NULL default '0',
   project_id int(10) unsigned NOT NULL default '0',
@@ -142,6 +187,9 @@ CREATE TABLE TBL_COMPONENT (
   PRIMARY KEY  (component_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_CONFIGURATION
 CREATE TABLE TBL_CONFIGURATION (
   varname char(40) NOT NULL default '',
   varvalue char(255) NOT NULL default '',
@@ -150,6 +198,19 @@ CREATE TABLE TBL_CONFIGURATION (
   PRIMARY KEY  (varname)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_DATABASE
+CREATE TABLE TBL_DATABASE (
+  database_id tinyint(3) unsigned NOT NULL default '0',
+  database_name varchar(40) NOT NULL default '',
+  sort_order tinyint(3) unsigned NOT NULL default '0',
+  PRIMARY KEY (database_id)
+) TYPE=MyISAM;
+
+
+#--
+# TBL_GROUP_PERM
 CREATE TABLE TBL_GROUP_PERM (
   group_id int(10) unsigned NOT NULL default '0',
   perm_id int(10) unsigned NOT NULL default '0',
@@ -157,6 +218,9 @@ CREATE TABLE TBL_GROUP_PERM (
   KEY perm_id (perm_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_OS
 CREATE TABLE TBL_OS (
   os_id int(10) unsigned NOT NULL default '0',
   os_name char(30) NOT NULL default '',
@@ -165,6 +229,21 @@ CREATE TABLE TBL_OS (
   PRIMARY KEY  (os_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_PRIORITY
+CREATE TABLE TBL_PRIORITY (
+  priority_id int(10) unsigned NOT NULL default '0',
+  priority_name varchar(30) NOT NULL default '',
+  priority_desc text NOT NULL,
+  sort_order tinyint(3) unsigned NOT NULL default '0',
+  priority_color varchar(10) NOT NULL default '#FFFFFF',
+  PRIMARY KEY  (priority_id)
+) TYPE=MyISAM;
+
+
+#--
+# TBL_PROJECT
 CREATE TABLE TBL_PROJECT (
   project_id int(10) unsigned NOT NULL default '0',
   project_name varchar(30) NOT NULL default '',
@@ -177,6 +256,9 @@ CREATE TABLE TBL_PROJECT (
   PRIMARY KEY  (project_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_PROJECT_GROUP
 CREATE TABLE TBL_PROJECT_GROUP (
   project_id int(10) unsigned NOT NULL default '0',
   group_id int(10) unsigned NOT NULL default '0',
@@ -186,11 +268,17 @@ CREATE TABLE TBL_PROJECT_GROUP (
   KEY group_id (group_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_PROJECT_PERM
 CREATE TABLE TBL_PROJECT_PERM (
   project_id int(11) NOT NULL default '0',
   user_id int(11) NOT NULL default '0'
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_RESOLUTION
 CREATE TABLE TBL_RESOLUTION (
   resolution_id int(10) unsigned NOT NULL default '0',
   resolution_name varchar(30) NOT NULL default '',
@@ -199,6 +287,9 @@ CREATE TABLE TBL_RESOLUTION (
   PRIMARY KEY  (resolution_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_SAVED_QUERY
 CREATE TABLE TBL_SAVED_QUERY (
   saved_query_id int(10) unsigned NOT NULL default '0',
   user_id int(10) unsigned NOT NULL default '0',
@@ -207,6 +298,9 @@ CREATE TABLE TBL_SAVED_QUERY (
   PRIMARY KEY  (saved_query_id,user_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_SEVERITY
 CREATE TABLE TBL_SEVERITY (
   severity_id int(10) unsigned NOT NULL default '0',
   severity_name varchar(30) NOT NULL default '',
@@ -216,15 +310,19 @@ CREATE TABLE TBL_SEVERITY (
   PRIMARY KEY  (severity_id)
 ) TYPE=MyISAM;
 
-CREATE TABLE TBL_PRIORITY (
-  priority_id int(10) unsigned NOT NULL default '0',
-  priority_name varchar(30) NOT NULL default '',
-  priority_desc text NOT NULL,
+
+#--
+# TBL_SITE
+CREATE TABLE TBL_SITE (
+  site_id tinyint(3) unsigned NOT NULL default '0',
+  site_name varchar(50) NOT NULL default '',
   sort_order tinyint(3) unsigned NOT NULL default '0',
-  priority_color varchar(10) NOT NULL default '#FFFFFF',
-  PRIMARY KEY  (priority_id)
+  PRIMARY KEY (site_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_STATUS
 CREATE TABLE TBL_STATUS (
   status_id int(10) unsigned NOT NULL default '0',
   status_name varchar(30) NOT NULL default '',
@@ -234,6 +332,9 @@ CREATE TABLE TBL_STATUS (
   PRIMARY KEY  (status_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_USER_GROUP
 CREATE TABLE TBL_USER_GROUP (
   user_id int(10) unsigned NOT NULL default '0',
   group_id int(10) unsigned NOT NULL default '0',
@@ -243,6 +344,9 @@ CREATE TABLE TBL_USER_GROUP (
   KEY group_id (group_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_USER_PERM
 CREATE TABLE TBL_USER_PERM (
   user_id int(10) unsigned NOT NULL default '0',
   perm_id int(10) unsigned NOT NULL default '0',
@@ -252,6 +356,9 @@ CREATE TABLE TBL_USER_PERM (
   KEY perm_id (perm_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_USER_PREF
 CREATE TABLE TBL_USER_PREF (
     user_id int(11) NOT NULL default '0',
     email_notices tinyint(1) NOT NULL default '1',
@@ -260,6 +367,9 @@ CREATE TABLE TBL_USER_PREF (
     PRIMARY KEY (user_id)
 ) TYPE=MyISAM;
 
+
+#--
+# TBL_VERSION
 CREATE TABLE TBL_VERSION (
   version_id int(10) unsigned NOT NULL default '0',
   project_id int(10) unsigned NOT NULL default '0',
@@ -273,61 +383,61 @@ CREATE TABLE TBL_VERSION (
   PRIMARY KEY  (version_id)
 ) TYPE=MyISAM;
 
-CREATE TABLE TBL_DATABASE (
-  database_id tinyint(3) unsigned NOT NULL default '0',
-  database_name varchar(40) NOT NULL default '',
-  sort_order tinyint(3) unsigned NOT NULL default '0',
-  PRIMARY KEY (database_id)
-) TYPE=MyISAM;
-
-CREATE TABLE TBL_SITE (
-  site_id tinyint(3) unsigned NOT NULL default '0',
-  site_name varchar(50) NOT NULL default '',
-  sort_order tinyint(3) unsigned NOT NULL default '0',
-  PRIMARY KEY (site_id)
-) TYPE=MyISAM;
-
-CREATE TABLE TBL_BOOKMARK (
-  user_id int(10) unsigned NOT NULL default '0',
-  bug_id int(10) unsigned NOT NULL default '0'
-) TYPE=MyISAM;
 
 #
 # -- Insert initial data --
 #
 
+
 INSERT INTO TBL_AUTH_USER
 	(user_id, login, first_name, last_name, email, password)
-	values (1, 'OPTION_ADMIN_EMAIL', 'System', 'Admin', 'OPTION_ADMIN_EMAIL',
-		'OPTION_ADMIN_PASS');
-create table TBL_AUTH_USER_seq (id int unsigned auto_increment not null primary key);
-insert into TBL_AUTH_USER_seq values (1);
+	values (1, 'OPTION_ADMIN_EMAIL', 'System', 'Admin',
+		'OPTION_ADMIN_EMAIL', 'OPTION_ADMIN_PASS');
+
+CREATE TABLE TBL_AUTH_USER_seq (
+  id int unsigned auto_increment not null primary key);
+INSERT INTO TBL_AUTH_USER_seq values (1);
+
 
 # Start off with three user levels...
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (1, 'Admin', 1);
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (2, 'User', 1);
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (3, 'Developer', 1);
-create table TBL_AUTH_GROUP_seq (id int unsigned auto_increment not null primary key);
-insert into TBL_AUTH_GROUP_seq values (3);
 
-# ... and only two permissions
+CREATE TABLE TBL_AUTH_GROUP_seq (
+  id int unsigned auto_increment not null primary key);
+INSERT INTO TBL_AUTH_GROUP_seq values (3);
+
+
+# ... and four permissions
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (1, 'Admin');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (2, 'Editbug');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (3, 'EditAssignment');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (4, 'Assignable');
 
-# Admins can do all the admin stuff, users can edit bugs, and
-# developers are users who can own bugs 
+
+# Admins can do all the admin stuff,
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (1, 1);
+
+# users can edit bugs, and
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (2, 2);
+
+# developers are users who can own bugs
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 2);
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 4);
 
-# Insert user_id 1 into the admin group 
+
+# Insert user_id 1 into the admin group
 INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 1);
+
 
 # Add user's prefs as default values for all users defined so far (only admin)
 INSERT INTO TBL_USER_PREF (user_id) SELECT USER_ID FROM TBL_AUTH_USER;
+
+
+#
+# -- Initialize the CONFIGURATION table --
+#
 
 INSERT INTO TBL_CONFIGURATION VALUES ('INSTALL_URL','OPTION_INSTALL_URL','The base URL of the phpBugTracker installation','string');
 INSERT INTO TBL_CONFIGURATION VALUES ('JPGRAPH_PATH','','If not in the include path.  This is the file path on the web server, not a URL.','string');
@@ -361,6 +471,11 @@ INSERT INTO TBL_CONFIGURATION VALUES ('BUG_ASSIGNED','3','The status to assign a
 INSERT INTO TBL_CONFIGURATION VALUES ('BUG_REOPENED','4','The status to assign a bug when it is reopened.','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('EMAIL_DISABLED', '0', 'Whether to disable all mail sent from the system', 'bool');
 
+
+#
+# -- Initialize the OS table --
+#
+
 INSERT INTO TBL_OS VALUES (1,'All',1,'');
 INSERT INTO TBL_OS VALUES (2,'Windows 3.1',2,'/Mozilla.*\\(Win16.*\\)/');
 INSERT INTO TBL_OS VALUES (3,'Windows 95',3,'/Mozilla.*\\(.*;.*; 32bit.*\\)/');
@@ -392,8 +507,15 @@ INSERT INTO TBL_OS VALUES (28,'OSF/1',28,'/Mozilla.*\\(.*;.*; OSF.*\\)/');
 INSERT INTO TBL_OS VALUES (29,'Solaris',29,'/Mozilla.*\\(.*;.*; SunOS 5.*\\)/');
 INSERT INTO TBL_OS VALUES (30,'SunOS',30,'/Mozilla.*\\(.*;.*; SunOS.*\\)/');
 INSERT INTO TBL_OS VALUES (31,'other',31,'');
-create table TBL_OS_seq (id int unsigned auto_increment not null primary key);
-insert into TBL_OS_seq values (31);
+
+CREATE TABLE TBL_OS_seq (
+  id int unsigned auto_increment not null primary key);
+INSERT INTO TBL_OS_seq values (31);
+
+
+#
+# -- Initialize the RESOLUTION table --
+#
 
 INSERT INTO TBL_RESOLUTION VALUES (1,'Fixed','Bug was eliminated',1);
 INSERT INTO TBL_RESOLUTION VALUES (2,'Not a bug','It''s not a bug -- it''s a feature!',2);
@@ -401,8 +523,15 @@ INSERT INTO TBL_RESOLUTION VALUES (3,'Won''t Fix','This bug will stay',3);
 INSERT INTO TBL_RESOLUTION VALUES (4,'Deferred','We''ll get around to it later',4);
 INSERT INTO TBL_RESOLUTION VALUES (5,'Works for me','Can''t replicate the bug',5);
 INSERT INTO TBL_RESOLUTION VALUES (6,'Duplicate','',6);
-create table TBL_RESOLUTION_seq (id int unsigned auto_increment not null primary key);
-insert into TBL_RESOLUTION_seq values (6);
+
+CREATE TABLE TBL_RESOLUTION_seq (
+  id int unsigned auto_increment not null primary key);
+INSERT INTO TBL_RESOLUTION_seq values (6);
+
+
+#
+# -- Initialize the SEVERITY table --
+#
 
 INSERT INTO TBL_SEVERITY VALUES (1,'Unassigned','Default bug creation',1,'#dadada');
 INSERT INTO TBL_SEVERITY VALUES (2,'Idea','Ideas for further development',2,'#dad0d0');
@@ -411,32 +540,60 @@ INSERT INTO TBL_SEVERITY VALUES (4,'Annoyance','Cosmetic problems or bugs not af
 INSERT INTO TBL_SEVERITY VALUES (5,'Content','Non-functional related bugs, such as text content',5,'#dababa');
 INSERT INTO TBL_SEVERITY VALUES (6,'Significant','A bug affecting the intended performance of the product',6,'#dab0b0');
 INSERT INTO TBL_SEVERITY VALUES (7,'Critical','A bug severe enough to prevent the release of the product',7,'#daaaaa');
-create table TBL_SEVERITY_seq (id int unsigned auto_increment not null primary key);
-insert into TBL_SEVERITY_seq values (7);
+
+CREATE TABLE TBL_SEVERITY_seq (
+  id int unsigned auto_increment not null primary key);
+INSERT INTO TBL_SEVERITY_seq values (7);
+
+
+#
+# -- Initialize the PRIORITY table --
+#
 
 INSERT INTO TBL_PRIORITY VALUES (1,'Low','Fix if possible',1,'#dadada');
 INSERT INTO TBL_PRIORITY VALUES (2,'Medium Low','Must fix before final',2,'#dad0d0');
 INSERT INTO TBL_PRIORITY VALUES (3,'Medium','Fix before next milestone (alpha, beta, etc.)',3,'#dac0c0');
 INSERT INTO TBL_PRIORITY VALUES (4,'Medium High','Fix as soon as possible',4,'#dab0b0');
 INSERT INTO TBL_PRIORITY VALUES (5,'High','Fix immediately',5,'#daaaaa');
-create table TBL_PRIORITY_seq (id int unsigned auto_increment not null primary key);
-insert into TBL_PRIORITY_seq values (5);
 
-INSERT INTO TBL_STATUS VALUES (1,'Unconfirmed','Reported but not confirmed',1, 1);
+CREATE TABLE TBL_PRIORITY_seq (
+  id int unsigned auto_increment not null primary key);
+INSERT INTO TBL_PRIORITY_seq values (5);
+
+
+#
+# -- Initialize the STATUS table --
+#
+
+INSERT INTO TBL_STATUS VALUES (1,'Unconfirmed','Reported but not confirmed',1,1);
 INSERT INTO TBL_STATUS VALUES (2,'New','A new bug',2,1);
 INSERT INTO TBL_STATUS VALUES (3,'Assigned','Assigned to a developer',3,1);
 INSERT INTO TBL_STATUS VALUES (4,'Reopened','Closed but opened again for further inspection',4,1);
 INSERT INTO TBL_STATUS VALUES (5,'Resolved','Set by engineer with a resolution',5,0);
 INSERT INTO TBL_STATUS VALUES (6,'Verified','The resolution is confirmed by the reporter',6,0);
 INSERT INTO TBL_STATUS VALUES (7,'Closed','The bug is officially squashed (QA)',7,0);
-create table TBL_STATUS_seq (id int unsigned auto_increment not null primary key);
-insert into TBL_STATUS_seq values (7);
+
+CREATE TABLE TBL_STATUS_seq (
+  id int unsigned auto_increment not null primary key);
+INSERT INTO TBL_STATUS_seq values (7);
+
+
+#
+# -- Initialize the DATABASE table --
+#
 
 INSERT INTO TBL_DATABASE VALUES (1,'Oracle 8.1.7',1);
 INSERT INTO TBL_DATABASE VALUES (2,'MySQL 3.23.49',2);
 INSERT INTO TBL_DATABASE VALUES (3,'PostgreSQL 7.1.3',3);
-create table TBL_DATABASE_seq (id int unsigned auto_increment not null primary key);
-insert into TBL_DATABASE_seq values (3);
+
+CREATE TABLE TBL_DATABASE_seq (
+  id int unsigned auto_increment not null primary key);
+INSERT INTO TBL_DATABASE_seq values (3);
+
+
+#
+# -- Initialize the SITE table --
+#
 
 # Examples only
 INSERT INTO TBL_SITE VALUES (0,'All',1);
@@ -444,17 +601,34 @@ INSERT INTO TBL_SITE VALUES (1,'Production - location 1',2);
 INSERT INTO TBL_SITE VALUES (2,'Production - location 2',3);
 INSERT INTO TBL_SITE VALUES (3,'Test site - location 1',4);
 INSERT INTO TBL_SITE VALUES (4,'Test site - location 2',5);
-create table TBL_SITE_seq (id int unsigned auto_increment not null primary key);
-insert into TBL_SITE_seq values (4);
 
-#-- Sequences for the tables with no initial entries
-create table TBL_BUG_seq (id int unsigned auto_increment not null primary key);
-insert into TBL_BUG_seq values(1);
-create table TBL_COMMENT_seq (id int unsigned auto_increment not null primary key);
-insert into TBL_COMMENT_seq values(1);
-create table TBL_COMPONENT_seq (id int unsigned auto_increment not null primary key);
-insert into TBL_COMPONENT_seq values(1);
-create table TBL_PROJECT_seq (id int unsigned auto_increment not null primary key);
-insert into TBL_PROJECT_seq values(1);
-create table TBL_VERSION_seq (id int unsigned auto_increment not null primary key);
-insert into TBL_VERSION_seq values(1);
+CREATE TABLE TBL_SITE_seq (
+  id int unsigned auto_increment not null primary key);
+INSERT INTO TBL_SITE_seq values (4);
+
+
+#
+# -- Sequences for the tables with no initial entries --
+#
+
+CREATE TABLE TBL_BUG_seq (
+  id int unsigned auto_increment not null primary key);
+INSERT INTO TBL_BUG_seq values(1);
+
+CREATE TABLE TBL_COMMENT_seq (
+  id int unsigned auto_increment not null primary key);
+INSERT INTO TBL_COMMENT_seq values(1);
+
+CREATE TABLE TBL_COMPONENT_seq (
+  id int unsigned auto_increment not null primary key);
+INSERT INTO TBL_COMPONENT_seq values(1);
+
+CREATE TABLE TBL_PROJECT_seq (
+  id int unsigned auto_increment not null primary key);
+INSERT INTO TBL_PROJECT_seq values(1);
+
+CREATE TABLE TBL_VERSION_seq (
+  id int unsigned auto_increment not null primary key);
+INSERT INTO TBL_VERSION_seq values(1);
+
+#--

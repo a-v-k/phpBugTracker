@@ -1,9 +1,12 @@
+# Oracle database creation script
+# This is a template for install.php -- not for creating the database!
+#
+# $Id: oci8.in,v 1.29 2005/08/23 21:09:42 ulferikson Exp $
 
--- Oracle database creation script
--- This is a template for install.php -- not for creating the database!
---
--- $Id: oci8.in,v 1.28 2005/06/20 01:05:29 bcurtis Exp $
 
+
+#--
+# TBL_ATTACHMENT
 CREATE TABLE TBL_ATTACHMENT (
   attachment_id number(10)   default '0' NOT NULL,
   bug_id number(10)   default '0' NOT NULL,
@@ -16,6 +19,9 @@ CREATE TABLE TBL_ATTACHMENT (
   PRIMARY KEY  (attachment_id)
 ) ;
 
+
+#--
+# TBL_AUTH_GROUP
 CREATE TABLE TBL_AUTH_GROUP (
   group_id number(10)   default '0' NOT NULL,
   group_name varchar2(80)  default '' NOT NULL,
@@ -28,6 +34,9 @@ CREATE TABLE TBL_AUTH_GROUP (
   PRIMARY KEY  (group_id)
 ) ;
 
+
+#--
+# TBL_AUTH_PERM
 CREATE TABLE TBL_AUTH_PERM (
   perm_id number(10)   default '0' NOT NULL,
   perm_name varchar2(80)  default '' NOT NULL,
@@ -38,6 +47,9 @@ CREATE TABLE TBL_AUTH_PERM (
   PRIMARY KEY  (perm_id)
 ) ;
 
+
+#--
+# TBL_AUTH_USER
 CREATE TABLE TBL_AUTH_USER (
   user_id number(10)   default '0' NOT NULL,
   login varchar2(40)  default '' NOT NULL UNIQUE,
@@ -54,6 +66,9 @@ CREATE TABLE TBL_AUTH_USER (
   PRIMARY KEY  (user_id)
 ) ;
 
+
+#--
+# TBL_BUG
 CREATE TABLE TBL_BUG (
   bug_id number(10)   default '0' NOT NULL,
   title varchar2(100)  default '' NOT NULL,
@@ -81,6 +96,9 @@ CREATE TABLE TBL_BUG (
   PRIMARY KEY  (bug_id)
 ) ;
 
+
+#--
+# TBL_BUG_CC
 CREATE TABLE TBL_BUG_CC (
   bug_id number(10)   default '0' NOT NULL,
   user_id number(10)   default '0' NOT NULL,
@@ -89,12 +107,18 @@ CREATE TABLE TBL_BUG_CC (
   PRIMARY KEY  (bug_id ,user_id)
 ) ;
 
+
+#--
+# TBL_BUG_DEPENDENCY
 CREATE TABLE TBL_BUG_DEPENDENCY (
   bug_id number(10)   default '0' NOT NULL,
   depends_on number(10)   default '0' NOT NULL,
   PRIMARY KEY  (bug_id ,depends_on)
 ) ;
 
+
+#--
+# TBL_BUG_GROUP
 CREATE TABLE TBL_BUG_GROUP (
   bug_id number(10)   default '0' NOT NULL,
   group_id number(10)   default '0' NOT NULL,
@@ -103,6 +127,9 @@ CREATE TABLE TBL_BUG_GROUP (
 
 CREATE INDEX GROUPIDX ON TBL_BUG_GROUP ( group_id );
 
+
+#--
+# TBL_BUG_HISTORY
 CREATE TABLE TBL_BUG_HISTORY (
   bug_id number(10)   default '0' NOT NULL,
   changed_field varchar2(30)  default '' NOT NULL,
@@ -112,6 +139,9 @@ CREATE TABLE TBL_BUG_HISTORY (
   created_date number(20)   default '0'
 ) ;
 
+
+#--
+# TBL_BUG_VOTE
 CREATE TABLE TBL_BUG_VOTE (
   user_id number(10)   default '0' NOT NULL,
   bug_id number(10)   default '0' NOT NULL,
@@ -121,6 +151,9 @@ CREATE TABLE TBL_BUG_VOTE (
 
 CREATE INDEX BUGIDX ON TBL_BUG_VOTE ( bug_id );
 
+
+#--
+# TBL_COMMENT
 CREATE TABLE TBL_COMMENT (
   comment_id number(10)   default '0' NOT NULL,
   bug_id number(10)   default '0' NOT NULL,
@@ -130,6 +163,9 @@ CREATE TABLE TBL_COMMENT (
   PRIMARY KEY  (comment_id)
 ) ;
 
+
+#--
+# TBL_COMPONENT
 CREATE TABLE TBL_COMPONENT (
   component_id number(10)   default '0' NOT NULL,
   project_id number(10)   default '0' NOT NULL,
@@ -144,6 +180,9 @@ CREATE TABLE TBL_COMPONENT (
   PRIMARY KEY  (component_id)
 ) ;
 
+
+#--
+# TBL_CONFIGURATION
 CREATE TABLE TBL_CONFIGURATION (
   varname varchar2(40)  default '' NOT NULL,
   varvalue varchar2(255)  default '' ,
@@ -152,6 +191,9 @@ CREATE TABLE TBL_CONFIGURATION (
   PRIMARY KEY  (varname)
 ) ;
 
+
+#--
+# TBL_GROUP_PERM
 CREATE TABLE TBL_GROUP_PERM (
   group_id number(10)   default '0' NOT NULL,
   perm_id number(10)   default '0' NOT NULL,
@@ -160,6 +202,9 @@ CREATE TABLE TBL_GROUP_PERM (
 
 CREATE INDEX PERMIDX ON TBL_GROUP_PERM ( perm_id );
 
+
+#--
+# TBL_OS
 CREATE TABLE TBL_OS (
   os_id number(10)   default '0' NOT NULL,
   os_name varchar2(30)  default '' NOT NULL,
@@ -168,6 +213,9 @@ CREATE TABLE TBL_OS (
   PRIMARY KEY  (os_id)
 ) ;
 
+
+#--
+# TBL_PROJECT
 CREATE TABLE TBL_PROJECT (
   project_id number(10)   default '0' NOT NULL,
   project_name varchar2(30)  default '' NOT NULL,
@@ -180,6 +228,9 @@ CREATE TABLE TBL_PROJECT (
   PRIMARY KEY  (project_id)
 ) ;
 
+
+#--
+# TBL_PROJECT_GROUP
 CREATE TABLE TBL_PROJECT_GROUP (
   project_id number(10)   default '0' NOT NULL,
   group_id number(10)   default '0' NOT NULL,
@@ -190,11 +241,17 @@ CREATE TABLE TBL_PROJECT_GROUP (
 
 CREATE INDEX GROUPPROJIDX ON TBL_PROJECT_GROUP ( group_id );
 
+
+#--
+# TBL_PROJECT_PERM
 CREATE TABLE TBL_PROJECT_PERM (
   project_id number(10) default '0' NOT NULL,
   user_id number(10) default '0' NOT NULL
 );
 
+
+#--
+# TBL_RESOLUTION
 CREATE TABLE TBL_RESOLUTION (
   resolution_id number(10)   default '0' NOT NULL,
   resolution_name varchar2(30)  default '' NOT NULL,
@@ -203,6 +260,9 @@ CREATE TABLE TBL_RESOLUTION (
   PRIMARY KEY  (resolution_id)
 ) ;
 
+
+#--
+# TBL_SAVED_QUERY
 CREATE TABLE TBL_SAVED_QUERY (
   saved_query_id number(10)   default '0' NOT NULL,
   user_id number(10)   default '0' NOT NULL,
@@ -211,6 +271,9 @@ CREATE TABLE TBL_SAVED_QUERY (
   PRIMARY KEY  (saved_query_id ,user_id)
 ) ;
 
+
+#--
+# TBL_SEVERITY
 CREATE TABLE TBL_SEVERITY (
   severity_id number(10)   default '0' NOT NULL,
   severity_name varchar2(30)  default '' NOT NULL,
@@ -220,6 +283,9 @@ CREATE TABLE TBL_SEVERITY (
   PRIMARY KEY  (severity_id)
 ) ;
 
+
+#--
+# TBL_STATUS
 CREATE TABLE TBL_STATUS (
   status_id number(10)   default '0' NOT NULL,
   status_name varchar2(30)  default '' NOT NULL,
@@ -229,6 +295,9 @@ CREATE TABLE TBL_STATUS (
   PRIMARY KEY  (status_id)
 ) ;
 
+
+#--
+# TBL_USER_GROUP
 CREATE TABLE TBL_USER_GROUP (
   user_id number(10)   default '0' NOT NULL,
   group_id number(10)   default '0' NOT NULL,
@@ -239,6 +308,9 @@ CREATE TABLE TBL_USER_GROUP (
 
 CREATE INDEX GROUPUSERIDX ON TBL_USER_GROUP ( group_id );
 
+
+#--
+# TBL_USER_PERM
 CREATE TABLE TBL_USER_PERM (
   user_id number(10)   default '0' NOT NULL,
   perm_id number(10)   default '0' NOT NULL,
@@ -246,8 +318,12 @@ CREATE TABLE TBL_USER_PERM (
   created_date number(20)   default '0' NOT NULL,
   PRIMARY KEY  (user_id ,perm_id)
 ) ;
+
 CREATE INDEX PERMUSERIDX ON TBL_USER_PERM ( perm_id );
 
+
+#--
+# TBL_USER_PREF
 CREATE TABLE TBL_USER_PREF (
     user_id number(10) default '0' NOT NULL,
     email_notices number(1) default '1' NOT NULL,
@@ -256,6 +332,9 @@ CREATE TABLE TBL_USER_PREF (
 	PRIMARY KEY (user_id)
 );
 
+
+#--
+# TBL_VERSION
 CREATE TABLE TBL_VERSION (
   version_id number(10)   default '0' NOT NULL,
   project_id number(10)   default '0' NOT NULL,
@@ -268,6 +347,9 @@ CREATE TABLE TBL_VERSION (
   PRIMARY KEY  (version_id)
 ) ;
 
+
+#--
+# TBL_DATABASE
 CREATE TABLE TBL_DATABASE (
     database_id number(3) default '0' NOT NULL,
     database_name varchar2(40) default '' NOT NULL,
@@ -275,6 +357,9 @@ CREATE TABLE TBL_DATABASE (
     PRIMARY KEY (database_id)
 );
 
+
+#--
+# TBL_SITE
 CREATE TABLE TBL_SITE (
     site_id number(3) default '0' NOT NULL,
     site_name varchar2(50) default '' NOT NULL,
@@ -282,32 +367,50 @@ CREATE TABLE TBL_SITE (
     PRIMARY KEY (site_id)
 );
 
+
+#
+# -- Insert initial data --
+#
+
 INSERT INTO TBL_AUTH_USER
 	(user_id, login, first_name, last_name, email, password)
-	values (1, 'OPTION_ADMIN_EMAIL', 'System', 'Admin', 'OPTION_ADMIN_EMAIL',
-		'OPTION_ADMIN_PASS');
+	values (1, 'OPTION_ADMIN_EMAIL', 'System', 'Admin',
+		'OPTION_ADMIN_EMAIL', 'OPTION_ADMIN_PASS');
+
 CREATE SEQUENCE TBL_AUTH_USER_seq START WITH 2 NOCACHE;
 
--- Start off with three user levels...
+
+# Start off with three user levels...
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (1, 'Admin', 1);
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (2, 'User', 1);
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked, assignable) VALUES (3, 'Developer', 1, 1);
+
 CREATE SEQUENCE TBL_AUTH_GROUP_seq START WITH 4 NOCACHE;
 
--- ... and only two permissions
+
+# ... and only two permissions
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (1, 'Admin');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (2, 'Editbug');
 
--- Admins can do all the admin stuff and users can edit bugs
+
+# Admins can do all the admin stuff, and
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (1, 1);
+
+# users can edit bugs
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (2, 2);
 
--- And user_id 1 is an admin and a user
-INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 1);
-INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 2);
 
--- Add user's prefs as default values for all users defined so far (only admin)
+# Insert user_id 1 into the admin group
+INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 1);
+
+
+# Add user's prefs as default values for all users defined so far (only admin)
 INSERT INTO TBL_USER_PREF (user_id) values (1);
+
+
+#
+# -- Initialize the CONFIGURATION table --
+#
 
 INSERT INTO TBL_CONFIGURATION VALUES ('INSTALL_URL','OPTION_INSTALL_URL','The base URL of the phpBugTracker installation','string');
 INSERT INTO TBL_CONFIGURATION VALUES ('JPGRAPH_PATH','','If not in the include path.  This is the file path on the web server, not a URL.','string');
@@ -341,6 +444,11 @@ INSERT INTO TBL_CONFIGURATION VALUES ('BUG_REOPENED','4','The status to assign a
 INSERT INTO TBL_CONFIGURATION VALUES ('BUG_CLOSED','7','The status to assign a bug when it is closed.','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('EMAIL_DISABLED', '0', 'Whether to disable all mail sent from the system', 'bool');
 
+
+#
+# -- Initialize the OS table --
+#
+
 INSERT INTO TBL_OS VALUES (1,'All',1,'');
 INSERT INTO TBL_OS VALUES (2,'Windows 3.1',2,'/Mozilla.*\\(Win16.*\\)/');
 INSERT INTO TBL_OS VALUES (3,'Windows 95',3,'/Mozilla.*\\(.*;.*; 32bit.*\\)/');
@@ -372,7 +480,13 @@ INSERT INTO TBL_OS VALUES (28,'OSF/1',28,'/Mozilla.*\\(.*;.*; OSF.*\\)/');
 INSERT INTO TBL_OS VALUES (29,'Solaris',29,'/Mozilla.*\\(.*;.*; SunOS 5.*\\)/');
 INSERT INTO TBL_OS VALUES (30,'SunOS',30,'/Mozilla.*\\(.*;.*; SunOS.*\\)/');
 INSERT INTO TBL_OS VALUES (31,'other',31,'');
+
 CREATE SEQUENCE TBL_OS_seq START WITH 32 NOCACHE;
+
+
+#
+# -- Initialize the RESOLUTION table --
+#
 
 INSERT INTO TBL_RESOLUTION VALUES (1,'Fixed','Bug was eliminated',1);
 INSERT INTO TBL_RESOLUTION VALUES (2,'Not a bug','It''s not a bug -- it''s a feature!',2);
@@ -380,7 +494,13 @@ INSERT INTO TBL_RESOLUTION VALUES (3,'Won''t Fix','This bug will stay',3);
 INSERT INTO TBL_RESOLUTION VALUES (4,'Deferred','We''ll get around to it later',4);
 INSERT INTO TBL_RESOLUTION VALUES (5,'Works for me','Can''t replicate the bug',5);
 INSERT INTO TBL_RESOLUTION VALUES (6,'Duplicate','',6);
+
 CREATE SEQUENCE TBL_RESOLUTION_seq START WITH 7 NOCACHE;
+
+
+#
+# -- Initialize the SEVERITY table --
+#
 
 INSERT INTO TBL_SEVERITY VALUES (1,'Unassigned','Default bug creation',1,'#dadada');
 INSERT INTO TBL_SEVERITY VALUES (2,'Idea','Ideas for further development',2,'#dad0d0');
@@ -389,7 +509,13 @@ INSERT INTO TBL_SEVERITY VALUES (4,'Annoyance','Cosmetic problems or bugs not af
 INSERT INTO TBL_SEVERITY VALUES (5,'Content','Non-functional related bugs, such as text content',5,'#dababa');
 INSERT INTO TBL_SEVERITY VALUES (6,'Significant','A bug affecting the intended performance of the product',6,'#dab0b0');
 INSERT INTO TBL_SEVERITY VALUES (7,'Critical','A bug severe enough to prevent the release of the product',7,'#daaaaa');
+
 CREATE SEQUENCE TBL_SEVERITY_seq START WITH 8 NOCACHE;
+
+
+#
+# -- Initialize the STATUS table --
+#
 
 INSERT INTO TBL_STATUS VALUES (1,'Unconfirmed','Reported but not confirmed',1);
 INSERT INTO TBL_STATUS VALUES (2,'New','A new bug',2);
@@ -398,23 +524,43 @@ INSERT INTO TBL_STATUS VALUES (4,'Reopened','Closed but opened again for further
 INSERT INTO TBL_STATUS VALUES (5,'Resolved','Set by engineer with a resolution',5);
 INSERT INTO TBL_STATUS VALUES (6,'Verified','The resolution is confirmed by the reporter',6);
 INSERT INTO TBL_STATUS VALUES (7,'Closed','The bug is officially squashed (QA)',7);
+
 CREATE SEQUENCE TBL_STATUS_seq START WITH 8 NOCACHE;
+
+
+#
+# -- Initialize the DATABASE table --
+#
 
 INSERT INTO TBL_DATABASE VALUES (1,'Oracle 8.1.7',1);
 INSERT INTO TBL_DATABASE VALUES (2,'MySQL 3.23.49',2);
 INSERT INTO TBL_DATABASE VALUES (3,'PostgreSQL 7.1.3',3);
+
 CREATE SEQUENCE TBL_DATABASE_seq START WITH 4 NOCACHE;
 
+
+#
+# -- Initialize the SITE table --
+#
+
+# Examples only
 INSERT INTO TBL_SITE VALUES (0,'All',1);
 INSERT INTO TBL_SITE VALUES (1,'Production - location 1',2);
 INSERT INTO TBL_SITE VALUES (2,'Production - location 2',3);
 INSERT INTO TBL_SITE VALUES (3,'Test site - location 1',4);
 INSERT INTO TBL_SITE VALUES (4,'Test site - location 2',5);
+
 CREATE SEQUENCE TBL_SITE_seq START WITH 5 NOCACHE;
 
--- Sequences for the tables with no initial entries
+
+#
+# -- Sequences for the tables with no initial entries --
+#
+
 CREATE SEQUENCE TBL_BUG_seq START WITH 1 NOCACHE;
 CREATE SEQUENCE TBL_COMMENT_seq START WITH 1 NOCACHE;
 CREATE SEQUENCE TBL_COMPONENT_seq START WITH 1 NOCACHE;
 CREATE SEQUENCE TBL_PROJECT_seq START WITH 1 NOCACHE;
 CREATE SEQUENCE TBL_VERSION_seq START WITH 1 NOCACHE;
+
+#--
