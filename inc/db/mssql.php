@@ -9,6 +9,7 @@ $QUERY = array(
 			'c.component_name, '.
 			'c.created_date, '.
 			'c.active, '.
+			'sort_order, '.
 			'count(bug_id) as bug_count '.
 		'from '.
 			TBL_COMPONENT.' c '.
@@ -40,8 +41,7 @@ $QUERY = array(
 			'ag.group_id, '.
 			'group_name, '.
 			'locked, '.
-			'count(ug.group_id) as count, '.
-			'assignable '.
+			'count(ug.group_id) as count '.
 		'from '.
 			TBL_AUTH_GROUP.' ag '.
 			'left join '.TBL_USER_GROUP.' ug on ug.group_id = ag.group_id '.
@@ -49,8 +49,7 @@ $QUERY = array(
 		'group by '.
 			'ag.group_id, '.
 			'group_name, '.
-			'locked, '.
-			'assignable '.
+			'locked '.
 		'order by '.
 			'%s %s',
 	'admin-list-oses' =>
@@ -67,6 +66,25 @@ $QUERY = array(
 			's.os_id, '.
 			'os_name, '.
 			'regex, '.
+			'sort_order '.
+		'order by '.
+			'%s %s',
+	'admin-list-priorities' =>
+		'select '.
+			'p.priority_id, '.
+			'priority_name, '.
+			'priority_desc, '.
+			'priority_color, '.
+			'sort_order, '.
+			'count(bug_id) as bug_count '.
+		'from '.
+			TBL_PRIORITY.' p '.
+			'left join '.TBL_BUG.' b on b.priority = p.priority_id '.
+		'group by '.
+			'p.priority_id, '.
+			'priority_name, '.
+			'priority_desc, '.
+			'priority_color, '.
 			'sort_order '.
 		'order by '.
 			'%s %s',
@@ -145,6 +163,7 @@ $QUERY = array(
 			'v.version_name, '.
 			'v.created_date, '.
 			'v.active, '.
+			'sort_order, '.
 			'count(bug_id) as bug_count '.
 		'from '.
 			TBL_VERSION.' v '.
@@ -207,14 +226,21 @@ $QUERY = array(
 			'bh.created_date',
 	'bug-prev-next' =>
 		'select '.
-			'bug_id, '.
+			'b.bug_id, '.
 			'reporter.login as reporter, '.
-			'owner.login as owner '.
+			'owner.login as owner, '.
+			'count(distinct comment.comment_id) as comments, '.
+			'count(distinct attachment.attachment_id) as attachments, '.
+			'count(distinct vote.user_id) as votes '.
 		'from '.
 			TBL_BUG.' b '.
 			'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
 			'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
 			'left join '.TBL_AUTH_USER.' lastmodifier on b.last_modified_by = lastmodifier.user_id '.
+			'left join '.TBL_COMMENT.' comment on b.bug_id = comment.bug_id '.
+			'left join '.TBL_ATTACHMENT.' attachment on b.bug_id = attachment.bug_id '.
+			'left join '.TBL_BUG_VOTE.' vote on b.bug_id = vote.bug_id '.
+			'left join '.TBL_BOOKMARK.' bookmark on b.bug_id = bookmark.bug_id '.
 			'left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_id '.
 			'left join '.TBL_DATABASE.' db on b.database_id = db.database_id '.
 			'left join '.TBL_VERSION.' version2 on b.to_be_closed_in_version_id = version2.version_id '.
@@ -222,12 +248,14 @@ $QUERY = array(
 			TBL_SEVERITY.' severity, '.
 			TBL_STATUS.' status, '.
 			TBL_OS.' os, '.
+			TBL_PRIORITY.' priority, '.
 			TBL_VERSION.' version, '.
 			TBL_COMPONENT.' component, '.
 			TBL_PROJECT.' project, '.
 			TBL_SITE.' site '.
 		'where '.
 			'b.severity_id = severity.severity_id '.
+			'and b.priority = priority.priority_id '.
 			'and b.status_id = status.status_id '.
 			'and b.os_id = os.os_id '.
 			'and b.version_id = version.version_id '.
@@ -235,10 +263,12 @@ $QUERY = array(
 			'and b.project_id = project.project_id '.
 			'and %s '.
 			'and b.site_id = site.site_id '.
-			'and bug_id <> %s '.
+			'and b.bug_id <> %s '.
+		'group by '.
+			'b.bug_id '.
 		'order by '.
 			'%s %s, '.
-			'bug_id asc',
+			'b.bug_id asc',
 	'bug-printable' =>
 		'select '.
 			'b.*, '.
@@ -248,6 +278,7 @@ $QUERY = array(
 			'component_name, '.
 			'version_name, '.
 			'severity_name, '.
+			'priority_name, '.
 			'os_name, '.
 			'status_name, '.
 			'resolution_name '.
@@ -255,17 +286,20 @@ $QUERY = array(
 			TBL_BUG.' b '.
 			'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
 			'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
+			'left join '.TBL_BOOKMARK.' bookmark on b.bug_id = bookmark.bug_id '.
 			'left join '.TBL_RESOLUTION.' r on b.resolution_id = r.resolution_id, '.
 			TBL_SEVERITY.' sv, '.
 			TBL_STATUS.' st, '.
 			TBL_OS.' os, '.
 			TBL_VERSION.' v, '.
+			TBL_PRIORITY.' priority, '.
 			TBL_COMPONENT.' c, '.
 			TBL_PROJECT.' p '.
 		'where '.
-			'bug_id = %s '.
+			'b.bug_id = %s '.
 			'and b.project_id not in (%s) '.
 			'and b.severity_id = sv.severity_id '.
+			'and b.priority = priority.priority_id '.
 			'and b.os_id = os.os_id '.
 			'and b.version_id = v.version_id '.
 			'and b.component_id = c.component_id '.
@@ -282,16 +316,19 @@ $QUERY = array(
 			TBL_BUG.' b '.
 			'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
 			'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
+			'left join '.TBL_BOOKMARK.' bookmark on b.bug_id = bookmark.bug_id '.
 			'left join '.TBL_RESOLUTION.' r on b.resolution_id = r.resolution_id, '.
 			TBL_SEVERITY.' sv, '.
 			TBL_STATUS.' st, '.
-			TBL_SITE.' site '.
+			TBL_SITE.' site, '.
+			TBL_PRIORITY.' prio '.
 		'where '.
-			'bug_id = %s '.
+			'b.bug_id = %s '.
 			'and b.project_id not in (%s) '.
 			'and b.site_id = site.site_id '.
 			'and b.severity_id = sv.severity_id '.
-			'and b.status_id = st.status_id',
+			'and b.status_id = st.status_id'.
+			'and b.priority = prio.priority_id',
 	'functions-bug-cc' =>
 		'select '.
 			'b.user_id, '.
@@ -316,6 +353,18 @@ $QUERY = array(
 			'p.project_name '.
 		'order by '.
 			'project_name',
+	'include-template-bookmark' =>
+		"SELECT ".
+			"sum(CASE WHEN s.status_id in (".OPEN_BUG_STATUSES.") THEN 1 ELSE 0 END ), ".
+			"sum(CASE WHEN s.status_id not in (".OPEN_BUG_STATUSES.") THEN 1 ELSE 0 END ) ".
+		"from ".
+			TBL_BUG." b ".
+			"left join ".TBL_STATUS." s on s.status_id = b.status_id ".
+			TBL_BOOKMARK." w ".
+		"where ".
+			"w.user_id=%s ".
+			"AND w.bug_id = b.bug_id",
+
 	'include-template-owner' =>
 		"SELECT ".
 			"sum(CASE WHEN s.status_id in (".OPEN_BUG_STATUSES.") THEN 1 ELSE 0 END ), ".
@@ -362,6 +411,10 @@ $QUERY = array(
 			'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
 			'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
 			'left join '.TBL_AUTH_USER.' lastmodifier on b.last_modified_by = lastmodifier.user_id '.
+			'left join '.TBL_COMMENT.' comment on b.bug_id = comment.bug_id '.
+			'left join '.TBL_ATTACHMENT.' attachment on b.bug_id = attachment.bug_id '.
+			'left join '.TBL_BUG_VOTE.' vote on b.bug_id = vote.bug_id '.
+			'left join '.TBL_BOOKMARK.' bookmark on b.bug_id = bookmark.bug_id '.
 			'left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_id '.
 			'left join '.TBL_DATABASE.' on b.database_id = '.TBL_DATABASE.'.database_id '.
 			'left join '.TBL_VERSION.' version2 on b.to_be_closed_in_version_id = version2.version_id '.
@@ -372,25 +425,30 @@ $QUERY = array(
 			TBL_SITE.' site, '.
 			TBL_VERSION.' version, '.
 			TBL_COMPONENT.' component, '.
-			TBL_PROJECT.' project '.
+			TBL_PROJECT.' project, '.
+			TBL_PRIORITY.' priority '.
 		'where '.
 			'b.severity_id = severity.severity_id '.
+			'and b.priority = priority.priority_id '.
 			'and b.status_id = status.status_id '.
 			'and b.os_id = os.os_id '.
 			'and b.site_id = site.site_id '.
 			'and b.version_id = version.version_id '.
 			'and b.component_id = component.component_id '.
 			'and b.project_id = project.project_id %s '.
+		'group by '.
+			'b.bug_id '.
 		'order by '.
 			'%s %s, '.
-			'bug_id asc',
+			'b.bug_id asc',
 	'query-list-bugs-count' =>
 		'select '.
 			'count(*) '.
 		'from '.
 			TBL_BUG.' b '.
 			'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
-			'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id ',
+			'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
+			'left join '.TBL_BOOKMARK.' bookmark on b.bug_id = bookmark.bug_id ',
 	'query-list-bugs-count-join' =>
 		'where ',
 	'report-resbyeng-1' =>

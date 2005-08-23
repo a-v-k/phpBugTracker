@@ -9,6 +9,7 @@ $QUERY = array(
 			'component_name, '.
 			'c.created_date, '.
 			'active, '.
+			'sort_order, '.
 			'count(bug_id) as bug_count '.
 		'from '.
 			TBL_COMPONENT.' c, '.
@@ -43,11 +44,10 @@ $QUERY = array(
 			'ag.group_id, '.
 			'ag.group_name, '.
 			'ag.locked, '.
-			'count(ug.group_id) as count, '.
-			'assignable '.
+			'count(ug.group_id) as count '.
 		'from '.
 			TBL_AUTH_GROUP.' ag, '.
-			TBL_USER_GROUP.' ug,'.
+			TBL_USER_GROUP.' ug, '.
 			TBL_AUTH_USER.' au '.
 		'where '.
 			'ag.group_id = ug.group_id(+) '.
@@ -55,8 +55,7 @@ $QUERY = array(
 		'group by '.
 			'ag.group_id, '.
 			'ag.group_name, '.
-			'ag.locked, '.
-			'ag.assignable '.
+			'ag.locked '.
 		'order by '.
 			'%s %s',
 	'admin-list-oses' =>
@@ -78,6 +77,27 @@ $QUERY = array(
 			's.sort_order '.
 		'order by '.
 			's.%s %s',
+	'admin-list-priorities' =>
+		'select '.
+			'p.priority_id, '.
+			'p.priority_name, '.
+			'p.priority_desc, '.
+			'p.priority_color, '.
+			'p.sort_order, '.
+			'count(b.bug_id) as bug_count '.
+		'from '.
+			TBL_PRIORITY.' p, '.
+			TBL_BUG.' b '.
+		'where '.
+			'p.priority_id = b.priority(+) '.
+		'group by '.
+			'p.priority_id, '.
+			'p.priority_name, '.
+			'p.priority_desc, '.
+			'p.priority_color, '.
+			'p.sort_order '.
+		'order by '.
+			'p.%s %s',
 	'admin-list-resolutions' =>
 		'select '.
 			's.resolution_id, '.
@@ -90,8 +110,13 @@ $QUERY = array(
 			TBL_BUG.' b '.
 		'where '.
 			's.resolution_id = b.resolution_id(+) '.
-		'group by s.resolution_id, resolution_name, resolution_desc, sort_order '.
-		'order by %s %s',
+		'group by '.
+			's.resolution_id, '.
+			'resolution_name, '.
+			'resolution_desc, '.
+			'sort_order '.
+		'order by '.
+			'%s %s',
 	'admin-list-severities' =>
 		'select '.
 			's.severity_id, '.
@@ -156,6 +181,7 @@ $QUERY = array(
 			'version_name, '.
 			'v.created_date, '.
 			'active, '.
+			'sort_order, '.
 			'count(bug_id) as bug_count '.
 		'from '.
 			TBL_VERSION.' v, '.
@@ -226,12 +252,19 @@ $QUERY = array(
 		'select '.
 			'b.bug_id, '.
 			'reporter.login as reporter, '.
-			'owner.login as owner '.
+			'owner.login as owner, '.
+			'count(distinct comment.comment_id) as comments, '.
+			'count(distinct attachment.attachment_id) as attachments, '.
+			'count(distinct vote.user_id) as votes '.
 		'from '.
 			TBL_BUG.' b, '.
 			TBL_AUTH_USER.' owner, '.
 			TBL_AUTH_USER.' reporter, '.
 			TBL_AUTH_USER.' lastmodifier, '.
+			TBL_COMMENT.' comment, '.
+			TBL_ATTACHMENT.' attachment, '.
+			TBL_BUG_VOTE.' vote, '.
+			TBL_BOOKMARK.' bookmark, '.
 			TBL_RESOLUTION.' resolution, '.
 			TBL_DATABASE.' database, '.
 			TBL_VERSION.' version2, '.
@@ -239,6 +272,7 @@ $QUERY = array(
 			TBL_SEVERITY.' severity, '.
 			TBL_STATUS.' status, '.
 			TBL_OS.' os, '.
+			TBL_PRIORITY.' priority, '.
 			TBL_VERSION.' version, '.
 			TBL_COMPONENT.' component, '.
 			TBL_PROJECT.' project, '.
@@ -247,18 +281,26 @@ $QUERY = array(
 			'b.assigned_to = owner.user_id(+) '.
 			'and b.created_by = reporter.user_id(+) '.
 			'and b.last_modified_by = lastmodifier.user_id(+) '.
+			'and b.bug_id = comment.bug_id(+) '.
+			'and b.bug_id = attachment.bug_id(+) '.
+			'and b.bug_id = vote.bug_id(+) '.
+			'and b.bug_id = bookmark.bug_id(+) '.
 			'and b.resolution_id = resolution.resolution_id(+) '.
 			'and b.database_id = database.database_id(+) '.
 			'and b.to_be_closed_in_version_id = version2.version_id(+) '.
 			'and b.closed_in_version_id = version3.version_id(+) '.
 			'and b.severity_id = severity.severity_id '.
+			'and b.priority = priority.priority_id '.
 			'and b.status_id = status.status_id '.
 			'and b.os_id = os.os_id '.
 			'and b.version_id = version.version_id '.
 			'and b.component_id = component.component_id '.
-			'and b.site_id = site.site_id '.
 			'and b.project_id = project.project_id '.
-			'and %s and bug_id <> %s '.
+			'and %s '.
+			'and b.site_id = site.site_id '.
+			'and b.bug_id <> %s '.
+		'group by '.
+			'b.bug_id '.
 		'order by '.
 			'%s %s, '.
 			'bug_id asc',
@@ -278,49 +320,57 @@ $QUERY = array(
 			TBL_BUG.' b, '.
 			TBL_AUTH_USER.' owner, '.
 			TBL_AUTH_USER.' reporter, '.
+			TBL_BOOKMARK.' bookmark, '.
 			TBL_RESOLUTION.' r, '.
 			TBL_SEVERITY.' sv, '.
 			TBL_STATUS.' st, '.
 			TBL_OS.' os, '.
 			TBL_VERSION.' v, '.
+			TBL_PRIORITY.' priority, '.
 			TBL_COMPONENT.' c, '.
-			TBL_PROJECT.' p ',
+			TBL_PROJECT.' p '.
 		'where '.
 			'b.assigned_to = owner.user_id(+) '.
 			'and b.created_by = reporter.user_id(+) '.
+			'and b.bug_id = bookmark.bug_id(+) '.
 			'and b.resolution_id = r.resolution_id(+) '.
+			'and b.bug_id = %s '.
+			'and b.project_id not in (%s)'.
+			'and b.severity_id = sv.severity_id '.
+			'and b.priority = priority.priority_id '.
 			'and b.os_id = os.os_id '.
 			'and b.version_id = v.version_id '.
 			'and b.component_id = c.component_id '.
 			'and b.project_id = p.project_id '.
-			'and b.severity_id = sv.severity_id '.
-			'and b.status_id = st.status_id '.
-			'and bug_id = %s '.
-			'and b.project_id not in (%s)',
+			'and b.status_id = st.status_id ',
 	'bug-show-bug' =>
 		'select '.
 			'b.*, '.
 			'reporter.login as reporter, '.
 			'owner.login as owner, '.
-			'r.resolution_name, '.
-			'st.status_name '.
+			'st.status_name, '.
+			'r.resolution_name '.
 		'from '.
 			TBL_BUG.' b, '.
 			TBL_AUTH_USER.' owner, '.
 			TBL_AUTH_USER.' reporter, '.
+			TBL_BOOKMARK.' bookmark, '.
 			TBL_RESOLUTION.' r, '.
 			TBL_SEVERITY.' sv, '.
 			TBL_STATUS.' st, '.
-			TBL_SITE.' site '.
+			TBL_SITE.' site, '.
+			TBL_PRIORITY.' prio '.
 		'where '.
 			'b.resolution_id = r.resolution_id(+) '.
 			'and b.assigned_to = owner.user_id(+) '.
 			'and b.created_by = reporter.user_id(+) '.
+			'and b.bug_id = bookmark.bug_id(+) '.
+			'and b.bug_id = %s '.
+			'and b.project_id not in (%s) '.
+			'and b.site_id = site.site_id '.
 			'and b.severity_id = sv.severity_id '.
 			'and b.status_id = st.status_id '.
-			'and b.site_id = site.site_id '.
-			'and bug_id = %s '.
-			'and b.project_id not in (%s)',
+			'and b.priority = prio.priority_id',
 	'functions-bug-cc' =>
 		'select '.
 			'b.user_id, '.
@@ -347,6 +397,18 @@ $QUERY = array(
 			'p.project_name '.
 		'order by '.
 			'project_name',
+	'include-template-bookmark' =>
+		"SELECT ".
+			"sum(decode( s.status_id in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )), ".
+			"sum(decode( s.status_id not in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )), ".
+		"from ".
+			TBL_BUG." b, ".
+			TBL_STATUS." s, ".
+			TBL_BOOKMARK." w ".
+		"where ".
+			"b.status_id = s.status_id (+) ".
+			"AND w.user_id=%s ".
+			"AND w.bug_id = b.bug_id",
 	'include-template-owner' =>
 		"SELECT ".
 			"sum(decode( s.status_id in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )), ".
@@ -392,48 +454,62 @@ $QUERY = array(
 			'%s '.
 		'from '.
 			TBL_BUG.' b, '.
-			TBL_AUTH_USER.' lastmodifier, '.
 			TBL_AUTH_USER.' owner, '.
 			TBL_AUTH_USER.' reporter, '.
+			TBL_AUTH_USER.' lastmodifier, '.
+			TBL_COMMENT.' comment, '.
+			TBL_ATTACHMENT.' attachment, '.
+			TBL_BUG_VOTE.' vote, '.
+			TBL_BOOKMARK.' bookmark, '.
+			TBL_RESOLUTION.' resolution, '.
+			TBL_DATABASE.' database, '.
+			TBL_VERSION.' version2, '.
+			TBL_VERSION.' version3, '.
 			TBL_SEVERITY.' severity, '.
 			TBL_STATUS.' status, '.
 			TBL_OS.' os, '.
+			TBL_SITE.' site, '.
 			TBL_VERSION.' version, '.
-			TBL_VERSION.' version2, '.
-			TBL_VERSION.' version3, '.
 			TBL_COMPONENT.' component, '.
 			TBL_PROJECT.' project, '.
-			TBL_RESOLUTION.' resolution, '.
-			TBL_SITE.' site, '.
-			TBL_DATABASE.' '.
+			TBL_PRIORITY.' priority '.
 		'where '.
 			'b.assigned_to = owner.user_id(+) '.
 			'and b.created_by = reporter.user_id(+) '.
 			'and b.last_modified_by = lastmodifier.user_id(+) '.
+			'and b.bug_id = comment.bug_id(+) '.
+			'and b.bug_id = attachment.bug_id(+) '.
+			'and b.bug_id = vote.bug_id(+) '.
+			'and b.bug_id = bookmark.bug_id(+) '.			
 			'and b.resolution_id = resolution.resolution_id(+) '.
-			'and b.severity_id = severity.severity_id '.
-			'and b.status_id = status.status_id '.
-			'and b.os_id = os.os_id '.
-			'and b.version_id = version.version_id '.
+			'and b.database_id = database.database_id(+) '.
 			'and b.to_be_closed_in_version_id = version2.version_id(+) '.
 			'and b.closed_in_version_id = version3.version_id(+) '.
-			'and b.database_id = '.TBL_DATABASE.'.database_id(+) '.
+			'and b.severity_id = severity.severity_id '.
+			'and b.priority = priority.priority_id '.
+			'and b.status_id = status.status_id '.
+			'and b.os_id = os.os_id '.
 			'and b.site_id = site.site_id '.
+			'and b.version_id = version.version_id '.
 			'and b.component_id = component.component_id '.
 			'and b.project_id = project.project_id %s '.
+		'group by '.
+			'b.bug_id '.
 		'order by '.
 			'%s %s, '.
-			'bug_id asc',
+			'b.bug_id asc',
 	'query-list-bugs-count' =>
 		'select '.
 			'count(*) '.
 		'from '.
 			TBL_BUG.' b, '.
 			TBL_AUTH_USER.' owner, '.
-			TBL_AUTH_USER.' reporter '.
+			TBL_AUTH_USER.' reporter, '.
+			TBL_BOOKMARK.' bookmark '.
 		'where '.
 			'b.assigned_to = owner.user_id(+) '.
-			'and b.created_by = reporter.user_id(+) ',
+			'and b.created_by = reporter.user_id(+) '.
+			'and b.bug_id = bookmark.bug_id(+) ',
 	'query-list-bugs-count-join' =>
 		'and ',
 	'report-resbyeng-1' =>

@@ -264,7 +264,7 @@ $QUERY = array(
 			'and %s '.
 			'and b.site_id = site.site_id '.
 			'and b.bug_id <> %s '.
-		'GROUP BY '.
+		'group by '.
 			'b.bug_id '.
 		'order by '.
 			'%s %s, '.
@@ -327,7 +327,7 @@ $QUERY = array(
 			'and b.project_id not in (%s) '.
 			'and b.site_id = site.site_id '.
 			'and b.severity_id = sv.severity_id '.
-			'and b.status_id = st.status_id ',
+			'and b.status_id = st.status_id '.
 			'and b.priority = prio.priority_id',
 	'functions-bug-cc' =>
 		'select '.
@@ -435,7 +435,7 @@ $QUERY = array(
 			'and b.version_id = version.version_id '.
 			'and b.component_id = component.component_id '.
 			'and b.project_id = project.project_id %s '.
-		'GROUP BY '.
+		'group by '.
 			'b.bug_id '.
 		'order by '.
 			'%s %s, '.
