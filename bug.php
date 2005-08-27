@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.143 2005/08/22 20:54:43 ulferikson Exp $
+// $Id: bug.php,v 1.144 2005/08/27 13:14:28 ulferikson Exp $
 
 include 'include.php';
 
@@ -355,7 +355,7 @@ function update_bug($bugid = 0) {
 
 	// Should we allow changes to be made to this bug by this user?
 	if (STRICT_UPDATING and !($u == $buginfo['assigned_to'] or
-		$u == $buginfo['created_by'] or $perm->have_perm('Manager'))) {
+		$u == $buginfo['created_by'] or $perm->have_perm_proj($project_id))) {
 		show_bug($bugid,array('status' => translate("You can not change this bug")));
 		return;
 	}
@@ -558,7 +558,7 @@ function do_form($bugid = 0) {
 }
 
 function show_form($bugid = 0, $error = '') {
-	global $db, $t;
+	global $db, $t, $u;
 
 	$projectname = $db->getOne("select project_name from ".TBL_PROJECT." where project_id = '{$_GET['project']}'");
 	if ($bugid && !$error) {
@@ -566,6 +566,7 @@ function show_form($bugid = 0, $error = '') {
 	} else {
 		$t->assign($_POST);
 		$t->assign(array(
+			'u' => $u,
 			'error' => $error,
 			'project' => $_GET['project'],
 			'projectname' => $projectname

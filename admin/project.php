@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.48 2005/08/22 20:21:42 ulferikson Exp $
+// $Id: project.php,v 1.49 2005/08/27 13:14:28 ulferikson Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -247,7 +247,7 @@ function show_project($projectid = 0, $error = null) {
 	else $t->assign('error', $error);
 	$t->assign('project_groups', 
 		$db->getCol('select group_id from '.TBL_PROJECT_GROUP." where project_id = $projectid"));
-	if ($perm->have_perm('Administrator')) {
+	if ($perm->have_perm('Admin')) {
 		$t->assign('project_admins', 
 			$db->getCol('select user_id from '.TBL_PROJECT_PERM." where project_id = $projectid"));
 

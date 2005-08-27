@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.61 2005/08/22 20:54:43 ulferikson Exp $
+// $Id: functions.php,v 1.62 2005/08/27 13:14:28 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -308,6 +308,7 @@ function lookup($var, $val) {
 	global $db;
 
 	switch($var) {
+		case 'reporter' :
 		case 'assigned_to' :
 			return maskemail($db->getOne("select login from ".TBL_AUTH_USER." where user_id = ".$db->quote($val)));
 			break;
@@ -318,7 +319,7 @@ function lookup($var, $val) {
 ///
 /// Divide the results of a database query into multiple pages
 function multipages($nr, $page, $urlstr) {
-	global $me, $selrange, $t, $u, $db, $perm;
+	global $me, $selrange, $t, $u, $db, $perm, $auth;
 
 	$pages = '';
 	if (!$page) $page = 1;
@@ -327,7 +328,7 @@ function multipages($nr, $page, $urlstr) {
 		$llimit = 0;
 		$page = 0;
 	} else {
-		if ($perm->check_auth('group', 'Users'))
+		if ($auth->is_authenticated())
 			$selrange = $db->getOne('select def_results from '.TBL_USER_PREF.' where user_id = '.$db->quote($u));
 		$llimit = ($page-1)*$selrange;
 	}

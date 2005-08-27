@@ -126,11 +126,19 @@ class uperm {
 		}
 	}
 
-	function have_perm_proj($project_id) {
+	function have_perm_proj($project_id = -1) {
 		global $db;
 
 		if ($this->have_perm('Admin')) {
 			return true;
+		}
+
+		if ($project_id == -1) {
+			if ( $db->getCol('SELECT user_id FROM '.TBL_PROJECT_PERM.' WHERE user_id = '.$_SESSION['uid']) ) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		if ( $db->getCol('SELECT user_id FROM '.TBL_PROJECT_PERM.' WHERE user_id = '.$_SESSION['uid']." AND project_id = $project_id") ) {

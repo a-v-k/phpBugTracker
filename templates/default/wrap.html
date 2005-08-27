@@ -26,7 +26,7 @@
 		<li><a href="report.php"><?php echo translate("View Reports"); ?></a></li>
 		<?php if (!NEW_ACCOUNTS_DISABLED && empty($_SESSION['uid'])) { ?><li><a href="newaccount.php"><?php echo translate("Create a New Account"); ?></a></li><?php } ?>
 		<li><a href="docs/html/userguide.html"><?php echo translate("Read Documentation"); ?></a></li>
-		<?php if (isset($perm) && $perm->have_perm('Administrator')) { ?><li><a href="admin/project.php"><?php echo translate("Administration Tools"); ?></a></li><?php } ?>
+		<?php if (isset($perm) && $perm->have_perm_proj()) { ?><li><a href="admin/project.php"><?php echo translate("Administration Tools"); ?></a></li><?php } ?>
 	</ul>
 </div>
 

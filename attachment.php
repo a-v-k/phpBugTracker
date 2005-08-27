@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.25 2005/07/20 18:48:01 ulferikson Exp $
+// $Id: attachment.php,v 1.26 2005/08/27 13:14:28 ulferikson Exp $
 
 include 'include.php';
 
@@ -156,7 +156,7 @@ function show_attachment_form($bugid, $error = '') {
 }
 
 if (isset($_GET['del'])) {
-	if (!$perm->have_perm('Administrator')) {
+	if (!$perm->have_perm('Admin')) {
 		show_text(translate("You do not have the permissions required for that function"));
 	} else {
 		del_attachment($_GET['del']);

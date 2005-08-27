@@ -128,7 +128,7 @@
 		<td><select name="resolution_id" <?php echo $disabled ?>><option value="0"><?php echo translate("None"); ?></option><?php build_select('resolution', $resolution_id) ?></select></td>
 	</tr><tr>
 		<td><?php echo translate("Assigned to"); ?>:</td>
-		<?php if (isset($perm) && $perm->have_perm('EditAssignment')) { ?>
+		<?php if (isset($perm) && ($perm->have_perm('EditAssignment') or $perm->have_perm_proj($project_id))) { ?>
 		<td><select name="assigned_to" <?php echo $disabled ?>><option value="0"><?php echo translate("None"); ?></option><?php build_select('owner', $assigned_to) ?></select></td>
 		<?php } else { ?>
 		<td>
@@ -210,7 +210,7 @@
 					<td align="center"><?php echo $attachments[$i]['mime_type']; ?></td>
 					<td align="center"><?php echo date(DATE_FORMAT, $attachments[$i]['created_date']); ?></td>
 					<td align="center"><a href='attachment.php?attachid=<?php echo $attachments[$i]['attachment_id']; ?>'>View</a>
-					<?php if (isset($perm) and $perm->have_perm('Administrator')) { ?>
+					<?php if (isset($perm) and $perm->have_perm_proj($project_id)) { ?>
 						| <a href='attachment.php?del=<?php echo $attachments[$i]['attachment_id']; ?>' onClick="return confirm('<?php echo translate("Are you sure you want to delete this attachment?"); ?>');"><?php echo translate("Delete"); ?></a>
 					<?php } ?>
 					</td>

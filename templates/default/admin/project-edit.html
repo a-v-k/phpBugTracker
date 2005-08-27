@@ -65,7 +65,7 @@
 			<input type="checkbox" name="active" value="1" <?php if($active) echo 'checked'; ?>>
 		</td>
 	</tr>
-<?php if(isset($perm) and $perm->have_perm('Administrator')) { ?>
+<?php if(isset($perm) and $perm->have_perm('Admin')) { ?>
 	<tr>
 		<td>
 			<?php echo translate("These developers can administer this project"); ?>:
@@ -80,7 +80,7 @@
 		<td>
 			<?php echo translate("These developers can administer this project"); ?>:
 			<br>
-				<?php for ($i = 0, $count = count($project_admins); $i < $count; $i++) echo $project_developers[$i].'<br />'; ?>
+				<?php for ($i = 0, $count = count($project_admins); $i < $count; $i++) echo $project_admins[$i].'<br />'; ?>
 		</td>
 	</tr>
 <?php } ?>

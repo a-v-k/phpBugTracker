@@ -10,6 +10,8 @@
 	if (!isset($database))    $database = '';
 	if (!isset($site))        $site = '';
 	if (!isset($os))          $os = '';
+
+	$reporter = $reporter ? $reporter : $u
 ?>
 		<form action="bug.php" method="post" enctype="multipart/form-data">
 			<table border="0">
@@ -33,9 +35,15 @@
 						<?php echo translate("Reporter"); ?>:
 					</td>
 					<td>
+					<?php if (isset($perm) and $perm->have_perm_proj($project)) { ?>
 						<select name="reporter">
 							<?php build_select('reporter', $reporter) ?>
 						</select>
+					<?php 	}
+						else {
+							echo lookup('reporter', $reporter);
+						} ?>
+						<input type="hidden" name="reporter" value="<?php echo $reporter ?>">
 					</td>
 				</tr>
 				<tr>
