@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.62 2005/08/27 13:14:28 ulferikson Exp $
+// $Id: functions.php,v 1.63 2005/08/27 13:51:42 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -497,6 +497,7 @@ function db_concat() {
 	$pieces = func_get_args();
 
 	switch(DB_TYPE) {
+		case 'mysqli' :
 		case 'mysql' : $retstr = 'concat('. delimit_list(', ', $pieces).')'; break;
 		case 'pgsql' :
 		case 'oci8' :
