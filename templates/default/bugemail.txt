@@ -6,7 +6,7 @@ INSTEAD FOLLOW BUG'S URL BELOW IN ORDER TO DETAIL BUG:
          Bug #: <?php echo $bugid; ?> (<?php echo $bugurl; ?>)
 <?php echo $reporter_stat; ?>  Reported By: <?php echo $reporter."\n"; ?>
 ----------------------------------------------------------------------------
-<?php echo $title_stat; ?>      Summary: <?php echo $title."\n"; ?>
+<?php echo $title_stat; ?>      Summary: <?php echo html_entity_decode($title)."\n"; ?>
 <?php echo $url_stat; ?>          URL: <?php echo $url."\n"; ?>
 <?php echo $project_id_stat; ?>      Product: <?php echo $project_id."\n"; ?>
 <?php echo $version_id_stat; ?>      Version: <?php echo $version_id."\n"; ?>
@@ -26,9 +26,9 @@ INSTEAD FOLLOW BUG'S URL BELOW IN ORDER TO DETAIL BUG:
                               COMMENTS
 
 ----- Posted by <?php echo $oldpostedby; ?> at <?php echo $oldpostedon; ?> -----
-<?php echo $oldcomments."\n"; ?>
+<?php echo html_entity_decode($oldcomments)."\n"; ?>
 
 ----- Posted by <?php echo $newpostedby; ?> at <?php echo $newpostedon; ?> -----
-<?php echo $newcomments."\n"; ?>
+<?php echo html_entity_decode($newcomments)."\n"; ?>
 
 <?php } ?>
