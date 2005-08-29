@@ -222,8 +222,7 @@ $QUERY = array(
 			TBL_AUTH_GROUP.' g '.
 		'where '.
 			'g.group_id = ug.group_id(+) '.
-			'and user_id = %s '.
-			'and group_name <> \'User\'',
+			'and user_id = %s ',
 	'bug-cc-list' =>
 		'select '.
 			'email '.

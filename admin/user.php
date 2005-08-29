@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.51 2005/08/22 20:11:49 ulferikson Exp $
+// $Id: user.php,v 1.52 2005/08/29 19:14:13 ulferikson Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -167,22 +167,30 @@ function list_items($userid = 0, $error = '') {
 	$filter_user = '';
 	$filter_group = '';
 	if (isset($_GET['userfilter'])) switch($_GET['userfilter']) {
-		case 1 : $filter_user = ' and u.active = 1'; break;
-		case 2 : $filter_user = ' and u.active = 0'; break;
+		case 1 : $filter_user = 'u.active = 1'; break;
+		case 2 : $filter_user = 'u.active = 0'; break;
 	}
 	if (isset($_GET['groupfilter'])) {
 		if ((int)$_GET['groupfilter'] > 0) {
-			$filter_group = ' and ug.group_id = '.(int)$_GET['groupfilter'];
+			$filter_group = 'u.user_id = ug.user_id and ug.group_id = '.(int)$_GET['groupfilter'];
 		}
 	}
-	$nr = $db->getOne("select count(distinct u.user_id) from ".TBL_AUTH_USER." u, ".TBL_USER_GROUP." ug where u.user_id = ug.user_id".$filter_user.$filter_group);
+	if ($filter_group<>'' && $filter_user<>'') {
+		$filter_group = 'and '.$filter_group;
+	}
+	$nr = $db->getOne("select count(distinct u.user_id)".
+		" from ".TBL_AUTH_USER." u ".
+		($filter_group<>'' ? ", ".TBL_USER_GROUP." ug" : "").
+		(($filter_group<>'' or $filter_user<>'') ? " where $filter_user $filter_group" : ""));
 
 	list($selrange, $llimit) = multipages($nr, $page, 
 		"order=$order&sort=$sort&userfilter=$user_filter&groupfilter=$group_filter");
 
 	$t->assign('users', $db->getAll($db->modifyLimitQuery("select distinct u.user_id, u.first_name, u.last_name, u.email, u.login, u.created_date, u.active".
-	    " from ".TBL_AUTH_USER." u, ".TBL_USER_GROUP." ug where u.user_id = ug.user_id $filter_user $filter_group".
-	    " order by $order $sort", $llimit, $selrange)));
+		" from ".TBL_AUTH_USER." u".
+		($filter_group<>'' ? ", ".TBL_USER_GROUP." ug" : "").
+		(($filter_group<>'' or $filter_user<>'') ? " where $filter_user $filter_group" : "").
+		" order by $order $sort", $llimit, $selrange)));
 
 	$headers = array(
 		'userid' => 'user_id',

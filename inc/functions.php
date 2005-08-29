@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.63 2005/08/27 13:51:42 ulferikson Exp $
+// $Id: functions.php,v 1.64 2005/08/29 19:14:13 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -74,7 +74,7 @@ function build_select($box, $selected = '', $project = 0) {
 		$querystart = "select {$box}_id, {$box}_name from $cfgDatabase[$box]";
 		$querymid = ' where sort_order > 0 order by sort_order';
 		$queries = array(
-			'group' => $querystart.' where group_name <> \'User\' order by group_name',
+			'group' => $querystart.' order by group_name',
 			'severity' => $querystart.$querymid,
 			'priority' => $querystart.$querymid,
 			'site' => $querystart.$querymid,

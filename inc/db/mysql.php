@@ -200,8 +200,7 @@ $QUERY = array(
 			TBL_USER_GROUP.' ug '.
 			'left join '.TBL_AUTH_GROUP.' g using (group_id) '.
 		'where '.
-			'user_id = %s '.
-			'and group_name <> \'User\'',
+			'user_id = %s ',
 	'bug-cc-list' =>
 		'select '.
 			'email '.
