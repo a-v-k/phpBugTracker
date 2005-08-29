@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.51 2005/08/23 21:26:14 ulferikson Exp $
+// $Id: install.php,v 1.52 2005/08/29 19:09:40 ulferikson Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -225,7 +225,7 @@ function create_tables() {
 		$do_query = '';
 	}
 	/*!! BAD! Must figure out how to get db_version from config-dist.php... */
-	$query = preg_replace(array_keys($tables), array_values($tables), 'INSERT INTO TBL_CONFIGURATION (varname,varvalue,description,vartype) VALUES (\'DB_VERSION\', './*!!!*/4/*!!!*/.', \'Database Version <b>Warning:</b> Changing this might make things go horribly wrong, so don\\\'t change it.\', \'mixed\')');
+	$query = preg_replace(array_keys($tables), array_values($tables), 'INSERT INTO TBL_CONFIGURATION (varname,varvalue,description,vartype) VALUES (\'DB_VERSION\', './*!!!*/5/*!!!*/.', \'Database Version <b>Warning:</b> Changing this might make things go horribly wrong, so don\\\'t change it.\', \'mixed\')');
 	log_query($query);
 
 	if ($num_errors > 0) {

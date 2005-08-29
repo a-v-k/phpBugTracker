@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.139 2005/08/22 20:50:23 ulferikson Exp $
+// $Id: include.php,v 1.140 2005/08/29 19:09:40 ulferikson Exp $
 
 define('RAWERROR', true);
 
@@ -79,6 +79,11 @@ if (empty($upgrading)) {
 		}
 	}
 
+}
+else {
+	if (!defined('OPEN_BUG_STATUSES')) define('OPEN_BUG_STATUSES', '0');
+	if (!defined('CHARSET')) define('CHARSET', 'utf-8');
+	if (!defined('STYLE')) define('STYLE', 'default');
 }
 require_once ('inc/db/'.DB_TYPE.'.php');
 

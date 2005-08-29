@@ -20,10 +20,9 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.41 2005/07/19 19:25:37 ulferikson Exp $
+// $Id: upgrade.php,v 1.42 2005/08/29 19:09:40 ulferikson Exp $
 
 define ('NO_AUTH', 1);
-define ('RAWERROR', true);
 define ('THEME', 'default');
 $upgrading = true;
 include 'include.php';
@@ -97,6 +96,7 @@ function upgrade() {
 
 	$log_text = $tmp_log;
 
+	$upgraded = 0;
 	if ($thisvers == CUR_DB_VERSION) $upgraded = 1;
 	if (!$upgraded) {
 		switch(DB_TYPE) {
@@ -120,6 +120,8 @@ function upgrade() {
 					log_query("update ".TBL_STATUS." set bug_open = 1");
 					log_query("ALTER TABLE ".TBL_STATUS." alter bug_open set NOT NULL");
 				}
+				if ($thisvers < 5) {
+				}
 				break;
 			case 'mysqli' :
 			case 'mysql' :
@@ -132,6 +134,14 @@ function upgrade() {
 				}
 				if ($thisvers < 4) {
 					log_query('ALTER TABLE '.TBL_STATUS.' ADD bug_open TINYINT DEFAULT \'1\' NOT NULL');
+				}
+				if ($thisvers < 5) {
+					log_query("create table if not exists ".TBL_PRIORITY." ( priority_id int(10) unsigned NOT NULL default '0', priority_name varchar(30) NOT NULL default '', priority_desc text NOT NULL, sort_order tinyint(3) unsigned NOT NULL default '0', priority_color varchar(10) NOT NULL default '#FFFFFF', PRIMARY KEY  (priority_id) )");
+					log_query("create table if not exists ".TBL_BOOKMARK." ( user_id int(10) unsigned NOT NULL default '0', bug_id int(10) unsigned NOT NULL default '0' )");
+					log_query("alter table ".TBL_COMPONENT." ADD sort_order tinyint(3) unsigned NOT NULL default '0' AFTER active");
+					log_query("alter table ".TBL_VERSION." ADD sort_order tinyint(3) unsigned NOT NULL default '0' AFTER active");
+					log_query("CREATE TABLE IF NOT EXISTS ".TBL_PRIORITY."_seq (id int unsigned auto_increment not null primary key)");
+					log_query("INSERT INTO ".TBL_PRIORITY."_seq values (5)");
 				}
 				break;
 			case 'oci8' :
@@ -154,6 +164,8 @@ function upgrade() {
 				if ($thisvers < 4) {
 					log_query("ALTER TABLE ".TBL_STATUS." ADD (bug_open number(1) default '1' NOT NULL)");
 				}
+				if ($thisvers < 5) {
+				}
 				break;
 		}
 
@@ -170,6 +182,17 @@ function upgrade() {
 			log_query('DELETE FROM '.TBL_CONFIGURATION.' WHERE varname = \'BUG_CLOSED\'');
 			$comment_text .= "You must set your Statuses to either open or closed. Default settings should be modified so that \"resolved\", \"closed\", and \"verified\" are shown as being closed, and all other statuses are set to open.<br><br>\n";
 			log_query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (3, 'EditAssignment')");
+		}
+
+		if ($thisvers < 5) {
+			log_query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (4, 'Assignable')");
+			$comment_text .= "You must set your developer group(s) to be Assignable by visiting the \"Groups\" page within the Administration Pages.<br><br>\n";
+			log_query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('USE_PRIORITY_COLOR','0','Should the query list use the priority colors as the row background color','bool')");
+			log_query("INSERT INTO ".TBL_PRIORITY." VALUES (1,'Low','Fix if possible',1,'#dadada')");
+			log_query("INSERT INTO ".TBL_PRIORITY." VALUES (2,'Medium Low','Must fix before final',2,'#dad0d0')");
+			log_query("INSERT INTO ".TBL_PRIORITY." VALUES (3,'Medium','Fix before next milestone (alpha, beta, etc.)',3,'#dac0c0')");
+			log_query("INSERT INTO ".TBL_PRIORITY." VALUES (4,'Medium High','Fix as soon as possible',4,'#dab0b0')");
+			log_query("INSERT INTO ".TBL_PRIORITY." VALUES (5,'High','Fix immediately',5,'#daaaaa')");
 		}
 
 		/* update to current DB_VERSION */
