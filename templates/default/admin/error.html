@@ -1,0 +1,13 @@
+<table width="100%">
+	<tr>
+		<td align="center">
+			<?php 
+                if ($iserror) echo "<div class=\"error\">$text</div>";
+                else echo $text;
+            ?>
+			<br>
+			<br>
+			<a href="javascript:history.go(-1)"><?php echo translate("Back"); ?></a>
+		</td>
+	</tr>
+</table>
