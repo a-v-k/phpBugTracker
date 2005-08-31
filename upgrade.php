@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.42 2005/08/29 19:09:40 ulferikson Exp $
+// $Id: upgrade.php,v 1.43 2005/08/31 20:11:06 ulferikson Exp $
 
 define ('NO_AUTH', 1);
 define ('THEME', 'default');
@@ -121,6 +121,16 @@ function upgrade() {
 					log_query("ALTER TABLE ".TBL_STATUS." alter bug_open set NOT NULL");
 				}
 				if ($thisvers < 5) {
+					log_query("create table ".TBL_PRIORITY."( priority_id INT4  NOT NULL DEFAULT '0', priority_name varchar(30) NOT NULL DEFAULT '', priority_desc TEXT DEFAULT '' NOT NULL, sort_order INT2  NOT NULL DEFAULT '0', priority_color varchar(10) NOT NULL DEFAULT '#FFFFFF', PRIMARY KEY  (priority_id) )");
+					log_query("create table ".TBL_BOOKMARK."( user_id INT4  NOT NULL DEFAULT '0', bug_id INT4  NOT NULL DEFAULT '0' )");
+
+					log_query('ALTER TABLE '.TBL_COMPONENT.' ADD sort_order INT2');
+					log_query("ALTER TABLE ".TBL_COMPONENT." alter sort_order set DEFAULT 0");
+					log_query("ALTER TABLE ".TBL_COMPONENT." alter sort_order set NOT NULL");
+					log_query('ALTER TABLE '.TBL_VERSION.' ADD sort_order INT2');
+					log_query("ALTER TABLE ".TBL_VERSION." alter sort_order set DEFAULT 0");
+					log_query("ALTER TABLE ".TBL_VERSION." alter sort_order set NOT NULL");
+					log_query("CREATE SEQUENCE ".TBL_PRIORITY."_seq START 6");
 				}
 				break;
 			case 'mysqli' :
@@ -165,6 +175,11 @@ function upgrade() {
 					log_query("ALTER TABLE ".TBL_STATUS." ADD (bug_open number(1) default '1' NOT NULL)");
 				}
 				if ($thisvers < 5) {
+					log_query("create table ".TBL_PRIORITY." ( priority_id number(3)   default '0' NOT NULL, priority_name varchar2(30)  default '' NOT NULL, priority_desc varchar2(4000) NOT NULL, sort_order number(3)   default '0' NOT NULL, priority_color varchar2(10)  default '#FFFFFF' NOT NULL, PRIMARY KEY  (priority_id) )");
+					log_query("create table ".TBL_BOOKMARK." ( user_id number(10) default '0' NOT NULL, bug_id number(10) default '0' NOT NULL )");
+					log_query("ALTER TABLE ".TBL_COMPONENT." ADD ( sort_order number(3) default '0' NOT NULL )");
+					log_query("ALTER TABLE ".TBL_VERSION." ADD ( sort_order number(3) default '0' NOT NULL )");
+					log_query("CREATE SEQUENCE ".TBL_PRIORITY."_seq START WITH 6 NOCACHE");
 				}
 				break;
 		}
