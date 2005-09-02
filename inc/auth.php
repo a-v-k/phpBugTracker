@@ -121,7 +121,7 @@ class uperm {
 		if ($this->have_perm_proj($project_id)) {
 			return true;
 		} else {
-			$this->perm_invalid($_SESSION['perms'], $p);
+			$this->perm_invalid($_SESSION['perms']);
 			exit();
 		}
 	}
@@ -182,7 +182,7 @@ class uperm {
 	}
 
 
-	function perm_invalid($actual_perms, $required_perms) {
+	function perm_invalid($actual_perms, $required_perms = 0) {
 		global $t;
 
 		$t->render('badperm.html', '');

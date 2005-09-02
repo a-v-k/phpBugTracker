@@ -20,13 +20,13 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.49 2005/08/27 13:14:28 ulferikson Exp $
+// $Id: project.php,v 1.50 2005/09/02 19:17:24 ulferikson Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
 include 'include.php';
 
-function del_version($versionid, $projectid) {
+function del_version($versionid, $projectid = 0) {
 	global $db, $me, $perm;
 
 	$perm->check_proj($projectid);
@@ -37,7 +37,7 @@ function del_version($versionid, $projectid) {
 	header("Location: $me?op=edit&id=$projectid&");
 }
 
-function save_version($version_id = 0) {
+function save_version($version_id = 0, $projectid = 0) {
 	global $db, $me, $now, $u, $t, $perm;
 
 	$perm->check_proj($projectid);
@@ -81,7 +81,7 @@ function show_version($versionid = 0, $error = '') {
 		!empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
 }
 
-function del_component($componentid, $projectid) {
+function del_component($componentid, $projectid = 0) {
 	global $db, $me, $perm;
 
 	$perm->check_proj($projectid);
@@ -92,7 +92,7 @@ function del_component($componentid, $projectid) {
 	header("Location: $me?op=edit&id=$projectid&");
 }
 
-function save_component($component_id = 0) {
+function save_component($component_id = 0, $projectid = 0) {
 	global $db, $me, $u, $now, $t, $perm;
 
 	$perm->check_proj($projectid);
@@ -243,6 +243,8 @@ function save_project($projectid = 0) {
 function show_project($projectid = 0, $error = null) {
 	global $db, $me, $t, $QUERY, $perm;
 
+	$perm->check_proj($projectid);
+
 	if (is_array($error)) $t->assign($error);
 	else $t->assign('error', $error);
 	$t->assign('project_groups', 
@@ -319,8 +321,8 @@ if (isset($_REQUEST['op'])) {
 		case 'del_component' : del_component($_REQUEST['id'], $_REQUEST['project_id']); break;
 		case 'del_version' : del_version($_REQUEST['id'], $_REQUEST['project_id']); break;
 		case 'save_project' : save_project($_POST['id']); break;
-		case 'save_version' : save_version($_POST['version_id']); break;
-		case 'save_component' : save_component($_POST['component_id']); break;
+		case 'save_version' : save_version($_POST['version_id'], $_POST['project_id']); break;
+		case 'save_component' : save_component($_POST['component_id'], $_POST['project_id']); break;
 	}
 } else list_projects();
 
