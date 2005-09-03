@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.43 2005/08/31 20:11:06 ulferikson Exp $
+// $Id: upgrade.php,v 1.44 2005/09/03 16:41:48 ulferikson Exp $
 
 define ('NO_AUTH', 1);
 define ('THEME', 'default');
@@ -208,6 +208,7 @@ function upgrade() {
 			log_query("INSERT INTO ".TBL_PRIORITY." VALUES (3,'Medium','Fix before next milestone (alpha, beta, etc.)',3,'#dac0c0')");
 			log_query("INSERT INTO ".TBL_PRIORITY." VALUES (4,'Medium High','Fix as soon as possible',4,'#dab0b0')");
 			log_query("INSERT INTO ".TBL_PRIORITY." VALUES (5,'High','Fix immediately',5,'#daaaaa')");
+			log_query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('NEW_ACCOUNTS_GROUP', 'User', 'The group assigned to new user accounts', 'string')");
 		}
 
 		/* update to current DB_VERSION */

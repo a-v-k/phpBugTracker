@@ -1,7 +1,7 @@
 # Oracle database creation script
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: oci8.in,v 1.31 2005/08/31 20:12:38 ulferikson Exp $
+# $Id: oci8.in,v 1.32 2005/09/03 16:41:48 ulferikson Exp $
 
 
 
@@ -453,6 +453,7 @@ INSERT INTO TBL_CONFIGURATION VALUES ('USE_PRIORITY_COLOR','0','Should the query
 INSERT INTO TBL_CONFIGURATION VALUES ('EMAIL_IS_LOGIN','1','Whether to use email addresses as logins','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('STRICT_UPDATING', '0', 'Only the bug reporter, bug owner, managers, and admins can change a bug', 'bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('NEW_ACCOUNTS_DISABLED', '0', 'Only admins can create new user accounts - newaccount.php is disabled', 'bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('NEW_ACCOUNTS_GROUP', 'User', 'The group assigned to new user accounts', 'string');
 INSERT INTO TBL_CONFIGURATION VALUES ('RECALL_LOGIN', '0', 'Enable use of cookies to store username between logins', 'bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('SHOW_PROJECT_SUMMARIES', '1', 'Itemize bug stats by project on the home page', 'bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('FORCE_LOGIN', '0', 'Force users to login before being able to use the bug tracker', 'bool');
@@ -598,6 +599,7 @@ CREATE SEQUENCE TBL_SITE_seq START WITH 5 NOCACHE;
 # -- Sequences for the tables with no initial entries --
 #
 
+CREATE SEQUENCE TBL_ATTACHMENT_seq START WITH 1 NOCACHE;
 CREATE SEQUENCE TBL_BUG_seq START WITH 1 NOCACHE;
 CREATE SEQUENCE TBL_COMMENT_seq START WITH 1 NOCACHE;
 CREATE SEQUENCE TBL_COMPONENT_seq START WITH 1 NOCACHE;

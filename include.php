@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.140 2005/08/29 19:09:40 ulferikson Exp $
+// $Id: include.php,v 1.141 2005/09/03 16:41:48 ulferikson Exp $
 
 define('RAWERROR', true);
 
@@ -87,7 +87,7 @@ else {
 }
 require_once ('inc/db/'.DB_TYPE.'.php');
 
-$me = $HTTP_SERVER_VARS['PHP_SELF'];
+$me = $_SERVER['PHP_SELF'];
 $selrange = 30;
 $now = time();
 

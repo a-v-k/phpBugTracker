@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.51 2005/08/23 21:12:38 ulferikson Exp $
+# $Id: mysql.in,v 1.52 2005/09/03 16:41:48 ulferikson Exp $
 
 
 
@@ -452,6 +452,7 @@ INSERT INTO TBL_CONFIGURATION VALUES ('USE_PRIORITY_COLOR','0','Should the query
 INSERT INTO TBL_CONFIGURATION VALUES ('EMAIL_IS_LOGIN','1','Whether to use email addresses as logins','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('STRICT_UPDATING', '0', 'Only the bug reporter, bug owner, managers, and admins can change a bug', 'bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('NEW_ACCOUNTS_DISABLED', '0', 'Only admins can create new user accounts - newaccount.php is disabled', 'bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('NEW_ACCOUNTS_GROUP', 'User', 'The group assigned to new user accounts', 'string');
 INSERT INTO TBL_CONFIGURATION VALUES ('RECALL_LOGIN', '0', 'Enable use of cookies to store username between logins', 'bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('SHOW_PROJECT_SUMMARIES', '1', 'Itemize bug stats by project on the home page', 'bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('FORCE_LOGIN', '0', 'Force users to login before being able to use the bug tracker', 'bool');
@@ -611,24 +612,28 @@ INSERT INTO TBL_SITE_seq values (4);
 # -- Sequences for the tables with no initial entries --
 #
 
+CREATE TABLE TBL_ATTACHMENT_seq (
+  id int unsigned auto_increment not null primary key);
+INSERT INTO TBL_ATTACHMENT_seq values(0);
+
 CREATE TABLE TBL_BUG_seq (
   id int unsigned auto_increment not null primary key);
-INSERT INTO TBL_BUG_seq values(1);
+INSERT INTO TBL_BUG_seq values(0);
 
 CREATE TABLE TBL_COMMENT_seq (
   id int unsigned auto_increment not null primary key);
-INSERT INTO TBL_COMMENT_seq values(1);
+INSERT INTO TBL_COMMENT_seq values(0);
 
 CREATE TABLE TBL_COMPONENT_seq (
   id int unsigned auto_increment not null primary key);
-INSERT INTO TBL_COMPONENT_seq values(1);
+INSERT INTO TBL_COMPONENT_seq values(0);
 
 CREATE TABLE TBL_PROJECT_seq (
   id int unsigned auto_increment not null primary key);
-INSERT INTO TBL_PROJECT_seq values(1);
+INSERT INTO TBL_PROJECT_seq values(0);
 
 CREATE TABLE TBL_VERSION_seq (
   id int unsigned auto_increment not null primary key);
-INSERT INTO TBL_VERSION_seq values(1);
+INSERT INTO TBL_VERSION_seq values(0);
 
 #--

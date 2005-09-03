@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.52 2005/08/29 19:09:40 ulferikson Exp $
+// $Id: install.php,v 1.53 2005/09/03 16:41:48 ulferikson Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -130,7 +130,7 @@ if (!empty($_POST)) {
 		'/OPTION_ADMIN_PASS/' => $_POST['encrypt_pass'] ? md5($_POST['admin_pass']) : $_POST['admin_pass'],
 		'/OPTION_PHPBT_EMAIL/' => $_POST['phpbt_email'],
 		'/OPTION_ENCRYPT_PASS/' => $_POST['encrypt_pass'],
-		'/OPTION_INSTALL_URL/' => 'http://'.$HTTP_SERVER_VARS['SERVER_NAME'].dirname($HTTP_SERVER_VARS['SCRIPT_NAME']),
+		'/OPTION_INSTALL_URL/' => 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']),
 		);
 }
 
@@ -296,11 +296,11 @@ function show_finished() {
 }
 
 function show_front($error = '') {
-	global $t, $_POST, $select, $HTTP_SERVER_VARS;
+	global $t, $_POST, $select;
 
 	extract($_POST);
 	$error = $error;
-	$default_email = 'phpbt@'.$HTTP_SERVER_VARS['SERVER_NAME'];
+	$default_email = 'phpbt@'.$_SERVER['SERVER_NAME'];
 	include('templates/default/install.html');
 }
 

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: newaccount.php,v 1.34 2005/08/22 20:50:23 ulferikson Exp $
+// $Id: newaccount.php,v 1.35 2005/09/03 16:41:48 ulferikson Exp $
 
 define('NO_AUTH', 1);
 include 'include.php'; 
@@ -58,7 +58,7 @@ function do_form() {
 	}
 	$user_id = $db->nextId(TBL_AUTH_USER);
 	$db->query("insert into ".TBL_AUTH_USER." (user_id, login, first_name, last_name, email, password, active, created_date, last_modified_date) values (".join(', ', array($user_id, $db->quote(stripslashes($login)), $db->quote(stripslashes($firstname)), $db->quote(stripslashes($lastname)), $db->quote($_POST['email']), $mpassword, 1, $now, $now)).")");
-	$db->query("insert into ".TBL_USER_GROUP." (user_id, group_id, created_by, created_date) select $user_id, group_id, 0, $now from ".TBL_AUTH_GROUP." where group_name = 'User'"); 
+	$db->query("insert into ".TBL_USER_GROUP." (user_id, group_id, created_by, created_date) select $user_id, group_id, 0, $now from ".TBL_AUTH_GROUP." where group_name = ".NEW_ACCOUNTS_GROUP); 
 	$db->query("insert into ".TBL_USER_PREF." (user_id) values ($user_id)");
 	
 	qp_mail($_POST['email'], 

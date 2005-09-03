@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: user.php,v 1.52 2005/08/29 19:14:13 ulferikson Exp $
+// $Id: user.php,v 1.53 2005/09/03 16:41:48 ulferikson Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -65,9 +65,6 @@ function do_form($userid = 0) {
 		}
 		// Add to prefs
 		$db->query("INSERT INTO ".TBL_USER_PREF." (user_id, email_notices) VALUES ($new_user_id, '{$_POST['fe_notice']}')");
-
-		// And add to the user group
-		$db->query("insert into ".TBL_USER_GROUP." (user_id, group_id, created_by, created_date) select $new_user_id, group_id, $u, $now from ".TBL_AUTH_GROUP." where group_name = 'User'");
 	} else {
 		if (ENCRYPT_PASS) {
 			$oldpass = $db->getOne("select password from ".TBL_AUTH_USER." where user_id = $userid");
