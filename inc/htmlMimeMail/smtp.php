@@ -84,7 +84,11 @@
 				return $obj;
 
 			}else{
-				$this->connection = fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
+				$this->connection = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
+				if (!is_resource($this->connection)) {
+					$this->errors[] = 'Failed to connect to server: '.$errstr;
+					return FALSE;
+				}
 				if(function_exists('socket_set_timeout')){
 					@socket_set_timeout($this->connection, 5, 0);
 				}

@@ -684,7 +684,11 @@ class htmlMimeMail
 				require_once(dirname(__FILE__) . '/smtp.php');
 				require_once(dirname(__FILE__) . '/RFC822.php');
 				$smtp = &smtp::connect($this->smtp_params);
-				
+				if ($smtp->status != SMTP_STATUS_CONNECTED) {
+					$this->errors = $smtp->errors;
+					return false;
+				}
+
 				// Parse recipients argument for internet addresses
 				foreach ($recipients as $recipient) {
 					$addresses = Mail_RFC822::parseAddressList($recipient, $this->smtp_params['helo'], null, false);
