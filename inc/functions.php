@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.64 2005/08/29 19:14:13 ulferikson Exp $
+// $Id: functions.php,v 1.65 2005/09/08 20:05:42 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -601,6 +601,7 @@ function qp_mail($to, $subject = 'No subject', $body, $from = ADMIN_EMAIL) {
 	$mail = new htmlMimeMail();
 	$mail->setSubject($subject);
 	$mail->setFrom($from);
+	$mail->setReturnPath(RETURN_PATH);
 	$recipient[] = $to;
 
 	if (SEND_MIME_EMAIL) {
@@ -620,7 +621,7 @@ function qp_mail($to, $subject = 'No subject', $body, $from = ADMIN_EMAIL) {
 	}
 
 	if (SMTP_EMAIL) {
-		$mail->setSMTPParams(SMTP_HOST, SMTP_PORT, SMTP_HELO, SMTP_AUTH, SMTP_AUTH_USER, SMTP_AUTH_PASS, SMTP_SENDER);
+		$mail->setSMTPParams(SMTP_HOST, SMTP_PORT, SMTP_HELO, SMTP_AUTH, SMTP_AUTH_USER, SMTP_AUTH_PASS);
 	}
 
 	$retval = $mail->send($recipient, SMTP_EMAIL ? 'smtp' : 'mail');

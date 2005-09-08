@@ -26,7 +26,6 @@
 		var $auth;
 		var $user;
 		var $pass;
-		var $sender;
 
 		/**
         * Constructor function. Arguments:
@@ -58,7 +57,6 @@
 			$this->auth				= FALSE;
 			$this->user				= '';
 			$this->pass				= '';
-			$this->sender				= null;
 			$this->errors   		= array();
 
 			foreach($params as $key => $value){
@@ -129,10 +127,7 @@
 						return FALSE;
 				}
 
-				$envelope_sender = $this->from;
-				if (!is_null($this->sender))
-					$envelope_sender = $this->sender;
-				$this->mail($envelope_sender);
+				$this->mail($this->from);
 				if(is_array($this->recipients))
 					foreach($this->recipients as $value)
 						$this->rcpt($value);

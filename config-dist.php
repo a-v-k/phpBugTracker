@@ -19,7 +19,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config-dist.php,v 1.35 2005/08/29 19:09:39 ulferikson Exp $
+// $Id: config-dist.php,v 1.36 2005/09/08 20:05:41 ulferikson Exp $
 
 // Database Config
 define ('DB_TYPE', '{db_type}');  // using PEAR::DB naming (mysql, pgsql, etc.)
@@ -78,7 +78,6 @@ define('SMTP_HELO', null);
 define('SMTP_AUTH', false);
 define('SMTP_AUTH_USER', "");
 define('SMTP_AUTH_PASS', "");
-// define('SMTP_SENDER', SMTP_AUTH_USER."@".SMTP_HELO);
-define('SMTP_SENDER', null);
+define('RETURN_PATH', null);
 
 ?>

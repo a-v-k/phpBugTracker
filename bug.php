@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.144 2005/08/27 13:14:28 ulferikson Exp $
+// $Id: bug.php,v 1.145 2005/09/08 20:05:41 ulferikson Exp $
 
 include 'include.php';
 
@@ -318,11 +318,12 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 		$mail = new htmlMimeMail();
 		$mail->setText($t->fetch($template));
 		$mail->setFrom(ADMIN_EMAIL);
+		$mail->setReturnPath(RETURN_PATH);
 		$mail->setSubject("[Bug {$buginfo['bug_id']}] ".
 			($newbug ? 'New' : 'Changed').' - '.
 				stripslashes((!empty($cf['title']) ? $cf['title'] : $buginfo['title'])));
 		if (SMTP_EMAIL) {
-			$mail->setSMTPParams(SMTP_HOST, SMTP_PORT, SMTP_HELO, SMTP_AUTH, SMTP_AUTH_USER, SMTP_AUTH_PASS, SMTP_SENDER);
+			$mail->setSMTPParams(SMTP_HOST, SMTP_PORT, SMTP_HELO, SMTP_AUTH, SMTP_AUTH_USER, SMTP_AUTH_PASS);
 		}
 		$mail->send($maillist, SMTP_EMAIL ? 'smtp' : 'mail');
 	}
