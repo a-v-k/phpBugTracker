@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.145 2005/09/08 20:05:41 ulferikson Exp $
+// $Id: bug.php,v 1.146 2005/09/09 20:22:25 ulferikson Exp $
 
 include 'include.php';
 
@@ -238,7 +238,21 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 		if (is_null($oldassignedto)) {
 			$oldassignedto = '';
 		}
-		$db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values ('. join(', ', array($buginfo['bug_id'], $db->quote(translate("Assigned To")), $db->quote($oldassignedto), $db->quote($assignedto), $u, $now)).")");
+
+		$oldassignedto_login = $db->getOne('select login from '.TBL_AUTH_USER.' u where u.user_id = '.$buginfo['assigned_to']);
+		if (is_null($oldassignedto_login)) {
+			$oldassignedto_login = '';
+		}
+	       
+		$assignedto_login = '';
+		if (!empty($cf['assigned_to'])) {
+			$assignedto_login = $db->getOne('select login from '.TBL_AUTH_USER.' u where u.user_id = '.(!empty($cf['assigned_to'])));
+		}
+		if (is_null($assignedto_login)) {
+			$assignedto_login = '';
+		}
+
+		$db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values ('. join(', ', array($buginfo['bug_id'], $db->quote(translate("Assigned To")), $db->quote($oldassignedto_login), $db->quote($assignedto_login), $u, $now)).")");
 	} else {
 		$assignedtostat = ' ';
 	}
