@@ -235,6 +235,7 @@
 	</table>
 </form>
 <div align="center" class="bugdisplaylinks">
+<?php if (isset($_SESSION['uid']) && !empty($_SESSION['uid'])) { ?>
 <?php if (!$already_bookmarked) { ?>
 	<b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=addbookmark&bugid=<?php echo $bug_id; ?>"><?php echo translate("Bookmark this bug"); ?></a></b> |
 <?php } else { ?>
@@ -242,6 +243,7 @@
 <?php } ?>
 <?php if (!empty($error['vote'])) echo "<div class=\"error\">{$error['vote']}</div>" ?>
 	<b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=vote&bugid=<?php echo $bug_id; ?>" onClick="if (<?php echo $already_voted; ?>) { alert ('<?php echo translate("You have already voted for this bug"); ?>'); return false; }"><?php echo translate("Vote for this bug"); ?></a></b> |
+<?php } ?>
 	<b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=viewvotes&bugid=<?php echo $bug_id; ?>"><?php echo translate("View votes"); ?> (<?php echo $num_votes; ?>)</a></b> |
 	<b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=history&bugid=<?php echo $bug_id; ?>"><?php echo translate("View bug history"); ?></a></b>
 <!--
