@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.146 2005/09/09 20:22:25 ulferikson Exp $
+// $Id: bug.php,v 1.147 2005/09/20 18:49:39 ulferikson Exp $
 
 include 'include.php';
 
@@ -149,7 +149,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 	$template = $newbug ? "bugemail-newbug.$template_ext" : "bugemail.$template_ext";
 	foreach(array('title','url') as $field) {
 		if (isset($cf[$field])) {
-			$db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values ('. join(', ', array($buginfo['bug_id'], $db->quote($field), $db->quote(stripslashes($buginfo[$field])), $db->quote(stripslashes($cf[$field])), $u, $now)).")");
+			$db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values ('. join(', ', array($buginfo['bug_id'], $db->quote(translate($field)), $db->quote(stripslashes($buginfo[$field])), $db->quote(stripslashes($cf[$field])), $u, $now)).")");
 			$t->assign(array(
 				$field => stripslashes($cf[$field]),
 				$field.'_stat' => '!'
@@ -178,6 +178,12 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 	);
 
 	foreach($cfgDatabase as $field => $table) {
+		if (isset($buginfo[$field]) && !isset($buginfo[$field.'_id'])) {
+			$buginfo[$field.'_id'] = $buginfo[$field];
+		}
+		if (isset($cf[$field]) && !isset($cf[$field.'_id'])) {
+			$cf[$field.'_id'] = $cf[$field];
+		}
 		if (isset($buginfo[$field.'_id'])) {
 			$oldvalue = $db->getOne("select ${field}_name from $table"." where ${field}_id = {$buginfo[$field.'_id']}");
 		}
@@ -418,15 +424,26 @@ function update_bug($bugid = 0) {
 			return;
 		}
 
+		$old_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid"));
 		// Add it
 		$db->query("insert into ".TBL_BUG_DEPENDENCY." (bug_id, depends_on) values($bugid, $add_dependency)");
+		$new_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid"));
+
+		$db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values('. join(', ', array($bugid, $db->quote(translate("dependency")), $db->quote($old_dependencies), $db->quote($new_dependencies), $u, $now)).")");
 	}
 
 	// Remove dependency if requested
 	if (!empty($del_dependency)) {
 		$del_dependency = preg_replace('/\D/', '', $del_dependency);
 		if (is_numeric($del_dependency)) {
-			$db->query("delete from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid and depends_on = $del_dependency");
+			// Check if the dependency has already been added
+			if ($db->getOne('select count(*) from '.TBL_BUG_DEPENDENCY." where bug_id = $bugid and depends_on = $del_dependency")) {
+				$old_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid"));
+				$db->query("delete from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid and depends_on = $del_dependency");
+				$new_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid"));
+
+				$db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values('. join(', ', array($bugid, $db->quote(translate("dependency")), $db->quote($old_dependencies), $db->quote($new_dependencies), $u, $now)).")");
+			}
 		}
 	}
 
