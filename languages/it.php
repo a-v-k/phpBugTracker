@@ -1,5 +1,6 @@
 <?php
-// it.php - Italian strings and titles àéì
+// it.php - Italian strings and titles
+// Translation by Alessandro Staltari <staltari(a)geocities.com>
 // ------------------------------------------------------------------------
 // Copyright (c) 2001 - 2004 The phpBugTracker Group
 // ------------------------------------------------------------------------
@@ -90,7 +91,7 @@ $STRING = array(
 	"Please enter a name" => "Prego inserire un nome",
 	"Edit Database" => "Modifica Database",
 	"Database List" => "Lista Database",
-	"Edit Group" => "Modifica Grouppo",
+	"Edit Group" => "Modifica Gruppo",
 	"Group List" => "Lista Gruppi",
 	"Edit Operating System" => "Modifica Sistema Operativo",
 	"Operating System List" => "Lista Sistemi Operativi",
@@ -139,7 +140,7 @@ $STRING = array(
 	"Assignable" => "Assegnabile",
 	"Find Bug" => "Cerca Bug",
 	"Projects" => "Progetti",
-	"Groups" => "Grouppi",
+	"Groups" => "Gruppi",
 	"Documentation" => "Documentazione",
 	"User Tools" => "Strumenti Utente",
 	"Statuses" => "Stati",
@@ -152,7 +153,7 @@ $STRING = array(
 	"Add new operating system" => "Aggiungi nuovo Sistema Operativo",
 	"Are you sure you want to delete this OS" => "Sei sicuro di voler elimare questo SO",
 	"Items with a Sort Order = 0 will not be selectable by users." => "Gli elementi con Ordinamento = 0 non saranno selezionabili dagli utenti.",
-	"Only those items that have no bugs referencing them can be deleted." => "Solo gli elementi con non hanno bug collegati possono essere eliminati.",
+	"Only those items that have no bugs referencing them can be deleted." => "Solo gli elementi che non hanno bug collegati possono essere eliminati.",
 	"Project Information" => "Informazioni sul Progetto",
 	"Version Information" => "Informazioni sulla Versione",
 	"Initial Version" => "Versione iniziale",
@@ -203,7 +204,7 @@ $STRING = array(
 	"Posted by" => "Inviato da",
 	"Back to bug" => "Ritorna al bug",
 	"You must login to modify this bug" => "Devi accedere per modificare questo bug",
-	"Return to bug list" => "Returna alla lista dei bug",
+	"Return to bug list" => "Ritorna alla lista dei bug",
 	"Previous bug" => "Bug precedente",
 	"Next bug" => "Bug successivo",
 	"To be closed in version" => "Da chiudere nella versione",
@@ -351,4 +352,3 @@ iniziare a segnalare i bug!",
 	);
 
 ?>
-
