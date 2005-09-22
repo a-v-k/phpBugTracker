@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.147 2005/09/20 18:49:39 ulferikson Exp $
+// $Id: bug.php,v 1.148 2005/09/22 20:51:49 ulferikson Exp $
 
 include 'include.php';
 
@@ -28,6 +28,13 @@ include 'include.php';
 /// View the votes for a bug
 function vote_view($bug_id) {
 	global $u, $db, $t;
+
+	if (isset($_REQUEST['pos']) && is_numeric($_REQUEST['pos'])) {
+		$posinfo = "&pos={$_REQUEST['pos']}";
+	} else {
+		$posinfo = '';
+	}
+	$t->assign(array('posinfo' => $posinfo));
 
 	$t->assign('votes', $db->getAll('select login, v.created_date '.'from '.TBL_AUTH_USER.' u, '.TBL_BUG_VOTE." v where u.user_id = v.user_id and bug_id = $bug_id order by v.created_date"));
 	$t->render('bugvotes.html', translate("Bug Votes"));
@@ -66,8 +73,8 @@ function vote_bug($bug_id) {
 			do_changedfields($u, $buginfo, $changedfields);
 		}
 	}
-	if (isset($_POST['pos'])) {
-		$posinfo = "&pos={$_POST['pos']}";
+	if (isset($_REQUEST['pos']) && is_numeric($_REQUEST['pos'])) {
+		$posinfo = "&pos={$_REQUEST['pos']}";
 	} else {
 		$posinfo = '';
 	}
@@ -132,6 +139,13 @@ function show_history($bugid) {
 		show_text(translate("There is no history for this bug"));
 		return;
 	}
+
+	if (isset($_REQUEST['pos']) && is_numeric($_REQUEST['pos'])) {
+		$posinfo = "&pos={$_REQUEST['pos']}";
+	} else {
+		$posinfo = '';
+	}
+	$t->assign(array('posinfo' => $posinfo));
 
 	$t->assign('history', $db->getAll(sprintf($QUERY['bug-history'], $db->quote($bugid))));
 	$t->render('bughistory.html', translate("Bug History"));
@@ -723,6 +737,13 @@ function show_bug($bugid = 0, $error = array()) {
 		'attachments' => $attachments,
 		'comments' => $db->getAll('select comment_text, c.created_date, login'.' from '.TBL_COMMENT.' c, '.TBL_AUTH_USER." where bug_id = $bugid and c.created_by = user_id order by c.created_date")
 		));
+
+	if (isset($_REQUEST['pos']) && is_numeric($_REQUEST['pos'])) {
+		$posinfo = "&pos={$_REQUEST['pos']}";
+	} else {
+		$posinfo = '';
+	}
+	$t->assign(array('posinfo' => $posinfo));
 
 	$t->render('bugdisplay.html', translate("View Bug"));
 }
