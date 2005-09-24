@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.148 2005/09/22 20:51:49 ulferikson Exp $
+// $Id: bug.php,v 1.149 2005/09/24 21:53:43 ulferikson Exp $
 
 include 'include.php';
 
@@ -372,6 +372,9 @@ function update_bug($bugid = 0) {
 
 	if (isset($_POST)) {
 		foreach ($_POST as $k => $v) {
+			if ($v == -1 && isset($buginfo[$k])) {
+				$v = $buginfo[$k];
+			}
 			$$k = $v;
 			if ($k == 'url') {
 				if (($v == 'http://') || ($v == 'https://')) {
@@ -388,24 +391,45 @@ function update_bug($bugid = 0) {
 		}
 	}
 
+	$project_id = isset($project_id) ? $project_id : $buginfo['project_id'];
+
 	// Should we allow changes to be made to this bug by this user?
 	if (STRICT_UPDATING and !($u == $buginfo['assigned_to'] or
 		$u == $buginfo['created_by'] or $perm->have_perm_proj($project_id))) {
-		show_bug($bugid,array('status' => translate("You can not change this bug")));
-		return;
+		return (array('status' => translate("You can not change this bug")));
 	}
 
 	// Check for more than one person modifying the bug at the same time
-	if ($last_modified_date != $buginfo['last_modified_date']) {
-		show_bug($bugid, array('status' => translate("Someone has updated this bug since you viewed it. The bug info has been reloaded with the latest changes.")));
-		return;
+	if ($last_modified_date < $buginfo['last_modified_date']) {
+		return (array('status' => translate("Someone has updated this bug since you viewed it. The bug info has been reloaded with the latest changes.")));
 	}
+
+	$project_id = isset($project_id) ? $project_id : $buginfo['project_id'];
+	$title = isset($title) ? $title : $buginfo['title'];
+	$url = isset($url) ? $url : $buginfo['url'];
+	$severity_id = isset($severity_id) ? $severity_id : $buginfo['severity_id'];
+	$priority = isset($priority) ? $priority : $buginfo['priority'];
+	$status_id = isset($status_id) ? $status_id : $buginfo['status_id'];
+	$database_id = isset($database_id) ? $database_id : $buginfo['database_id'];
+	$to_be_closed_in_version_id = isset($to_be_closed_in_version_id) ? $to_be_closed_in_version_id : $buginfo['to_be_closed_in_version_id'];
+	$closed_in_version_id = isset($closed_in_version_id) ? $closed_in_version_id : $buginfo['closed_in_version_id'];
+	$site_id = isset($site_id) ? $site_id : $buginfo['site_id'];
+	$resolution_id = isset($resolution_id) ? $resolution_id : $buginfo['resolution_id'];
+	$assigned_to = isset($assigned_to) ? $assigned_to : $buginfo['assigned_to'];
+	$project_id = isset($project_id) ? $project_id : $buginfo['project_id'];
+	$version_id = isset($version_id) ? $version_id : $buginfo['version_id'];
+	$component_id = isset($component_id) ? $component_id : $buginfo['component_id'];
+	$os_id = isset($os_id) ? $os_id : $buginfo['os_id'];
+	$comments = isset($comments) ? $comments : null;
+	$add_cc = isset($add_cc) ? $add_cc : null;
+	$remove_cc = isset($remove_cc) ? $remove_cc : null;
+	$add_dependency = isset($add_dependency) ? $add_dependency : null;
+	$remove_dependency = isset($remove_dependency) ? $remove_dependency : null;
 
 	// Add CC if specified
 	if ($add_cc) {
 		if (!$cc_uid = $db->getOne("select user_id from ".TBL_AUTH_USER." where login = ".$db->quote(stripslashes($add_cc)))) {
-			show_bug($bugid,array('status' => translate("That user does not exist")));
-			return;
+			return (array('status' => translate("That user does not exist")));
 		}
 		$cc_already = $db->getOne('select user_id from '.TBL_BUG_CC." where bug_id = $bugid and user_id = $cc_uid");
 		if (!$cc_already && $cc_uid != $buginfo['created_by']) {
@@ -424,18 +448,15 @@ function update_bug($bugid = 0) {
 
 		// Validate the bug number
 		if (!is_numeric($add_dependency)) {
-			show_bug($bugid, array('add_dep' => translate("That bug does not exist")));
-			return;
+			return (array('add_dep' => translate("That bug does not exist")));
 		}
 		if (!$db->getOne('select count(*) from '.TBL_BUG." where bug_id = $add_dependency")) {
-			show_bug($bugid, array('add_dep' => translate("That bug does not exist")));
-			return;
+			return (array('add_dep' => translate("That bug does not exist")));
 		}
 
 		// Check if the dependency has already been added
 		if ($db->getOne('select count(*) from '.TBL_BUG_DEPENDENCY." where bug_id = $bugid and depends_on = $add_dependency")) {
-			show_bug($bugid, array('add_dep' => translate("That bug dependency has already been added")));
-			return;
+			return (array('add_dep' => translate("That bug dependency has already been added")));
 		}
 
 		$old_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid"));
@@ -481,8 +502,18 @@ function update_bug($bugid = 0) {
 	if (count($changedfields) or !empty($comments)) {
 		do_changedfields($u, $buginfo, $changedfields, $comments);
 	}
+}
 
-	header("Location: bug.php?op=show&bugid=$bugid&pos=$pos");
+function update_bugs($bugs) {
+	if (!empty($bugs) && is_array($bugs)) {
+		foreach($bugs as $bug) {
+			if (is_numeric($bug)) {
+				update_bug((int)$bug);
+			}
+		}
+	}
+
+	header("Location: query.php?op=doquery");
 }
 
 function add_attachment($bugid, $description) {
@@ -791,7 +822,19 @@ if (!empty($_REQUEST['op'])) {
 			show_bug(check_id($_GET['bugid']));
 			break;
 		case 'update':
-			update_bug(check_id($_POST['bugid']));
+			$error = update_bug(check_id($_POST['bugid']));
+			if (!empty($error)) {
+				show_bug($_POST['bugid'], $error);
+			} else {
+				header("Location: bug.php?op=show&bugid=".$_POST['bugid']."&pos=".$_POST['pos']);
+			}
+			break;
+		case 'mass_update':
+			$bugs = array();
+			if (!empty($_POST['bugids'])) {
+				$bugs = $_POST['bugids'];
+			}
+			update_bugs($bugs);
 			break;
 		case 'do':
 			do_form(check_id($_POST['bugid']));
