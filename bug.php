@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.149 2005/09/24 21:53:43 ulferikson Exp $
+// $Id: bug.php,v 1.150 2005/09/27 19:49:42 ulferikson Exp $
 
 include 'include.php';
 
@@ -513,7 +513,7 @@ function update_bugs($bugs) {
 		}
 	}
 
-	header("Location: query.php?op=doquery");
+	header("Location: query.php");
 }
 
 function add_attachment($bugid, $description) {

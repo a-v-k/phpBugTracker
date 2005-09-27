@@ -57,20 +57,7 @@
 </div>
 <?php } ?>
 <div align="left">
-	<a href="query.php?op=edit<?php
-		$paramstr = '';
-		foreach ($_GET as $k => $v) {
-			$$k = $v;
-			if ($k == 'op') continue;
-			if (is_array($v)) {
-				foreach ($v as $value) {
-					$paramstr .= "&{$k}[]=$value";
-				}
-			} else {
-				$paramstr .= "&$k=$v";
-			}
-		}
-		echo $paramstr; ?>"><?php echo translate("Edit this query"); ?></a>
+	<a href="query.php?op=edit"><?php echo translate("Edit this query"); ?></a>
 </div>
 <?php if ($mass_update) { ?>
 	<hr>

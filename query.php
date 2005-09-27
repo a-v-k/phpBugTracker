@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.105 2005/08/22 20:44:16 ulferikson Exp $
+// $Id: query.php,v 1.106 2005/09/27 19:49:42 ulferikson Exp $
 
 include 'include.php';
 
@@ -46,6 +46,9 @@ function show_query($edit = false) {
 
 	if ($edit) {
 		extract($_GET);
+		if (isset($_SESSION['queryinfo']['queryparams'])) {
+			extract($_SESSION['queryinfo']['queryparams']);
+		}
 		$t->assign('project', isset($projects) ? $projects : null);
 		$t->assign('version', isset($versions) ? $versions : null);
 		$t->assign('component', isset($components) ? $components : null);
@@ -365,6 +368,9 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 	if (empty($_SESSION['queryinfo'])) $_SESSION['queryinfo'] = array();
 	$_SESSION['queryinfo']['order'] = $db_headers[$order];;
 	$_SESSION['queryinfo']['sort'] = $sort;
+	if (empty($_SESSION['queryinfo']['queryparams']) || !empty($_GET)) {
+	      $_SESSION['queryinfo']['queryparams'] = $_GET;
+	}
 
 	if (empty($_SESSION['queryinfo']['query']) or isset($op)) {
 		list($_SESSION['queryinfo']['query'], $paramstr) =
