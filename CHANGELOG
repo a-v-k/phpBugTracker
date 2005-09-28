@@ -6,6 +6,10 @@
 : Added a simple UI to edit group permissions
 : Added support to (re)edit a query
 : Added support for sending smtp mail
+: Made the group "User" less special
+: Fixed some permissions related issues for project admins
+: Added "priority" and "dependency" to the bug history
+: Added the ability to update several bugs at once
 
 -- 1.0 -- 3 Aug 2005
 : Added links from project summary on home page (Phil Davis).
