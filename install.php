@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.54 2005/09/03 16:53:05 ulferikson Exp $
+// $Id: install.php,v 1.55 2005/09/30 21:56:53 ulferikson Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -204,7 +204,25 @@ function create_tables() {
 	global $_POST, $tables;
 	global $db, $log_text, $num_errors;
 
-	$db = test_database($_POST);
+	$query = 'select count(*) from '.$_POST['tbl_prefix'].'configuration';
+	$count = $db->getOne($query);
+	if (!DB::isError($count) && empty($_POST['force_install'])) {
+		$op = $_POST['op'];
+		$db_type = $_POST['db_type'];
+		$db_host = $_POST['db_host'];
+		$db_database = $_POST['db_database'];
+		$db_user = $_POST['db_user'];
+		$db_pass = $_POST['db_pass'];
+		$tbl_prefix = $_POST['tbl_prefix'];
+		$phpbt_email = $_POST['phpbt_email'];
+		$admin_login = $_POST['admin_login'];
+		$admin_pass = $_POST['admin_pass'];
+		$admin_pass2 = $_POST['admin_pass2'];
+		$encrypt_pass = $_POST['encrypt_pass'];
+		include('templates/default/install-question.html');
+		exit;
+	}
+
 	$db->setOption('optimize', 'portability');
 
 	$db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_install_error");
@@ -267,18 +285,22 @@ function check_vars() {
 }
 
 function dump_config_file() {
+	global $db;
 
 	if (!check_vars()) return;
-	create_tables();
+	$db = test_database($_POST);
+	if (empty($_POST['no_install'])) create_tables();
 	header('Content-Type: text/x-delimtext; name="config.php"');
 	header('Content-disposition: attachment; filename=config.php');
 	echo grab_config_file();
 }
 
 function save_config_file() {
+	global $db;
 
 	if (!check_vars()) return;
-	create_tables();
+	$db = test_database($_POST);
+	if (empty($_POST['no_install'])) create_tables();
 	if (!$fp = @fopen('config.php', 'w')) {
 		show_front(translate("Error writing to config.php"));
 	} else {
@@ -292,7 +314,11 @@ function show_finished() {
 	global $t, $_POST;
 
 	$login = $_POST['admin_login'];
-	include('templates/default/install-complete.html');
+	if (!empty($_POST['no_install'])) {
+		header("Location: upgrade.php");
+		exit;
+	}
+	include('templates/default/install-complete.html');	
 }
 
 function show_front($error = '') {
@@ -314,14 +340,15 @@ if (isset($_POST['op'])) {
 		case 'dbtest' : test_database($_GET, true); break;
 	}
 } else {
+	$error = '';
+
 	if (!get_magic_quotes_gpc()) {
-	        echo "<p>magic_quotes_gpc is OFF!</p>";
-	        echo "<p>You must have magic_quotes_gpc set to On either in php.ini or in ";
-	        echo ".htaccess (see <a href=\"http://www.php.net/manual/en/configuration.php\">http://www.php.net/manual/en/configuration.php</a> for more info).</p>";
+		$error .= "<p><hr></p><p>magic_quotes_gpc is OFF!</p>".
+			"<p>You must have magic_quotes_gpc set to On either in php.ini or in ".
+			".htaccess (see <a href=\"http://www.php.net/manual/en/configuration.php\">http://www.php.net/manual/en/configuration.php</a> for more info).</p><p><hr></p>";
 	}
-	else {
-		show_front();
-	}
+
+	show_front($error);
 }
 // Any whitespace below the end tag will disrupt config.php
 ?>

@@ -19,7 +19,26 @@
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
-		<td width="200" valign="top"><br /><img src="logo.jpg" alt="phpBugTracker Logo" /></td>
+		<td width="200" valign="top"><br />
+			<table border="0" cellpadding="0" cellspacing="3">
+				<tr>
+					<td>
+						<img src="logo.jpg" alt="phpBugTracker Logo" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<ul>
+							<li><a href="README">README</a></li>
+							<li><a href="INSTALL">INSTALL</a></li>
+							<li><a href="UPGRADING">UPGRADING</a></li>
+							<li><a href="docs/html/index.html">Documentation</a>
+							<li><a href="COPYING">LICENSE</a></li>
+						</ul>
+					</td>
+				</tr>
+			</table>
+		</td>
 		<td valign="top" align="center">
 			<div class="banner"><?php echo translate("phpBugTracker Installation"); ?></div>
 			<?php if (!empty($error))  echo "<div class=\"error\">$error</div>"; ?>
