@@ -268,4 +268,13 @@
 		<td><?php echo format_comments($comments[$i]['comment_text']); ?> <br><br></td>
 		</tr>
 	<?php } ?>
+	<?php if (isset($perm) && $perm->have_perm_proj($project_id)) { ?>
+		<tr class="noprint">
+		<td>
+			<div align="right">
+			<a href="bug.php?op=del&bugid=<?php echo $bug_id; ?>"><?php echo translate("Delete bug"); ?></a>
+			</div>
+		</td>
+		</tr>
+	<?php } ?>
 </table>

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.65 2005/09/08 20:05:42 ulferikson Exp $
+// $Id: functions.php,v 1.66 2005/10/01 15:19:55 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -676,8 +676,14 @@ function check_id($id) {
 
 // Delete a bug and all associated records from the database
 function delete_bug($bug_id) {
-	global $db;
+	global $db, $perm;
 	
+	// Permissions
+	$projectid = $db->getOne("select project_id".
+		" from ".TBL_BUG." b".
+		" where b.bug_id = ".$db->quote($bug_id));
+	$perm->check_proj($projectid);
+
 	// Attachments
 	$attary = $db->getAll("select file_name, project_id".
 		" from ".TBL_ATTACHMENT." a, ".TBL_BUG." b".

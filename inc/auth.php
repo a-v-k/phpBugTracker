@@ -115,7 +115,7 @@ class uperm {
 		}
 	}
 
-	function check_proj($project_id) {
+	function check_proj($project_id = -1) {
 		global $db;
 
 		if ($this->have_perm_proj($project_id)) {

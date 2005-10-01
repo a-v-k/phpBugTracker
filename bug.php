@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.150 2005/09/27 19:49:42 ulferikson Exp $
+// $Id: bug.php,v 1.151 2005/10/01 15:19:56 ulferikson Exp $
 
 include 'include.php';
 
@@ -817,6 +817,11 @@ if (!empty($_REQUEST['op'])) {
 			} else {
 				show_projects();
 			}
+			break;
+		case 'del':
+			$perm->check_proj();
+			delete_bug(check_id($_GET['bugid']));
+			header("Location: query.php");
 			break;
 		case 'show':
 			show_bug(check_id($_GET['bugid']));
