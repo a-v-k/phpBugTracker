@@ -104,9 +104,9 @@ class uperm {
 	var $classname = 'uperm';
 	var $permissions = array ();
 
-	function check($p) {
+	function check($p, $proj = 0) {
 
-		if (!$this->have_perm($p)) {
+		if (!$this->have_perm($p, $proj)) {
 			if (!isset($_SESSION['perms']) ) {
 				$_SESSION['perms'] = '';
 			}
@@ -148,10 +148,14 @@ class uperm {
 		}
 	}
 
-	function check_auth($auth_var, $reqs) {
+	function check_auth($auth_var, $reqs, $proj = 0) {
 
 		// Administrators always pass
 		if (@isset($_SESSION[$auth_var]['Admin'])) {
+			return true;
+		}
+
+		if (isset($proj) && !empty($proj) && $this->have_perm_proj($proj)) {
 			return true;
 		}
 
@@ -177,8 +181,8 @@ class uperm {
 	}
 
 
-	function have_perm($req_perms) {
-		return $this->check_auth('perms', $req_perms);
+	function have_perm($req_perms, $proj = 0) {
+		return $this->check_auth('perms', $req_perms, $proj);
 	}
 
 
