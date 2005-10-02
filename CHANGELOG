@@ -11,6 +11,8 @@
 : Added "priority" and "dependency" to the bug history
 : Added the ability to update several bugs at once
 : Allow admins and project admins to delete bugs
+: Allow admins and project admins to change reporter
+: Adding two new permissions (AddBug, CloseBug) and one new group (Manager)
 
 -- 1.0 -- 3 Aug 2005
 : Added links from project summary on home page (Phil Davis).
