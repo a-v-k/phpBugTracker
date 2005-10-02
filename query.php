@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.106 2005/09/27 19:49:42 ulferikson Exp $
+// $Id: query.php,v 1.107 2005/10/02 20:44:19 ulferikson Exp $
 
 include 'include.php';
 
@@ -81,7 +81,8 @@ function show_query($edit = false) {
 	}
 
 	// Show the advanced query form
-	if (!empty($_GET['form']) and $_GET['form'] == 'advanced') {
+	if (!empty($_GET['form']) and $_GET['form'] == 'advanced' or
+		!empty($form) and $form == 'advanced') {
 		$t->render('queryform.html', translate("Query Bugs"));
 	} else { // or show the simple one
 		$t->render('queryform-simple.html', translate("Query Bugs"));

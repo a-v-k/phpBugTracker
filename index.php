@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: index.php,v 1.41 2005/07/19 19:25:36 ulferikson Exp $
+// $Id: index.php,v 1.42 2005/10/02 20:44:19 ulferikson Exp $
 
 include 'include.php';
 
@@ -142,7 +142,7 @@ if (SHOW_PROJECT_SUMMARIES) {
 	foreach ($aProjects['projects'] as $iProjectNumberKey => $value1) {
 		foreach ($aProjects['projects'][$iProjectNumberKey] as $sResolutionKey => $value2) {
 			if ($sResolutionKey != "Project" && $sResolutionKey != "Total" && $sResolutionKey != "Open") {
-				$aProjects['projects'][$iProjectNumberKey][$sResolutionKey] = "<A HREF='query.php?resolution%5B%5D=" . $aResolutionsToIds[$sResolutionKey] . "&projects=" . $aProjectsToIds[$aProjects['projects'][$iProjectNumberKey]["Project"]] . "&op=doquery'>" . $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] . "</A>";
+				$aProjects['projects'][$iProjectNumberKey][$sResolutionKey] = "<A HREF='query.php?resolution%5B%5D=" . $aResolutionsToIds[$sResolutionKey] . "&projects=" . $aProjectsToIds[$aProjects['projects'][$iProjectNumberKey]["Project"]] . "&op=doquery&form=advanced'>" . $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] . "</A>";
 			} elseif ($sResolutionKey == "Open") {
 				$aProjects['projects'][$iProjectNumberKey][$sResolutionKey] = "<A HREF='query.php?projects=" . $aProjectsToIds[$aProjects['projects'][$iProjectNumberKey]["Project"]] . $sOpenStatusQuery . "&op=doquery'>" . $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] . "</A>";
 			} elseif ($sResolutionKey == "Total") {
