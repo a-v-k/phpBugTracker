@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.66 2005/10/01 15:19:55 ulferikson Exp $
+// $Id: functions.php,v 1.67 2005/10/02 21:04:50 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -52,7 +52,7 @@ function show_text($text, $iserror = false) {
 ///
 /// Build a select box with the item matching $value selected
 function build_select($box, $selected = '', $project = 0) {
-	global $db, $select, $perm, $restricted_projects, $QUERY;
+	global $db, $select, $perm, $restricted_projects, $QUERY, $u;
 
 	// create hash to map tablenames
 	$cfgDatabase = array(
@@ -194,9 +194,12 @@ function build_select($box, $selected = '', $project = 0) {
 			}
 			break;
 		case 'bug_cc':
+		        $may_edit = (isset($perm) && $perm->have_perm('EditBug', $project));
 			$rs = $db->query(sprintf($QUERY['functions-bug-cc'], $db->quote($selected)));
 			while (list($uid, $user) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
-				$text .= "<option value=\"$uid\">".maskemail($user).'</option>';
+				if ($may_edit or $uid == $u) {
+					$text .= "<option value=\"$uid\">".maskemail($user).'</option>';
+				}
 			}
 			// Pad the sucker
 			$text .= '<option value="" disabled>';
@@ -304,14 +307,36 @@ function build_select($box, $selected = '', $project = 0) {
 
 ///
 /// Return human-friendly text for a value
-function lookup($var, $val) {
+function lookup($var, $val, $project = 0) {
 	global $db;
+
+	// create hash to map tablenames
+	$cfgDatabase = array(
+		'group' => TBL_AUTH_GROUP,
+		'project' => TBL_PROJECT,
+		'component' => TBL_COMPONENT,
+		'status' => TBL_STATUS,
+		'resolution' => TBL_RESOLUTION,
+		'severity' => TBL_SEVERITY,
+		'priority' => TBL_PRIORITY,
+		'version' => TBL_VERSION,
+		'database' => TBL_DATABASE,
+		'site' => TBL_SITE,
+		'os' => TBL_OS
+		);
 
 	switch($var) {
 		case 'reporter' :
 		case 'assigned_to' :
 			return maskemail($db->getOne("select login from ".TBL_AUTH_USER." where user_id = ".$db->quote($val)));
 			break;
+		case 'version' :
+			return $db->getOne("select {$var}_name from ".$cfgDatabase[$var]." where project_id = ".$db->quote($project)." and {$var}_id = ".$db->quote($val));
+			break;
+		default:
+			return $db->getOne("select {$var}_name from ".$cfgDatabase[$var]." where {$var}_id = ".$db->quote($val));
+			break;
+
 	}
 }
 

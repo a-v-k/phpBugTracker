@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.152 2005/10/02 20:52:09 ulferikson Exp $
+// $Id: bug.php,v 1.153 2005/10/02 21:04:50 ulferikson Exp $
 
 include 'include.php';
 
@@ -402,18 +402,12 @@ function update_bug($bugid = 0) {
 				}
 				$url = $v;
 			}
-
-			if (isset($buginfo[$k]) && stripslashes($buginfo[$k]) != stripslashes($v)) {
-				$changedfields[$k] = $v;
-			}
 		}
 	}
 
-	$project_id = isset($project_id) ? $project_id : $buginfo['project_id'];
-
 	// Should we allow changes to be made to this bug by this user?
 	if (STRICT_UPDATING and !($u == $buginfo['assigned_to'] or
-		$u == $buginfo['created_by'] or $perm->have_perm_proj($project_id))) {
+		$u == $buginfo['created_by'] or $perm->have_perm_proj($buginfo['project_id']))) {
 		return (array('status' => translate("You can not change this bug")));
 	}
 
@@ -422,36 +416,61 @@ function update_bug($bugid = 0) {
 		return (array('status' => translate("Someone has updated this bug since you viewed it. The bug info has been reloaded with the latest changes.")));
 	}
 
-	$project_id = isset($project_id) ? $project_id : $buginfo['project_id'];
-	$title = isset($title) ? $title : $buginfo['title'];
-	$url = isset($url) ? $url : $buginfo['url'];
-	$severity_id = isset($severity_id) ? $severity_id : $buginfo['severity_id'];
-	$priority = isset($priority) ? $priority : $buginfo['priority'];
-	$status_id = isset($status_id) ? $status_id : $buginfo['status_id'];
-	$database_id = isset($database_id) ? $database_id : $buginfo['database_id'];
-	$to_be_closed_in_version_id = isset($to_be_closed_in_version_id) ? $to_be_closed_in_version_id : $buginfo['to_be_closed_in_version_id'];
-	$closed_in_version_id = isset($closed_in_version_id) ? $closed_in_version_id : $buginfo['closed_in_version_id'];
-	$site_id = isset($site_id) ? $site_id : $buginfo['site_id'];
-	$resolution_id = isset($resolution_id) ? $resolution_id : $buginfo['resolution_id'];
-	$assigned_to = isset($assigned_to) ? $assigned_to : $buginfo['assigned_to'];
-	$project_id = isset($project_id) ? $project_id : $buginfo['project_id'];
+	$may_edit = $perm->have_perm('EditBug', $buginfo['project_id']);
+	$may_close = $perm->have_perm('CloseBug', $buginfo['project_id']);
+
+	$project_id = isset($project_id) && $may_edit ? (int) $project_id : $buginfo['project_id'];
+	$title = isset($title) && $may_edit ? $title : $buginfo['title'];
+	$url = isset($url) && $may_edit ? $url : $buginfo['url'];
+	$severity_id = isset($severity_id) && $may_edit ? (int) $severity_id : $buginfo['severity_id'];
+	$priority = isset($priority) && $may_edit ? (int) $priority : $buginfo['priority'];
+	$status_id = isset($status_id) && $may_edit ? (int) $status_id : $buginfo['status_id'];
+	if (is_closed($status_id) && !$may_close) {
+		$status_id = $buginfo['status_id'];
+	}
+	$database_id = isset($database_id) && $may_edit ? (int) $database_id : $buginfo['database_id'];
+	$to_be_closed_in_version_id = isset($to_be_closed_in_version_id) && $may_close ? (int) $to_be_closed_in_version_id : $buginfo['to_be_closed_in_version_id'];
+	$closed_in_version_id = isset($closed_in_version_id) && $may_close ? (int) $closed_in_version_id : $buginfo['closed_in_version_id'];
+	$site_id = isset($site_id) && $may_edit ? (int) $site_id : $buginfo['site_id'];
+	$resolution_id = isset($resolution_id) && $may_close ? (int) $resolution_id : $buginfo['resolution_id'];
+	$assigned_to = isset($assigned_to) && $may_edit ? (int) $assigned_to : $buginfo['assigned_to'];
 	if (isset($perm) and $perm->have_perm_proj($project_id) and isset($created_by) && is_numeric($created_by)) {
 		$created_by = (int) $created_by;
 	} else {
 		$created_by = $buginfo['created_by'];
 	}
-	$version_id = isset($version_id) ? $version_id : $buginfo['version_id'];
-	$component_id = isset($component_id) ? $component_id : $buginfo['component_id'];
-	$os_id = isset($os_id) ? $os_id : $buginfo['os_id'];
+	$version_id = isset($version_id) && $may_edit ? (int) $version_id : $buginfo['version_id'];
+	$component_id = isset($component_id) && $may_edit ? (int) $component_id : $buginfo['component_id'];
+	$os_id = isset($os_id) && $may_edit ? (int) $os_id : $buginfo['os_id'];
 	$comments = isset($comments) ? $comments : null;
 	$add_cc = isset($add_cc) ? $add_cc : null;
 	$remove_cc = isset($remove_cc) ? $remove_cc : null;
-	$add_dependency = isset($add_dependency) ? $add_dependency : null;
-	$remove_dependency = isset($remove_dependency) ? $remove_dependency : null;
+	if (isset($remove_cc) && !$may_edit) {
+		if (in_array($u, $remove_cc)) {
+			$remove_cc = array($u);
+		}
+		else {
+			$remove_cc = null;
+		}
+	}
+	$add_dependency = isset($add_dependency) && $may_edit ? $add_dependency : null;
+	$remove_dependency = isset($remove_dependency) && $may_edit ? $remove_dependency : null;
+
+	if (isset($_POST)) {
+		foreach ($_POST as $k => $v) {
+			if (isset($buginfo[$k]) && stripslashes($buginfo[$k]) != stripslashes($$k)) {
+				$changedfields[$k] = $v;
+			}
+		}
+	}
 
 	// Add CC if specified
-	if ($add_cc) {
-		if (!$cc_uid = $db->getOne("select user_id from ".TBL_AUTH_USER." where login = ".$db->quote(stripslashes($add_cc)))) {
+	if (isset($add_cc) and $add_cc) {
+		$cc_uid = $db->getOne("select user_id from ".TBL_AUTH_USER." where login = ".$db->quote(stripslashes($add_cc)));
+		if ($cc_uid != $u and !$may_edit) {
+			return (array('status' => translate("You may only add yourself to the CC list")));
+		}
+		if (!$cc_uid) {
 			return (array('status' => translate("That user does not exist")));
 		}
 		$cc_already = $db->getOne('select user_id from '.TBL_BUG_CC." where bug_id = $bugid and user_id = $cc_uid");
@@ -747,7 +766,7 @@ function prev_next_links($bugid, $pos) {
 }
 
 function show_bug($bugid = 0, $error = array()) {
-	global $db, $me, $t, $u, $QUERY, $restricted_projects;
+	global $db, $me, $t, $u, $QUERY, $restricted_projects, $auth;
 
 	if (!ereg('^[0-9]+$',$bugid) or
 		!$row = $db->getRow(sprintf($QUERY['bug-show-bug'], $bugid,
@@ -834,7 +853,7 @@ if (!empty($_REQUEST['op'])) {
 			show_history(check_id($_GET['bugid']));
 			break;
 		case 'add':
-			$perm->check('Editbug');
+			$perm->check('AddBug');
 			if (isset($_GET['project'])) {
 				show_form();
 			} else {

@@ -1,4 +1,3 @@
-<?php $disabled = empty($_SESSION['uid']) ? 'onClick="alertNoChange();"' : ''; ?>
 <script type="text/JavaScript">
 <!--
 	warningString = '<?php echo translate("You must login to modify this bug"); ?>';
@@ -47,15 +46,12 @@
 		window.open('attachment.php?use_js=1&bugid='+id, 'ewin', 'dependent=yes,width=350,height=200,scrollbars=1');
 		return false;
 	}
-
-	function alertNoChange() {
-		if (!warnedAlready) {
-			alert(warningString);
-			warnedAlready = true;
-		}
-	}
 //-->
 </script>
+<?php
+        $may_edit = (isset($perm) && $perm->have_perm('EditBug', $project_id));
+        $may_close = (isset($perm) && $perm->have_perm('CloseBug', $project_id));
+?>
 <form action="bug.php" method="post">
 	<input type="hidden" name="op" value="update">
 	<input type="hidden" name="bugid" value="<?php echo $bug_id ?>">
@@ -82,62 +78,124 @@
 	<table border="0" width="100%" cellspacing="0" cellpadding="2">
 	<tr>
 		<td><?php echo translate("Reporter"); ?>:</td>
-		<td><b><?php echo maskemail($reporter) ?></b></td>
+		<?php if (isset($perm) and $perm->have_perm_proj($project_id)) { ?>
+			<td><select name="created_by"><?php build_select('reporter', $created_by) ?></select></td>
+		<?php } else { ?>
+			<td><b><?php echo maskemail($reporter); ?></b></td>
+		<?php } ?>
 		<td><?php echo translate("Created"); ?>:</td>
 		<td><b><?php echo date(DATE_FORMAT, $created_date) ?></b></td>
 	</tr><tr>
 		<td><?php echo translate("Project"); ?>:</td>
-		<td><select name="project_id" onChange="updateMenus(this.form)" <?php echo $disabled ?>><?php build_select('project', $project_id) ?></select></td>
+		<?php if ($may_edit) { ?>
+			<td><select name="project_id" onChange="updateMenus(this.form)"><?php build_select('project', $project_id) ?></select></td>
+		<?php } else { ?>
+			<td><?php echo lookup('project', $project_id); ?></td>
+		<?php } ?>
 		<td><?php echo translate("Priority"); ?>:</td>
-		<td><select name="priority" <?php echo $disabled ?>><?php build_select('priority', $priority) ?></select></td>
+		<?php if ($may_edit) { ?>
+			<td><select name="priority"><?php build_select('priority', $priority) ?></select></td>
+		<?php } else { ?>
+			<td><?php echo lookup('priority', $priority); ?></td>
+		<?php } ?>
 	</tr><tr>
 		<td><?php echo translate("Component"); ?>:</td>
-		<td><select name="component_id" <?php echo $disabled ?>><?php build_select('component', $component_id, $project_id) ?></select></td>
+		<?php if ($may_edit) { ?>
+			<td><select name="component_id"><?php build_select('component', $component_id, $project_id) ?></select></td>
+		<?php } else { ?>
+			<td><?php echo lookup('component', $component_id); ?></td>
+		<?php } ?>
 		<td><?php echo translate("Severity"); ?>:</td>
-		<td><select name="severity_id" <?php echo $disabled ?>><?php build_select('severity', $severity_id) ?></select></td>
+		<?php if ($may_edit) { ?>
+			<td><select name="severity_id"><?php build_select('severity', $severity_id) ?></select></td>
+		<?php } else { ?>
+			<td><?php echo lookup('severity', $severity_id); ?></td>
+		<?php } ?>
 	</tr><tr>
 		<td><?php echo translate("Version"); ?>:</td>
-		<td><select name="version_id" <?php echo $disabled ?>><?php build_select('version', $version_id, $project_id) ?></select></td>
+		<?php if ($may_edit) { ?>
+			<td><select name="version_id"><?php build_select('version', $version_id, $project_id) ?></select></td>
+		<?php } else { ?>
+			<td><?php echo lookup('version', $version_id); ?></td>
+		<?php } ?>
 		<td><?php echo translate("Operating System"); ?>:</td>
-		<td><select name="os_id" <?php echo $disabled ?>><?php build_select('os', $os_id) ?></select></td>
+		<?php if ($may_edit) { ?>
+			<td><select name="os_id"><?php build_select('os', $os_id) ?></select></td>
+		<?php } else { ?>
+			<td><?php echo lookup('os', $os_id); ?></td>
+		<?php } ?>
 	</tr><tr>
 		<td><?php echo translate("To be closed in version"); ?></td>
-		<td><select name="to_be_closed_in_version_id" <?php echo $disabled ?>>
-			<option value="0"><?php echo translate("Choose one"); ?></option>
-			<?php build_select('version', $to_be_closed_in_version_id, $project_id) ?>
-		</select></td>
+		<?php if ($may_close) { ?>
+			<td><select name="to_be_closed_in_version_id">
+				<option value="0"><?php echo translate("Choose one"); ?></option>
+				<?php build_select('version', $to_be_closed_in_version_id, $project_id) ?>
+			</select></td>
+		<?php } else { ?>
+			<td><?php echo lookup('version', $to_be_closed_in_version_id, $project_id); ?></td>
+		<?php } ?>
 		<td><?php echo translate("Database"); ?>:</td>
-		<td><select name="database_id" <?php echo $disabled ?>><?php build_select('database', $database_id) ?></select></td>
+		<?php if ($may_edit) { ?>
+			<td><select name="database_id"><?php build_select('database', $database_id) ?></select></td>
+		<?php } else { ?>
+			<td><?php echo lookup('database', $database_id); ?></td>
+		<?php } ?>
 	</tr><tr>
 		<td><?php echo translate("Closed in version"); ?></td>
-		<td><select name="closed_in_version_id" <?php echo $disabled ?>>
-			<option value="0"><?php echo translate("Choose one"); ?></option>
-			<?php build_select('version', $closed_in_version_id, $project_id) ?>
-		</select></td>
+		<?php if ($may_close) { ?>
+			<td><select name="closed_in_version_id">
+				<option value="0"><?php echo translate("Choose one"); ?></option>
+				<?php build_select('version', $closed_in_version_id, $project_id) ?>
+			</select></td>
+		<?php } else { ?>
+			<td><?php echo lookup('version', $closed_in_version_id, $project_id); ?></td>
+		<?php } ?>
 		<td><?php echo translate("Site"); ?></td>
-		<td><select name="site_id" <?php echo $disabled ?>><?php build_select('site', $site_id) ?></select></td>
+		<?php if ($may_edit) { ?>
+			<td><select name="site_id"><?php build_select('site', $site_id) ?></select></td>
+		<?php } else { ?>
+			<td><?php echo lookup('site', $site_id); ?></td>
+		<?php } ?>
 	</tr><tr>
 		<td><?php echo translate("Summary"); ?>:</td>
-		<td><input type="text" size="30" maxlength="100" name="title" value="<?php echo stripslashes(htmlspecialchars($title)) ?>" <?php echo $disabled ?>></td>
+		<?php if ($may_edit) { ?>
+			<td><input type="text" size="30" maxlength="100" name="title" value="<?php echo stripslashes(htmlspecialchars($title)) ?>"></td>
+		<?php } else { ?>
+			<td><?php echo stripslashes(htmlspecialchars($title)); ?></td>
+		<?php } ?>
 		<td><?php echo translate("Status"); ?>:</td>
-		<td><select name="status_id" <?php echo $disabled ?>><?php build_select('status', $status_id) ?></select></td>
+		<?php if ($may_edit) { ?>
+			<td><select name="status_id"><?php build_select('status', $status_id) ?></select></td>
+		<?php } else { ?>
+			<td><?php echo lookup('status', $status_id); ?></td>
+		<?php } ?>
 	</tr><tr>
 		<td><?php if($url) echo "<a href=\"$url\">URL</a>"; else echo 'URL'; ?>:</td>
-		<td><input type="text" size="30" maxlength="255" name="url" value="<?php echo $url ?>" <?php echo $disabled ?>></td>
+		<?php if ($may_edit) { ?>
+			<td><input type="text" size="30" maxlength="255" name="url" value="<?php echo $url ?>"></td>
+		<?php } else { ?>
+			<td><?php echo $url; ?></td>
+		<?php } ?>
 		<td><?php echo translate("Resolution"); ?>:</td>
-		<td><select name="resolution_id" <?php echo $disabled ?>><option value="0"><?php echo translate("None"); ?></option><?php build_select('resolution', $resolution_id) ?></select></td>
+		<?php if ($may_close) { ?>
+			<td><select name="resolution_id"><option value="0"><?php echo translate("None"); ?></option><?php build_select('resolution', $resolution_id) ?></select></td>
+		<?php } else { ?>
+			<td><?php echo lookup('resolution', $resolution_id); ?></td>
+		<?php } ?>
 	</tr><tr>
 		<td><?php echo translate("Assigned to"); ?>:</td>
 		<?php if (isset($perm) && ($perm->have_perm('EditAssignment') or $perm->have_perm_proj($project_id))) { ?>
-		<td><select name="assigned_to" <?php echo $disabled ?>><option value="0"><?php echo translate("None"); ?></option><?php build_select('owner', $assigned_to) ?></select></td>
+		<td><select name="assigned_to"><option value="0"><?php echo translate("None"); ?></option><?php build_select('owner', $assigned_to) ?></select></td>
 		<?php } else { ?>
 		<td>
 			<?php echo lookup('assigned_to', $assigned_to); ?>
 			<input type="hidden" name="assigned_to" value="<?php echo $assigned_to ?>">
 		</td>
 		<?php } ?>
-		<td><?php echo translate("Add CC"); ?>:</td>
-		<td><input type="text" name="add_cc" <?php echo $disabled ?>></td>
+		<?php if (isset($perm)) { ?>
+			<td><?php echo translate("Add CC"); ?>:</td>
+			<td><input type="text" name="add_cc"></td>
+		<?php } ?>
 	</tr><tr>
 		<td colspan="2" valign="top">
 		<?php if (!empty($error['add_dep'])) echo "<div class=\"error\">{$error['add_dep']}</div>"; ?>
@@ -159,17 +217,27 @@
 					($i < $count - 1 ? ', ' : ''));
 			} ?>
 			<br>
-		<?php echo translate("Add dependency"); ?>: <input type="text" name="add_dependency" size="5" <?php echo $disabled ?>><br>
-		<?php echo translate("Remove dependency"); ?>: <input type="text" name="del_dependency" size="5" <?php echo $disabled ?>><br><br></td>
+		<?php if ($may_edit) { ?>
+			<?php echo translate("Add dependency"); ?>: <input type="text" name="add_dependency" size="5"><br>
+			<?php echo translate("Remove dependency"); ?>: <input type="text" name="del_dependency" size="5"><br><br>
+		<?php } else { ?>
+			<input type="hidden" name="add_dependency" value="">
+			<input type="hidden" name="del_dependency" value="">
+		<?php } ?>
+		</td>
 		<td colspan="2" valign="top">
-		<?php echo translate("Remove selected CCs"); ?>:<br>
-		<select name="remove_cc[]" size="5" style="width: 15em" multiple <?php echo $disabled ?>><?php build_select('bug_cc', $bug_id) ?></select></td>
+		<?php if (isset($perm)) { ?>
+			<?php echo translate("Remove selected CCs"); ?>:<br>
+			<select name="remove_cc[]" size="5" style="width: 15em" multiple><?php build_select('bug_cc', $bug_id, $project_id) ?></select>
+		<?php } ?>
+		</td>
 	</tr>
 	</table>
 	<table border="0" cellpadding="2" cellspacing="0" width="100%">
+	<?php if (isset($perm)) { ?>
 	<tr class="noprint">
-		<td valign="top"><?php echo translate("Additional comments"); ?>:<br><br>
-		<textarea name="comments" rows="6" cols="55" wrap="virtual" <?php echo $disabled ?>><?php echo isset($_POST['comments']) ? $_POST['comments'] : ''; ?></textarea>
+		<td valign="top"><br><?php echo translate("Additional comments"); ?>:<br>
+		<textarea name="comments" rows="6" cols="55" wrap="virtual"><?php echo isset($_POST['comments']) ? $_POST['comments'] : ''; ?></textarea>
 		<br><br>
 		<div align="right">
 		<?php if (!empty($_SESSION['uid'])) { ?>
@@ -177,11 +245,17 @@
 			<input type="submit" value="Submit">
 		<?php } else echo translate("You must login to modify this bug"); ?>
 		</div></td>
-	</tr><tr>
+	</tr>
+	<?php } ?>
+	<tr>
 		<td><table border="0" cellpadding="0" width="100%">
 			<tr>
 			<td colspan="2"><?php echo translate("Attachments"); ?>:</td>
-			<td colspan="3" align="right"><a href="attachment.php?bugid=<?php echo $bug_id; ?>" onClick="return popupAtt(<?php echo $bug_id; ?>)"><?php echo translate("Create new attachment"); ?></a></td>
+			<td colspan="3" align="right">
+			<?php if ($may_edit) { ?>
+				<a href="attachment.php?bugid=<?php echo $bug_id; ?>" onClick="return popupAtt(<?php echo $bug_id; ?>)"><?php echo translate("Create new attachment"); ?></a>
+			<?php } ?>
+			</td>
 			</tr><tr>
 			<td colspan="5" height="2" bgcolor="#ffffff"><spacer type="block" height="2" width="2"></td>
 			</tr><tr>
