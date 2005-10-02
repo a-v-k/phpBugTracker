@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.151 2005/10/01 15:19:56 ulferikson Exp $
+// $Id: bug.php,v 1.152 2005/10/02 20:52:09 ulferikson Exp $
 
 include 'include.php';
 
@@ -264,10 +264,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 			$oldassignedto_login = '';
 		}
 	       
-		$assignedto_login = '';
-		if (!empty($cf['assigned_to'])) {
-			$assignedto_login = $db->getOne('select login from '.TBL_AUTH_USER.' u where u.user_id = '.(!empty($cf['assigned_to'])));
-		}
+		$assignedto_login = $db->getOne('select login from '.TBL_AUTH_USER.' u where u.user_id = '.$cf['assigned_to']);
 		if (is_null($assignedto_login)) {
 			$assignedto_login = '';
 		}
@@ -277,13 +274,34 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 		$assignedtostat = ' ';
 	}
 
+	if (!empty($cf['created_by'])) {
+		$reporterstat = '!';
+		$oldreporter_login = $db->getOne('select login from '.TBL_AUTH_USER.' u where u.user_id = '.$buginfo['created_by']);
+		if (is_null($oldreporter_login)) {
+			$oldreporter_login = '';
+		}
+	       
+		$reporter_login = $db->getOne('select login from '.TBL_AUTH_USER.' u where u.user_id = '.$cf['created_by']);
+		if (is_null($reporter_login)) {
+			$reporter_login = '';
+		}
+
+		$db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values ('. join(', ', array($buginfo['bug_id'], $db->quote(translate("Reporter")), $db->quote($oldreporter_login), $db->quote($reporter_login), $u, $now)).")");
+	} else {
+		$reporterstat = ' ';
+	}
+
 	if (!empty($_POST['suppress_email'])) return; // Don't send email if silent update requested.
 
 	if (defined('EMAIL_DISABLED') and EMAIL_DISABLED) return;
 
-	// Reporter never changes
-	$reporter = $db->getOne('select email from '.TBL_AUTH_USER." u, ".TBL_USER_PREF." p where u.user_id = {$buginfo['created_by']} and u.user_id = p.user_id and email_notices = 1");
-	$reporterstat = ' ';
+	if (isset($perm) and $perm->have_perm_proj($project_id) and is_numeric($created_by)) {
+		$reporter = $db->getOne('select email from '.TBL_AUTH_USER." u, ".TBL_USER_PREF." p where u.user_id = {$buginfo['created_by']} and u.user_id = p.user_id and email_notices = 1");
+		$reporterstat = '!';
+	} else {
+		$reporter = $db->getOne('select email from '.TBL_AUTH_USER." u, ".TBL_USER_PREF." p where u.user_id = {$buginfo['created_by']} and u.user_id = p.user_id and email_notices = 1");
+		$reporterstat = ' ';
+	}
 
 	// If there are new comments grab the comments immediately before the latest
 	if ($comments or $newbug) {
@@ -417,6 +435,11 @@ function update_bug($bugid = 0) {
 	$resolution_id = isset($resolution_id) ? $resolution_id : $buginfo['resolution_id'];
 	$assigned_to = isset($assigned_to) ? $assigned_to : $buginfo['assigned_to'];
 	$project_id = isset($project_id) ? $project_id : $buginfo['project_id'];
+	if (isset($perm) and $perm->have_perm_proj($project_id) and isset($created_by) && is_numeric($created_by)) {
+		$created_by = (int) $created_by;
+	} else {
+		$created_by = $buginfo['created_by'];
+	}
 	$version_id = isset($version_id) ? $version_id : $buginfo['version_id'];
 	$component_id = isset($component_id) ? $component_id : $buginfo['component_id'];
 	$os_id = isset($os_id) ? $os_id : $buginfo['os_id'];
@@ -492,7 +515,7 @@ function update_bug($bugid = 0) {
 	} else {
 		$closed_query = '';
 	}
-	$db->query("update ".TBL_BUG." set title = ".$db->quote(stripslashes($title)).', url = '.$db->quote(stripslashes($url)).", severity_id = ".(int)$severity_id.", priority = ".(int)$priority.", status_id = ".(int)$status_id.", database_id = ".(int)$database_id.", to_be_closed_in_version_id = ".(int)$to_be_closed_in_version_id.", closed_in_version_id = ".(int)$closed_in_version_id.', site_id ='.(int)$site_id.", resolution_id = ".(int)$resolution_id.", assigned_to = ".(int)$assigned_to.", project_id = $project_id, version_id = $version_id, component_id = ".(int)$component_id.", os_id = ".(int)$os_id.", last_modified_by = $u, last_modified_date = $now $closed_query where bug_id = $bugid");
+	$db->query("update ".TBL_BUG." set title = ".$db->quote(stripslashes($title)).', url = '.$db->quote(stripslashes($url)).", severity_id = ".(int)$severity_id.", priority = ".(int)$priority.", status_id = ".(int)$status_id.", database_id = ".(int)$database_id.", to_be_closed_in_version_id = ".(int)$to_be_closed_in_version_id.", closed_in_version_id = ".(int)$closed_in_version_id.', site_id ='.(int)$site_id.", resolution_id = ".(int)$resolution_id.", assigned_to = ".(int)$assigned_to.", created_by = $created_by, project_id = $project_id, version_id = $version_id, component_id = ".(int)$component_id.", os_id = ".(int)$os_id.", last_modified_by = $u, last_modified_date = $now $closed_query where bug_id = $bugid");
 	
 	// If the project has changed, move any attachments	
 	if (!empty($changedfields['project_id'])) {

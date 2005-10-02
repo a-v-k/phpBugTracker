@@ -11,12 +11,12 @@
             <tr<?php if ($i % 2) echo ' class="alt" bgcolor="#dddddd"' ?>>
                 <td><?php echo maskemail($history[$i]['login']); ?></td>
                 <td><?php echo $history[$i]['changed_field']; ?></td>
-		<td>&nbsp;<?php if ($history[$i]['changed_field'] == translate("Assigned To")) {
+		<td>&nbsp;<?php if ($history[$i]['changed_field'] == translate("Assigned To") or $history[$i]['changed_field'] == translate("Reporter")) {
 					echo maskemail($history[$i]['old_value']);
 				} else {
 					echo $history[$i]['old_value'];
 				} ?></td>
-		<td>&nbsp;<?php if ($history[$i]['changed_field'] == translate("Assigned To")) {
+		<td>&nbsp;<?php if ($history[$i]['changed_field'] == translate("Assigned To") or $history[$i]['changed_field'] == translate("Reporter")) {
 					echo maskemail($history[$i]['new_value']);
 				} else {
 					echo $history[$i]['new_value'];
