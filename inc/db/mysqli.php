@@ -8,6 +8,7 @@ $QUERY = array(
 			'c.component_id, '.
 			'component_name, '.
 			'c.created_date, '.
+			'owner, '.
 			'active, '.
 			'sort_order, '.
 			'count(bug_id) as bug_count '.
