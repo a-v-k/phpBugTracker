@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysqli.in,v 1.2 2005/09/03 16:41:48 ulferikson Exp $
+# $Id: mysqli.in,v 1.3 2005/10/02 20:57:40 ulferikson Exp $
 
 
 
@@ -403,6 +403,7 @@ INSERT INTO TBL_AUTH_USER_seq values (1);
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (1, 'Admin', 1);
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (2, 'User', 1);
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (3, 'Developer', 1);
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (4, 'Manager', 1);
 
 CREATE TABLE TBL_AUTH_GROUP_seq (
   id int unsigned auto_increment not null primary key);
@@ -411,20 +412,26 @@ INSERT INTO TBL_AUTH_GROUP_seq values (3);
 
 # ... and four permissions
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (1, 'Admin');
-INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (2, 'Editbug');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (2, 'AddBug');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (3, 'EditAssignment');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (4, 'Assignable');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (5, 'EditBug');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (6, 'CloseBug');
 
 
 # Admins can do all the admin stuff,
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (1, 1);
 
-# users can edit bugs, and
+# users can add and edit bugs,
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (2, 2);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (2, 5);
 
-# developers are users who can own bugs
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 2);
+# developers can own bugs, and
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 4);
+
+# managers can assign and close bugs
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 3);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 6);
 
 
 # Insert user_id 1 into the admin group
@@ -614,26 +621,20 @@ INSERT INTO TBL_SITE_seq values (4);
 
 CREATE TABLE TBL_ATTACHMENT_seq (
   id int unsigned auto_increment not null primary key);
-INSERT INTO TBL_ATTACHMENT_seq values(0);
 
 CREATE TABLE TBL_BUG_seq (
   id int unsigned auto_increment not null primary key);
-INSERT INTO TBL_BUG_seq values(0);
 
 CREATE TABLE TBL_COMMENT_seq (
   id int unsigned auto_increment not null primary key);
-INSERT INTO TBL_COMMENT_seq values(0);
 
 CREATE TABLE TBL_COMPONENT_seq (
   id int unsigned auto_increment not null primary key);
-INSERT INTO TBL_COMPONENT_seq values(0);
 
 CREATE TABLE TBL_PROJECT_seq (
   id int unsigned auto_increment not null primary key);
-INSERT INTO TBL_PROJECT_seq values(0);
 
 CREATE TABLE TBL_VERSION_seq (
   id int unsigned auto_increment not null primary key);
-INSERT INTO TBL_VERSION_seq values(0);
 
 #--
