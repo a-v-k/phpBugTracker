@@ -172,7 +172,8 @@ $QUERY = array(
 			's.status_id, '.
 			'status_name, '.
 			'status_desc, '.
-			'sort_order '.
+			'sort_order, '.
+			'bug_open '.
 		'order by '.
 			'%s %s',
 	'admin-list-versions' =>
