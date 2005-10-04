@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.107 2005/10/02 20:44:19 ulferikson Exp $
+// $Id: query.php,v 1.108 2005/10/04 20:10:04 ulferikson Exp $
 
 include 'include.php';
 
@@ -202,8 +202,8 @@ function build_query($assignedto, $reportedby, $open, $bookmarked) {
 		if (!empty($projects)) {
 			$proj[] = "b.project_id = '$projects'";
 			if (!empty($versions) and $versions != 'All') $proj[] = "b.version_id = '$versions'";
-			if (!empty($closedinversion) and $closedinversion != 'All') $proj[] = "b.closed_in_version_id = '$closedinversion'";
-			if (!empty($tobeclosedinversion) and $tobeclosedinversion != 'All') $proj[] = "b.to_be_closed_in_version_id = '$tobeclosedinversion'";
+			if (isset($closedinversion) and $closedinversion != '' and $closedinversion != 'All') $proj[] = "b.closed_in_version_id = '$closedinversion'";
+			if (isset($tobeclosedinversion) and $tobeclosedinversion != '' and $tobeclosedinversion != 'All') $proj[] = "b.to_be_closed_in_version_id = '$tobeclosedinversion'";
 			if (!empty($components) and $components != 'All') $proj[] = "b.component_id = '$components'";
 			$query[] = '('.@join(' and ',$proj).')';
 		} elseif (!$perm->have_perm('Admin')) { // Filter results from hidden projects

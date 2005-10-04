@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.67 2005/10/02 21:04:50 ulferikson Exp $
+// $Id: functions.php,v 1.68 2005/10/04 20:10:04 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -482,13 +482,14 @@ function build_project_js($no_all = false) {
 		$rs = $db->query(sprintf($QUERY['functions-project-js'],
 			$db->quote(@join(',', $_SESSION['group_ids']))));
 	}
+	$js = "closedversions['All'] = new Array(new Array('','All'),new Array('0','Not Set'));\n";
 	while (list($pid, $pname) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
 		$pname = addslashes($pname);
 		// Version arrays
 		$js .= "versions['$pname'] = new Array(".
 			((!isset($no_all) or !$no_all) ? "new Array('','All')," : '');
 		$js2 = "closedversions['$pname'] = new Array(".
-			((!isset($no_all) or !$no_all) ? "new Array('','All'),"
+			((!isset($no_all) or !$no_all) ? "new Array('','All'),new Array('0','Not Set'),"
 				: "new Array(0, 'Choose One'),");
 		$rs2 = $db->query("select version_name, version_id from ".TBL_VERSION." where project_id = ".$db->quote($pid)." and active = 1");
 		while (list($version,$vid) = $rs2->fetchRow(DB_FETCHMODE_ORDERED)) {

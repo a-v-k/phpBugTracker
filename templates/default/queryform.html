@@ -19,15 +19,15 @@ function updateMenus(f) {
     f.versions.options[x].value = versions[sel][x][0];
     f.versions.options[x].text = versions[sel][x][1];
   }
-  f.closedinversion.length = versions[sel].length;
-  for (var x = 0; x < versions[sel].length; x++) {
-    f.closedinversion.options[x].value = versions[sel][x][0];
-    f.closedinversion.options[x].text = versions[sel][x][1];
+  f.closedinversion.length = closedversions[sel].length;
+  for (var x = 0; x < closedversions[sel].length; x++) {
+    f.closedinversion.options[x].value = closedversions[sel][x][0];
+    f.closedinversion.options[x].text = closedversions[sel][x][1];
   }
-  f.tobeclosedinversion.length = versions[sel].length;
-  for (var x = 0; x < versions[sel].length; x++) {
-    f.tobeclosedinversion.options[x].value = versions[sel][x][0];
-    f.tobeclosedinversion.options[x].text = versions[sel][x][1];
+  f.tobeclosedinversion.length = closedversions[sel].length;
+  for (var x = 0; x < closedversions[sel].length; x++) {
+    f.tobeclosedinversion.options[x].value = closedversions[sel][x][0];
+    f.tobeclosedinversion.options[x].text = closedversions[sel][x][1];
   }
   f.components.length = components[sel].length;
   for (var x = 0; x < components[sel].length; x++) {
@@ -196,6 +196,7 @@ function checkSavedQueries(frm) {
 	    <td><b><?php echo translate("Closed in Version"); ?>:</b></td>
 	    <td><select name="closedinversion">
 		    <option value=''><?php echo translate("All"); ?></option>
+		    <option value='0' <?php echo isset($closedinversion) && $closedinversion!='' && $closedinversion==0 ? 'selected': ''; ?>><?php echo translate("Not Set"); ?></option>
 		    <?php if ($project) build_select('version', $closedinversion, $project); ?>
 		</select>
             </td>
@@ -203,6 +204,7 @@ function checkSavedQueries(frm) {
 	    <td><b><?php echo translate("To be Closed in Version"); ?>:</b></td>
 	    <td><select name="tobeclosedinversion">
 		    <option value=''><?php echo translate("All"); ?></option>
+		    <option value='0' <?php echo isset($tobeclosedinversion) && $tobeclosedinversion!='' && $tobeclosedinversion==0 ? 'selected': ''; ?>><?php echo translate("Not Set"); ?></option>
 		    <?php if ($project) build_select('version', $tobeclosedinversion, $project); ?>
 		</select>
             </td>
