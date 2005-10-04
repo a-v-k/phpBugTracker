@@ -128,6 +128,11 @@ function checkSavedQueries(frm) {
 				</tr>
 			    </table></td>
 		    </tr>
+		    <tr>
+			    <td><input type="checkbox" name="unassigned" value="1"
+					<?php if (!empty($unassigned)) echo "checked"; ?>>
+					<?php echo translate("Unassigned"); ?></td>
+		    </tr>
 	    </table></td>
 	</tr>
     </table>

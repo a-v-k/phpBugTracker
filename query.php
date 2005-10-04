@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.108 2005/10/04 20:10:04 ulferikson Exp $
+// $Id: query.php,v 1.109 2005/10/04 20:12:12 ulferikson Exp $
 
 include 'include.php';
 
@@ -159,6 +159,9 @@ function build_query($assignedto, $reportedby, $open, $bookmarked) {
 		}
 		if (!empty($closed_end_date)) {
 			$query[] = 'b.close_date < '.strtotime($closed_end_date);
+		}
+		if (!empty($unassigned)) {
+			$query[] = 'b.assigned_to = 0';
 		}
 
 		// Email field(s)
