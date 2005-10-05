@@ -198,6 +198,7 @@
 		<?php } ?>
 	</tr><tr>
 		<td colspan="2" valign="top">
+			<br>
 		<?php if (!empty($error['add_dep'])) echo "<div class=\"error\">{$error['add_dep']}</div>"; ?>
 		<?php echo translate("Depends on bugs"); ?>: 
 			<?php for ($i = 0, $count = count($bug_dependencies); $i < $count; $i++) {
@@ -217,9 +218,23 @@
 					($i < $count - 1 ? ', ' : ''));
 			} ?>
 			<br>
+		<?php echo translate("Duplicates"); ?>: 
+			<?php for ($i = 0, $count = count($bug_duplicates); $i < $count; $i++) {
+				if (isset($bug_duplicates[$i])) {
+					printf('<a href="bug.php?op=show&bugid=%d" class="%s">#%d</a>%s', 
+						$bug_duplicates[$i]['bug_id'], 
+						($bug_duplicates[$i]['bug_open'] ? 'open_bug_number' : 'closed_bug_number'),
+						$bug_duplicates[$i]['bug_id'],
+						($i < $count - 1 ? ', ' : ''));
+				}
+			} ?>
+			<br>
 		<?php if ($may_edit) { ?>
+			<br>
 			<?php echo translate("Add dependency"); ?>: <input type="text" name="add_dependency" size="5"><br>
-			<?php echo translate("Remove dependency"); ?>: <input type="text" name="del_dependency" size="5"><br><br>
+			<?php echo translate("Remove dependency"); ?>: <input type="text" name="del_dependency" size="5"><br>
+			<?php echo translate("Add duplicate"); ?>: <input type="text" name="add_duplicate" size="5"><br>
+			<?php echo translate("Remove duplicate"); ?>: <input type="text" name="del_duplicate" size="5"><br><br>
 		<?php } else { ?>
 			<input type="hidden" name="add_dependency" value="">
 			<input type="hidden" name="del_dependency" value="">

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.154 2005/10/05 20:28:53 ulferikson Exp $
+// $Id: bug.php,v 1.155 2005/10/05 20:36:02 ulferikson Exp $
 
 include 'include.php';
 
@@ -459,8 +459,10 @@ function update_bug($bugid = 0) {
 			$remove_cc = null;
 		}
 	}
-	$add_dependency = isset($add_dependency) && $may_edit ? $add_dependency : null;
-	$remove_dependency = isset($remove_dependency) && $may_edit ? $remove_dependency : null;
+	$add_dependency = isset($add_dependency) && $may_edit ? (int) $add_dependency : null;
+	$remove_dependency = isset($remove_dependency) && $may_edit ? (int) $remove_dependency : null;
+	$add_duplicate = isset($add_duplicate) && $may_edit ? (int) $add_duplicate : null;
+	$del_duplicate = isset($del_duplicate) && $may_edit ? (int) $del_duplicate : null;
 
 	if (isset($_POST)) {
 		foreach ($_POST as $k => $v) {
@@ -490,8 +492,13 @@ function update_bug($bugid = 0) {
 		$db->query('delete from '.TBL_BUG_CC." where bug_id = $bugid and user_id in (".@join(',', $remove_cc).')');
 	}
 
+
+	$old_duplicates = $db->getCol("select b.bug_id from ".TBL_BUG_DEPENDENCY." d1, ".TBL_BUG_DEPENDENCY." d2, ".TBL_BUG." b, ".TBL_STATUS." s where d1.bug_id = $bugid and d2.bug_id = b.bug_id and d2.bug_id = d1.depends_on and d2.depends_on = d1.bug_id group by b.bug_id");
+
+	$no_dupes = !empty($old_duplicates) ? ' and depends_on <> '.join(' and depends_on <> ', $old_duplicates) : '';
+
 	// Add dependency if requested
-	if (!empty($add_dependency)) {
+	if (!empty($add_dependency) && $add_dependency != $bugid && !in_array($add_dependency, $old_duplicates)) {
 		$add_dependency = preg_replace('/\D/', '', $add_dependency);
 
 		// Validate the bug number
@@ -507,25 +514,72 @@ function update_bug($bugid = 0) {
 			return (array('add_dep' => translate("That bug dependency has already been added")));
 		}
 
-		$old_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid"));
+		$old_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid $no_dupes"));
 		// Add it
 		$db->query("insert into ".TBL_BUG_DEPENDENCY." (bug_id, depends_on) values($bugid, $add_dependency)");
-		$new_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid"));
+		$new_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid $no_dupes"));
 
 		$db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values('. join(', ', array($bugid, $db->quote(translate("dependency")), $db->quote($old_dependencies), $db->quote($new_dependencies), $u, $now)).")");
 	}
 
 	// Remove dependency if requested
-	if (!empty($del_dependency)) {
+	if (!empty($del_dependency) && !in_array($del_dependency, $old_duplicates)) {
 		$del_dependency = preg_replace('/\D/', '', $del_dependency);
 		if (is_numeric($del_dependency)) {
 			// Check if the dependency has already been added
 			if ($db->getOne('select count(*) from '.TBL_BUG_DEPENDENCY." where bug_id = $bugid and depends_on = $del_dependency")) {
-				$old_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid"));
+				$old_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid $no_dupes"));
 				$db->query("delete from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid and depends_on = $del_dependency");
-				$new_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid"));
+				$new_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid $no_dupes"));
 
-				$db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values('. join(', ', array($bugid, $db->quote(translate("dependency")), $db->quote($old_dependencies), $db->quote($new_dependencies), $u, $now)).")");
+					$db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values('. join(', ', array($bugid, $db->quote(translate("dependency")), $db->quote($old_dependencies), $db->quote($new_dependencies), $u, $now)).")");
+			}
+		}
+	}
+
+	// Add duplicate if requested
+	if (!empty($add_duplicate) && $add_duplicate != $bugid) {
+		$add_duplicate = preg_replace('/\D/', '', $add_duplicate);
+
+		// Validate the bug number
+		if (!is_numeric($add_duplicate)) {
+			return (array('add_dep' => translate("That bug does not exist")));
+		}
+		if (!$db->getOne('select count(*) from '.TBL_BUG." where bug_id = $add_duplicate")) {
+			return (array('add_dep' => translate("That bug does not exist")));
+		}
+		
+		// Check if the dependency has already been added
+		if ($db->getOne('select count(*) from '.TBL_BUG_DEPENDENCY." where bug_id = $bugid and depends_on = $add_duplicate") || $db->getOne('select count(*) from '.TBL_BUG_DEPENDENCY." where bug_id = $add_duplicate and depends_on = $bugid") || $bugid == $add_duplicate) {
+			return (array('add_dep' => translate("That bug dependency has already been added")));
+		}
+		
+		$db->query("insert into ".TBL_BUG_DEPENDENCY." (bug_id, depends_on) values($bugid, $add_duplicate)");
+		$db->query("insert into ".TBL_BUG_DEPENDENCY." (bug_id, depends_on) values($add_duplicate, $bugid)");
+		$new_duplicates = $db->getCol("select b.bug_id from ".TBL_BUG_DEPENDENCY." d1, ".TBL_BUG_DEPENDENCY." d2, ".TBL_BUG." b, ".TBL_STATUS." s where d1.bug_id = $bugid and d2.bug_id = b.bug_id and d2.bug_id = d1.depends_on and d2.depends_on = d1.bug_id group by b.bug_id");
+		$old_dupes = delimit_list(', ', $old_duplicates);
+		$new_dupes = delimit_list(', ', $new_duplicates);
+
+		$db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values('. join(', ', array($bugid, $db->quote(translate("duplicates")), $db->quote($old_dupes), $db->quote($new_dupes), $u, $now)).")");
+	}
+
+	// Remove duplicate if requested
+	if (!empty($del_duplicate)) {
+		$del_duplicate = preg_replace('/\D/', '', $del_duplicate);
+		if (is_numeric($del_duplicate)) {
+			// Check if the dependency has already been added
+			if ($db->getOne('select count(*) from '.TBL_BUG_DEPENDENCY." where bug_id = $bugid and depends_on = $del_duplicate")) {
+				// both ways
+				if ($db->getOne('select count(*) from '.TBL_BUG_DEPENDENCY." where bug_id = $del_duplicate and depends_on = $bugid")) {
+					$old_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid"));
+					$db->query("delete from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid and depends_on = $del_duplicate");
+					$db->query("delete from ".TBL_BUG_DEPENDENCY." where bug_id = $del_duplicate and depends_on = $bugid");
+		$new_duplicates = $db->getCol("select b.bug_id from ".TBL_BUG_DEPENDENCY." d1, ".TBL_BUG_DEPENDENCY." d2, ".TBL_BUG." b, ".TBL_STATUS." s where d1.bug_id = $bugid and d2.bug_id = b.bug_id and d2.bug_id = d1.depends_on and d2.depends_on = d1.bug_id group by b.bug_id");
+		$old_dupes = delimit_list(', ', $old_duplicates);
+		$new_dupes = delimit_list(', ', $new_duplicates);
+
+					$db->query('insert into '.TBL_BUG_HISTORY.' (bug_id, changed_field, old_value, new_value, created_by, created_date) values('. join(', ', array($bugid, $db->quote(translate("duplicates")), $db->quote($old_dupes), $db->quote($new_dupes), $u, $now)).")");
+				}
 			}
 		}
 	}
@@ -712,13 +766,21 @@ function show_bug_printable($bugid) {
 
 	$t->assign($row);
 
-	$bug_dependencies = $db->getAll("select b.bug_id, s.bug_open from ".TBL_BUG_DEPENDENCY." d, ".TBL_BUG." b, ".TBL_STATUS." s where d.bug_id = $bugid and d.depends_on = b.bug_id and b.status_id = s.status_id");
+	$bug_duplicates = $db->getAll("select b.bug_id, s.bug_open from ".TBL_BUG_DEPENDENCY." d1, ".TBL_BUG_DEPENDENCY." d2, ".TBL_BUG." b, ".TBL_STATUS." s where d1.bug_id = $bugid and d2.bug_id = b.bug_id and d2.bug_id = d1.depends_on and d2.depends_on = d1.bug_id and b.status_id = s.status_id");
 
-	$bug_blocks = $db->getAll("select b.bug_id, s.bug_open from ".TBL_BUG_DEPENDENCY." d, ".TBL_BUG." b, ".TBL_STATUS." s where d.depends_on = $bugid and d.bug_id = b.bug_id and b.status_id = s.status_id");
+	$no_dupes = "";
+	for ($i = 0, $count = count($bug_duplicates); $i < $count; $i++) {
+		$no_dupes .= " and b.bug_id <> ".$bug_duplicates[$i]['bug_id'];
+	}
+
+	$bug_dependencies = $db->getAll("select b.bug_id, s.bug_open from ".TBL_BUG_DEPENDENCY." d, ".TBL_BUG." b, ".TBL_STATUS." s where d.bug_id = $bugid and d.depends_on = b.bug_id and b.status_id = s.status_id $no_dupes");
+
+	$bug_blocks = $db->getAll("select b.bug_id, s.bug_open from ".TBL_BUG_DEPENDENCY." d, ".TBL_BUG." b, ".TBL_STATUS." s where d.depends_on = $bugid and d.bug_id = b.bug_id and b.status_id = s.status_id $no_dupes");
 
 	$t->assign(array(
 		'bug_dependencies' => $bug_dependencies,
-		'bug_blocks' => $bug_blocks
+		'bug_blocks' => $bug_blocks,
+		'bug_duplicates' => $bug_duplicates
 		));
 
 	// Show the comments
@@ -787,9 +849,16 @@ function show_bug($bugid = 0, $error = array()) {
 	// Override the database values with posted values if there were errors
 	if (count($error)) $t->assign($_POST);
 
-	$bug_dependencies = $db->getAll("select b.bug_id, s.bug_open from ".TBL_BUG_DEPENDENCY." d, ".TBL_BUG." b, ".TBL_STATUS." s where d.bug_id = $bugid and d.depends_on = b.bug_id and b.status_id = s.status_id");
+	$bug_duplicates = $db->getAll("select b.bug_id, s.bug_open from ".TBL_BUG_DEPENDENCY." d1, ".TBL_BUG_DEPENDENCY." d2, ".TBL_BUG." b, ".TBL_STATUS." s where d1.bug_id = $bugid and d2.bug_id = b.bug_id and d2.bug_id = d1.depends_on and d2.depends_on = d1.bug_id and b.status_id = s.status_id");
 
-	$bug_blocks = $db->getAll("select b.bug_id, s.bug_open from ".TBL_BUG_DEPENDENCY." d, ".TBL_BUG." b, ".TBL_STATUS." s where d.depends_on = $bugid and d.bug_id = b.bug_id and b.status_id = s.status_id");
+	$no_dupes = "";
+	for ($i = 0, $count = count($bug_duplicates); $i < $count; $i++) {
+		$no_dupes .= " and b.bug_id <> ".$bug_duplicates[$i]['bug_id'];
+	}
+
+	$bug_dependencies = $db->getAll("select b.bug_id, s.bug_open from ".TBL_BUG_DEPENDENCY." d, ".TBL_BUG." b, ".TBL_STATUS." s where d.bug_id = $bugid and d.depends_on = b.bug_id and b.status_id = s.status_id $no_dupes");
+
+	$bug_blocks = $db->getAll("select b.bug_id, s.bug_open from ".TBL_BUG_DEPENDENCY." d, ".TBL_BUG." b, ".TBL_STATUS." s where d.depends_on = $bugid and d.bug_id = b.bug_id and b.status_id = s.status_id $no_dupes");
 
 	$t->assign(array(
 		'error' => $error,
@@ -797,7 +866,8 @@ function show_bug($bugid = 0, $error = array()) {
 		'already_bookmarked' => $db->getOne("select count(*) from ".TBL_BOOKMARK." where bug_id = $bugid and user_id = $u"),
 		'num_votes' => $db->getOne("select count(*) from ".TBL_BUG_VOTE." where bug_id = $bugid"),
 		'bug_dependencies' => $bug_dependencies,
-		'bug_blocks' => $bug_blocks
+		'bug_blocks' => $bug_blocks,
+		'bug_duplicates' => $bug_duplicates,
 		));
 
 	// Show the attachments
