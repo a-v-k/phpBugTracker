@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.109 2005/10/04 20:12:12 ulferikson Exp $
+// $Id: query.php,v 1.110 2005/10/05 20:25:57 ulferikson Exp $
 
 include 'include.php';
 
@@ -59,6 +59,7 @@ function show_query($edit = false) {
 		$t->assign('severity', isset($severity) ? $severity : null);
 		$t->assign('database', isset($database) ? $database : null);
 		$t->assign('site', isset($site) ? $site : null);
+		$t->assign('unassigned', isset($unassigned) ? $unassigned : null);
 		$t->assign('emailsearch1', isset($emailsearch1) ? $emailsearch1 : null);
 		$t->assign('closedinversion', isset($closedinversion) ? $closedinversion : null);
 		$t->assign('tobeclosedinversion', isset($tobeclosedinversion) ? $tobeclosedinversion : null);
