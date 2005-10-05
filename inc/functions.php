@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.68 2005/10/04 20:10:04 ulferikson Exp $
+// $Id: functions.php,v 1.69 2005/10/05 20:28:53 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -51,7 +51,7 @@ function show_text($text, $iserror = false) {
 
 ///
 /// Build a select box with the item matching $value selected
-function build_select($box, $selected = '', $project = 0) {
+function build_select($box, $selected = '', $project = 0, $limit = false) {
 	global $db, $select, $perm, $restricted_projects, $QUERY, $u;
 
 	// create hash to map tablenames
@@ -78,7 +78,9 @@ function build_select($box, $selected = '', $project = 0) {
 			'severity' => $querystart.$querymid,
 			'priority' => $querystart.$querymid,
 			'site' => $querystart.$querymid,
-			'status' => $querystart.$querymid,
+			'status' => (!$limit || $perm->have_perm('CloseBug', $project)
+					? $querystart.$querymid
+					: $querystart." where sort_order > 0 and (bug_open = 1 or status_id = ".(!empty($selected)?$selected:0).") order by sort_order"),
 			'resolution' => $querystart.$querymid,
 			'project' => $perm->have_perm('Admin')
 					? $querystart." where ".

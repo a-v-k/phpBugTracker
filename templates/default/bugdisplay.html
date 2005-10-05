@@ -165,7 +165,7 @@
 		<?php } ?>
 		<td><?php echo translate("Status"); ?>:</td>
 		<?php if ($may_edit) { ?>
-			<td><select name="status_id"><?php build_select('status', $status_id) ?></select></td>
+			<td><select name="status_id"><?php build_select('status', $status_id, $project_id, true); ?></select></td>
 		<?php } else { ?>
 			<td><?php echo lookup('status', $status_id); ?></td>
 		<?php } ?>

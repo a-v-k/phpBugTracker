@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.153 2005/10/02 21:04:50 ulferikson Exp $
+// $Id: bug.php,v 1.154 2005/10/05 20:28:53 ulferikson Exp $
 
 include 'include.php';
 
@@ -424,15 +424,21 @@ function update_bug($bugid = 0) {
 	$url = isset($url) && $may_edit ? $url : $buginfo['url'];
 	$severity_id = isset($severity_id) && $may_edit ? (int) $severity_id : $buginfo['severity_id'];
 	$priority = isset($priority) && $may_edit ? (int) $priority : $buginfo['priority'];
+	$resolution_id = isset($resolution_id) && $may_close ? (int) $resolution_id : $buginfo['resolution_id'];
 	$status_id = isset($status_id) && $may_edit ? (int) $status_id : $buginfo['status_id'];
-	if (is_closed($status_id) && !$may_close) {
-		$status_id = $buginfo['status_id'];
+	if (!$may_close) {
+		if (is_closed($status_id)) {
+			$status_id = $buginfo['status_id'];
+		}
+		else if (is_closed($buginfo['status_id'])) {
+			$resolution_id = 0;
+			$changedfields['resolution_id'] = 0;
+		}
 	}
 	$database_id = isset($database_id) && $may_edit ? (int) $database_id : $buginfo['database_id'];
 	$to_be_closed_in_version_id = isset($to_be_closed_in_version_id) && $may_close ? (int) $to_be_closed_in_version_id : $buginfo['to_be_closed_in_version_id'];
 	$closed_in_version_id = isset($closed_in_version_id) && $may_close ? (int) $closed_in_version_id : $buginfo['closed_in_version_id'];
 	$site_id = isset($site_id) && $may_edit ? (int) $site_id : $buginfo['site_id'];
-	$resolution_id = isset($resolution_id) && $may_close ? (int) $resolution_id : $buginfo['resolution_id'];
 	$assigned_to = isset($assigned_to) && $may_edit ? (int) $assigned_to : $buginfo['assigned_to'];
 	if (isset($perm) and $perm->have_perm_proj($project_id) and isset($created_by) && is_numeric($created_by)) {
 		$created_by = (int) $created_by;
