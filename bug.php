@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.155 2005/10/05 20:36:02 ulferikson Exp $
+// $Id: bug.php,v 1.156 2005/10/10 19:31:53 ulferikson Exp $
 
 include 'include.php';
 
@@ -115,16 +115,16 @@ function format_comments($comments) {
 
 	// Set up the regex replacements
 	$patterns = array(
-		'/(bug)[[:space:]]*(#?)([0-9]+)/i', // matches bug #nn
-		'/cvs:([^\.\s:,\?!]+(\.[^\.\s:,\?!]+)*)(:)?(\d\.[\d\.]+)?([\W\s])?/i', // matches cvs:filename.php or cvs:filename.php:n.nn
 		'/</',
 		'/>/',
+		'/(bug)[[:space:]]*(#?)([0-9]+)/i', // matches bug #nn
+		'/cvs:([^\.\s:,\?!]+(\.[^\.\s:#,\?!]+)*)([:#](rev|r)?)?(\d\.[\d\.]+)?([\W\s])?/i', // matches cvs:filename.php, cvs:filename.php:n.nn or cvs:filename.php#revn.nn
 		);
 	$replacements = array(
-		"\\1 <a href='$me?op=show&bugid=\\3'>\\2\\3</a>", // internal link to bug
-		'<a href="'.CVS_WEB.'\\1#rev\\4" target="_new">\\1</a>\\5', // external link to cvs web interface
 		'&lt;',
 		'&gt;',
+		"<a href='$me?op=show&bugid=\\3'>\\1 \\2\\3</a>", // internal link to bug
+		'<a href="'.CVS_WEB.'\\1#rev\\5" target="_new">\\1</a>\\6', // external link to cvs web interface
 		);
 
 	return nl2br(preg_replace($patterns, $replacements, stripslashes($comments)));
