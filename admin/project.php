@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: project.php,v 1.50 2005/09/02 19:17:24 ulferikson Exp $
+// $Id: project.php,v 1.51 2005/10/18 19:00:30 ulferikson Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -47,13 +47,19 @@ function save_version($version_id = 0, $projectid = 0) {
 	if (!$_POST['version_name'] = trim($_POST['version_name']))
 		$error = translate("Please enter a version");
 	if ($error) {
-		show_version($_POST['version_id'], $error); return;
+		show_version($_POST['version_id'], $error);
+		return;
 	}
 
 	extract($_POST);
 	if (!isset($active)) $active = 0;
 	if (empty($sort_order)) $sort_order = 0;
 	if (!$version_id) {
+		if ($db->getOne('select count(*) from '.TBL_VERSION." where project_id = $project_id and version_name = ".$db->quote(stripslashes($version_name)))) {
+			$error = translate("That version already exists");
+			show_version($_POST['version_id'], $error);
+			return;
+		}
 		$db->query('insert into '.TBL_VERSION." (version_id, project_id, version_name, active, sort_order, created_by, created_date) values (".$db->nextId(TBL_VERSION).", $project_id, ".$db->quote(stripslashes($version_name)).", $active, $sort_order, $u, $now)");
 	} else {
 		$db->query('update '.TBL_VERSION." set project_id = $project_id, version_name = ".$db->quote(stripslashes($version_name)).", active = $active, sort_order = $sort_order where version_id = '$version_id'");
@@ -114,6 +120,11 @@ function save_component($component_id = 0, $projectid = 0) {
 	if (!$active) $active = 0;
 	if (empty($sort_order)) $sort_order = 0;
 	if (!$component_id) {
+		if ($db->getOne('select count(*) from '.TBL_COMPONENT." where project_id = $project_id and component_name = ".$db->quote(stripslashes($component_name)))) {
+			$error = translate("That component already exists");
+			show_component($_POST['component_id'], $error);
+			return;
+		}
 		$db->query('insert into '.TBL_COMPONENT." (component_id, project_id, component_name, component_desc, owner, active, sort_order, created_by, created_date, last_modified_by, last_modified_date) values (".$db->nextId(TBL_COMPONENT).", $project_id, ".$db->quote(stripslashes($component_name)).", ".$db->quote(stripslashes($component_desc)).", $owner, $active, $sort_order, $u, $now, $u, $now)");
 	} else {
 		$db->query('update '.TBL_COMPONENT." set component_name = ".$db->quote(stripslashes($component_name)).', component_desc = '.$db->quote(stripslashes($component_desc)).", owner = $owner, active = $active, sort_order = $sort_order, last_modified_by = $u, "."last_modified_date = $now where component_id = $component_id");
@@ -159,7 +170,9 @@ function save_project($projectid = 0) {
 		return; 
 	}
 
+	$typeOP = 'update';
 	if (!$projectid) {
+		$typeOP = 'add';
 		if (!$_POST['version_name'] = htmlspecialchars(trim($_POST['version_name']))) {
 			$error['version_error'] = translate("Please enter a version");
 		} elseif (!$_POST['component_name'] = trim($_POST['component_name'])) {
@@ -178,6 +191,11 @@ function save_project($projectid = 0) {
 	if (empty($version_sortorder)) $version_sortorder = 0;
 	if (empty($component_sortorder)) $component_sortorder = 0;
 	if (!$projectid) {
+		if ($db->getOne('select count(*) from '.TBL_PROJECT." where project_name = ".$db->quote(stripslashes($project_name)))) {
+			$error = translate("That project already exists");
+			show_project($projectid, $error); 
+			return;
+		}
 		$projectid = $db->nextId(TBL_PROJECT);
 		$db->query('insert into '.TBL_PROJECT." (project_id, project_name, project_desc, active, created_by, created_date) values ($projectid , ".$db->quote(stripslashes($project_name)).", ".$db->quote(stripslashes($project_desc)).", $active, $u, $now)");
 		$db->query('insert into '.TBL_VERSION." (version_id, project_id, version_name, active, sort_order, created_by, created_date) values (".$db->nextId(TBL_VERSION).", $projectid, ".$db->quote(stripslashes($version_name)).", 1, $version_sortorder, $u, $now)");
@@ -237,6 +255,18 @@ function save_project($projectid = 0) {
 		$db->query('delete from '.TBL_PROJECT_GROUP." where project_id = $projectid");
 	}
 
+	// This should only be used when the conditions for bug #1292113 are true
+	if (true) {
+		if ($typeOP == 'add') {
+			show_project($projectid);
+			return;	
+		}
+		else if ($typeOP == 'update') {
+			list_projects();
+			return;	
+		}
+	}
+	
 	header("Location: $me?op=edit&id=$projectid");
 }
 
