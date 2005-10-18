@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.69 2005/10/05 20:28:53 ulferikson Exp $
+// $Id: functions.php,v 1.70 2005/10/18 18:43:15 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -752,7 +752,7 @@ function delete_bug($bug_id) {
  * @return bool
  */
 function find_include($file) {
-	foreach (explode(PATH_SEPARATOR, get_include_path()) as $path) { 
+	foreach (explode(PATH_SEPARATOR, ini_get('include_path')) as $path) { 
 		if (file_exists("$path/$file")) return true; 
 	}
 	return false;
