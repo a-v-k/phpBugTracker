@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.110 2005/10/05 20:25:57 ulferikson Exp $
+// $Id: query.php,v 1.111 2005/10/18 18:52:29 ulferikson Exp $
 
 include 'include.php';
 
@@ -179,8 +179,8 @@ function build_query($assignedto, $reportedby, $open, $bookmarked) {
 
 		// Search for additional comments with 'description'
 		// TODO: Change this to match the condition selected (see below for rlike, not rlike, etc.)
+		$bugs_with_comment = array(0);
 		if (!empty($description)) {
-			$bugs_with_comment = array(0);
 			foreach ($db->getAll('SELECT bug_id FROM '.TBL_COMMENT.' WHERE comment_text LIKE \'%'.$description.'%\'') as $row) {
 				$bugs_with_comment[] = $row['bug_id'];
 			}
