@@ -440,7 +440,8 @@ $QUERY = array(
 	'index-projsummary-4' =>
 		"', 1, 0)) as \"'",
 	'index-projsummary-5' =>
-		"from ".TBL_RESOLUTION." b",
+		"from ".TBL_RESOLUTION." b".
+		" order by b.sort_order",
 	'index-projsummary-6' =>
 		"%s, count(bug_id) as \"Total\" ".
 		'from '.TBL_BUG.' b, '.TBL_PROJECT.' p '.
