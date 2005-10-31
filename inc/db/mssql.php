@@ -47,6 +47,8 @@ $QUERY = array(
 			TBL_AUTH_GROUP.' ag '.
 			'left join '.TBL_USER_GROUP.' ug on ug.group_id = ag.group_id '.
 			'left join '.TBL_AUTH_USER.' au on ug.user_id = au.user_id '.
+		'where '.
+			' %s '.
 		'group by '.
 			'ag.group_id, '.
 			'group_name, '.

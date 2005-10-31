@@ -53,6 +53,7 @@ $QUERY = array(
 		'where '.
 			'ag.group_id = ug.group_id(+) '.
 			'and ug.user_id = au.user_id(+) '.
+			'and %s '.
 		'group by '.
 			'ag.group_id, '.
 			'ag.group_name, '.

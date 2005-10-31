@@ -1,7 +1,7 @@
 # PostgreSQL database creation script
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: pgsql.in,v 1.52 2005/10/02 20:57:40 ulferikson Exp $
+# $Id: pgsql.in,v 1.53 2005/10/31 21:34:35 ulferikson Exp $
 
 BEGIN;
 
@@ -30,6 +30,7 @@ CREATE TABLE TBL_AUTH_GROUP (
   created_date INT8  NOT NULL DEFAULT '0',
   last_modified_by INT4  NOT NULL DEFAULT '0',
   last_modified_date INT8  NOT NULL DEFAULT '0',
+  is_role INT2 NOT NULL DEFAULT 0,
   PRIMARY KEY  (group_id)
 );
 
@@ -383,6 +384,10 @@ CREATE TABLE TBL_VERSION (
 
 
 INSERT INTO TBL_AUTH_USER
+	(user_id, login, first_name, last_name, email, password, active)
+	values (0, 'Anonymous User', 'Anonymous', 'User', '', '', 0);
+
+INSERT INTO TBL_AUTH_USER
 	(user_id, login, first_name, last_name, email, password)
 	values (1, 'OPTION_ADMIN_EMAIL', 'System', 'Admin',
 		'OPTION_ADMIN_EMAIL', 'OPTION_ADMIN_PASS');
@@ -390,37 +395,70 @@ INSERT INTO TBL_AUTH_USER
 CREATE SEQUENCE TBL_AUTH_USER_seq START 2;
 
 
-# Start off with three user levels...
+# Start off with four user levels...
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (1, 'Admin', 1);
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (2, 'User', 1);
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (3, 'Developer', 1);
 INSERT INTO TBL_AUTH_GROUP (group_id, group_name, locked) VALUES (4, 'Manager', 1);
 
-CREATE SEQUENCE TBL_AUTH_GROUP_seq START 4;
+# ... six user roles ...
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name, is_role, locked) VALUES (5, 'Guest', 1, 1);
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name, is_role, locked) VALUES (6, 'User', 1, 1);
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name, is_role, locked) VALUES (7, 'Reporter', 1, 1);
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name, is_role, locked) VALUES (8, 'Assignee', 1, 1);
+INSERT INTO TBL_AUTH_GROUP (group_id, group_name, is_role, locked) VALUES (9, 'Owner', 1, 1);
 
+CREATE SEQUENCE TBL_AUTH_GROUP_seq START 10;
 
-# ... and four permissions
+# ... and fourteen permissions
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (1, 'Admin');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (2, 'AddBug');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (3, 'EditAssignment');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (4, 'Assignable');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (5, 'EditBug');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (6, 'CloseBug');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (7, 'CommentBug');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (8, 'EditPriority');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (9, 'EditStatus');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (10, 'EditSeverity');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (11, 'EditResolution');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (12, 'EditProject');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (13, 'EditComponent');
+INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (14, 'ManageBug');
 
 
 # Admins can do all the admin stuff,
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (1, 1);
 
 # users can add and edit bugs,
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (2, 2);
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (2, 5);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (5, 7);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (6, 2);
+
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (7, 5);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (7, 10);
 
 # developers can own bugs, and
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 4);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 5);
+
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (8, 8);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (8, 9);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (8, 11);
 
 # managers can assign and close bugs
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 3);
 INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 6);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 12);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 13);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 14);
+
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 6);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 7);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 8);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 9);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 10);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 11);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 13);
 
 
 # Insert user_id 1 into the admin group

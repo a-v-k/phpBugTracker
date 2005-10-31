@@ -61,6 +61,17 @@ class uauth {
 	function auth_validatelogin() {
 		global $db, $select, $emailpass, $emailsuccess, $uid;
 
+		$role = array();
+		$roles = $db->getAll("select group_id, group_name from ".TBL_AUTH_GROUP." ag where ag.is_role=1");
+
+		foreach ($roles as $r) {
+			$role[$r['group_name']] = $r['group_id'];
+		}
+
+		$_SESSION['group'] = array();
+		$_SESSION['group_ids'] = array(0);
+		$_SESSION['perms'] = array();
+
 		extract($_POST);
 		if (!$username) return 0;
 		$_SESSION['uname'] = $username;
@@ -79,11 +90,18 @@ class uauth {
 				$_SESSION['group_ids'][] = $groupid;
 				$_SESSION['group'][$groupname] = true;
 			}
+			$_SESSION['group_ids'][] = $role['User'];
+			$_SESSION['group']['User'] = true;
+			
 			$perms = $db->getCol("select perm_name from ".TBL_AUTH_PERM." ap, ".TBL_GROUP_PERM." gp where group_id in (".@join(',', $_SESSION['group_ids']).") and gp.perm_id = ap.perm_id");
 			foreach ($perms as $perm) {
 				$_SESSION['perms'][$perm] = true;
 			}
 			$_SESSION['uid'] = $u['user_id'];
+			$projs = $db->getCol("select project_id from ".TBL_PROJECT_PERM." where user_id = ".$_SESSION['uid']);
+			foreach ($projs as $proj) {
+				$_SESSION['projs'][$proj] = true;
+			}
 
 			return $u['user_id'];
 		}
@@ -97,6 +115,9 @@ class uauth {
 		$_SESSION['group'] = array();
 		$_SESSION['group_ids'] = array(0);
 		$_SESSION['db_fields'] = array();
+		$_SESSION['queryinfo'] = array();
+		$_SESSION = array();
+
 	}
 }
 
@@ -134,14 +155,14 @@ class uperm {
 		}
 
 		if ($project_id == -1) {
-			if ( $db->getCol('SELECT user_id FROM '.TBL_PROJECT_PERM.' WHERE user_id = '.$_SESSION['uid']) ) {
+			if (isset($_SESSION['projs']) ) {
 				return true;
 			} else {
 				return false;
 			}
 		}
 
-		if ( $db->getCol('SELECT user_id FROM '.TBL_PROJECT_PERM.' WHERE user_id = '.$_SESSION['uid']." AND project_id = $project_id") ) {
+		if (isset($_SESSION['projs'][$project_id]) ) {
 			return true;
 		} else {
 			return false;
@@ -161,12 +182,14 @@ class uperm {
 
 		if (is_array($reqs)) {
 			foreach ($reqs as $req) {
-				if (!@isset($_SESSION[$auth_var][$req])) {
+				if (!@isset($_SESSION[$auth_var][$req]) &&
+					($auth_var!='perms' || !@isset($this->permissions[$req]))) {
 					return false;
 				}
 			}
 		} else {
-			if (!@isset($_SESSION[$auth_var][$reqs])) {
+			if (!@isset($_SESSION[$auth_var][$reqs]) &&
+				($auth_var!='perms' || !@isset($this->permissions[$reqs]))) {
 				return false;
 			}
 		}
@@ -201,6 +224,18 @@ class uperm {
 			exit();
 		}
 	}
+
+	function add_role($arole) {
+		global $db;
+
+		$perms = $db->getCol("select perm_name from ".TBL_AUTH_PERM." ap, ".TBL_GROUP_PERM." gp, ".TBL_AUTH_GROUP." ag where ag.group_name='$arole' and ag.group_id=gp.group_id and gp.perm_id = ap.perm_id");
+		if ($perms && !DB::isError($perms)) {
+			foreach ($perms as $p) {
+				$this->permissions[$p] = true;
+			}
+		}
+	}
+
 }
 
 ?>

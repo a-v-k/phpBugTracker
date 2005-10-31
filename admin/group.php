@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: group.php,v 1.15 2005/08/22 20:04:05 ulferikson Exp $
+// $Id: group.php,v 1.16 2005/10/31 21:34:35 ulferikson Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -85,7 +85,7 @@ function show_form($groupid = 0, $error = '') {
 }
 
 
-function list_items($groupid = 0, $error = '') {
+function list_items($do_group = true, $groupid = 0, $error = '') {
 	global $me, $db, $t, $QUERY;
 
 	if (empty($_GET['order'])) { 
@@ -98,12 +98,14 @@ function list_items($groupid = 0, $error = '') {
 
 	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	
-	$nr = $db->getOne("select count(*) from ".TBL_AUTH_GROUP);
+	$match = $do_group ? "is_role=0" : "is_role=1";
+
+	$nr = $db->getOne("select count(*) from ".TBL_AUTH_GROUP." where $match");
 
 	list($selrange, $llimit) = multipages($nr, $page, "order=$order&sort=$sort");
 
 	$t->assign('groups', $db->getAll($db->modifyLimitQuery(
-		sprintf($QUERY['admin-list-groups'], $order, $sort), $llimit, $selrange)));
+		sprintf($QUERY['admin-list-groups'], $match, $order, $sort), $llimit, $selrange)));
 
 	$headers = array(
 		'groupid' => 'group_id',
@@ -112,7 +114,8 @@ function list_items($groupid = 0, $error = '') {
 
 	sorting_headers($me, $headers, $order, $sort, "page=$page");
 
-	$t->render('grouplist.html', translate("Group List"));
+	$t->assign('do_group', $do_group);
+	$t->render('grouplist.html', $do_group ? translate("Group List") : translate("Role List"));
 }
 
 $perm->check('Admin');
@@ -121,8 +124,13 @@ if (isset($_REQUEST['op'])) {
 	switch($_REQUEST['op']) {
 		case 'save' : do_form($_POST['group_id']); break;
 		case 'edit' : show_form($_GET['group_id']); break;
-		case 'del' : del_group($_GET['group_id']); list_items($_GET['group_id']); break;
-		case 'purge' : purge_group($_GET['group_id']); list_items($_GET['group_id']); break;
+		case 'del' : del_group($_GET['group_id']); list_items(true, $_GET['group_id']); break;
+		case 'purge' : purge_group($_GET['group_id']); list_items(true, $_GET['group_id']); break;
+		case 'list-roles' : list_items(false); break;
+		case 'save-role' : do_form($_POST['group_id']); break;
+		case 'edit-role' : show_form($_GET['group_id']); break;
+		case 'del-role' : del_group($_GET['group_id']); list_items(false, $_GET['group_id']); break;
+		case 'purge-role' : purge_group($_GET['group_id']); list_items(false, $_GET['group_id']); break;
 	}
 } else list_items();
 

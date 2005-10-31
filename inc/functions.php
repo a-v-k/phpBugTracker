@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.70 2005/10/18 18:43:15 ulferikson Exp $
+// $Id: functions.php,v 1.71 2005/10/31 21:34:35 ulferikson Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -74,11 +74,11 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
 		$querystart = "select {$box}_id, {$box}_name from $cfgDatabase[$box]";
 		$querymid = ' where sort_order > 0 order by sort_order';
 		$queries = array(
-			'group' => $querystart.' order by group_name',
+			'group' => $querystart.' where is_role = 0 order by group_name',
 			'severity' => $querystart.$querymid,
 			'priority' => $querystart.$querymid,
 			'site' => $querystart.$querymid,
-			'status' => (!$limit || $perm->have_perm('CloseBug', $project)
+			'status' => (!$limit || ($perm->have_perm('CloseBug', $project) or $perm->have_perm('ManageBug', $project))
 					? $querystart.$querymid
 					: $querystart." where sort_order > 0 and (bug_open = 1 or status_id = ".(!empty($selected)?$selected:0).") order by sort_order"),
 			'resolution' => $querystart.$querymid,

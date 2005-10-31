@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.156 2005/10/10 19:31:53 ulferikson Exp $
+// $Id: bug.php,v 1.157 2005/10/31 21:34:35 ulferikson Exp $
 
 include 'include.php';
 
@@ -416,17 +416,45 @@ function update_bug($bugid = 0) {
 		return (array('status' => translate("Someone has updated this bug since you viewed it. The bug info has been reloaded with the latest changes.")));
 	}
 
-	$may_edit = $perm->have_perm('EditBug', $buginfo['project_id']);
-	$may_close = $perm->have_perm('CloseBug', $buginfo['project_id']);
+	$is_reporter = false;
+	$is_assignee = false;
+	$is_owner = false;
+	
+	if (!empty($u) && $u == $buginfo['created_by']) {
+		$perm->add_role('Reporter');
+		$is_reporter = true;
+	}
+	if (!empty($u) && $u == $buginfo['assigned_to']) {
+		$perm->add_role('Assignee');
+		$is_assignee = true;
+	}
+	if (!empty($u) && $u == $db->getOne("select owner from ".TBL_COMPONENT." where owner = ".$u." and component_id = ".$buginfo['component_id'])) {
+		$perm->add_role('Owner');
+		$is_owner = true;
+	}
 
-	$project_id = isset($project_id) && $may_edit ? (int) $project_id : $buginfo['project_id'];
+	$is_user = (isset($_SESSION['uid']) && !empty($_SESSION['uid']));
+	$is_admin = ($is_user && isset($perm) && $perm->have_perm_proj($buginfo['project_id']));
+	$may_edit = (isset($perm) && $perm->have_perm('EditBug', $buginfo['project_id']));
+	$may_manage = ($may_edit && $perm->have_perm('ManageBug', $buginfo['project_id']));
+	$may_change_project = ($may_edit && $perm->have_perm('EditProject', $buginfo['project_id']));
+	$may_change_component = ($may_edit && $perm->have_perm('EditComponent', $buginfo['project_id']));
+	$may_change_assignment = ($may_edit && $perm->have_perm('EditAssignment', $buginfo['project_id']));
+	$may_change_status = ($may_edit && $perm->have_perm('EditStatus', $buginfo['project_id']));
+	$may_close = ($may_edit && $perm->have_perm('CloseBug', $buginfo['project_id']));
+	$may_change_resolution = ($may_edit && $perm->have_perm('EditResolution', $buginfo['project_id']));
+	$may_change_priority = ($may_edit && $perm->have_perm('EditPriority', $buginfo['project_id']));
+	$may_change_severity = ($may_edit && $perm->have_perm('EditSeverity', $buginfo['project_id']));
+	$may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $buginfo['project_id']));
+
+	$project_id = isset($project_id) && $may_change_project ? (int) $project_id : $buginfo['project_id'];
 	$title = isset($title) && $may_edit ? $title : $buginfo['title'];
 	$url = isset($url) && $may_edit ? $url : $buginfo['url'];
-	$severity_id = isset($severity_id) && $may_edit ? (int) $severity_id : $buginfo['severity_id'];
-	$priority = isset($priority) && $may_edit ? (int) $priority : $buginfo['priority'];
-	$resolution_id = isset($resolution_id) && $may_close ? (int) $resolution_id : $buginfo['resolution_id'];
-	$status_id = isset($status_id) && $may_edit ? (int) $status_id : $buginfo['status_id'];
-	if (!$may_close) {
+	$severity_id = isset($severity_id) && ($may_change_severity or $may_manage) ? (int) $severity_id : $buginfo['severity_id'];
+	$priority = isset($priority) && ($may_change_priority or $may_manage) ? (int) $priority : $buginfo['priority'];
+	$resolution_id = isset($resolution_id) && ($may_close or $may_change_resolution or $may_manage) ? (int) $resolution_id : $buginfo['resolution_id'];
+	$status_id = isset($status_id) && ($may_change_status or $may_manage) ? (int) $status_id : $buginfo['status_id'];
+	if (!$may_close and !$may_manage) {
 		if (is_closed($status_id)) {
 			$status_id = $buginfo['status_id'];
 		}
@@ -436,22 +464,22 @@ function update_bug($bugid = 0) {
 		}
 	}
 	$database_id = isset($database_id) && $may_edit ? (int) $database_id : $buginfo['database_id'];
-	$to_be_closed_in_version_id = isset($to_be_closed_in_version_id) && $may_close ? (int) $to_be_closed_in_version_id : $buginfo['to_be_closed_in_version_id'];
-	$closed_in_version_id = isset($closed_in_version_id) && $may_close ? (int) $closed_in_version_id : $buginfo['closed_in_version_id'];
+	$to_be_closed_in_version_id = isset($to_be_closed_in_version_id) && ($may_close or $may_manage) ? (int) $to_be_closed_in_version_id : $buginfo['to_be_closed_in_version_id'];
+	$closed_in_version_id = isset($closed_in_version_id) && ($may_close or $may_manage) ? (int) $closed_in_version_id : $buginfo['closed_in_version_id'];
 	$site_id = isset($site_id) && $may_edit ? (int) $site_id : $buginfo['site_id'];
-	$assigned_to = isset($assigned_to) && $may_edit ? (int) $assigned_to : $buginfo['assigned_to'];
+	$assigned_to = isset($assigned_to) && ($may_change_assignment or $may_manage) ? (int) $assigned_to : $buginfo['assigned_to'];
 	if (isset($perm) and $perm->have_perm_proj($project_id) and isset($created_by) && is_numeric($created_by)) {
 		$created_by = (int) $created_by;
 	} else {
 		$created_by = $buginfo['created_by'];
 	}
 	$version_id = isset($version_id) && $may_edit ? (int) $version_id : $buginfo['version_id'];
-	$component_id = isset($component_id) && $may_edit ? (int) $component_id : $buginfo['component_id'];
+	$component_id = isset($component_id) && $may_change_component ? (int) $component_id : $buginfo['component_id'];
 	$os_id = isset($os_id) && $may_edit ? (int) $os_id : $buginfo['os_id'];
-	$comments = isset($comments) ? $comments : null;
+	$comments = isset($comments) && $may_add_comment ? $comments : null;
 	$add_cc = isset($add_cc) ? $add_cc : null;
 	$remove_cc = isset($remove_cc) ? $remove_cc : null;
-	if (isset($remove_cc) && !$may_edit) {
+	if (isset($remove_cc) && !$is_admin && !$is_owner && !$may_manage) {
 		if (in_array($u, $remove_cc)) {
 			$remove_cc = array($u);
 		}
@@ -459,10 +487,10 @@ function update_bug($bugid = 0) {
 			$remove_cc = null;
 		}
 	}
-	$add_dependency = isset($add_dependency) && $may_edit ? (int) $add_dependency : null;
-	$remove_dependency = isset($remove_dependency) && $may_edit ? (int) $remove_dependency : null;
-	$add_duplicate = isset($add_duplicate) && $may_edit ? (int) $add_duplicate : null;
-	$del_duplicate = isset($del_duplicate) && $may_edit ? (int) $del_duplicate : null;
+	$add_dependency = isset($add_dependency) && ($is_admin or $is_owner or $is_assignee or $may_manage) ? (int) $add_dependency : null;
+	$remove_dependency = isset($remove_dependency) && ($is_admin or $is_owner or $is_assignee or $may_manage) ? (int) $remove_dependency : null;
+	$add_duplicate = isset($add_duplicate) && ($is_admin or $is_owner or $is_assignee or $may_manage) ? (int) $add_duplicate : null;
+	$del_duplicate = isset($del_duplicate) && ($is_admin or $is_owner or $is_assignee or $may_manage) ? (int) $del_duplicate : null;
 
 	if (isset($_POST)) {
 		foreach ($_POST as $k => $v) {
@@ -475,7 +503,7 @@ function update_bug($bugid = 0) {
 	// Add CC if specified
 	if (isset($add_cc) and $add_cc) {
 		$cc_uid = $db->getOne("select user_id from ".TBL_AUTH_USER." where login = ".$db->quote(stripslashes($add_cc)));
-		if ($cc_uid != $u and !$may_edit) {
+		if ($cc_uid != $u and !$is_admin && !$is_owner && !$may_manage) {
 			return (array('status' => translate("You may only add yourself to the CC list")));
 		}
 		if (!$cc_uid) {
@@ -834,7 +862,7 @@ function prev_next_links($bugid, $pos) {
 }
 
 function show_bug($bugid = 0, $error = array()) {
-	global $db, $me, $t, $u, $QUERY, $restricted_projects, $auth;
+	global $db, $me, $t, $u, $QUERY, $restricted_projects, $auth, $perm;
 
 	if (!ereg('^[0-9]+$',$bugid) or
 		!$row = $db->getRow(sprintf($QUERY['bug-show-bug'], $bugid,
@@ -844,10 +872,34 @@ function show_bug($bugid = 0, $error = array()) {
 	}
 
 	prev_next_links($bugid, isset($_GET['pos']) ? $_GET['pos'] : 0);
+	
+	$is_reporter = false;
+	$is_assignee = false;
+	$is_owner = false;
+	$is_admin = false;
+
+	if (!empty($u) && $u == $row['created_by']) {
+		$perm->add_role('Reporter');
+		$is_reporter = true;
+	}
+	if (!empty($u) && $u == $row['assigned_to']) {
+		$perm->add_role('Assignee');
+		$is_assignee = true;
+	}
+	if (!empty($u) && $u == $db->getOne("select owner from ".TBL_COMPONENT." where owner = ".$u." and component_id = ".$row['component_id'])) {
+		$perm->add_role('Owner');
+		$is_owner = true;
+	}
+	if (!empty($u) && $u == $db->getOne("select user_id from ".TBL_PROJECT_PERM." where user_id = ".$u." and project_id = ".$row['project_id'])) {
+		$perm->add_role('Admin');
+		$is_admin = true;
+	}
 
 	$t->assign($row);
 	// Override the database values with posted values if there were errors
 	if (count($error)) $t->assign($_POST);
+
+	$t->assign(array($is_reporter, $is_assignee, $is_owner, $is_admin));
 
 	$bug_duplicates = $db->getAll("select b.bug_id, s.bug_open from ".TBL_BUG_DEPENDENCY." d1, ".TBL_BUG_DEPENDENCY." d2, ".TBL_BUG." b, ".TBL_STATUS." s where d1.bug_id = $bugid and d2.bug_id = b.bug_id and d2.bug_id = d1.depends_on and d2.depends_on = d1.bug_id and b.status_id = s.status_id");
 
@@ -894,6 +946,7 @@ function show_bug($bugid = 0, $error = array()) {
 	}
 	$t->assign(array('posinfo' => $posinfo));
 
+	$t->assign(array('perm' => $perm));
 	$t->render('bugdisplay.html', translate("View Bug"));
 }
 

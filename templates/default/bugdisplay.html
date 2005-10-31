@@ -49,8 +49,19 @@
 //-->
 </script>
 <?php
+	$is_user = (isset($_SESSION['uid']) && !empty($_SESSION['uid']));
+	$is_admin = ($is_user && isset($perm) && $perm->have_perm_proj($project_id));
         $may_edit = (isset($perm) && $perm->have_perm('EditBug', $project_id));
-        $may_close = (isset($perm) && $perm->have_perm('CloseBug', $project_id));
+	$may_manage = ($may_edit && $perm->have_perm('ManageBug', $project_id));
+	$may_change_project = ($may_edit && $perm->have_perm('EditProject', $project_id));
+	$may_change_component = ($may_edit && $perm->have_perm('EditComponent', $project_id));
+	$may_change_assignment = ($may_edit && $perm->have_perm('EditAssignment', $project_id));
+	$may_change_status = ($may_edit && $perm->have_perm('EditStatus', $project_id));
+	$may_close = ($may_edit && $perm->have_perm('CloseBug', $project_id));
+	$may_change_resolution = ($may_edit && $perm->have_perm('EditResolution', $project_id));
+	$may_change_priority = ($may_edit && $perm->have_perm('EditPriority', $project_id));
+	$may_change_severity = ($may_edit && $perm->have_perm('EditSeverity', $project_id));
+	$may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id));
 ?>
 <form action="bug.php" method="post">
 	<input type="hidden" name="op" value="update">
@@ -78,7 +89,7 @@
 	<table border="0" width="100%" cellspacing="0" cellpadding="2">
 	<tr>
 		<td><?php echo translate("Reporter"); ?>:</td>
-		<?php if (isset($perm) and $perm->have_perm_proj($project_id)) { ?>
+		<?php if ($is_admin) { ?>
 			<td><select name="created_by"><?php build_select('reporter', $created_by) ?></select></td>
 		<?php } else { ?>
 			<td><b><?php echo maskemail($reporter); ?></b></td>
@@ -87,26 +98,26 @@
 		<td><b><?php echo date(DATE_FORMAT, $created_date) ?></b></td>
 	</tr><tr>
 		<td><?php echo translate("Project"); ?>:</td>
-		<?php if ($may_edit) { ?>
+		<?php if ($may_change_project) { ?>
 			<td><select name="project_id" onChange="updateMenus(this.form)"><?php build_select('project', $project_id) ?></select></td>
 		<?php } else { ?>
 			<td><?php echo lookup('project', $project_id); ?></td>
 		<?php } ?>
 		<td><?php echo translate("Priority"); ?>:</td>
-		<?php if ($may_edit) { ?>
+		<?php if ($may_change_priority or $may_manage) { ?>
 			<td><select name="priority"><?php build_select('priority', $priority) ?></select></td>
 		<?php } else { ?>
 			<td><?php echo lookup('priority', $priority); ?></td>
 		<?php } ?>
 	</tr><tr>
 		<td><?php echo translate("Component"); ?>:</td>
-		<?php if ($may_edit) { ?>
+		<?php if ($may_change_component) { ?>
 			<td><select name="component_id"><?php build_select('component', $component_id, $project_id) ?></select></td>
 		<?php } else { ?>
 			<td><?php echo lookup('component', $component_id); ?></td>
 		<?php } ?>
 		<td><?php echo translate("Severity"); ?>:</td>
-		<?php if ($may_edit) { ?>
+		<?php if ($may_change_severity or $may_manage) { ?>
 			<td><select name="severity_id"><?php build_select('severity', $severity_id) ?></select></td>
 		<?php } else { ?>
 			<td><?php echo lookup('severity', $severity_id); ?></td>
@@ -126,7 +137,7 @@
 		<?php } ?>
 	</tr><tr>
 		<td><?php echo translate("To be closed in version"); ?></td>
-		<?php if ($may_close) { ?>
+		<?php if ($may_close or $may_manage) { ?>
 			<td><select name="to_be_closed_in_version_id">
 				<option value="0"><?php echo translate("Choose one"); ?></option>
 				<?php build_select('version', $to_be_closed_in_version_id, $project_id) ?>
@@ -142,7 +153,7 @@
 		<?php } ?>
 	</tr><tr>
 		<td><?php echo translate("Closed in version"); ?></td>
-		<?php if ($may_close) { ?>
+		<?php if ($may_close or $may_manage) { ?>
 			<td><select name="closed_in_version_id">
 				<option value="0"><?php echo translate("Choose one"); ?></option>
 				<?php build_select('version', $closed_in_version_id, $project_id) ?>
@@ -164,7 +175,7 @@
 			<td><?php echo stripslashes(htmlspecialchars($title)); ?></td>
 		<?php } ?>
 		<td><?php echo translate("Status"); ?>:</td>
-		<?php if ($may_edit) { ?>
+		<?php if ($may_change_status or $may_manage) { ?>
 			<td><select name="status_id"><?php build_select('status', $status_id, $project_id, true); ?></select></td>
 		<?php } else { ?>
 			<td><?php echo lookup('status', $status_id); ?></td>
@@ -177,22 +188,22 @@
 			<td><?php echo $url; ?></td>
 		<?php } ?>
 		<td><?php echo translate("Resolution"); ?>:</td>
-		<?php if ($may_close) { ?>
+		<?php if ($may_close or $may_change_resolution or $may_manage) { ?>
 			<td><select name="resolution_id"><option value="0"><?php echo translate("None"); ?></option><?php build_select('resolution', $resolution_id) ?></select></td>
 		<?php } else { ?>
 			<td><?php echo lookup('resolution', $resolution_id); ?></td>
 		<?php } ?>
 	</tr><tr>
 		<td><?php echo translate("Assigned to"); ?>:</td>
-		<?php if (isset($perm) && ($perm->have_perm('EditAssignment') or $perm->have_perm_proj($project_id))) { ?>
+		<?php if ($may_change_assignment or $may_manage) { ?>
 		<td><select name="assigned_to"><option value="0"><?php echo translate("None"); ?></option><?php build_select('owner', $assigned_to) ?></select></td>
 		<?php } else { ?>
 		<td>
-			<?php echo lookup('assigned_to', $assigned_to); ?>
+			<?php echo $assigned_to ? lookup('assigned_to', $assigned_to) : ""; ?>
 			<input type="hidden" name="assigned_to" value="<?php echo $assigned_to ?>">
 		</td>
 		<?php } ?>
-		<?php if (isset($perm)) { ?>
+		<?php if ($is_user) { ?>
 			<td><?php echo translate("Add CC"); ?>:</td>
 			<td><input type="text" name="add_cc"></td>
 		<?php } ?>
@@ -200,6 +211,7 @@
 		<td colspan="2" valign="top">
 			<br>
 		<?php if (!empty($error['add_dep'])) echo "<div class=\"error\">{$error['add_dep']}</div>"; ?>
+		<?php if (!empty($bug_dependencies)) { ?>
 		<?php echo translate("Depends on bugs"); ?>: 
 			<?php for ($i = 0, $count = count($bug_dependencies); $i < $count; $i++) {
 				printf('<a href="bug.php?op=show&bugid=%d" class="%s">#%d</a>%s', 
@@ -209,6 +221,8 @@
 					($i < $count - 1 ? ', ' : ''));
 			} ?>
 			<br>
+		<?php } ?>
+		<?php if (!empty($bug_blocks)) { ?>
 		<?php echo translate("Blocks bugs"); ?>:  
 			<?php for ($i = 0, $count = count($bug_blocks); $i < $count; $i++) {
 				printf('<a href="bug.php?op=show&bugid=%d" class="%s">#%d</a>%s', 
@@ -218,6 +232,8 @@
 					($i < $count - 1 ? ', ' : ''));
 			} ?>
 			<br>
+		<?php } ?>
+		<?php if (!empty($bug_duplicates)) { ?>
 		<?php echo translate("Duplicates"); ?>: 
 			<?php for ($i = 0, $count = count($bug_duplicates); $i < $count; $i++) {
 				if (isset($bug_duplicates[$i])) {
@@ -229,7 +245,8 @@
 				}
 			} ?>
 			<br>
-		<?php if ($may_edit) { ?>
+		<?php } ?>
+		<?php if ($may_manage or $is_owner or $is_assignee) { ?>
 			<br>
 			<?php echo translate("Add dependency"); ?>: <input type="text" name="add_dependency" size="5"><br>
 			<?php echo translate("Remove dependency"); ?>: <input type="text" name="del_dependency" size="5"><br>
@@ -241,7 +258,7 @@
 		<?php } ?>
 		</td>
 		<td colspan="2" valign="top">
-		<?php if (isset($perm)) { ?>
+		<?php if ($is_user) { ?>
 			<?php echo translate("Remove selected CCs"); ?>:<br>
 			<select name="remove_cc[]" size="5" style="width: 15em" multiple><?php build_select('bug_cc', $bug_id, $project_id) ?></select>
 		<?php } ?>
@@ -249,13 +266,13 @@
 	</tr>
 	</table>
 	<table border="0" cellpadding="2" cellspacing="0" width="100%">
-	<?php if (isset($perm)) { ?>
+	<?php if ($may_add_comment) { ?>
 	<tr class="noprint">
 		<td valign="top"><br><?php echo translate("Additional comments"); ?>:<br>
 		<textarea name="comments" rows="6" cols="55" wrap="virtual"><?php echo isset($_POST['comments']) ? $_POST['comments'] : ''; ?></textarea>
 		<br><br>
 		<div align="right">
-		<?php if (!empty($_SESSION['uid'])) { ?>
+		<?php if ($may_edit or $may_add_comment) { ?>
 			<?php echo translate("Supress notification email"); ?> <input type="checkbox" name="suppress_email" value="1">
 			<input type="submit" value="Submit">
 		<?php } else echo translate("You must login to modify this bug"); ?>
@@ -299,7 +316,7 @@
 					<td align="center"><?php echo $attachments[$i]['mime_type']; ?></td>
 					<td align="center"><?php echo date(DATE_FORMAT, $attachments[$i]['created_date']); ?></td>
 					<td align="center"><a href='attachment.php?attachid=<?php echo $attachments[$i]['attachment_id']; ?>'>View</a>
-					<?php if (isset($perm) and $perm->have_perm_proj($project_id)) { ?>
+					<?php if ($is_admin or $may_manage) { ?>
 						| <a href='attachment.php?del=<?php echo $attachments[$i]['attachment_id']; ?>' onClick="return confirm('<?php echo translate("Are you sure you want to delete this attachment?"); ?>');"><?php echo translate("Delete"); ?></a>
 					<?php } ?>
 					</td>
@@ -357,7 +374,7 @@
 		<td><?php echo format_comments($comments[$i]['comment_text']); ?> <br><br></td>
 		</tr>
 	<?php } ?>
-	<?php if (isset($perm) && $perm->have_perm_proj($project_id)) { ?>
+	<?php if ($is_admin) { ?>
 		<tr class="noprint">
 		<td>
 			<div align="right">
