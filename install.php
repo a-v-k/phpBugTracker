@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.55 2005/09/30 21:56:53 ulferikson Exp $
+// $Id: install.php,v 1.56 2005/11/09 20:41:20 ulferikson Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -84,7 +84,9 @@ $db_types = array(
 	'mysql' => 'MySQL < 4.1',
 	'mysqli' => 'MySQL >= 4.1',
 	'oci8' => 'Oracle 8.1.x',
-	'pgsql' => 'PostgreSQL');
+	'pgsql' => 'PostgreSQL',
+	'mssql' => 'Microsoft SQL Server',
+	);
 
 @ini_set("magic_quotes_runtime", 0); // runtime quotes will kill the included sql
 @ini_set("magic_quotes_sybase", 0);
