@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.44 2005/09/03 16:41:48 ulferikson Exp $
+// $Id: upgrade.php,v 1.45 2005/11/09 20:40:20 ulferikson Exp $
 
 define ('NO_AUTH', 1);
 define ('THEME', 'default');
@@ -101,6 +101,15 @@ function upgrade() {
 	if (!$upgraded) {
 		switch(DB_TYPE) {
 			case 'pgsql' :
+				if (true) {
+					$comment_text .= "<div class=\"error\">Upgrading of old installs is still unsupported</div>";
+
+					$comment_text .= "<p>An upgrade script has been written, but it is completely UNTESTED! Proceed At Your Own Risk...</p>";
+					$comment_text .= "<p>Don't forget to report your success (or failure) story to <a href=\"mailto:phpbt-dev@lists.sourceforge.net\">phpbt-dev@lists.sourceforge.net</a> if you do proceed. We have interest in detailed error reports and patches from people who use PostgreSQL.</p>";
+					include 'templates/default/upgrade-finished.html';
+					exit;
+				}
+
 				log_query("create table ".TBL_PROJECT_PERM." ( project_id INT4 NOT NULL DEFAULT '0', user_id INT4 NOT NULL DEFAULT '0' )");
 				if ($thisvers < 2) {
 					log_query("alter table ".TBL_AUTH_GROUP." ADD assignable INT2");
@@ -124,17 +133,31 @@ function upgrade() {
 					log_query("create table ".TBL_PRIORITY."( priority_id INT4  NOT NULL DEFAULT '0', priority_name varchar(30) NOT NULL DEFAULT '', priority_desc TEXT DEFAULT '' NOT NULL, sort_order INT2  NOT NULL DEFAULT '0', priority_color varchar(10) NOT NULL DEFAULT '#FFFFFF', PRIMARY KEY  (priority_id) )");
 					log_query("create table ".TBL_BOOKMARK."( user_id INT4  NOT NULL DEFAULT '0', bug_id INT4  NOT NULL DEFAULT '0' )");
 
-					log_query('ALTER TABLE '.TBL_COMPONENT.' ADD sort_order INT2');
+					log_query("ALTER TABLE ".TBL_COMPONENT." ADD sort_order INT2");
 					log_query("ALTER TABLE ".TBL_COMPONENT." alter sort_order set DEFAULT 0");
 					log_query("ALTER TABLE ".TBL_COMPONENT." alter sort_order set NOT NULL");
-					log_query('ALTER TABLE '.TBL_VERSION.' ADD sort_order INT2');
+					log_query("ALTER TABLE ".TBL_VERSION." ADD sort_order INT2");
 					log_query("ALTER TABLE ".TBL_VERSION." alter sort_order set DEFAULT 0");
 					log_query("ALTER TABLE ".TBL_VERSION." alter sort_order set NOT NULL");
 					log_query("CREATE SEQUENCE ".TBL_PRIORITY."_seq START 6");
+					log_query("ALTER TABLE ".TBL_AUTH_GROUP." ADD is_role INT2");
+					log_query("ALTER TABLE ".TBL_AUTH_GROUP." alter is_role set DEFAULT 0");
+					log_query("ALTER TABLE ".TBL_AUTH_GROUP." alter is_role set NOT NULL");
+					log_query("DROP SEQUENCE ".TBL_AUTH_GROUP."_seq");
+					log_query("CREATE SEQUENCE ".TBL_AUTH_GROUP."_seq START 10");
 				}
 				break;
 			case 'mysqli' :
 			case 'mysql' :
+				if (true) {
+					$comment_text .= "<div class=\"error\">Upgrading of old installs is still unsupported</div>";
+
+					$comment_text .= "<p>An upgrade script has been written, but it is completely UNTESTED! Proceed At Your Own Risk...</p>";
+					$comment_text .= "<p>Don't forget to report your success (or failure) story to <a href=\"mailto:phpbt-dev@lists.sourceforge.net\">phpbt-dev@lists.sourceforge.net</a> if you do proceed. We have interest in detailed error reports and patches from people who use MySQL.</p>";
+					include 'templates/default/upgrade-finished.html';
+					exit;
+				}
+
 				log_query("create table if not exists ".TBL_PROJECT_PERM." ( project_id int(11) NOT NULL default '0', user_id int(11) NOT NULL default '0' )");
 				if ($thisvers < 2) {
 					log_query("alter table ".TBL_AUTH_GROUP." ADD assignable TINYINT DEFAULT 0 NOT NULL AFTER locked");
@@ -152,13 +175,17 @@ function upgrade() {
 					log_query("alter table ".TBL_VERSION." ADD sort_order tinyint(3) unsigned NOT NULL default '0' AFTER active");
 					log_query("CREATE TABLE IF NOT EXISTS ".TBL_PRIORITY."_seq (id int unsigned auto_increment not null primary key)");
 					log_query("INSERT INTO ".TBL_PRIORITY."_seq values (5)");
+					log_query("alter table ".TBL_AUTH_GROUP." ADD is_role tinyint(1) unsigned NOT NULL default '0'");
+					log_query("DROP TABLE ".TBL_AUTH_GROUP."_seq");
+					log_query("CREATE TABLE IF NOT EXISTS ".TBL_AUTH_GROUP."_seq (id int unsigned auto_increment not null primary key)");
+					log_query("INSERT INTO ".TBL_AUTH_GROUP."_seq values (9)");
 				}
 				break;
 			case 'oci8' :
 				if (true) {
-					$comment_text .= "<div class=\"error\">Oracle is not supported in version 1.0</div>";
+					$comment_text .= "<div class=\"error\">Upgrading of old installs is still unsupported</div>";
 
-					$comment_text .= "<p>An attempt to restore Oracle support has been made (by copy-paste-and-edit), but it is completely UNTESTED! Proceed At Your Own Risk...</p>";
+					$comment_text .= "<p>An upgrade script has been written, but it is completely UNTESTED! Proceed At Your Own Risk...</p>";
 					$comment_text .= "<p>Don't forget to report your success (or failure) story to <a href=\"mailto:phpbt-dev@lists.sourceforge.net\">phpbt-dev@lists.sourceforge.net</a> if you do proceed. We have interest in detailed error reports and patches from people who use Oracle.</p>";
 					include 'templates/default/upgrade-finished.html';
 					exit;
@@ -180,6 +207,9 @@ function upgrade() {
 					log_query("ALTER TABLE ".TBL_COMPONENT." ADD ( sort_order number(3) default '0' NOT NULL )");
 					log_query("ALTER TABLE ".TBL_VERSION." ADD ( sort_order number(3) default '0' NOT NULL )");
 					log_query("CREATE SEQUENCE ".TBL_PRIORITY."_seq START WITH 6 NOCACHE");
+					log_query("ALTER TABLE ".TBL_AUTH_GROUP." ADD ( is_role number(1) default '0' NOT NULL )");
+					log_query("DROP SEQUENCE ".TBL_AUTH_GROUP."_seq");
+					log_query("CREATE SEQUENCE ".TBL_AUTH_GROUP."_seq START WITH 10 NOCACHE");
 				}
 				break;
 		}
@@ -200,8 +230,54 @@ function upgrade() {
 		}
 
 		if ($thisvers < 5) {
+			log_query("DELETE FROM ".TBL_AUTH_GROUP." WHERE 1");
+			log_query("DELETE FROM ".TBL_AUTH_PERM." WHERE 1");
+			log_query("DELETE FROM ".TBL_GROUP_PERM." WHERE 1");
+			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, locked) VALUES (1, 'Admin', 1)");
+			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, locked) VALUES (2, 'User', 1)");
+			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, locked) VALUES (3, 'Developer', 1)");
+			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, locked) VALUES (4, 'Manager', 1)");
+			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, is_role, locked) VALUES (5, 'Guest', 1, 1)");
+			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, is_role, locked) VALUES (6, 'User', 1, 1)");
+			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, is_role, locked) VALUES (7, 'Reporter', 1, 1)");
+			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, is_role, locked) VALUES (8, 'Assignee', 1, 1)");
+			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, is_role, locked) VALUES (9, 'Owner', 1, 1)");
+			log_query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (1, 'Admin')");
+			log_query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (2, 'AddBug')");
+			log_query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (3, 'EditAssignment')");
 			log_query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (4, 'Assignable')");
-			$comment_text .= "You must set your developer group(s) to be Assignable by visiting the \"Groups\" page within the Administration Pages.<br><br>\n";
+			log_query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (5, 'EditBug')");
+			log_query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (6, 'CloseBug')");
+			log_query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (7, 'CommentBug')");
+			log_query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (8, 'EditPriority')");
+			log_query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (9, 'EditStatus')");
+			log_query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (10, 'EditSeverity')");
+			log_query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (11, 'EditResolution')");
+			log_query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (12, 'EditProject')");
+			log_query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (13, 'EditComponent')");
+			log_query("INSERT INTO ".TBL_AUTH_PERM." (perm_id, perm_name) VALUES (14, 'ManageBug')");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (1, 1)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (5, 7)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (6, 2)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (7, 5)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (7, 10)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (3, 4)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (3, 5)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (8, 8)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (8, 9)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (8, 11)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (4, 3)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (4, 6)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (4, 12)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (4, 13)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (4, 14)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (9, 6)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (9, 7)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (9, 8)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (9, 9)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (9, 10)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (9, 11)");
+			log_query("INSERT INTO ".TBL_GROUP_PERM." (group_id, perm_id) VALUES (9, 13)");
 			log_query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('USE_PRIORITY_COLOR','0','Should the query list use the priority colors as the row background color','bool')");
 			log_query("INSERT INTO ".TBL_PRIORITY." VALUES (1,'Low','Fix if possible',1,'#dadada')");
 			log_query("INSERT INTO ".TBL_PRIORITY." VALUES (2,'Medium Low','Must fix before final',2,'#dad0d0')");
@@ -209,6 +285,7 @@ function upgrade() {
 			log_query("INSERT INTO ".TBL_PRIORITY." VALUES (4,'Medium High','Fix as soon as possible',4,'#dab0b0')");
 			log_query("INSERT INTO ".TBL_PRIORITY." VALUES (5,'High','Fix immediately',5,'#daaaaa')");
 			log_query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('NEW_ACCOUNTS_GROUP', 'User', 'The group assigned to new user accounts', 'string')");
+			log_query("INSERT INTO ".TBL_AUTH_USER." (user_id, login, first_name, last_name, email, password, active) values (0, 'Anonymous User', 'Anonymous', 'User', '', '', 0)");
 		}
 
 		/* update to current DB_VERSION */
