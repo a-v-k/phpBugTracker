@@ -48,3 +48,14 @@ Using the directory where you unpacked the new set of files...
    point your users to the new location.
    
 There is no need to run the upgrade script.  The upgrade is complete.
+
+
+Upgrading from 1.0.1 to developer CVS
+-------------------------------------
+You can recycle your old "config.php", however first change
+	define ('CUR_DB_VERSION', 4);
+to
+	define ('CUR_DB_VERSION', 5);
+Then after first login, run "upgrade.php" to update the database schema.
+"upgrade.php" is not yet complete, so you'll have to do some hacking.
+
