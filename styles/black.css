@@ -1,3 +1,4 @@
+/* Validated with http://jigsaw.w3.org/css-validator/ */
 body { 
   font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
 	font-size: 12px; 
@@ -162,7 +163,7 @@ a.sidenavlink {
 	border-style: solid;
 	padding: 5px;
 	cursor: pointer;
-	cursor: hand;
+	cursor: hand;	/* IE5 Hack */
 	}
 	
 .navbox {
@@ -177,7 +178,7 @@ a.sidenavlink {
 	border-style: solid;
 	padding: 5px;
 	cursor: pointer;
-	cursor: hand;
+	cursor: hand;	/* IE5 Hack */
 	}
 	
 .navboxselected {
@@ -192,7 +193,7 @@ a.sidenavlink {
 	border-style: solid;
 	padding: 5px;
 	cursor: pointer;
-	cursor: hand;
+	cursor: hand;	/* IE5 Hack */
 	}
 	
 .maincontent {

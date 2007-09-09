@@ -1,3 +1,4 @@
+/* Validated with http://jigsaw.w3.org/css-validator/ */
 body {
   font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif";
 	font-size: 12px;
@@ -92,7 +93,7 @@ textarea {
 
 .bottomnavinput {
 	vertical-align: middle;
-	color: #00000;
+	color: #000000;
 	font-family: "Arial", sans-serif;
 	font-size: 10px;
 	}
