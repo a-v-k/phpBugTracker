@@ -59,3 +59,6 @@ to
 Then after first login, run "upgrade.php" to update the database schema.
 "upgrade.php" is not yet complete, so you'll have to do some hacking.
 
+Known issue: the "bug list columns" from your personal page may not be
+fully compatible.  If you get a missing column name in a DB query, try
+saving this page again.
