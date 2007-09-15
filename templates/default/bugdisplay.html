@@ -71,8 +71,9 @@
 	<input type="hidden" name="pos" value="<?php echo isset($_REQUEST['pos']) ? $_REQUEST['pos'] : ''; ?>">
 	<table border="0" width="100%">
 	<tr>
-		<td>Bug <b>#<?php echo $bug_id ?></b> - <?php echo stripslashes($title) ?> - <a href="query.php"><?php echo translate("Return to bug list"); ?></a></td>
+		<td>Bug <b>#<?php echo $bug_id ?></b> - <?php echo stripslashes($title) ?></td>
 		<td align="right">
+        <b><a href="query.php"><?php echo translate("Return to bug list"); ?></a></b>&nbsp;|&nbsp;
 		<?php if (!empty($prevbug)) { ?>
 			<b><a href="bug.php?op=show&bugid=<?php echo $prevbug ?>&pos=<?php echo $prevpos ?>"><?php echo translate("Previous bug"); ?></a></b>
 		<?php } ?>
