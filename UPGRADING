@@ -1,16 +1,13 @@
 First, backup your database!  This upgrade should go smoothly, but
 if it doesn't, it's better to be safe than sorry.
 
-
 Upgrading from 0.9.1 to 1.0
 ---------------------------
-
 PEAR and PEAR DB have been removed from the phpBT distribution. If you
 have a  system-wide install of PEAR  that is available  in the include
 path you  should set  the new PEAR_PATH  constant in config.php  to an
 empty string  ('').  To reuse the  old pear files from 0.9.1, copy the
 inc/pear/ directory from phpBT 0.9.1 and set PEAR_PATH to 'inc/pear/'.
-
 
 Following the steps below will upgrade your installation of phpBT.
 
@@ -33,7 +30,6 @@ statuses are set to open.
 
 Upgrading from 1.0 RCx to 1.0 RC6
 ---------------------------------
-
 PEAR and PEAR DB have been removed from the phpBT distribution. If you
 have a  system-wide install of PEAR  that is available  in the include
 path you  should set  the new PEAR_PATH  constant in config.php  to an
@@ -50,15 +46,13 @@ Using the directory where you unpacked the new set of files...
 There is no need to run the upgrade script.  The upgrade is complete.
 
 
-Upgrading from 1.0.1 to developer CVS
--------------------------------------
-You can recycle your old "config.php", however first change
-	define ('CUR_DB_VERSION', 4);
-to
-	define ('CUR_DB_VERSION', 5);
-Then after first login, run "upgrade.php" to update the database schema.
-"upgrade.php" is not yet complete, so you'll have to do some hacking.
+Upgrading from 1.0.1 to 1.0.2
+-----------------------------
+It is best to delete your old "config.php" and make a new one.  Start
+with "config-dist.php", and copy over your database connection parameters.
+Sorry this is not more automated.
 
-Known issue: the "bug list columns" from your personal page may not be
-fully compatible.  If you get a missing column name in a DB query, try
-saving this page again.
+Known issue: if you are logged in to your old version of phpBugTracker,
+you'll get database errors on the "bookmark" feature of the new phpBugTracker.
+Log out of both versions, and log back in to just one of them.
+

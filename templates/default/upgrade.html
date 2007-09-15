@@ -6,7 +6,11 @@
 		<div align="center">
 			<br>
 			<br>
-			<?php printf(translate('This script will upgrade your database from version %s to version %s of phpBugTracker.'), '1.0.x', '1-devel'); ?>
+			<?php printf(translate('This script will upgrade your phpBugTracker database to version %s.'), $new_db_rev); ?>
+			<br>
+			<?php printf(translate('Please back up your database before running this script.')); ?>
+			<br>
+			<?php printf(translate('Before running this script: delete your old config.php and rebuild it.')); ?>
 			<br>
 			<br>
 			<a href="<?php echo $HTTP_SERVER_VARS['PHP_SELF']; ?>?doit=1"><?php echo translate('Do it!'); ?></a>

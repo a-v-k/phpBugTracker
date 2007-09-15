@@ -1,13 +1,11 @@
 Ok, here's the quick and dirty install instructions:
 
-Required: You must have PEAR and PEAR DB installed. If PEAR is not in the
-include path, edit install.php in the test_database function, supplying the full
-path to PEAR for the PEAR_PATH constant.
-   
-Optional: Install JpGraph (http://www.aditus.nu/jpgraph/) if you wish to use it.
-	 
-1. Copy the directory tree from the tarball to a location suitable for serving
-   web pages.
+Required: You must have PEAR and PEAR DB installed (See http://pear.php.net/).
+If PEAR is not in the include path, edit install.php in the test_database
+function, supplying the full path to PEAR for the PEAR_PATH constant.
+ 
+Then:
+1. Copy the directory tree to a location suitable for serving web pages.
 	 
 2. With your web browser, go the location where you installed the package. 
    You will be presented with a web page that will help you configure and 
@@ -15,5 +13,10 @@ Optional: Install JpGraph (http://www.aditus.nu/jpgraph/) if you wish to use it.
 
 3. After completing the installation, login and start reporting bugs.
 
-* Note: You must have magic_quotes_gpc set to On either in php.ini or in 
+Note:
+You must have magic_quotes_gpc set to On either in php.ini or in 
 .htaccess (see http://www.php.net/manual/en/configuration.php for more info).
+
+Optional:
+Install JpGraph (http://www.aditus.nu/jpgraph/) if you wish to use it.
+Install Spreadsheet_Excel_Writer for bug list download support.

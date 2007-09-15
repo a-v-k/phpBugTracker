@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.45 2005/11/09 20:40:20 ulferikson Exp $
+// $Id: upgrade.php,v 1.46 2007/09/15 23:35:21 brycen Exp $
 
 define ('NO_AUTH', 1);
 define ('THEME', 'default');
@@ -101,7 +101,7 @@ function upgrade() {
 	if (!$upgraded) {
 		switch(DB_TYPE) {
 			case 'pgsql' :
-				if (true) {
+				if (false) {
 					$comment_text .= "<div class=\"error\">Upgrading of old installs is still unsupported</div>";
 
 					$comment_text .= "<p>An upgrade script has been written, but it is completely UNTESTED! Proceed At Your Own Risk...</p>";
@@ -149,7 +149,7 @@ function upgrade() {
 				break;
 			case 'mysqli' :
 			case 'mysql' :
-				if (true) {
+				if (false) {
 					$comment_text .= "<div class=\"error\">Upgrading of old installs is still unsupported</div>";
 
 					$comment_text .= "<p>An upgrade script has been written, but it is completely UNTESTED! Proceed At Your Own Risk...</p>";
@@ -185,7 +185,7 @@ function upgrade() {
 				if (true) {
 					$comment_text .= "<div class=\"error\">Upgrading of old installs is still unsupported</div>";
 
-					$comment_text .= "<p>An upgrade script has been written, but it is completely UNTESTED! Proceed At Your Own Risk...</p>";
+					$comment_text .= "<p>An Oracle upgrade script has been written, but it is completely UNTESTED! Proceed At Your Own Risk...</p>";
 					$comment_text .= "<p>Don't forget to report your success (or failure) story to <a href=\"mailto:phpbt-dev@lists.sourceforge.net\">phpbt-dev@lists.sourceforge.net</a> if you do proceed. We have interest in detailed error reports and patches from people who use Oracle.</p>";
 					include 'templates/default/upgrade-finished.html';
 					exit;
@@ -301,13 +301,17 @@ function upgrade() {
 		$comment_text .= "Nothing to do...<br>\n";
 	}
 
+	$comment_text .= "<br/><br/><font size='-1'>$log_text</font>" ;
+
 	include 'templates/default/upgrade-finished.html';
 }
 
 if (isset($_GET['doit'])) {
 	upgrade();
 } else {
-	include 'templates/default/upgrade.html';
+    $old_db_rev = "1.0.x";
+    $new_db_rev = "5";
+	include('templates/default/upgrade.html');
 }
 
 ?>

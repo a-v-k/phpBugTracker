@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.157 2005/10/31 21:34:35 ulferikson Exp $
+// $Id: bug.php,v 1.158 2007/09/15 23:35:21 brycen Exp $
 
 include 'include.php';
 
@@ -788,7 +788,7 @@ function show_bug_printable($bugid) {
 	if (!is_numeric($bugid) or
 		!$row = $db->getRow(sprintf($QUERY['bug-printable'], $bugid,
 		$restricted_projects))) {
-		show_text(translate("That bug does not exist"), true);
+		show_text(translate("That bug does not exist, or you don't have permission to view it."), true);
 		exit;
 	}
 
@@ -867,7 +867,7 @@ function show_bug($bugid = 0, $error = array()) {
 	if (!ereg('^[0-9]+$',$bugid) or
 		!$row = $db->getRow(sprintf($QUERY['bug-show-bug'], $bugid,
 			$restricted_projects))) {
-		show_text(translate("That bug does not exist"), true);
+		show_text(translate("That bug does not exist, or you don't have permission to view it."), true);
 		return;
 	}
 

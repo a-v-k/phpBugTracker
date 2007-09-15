@@ -1,4 +1,9 @@
--- 1.x -- 
+-- 1.0.2 2007 September
+: Applied various patches from sourceforge
+: Changed password login to preserve original URL (e.g. from an email link). Nice.
+: Fixed various CCS and HTML syntax or validation errors
+
+-- 1.x devel -- 
 : Moved priority levels into a table
 : Changed the 'Assignable' bit to a group permission
 : Added sort-order to components and versions
@@ -14,6 +19,9 @@
 : Allow admins and project admins to change reporter
 : Added support to mark bugs as duplicates of each other
 : Added several new permissions and a set of "user roles"
+
+-- 1.0.1 -- 14 September 2005
+: Fixed mysqli database adapter. 
 
 -- 1.0 -- 3 Aug 2005
 : Added links from project summary on home page (Phil Davis).

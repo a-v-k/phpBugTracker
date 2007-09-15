@@ -19,19 +19,19 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.42 2005/06/04 21:48:26 bcurtis Exp $
+// $Id: config.php,v 1.43 2007/09/15 23:35:21 brycen Exp $
 
 // Database Config
 define ('DB_TYPE', 'mysql');  // using PEAR::DB naming (mysql, pgsql, etc.)
 define ('DB_HOST', 'localhost'); // hostname of database server
-define ('DB_DATABASE', 'bug_tracker'); // database name
-define ('DB_USER', ''); // username for database connection
-define ('DB_PASSWORD', ''); // password for database connection
+define ('DB_DATABASE', 'phpbt2'); // database name
+define ('DB_USER', 'phpbt-test'); // username for database connection
+define ('DB_PASSWORD', 'phpbt-test'); // password for database connection
 
 // Database Table Config
 // you can change either the prefix of the table names or each table name individually
-define ('CUR_DB_VERSION', 4); // the version of the database
-define ('TBL_PREFIX', '');	// the prefix for all tables, leave empty to use the old style
+define ('CUR_DB_VERSION', 5);  // The version of the database
+define ('TBL_PREFIX', 'phpbt_');	// the prefix for all tables, leave empty to use the old style
 
 define ('TBL_ACTIVE_SESSIONS', TBL_PREFIX.'active_sessions');
 define ('TBL_DB_SEQUENCE',     TBL_PREFIX.'db_sequence');
@@ -63,10 +63,24 @@ define ('TBL_PROJECT_GROUP',   TBL_PREFIX.'project_group');
 define ('TBL_PROJECT_PERM',    TBL_PREFIX.'project_perm');
 define ('TBL_DATABASE',	       TBL_PREFIX.'database_server');
 define ('TBL_SITE',            TBL_PREFIX.'site');
+// New stuff for database DB_VERSION 5
+define ('TBL_BOOKMARK',	       TBL_PREFIX.'bookmark');
+define ('TBL_PRIORITY',        TBL_PREFIX.'priority');
 
+// Constants
 define ('ONEDAY', 86400);
 
-define('PEAR_PATH', ''); // Set this to '/some/path/' to not use system-wide PEAR
+define('PEAR_PATH', ''); // If other than the system-wide PEAR (See http://pear.php.net/)
 require_once (dirname(__FILE__).'/inc/auth.php');
+
+// Mail parameters
+define('SMTP_EMAIL', false);
+define('SMTP_HOST', "localhost");
+define('SMTP_PORT', 25);
+define('SMTP_HELO', null);
+define('SMTP_AUTH', false);
+define('SMTP_AUTH_USER', "");
+define('SMTP_AUTH_PASS', "");
+define('RETURN_PATH', null);
 
 ?>
