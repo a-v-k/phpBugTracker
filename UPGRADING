@@ -52,6 +52,9 @@ It is best to delete your old "config.php" and make a new one.  Start
 with "config-dist.php", and copy over your database connection parameters.
 Sorry this is not more automated.
 
+Now, run the "upgrade.php" script to upgrade your database from version 4
+to version 5.  The main new tables are for bookmarks and groups.
+
 Known issue: if you are logged in to your old version of phpBugTracker,
 you'll get database errors on the "bookmark" feature of the new phpBugTracker.
 Log out of both versions, and log back in to just one of them.

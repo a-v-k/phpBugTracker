@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.46 2007/09/15 23:35:21 brycen Exp $
+// $Id: upgrade.php,v 1.47 2007/09/16 05:38:28 brycen Exp $
 
 define ('NO_AUTH', 1);
 define ('THEME', 'default');
@@ -45,7 +45,7 @@ function log_query($str) {
 
 	$log_text .= "SQL: " . $str . "<br>\n";
 	$result = $db->query($str);
-	if (DB::isError($result)) {
+	if (DB::isError($result)) { // DB::isError() should not be called statically
 		$num_errors = $num_errors + 1;
 	}
 	$log_text .= "<br>\n";

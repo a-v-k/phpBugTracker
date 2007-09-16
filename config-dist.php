@@ -19,7 +19,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config-dist.php,v 1.38 2007/09/15 23:35:21 brycen Exp $
+// $Id: config-dist.php,v 1.39 2007/09/16 05:38:28 brycen Exp $
 
 // Database Config
 define ('DB_TYPE', '{db_type}');  // using PEAR::DB naming (mysql, pgsql, etc.)
@@ -69,7 +69,7 @@ define ('TBL_PRIORITY',        TBL_PREFIX.'priority');
 
 // Constants
 define ('ONEDAY', 86400);
-define('PEAR_PATH', ''); // If other than the system-wide PEAR (See http://pear.php.net/)
+define('PEAR_PATH', ''); // Blank, or path to Pear::DB library directory containing DB.php (See http://pear.php.net/)
 require_once (dirname(__FILE__).'/inc/auth.php');
 
 // Mail parameters

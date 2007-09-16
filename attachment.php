@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.26 2005/08/27 13:14:28 ulferikson Exp $
+// $Id: attachment.php,v 1.27 2007/09/16 05:38:28 brycen Exp $
 
 include 'include.php';
 
@@ -99,12 +99,12 @@ function add_attachment($bugid, $description) {
 	$filename = "$bugid-{$_FILES['attachment']['name']}";
 
 	if (!is_dir($filepath)) {
-		show_attachment_form($bugid, translate("Couldn't find where to save the file!"));
+		show_attachment_form($bugid, translate("Couldn't find where to save the file!" . " (" .$filepath . ")"));
 		return;
 	}
 
 	if (!is_writeable($filepath)) {
-		show_attachment_form($bugid, translate("Couldn't create a file in the save path"));
+		show_attachment_form($bugid, translate("Couldn't create a file in the save path" . " (" .$filepath . ")"));
 		return;
 	}
 
