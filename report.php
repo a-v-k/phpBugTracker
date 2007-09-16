@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: report.php,v 1.27 2004/10/25 12:06:58 bcurtis Exp $  
+// $Id: report.php,v 1.28 2007/09/16 03:39:16 brycen Exp $  
 
 include 'include.php';
 
@@ -62,11 +62,14 @@ function resolution_by_engineer($projectid = 0) {
 	$t->render('report.html', translate("Reporting"));
 }
 
+// @deprecated
 function new_bugs_by_date($date_range) {
 	global $db, $t, $now;
 	
-	include_once("jpgraph.php");
-	include_once("jpgraph_bar.php");
+    include_once(JPGRAPH_PATH.'jpgraph.php');
+    include_once(JPGRAPH_PATH.'jpgraph_bar.php');
+	//include_once("jpgraph.php");
+	//include_once("jpgraph_bar.php");
 	
 	$colors = array('red', 'cadetblue', 'gold', 'darkmagenta');
 	
@@ -88,7 +91,7 @@ function new_bugs_by_date($date_range) {
 	$then = $now - (ONEDAY * $date_range);
 	
 	// New bugs
-	$dates = $db->getCol("select created_date from bug where created_date between $then and $now order by 1");
+	$dates = $db->getCol("select created_date from " . TBL_BUG . " where created_date between $then and $now order by 1");
 	if ($date_range == 365) {
 		$date_format = 'M Y';
 	} else {
