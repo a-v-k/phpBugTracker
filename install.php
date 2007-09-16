@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.56 2005/11/09 20:41:20 ulferikson Exp $
+// $Id: install.php,v 1.57 2007/09/16 05:11:52 brycen Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -174,6 +174,7 @@ function test_database(&$params, $testonly = false) {
 	if (!@include_once(PEAR_PATH.'DB.php')) {
 		$error_message = translate("Failed loading Pear:DB");
 		$error_info = translate("Please check your Pear installation and the defined PEAR_PATH in install.php");
+		$error_info .= " <a href='http://pear.php.net/'>http://pear.php.net/</a>";
 		include('templates/default/install-dbfailure.html');
 		exit;
 	}
