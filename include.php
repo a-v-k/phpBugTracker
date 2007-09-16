@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.141 2005/09/03 16:41:48 ulferikson Exp $
+// $Id: include.php,v 1.142 2007/09/16 01:17:39 brycen Exp $
 
 define('RAWERROR', true);
 
@@ -44,6 +44,7 @@ if (!defined('DB_HOST')) { // Installation hasn't been completed
 include ('inc/functions.php');
 
 // PEAR::DB
+// Note php5 error "Non-static method DB::isError() should not be called statically "
 require_once(PEAR_PATH.'DB.php');
 $dsn = array(
 	'phptype' => DB_TYPE,
