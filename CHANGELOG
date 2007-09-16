@@ -1,4 +1,5 @@
 -- 1.0.2 2007 September
+: Fixed for php5/jpgraph 2.2
 : Applied various patches from sourceforge
 : Changed password login to preserve original URL (e.g. from an email link). Nice.
 : Fixed various CCS and HTML syntax or validation errors

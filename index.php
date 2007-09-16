@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: index.php,v 1.42 2005/10/02 20:44:19 ulferikson Exp $
+// $Id: index.php,v 1.43 2007/09/16 03:48:29 brycen Exp $
 
 include 'include.php';
 
@@ -46,7 +46,7 @@ function build_image($restricted_projects) {
 
 	error_reporting(0); // Force this, just in case
 	if (!include_once(JPGRAPH_PATH.'jpgraph.php')) {
-		return '<span class="error">'.translate("Unable to load JPGraph").'</span>';
+		return '<span class="error">'.translate("Unable to load JPGraph").' ('.JPGRAPH_PATH.'jpgraph.php'.')</span>';
 	}
 	if (!include_once(JPGRAPH_PATH.'jpgraph_pie.php')) {
 		return '<span class="error">'.translate("Unable to load JPGraph pie class").'</span>';
