@@ -49,17 +49,20 @@
 		<?php } ?>
 	<?php } ?>
 </table>
+
 <?php include('admin/pagination.html'); ?>
+
 <div class="noprint">
 <?php if ($has_excel) { ?>
 <div align="center">
 	<a href="query.php?xl=1"><?php echo translate("Download to spreadsheet"); ?></a>
 </div>
 <?php } ?>
+
 <div align="left">
 	<a href="query.php?op=edit"><?php echo translate("Edit this query"); ?></a>
 </div>
-<?php if ($mass_update) { ?>
+<?php if (false) { // Was $mass_update. Disabled until fixed ?>
 	<hr>
 	<table border="0" width="100%" cellspacing="0" cellpadding="2">
 	<tr>
@@ -102,5 +105,6 @@
 	</tr>
 	</table>
 <?php } ?>
+
 </div>
 </form>

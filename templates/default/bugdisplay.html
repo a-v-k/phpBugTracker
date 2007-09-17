@@ -73,13 +73,12 @@
 	<tr>
 		<td>Bug <b>#<?php echo $bug_id ?></b> - <?php echo stripslashes($title) ?></td>
 		<td align="right">
-        <b><a href="query.php"><?php echo translate("Return to bug list"); ?></a></b>&nbsp;|&nbsp;
+        <b><a href="query.php"><?php echo translate("Return to bug list"); ?></a></b>
 		<?php if (!empty($prevbug)) { ?>
-			<b><a href="bug.php?op=show&bugid=<?php echo $prevbug ?>&pos=<?php echo $prevpos ?>"><?php echo translate("Previous bug"); ?></a></b>
+			<b>&nbsp;|&nbsp;&nbsp;<a href="bug.php?op=show&bugid=<?php echo $prevbug ?>&pos=<?php echo $prevpos ?>"><?php echo translate("Previous bug"); ?></a></b>
 		<?php } ?>
-		<?php if (!empty($prevbug) && !empty($nextbug)) echo ' | '; ?>
 		<?php if (!empty($nextbug)) { ?>
-			<b><a href="bug.php?op=show&bugid=<?php echo $nextbug ?>&pos=<?php echo $nextpos ?>"><?php echo translate("Next bug"); ?></a></b>
+			<b>&nbsp;|&nbsp;&nbsp;<a href="bug.php?op=show&bugid=<?php echo $nextbug ?>&pos=<?php echo $nextpos ?>"><?php echo translate("Next bug"); ?></a></b>
 		<?php } ?>
 		</td>
 	</tr>
@@ -87,6 +86,37 @@
 	</table>
 	<?php if (!empty($error['add_dep'])) echo "<div class=\"error\">{$error['add_dep']}</div>"; ?>
 	<?php if (!empty($error['vote'])) echo "<div class=\"error\">{$error['vote']}</div>" ?>
+
+    <!-- comments (the meat of the bug report) -->
+    <table border="0" cellpadding="2" cellspacing="0" width="100%">
+        <tr><td><!-- <?php echo translate("Comments"); ?>: --></td></tr>
+        <tr class="alt">
+        <td><?php echo translate("Posted by"); ?>: <?php echo maskemail($reporter); ?> <br>
+            <?php echo translate("Date"); ?>: <?php echo date(TIME_FORMAT.' '.DATE_FORMAT, $created_date); ?></td>
+        </tr><tr>
+        <td><?php echo format_comments($description); ?> <br><br></td>
+        </tr>
+        <?php for ($i = 0, $ccount = count($comments); $i < $ccount; $i++) { ?>
+            <tr class="alt">
+            <td><?php echo translate("Posted by"); ?>: <?php echo maskemail($comments[$i]['login']); ?> <br>
+                <?php echo translate("Date"); ?>: <?php echo date(TIME_FORMAT.' '.DATE_FORMAT, $comments[$i]['created_date']); ?></td>
+            </tr><tr>
+            <td><?php echo format_comments($comments[$i]['comment_text']); ?> <br><br></td>
+            </tr>
+        <?php } ?>
+        <?php if ($is_admin) { ?>
+            <tr class="noprint">
+            <td>
+                <div align="right">
+                <a href="bug.php?op=del&bugid=<?php echo $bug_id; ?>"><?php echo translate("Delete bug"); ?></a>
+                </div>
+            </td>
+            </tr>
+        <?php } ?>
+    </table>
+
+    <!-- metadata -->
+    <hr/>
 	<table border="0" width="100%" cellspacing="0" cellpadding="2">
 	<tr>
 		<td><?php echo translate("Reporter"); ?>:</td>
@@ -270,7 +300,7 @@
 	<?php if ($may_add_comment) { ?>
 	<tr class="noprint">
 		<td valign="top"><br><?php echo translate("Additional comments"); ?>:<br>
-		<textarea name="comments" rows="6" cols="55" wrap="virtual"><?php echo isset($_POST['comments']) ? $_POST['comments'] : ''; ?></textarea>
+		<textarea name="comments" rows="6" cols="79" wrap="virtual"><?php echo isset($_POST['comments']) ? $_POST['comments'] : ''; ?></textarea>
 		<br><br>
 		<div align="right">
 		<?php if ($may_edit or $may_add_comment) { ?>
@@ -357,31 +387,3 @@
 	| <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=print&bugid=<?php echo $bug_id.$posinfo; ?>"><?php echo translate("Printable View"); ?></a></b>
 -->
 </div>
-<br><br>
-<table border="0" cellpadding="2" cellspacing="0" width="100%">
-	<tr>
-	<td><?php echo translate("Comments"); ?>:</td>
-	</tr><tr class="alt">
-	<td><?php echo translate("Posted by"); ?>: <?php echo maskemail($reporter); ?> <br>
-		<?php echo translate("Date"); ?>: <?php echo date(TIME_FORMAT.' '.DATE_FORMAT, $created_date); ?></td>
-	</tr><tr>
-	<td><?php echo format_comments($description); ?> <br><br></td>
-	</tr>
-	<?php for ($i = 0, $ccount = count($comments); $i < $ccount; $i++) { ?>
-		<tr class="alt">
-		<td><?php echo translate("Posted by"); ?>: <?php echo maskemail($comments[$i]['login']); ?> <br>
-			<?php echo translate("Date"); ?>: <?php echo date(TIME_FORMAT.' '.DATE_FORMAT, $comments[$i]['created_date']); ?></td>
-		</tr><tr>
-		<td><?php echo format_comments($comments[$i]['comment_text']); ?> <br><br></td>
-		</tr>
-	<?php } ?>
-	<?php if ($is_admin) { ?>
-		<tr class="noprint">
-		<td>
-			<div align="right">
-			<a href="bug.php?op=del&bugid=<?php echo $bug_id; ?>"><?php echo translate("Delete bug"); ?></a>
-			</div>
-		</td>
-		</tr>
-	<?php } ?>
-</table>
