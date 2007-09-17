@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.158 2007/09/15 23:35:21 brycen Exp $
+// $Id: bug.php,v 1.159 2007/09/17 20:27:59 brycen Exp $
 
 include 'include.php';
 
@@ -124,7 +124,7 @@ function format_comments($comments) {
 		'&lt;',
 		'&gt;',
 		"<a href='$me?op=show&bugid=\\3'>\\1 \\2\\3</a>", // internal link to bug
-		'<a href="'.CVS_WEB.'\\1#rev\\5" target="_new">\\1</a>\\6', // external link to cvs web interface
+		'<a href="'.CVS_WEB.'\\1#rev\\5" target="_blank">\\1</a>\\6', // external link to cvs web interface
 		);
 
 	return nl2br(preg_replace($patterns, $replacements, stripslashes($comments)));

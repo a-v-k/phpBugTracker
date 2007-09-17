@@ -163,7 +163,7 @@ a.sidenavlink {
 	border-style: solid;
 	padding: 5px;
 	cursor: pointer;
-	cursor: hand;	/* IE5 Hack */
+	/* cursor: hand; */	/* IE5 Hack */
 	}
 	
 .navbox {
@@ -178,7 +178,7 @@ a.sidenavlink {
 	border-style: solid;
 	padding: 5px;
 	cursor: pointer;
-	cursor: hand;	/* IE5 Hack */
+	/* cursor: hand; */	/* IE5 Hack */
 	}
 	
 .navboxselected {
@@ -193,7 +193,7 @@ a.sidenavlink {
 	border-style: solid;
 	padding: 5px;
 	cursor: pointer;
-	cursor: hand;	/* IE5 Hack */
+	/* cursor: hand; */	/* IE5 Hack */
 	}
 	
 .maincontent {

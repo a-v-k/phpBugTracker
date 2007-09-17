@@ -1,7 +1,7 @@
 # MS-SQL Server database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mssql.in,v 1.6 2005/10/31 21:34:35 ulferikson Exp $
+# $Id: mssql.in,v 1.7 2007/09/17 20:27:59 brycen Exp $
 
 
 
@@ -497,8 +497,8 @@ INSERT INTO TBL_CONFIGURATION VALUES ('MAX_USER_VOTES', 5, 'The maximum number o
 INSERT INTO TBL_CONFIGURATION VALUES ('ATTACHMENT_PATH','attachments','Sub-dir of the INSTALLPATH - Needs to be writeable by the web process','string');
 INSERT INTO TBL_CONFIGURATION VALUES ('THEME','default','Which set of templates to use','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('ATTACHMENT_MAX_SIZE','2097152','Maximum size (in bytes) of an attachment. This will not override the settings in php.ini if php.ini has a lower limit.','string');
-INSERT INTO TBL_CONFIGURATION VALUES ('DATE_FORMAT','m-d-Y','See the <a href="http://www.php.net/date" target="_new">date page</a> in the PHP manual for more info','string');
-INSERT INTO TBL_CONFIGURATION VALUES ('TIME_FORMAT','g:i A','See the <a href="http://www.php.net/date" target="_new">date page</a> in the PHP manual for more info','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('DATE_FORMAT','m-d-Y','See the <a href="http://www.php.net/date" target="_blank">date page</a> in the PHP manual for more info','string');
+INSERT INTO TBL_CONFIGURATION VALUES ('TIME_FORMAT','g:i A','See the <a href="http://www.php.net/date" target="_blank">date page</a> in the PHP manual for more info','string');
 INSERT INTO TBL_CONFIGURATION VALUES ('LANGUAGE','en','The language file to use for warning and error messages','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('STYLE', 'default', 'The CSS file to use (color scheme)', 'multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('SEND_MIME_EMAIL', '1', 'Whether to use MIME quoted-printable encoded emails or not', 'bool');

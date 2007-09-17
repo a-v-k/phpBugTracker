@@ -248,7 +248,6 @@ function checkSavedQueries(frm) {
 		<option <?php if (!$sort || $sort == 'asc') echo "selected"; ?> value="asc"><?php echo translate("Ascending"); ?></option>
 		<option <?php if ($sort == 'desc') echo "selected"; ?> value="desc"><?php echo translate("Descending"); ?></option>
     </select>
-    </nobr>
     <br><br>
 	<?php if (!empty($_SESSION['uid'])) { ?>
 		<?php echo translate("Save this query as"); ?>: <input maxlength="40" type="text" name="savedqueryname">

@@ -1,3 +1,7 @@
+-- 1.0.3
+TODO: copy magic quotes warning to admin side
+TODO: handy login
+
 -- 1.0.2 2007 September - A catchup release
 : Fixed static method call, for php5/jpgraph 2.2
 : Applied various patches from sourceforge

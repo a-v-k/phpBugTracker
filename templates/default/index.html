@@ -1,6 +1,6 @@
 <table border=0 width="100%">
 	<tr>
-		<td valign="top" width="250">
+		<td valign="top">
 			<b><?php echo translate("Five most recently submitted bugs") ?></b>
 			<br>
 			<?php 
@@ -33,7 +33,7 @@
 				}
 			} ?>
 		</td>
-		<td valign="top"> 
+		<td valign="top" align="right"> 
 			<?php if (USE_JPGRAPH) {
 				if (!is_writeable('jpgimages')) {
 					echo translate("The image path 'jpgimages' is not writeable");

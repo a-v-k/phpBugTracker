@@ -52,10 +52,28 @@ It is best to delete your old "config.php" and make a new one.  Start
 with "config-dist.php", and copy over your database connection parameters.
 Sorry this is not more automated.
 
-Now, run the "upgrade.php" script to upgrade your database from version 4
+Run the "upgrade.php" script to upgrade your database from version 4
 to version 5.  The main new tables are for bookmarks and groups.
 
-Known issue: if you are logged in to your old version of phpBugTracker,
-you'll get database errors on the "bookmark" feature of the new phpBugTracker.
-Log out of both versions, and log back in to just one of them.
+Note "You must have magic_quotes_gpc set to On either in php.ini or in .htaccess",
+which has always been true, but you might miss this warning while upgrading.
 
+Known issue: if you are logged in to your old version of phpBugTracker,
+you'll get "DB Error: syntax error" on various feature of the new phpBugTracker.
+Log out of both versions, and log back in to just one of them.  If you still 
+get errors, visit your "Personal Page", and click "Submit" to reset the bug
+list columns.  Patches welcome.
+
+
+Upgrading from 1.0.1 to 1.0.3
+-----------------------------
+There is no database update required.
+
+Note that "You must have magic_quotes_gpc set to On either in php.ini or in .htaccess",
+which has always been true, but you might miss this warning while upgrading.
+
+Known issue: if you are logged in to your old version of phpBugTracker,
+you'll get "DB Error: syntax error" on various feature of the new phpBugTracker.
+Log out of both versions, and log back in to just one of them.  If you still 
+get errors, visit your "Personal Page", and click "Submit" to reset the bug
+list columns.  Patches welcome.

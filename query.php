@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.111 2005/10/18 18:52:29 ulferikson Exp $
+// $Id: query.php,v 1.112 2007/09/17 20:27:59 brycen Exp $
 
 include 'include.php';
 
@@ -254,7 +254,7 @@ function format_bug_col($colvalue, $coltype, $bugid, $pos) {
 
 	switch ($coltype) {
 		case 'url' :
-			return "<a href=\"$colvalue\" target=\"_new\">$colvalue</a>";
+			return "<a href=\"$colvalue\" target=\"_blank\">$colvalue</a>";
 			break;
 		case 'created_date' :
 		case 'last_modified_date' :
