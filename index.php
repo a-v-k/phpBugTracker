@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: index.php,v 1.43 2007/09/16 03:48:29 brycen Exp $
+// $Id: index.php,v 1.44 2007/09/17 20:10:50 brycen Exp $
 
 include 'include.php';
 
@@ -28,9 +28,10 @@ function grab_data($restricted_projects) {
 	global $db;
 
 	// Grab the legend
-	$rs = $db->query("select status_id, status_name from ".TBL_STATUS." order by sort_order");
+	$rs = $db->query("select status_id, status_name, bug_open from ".TBL_STATUS." order by sort_order");
 	while ($rs->fetchInto($row)) {
 		$stats[$row['status_id']]['name'] = $row['status_name'];
+		$stats[$row['status_id']]['open'] = $row['bug_open'];
 	}
 
 	// Grab the data
@@ -43,8 +44,6 @@ function grab_data($restricted_projects) {
 }
 
 function build_image($restricted_projects) {
-
-	error_reporting(0); // Force this, just in case
 	if (!include_once(JPGRAPH_PATH.'jpgraph.php')) {
 		return '<span class="error">'.translate("Unable to load JPGraph").' ('.JPGRAPH_PATH.'jpgraph.php'.')</span>';
 	}
@@ -55,6 +54,11 @@ function build_image($restricted_projects) {
 	$stats = grab_data($restricted_projects);
 	$totalbugs = 0;
 	foreach ($stats as $statid => $stat) {
+        // Skip closed bugs
+        if (!$stat['open']) {
+            continue;
+        }
+        // Count all open statuses
 		if ($stat['count']) {
 			$data[] = $stat['count'];
 			$legend[] = "{$stat['name']} ({$stat['count']})";
