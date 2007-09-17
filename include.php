@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.144 2007/09/16 16:45:30 brycen Exp $
+// $Id: include.php,v 1.145 2007/09/17 05:54:43 brycen Exp $
 
 define('RAWERROR', true);
 
@@ -58,17 +58,17 @@ $dsn = array(
 ** It's unclear what solution works for both php4 and php5.
 ** the documentation recommends PEAR::isError($db) which is also non-static
 */
-/*
 $db = DB::Connect($dsn);
 if (DB::isError($db)) {
 	die($db->message.'<br>'.$db->userinfo);
 }
-*/
+/*
 $db = new DB();
 $db = $db->connect($dsn);
 if ($db->isError($db)) {
     die($db->message.'<br>'.$db->userinfo);
 }
+*/
 /*
 $db = &DB::connect($dsn);
 if (PEAR::isError($db)) {
