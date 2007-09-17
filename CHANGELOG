@@ -1,8 +1,9 @@
--- 1.0.2 2007 September
-: Fixed for php5/jpgraph 2.2
+-- 1.0.2 2007 September - A catchup release
+: Fixed static method call, for php5/jpgraph 2.2
 : Applied various patches from sourceforge
-: Changed password login to preserve original URL (e.g. from an email link). Nice.
-: Fixed various CCS and HTML syntax or validation errors
+: Validated CCS and HTML syntax 
+: Temporarily disabled "mass_update" footer on query, until fixed.
+: Changed bug layout to put the description of the bug first, before metadata
 
 -- 1.x devel -- 
 : Moved priority levels into a table
