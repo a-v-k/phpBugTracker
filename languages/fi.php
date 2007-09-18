@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: fi.php,v 1.1 2004/12/06 00:36:38 bcurtis Exp $
+// $Id: fi.php,v 1.2 2007/09/18 05:53:07 brycen Exp $
 
 $STRING = array(
 	"That attachment does not exist" => "Liitettä ei löydy",
@@ -239,8 +239,8 @@ $STRING = array(
 	"Download to spreadsheet" => "Lataa taulukko",
 	"No votes found for this bug" => "Ei äänestyksiä",
 	"Back" => "Takaisin",
-	"Five most recently submitted bugs" => "Viisi uusinta",
-	"Five most recently closed bugs" => "Viisi viimeksi suljettua",
+	"Most recently submitted bugs" => "Viisi uusinta",
+	"Most recently closed bugs" => "Viisi viimeksi suljettua",
 	"Saved Queries" => "Tallennetut haut",
 	"The image path is not writeable" => "Kuvia ei voi tallentaa",
 	"Quick Stats" => "Tilastot",

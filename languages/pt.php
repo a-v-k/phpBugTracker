@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: pt.php,v 1.1 2005/09/28 19:48:41 ulferikson Exp $
+// $Id: pt.php,v 1.2 2007/09/18 05:53:07 brycen Exp $
 
 $STRING = array(
 	"That attachment does not exist" => "O anexo não existe",
@@ -239,8 +239,8 @@ $STRING = array(
 	"Download to spreadsheet" => "Descarregar em uma folha de cálculo",
 	"No votes found for this bug" => "Não se encontraram votos para este erro",
 	"Back" => "Voltar",
-	"Five most recently submitted bugs" => "Cinco últimos erros remetidos",
-	"Five most recently closed bugs" => "Cinco últimos erros fechados",
+	"Most recently submitted bugs" => "últimos erros remetidos",
+	"Most recently closed bugs" => "últimos erros fechados",
 	"Saved Queries" => "Consultas guardadas",
 	"The image path is not writeable" => "A rota de acesso das imagens não tem acesso de escritura",
 	"Quick Stats" => "Estatísticas rapidamente",

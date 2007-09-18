@@ -21,7 +21,7 @@
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
 // Translation by Jan Pilarzeck
-// $Id: de.php,v 1.21 2004/10/25 12:07:01 bcurtis Exp $
+// $Id: de.php,v 1.22 2007/09/18 05:53:07 brycen Exp $
 
 $STRING = array(
 	"That attachment does not exist" => "Der Anhang existiert nicht",
@@ -239,8 +239,8 @@ $STRING = array(
 	"Download to spreadsheet" => "zum Arbeitsblatt herunterladen",
 	"No votes found for this bug" => "keine Abstimmungen zu dem Fehler gefunden",
 	"Back" => "zur&uuml;ck",
-	"Five most recently submitted bugs" => "die f&uuml;nf zuletzt berichteten Fehler",
-	"Five most recently closed bugs" => "die f&uuml;nf zuletzt geschlossenen Fehler",
+	"Most recently submitted bugs" => "die zuletzt berichteten Fehler",
+	"Most recently closed bugs" => "die zuletzt geschlossenen Fehler",
 	"Saved Queries" => "gespeicherte Abfragen",
 	"The image path is not writeable" => "Im Bilder-Pfad kann nicht geschrieben werden",
 	"Quick Stats" => "Schnell-Statistik",

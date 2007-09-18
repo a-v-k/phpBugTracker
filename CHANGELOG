@@ -1,6 +1,7 @@
--- 1.0.3
+-- 1.0.3 DUE 2007 October
+: Modify translations, no longer "five" most recent bugs
 TODO: copy magic quotes warning to admin side
-TODO: handy login
+TODO: URL preservation through login
 
 -- 1.0.2 2007 September - A catchup release
 : Fixed static method call, for php5/jpgraph 2.2

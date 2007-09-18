@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: index.php,v 1.44 2007/09/17 20:10:50 brycen Exp $
+// $Id: index.php,v 1.45 2007/09/18 05:53:07 brycen Exp $
 
 include 'include.php';
 
@@ -164,7 +164,7 @@ if (SHOW_PROJECT_SUMMARIES) {
 
 // Show the recently added and closed bugs
 $t->assign('recentbugs',
-	$db->getAll($db->modifyLimitQuery("select bug_id, title, project_name from ".TBL_BUG.' b, '.TBL_PROJECT." p where b.project_id not in ($restricted_projects) and b.project_id = p.project_id order by b.created_date desc", 0, 5)));
+	$db->getAll($db->modifyLimitQuery("select bug_id, title, project_name from ".TBL_BUG.' b, '.TBL_PROJECT." p where b.project_id not in ($restricted_projects) and b.project_id = p.project_id order by b.created_date desc", 0, 8)));
 
 $t->assign('closedbugs',
 	$db->getAll($db->modifyLimitQuery('select b.bug_id, title, project_name from '.TBL_BUG.' b, '.TBL_PROJECT." p where b.project_id not in ($restricted_projects) and ".in_closed('status_id').' and b.project_id = p.project_id order by close_date desc', 0, 5)));

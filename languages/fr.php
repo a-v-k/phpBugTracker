@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: fr.php,v 1.18 2004/12/05 16:12:41 bcurtis Exp $
+// $Id: fr.php,v 1.19 2007/09/18 05:53:07 brycen Exp $
 
 $STRING = array(
 	"That attachment does not exist" => "Cette pièce jointe n'existe pas",
@@ -239,8 +239,8 @@ $STRING = array(
 	"Download to spreadsheet" => "Décharger dans un tableur",
 	"No votes found for this bug" => "Aucun vote n'a été trouvé pour ce bogue",
 	"Back" => "Retour",
-	"Five most recently submitted bugs" => "Les cinq derniers bogues soumis",
-	"Five most recently closed bugs" => "Les cinq derniers bogues clos",
+	"Most recently submitted bugs" => "Les derniers bogues soumis",
+	"Most recently closed bugs" => "Les derniers bogues clos",
 	"Saved Queries" => "Requêtes enregistrées",
 	"The image path is not writeable" => "Le chemin vers les images n'est pas accessible en écriture",
 	"Quick Stats" => "Statistiques rapides",

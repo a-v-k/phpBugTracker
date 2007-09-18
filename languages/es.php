@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: es.php,v 1.11 2005/07/13 18:21:17 ulferikson Exp $
+// $Id: es.php,v 1.12 2007/09/18 05:53:07 brycen Exp $
 
 
 $STRING = array(
@@ -240,8 +240,8 @@ $STRING = array(
 	"Download to spreadsheet" => "Descargar en una hoja de cálculo",
 	"No votes found for this bug" => "No se encontraron votos para este error",
 	"Back" => "Volver",
-	"Five most recently submitted bugs" => "Cinco últimos errores remitidos",
-	"Five most recently closed bugs" => "Cinco últimos errores cerrados",
+	"Most recently submitted bugs" => "últimos errores remitidos",
+	"Most recently closed bugs" => "últimos errores cerrados",
 	"Saved Queries" => "Consultas almacenadas",
 	"The image path is not writeable" => "La ruta de acceso de las imagenes no tiene acceso de escritura",
 	"Quick Stats" => "Estadísticas rápidas",

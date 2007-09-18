@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: ja.php,v 1.3 2005/07/19 19:23:37 ulferikson Exp $
+// $Id: ja.php,v 1.4 2007/09/18 05:53:07 brycen Exp $
 
 $STRING = array(
 	"That attachment does not exist" => "添付が存在しません。",
@@ -238,8 +238,8 @@ $STRING = array(
 	"Download to spreadsheet" => "スプレッドシートのダウンロード",
 	"No votes found for this bug" => "この不都合は投票が見つかりませんでした。",
 	"Back" => "戻る",
-	"Five most recently submitted bugs" => "もっとも最近の登録された 5 つの不都合",
-	"Five most recently closed bugs" => "もっとも最近の閉じられた 5 つの不都合",
+	"Most recently submitted bugs" => "もっとも最近の登録された 5 つの不都合",
+	"Most recently closed bugs" => "もっとも最近の閉じられた 5 つの不都合",
 	"Saved Queries" => "照会保存",
 	"The image path is not writeable" => "画像パスが書き込み出来ませんでした。",
 	"Quick Stats" => "簡易状況",

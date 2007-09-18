@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.40 2004/10/25 12:07:02 bcurtis Exp $
+// $Id: en.php,v 1.41 2007/09/18 05:53:07 brycen Exp $
 
 $STRING = array(
 	"That attachment does not exist" => "That attachment does not exist",
@@ -238,8 +238,8 @@ $STRING = array(
 	"Download to spreadsheet" => "Download to spreadsheet",
 	"No votes found for this bug" => "No votes found for this bug",
 	"Back" => "Back",
-	"Five most recently submitted bugs" => "Five most recently submitted bugs",
-	"Five most recently closed bugs" => "Five most recently closed bugs",
+	"Most recently submitted bugs" => "Most recently submitted bugs",
+	"Most recently closed bugs" => "Most recently closed bugs",
 	"Saved Queries" => "Saved Queries",
 	"The image path is not writeable" => "The image path is not writeable",
 	"Quick Stats" => "Quick Stats",

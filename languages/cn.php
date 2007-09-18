@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: cn.php,v 1.1 2004/12/05 16:23:07 bcurtis Exp $
+// $Id: cn.php,v 1.2 2007/09/18 05:53:07 brycen Exp $
 
 $STRING = array(
 	"That attachment does not exist" => "附件不存在",
@@ -239,8 +239,8 @@ $STRING = array(
 	"Download to spreadsheet" => "下载为电子表格",
 	"No votes found for this bug" => "该Bug无投票",
 	"Back" => "返回",
-	"Five most recently submitted bugs" => "最近提交的5个Bug",
-	"Five most recently closed bugs" => "最近关闭的5个Bug",
+	"Most recently submitted bugs" => "最近提交的5个Bug",
+	"Most recently closed bugs" => "最近关闭的5个Bug",
 	"Saved Queries" => "快捷查询",
 	"The image path is not writeable" => "图片路径不可写",
 	"Quick Stats" => "当前Bug信息",
