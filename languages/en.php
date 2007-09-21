@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.41 2007/09/18 05:53:07 brycen Exp $
+// $Id: en.php,v 1.42 2007/09/21 23:22:29 brycen Exp $
 
 $STRING = array(
 	"That attachment does not exist" => "That attachment does not exist",
@@ -198,7 +198,7 @@ $STRING = array(
 	"Priority" => "Priority",
 	"Operating System" => "Operating System",
 	"Summary" => "Summary",
-	"URL" => "URL",
+	"URL" => "URL / Website Link",
 	"Depends on bugs" => "Depends on bugs",
 	"Blocks bugs" => "Blocks bugs",
 	"Comments" => "Comments",

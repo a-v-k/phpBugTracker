@@ -201,7 +201,7 @@
 	</tr><tr>
 		<td><?php echo translate("Summary"); ?>:</td>
 		<?php if ($may_edit) { ?>
-			<td><input type="text" size="30" maxlength="100" name="title" value="<?php echo stripslashes(htmlspecialchars($title)) ?>"></td>
+			<td><input type="text" size="40" maxlength="100" name="title" value="<?php echo stripslashes(htmlspecialchars($title)) ?>"></td>
 		<?php } else { ?>
 			<td><?php echo stripslashes(htmlspecialchars($title)); ?></td>
 		<?php } ?>
@@ -212,9 +212,9 @@
 			<td><?php echo lookup('status', $status_id); ?></td>
 		<?php } ?>
 	</tr><tr>
-		<td><?php if($url) echo "<a href=\"$url\">URL</a>"; else echo 'URL'; ?>:</td>
+		<td><?php if($url) echo "<a href=\"$url\" rel=\"nofollow\">".translate("URL")."</a>"; else echo translate("URL"); ?>:</td>
 		<?php if ($may_edit) { ?>
-			<td><input type="text" size="30" maxlength="255" name="url" value="<?php echo $url ?>"></td>
+			<td><input type="text" size="35" maxlength="255" name="url" value="<?php echo $url ?>"></td>
 		<?php } else { ?>
 			<td><?php echo $url; ?></td>
 		<?php } ?>

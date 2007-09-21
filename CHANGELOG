@@ -1,10 +1,14 @@
 -- 1.0.3 DUE 2007 October
+: Add rel="nofollow" to make phpBugTracker less attractive to comment spammers.
+: Fix small SQL injection hole. Copy magic_quotes_gpc warning to admin side.
 : Modify translations, no longer "five" most recent bugs
-TODO: copy magic quotes warning to admin side
+: Clean up email template: line up columns, fix horked priority attribute
+: Speed up direct-to-bug links (eliminate redundant query of prior query results)
 TODO: URL preservation through login
+TODO: Sort by priority bug
 
 -- 1.0.2 2007 September - A catchup release
-: Fixed static method call, for php5/jpgraph 2.2
+: Noted workaround for static method call, for php5/jpgraph 2.2.  easier jpgraph setup also.
 : Applied various patches from sourceforge
 : Validated CCS and HTML syntax 
 : Temporarily disabled "mass_update" footer on query, until fixed.

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.72 2007/09/09 04:30:16 brycen Exp $
+// $Id: functions.php,v 1.73 2007/09/21 23:22:29 brycen Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -464,7 +464,7 @@ function maskemail($email) {
 	if (HIDE_EMAIL && empty($_SESSION['uid'])) {
 		return '******';
 	} elseif (MASK_EMAIL) {
-		return str_replace('@', ' at ', str_replace('.', ' dot ', $email));
+		return str_replace('@', ' at ', str_replace('.', ' döt ', $email));
 	} else {
 		return $email;
 	}

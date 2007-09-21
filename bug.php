@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.159 2007/09/17 20:27:59 brycen Exp $
+// $Id: bug.php,v 1.160 2007/09/21 23:22:29 brycen Exp $
 
 include 'include.php';
 
@@ -192,6 +192,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 	);
 
 	foreach($cfgDatabase as $field => $table) {
+        // fake _id for fields like priority
 		if (isset($buginfo[$field]) && !isset($buginfo[$field.'_id'])) {
 			$buginfo[$field.'_id'] = $buginfo[$field];
 		}
@@ -311,7 +312,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 			'newpostedby' => $row['login'],
 			'newpostedon' => date(TIME_FORMAT, $row['created_date']).' on '.
 			date(DATE_FORMAT, $row['created_date']),
-			'newcomments' => textwrap('+ '.format_comments($row['comment_text']),72,"\n+ ")
+			'newcomments' => textwrap('+ '.$row['comment_text'],72,"\n+ ")
 		));
 
 		// If this comment is the first additional comment after the creation of the
@@ -321,7 +322,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 			$t->assign(array(
 			'oldpostedby' => $by,
 			'oldpostedon' => date(TIME_FORMAT,$on).' on '.date(DATE_FORMAT,$on),
-			'oldcomments' => textwrap(format_comments($comments),72)
+			'oldcomments' => textwrap($comments,72)
 			));
 		} else {
 			$rs->fetchInto($row);
@@ -329,7 +330,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 			'oldpostedby' => $row['login'],
 			'oldpostedon' => date(TIME_FORMAT,$row['created_date']).' on '.
 				date(DATE_FORMAT,$row['created_date']),
-			'oldcomments' => textwrap(format_comments($row['comment_text']),72)
+			'oldcomments' => textwrap($row['comment_text'],72)
 			));
 		}
 		$t->assign('showcomments', true);
@@ -871,7 +872,9 @@ function show_bug($bugid = 0, $error = array()) {
 		return;
 	}
 
-	prev_next_links($bugid, isset($_GET['pos']) ? $_GET['pos'] : 0);
+    if( isset($_GET['pos']) ) { // Skip intensive select for direct bug_id queries
+        prev_next_links($bugid, $_GET['pos'] );
+        }
 	
 	$is_reporter = false;
 	$is_assignee = false;

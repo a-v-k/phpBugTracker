@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: editComment.php,v 1.1 2007/09/15 23:54:08 brycen Exp $  
+// $Id: editComment.php,v 1.2 2007/09/21 23:22:29 brycen Exp $  
 
 include 'include.php';
 
@@ -57,7 +57,7 @@ if (isset($_GET['newComment'])) {
 
 //	List all comments
 //	In the case of an edit, this counts as the confirmation page.
-$bug_id = $_GET['bugid'];
+$bug_id = check_id($_GET['bugid']);
 if (is_numeric($bug_id)) {
 	$t->assign('comments', $db->getAll('select c.* from '.TBL_COMMENT." c where bug_id=$bug_id order by c.created_date"));
 	$t->render('editComment.html', translate("Edit Comment"));

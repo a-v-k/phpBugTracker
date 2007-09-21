@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: configure.php,v 1.14 2005/06/04 16:11:16 bcurtis Exp $
+// $Id: configure.php,v 1.15 2007/09/21 23:22:29 brycen Exp $
 
 chdir('..');
 define('TEMPLATE_PATH', 'admin');
@@ -42,7 +42,7 @@ if (isset($_POST['submit'])) {
 	}
 }
 
-$t->assign('vars',  $db->getAll('select * from '.TBL_CONFIGURATION));
+$t->assign('vars',  $db->getAll('select * from '.TBL_CONFIGURATION .' order by varname'));
 $t->assign('has_excel', find_include('Spreadsheet/Excel/Writer.php'));
 $t->render('configure.html', translate("Configuration"));
 
