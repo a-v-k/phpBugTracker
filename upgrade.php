@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.48 2007/09/21 16:32:05 brycen Exp $
+// $Id: upgrade.php,v 1.49 2007/10/05 06:07:33 brycen Exp $
 
 define ('NO_AUTH', 1);
 define ('THEME', 'default');
@@ -285,8 +285,8 @@ function upgrade() {
 			log_query("INSERT INTO ".TBL_PRIORITY." VALUES (4,'Medium High','Fix as soon as possible',4,'#dab0b0')");
 			log_query("INSERT INTO ".TBL_PRIORITY." VALUES (5,'High','Fix immediately',5,'#daaaaa')");
 			log_query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('NEW_ACCOUNTS_GROUP', 'User', 'The group assigned to new user accounts', 'string')");
-			log_query("INSERT INTO ".TBL_AUTH_USER." (user_id, login, first_name, last_name, email, password, active) values (0, 'Anonymous User', 'Anonymous', 'User', '', '', 0)");
 			log_query("UPDATE ".TBL_AUTH_USER." SET bug_list_fields=null"); // Incompatible change, blow 'em away
+			log_query("INSERT INTO ".TBL_AUTH_USER." (user_id, login, first_name, last_name, email, password, active, bug_list_fields) values (0, 'Anonymous User', 'Anonymous', 'User', '', '', 0, null)");
 		}
 
 		/* update to current DB_VERSION */

@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.112 2007/09/17 20:27:59 brycen Exp $
+// $Id: query.php,v 1.113 2007/10/05 06:07:33 brycen Exp $
 
 include 'include.php';
 
@@ -121,6 +121,9 @@ function build_query($assignedto, $reportedby, $open, $bookmarked) {
 	} else {
 		// Select boxes
 		$flags = array();
+		if ($open) {
+            $flags[] = 'b.status_id '.($open ? '' : 'not ').  'in ('.OPEN_BUG_STATUSES.')';
+		}
 		// Need to check $array[0] for Opera --
 		// it passes non-empty arrays for every multi-choice select box
 		if (!empty($status) and $status[0]) {
@@ -194,9 +197,9 @@ function build_query($assignedto, $reportedby, $open, $bookmarked) {
 					case 'rlike' : $cond = "rlike '".$$searchfield."'"; break;
 					case 'not rlike' : $cond = "not rlike '".$$searchfield."'"; break;
 				}
-				$fields[] = "$searchfield $cond".
+				$fields[] = "b.$searchfield $cond".
 					($searchfield == 'description' 
-						? ' or bug_id in ('.@join(', ', $bugs_with_comment).')'
+						? ' or b.bug_id in ('.@join(', ', $bugs_with_comment).')'
 						: '');
 			}
 		}
@@ -286,7 +289,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 	$query_db_fields = array(
 		'bug_id' => 'b.bug_id',
 		'title' => 'title',
-		'description' => 'description',
+		'description' => 'b.description',
 		'url' => 'url',
 		'severity_name' => 'severity.severity_name',
 		'priority_name' => 'priority.priority_name',
@@ -315,7 +318,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 	$db_headers = array(
 		'bug_id' => 'b.bug_id',
 		'title' => 'title',
-		'description' => 'description',
+		'description' => 'b.description',
 		'url' => 'url',
 		'severity_name' => 'severity.sort_order',
 		'priority_name' => 'priority.sort_order',
@@ -466,7 +469,7 @@ if (!empty($_GET['projects']) && isset($restricted_projects) &&
 
 if (isset($_GET['op'])) switch($_GET['op']) {
 	case 'query' : show_query(); break;
-	case 'doquery' : $_SESSION['queryinfo'] = array(); list_items(); break;
+	case 'doquery' : $_SESSION['queryinfo'] = array(); list_items(0,0,$open,0); break;
 	case 'delquery' : 
 		if ($auth->is_authenticated()) delete_saved_query(check_id($_GET['queryid']));  
 		else show_query(); 

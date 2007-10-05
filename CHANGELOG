@@ -1,9 +1,10 @@
 -- 1.0.3 DUE 2007 October
 : Add rel="nofollow" to make phpBugTracker less attractive to comment spammers.
-: Fix small SQL injection hole. Copy magic_quotes_gpc warning to admin side.
 : Modify translations, no longer "five" most recent bugs
 : Clean up email template: line up columns, fix horked priority attribute
-: Speed up direct-to-bug links (eliminate redundant query of prior query results)
+: Fix ambiguous column, in searches, caused by bookmarks table
+: Fix small SQL injection hole. Copy magic_quotes_gpc warning to admin side.
+: Vastly speed up direct-to-bug links (eliminate redundant query of prior query results)
 TODO: URL preservation through login
 TODO: Sort by priority bug
 

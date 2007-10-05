@@ -85,20 +85,23 @@ function checkSavedQueries(frm) {
 			<td valign="top"><b><?php echo translate("Sort by"); ?>:</b></td>
 			<td valign="top">
 				<select name="order">
+					<option <?php if (!$order || $order == 'priority') echo "selected"; ?> value="priority.sort_order">
+					<?php echo translate("Priority"); ?>
+					</option>
+					<option <?php if ($order == 'severity.sort_order') echo "selected"; ?> value="severity.sort_order">
+					<?php echo translate("Severity"); ?>
+					</option>
+					<option <?php if ($order == 'status_name') echo "selected"; ?> value="status_name">
+					<?php echo translate("Status"); ?>
+					</option>
 					<option <?php if ($order == 'bug_id') echo "selected"; ?> value="bug_id">
 					<?php echo translate("Bug number"); ?>
-					</option>
-					<option <?php if (!$order || $order == 'severity.sort_order') echo "selected"; ?> value="severity.sort_order">
-					<?php echo translate("Severity"); ?>
 					</option>
 					<option <?php if ($order == 'reporter') echo "selected"; ?> value="reporter">
 					<?php echo translate("Reporter"); ?>
 					</option>
-					<option <?php if ($order == 'status.sort_order') echo "selected"; ?> value="status.sort_order">
-					<?php echo translate("Status"); ?>
-					</option>
-					<option <?php if ($order == 'priority') echo "selected"; ?> value="priority.sort_order">
-					<?php echo translate("Priority"); ?>
+					<option <?php if ($order == 'owner') echo "selected"; ?> value="owner">
+					<?php echo translate("Owner"); ?>
 					</option>
 				</select>
 				<select name="sort">

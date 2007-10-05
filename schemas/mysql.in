@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.54 2005/10/31 21:34:35 ulferikson Exp $
+# $Id: mysql.in,v 1.55 2007/10/05 06:07:33 brycen Exp $
 
 
 
@@ -586,7 +586,7 @@ INSERT INTO TBL_SEVERITY VALUES (3,'Feature Request','Requests for specific feat
 INSERT INTO TBL_SEVERITY VALUES (4,'Annoyance','Cosmetic problems or bugs not affecting performance',4,'#dac0c0');
 INSERT INTO TBL_SEVERITY VALUES (5,'Content','Non-functional related bugs, such as text content',5,'#dababa');
 INSERT INTO TBL_SEVERITY VALUES (6,'Significant','A bug affecting the intended performance of the product',6,'#dab0b0');
-INSERT INTO TBL_SEVERITY VALUES (7,'Critical','A bug severe enough to prevent the release of the product',7,'#daaaaa');
+INSERT INTO TBL_SEVERITY VALUES (7,'Critical','A bug severe enough to prevent the release of the product',7,'#ff9999');
 
 CREATE TABLE TBL_SEVERITY_seq (
   id int unsigned auto_increment not null primary key);
@@ -601,7 +601,7 @@ INSERT INTO TBL_PRIORITY VALUES (1,'Low','Fix if possible',1,'#dadada');
 INSERT INTO TBL_PRIORITY VALUES (2,'Medium Low','Must fix before final',2,'#dad0d0');
 INSERT INTO TBL_PRIORITY VALUES (3,'Medium','Fix before next milestone (alpha, beta, etc.)',3,'#dac0c0');
 INSERT INTO TBL_PRIORITY VALUES (4,'Medium High','Fix as soon as possible',4,'#dab0b0');
-INSERT INTO TBL_PRIORITY VALUES (5,'High','Fix immediately',5,'#daaaaa');
+INSERT INTO TBL_PRIORITY VALUES (5,'High','Fix immediately',5,'#ff9999');
 
 CREATE TABLE TBL_PRIORITY_seq (
   id int unsigned auto_increment not null primary key);

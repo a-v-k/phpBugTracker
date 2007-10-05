@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.42 2007/09/21 23:22:29 brycen Exp $
+// $Id: en.php,v 1.43 2007/10/05 06:07:33 brycen Exp $
 
 $STRING = array(
 	"That attachment does not exist" => "That attachment does not exist",
@@ -350,6 +350,7 @@ start reporting bugs!",
 	"Unable to load JPGraph" => "Unable to load JPGraph",
 	"Unable to load JPGraph pie class" => "Unable to load JPGraph pie class",
 	"There was a problem when trying to use the JPGraph library. Please fix or disable by setting 'USE_JPGRAPH' to 'NO' on the Configuration page of the Administration Tools." => "There was a problem when trying to use the JPGraph library. Please fix or disable by setting 'USE_JPGRAPH' to 'NO' on the Configuration page of the Administration Tools.",
+	"Edit Comment" => "Edit Comment",
 	);
 
 ?>

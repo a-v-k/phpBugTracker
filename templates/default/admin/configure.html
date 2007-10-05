@@ -1,11 +1,11 @@
 <form method="post">
 <div class="error">
 <?php if (!$has_excel) { ?>
-	<?php echo translate("Install PEAR package Spreadsheet_Excel_Writer for bug list download support"); ?>
+	<?php echo translate("Install PEAR package Spreadsheet_Excel_Writer for bug list download support"); ?><br/>
 <?php } ?>
 <?php if (!get_magic_quotes_gpc()) { ?>
 	<?php echo translate("Error: magic_quotes_gpc is OFF, you are at risk of SQL Injection attacks!"); ?>
-<?php } ?>
+<?php } ?><br/>
 </div>
 
 <table border="0" width="100%">

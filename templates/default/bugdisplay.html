@@ -104,15 +104,6 @@
             <td><?php echo format_comments($comments[$i]['comment_text']); ?> <br><br></td>
             </tr>
         <?php } ?>
-        <?php if ($is_admin) { ?>
-            <tr class="noprint">
-            <td>
-                <div align="right">
-                <a href="bug.php?op=del&bugid=<?php echo $bug_id; ?>"><?php echo translate("Delete bug"); ?></a>
-                </div>
-            </td>
-            </tr>
-        <?php } ?>
     </table>
 
     <!-- metadata -->
@@ -279,9 +270,9 @@
 		<?php } ?>
 		<?php if ($may_manage or $is_owner or $is_assignee) { ?>
 			<br>
-			<?php echo translate("Add dependency"); ?>: <input type="text" name="add_dependency" size="5"><br>
+			<?php echo translate("Add dependency"); ?>: <input type="text" name="add_dependency" size="5">&nbsp;
 			<?php echo translate("Remove dependency"); ?>: <input type="text" name="del_dependency" size="5"><br>
-			<?php echo translate("Add duplicate"); ?>: <input type="text" name="add_duplicate" size="5"><br>
+			<?php echo translate("Add duplicate"); ?>: <input type="text" name="add_duplicate" size="5">&nbsp;
 			<?php echo translate("Remove duplicate"); ?>: <input type="text" name="del_duplicate" size="5"><br><br>
 		<?php } else { ?>
 			<input type="hidden" name="add_dependency" value="">
@@ -381,9 +372,15 @@
 <?php if (!empty($error['vote'])) echo "<div class=\"error\">{$error['vote']}</div>" ?>
 	<b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=vote&bugid=<?php echo $bug_id.$posinfo; ?>" onClick="if (<?php echo $already_voted; ?>) { alert ('<?php echo translate("You have already voted for this bug"); ?>'); return false; }"><?php echo translate("Vote for this bug"); ?></a></b> |
 <?php } ?>
-	<b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=viewvotes&bugid=<?php echo $bug_id.$posinfo; ?>"><?php echo translate("View votes"); ?> (<?php echo $num_votes; ?>)</a></b> |
-	<b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=history&bugid=<?php echo $bug_id.$posinfo; ?>"><?php echo translate("View bug history"); ?></a></b>
-<!--
-	| <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=print&bugid=<?php echo $bug_id.$posinfo; ?>"><?php echo translate("Printable View"); ?></a></b>
--->
+	<b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=viewvotes&bugid=<?php echo $bug_id.$posinfo; ?>"><?php echo translate("View votes"); ?> (<?php echo $num_votes; ?>)</a></b>
+    | <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=history&bugid=<?php echo $bug_id.$posinfo; ?>"><?php echo translate("View bug history"); ?></a></b>
+    | <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=print&bugid=<?php echo $bug_id.$posinfo; ?>"><?php echo translate("Printable View"); ?></a></b>
+    <?php if ($is_admin or $may_manage) { ?>
+    | <b><a href="editComment.php?bugid=<?php echo $bug_id ?>"><?php echo translate("Edit Comment")?></a></b>
+    <?php } ?>
+    <?php if ($is_admin) { ?>
+    <!--
+    | <b><a href="bug.php?op=del&bugid=<?php echo $bug_id; ?>"><?php echo translate("Delete bug"); ?></a></b>
+    -->
+    <?php } ?>
 </div>
