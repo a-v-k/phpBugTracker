@@ -32,18 +32,12 @@
 				</tr>
 				<tr>
 					<td align="right" valign="top">
-						<?php echo translate("Reporter"); ?>:
+						<?php echo translate("Component"); ?>:
 					</td>
 					<td>
-					<?php if (isset($perm) and $perm->have_perm_proj($project)) { ?>
-						<select name="reporter">
-							<?php build_select('reporter', $reporter) ?>
+						<select name="component">
+							<?php build_select('component',  $component, $project) ?>
 						</select>
-					<?php 	}
-						else {
-							echo lookup('reporter', $reporter);
-						} ?>
-						<input type="hidden" name="reporter" value="<?php echo $reporter ?>">
 					</td>
 				</tr>
 				<tr>
@@ -61,7 +55,7 @@
 						<?php echo translate("Summary"); ?>:
 					</td>
 					<td>
-						<input type="text" size="50" maxlength="100" name="title" value="<?php echo htmlspecialchars(stripslashes($title)) ?>">
+						<input type="text" size="55" maxlength="100" name="title" value="<?php echo htmlspecialchars(stripslashes($title)) ?>">
 					</td>
 				</tr>
 				<tr>
@@ -102,16 +96,6 @@
 				</tr>
 				<tr>
 					<td align="right" valign="top">
-						<?php echo translate("Component"); ?>:
-					</td>
-					<td>
-						<select name="component">
-							<?php build_select('component',  $component, $project) ?>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td align="right" valign="top">
 						<?php echo translate("Database"); ?>:
 					</td>
 					<td>
@@ -140,9 +124,27 @@
 						</select>
 					</td>
 				</tr>
+
 				<tr>
-					<td align="right">
-						&nbsp;
+					<td align="right" valign="top">
+						<?php echo translate("Reporter"); ?>:
+					</td>
+					<td>
+					<?php if (isset($perm) and $perm->have_perm_proj($project)) { ?>
+						<select name="reporter">
+							<?php build_select('reporter', $reporter) ?>
+						</select>
+					<?php 	}
+						else {
+							echo lookup('reporter', $reporter);
+						} ?>
+						<input type="hidden" name="reporter" value="<?php echo $reporter ?>">
+					</td>
+				</tr>
+
+				<tr>
+					<td align="right" valign="top">
+						<?php echo translate("Attachments"); ?>:
 					</td>
 					<td>
 						<table border="0" align="center">
@@ -150,11 +152,13 @@
 								<td colspan="2" align="center">
 									If you wish to attach a file to this report, please choose a file to upload and enter a one-line description.
 									<br>
+                                    <!--
 									 Maximum file size: <?php echo ini_get('upload_max_filesize') < ATTACHMENT_MAX_SIZE
 										? number_format(ini_get('upload_max_filesize'))
 										: number_format(ATTACHMENT_MAX_SIZE) ?> bytes
 									<br>
 									<br>
+                                    -->
 								</td>
 							</tr>
 							<tr>
@@ -170,7 +174,7 @@
 									Description:
 								</td>
 								<td>
-									<input type="text" name="at_description" maxlength="255" value="">
+									<input type="text" name="at_description" size="60" maxlength="255" value="">
 								</td>
 							</tr>
 						</table>
