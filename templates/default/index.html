@@ -60,8 +60,7 @@
 		</td>
 	</tr>
 </table>
-<br>
-<br>
+<br/>
 <?php if (SHOW_PROJECT_SUMMARIES) { ?>
 	<table class="bordertable" align="center">
 		<tr>
@@ -73,4 +72,9 @@
 			</tr>
 		<?php } ?>
 	</table>
+<?php } ?>
+<?php if ($fastlinks1) { ?>
+<b><?php echo translate("Add a new bug"); ?></b><br/><?php echo $fastlinks1 ?><br/>
+<br/>
+<b><?php echo translate("Basic Query"); ?></b><br/><?php echo $fastlinks2 ?><br/>
 <?php } ?>

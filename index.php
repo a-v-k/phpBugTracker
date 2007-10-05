@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: index.php,v 1.45 2007/09/18 05:53:07 brycen Exp $
+// $Id: index.php,v 1.46 2007/10/05 06:06:45 brycen Exp $
 
 include 'include.php';
 
@@ -101,7 +101,18 @@ function build_image($restricted_projects) {
 	}
 }
 
+// Build fastlinks.  We need all of the project names.
+if (true) {
+	$rs = $db->query("select project_id, project_name from " . TBL_PROJECT);
+	while (list($iProject_id, $sProject_name) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
+        $fastlinks1 .= "<a href=\"bug.php?op=add&amp;project=$iProject_id\">$sProject_name</a>&nbsp;&nbsp;|&nbsp;&nbsp;";
+        $fastlinks2 .= "<a href=\"query.php?op=doquery&amp;projects=$iProject_id&amp;open=1&amp;order=priority_name&amp;sort=desc\">$sProject_name</a>&nbsp;&nbsp;|&nbsp;&nbsp;";
+	}
+	$t->assign('fastlinks1',$fastlinks1);
+	$t->assign('fastlinks2',$fastlinks2);
+}
 
+// Build a large table of bug counts.  We need all of the project names.
 if (SHOW_PROJECT_SUMMARIES) {
 	$querystring = $QUERY['index-projsummary-1'];
 	$resfields = array(translate("Project"), translate("Open"));
