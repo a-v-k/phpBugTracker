@@ -1,12 +1,12 @@
--- 1.0.3 DUE 2007 October
+-- 1.0.3 2007 October - Usability Changes
 : Add rel="nofollow" to make phpBugTracker less attractive to comment spammers.
+: Vastly speed up direct-to-bug links (eliminate redundant query of prior query results)
+: Feature - URL is preserved  through login
 : Modify translations, no longer "five" most recent bugs
 : Clean up email template: line up columns, fix horked priority attribute
-: Fix ambiguous column, in searches, caused by bookmarks table
-: Fix small SQL injection hole. Copy magic_quotes_gpc warning to admin side.
-: Vastly speed up direct-to-bug links (eliminate redundant query of prior query results)
-TODO: URL preservation through login
-TODO: Sort by priority bug
+: Fix ambiguous column, in searches, caused by bookmarks & attachments table
+: Fix small SQL injection hole.
+: Copy magic_quotes_gpc warning to admin side.
 
 -- 1.0.2 2007 September - A catchup release
 : Noted workaround for static method call, for php5/jpgraph 2.2.  easier jpgraph setup also.

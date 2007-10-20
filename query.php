@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.113 2007/10/05 06:07:33 brycen Exp $
+// $Id: query.php,v 1.114 2007/10/20 06:42:53 brycen Exp $
 
 include 'include.php';
 
@@ -224,6 +224,7 @@ function build_query($assignedto, $reportedby, $open, $bookmarked) {
 		*/
 	}
 
+
 	if (!empty($query)) {
 		return array(@join(' and ',$query), $paramstr);
 	} else {
@@ -411,6 +412,17 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 			'field_titles' => $field_titles,
 			'has_excel' => find_include('Spreadsheet/Excel/Writer.php')
 			));
+
+    // Because syslog() is broken on OS X
+    //$fd = fopen("/tmp/php.log", "a");
+    //fwrite($fd, sprintf($QUERY['query-list-bugs'], join(', ', $query_fields),
+    //                (!empty($_SESSION['queryinfo']['query'])
+    //                                ? "and {$_SESSION['queryinfo']['query']} " : ''),
+    //                                            $db_headers[$order], $sort));
+    //fwrite($fd,"\n");
+    //fclose($fd);
+    // Because syslog() is broken on OS X
+
 		
 		$t->assign('bugs', $db->getAll($db->modifyLimitQuery(
 			sprintf($QUERY['query-list-bugs'], join(', ', $query_fields),

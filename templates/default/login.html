@@ -58,6 +58,10 @@
 		</tr>
 		<?php } ?>
 	</table>
+    <br/>
+    After login, you will be redirected to:<br/>
+    <?php echo $incoming_url ?>
+    <input type='hidden' name='redirect_url'  value='<?php echo $incoming_url ?>'>
 	</form>
 </center>
 </body>

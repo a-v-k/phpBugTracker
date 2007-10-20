@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.145 2007/09/17 05:54:43 brycen Exp $
+// $Id: include.php,v 1.146 2007/10/20 06:42:53 brycen Exp $
 
 define('RAWERROR', true);
 
@@ -224,10 +224,16 @@ if (isset($_POST['dologin'])) {
 			}
 		}
 	} else {
+        // If Invalid Login
 		if (!$u = $auth->auth_validatelogin()) {
 			$t->assign('loginerror', '<div class="error">'.translate("Invalid login").'</div>');
 			$username = $_POST['username'];
 		}
+        // If good login with saved URL: redirect user
+        if( $url = $_POST['redirect_url'] ) {
+            header("location: $url");
+            exit(0);
+        }
 	}
 
 	// "Remember me" handling
@@ -261,6 +267,11 @@ if (!empty($u)) {
 }
 
 if (defined('FORCE_LOGIN') and FORCE_LOGIN and !$u and !defined('NO_AUTH')) {
+    // Save URL for after login
+    $incoming_url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    $t->assign('incoming_url', $incoming_url);
+
+    // Basic template
 	include('templates/'.THEME.'/login.html');
 	exit;
 }

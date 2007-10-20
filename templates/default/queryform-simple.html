@@ -85,10 +85,10 @@ function checkSavedQueries(frm) {
 			<td valign="top"><b><?php echo translate("Sort by"); ?>:</b></td>
 			<td valign="top">
 				<select name="order">
-					<option <?php if (!$order || $order == 'priority') echo "selected"; ?> value="priority.sort_order">
+					<option <?php if (!$order || $order == 'priority') echo "selected"; ?> value="priority_name">
 					<?php echo translate("Priority"); ?>
 					</option>
-					<option <?php if ($order == 'severity.sort_order') echo "selected"; ?> value="severity.sort_order">
+					<option <?php if ($order == 'severity.sort_order') echo "selected"; ?> value="severity_name">
 					<?php echo translate("Severity"); ?>
 					</option>
 					<option <?php if ($order == 'status_name') echo "selected"; ?> value="status_name">
