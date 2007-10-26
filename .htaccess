@@ -1,0 +1,2 @@
+# Works if AllowOverride Options is also enabled for this directory
+php_flag magic_quotes_gpc on
