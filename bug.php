@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.160 2007/09/21 23:22:29 brycen Exp $
+// $Id: bug.php,v 1.161 2007/10/26 17:36:20 brycen Exp $
 
 include 'include.php';
 
@@ -1003,7 +1003,7 @@ if (!empty($_REQUEST['op'])) {
 		case 'update':
 			$error = update_bug(check_id($_POST['bugid']));
 			if (!empty($error)) {
-				show_bug($_POST['bugid'], $error);
+				show_bug(check_id($_POST['bugid']), $error);
 			} else {
 				header("Location: bug.php?op=show&bugid=".$_POST['bugid']."&pos=".$_POST['pos']);
 			}
