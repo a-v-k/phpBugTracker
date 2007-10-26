@@ -60,7 +60,7 @@ you'll get "DB Error: syntax error" on various feature of the new phpBugTracker.
 Visit your "Personal Page", and click "Submit" to reset the bug list columns.
 
 
-Upgrading from 1.0.1 to 1.0.3
+Upgrading from 1.0.2 to 1.0.3
 -----------------------------
 There is no database update required.
 
