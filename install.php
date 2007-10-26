@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.57 2007/09/16 05:11:52 brycen Exp $
+// $Id: install.php,v 1.58 2007/10/26 05:06:27 brycen Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -348,7 +348,7 @@ if (isset($_POST['op'])) {
 	if (!get_magic_quotes_gpc()) {
 		$error .= "<p><hr></p><p>magic_quotes_gpc is OFF!</p>".
 			"<p>You must have magic_quotes_gpc set to On either in php.ini or in ".
-			".htaccess (see <a href=\"http://www.php.net/manual/en/configuration.php\">http://www.php.net/manual/en/configuration.php</a> for more info).</p><p><hr></p>";
+			".htaccess (see <a href=\"http://php.net/magic_quotes\">http://php.net/magic_quotes</a> for more info).</p><p><hr></p>";
 	}
 
 	show_front($error);
