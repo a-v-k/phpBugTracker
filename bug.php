@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.161 2007/10/26 17:36:20 brycen Exp $
+// $Id: bug.php,v 1.162 2008/01/27 23:16:03 brycen Exp $
 
 include 'include.php';
 
@@ -741,11 +741,12 @@ function do_form($bugid = 0) {
 	$reporter = ($reporter and is_numeric($reporter)) ? $reporter : $u;
 
 	// Check to see if this bug's component has an owner and should be assigned
+    // If we aren't using voting to promote, then auto-promote to New
 	if ($owner = $db->getOne("select owner from ".TBL_COMPONENT." c where component_id = $component")) {
-		$status = BUG_ASSIGNED;
+		//$status = BUG_ASSIGNED;
+		$status = PROMOTE_VOTES ? BUG_UNCONFIRMED : BUG_ASSIGNED;
 	} else {
 		$owner = 0;
-		// If we aren't using voting to promote, then auto-promote to New
 		$status = PROMOTE_VOTES ? BUG_UNCONFIRMED : BUG_PROMOTED;
 	}
 
