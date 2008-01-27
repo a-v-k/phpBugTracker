@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.43 2007/10/05 06:07:33 brycen Exp $
+// $Id: en.php,v 1.44 2008/01/27 23:16:50 brycen Exp $
 
 $STRING = array(
 	"That attachment does not exist" => "That attachment does not exist",
@@ -336,14 +336,15 @@ start reporting bugs!",
 	"Add a new bug" => "Add a new bug",
 	"View Reports" => "View Reports",
 	"Create a New Account" => "Create a New Account",
-	"Read Documentation" => "Read Documentation",
-	"Administration Tools" => "Administration Tools",
+	"Read Documentation" => "Help",
+	"Administration Tools" => "Admin",
 	"Email Password" => "Email Password",
 	"Forgot your password?  Have it sent to you" => "Forgot your password?  Have it sent to you",
 	"Remember %s for next time" => "Remember %s for next time",
 	"Remember me" => "Remember me",
 	"Bugs assigned to me" => "Bugs assigned to me",
-	"Bugs reported by me" => "Bugs reported by me",
+	"Bugs reported by me" => "Reported by me",
+	"Bookmarked bugs" => "Bookmarks",
 	"Personal Page" => "Personal Page",
 	"Logout %s" => "Logout %s",
 	"You do not have the rights to view this project." => "You do not have the rights to view this project.",
