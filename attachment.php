@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: attachment.php,v 1.28 2007/09/21 23:22:29 brycen Exp $
+// $Id: attachment.php,v 1.29 2008/01/27 23:19:15 brycen Exp $
 
 include 'include.php';
 
@@ -162,7 +162,7 @@ if (isset($_GET['del'])) {
 		del_attachment($_GET['del']);
 	}
 } elseif (isset($_POST['submit'])) {
-	$perm->check('Editbug');
+	$perm->check('EditBug');
 	add_attachment($_POST['bugid'], $_POST['description']);
 } elseif (isset($_GET['attachid'])) {
 	if (list($filename, $mimetype) = grab_attachment($_GET['attachid'])) {
@@ -177,7 +177,7 @@ if (isset($_GET['del'])) {
 		exit;
 	}
 } elseif (isset($_GET['bugid'])) {
-	$perm->check('Editbug');
+	$perm->check('EditBug');
 	show_attachment_form(check_id($_GET['bugid']));
 } else {
 	show_text(translate("You tried to post an attachment that is larger than the server's maximum upload file size."));
