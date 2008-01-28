@@ -1,3 +1,10 @@
+
+-- 1.0.4 2007 October - Stability
+: Bug 1872351: fix preventing non-admins from attaching attachments
+: Bug: fix parameter checking on bugid
+: Bug: fix to AQL for newaccount.php (external facing new account form)
+: Change: new bugs are left "Unconfirmed" based on preferences, even if there is a default contact for the module.
+
 -- 1.0.3 2007 October - Usability Changes
 : Add rel="nofollow" to make phpBugTracker less attractive to comment spammers.
 : Vastly speed up direct-to-bug links (eliminate redundant query of prior query results)
@@ -8,7 +15,7 @@
 : Fix small SQL injection hole.
 : Copy magic_quotes_gpc warning to admin side.
 
--- 1.0.2 2007 September - A catchup release
+-- 1.0.2 2007 September - A catchup release, several years of odd checkins gathered
 : Noted workaround for static method call, for php5/jpgraph 2.2.  easier jpgraph setup also.
 : Applied various patches from sourceforge
 : Validated CCS and HTML syntax 
