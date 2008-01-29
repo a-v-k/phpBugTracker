@@ -78,6 +78,8 @@
 			<b>&nbsp;|&nbsp;&nbsp;<a href="bug.php?op=show&bugid=<?php echo $prevbug ?>&pos=<?php echo $prevpos ?>"><?php echo translate("Previous bug"); ?></a></b>
 		<?php } ?>
 		<?php if (!empty($nextbug)) { ?>
+            <input type="hidden" name="nextbug" value="<?php echo $nextbug ?>">
+            <input type="hidden" name="nextpos" value="<?php echo $nextpos ?>">
 			<b>&nbsp;|&nbsp;&nbsp;<a href="bug.php?op=show&bugid=<?php echo $nextbug ?>&pos=<?php echo $nextpos ?>"><?php echo translate("Next bug"); ?></a></b>
 		<?php } ?>
 		</td>
@@ -296,7 +298,11 @@
 		<div align="right">
 		<?php if ($may_edit or $may_add_comment) { ?>
 			<?php echo translate("Supress notification email"); ?> <input type="checkbox" name="suppress_email" value="1">
-			<input type="submit" value="Submit">
+            <?php if (empty($nextbug)) { ?>
+                <input type="submit" value="Submit">
+            <?php } else { ?>
+                <input type="submit" value="Submit & View Next">
+            <?php } ?>
 		<?php } else echo translate("You must login to modify this bug"); ?>
 		</div></td>
 	</tr>
