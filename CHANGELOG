@@ -2,7 +2,7 @@
 -- 1.0.4 2007 October - Stability
 : Bug 1872351: fix preventing non-admins from attaching attachments
 : Bug: fix parameter checking on bugid
-: Bug: fix to AQL for newaccount.php (external facing new account form)
+: Bug: fix to SQL for newaccount.php (external facing new account form)
 : Change: new bugs are left "Unconfirmed" based on preferences, even if there is a default contact for the module.
 
 -- 1.0.3 2007 October - Usability Changes
