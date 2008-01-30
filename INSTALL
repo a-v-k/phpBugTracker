@@ -27,7 +27,9 @@ Then:
    install the application.  You may need to download and copy a
    new "config.php" into the installation location.
 
-3. After completing the installation, login, set up a project,
+3. If you get a blank page, check your web server's error logs for php errors.
+
+4. After completing the installation, login, set up a project,
    and start reporting bugs.
 
 Mandantory:

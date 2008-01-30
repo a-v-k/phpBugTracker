@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.58 2007/10/26 05:06:27 brycen Exp $
+// $Id: install.php,v 1.59 2008/01/30 06:01:31 brycen Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -81,8 +81,8 @@ $t = new template(array(
 	'template_path' => 'templates/default'));
 
 $db_types = array(
-	'mysql' => 'MySQL < 4.1',
 	'mysqli' => 'MySQL >= 4.1',
+	'mysql' => 'MySQL < 4.1',
 	'oci8' => 'Oracle 8.1.x',
 	'pgsql' => 'PostgreSQL',
 	'mssql' => 'Microsoft SQL Server',
@@ -132,8 +132,9 @@ if (!empty($_POST)) {
 		'/OPTION_ADMIN_PASS/' => $_POST['encrypt_pass'] ? md5($_POST['admin_pass']) : $_POST['admin_pass'],
 		'/OPTION_PHPBT_EMAIL/' => $_POST['phpbt_email'],
 		'/OPTION_ENCRYPT_PASS/' => $_POST['encrypt_pass'],
-		'/OPTION_INSTALL_URL/' => 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']),
+		'/OPTION_INSTALL_URL/' => 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']),
 		);
+		// Bug #1501163 '/OPTION_INSTALL_URL/' => 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']),
 }
 
 if (file_exists('config.php')) {
@@ -330,6 +331,7 @@ function show_front($error = '') {
 	extract($_POST);
 	$error = $error;
 	$default_email = 'phpbt@'.$_SERVER['SERVER_NAME'];
+	$OPTION_INSTALL_URL = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']);
 	include('templates/default/install.html');
 }
 

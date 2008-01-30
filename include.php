@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.146 2007/10/20 06:42:53 brycen Exp $
+// $Id: include.php,v 1.147 2008/01/30 06:01:31 brycen Exp $
 
 define('RAWERROR', true);
 
@@ -44,7 +44,9 @@ if (!defined('DB_HOST')) { // Installation hasn't been completed
 include ('inc/functions.php');
 
 // PEAR::DB
+@ini_set("display_errors", true);
 require_once(PEAR_PATH.'DB.php');
+@ini_restore("display_errors");
 $dsn = array(
 	'phptype' => DB_TYPE,
 	'hostspec' => DB_HOST,
