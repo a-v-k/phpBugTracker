@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: editComment.php,v 1.2 2007/09/21 23:22:29 brycen Exp $  
+// $Id: editComment.php,v 1.3 2008/04/09 03:27:14 brycen Exp $  
 
 include 'include.php';
 
@@ -34,6 +34,7 @@ if (! $perm->have_perm('Manager')) {
 }
 
 //	Edit a specific comment
+$bug_id = check_id($_GET['bugid']);
 if (isset($_GET['newComment'])) {
 	$new_comment = $_GET['newComment'];
 	$new_comment = $db->quoteSmart($new_comment);
@@ -53,11 +54,11 @@ if (isset($_GET['newComment'])) {
 	// TODO: create a "revised_on" date column in the database
 	$db->query("update ".TBL_COMMENT." set comment_text=".$new_comment." where comment_id=$comment_id");
 	$t->assign('status', "Comment #$comment_id updated"); 
+    header("Location: bug.php?op=show&bugid=$bug_id");
 }
 
 //	List all comments
 //	In the case of an edit, this counts as the confirmation page.
-$bug_id = check_id($_GET['bugid']);
 if (is_numeric($bug_id)) {
 	$t->assign('comments', $db->getAll('select c.* from '.TBL_COMMENT." c where bug_id=$bug_id order by c.created_date"));
 	$t->render('editComment.html', translate("Edit Comment"));

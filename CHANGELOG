@@ -1,9 +1,18 @@
+-- 1.0.5 2008 - Stability
+: Bug: fix BLOB/TEXT default, for compatibility with versions of mysql
+: Bug: fix home page error that only shows up if there are no projects in DB
+: Feature: support <pre></pre> in bug comments
+: TODO: document <pre></pre>
+: Change: submit & next
+: Change: show most recently CHANGED bugs on home page
 
 -- 1.0.4 2007 October - Stability
 : Bug 1872351: fix preventing non-admins from attaching attachments
 : Bug: fix parameter checking on bugid
 : Bug: fix to SQL for newaccount.php (external facing new account form)
 : Change: new bugs are left "Unconfirmed" based on preferences, even if there is a default contact for the module.
+: Change: new bugs drop you at the bug, not some stale old querry
+: Change: tighter regex for automatic bug linking.  Use "bug #xxxxx".
 
 -- 1.0.3 2007 October - Usability Changes
 : Add rel="nofollow" to make phpBugTracker less attractive to comment spammers.
