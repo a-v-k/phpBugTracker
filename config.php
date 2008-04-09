@@ -19,14 +19,14 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config.php,v 1.44 2007/09/16 05:38:28 brycen Exp $
+// $Id: config.php,v 1.45 2008/04/09 03:56:37 brycen Exp $
 
 // Database Config
-define ('DB_TYPE', 'mysql');  // using PEAR::DB naming (mysql, pgsql, etc.)
+define ('DB_TYPE', 'mysqli');  // using PEAR::DB naming (mysql, pgsql, etc.)
 define ('DB_HOST', 'localhost'); // hostname of database server
-define ('DB_DATABASE', 'bug_tracker'); // database name
-define ('DB_USER', 'user'); // username for database connection
-define ('DB_PASSWORD', 'password'); // password for database connection
+define ('DB_DATABASE', 'bug_tracker2'); // database name
+define ('DB_USER', 'root'); // username for database connection
+define ('DB_PASSWORD', ''); // password for database connection
 
 // Database Table Config
 // you can change either the prefix of the table names or each table name individually
@@ -69,7 +69,6 @@ define ('TBL_PRIORITY',        TBL_PREFIX.'priority');
 
 // Constants
 define ('ONEDAY', 86400);
-
 define('PEAR_PATH', ''); // Blank, or path to Pear::DB library directory containing DB.php (See http://pear.php.net/)
 require_once (dirname(__FILE__).'/inc/auth.php');
 

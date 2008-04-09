@@ -122,10 +122,10 @@
 					<td colspan="2" align="center">
 						<hr size="1" width="220" />
 						<?php if (@is_writeable('config.php')) { ?>
-							<?php echo translate('When you submit the form, the database tables will be created and config.php will be saved to disk.  You will then be able 							to login and use the bug tracker.'); ?>
+							<?php echo translate('When you submit the form, the database tables will be created and config.php will be saved to disk.  You will need to login to access admin functions.'); ?>
 							<input type="hidden" name="op" value="save_config_file" />
 						<?php } else { ?>
-							<?php echo translate('Since config.php is not writeable by this script, when you submit this form you will be prompted to save config.php.  Copy 							this file to the location of the bug tracker, and then you will 							be able to <a href="index.php">login to the bug tracker</a>.  From 							the home page you can go to the Admin Tools and customize your 							installation via the Configuration link.  Once you have 							completed the configuration, you will be ready to add a project and 							start reporting bugs!'); ?>
+							<?php echo translate('Since config.php is not writeable by this script, when you submit this form you will be prompted to save config.php.  Copy 							this file to the location of the bug tracker, and then you will 							be able to <a href="index.php">login to the bug tracker</a>.  From 							the home page you can go to the Admin Tools and customize your 							installation via the Configuration link.  Once you have 							completed the configuration, you will need to login to access admin functions.'); ?>
 							<input type="hidden" name="op" value="dump_config_file" />
 						<?php } ?>
 						<br />
