@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.162 2008/01/27 23:16:03 brycen Exp $
+// $Id: bug.php,v 1.163 2008/04/09 03:24:28 brycen Exp $
 
 include 'include.php';
 
@@ -115,19 +115,27 @@ function format_comments($comments) {
 
 	// Set up the regex replacements
 	$patterns = array(
+		'/\r/',
 		'/</',
 		'/>/',
-		'/(bug)[[:space:]]*(#?)([0-9]+)/i', // matches bug #nn
+		'/\n/',
+		'/(bug)[[:space:]]?(#?)([0-9]+)/i', // matches bug #nn
 		'/cvs:([^\.\s:,\?!]+(\.[^\.\s:#,\?!]+)*)([:#](rev|r)?)?(\d\.[\d\.]+)?([\W\s])?/i', // matches cvs:filename.php, cvs:filename.php:n.nn or cvs:filename.php#revn.nn
+		'/&lt;pre&gt;/',        // preformatted text
+		'/&lt;\/pre&gt;/',      // preformatted text
 		);
 	$replacements = array(
+		'',
 		'&lt;',
 		'&gt;',
-		"<a href='$me?op=show&bugid=\\3'>\\1 \\2\\3</a>", // internal link to bug
+		'<br>',
+		"<a href='$me?op=show&bugid=\\3'>\\1 #\\3</a>", // internal link to bug
 		'<a href="'.CVS_WEB.'\\1#rev\\5" target="_blank">\\1</a>\\6', // external link to cvs web interface
+		'<pre>',
+		'</pre>',
 		);
 
-	return nl2br(preg_replace($patterns, $replacements, stripslashes($comments)));
+	return preg_replace($patterns, $replacements, stripslashes($comments));
 }
 
 ///
@@ -759,11 +767,14 @@ function do_form($bugid = 0) {
 	if (isset($_POST['at_description']))
 		add_attachment($bugid, $_POST['at_description']); //attachment (initial)
 
-	if (isset($another)) {
-		header("Location: $me?op=add&project=$project");
-	} else {
-		header("Location: query.php");
-	}
+//	if (isset($another)) {
+//		header("Location: $me?op=add&project=$project");
+//	} else {
+//		header("Location: query.php");
+//	}
+
+    //  Go directly to view the bug we just submitted
+    header("Location: bug.php?op=show&bugid=$bugid");
 }
 
 function show_form($bugid = 0, $error = '') {
@@ -1006,7 +1017,11 @@ if (!empty($_REQUEST['op'])) {
 			if (!empty($error)) {
 				show_bug(check_id($_POST['bugid']), $error);
 			} else {
-				header("Location: bug.php?op=show&bugid=".$_POST['bugid']."&pos=".$_POST['pos']);
+                if (isset($_POST['nextbug'])) {
+                    header("Location: bug.php?op=show&bugid=".$_POST['nextbug']."&pos=".$_POST['nextpos']);
+                } else {
+                    header("Location: bug.php?op=show&bugid=".$_POST['bugid']);
+                }
 			}
 			break;
 		case 'mass_update':
