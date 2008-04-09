@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: index.php,v 1.47 2007/10/05 18:07:19 brycen Exp $
+// $Id: index.php,v 1.48 2008/04/09 03:12:47 brycen Exp $
 
 include 'include.php';
 
@@ -103,6 +103,8 @@ function build_image($restricted_projects) {
 
 // Build fastlinks.  We need all of the project names.
 if (true) {
+    $fastlinks1 = "";
+    $fastlinks2 = "";
 	$rs = $db->query("select project_id, project_name from " . TBL_PROJECT);
 	while (list($iProject_id, $sProject_name) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
         $fastlinks1 .= "<a href=\"bug.php?op=add&amp;project=$iProject_id\">$sProject_name</a>&nbsp;&nbsp;|&nbsp;&nbsp;";
@@ -175,7 +177,7 @@ if (SHOW_PROJECT_SUMMARIES) {
 
 // Show the recently added and closed bugs
 $t->assign('recentbugs',
-	$db->getAll($db->modifyLimitQuery("select bug_id, title, project_name from ".TBL_BUG.' b, '.TBL_PROJECT." p where b.project_id not in ($restricted_projects) and not ".in_closed('status_id')."and b.project_id = p.project_id order by b.created_date desc", 0, 8)));
+	$db->getAll($db->modifyLimitQuery("select bug_id, title, project_name from ".TBL_BUG.' b, '.TBL_PROJECT." p where b.project_id not in ($restricted_projects) and not ".in_closed('status_id')."and b.project_id = p.project_id order by b.last_modified_date desc", 0, 15)));
 
 $t->assign('closedbugs',
 	$db->getAll($db->modifyLimitQuery('select b.bug_id, title, project_name from '.TBL_BUG.' b, '.TBL_PROJECT." p where b.project_id not in ($restricted_projects) and ".in_closed('status_id').' and b.project_id = p.project_id order by close_date desc', 0, 5)));
