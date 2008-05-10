@@ -1,0 +1,570 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.6	//
+CHARSET	include.php	/^			define('CHARSET', $STRING['charset']);$/;"	d
+CHARSET	include.php	/^			define('CHARSET', 'utf-8');$/;"	d
+CUR_DB_VERSION	config-dist.php	/^define ('CUR_DB_VERSION', 5);  \/\/ The version of the database$/;"	d
+CUR_DB_VERSION	config.php	/^define ('CUR_DB_VERSION', 5);  \/\/ The version of the database$/;"	d
+CUR_DB_VERSION	config_bak.php	/^define ('CUR_DB_VERSION', 5);  \/\/ The version of the database$/;"	d
+DB_DATABASE	config-dist.php	/^define ('DB_DATABASE', '{db_database}'); \/\/ database name$/;"	d
+DB_DATABASE	config.php	/^define ('DB_DATABASE', 'bug_tracker'); \/\/ database name$/;"	d
+DB_DATABASE	config_bak.php	/^define ('DB_DATABASE', 'bug_tracker'); \/\/ database name$/;"	d
+DB_HOST	config-dist.php	/^define ('DB_HOST', '{db_host}'); \/\/ hostname of database server$/;"	d
+DB_HOST	config.php	/^define ('DB_HOST', 'localhost'); \/\/ hostname of database server$/;"	d
+DB_HOST	config_bak.php	/^define ('DB_HOST', 'localhost'); \/\/ hostname of database server$/;"	d
+DB_PASSWORD	config-dist.php	/^define ('DB_PASSWORD', '{db_pass}'); \/\/ password for database connection$/;"	d
+DB_PASSWORD	config.php	/^define ('DB_PASSWORD', 'lemme1n'); \/\/ password for database connection$/;"	d
+DB_PASSWORD	config_bak.php	/^define ('DB_PASSWORD', 'lemme1n'); \/\/ password for database connection$/;"	d
+DB_TYPE	config-dist.php	/^define ('DB_TYPE', '{db_type}');  \/\/ using PEAR::DB naming (mysql, pgsql, etc.)$/;"	d
+DB_TYPE	config.php	/^define ('DB_TYPE', 'mysqli');  \/\/ using PEAR::DB naming (mysql, pgsql, etc.)$/;"	d
+DB_TYPE	config_bak.php	/^define ('DB_TYPE', 'mysql');  \/\/ using PEAR::DB naming (mysql, pgsql, etc.)$/;"	d
+DB_USER	config-dist.php	/^define ('DB_USER', '{db_user}'); \/\/ username for database connection$/;"	d
+DB_USER	config.php	/^define ('DB_USER', 'ccs'); \/\/ username for database connection$/;"	d
+DB_USER	config_bak.php	/^define ('DB_USER', 'ccs'); \/\/ username for database connection$/;"	d
+NO_AUTH	newaccount.php	/^define('NO_AUTH', 1);$/;"	d
+NO_AUTH	upgrade.php	/^define ('NO_AUTH', 1);$/;"	d
+ONEDAY	config-dist.php	/^define ('ONEDAY', 86400);$/;"	d
+ONEDAY	config.php	/^define ('ONEDAY', 86400);$/;"	d
+ONEDAY	config_bak.php	/^define ('ONEDAY', 86400);$/;"	d
+OPEN_BUG_STATUSES	include.php	/^	define('OPEN_BUG_STATUSES', join(', ', $/;"	d
+OPTION_INSTALL_URL	install.php	/^	$OPTION_INSTALL_URL = 'http:\/\/'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']);$/;"	v
+PEAR_PATH	config-dist.php	/^define('PEAR_PATH', ''); \/\/ Blank, or path to Pear::DB library directory containing DB.php (See http:\/\/pear.php.net\/)$/;"	d
+PEAR_PATH	config.php	/^define('PEAR_PATH', ''); \/\/ Blank, or path to Pear::DB library directory containing DB.php (See http:\/\/pear.php.net\/)$/;"	d
+PEAR_PATH	config_bak.php	/^define('PEAR_PATH', ''); \/\/ Blank, or path to Pear::DB library directory containing DB.php (See http:\/\/pear.php.net\/)$/;"	d
+PEAR_PATH	install.php	/^	define('PEAR_PATH', ''); \/\/ Set this to '\/some\/path\/' to not use system-wide PEAR$/;"	d
+PHPBT_VERSION	include.php	/^define('PHPBT_VERSION', '1.0rc6');$/;"	d
+RAWERROR	include.php	/^define('RAWERROR', true);$/;"	d
+RAWERROR	install.php	/^define('RAWERROR', true);$/;"	d
+RETURN_PATH	config-dist.php	/^define('RETURN_PATH', null);$/;"	d
+RETURN_PATH	config.php	/^define('RETURN_PATH', null);$/;"	d
+RETURN_PATH	config_bak.php	/^define('RETURN_PATH', null);$/;"	d
+SMTP_AUTH	config-dist.php	/^define('SMTP_AUTH', false);$/;"	d
+SMTP_AUTH	config.php	/^define('SMTP_AUTH', false);$/;"	d
+SMTP_AUTH	config_bak.php	/^define('SMTP_AUTH', false);$/;"	d
+SMTP_AUTH_PASS	config-dist.php	/^define('SMTP_AUTH_PASS', "");$/;"	d
+SMTP_AUTH_PASS	config.php	/^define('SMTP_AUTH_PASS', "");$/;"	d
+SMTP_AUTH_PASS	config_bak.php	/^define('SMTP_AUTH_PASS', "");$/;"	d
+SMTP_AUTH_USER	config-dist.php	/^define('SMTP_AUTH_USER', "");$/;"	d
+SMTP_AUTH_USER	config.php	/^define('SMTP_AUTH_USER', "");$/;"	d
+SMTP_AUTH_USER	config_bak.php	/^define('SMTP_AUTH_USER', "");$/;"	d
+SMTP_EMAIL	config-dist.php	/^define('SMTP_EMAIL', false);$/;"	d
+SMTP_EMAIL	config.php	/^define('SMTP_EMAIL', false);$/;"	d
+SMTP_EMAIL	config_bak.php	/^define('SMTP_EMAIL', false);$/;"	d
+SMTP_HELO	config-dist.php	/^define('SMTP_HELO', null);$/;"	d
+SMTP_HELO	config.php	/^define('SMTP_HELO', null);$/;"	d
+SMTP_HELO	config_bak.php	/^define('SMTP_HELO', null);$/;"	d
+SMTP_HOST	config-dist.php	/^define('SMTP_HOST', "localhost");$/;"	d
+SMTP_HOST	config.php	/^define('SMTP_HOST', "localhost");$/;"	d
+SMTP_HOST	config_bak.php	/^define('SMTP_HOST', "localhost");$/;"	d
+SMTP_PORT	config-dist.php	/^define('SMTP_PORT', 25);$/;"	d
+SMTP_PORT	config.php	/^define('SMTP_PORT', 25);$/;"	d
+SMTP_PORT	config_bak.php	/^define('SMTP_PORT', 25);$/;"	d
+TBL_ACTIVE_SESSIONS	config-dist.php	/^define ('TBL_ACTIVE_SESSIONS', TBL_PREFIX.'active_sessions');$/;"	d
+TBL_ACTIVE_SESSIONS	config.php	/^define ('TBL_ACTIVE_SESSIONS', TBL_PREFIX.'active_sessions');$/;"	d
+TBL_ACTIVE_SESSIONS	config_bak.php	/^define ('TBL_ACTIVE_SESSIONS', TBL_PREFIX.'active_sessions');$/;"	d
+TBL_ATTACHMENT	config-dist.php	/^define ('TBL_ATTACHMENT',      TBL_PREFIX.'attachment');$/;"	d
+TBL_ATTACHMENT	config.php	/^define ('TBL_ATTACHMENT',      TBL_PREFIX.'attachment');$/;"	d
+TBL_ATTACHMENT	config_bak.php	/^define ('TBL_ATTACHMENT',      TBL_PREFIX.'attachment');$/;"	d
+TBL_AUTH_GROUP	config-dist.php	/^define ('TBL_AUTH_GROUP',      TBL_PREFIX.'auth_group');$/;"	d
+TBL_AUTH_GROUP	config.php	/^define ('TBL_AUTH_GROUP',      TBL_PREFIX.'auth_group');$/;"	d
+TBL_AUTH_GROUP	config_bak.php	/^define ('TBL_AUTH_GROUP',      TBL_PREFIX.'auth_group');$/;"	d
+TBL_AUTH_PERM	config-dist.php	/^define ('TBL_AUTH_PERM',       TBL_PREFIX.'auth_perm');$/;"	d
+TBL_AUTH_PERM	config.php	/^define ('TBL_AUTH_PERM',       TBL_PREFIX.'auth_perm');$/;"	d
+TBL_AUTH_PERM	config_bak.php	/^define ('TBL_AUTH_PERM',       TBL_PREFIX.'auth_perm');$/;"	d
+TBL_AUTH_USER	config-dist.php	/^define ('TBL_AUTH_USER',       TBL_PREFIX.'auth_user');$/;"	d
+TBL_AUTH_USER	config.php	/^define ('TBL_AUTH_USER',       TBL_PREFIX.'auth_user');$/;"	d
+TBL_AUTH_USER	config_bak.php	/^define ('TBL_AUTH_USER',       TBL_PREFIX.'auth_user');$/;"	d
+TBL_BOOKMARK	config-dist.php	/^define ('TBL_BOOKMARK',	       TBL_PREFIX.'bookmark');$/;"	d
+TBL_BOOKMARK	config.php	/^define ('TBL_BOOKMARK',	       TBL_PREFIX.'bookmark');$/;"	d
+TBL_BOOKMARK	config_bak.php	/^define ('TBL_BOOKMARK',	       TBL_PREFIX.'bookmark');$/;"	d
+TBL_BUG	config-dist.php	/^define ('TBL_BUG',             TBL_PREFIX.'bug');$/;"	d
+TBL_BUG	config.php	/^define ('TBL_BUG',             TBL_PREFIX.'bug');$/;"	d
+TBL_BUG	config_bak.php	/^define ('TBL_BUG',             TBL_PREFIX.'bug');$/;"	d
+TBL_BUG_CC	config-dist.php	/^define ('TBL_BUG_CC',          TBL_PREFIX.'bug_cc');$/;"	d
+TBL_BUG_CC	config.php	/^define ('TBL_BUG_CC',          TBL_PREFIX.'bug_cc');$/;"	d
+TBL_BUG_CC	config_bak.php	/^define ('TBL_BUG_CC',          TBL_PREFIX.'bug_cc');$/;"	d
+TBL_BUG_DEPENDENCY	config-dist.php	/^define ('TBL_BUG_DEPENDENCY',  TBL_PREFIX.'bug_dependency');$/;"	d
+TBL_BUG_DEPENDENCY	config.php	/^define ('TBL_BUG_DEPENDENCY',  TBL_PREFIX.'bug_dependency');$/;"	d
+TBL_BUG_DEPENDENCY	config_bak.php	/^define ('TBL_BUG_DEPENDENCY',  TBL_PREFIX.'bug_dependency');$/;"	d
+TBL_BUG_GROUP	config-dist.php	/^define ('TBL_BUG_GROUP',       TBL_PREFIX.'bug_group');$/;"	d
+TBL_BUG_GROUP	config.php	/^define ('TBL_BUG_GROUP',       TBL_PREFIX.'bug_group');$/;"	d
+TBL_BUG_GROUP	config_bak.php	/^define ('TBL_BUG_GROUP',       TBL_PREFIX.'bug_group');$/;"	d
+TBL_BUG_HISTORY	config-dist.php	/^define ('TBL_BUG_HISTORY',     TBL_PREFIX.'bug_history');$/;"	d
+TBL_BUG_HISTORY	config.php	/^define ('TBL_BUG_HISTORY',     TBL_PREFIX.'bug_history');$/;"	d
+TBL_BUG_HISTORY	config_bak.php	/^define ('TBL_BUG_HISTORY',     TBL_PREFIX.'bug_history');$/;"	d
+TBL_BUG_VOTE	config-dist.php	/^define ('TBL_BUG_VOTE',        TBL_PREFIX.'bug_vote');$/;"	d
+TBL_BUG_VOTE	config.php	/^define ('TBL_BUG_VOTE',        TBL_PREFIX.'bug_vote');$/;"	d
+TBL_BUG_VOTE	config_bak.php	/^define ('TBL_BUG_VOTE',        TBL_PREFIX.'bug_vote');$/;"	d
+TBL_COMMENT	config-dist.php	/^define ('TBL_COMMENT',         TBL_PREFIX.'comment');$/;"	d
+TBL_COMMENT	config.php	/^define ('TBL_COMMENT',         TBL_PREFIX.'comment');$/;"	d
+TBL_COMMENT	config_bak.php	/^define ('TBL_COMMENT',         TBL_PREFIX.'comment');$/;"	d
+TBL_COMPONENT	config-dist.php	/^define ('TBL_COMPONENT',       TBL_PREFIX.'component');$/;"	d
+TBL_COMPONENT	config.php	/^define ('TBL_COMPONENT',       TBL_PREFIX.'component');$/;"	d
+TBL_COMPONENT	config_bak.php	/^define ('TBL_COMPONENT',       TBL_PREFIX.'component');$/;"	d
+TBL_CONFIGURATION	config-dist.php	/^define ('TBL_CONFIGURATION',   TBL_PREFIX.'configuration');$/;"	d
+TBL_CONFIGURATION	config.php	/^define ('TBL_CONFIGURATION',   TBL_PREFIX.'configuration');$/;"	d
+TBL_CONFIGURATION	config_bak.php	/^define ('TBL_CONFIGURATION',   TBL_PREFIX.'configuration');$/;"	d
+TBL_DATABASE	config-dist.php	/^define ('TBL_DATABASE',	       TBL_PREFIX.'database_server');$/;"	d
+TBL_DATABASE	config.php	/^define ('TBL_DATABASE',	       TBL_PREFIX.'database_server');$/;"	d
+TBL_DATABASE	config_bak.php	/^define ('TBL_DATABASE',	       TBL_PREFIX.'database_server');$/;"	d
+TBL_DB_SEQUENCE	config-dist.php	/^define ('TBL_DB_SEQUENCE',     TBL_PREFIX.'db_sequence');$/;"	d
+TBL_DB_SEQUENCE	config.php	/^define ('TBL_DB_SEQUENCE',     TBL_PREFIX.'db_sequence');$/;"	d
+TBL_DB_SEQUENCE	config_bak.php	/^define ('TBL_DB_SEQUENCE',     TBL_PREFIX.'db_sequence');$/;"	d
+TBL_GROUP_PERM	config-dist.php	/^define ('TBL_GROUP_PERM',      TBL_PREFIX.'group_perm');$/;"	d
+TBL_GROUP_PERM	config.php	/^define ('TBL_GROUP_PERM',      TBL_PREFIX.'group_perm');$/;"	d
+TBL_GROUP_PERM	config_bak.php	/^define ('TBL_GROUP_PERM',      TBL_PREFIX.'group_perm');$/;"	d
+TBL_OS	config-dist.php	/^define ('TBL_OS',              TBL_PREFIX.'os');$/;"	d
+TBL_OS	config.php	/^define ('TBL_OS',              TBL_PREFIX.'os');$/;"	d
+TBL_OS	config_bak.php	/^define ('TBL_OS',              TBL_PREFIX.'os');$/;"	d
+TBL_PREFIX	config-dist.php	/^define ('TBL_PREFIX', '{tbl_prefix}');	\/\/ the prefix for all tables, leave empty to use the old style$/;"	d
+TBL_PREFIX	config.php	/^define ('TBL_PREFIX', 'phpbt_');	\/\/ the prefix for all tables, leave empty to use the old style$/;"	d
+TBL_PREFIX	config_bak.php	/^define ('TBL_PREFIX', 'phpbt_');	\/\/ the prefix for all tables, leave empty to use the old style$/;"	d
+TBL_PRIORITY	config-dist.php	/^define ('TBL_PRIORITY',        TBL_PREFIX.'priority');$/;"	d
+TBL_PRIORITY	config.php	/^define ('TBL_PRIORITY',        TBL_PREFIX.'priority');$/;"	d
+TBL_PRIORITY	config_bak.php	/^define ('TBL_PRIORITY',        TBL_PREFIX.'priority');$/;"	d
+TBL_PROJECT	config-dist.php	/^define ('TBL_PROJECT',         TBL_PREFIX.'project');$/;"	d
+TBL_PROJECT	config.php	/^define ('TBL_PROJECT',         TBL_PREFIX.'project');$/;"	d
+TBL_PROJECT	config_bak.php	/^define ('TBL_PROJECT',         TBL_PREFIX.'project');$/;"	d
+TBL_PROJECT_GROUP	config-dist.php	/^define ('TBL_PROJECT_GROUP',   TBL_PREFIX.'project_group');$/;"	d
+TBL_PROJECT_GROUP	config.php	/^define ('TBL_PROJECT_GROUP',   TBL_PREFIX.'project_group');$/;"	d
+TBL_PROJECT_GROUP	config_bak.php	/^define ('TBL_PROJECT_GROUP',   TBL_PREFIX.'project_group');$/;"	d
+TBL_PROJECT_PERM	config-dist.php	/^define ('TBL_PROJECT_PERM',    TBL_PREFIX.'project_perm');$/;"	d
+TBL_PROJECT_PERM	config.php	/^define ('TBL_PROJECT_PERM',    TBL_PREFIX.'project_perm');$/;"	d
+TBL_PROJECT_PERM	config_bak.php	/^define ('TBL_PROJECT_PERM',    TBL_PREFIX.'project_perm');$/;"	d
+TBL_RESOLUTION	config-dist.php	/^define ('TBL_RESOLUTION',      TBL_PREFIX.'resolution');$/;"	d
+TBL_RESOLUTION	config.php	/^define ('TBL_RESOLUTION',      TBL_PREFIX.'resolution');$/;"	d
+TBL_RESOLUTION	config_bak.php	/^define ('TBL_RESOLUTION',      TBL_PREFIX.'resolution');$/;"	d
+TBL_SAVED_QUERY	config-dist.php	/^define ('TBL_SAVED_QUERY',     TBL_PREFIX.'saved_query');$/;"	d
+TBL_SAVED_QUERY	config.php	/^define ('TBL_SAVED_QUERY',     TBL_PREFIX.'saved_query');$/;"	d
+TBL_SAVED_QUERY	config_bak.php	/^define ('TBL_SAVED_QUERY',     TBL_PREFIX.'saved_query');$/;"	d
+TBL_SEVERITY	config-dist.php	/^define ('TBL_SEVERITY',        TBL_PREFIX.'severity');$/;"	d
+TBL_SEVERITY	config.php	/^define ('TBL_SEVERITY',        TBL_PREFIX.'severity');$/;"	d
+TBL_SEVERITY	config_bak.php	/^define ('TBL_SEVERITY',        TBL_PREFIX.'severity');$/;"	d
+TBL_SITE	config-dist.php	/^define ('TBL_SITE',            TBL_PREFIX.'site');$/;"	d
+TBL_SITE	config.php	/^define ('TBL_SITE',            TBL_PREFIX.'site');$/;"	d
+TBL_SITE	config_bak.php	/^define ('TBL_SITE',            TBL_PREFIX.'site');$/;"	d
+TBL_STATUS	config-dist.php	/^define ('TBL_STATUS',          TBL_PREFIX.'status');$/;"	d
+TBL_STATUS	config.php	/^define ('TBL_STATUS',          TBL_PREFIX.'status');$/;"	d
+TBL_STATUS	config_bak.php	/^define ('TBL_STATUS',          TBL_PREFIX.'status');$/;"	d
+TBL_USER_GROUP	config-dist.php	/^define ('TBL_USER_GROUP',      TBL_PREFIX.'user_group');$/;"	d
+TBL_USER_GROUP	config.php	/^define ('TBL_USER_GROUP',      TBL_PREFIX.'user_group');$/;"	d
+TBL_USER_GROUP	config_bak.php	/^define ('TBL_USER_GROUP',      TBL_PREFIX.'user_group');$/;"	d
+TBL_USER_PERM	config-dist.php	/^define ('TBL_USER_PERM',       TBL_PREFIX.'user_perm');$/;"	d
+TBL_USER_PERM	config.php	/^define ('TBL_USER_PERM',       TBL_PREFIX.'user_perm');$/;"	d
+TBL_USER_PERM	config_bak.php	/^define ('TBL_USER_PERM',       TBL_PREFIX.'user_perm');$/;"	d
+TBL_USER_PREF	config-dist.php	/^define ('TBL_USER_PREF',       TBL_PREFIX.'user_pref');$/;"	d
+TBL_USER_PREF	config.php	/^define ('TBL_USER_PREF',       TBL_PREFIX.'user_pref');$/;"	d
+TBL_USER_PREF	config_bak.php	/^define ('TBL_USER_PREF',       TBL_PREFIX.'user_pref');$/;"	d
+TBL_VERSION	config-dist.php	/^define ('TBL_VERSION',         TBL_PREFIX.'version');$/;"	d
+TBL_VERSION	config.php	/^define ('TBL_VERSION',         TBL_PREFIX.'version');$/;"	d
+TBL_VERSION	config_bak.php	/^define ('TBL_VERSION',         TBL_PREFIX.'version');$/;"	d
+THEME	install.php	/^define('THEME', 'default');$/;"	d
+THEME	upgrade.php	/^define ('THEME', 'default');$/;"	d
+aProjects	index.php	/^	$aProjects = array($/;"	v
+add_attachment	attachment.php	/^function add_attachment($bugid, $description) {$/;"	f
+add_attachment	bug.php	/^function add_attachment($bugid, $description) {$/;"	f
+add_cc	bug.php	/^	$add_cc = isset($add_cc) ? $add_cc : null;$/;"	v
+add_dependency	bug.php	/^		$add_dependency = preg_replace('\/\\D\/', '', $add_dependency);$/;"	v
+add_dependency	bug.php	/^	$add_dependency = isset($add_dependency) && ($is_admin or $is_owner or $is_assignee or $may_manage) ? (int) $add_dependency : null;$/;"	v
+add_duplicate	bug.php	/^		$add_duplicate = preg_replace('\/\\D\/', '', $add_duplicate);$/;"	v
+add_duplicate	bug.php	/^	$add_duplicate = isset($add_duplicate) && ($is_admin or $is_owner or $is_assignee or $may_manage) ? (int) $add_duplicate : null;$/;"	v
+admin_login	install.php	/^		$admin_login = $_POST['admin_login'];$/;"	v
+admin_pass	install.php	/^		$admin_pass = $_POST['admin_pass'];$/;"	v
+admin_pass2	install.php	/^		$admin_pass2 = $_POST['admin_pass2'];$/;"	v
+ainfo	attachment.php	/^	$ainfo = $db->getRow("select a.bug_id, file_name, mime_type, project_id"." from ".TBL_ATTACHMENT." a, ".TBL_BUG." b"." where attachment_id = $attachid and a.bug_id = b.bug_id");$/;"	v
+all_db_fields	include.php	/^$all_db_fields = array($/;"	v
+assign	include.php	/^	function assign($var, $value = '') {$/;"	f
+assign	install.php	/^	function assign($var, $value = '') {$/;"	f
+assigned_to	bug.php	/^	$assigned_to = isset($assigned_to) && ($may_change_assignment or $may_manage) ? (int) $assigned_to : $buginfo['assigned_to'];$/;"	v
+assignedto	query.php	/^$assignedto = !empty($_GET['assignedto']) ? $_GET['assignedto'] : 0;$/;"	v
+assignedto_login	bug.php	/^			$assignedto_login = '';$/;"	v
+assignedto_login	bug.php	/^		$assignedto_login = $db->getOne('select login from '.TBL_AUTH_USER.' u where u.user_id = '.$cf['assigned_to']);$/;"	v
+assignedtostat	bug.php	/^		$assignedtostat = ' ';$/;"	v
+assignedtostat	bug.php	/^		$assignedtostat = '!';$/;"	v
+attachments	bug.php	/^	$attachments = array();$/;"	v
+auth	include.php	/^	$auth = new uauth;$/;"	v
+base	attachment.php	/^		$base = basename($filename);$/;"	v
+boldformat	query.php	/^	$boldformat =& $workbook->addformat(array('bold' => 1));$/;"	v
+bookmark_bug	bug.php	/^function bookmark_bug($bug_id, $add) {$/;"	f
+bookmarked	query.php	/^$bookmarked = !empty($_GET['bookmarked']) ? $_GET['bookmarked'] : 0;$/;"	v
+bug_blocks	bug.php	/^	$bug_blocks = $db->getAll("select b.bug_id, s.bug_open from ".TBL_BUG_DEPENDENCY." d, ".TBL_BUG." b, ".TBL_STATUS." s where d.depends_on = $bugid and d.bug_id = b.bug_id and b.status_id = s.status_id $no_dupes");$/;"	v
+bug_dependencies	bug.php	/^	$bug_dependencies = $db->getAll("select b.bug_id, s.bug_open from ".TBL_BUG_DEPENDENCY." d, ".TBL_BUG." b, ".TBL_STATUS." s where d.bug_id = $bugid and d.depends_on = b.bug_id and b.status_id = s.status_id $no_dupes");$/;"	v
+bug_duplicates	bug.php	/^	$bug_duplicates = $db->getAll("select b.bug_id, s.bug_open from ".TBL_BUG_DEPENDENCY." d1, ".TBL_BUG_DEPENDENCY." d2, ".TBL_BUG." b, ".TBL_STATUS." s where d1.bug_id = $bugid and d2.bug_id = b.bug_id and d2.bug_id = d1.depends_on and d2.depends_on = d1.bug_id and b.status_id = s.status_id");$/;"	v
+bug_id	editComment.php	/^$bug_id = check_id($_GET['bugid']);$/;"	v
+bug_is_new	bug.php	/^		$bug_is_new = $db->getOne("select count(*) from ".TBL_BUG." b, ".TBL_STATUS." s where bug_id = ".$db->quote($bug_id)." and b.status_id = s.status_id and status_name = 'New'");$/;"	v
+bugexists	attachment.php	/^	$bugexists = $db->getOne("select count(*) from ".TBL_BUG." where bug_id = $bugid");$/;"	v
+bugid	bug.php	/^	$bugid = $db->nextId(TBL_BUG);$/;"	v
+buginfo	bug.php	/^			$buginfo = $db->getOne("select * from ".TBL_BUG." where bug_id = ".$db->quote($bug_id));$/;"	v
+buginfo	bug.php	/^	$buginfo = $db->getRow("select * from ".TBL_BUG." where bug_id = $bugid");$/;"	v
+buginfo	bug.php	/^	$buginfo = $db->getRow('select * from '.TBL_BUG." where bug_id = $bugid");$/;"	v
+bugs	bug.php	/^				$bugs = $_POST['bugids'];$/;"	v
+bugs	bug.php	/^			$bugs = array();$/;"	v
+bugs_with_comment	query.php	/^		$bugs_with_comment = array(0);$/;"	v
+build_image	index.php	/^function build_image($restricted_projects) {$/;"	f
+build_query	query.php	/^function build_query($assignedto, $reportedby, $open, $bookmarked) {$/;"	f
+cc_already	bug.php	/^		$cc_already = $db->getOne('select user_id from '.TBL_BUG_CC." where bug_id = $bugid and user_id = $cc_uid");$/;"	v
+cc_uid	bug.php	/^		$cc_uid = $db->getOne("select user_id from ".TBL_AUTH_USER." where login = ".$db->quote(stripslashes($add_cc)));$/;"	v
+cfgDatabase	bug.php	/^	$cfgDatabase = array($/;"	v
+change_bug_list_columns	user.php	/^function change_bug_list_columns($column_list) {$/;"	f
+change_password	user.php	/^function change_password($pass1, $pass2) {$/;"	f
+change_preferences	user.php	/^function change_preferences($prefs) {$/;"	f
+changedfields	bug.php	/^			$changedfields = array('status_id' => $status_id);$/;"	v
+changedfields	bug.php	/^	$changedfields = array();$/;"	v
+check_vars	install.php	/^function check_vars() {$/;"	f
+closed_in_version_id	bug.php	/^	$closed_in_version_id = isset($closed_in_version_id) && ($may_close or $may_manage) ? (int) $closed_in_version_id : $buginfo['closed_in_version_id'];$/;"	v
+closed_query	bug.php	/^		$closed_query = ", close_date = $now";$/;"	v
+closed_query	bug.php	/^		$closed_query = '';$/;"	v
+color	report.php	/^		$color = 0;$/;"	v
+colors	report.php	/^	$colors = array('red', 'cadetblue', 'gold', 'darkmagenta');$/;"	v
+column_list	user.php	/^	$column_list = serialize($column_list);$/;"	v
+comment_id	editComment.php	/^	$comment_id  = $_GET['commentID'];$/;"	v
+comment_id	editComment.php	/^	$comment_id  = $db->escapeSimple($comment_id);$/;"	v
+comment_text	upgrade.php	/^$comment_text = "";$/;"	v
+comments	bug.php	/^	$comments = isset($comments) && $may_add_comment ? $comments : null;$/;"	v
+component_id	bug.php	/^	$component_id = isset($component_id) && $may_change_component ? (int) $component_id : $buginfo['component_id'];$/;"	v
+contents	install.php	/^	$contents = join('', file('config-dist.php'));$/;"	v
+count	install.php	/^	$count = $db->getOne($query);$/;"	v
+count	upgrade.php	/^		$count = 0;$/;"	v
+count	upgrade.php	/^	$count = $db->getOne($query);$/;"	v
+create_tables	install.php	/^function create_tables() {$/;"	f
+created_by	bug.php	/^		$created_by = $buginfo['created_by'];$/;"	v
+created_by	bug.php	/^		$created_by = (int) $created_by;$/;"	v
+database_id	bug.php	/^	$database_id = isset($database_id) && $may_edit ? (int) $database_id : $buginfo['database_id'];$/;"	v
+date_format	report.php	/^				$date_format = 'M Y';$/;"	v
+date_format	report.php	/^				$date_format = 'j M';$/;"	v
+date_format	report.php	/^		$date_format = 'M Y';$/;"	v
+date_format	report.php	/^		$date_format = 'j M';$/;"	v
+dates	report.php	/^			$dates = $db->getCol("select created_date from bug_history where changed_field = 'resolution' and new_value = '$resolution' and created_date between $then and $now order by 1");$/;"	v
+dates	report.php	/^	$dates = $db->getCol("select created_date from " . TBL_BUG . " where created_date between $then and $now order by 1");$/;"	v
+dates	report.php	/^	$dates = array();$/;"	v
+db	bug.php	/^	$db = DB::Connect($dsn);$/;"	v
+db	include.php	/^$db = $db->connect($dsn);$/;"	v
+db	include.php	/^$db = &DB::connect($dsn);$/;"	v
+db	include.php	/^$db = DB::Connect($dsn);$/;"	v
+db	include.php	/^$db = new DB();$/;"	v
+db	install.php	/^	$db = DB::Connect($dsn);$/;"	v
+db	install.php	/^	$db = test_database($_POST);$/;"	v
+db_database	install.php	/^		$db_database = $_POST['db_database'];$/;"	v
+db_headers	query.php	/^	$db_headers = array($/;"	v
+db_host	install.php	/^		$db_host = $_POST['db_host'];$/;"	v
+db_pass	install.php	/^		$db_pass = $_POST['db_pass'];$/;"	v
+db_type	install.php	/^		$db_type = $_POST['db_type'];$/;"	v
+db_type_options	install.php	/^function db_type_options($selected = 0) {$/;"	f
+db_types	install.php	/^$db_types = array($/;"	v
+db_user	install.php	/^		$db_user = $_POST['db_user'];$/;"	v
+def_results	user.php	/^	$def_results = $prefs['def_results'];$/;"	v
+default_db_fields	include.php	/^$default_db_fields = array('bug_id', 'title', 'reporter', 'owner',$/;"	v
+default_email	install.php	/^	$default_email = 'phpbt@'.$_SERVER['SERVER_NAME'];$/;"	v
+del_attachment	attachment.php	/^function del_attachment($attachid) {$/;"	f
+del_dependency	bug.php	/^		$del_dependency = preg_replace('\/\\D\/', '', $del_dependency);$/;"	v
+del_duplicate	bug.php	/^		$del_duplicate = preg_replace('\/\\D\/', '', $del_duplicate);$/;"	v
+del_duplicate	bug.php	/^	$del_duplicate = isset($del_duplicate) && ($is_admin or $is_owner or $is_assignee or $may_manage) ? (int) $del_duplicate : null;$/;"	v
+delete_saved_query	query.php	/^function delete_saved_query($queryid) {$/;"	f
+delete_vote	user.php	/^function delete_vote($bug_id) {$/;"	f
+desired_fields	query.php	/^	$desired_fields = !empty($_SESSION['db_fields']) ?$/;"	v
+do_changedfields	bug.php	/^function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {$/;"	f
+do_form	bug.php	/^function do_form($bugid = 0) {$/;"	f
+do_form	newaccount.php	/^function do_form() {$/;"	f
+do_query	install.php	/^			$do_query = substr($do_query, 0, -1);$/;"	v
+do_query	install.php	/^		$do_query = '';$/;"	v
+do_query	install.php	/^	$do_query = '';$/;"	v
+dsn	include.php	/^$dsn = array($/;"	v
+dsn	install.php	/^	$dsn = array($/;"	v
+dump_config_file	install.php	/^function dump_config_file() {$/;"	f
+dump_spreadsheet	query.php	/^function dump_spreadsheet($fields, $titles, &$data) {$/;"	f
+emailsuccess	include.php	/^				$emailsuccess = true;$/;"	v
+encrypt_pass	install.php	/^		$encrypt_pass = $_POST['encrypt_pass'];$/;"	v
+error	bug.php	/^			$error = update_bug(check_id($_POST['bugid']));$/;"	v
+error	bug.php	/^		$error = translate("Please enter a description");$/;"	v
+error	bug.php	/^		$error = translate("Please enter a summary");$/;"	v
+error	bug.php	/^	$error = '';$/;"	v
+error	install.php	/^		$error = translate("Please confirm the admin password");$/;"	v
+error	install.php	/^		$error = translate("Please enter the admin login");$/;"	v
+error	install.php	/^		$error = translate("Please enter the admin password");$/;"	v
+error	install.php	/^		$error = translate("Please enter the host name for your database server");$/;"	v
+error	install.php	/^		$error = translate("Please enter the name of the database you will be using");$/;"	v
+error	install.php	/^		$error = translate("Please enter the phpBT email address");$/;"	v
+error	install.php	/^		$error = translate("Please enter the user name for connecting to the database");$/;"	v
+error	install.php	/^		$error = translate("Please use a valid email address for the admin login");$/;"	v
+error	install.php	/^		$error = translate("The admin passwords don't match");$/;"	v
+error	install.php	/^	$error = $error;$/;"	v
+error	install.php	/^	$error = '';$/;"	v
+error	newaccount.php	/^		$error = translate("Please enter a login");$/;"	v
+error	newaccount.php	/^		$error = translate("Please enter a valid email");$/;"	v
+error	newaccount.php	/^		$error = translate("That login has already been used");$/;"	v
+error	user.php	/^		$error = false;$/;"	v
+error	user.php	/^		$error = translate("Please enter a password");$/;"	v
+error	user.php	/^		$error = translate("Those passwords don't match -- please try again");$/;"	v
+error_info	install.php	/^		$error_info = isset($db->user_info) ? $db->user_info : '';$/;"	v
+error_info	install.php	/^		$error_info = translate("Please check your Pear installation and the defined PEAR_PATH in install.php");$/;"	v
+error_message	install.php	/^		$error_message = isset($db->message) ? $db->message : '';$/;"	v
+error_message	install.php	/^		$error_message = translate("Failed loading Pear:DB");$/;"	v
+fastlinks1	index.php	/^    $fastlinks1 = "";$/;"	v
+fastlinks2	index.php	/^    $fastlinks2 = "";$/;"	v
+fetch	include.php	/^	function fetch($content_template) {$/;"	f
+field	bug.php	/^				$field => stripslashes($buginfo[$field]),$/;"	v
+field	bug.php	/^				$field => stripslashes($cf[$field]),$/;"	v
+filename	attachment.php	/^	$filename = "$bugid-{$_FILES['attachment']['name']}";$/;"	v
+filename	attachment.php	/^	$filename = join('\/',array(ATTACHMENT_PATH,$/;"	v
+filename	bug.php	/^	$filename = "$bugid-{$_FILES['attachment']['name']}";$/;"	v
+filepath	attachment.php	/^	$filepath = ATTACHMENT_PATH;$/;"	v
+filepath	bug.php	/^	$filepath = ATTACHMENT_PATH;$/;"	v
+firstname	newaccount.php	/^	$firstname = htmlspecialchars($_POST['firstname']);$/;"	v
+flags	query.php	/^		$flags = array();$/;"	v
+format_bug_col	query.php	/^function format_bug_col($colvalue, $coltype, $bugid, $pos) {$/;"	f
+format_comments	bug.php	/^function format_comments($comments) {$/;"	f
+format_spreadsheet_col	query.php	/^function format_spreadsheet_col($colvalue, $coltype) {$/;"	f
+grab_attachment	attachment.php	/^function grab_attachment($attachid) {$/;"	f
+grab_config_file	install.php	/^function grab_config_file() {$/;"	f
+grab_data	index.php	/^function grab_data($restricted_projects) {$/;"	f
+graph	index.php	/^	$graph = new PieGraph(350,200,"bug_cat_summary");$/;"	v
+graph	report.php	/^	$graph = new Graph(450,300);$/;"	v
+handle_install_error	install.php	/^function handle_install_error(&$obj) {$/;"	f
+handle_upgrade_error	upgrade.php	/^function handle_upgrade_error(&$obj) {$/;"	f
+incoming_url	include.php	/^    $incoming_url = "http:\/\/" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];$/;"	v
+is_admin	bug.php	/^		$is_admin = true;$/;"	v
+is_admin	bug.php	/^	$is_admin = ($is_user && isset($perm) && $perm->have_perm_proj($buginfo['project_id']));$/;"	v
+is_admin	bug.php	/^	$is_admin = false;$/;"	v
+is_assignee	bug.php	/^		$is_assignee = true;$/;"	v
+is_assignee	bug.php	/^	$is_assignee = false;$/;"	v
+is_owner	bug.php	/^		$is_owner = true;$/;"	v
+is_owner	bug.php	/^	$is_owner = false;$/;"	v
+is_reporter	bug.php	/^		$is_reporter = true;$/;"	v
+is_reporter	bug.php	/^	$is_reporter = false;$/;"	v
+is_user	bug.php	/^	$is_user = (isset($_SESSION['uid']) && !empty($_SESSION['uid']));$/;"	v
+lastname	newaccount.php	/^	$lastname = htmlspecialchars($_POST['lastname']);$/;"	v
+limit	bug.php	/^		$limit = 1;$/;"	v
+limit	bug.php	/^		$limit = 2;$/;"	v
+list_items	query.php	/^function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0) {$/;"	f
+log_query	install.php	/^function log_query($str) {$/;"	f
+log_query	upgrade.php	/^function log_query($str) {$/;"	f
+log_text	install.php	/^$log_text = "";$/;"	v
+log_text	upgrade.php	/^			$log_text = "";$/;"	v
+log_text	upgrade.php	/^		$log_text = "";$/;"	v
+log_text	upgrade.php	/^	$log_text = $tmp_log;$/;"	v
+log_text	upgrade.php	/^$log_text = "";$/;"	v
+login	install.php	/^	$login = $_POST['admin_login'];$/;"	v
+login	newaccount.php	/^		$login = $_POST['email'];$/;"	v
+login	newaccount.php	/^		$login = $_POST['login'];$/;"	v
+mail	bug.php	/^		$mail = new htmlMimeMail();$/;"	v
+maillist	bug.php	/^		$maillist = array_merge($maillist, $ccs);$/;"	v
+maillist	bug.php	/^	$maillist = array();$/;"	v
+matching_projects	include.php	/^		$matching_projects = delimit_list(',',$/;"	v
+may_add_comment	bug.php	/^	$may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $buginfo['project_id']));$/;"	v
+may_change_assignment	bug.php	/^	$may_change_assignment = ($may_edit && $perm->have_perm('EditAssignment', $buginfo['project_id']));$/;"	v
+may_change_component	bug.php	/^	$may_change_component = ($may_edit && $perm->have_perm('EditComponent', $buginfo['project_id']));$/;"	v
+may_change_priority	bug.php	/^	$may_change_priority = ($may_edit && $perm->have_perm('EditPriority', $buginfo['project_id']));$/;"	v
+may_change_project	bug.php	/^	$may_change_project = ($may_edit && $perm->have_perm('EditProject', $buginfo['project_id']));$/;"	v
+may_change_resolution	bug.php	/^	$may_change_resolution = ($may_edit && $perm->have_perm('EditResolution', $buginfo['project_id']));$/;"	v
+may_change_severity	bug.php	/^	$may_change_severity = ($may_edit && $perm->have_perm('EditSeverity', $buginfo['project_id']));$/;"	v
+may_change_status	bug.php	/^	$may_change_status = ($may_edit && $perm->have_perm('EditStatus', $buginfo['project_id']));$/;"	v
+may_close	bug.php	/^	$may_close = ($may_edit && $perm->have_perm('CloseBug', $buginfo['project_id']));$/;"	v
+may_edit	bug.php	/^	$may_edit = (isset($perm) && $perm->have_perm('EditBug', $buginfo['project_id']));$/;"	v
+may_manage	bug.php	/^	$may_manage = ($may_edit && $perm->have_perm('ManageBug', $buginfo['project_id']));$/;"	v
+me	include.php	/^$me = $_SERVER['PHP_SELF'];$/;"	v
+move_attachments	bug.php	/^function move_attachments($bug_id, $old_project, $new_project) {$/;"	f
+mpassword	include.php	/^				$mpassword = md5($password);$/;"	v
+mpassword	newaccount.php	/^		$mpassword = $db->quote(md5($password));$/;"	v
+mpassword	newaccount.php	/^		$mpassword = $db->quote(stripslashes($password));$/;"	v
+mpassword	user.php	/^		$mpassword = $pass1;$/;"	v
+mpassword	user.php	/^		$mpassword = md5($pass1);$/;"	v
+new_bugs_by_date	report.php	/^function new_bugs_by_date($date_range) {$/;"	f
+new_comment	editComment.php	/^	$new_comment = $_GET['newComment'];$/;"	v
+new_comment	editComment.php	/^	$new_comment = $db->quoteSmart($new_comment);$/;"	v
+new_db_rev	upgrade.php	/^    $new_db_rev = "5";$/;"	v
+new_dependencies	bug.php	/^				$new_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid $no_dupes"));$/;"	v
+new_dependencies	bug.php	/^		$new_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid $no_dupes"));$/;"	v
+new_dupes	bug.php	/^		$new_dupes = delimit_list(', ', $new_duplicates);$/;"	v
+new_duplicates	bug.php	/^		$new_duplicates = $db->getCol("select b.bug_id from ".TBL_BUG_DEPENDENCY." d1, ".TBL_BUG_DEPENDENCY." d2, ".TBL_BUG." b, ".TBL_STATUS." s where d1.bug_id = $bugid and d2.bug_id = b.bug_id and d2.bug_id = d1.depends_on and d2.depends_on = d1.bug_id group by b.bug_id");$/;"	v
+newbug	bug.php	/^	$newbug = (!count($cf) and !$comments);$/;"	v
+newvalue	bug.php	/^			$newvalue = $db->getOne("select ${field}_name from $table where ${field}_id = {$cf[$field.'_id']}");$/;"	v
+newvalue	bug.php	/^			$newvalue = $db->getOne('select version_name from '.$cfgDatabase['version'].' where version_id = '.$cf[$field.'_id']);$/;"	v
+nextid	query.php	/^			$nextid = $db->getOne("select max(saved_query_id)+1 from ".TBL_SAVED_QUERY." where user_id = $u");$/;"	v
+nextid	query.php	/^			$nextid = $nextid ? $nextid : 1;$/;"	v
+no_dupes	bug.php	/^	$no_dupes = !empty($old_duplicates) ? ' and depends_on <> '.join(' and depends_on <> ', $old_duplicates) : '';$/;"	v
+no_dupes	bug.php	/^	$no_dupes = "";$/;"	v
+now	include.php	/^$now = time();$/;"	v
+nr	query.php	/^		$nr = $db->getOne($QUERY['query-list-bugs-count'].$/;"	v
+num_errors	install.php	/^		$num_errors = $num_errors + 1;$/;"	v
+num_errors	install.php	/^$num_errors = 0;$/;"	v
+num_errors	upgrade.php	/^		$num_errors = $num_errors + 1;$/;"	v
+num_errors	upgrade.php	/^$num_errors = 0;$/;"	v
+offset	bug.php	/^		$offset = $pos - 1;$/;"	v
+offset	bug.php	/^		$offset = 0;$/;"	v
+old_db_rev	upgrade.php	/^    $old_db_rev = "1.0.x";$/;"	v
+old_dependencies	bug.php	/^					$old_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid"));$/;"	v
+old_dependencies	bug.php	/^				$old_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid $no_dupes"));$/;"	v
+old_dependencies	bug.php	/^		$old_dependencies = delimit_list(', ', $db->getCol("select depends_on from ".TBL_BUG_DEPENDENCY." where bug_id = $bugid $no_dupes"));$/;"	v
+old_dupes	bug.php	/^		$old_dupes = delimit_list(', ', $old_duplicates);$/;"	v
+old_duplicates	bug.php	/^	$old_duplicates = $db->getCol("select b.bug_id from ".TBL_BUG_DEPENDENCY." d1, ".TBL_BUG_DEPENDENCY." d2, ".TBL_BUG." b, ".TBL_STATUS." s where d1.bug_id = $bugid and d2.bug_id = b.bug_id and d2.bug_id = d1.depends_on and d2.depends_on = d1.bug_id group by b.bug_id");$/;"	v
+old_prefs	user.php	/^	$old_prefs = $db->getRow("select * from ".TBL_USER_PREF." where user_id = $u");$/;"	v
+oldassignedto	bug.php	/^			$oldassignedto = '';$/;"	v
+oldassignedto	bug.php	/^		$oldassignedto = $db->getOne('select email from '.TBL_AUTH_USER.' u where u.user_id = '.$buginfo['assigned_to']);$/;"	v
+oldassignedto_login	bug.php	/^			$oldassignedto_login = '';$/;"	v
+oldassignedto_login	bug.php	/^		$oldassignedto_login = $db->getOne('select login from '.TBL_AUTH_USER.' u where u.user_id = '.$buginfo['assigned_to']);$/;"	v
+oldreporter_login	bug.php	/^			$oldreporter_login = '';$/;"	v
+oldreporter_login	bug.php	/^		$oldreporter_login = $db->getOne('select login from '.TBL_AUTH_USER.' u where u.user_id = '.$buginfo['created_by']);$/;"	v
+oldvalue	bug.php	/^			$oldvalue = $db->getOne("select ${field}_name from $table"." where ${field}_id = {$buginfo[$field.'_id']}");$/;"	v
+oldvalue	bug.php	/^			$oldvalue = $db->getOne('select version_name from '.$cfgDatabase['version'].' where version_id = '.$buginfo[$field.'_id']);$/;"	v
+op	include.php	/^$op = !empty($_REQUEST['op']) ? $_REQUEST['op'] : '';$/;"	v
+op	install.php	/^		$op = $_POST['op'];$/;"	v
+open	query.php	/^$open = !empty($_GET['open']) ? $_GET['open'] : 0;$/;"	v
+order	query.php	/^			$order = $_SESSION['queryinfo']['order'];$/;"	v
+order	query.php	/^			$order = 'b.bug_id';$/;"	v
+os_id	bug.php	/^	$os_id = isset($os_id) && $may_edit ? (int) $os_id : $buginfo['os_id'];$/;"	v
+owner	bug.php	/^		$owner = 0;$/;"	v
+p1	index.php	/^		$p1 = new PiePlot($data);$/;"	v
+p1	report.php	/^	$p1 = new BarPlot($xvalue);$/;"	v
+p_query	bug.php	/^		$p_query = " and p.project_id not in ($restricted_projects)";$/;"	v
+p_query	bug.php	/^		$p_query = '';$/;"	v
+page	query.php	/^		$page = 1;$/;"	v
+paramstr	query.php	/^	$paramstr = '';$/;"	v
+password	include.php	/^				$password = genpassword(10);$/;"	v
+password	newaccount.php	/^	$password = genpassword(10);$/;"	v
+path	include.php	/^		$path = defined('TEMPLATE_PATH')$/;"	v
+path	install.php	/^		$path = defined('TEMPLATE_PATH')$/;"	v
+patterns	bug.php	/^	$patterns = array($/;"	v
+perm	include.php	/^	$perm = new uperm;$/;"	v
+phpbt_email	install.php	/^		$phpbt_email = $_POST['phpbt_email'];$/;"	v
+posinfo	bug.php	/^		$posinfo = "&pos={$_POST['pos']}";$/;"	v
+posinfo	bug.php	/^		$posinfo = "&pos={$_REQUEST['pos']}";$/;"	v
+posinfo	bug.php	/^		$posinfo = '';$/;"	v
+pref	index.php	/^	$pref = $db->GetOne('select saved_queries from '.TBL_USER_PREF." where user_id='".$u."'");$/;"	v
+pref_labels	user.php	/^	$pref_labels = array($/;"	v
+prefs	user.php	/^	$prefs = $db->getRow("select * from ".TBL_USER_PREF." where user_id = $u");$/;"	v
+prev_next_links	bug.php	/^function prev_next_links($bugid, $pos) {$/;"	f
+priority	bug.php	/^	$priority = isset($priority) && ($may_change_priority or $may_manage) ? (int) $priority : $buginfo['priority'];$/;"	v
+project_id	bug.php	/^	$project_id = isset($project_id) && $may_change_project ? (int) $project_id : $buginfo['project_id'];$/;"	v
+projectid	attachment.php	/^	$projectid = $db->getOne("select project_id from ".TBL_BUG." where bug_id = $bugid");$/;"	v
+projectid	bug.php	/^	$projectid = $db->getOne("select project_id from ".TBL_BUG." where bug_id = $bugid");$/;"	v
+projectid	editComment.php	/^$projectid = isset($_GET['projectid']) ? $_GET['projectid'] : 0;$/;"	v
+projectid	report.php	/^$projectid = isset($_GET['projectid']) ? $_GET['projectid'] : 0;$/;"	v
+projectname	bug.php	/^	$projectname = $db->getOne("select project_name from ".TBL_PROJECT." where project_id = '{$_GET['project']}'");$/;"	v
+projectquery	report.php	/^		$projectquery = $QUERY['join-where']." project_id = $projectid";$/;"	v
+projectquery	report.php	/^		$projectquery = $QUERY['join-where'].$/;"	v
+projectquery	report.php	/^		$projectquery = '';$/;"	v
+projects	bug.php	/^	$projects = $db->getAll('select p.project_id, p.project_name, p.project_desc, p.created_date from '.TBL_PROJECT.' p, '.TBL_COMPONENT.' c where p.active = 1 and p.project_id = c.project_id'.$p_query.' group by p.project_id, p.project_name, p.project_desc, p.created_date order by project_name');$/;"	v
+projects	bug.php	/^	$projects = array();$/;"	v
+q_temp_ary	install.php	/^	$q_temp_ary = file('schemas\/'.$_POST['db_type'].'.in');$/;"	v
+queries	install.php	/^	$queries = preg_replace(array_keys($tables), array_values($tables),$/;"	v
+query	install.php	/^	$query = 'select count(*) from '.$_POST['tbl_prefix'].'configuration';$/;"	v
+query	install.php	/^	$query = preg_replace(array_keys($tables), array_values($tables), 'INSERT INTO TBL_CONFIGURATION (varname,varvalue,description,vartype) VALUES (\\'DB_VERSION\\', '.\/*!!!*\/5\/*!!!*\/.', \\'Database Version <b>Warning:<\/b> Changing this might make things go horribly wrong, so don\\\\\\'t change it.\\', \\'mixed\\')');$/;"	v
+query	upgrade.php	/^		$query = 'select varvalue from '.TBL_CONFIGURATION.' where varname = \\'DB_VERSION\\'';$/;"	v
+query	upgrade.php	/^	$query = 'select count(*) from '.TBL_CONFIGURATION;$/;"	v
+query_db_fields	query.php	/^	$query_db_fields = array($/;"	v
+query_fields	query.php	/^	$query_fields = array('b.bug_id as bug_link_id', $/;"	v
+querystring	index.php	/^	$querystring = $QUERY['index-projsummary-1'];$/;"	v
+querystring	report.php	/^	$querystring = $QUERY['report-resbyeng-1'];$/;"	v
+remove_cc	bug.php	/^			$remove_cc = array($u);$/;"	v
+remove_cc	bug.php	/^			$remove_cc = null;$/;"	v
+remove_cc	bug.php	/^	$remove_cc = isset($remove_cc) ? $remove_cc : null;$/;"	v
+remove_dependency	bug.php	/^	$remove_dependency = isset($remove_dependency) && ($is_admin or $is_owner or $is_assignee or $may_manage) ? (int) $remove_dependency : null;$/;"	v
+render	include.php	/^	function render($content_template, $page_title, $wrap_file = '', $nowrap = false) {$/;"	f
+render	install.php	/^	function render($content_template, $page_title, $wrap_file = '') {$/;"	f
+replacements	bug.php	/^	$replacements = array($/;"	v
+reportedby	query.php	/^$reportedby = !empty($_GET['reportedby']) ? $_GET['reportedby'] : 0;$/;"	v
+reporter	bug.php	/^		$reporter = $db->getOne('select email from '.TBL_AUTH_USER." u, ".TBL_USER_PREF." p where u.user_id = {$buginfo['created_by']} and u.user_id = p.user_id and email_notices = 1");$/;"	v
+reporter	bug.php	/^	$reporter = ($reporter and is_numeric($reporter)) ? $reporter : $u;$/;"	v
+reporter_login	bug.php	/^			$reporter_login = '';$/;"	v
+reporter_login	bug.php	/^		$reporter_login = $db->getOne('select login from '.TBL_AUTH_USER.' u where u.user_id = '.$cf['created_by']);$/;"	v
+reporterstat	bug.php	/^		$reporterstat = ' ';$/;"	v
+reporterstat	bug.php	/^		$reporterstat = '!';$/;"	v
+resfields	index.php	/^	$resfields = array(translate("Project"), translate("Open"));$/;"	v
+resfields	report.php	/^	$resfields = array(translate("Assigned To"), translate("Open"));$/;"	v
+resolution_by_engineer	report.php	/^function resolution_by_engineer($projectid = 0) {$/;"	f
+resolution_id	bug.php	/^			$resolution_id = 0;$/;"	v
+resolution_id	bug.php	/^	$resolution_id = isset($resolution_id) && ($may_close or $may_change_resolution or $may_manage) ? (int) $resolution_id : $buginfo['resolution_id'];$/;"	v
+restricted_projects	include.php	/^	$restricted_projects = '0';$/;"	v
+result	install.php	/^	$result = $db->query($str);$/;"	v
+result	upgrade.php	/^	$result = $db->query($str);$/;"	v
+rettext	include.php	/^		$rettext = ob_get_contents();$/;"	v
+row	query.php	/^	$row = 0;$/;"	v
+rs	attachment.php	/^	$rs = $db->query("select a.bug_id, project_id from ".TBL_ATTACHMENT." a, ".TBL_BUG." b where file_name = ".$db->quote($_FILES['attachment']['name'])." and a.bug_id = b.bug_id");$/;"	v
+rs	bug.php	/^		$rs = $db->limitQuery('select u.login, c.comment_text, c.created_date from '.TBL_COMMENT.' c, '.TBL_AUTH_USER." u where bug_id = {$buginfo['bug_id']} and c.created_by = u.user_id order by created_date desc", 0, 2);$/;"	v
+rs	bug.php	/^	$rs = $db->limitQuery(sprintf($QUERY['bug-prev-next'],$/;"	v
+rs	bug.php	/^	$rs = $db->query("select * from ".TBL_ATTACHMENT." where bug_id = $bugid");$/;"	v
+rs	bug.php	/^	$rs = $db->query("select a.bug_id, project_id from ".TBL_ATTACHMENT." a, ".TBL_BUG." b where file_name = '{$_FILES['attachment']['name']}' and a.bug_id = b.bug_id");$/;"	v
+rs	bug.php	/^	$rs = $db->query("select attachment_id, file_name from ".TBL_ATTACHMENT." where bug_id = $bug_id");$/;"	v
+rs	include.php	/^	$rs = $db->query('select varname, varvalue from '.TBL_CONFIGURATION);$/;"	v
+rs	index.php	/^	$rs = $db->query("select project_id, project_name from " . TBL_PROJECT);$/;"	v
+rs	index.php	/^	$rs = $db->query("select resolution_id, resolution_name from " . TBL_RESOLUTION);$/;"	v
+rs	index.php	/^	$rs = $db->query("select status_id, count(status_id) as count from ".TBL_BUG." where project_id not in ($restricted_projects) group by status_id");$/;"	v
+rs	index.php	/^	$rs = $db->query("select status_id, status_name, bug_open from ".TBL_STATUS." order by sort_order");$/;"	v
+rs	index.php	/^	$rs = $db->query($QUERY['index-projsummary-2'].$/;"	v
+rs	report.php	/^	$rs = $db->query($QUERY['report-resbyeng-2'].$/;"	v
+sOpenStatusQuery	index.php	/^	$sOpenStatusQuery = '&status%5B%5D='.@join('&status%5B%5D=',$/;"	v
+save_config_file	install.php	/^function save_config_file() {$/;"	f
+savedquerystring	query.php	/^		$savedquerystring = ereg_replace('&savedqueryname=.*(&?)', '\\1', $_SERVER['QUERY_STRING']);$/;"	v
+selrange	include.php	/^$selrange = 30;$/;"	v
+severity_id	bug.php	/^	$severity_id = isset($severity_id) && ($may_change_severity or $may_manage) ? (int) $severity_id : $buginfo['severity_id'];$/;"	v
+show_attachment_form	attachment.php	/^function show_attachment_form($bugid, $error = '') {$/;"	f
+show_bug	bug.php	/^function show_bug($bugid = 0, $error = array()) {$/;"	f
+show_bug_printable	bug.php	/^function show_bug_printable($bugid) {$/;"	f
+show_finished	install.php	/^function show_finished() {$/;"	f
+show_form	bug.php	/^function show_form($bugid = 0, $error = '') {$/;"	f
+show_form	newaccount.php	/^function show_form($error = '') {$/;"	f
+show_front	install.php	/^function show_front($error = '') {$/;"	f
+show_history	bug.php	/^function show_history($bugid) {$/;"	f
+show_preferences_form	user.php	/^function show_preferences_form($error = '') {$/;"	f
+show_projects	bug.php	/^function show_projects() {$/;"	f
+show_query	query.php	/^function show_query($edit = false) {$/;"	f
+site_id	bug.php	/^	$site_id = isset($site_id) && $may_edit ? (int) $site_id : $buginfo['site_id'];$/;"	v
+sort	query.php	/^			$sort = $_SESSION['queryinfo']['sort'];$/;"	v
+sort	query.php	/^			$sort = 'asc';$/;"	v
+stats	index.php	/^	$stats = grab_data($restricted_projects);$/;"	v
+stats	report.php	/^			$stats = array($/;"	v
+status	bug.php	/^		$status = PROMOTE_VOTES ? BUG_UNCONFIRMED : BUG_ASSIGNED;$/;"	v
+status	bug.php	/^		$status = PROMOTE_VOTES ? BUG_UNCONFIRMED : BUG_PROMOTED;$/;"	v
+status_id	bug.php	/^			$status_id = $buginfo['status_id'];$/;"	v
+status_id	bug.php	/^			$status_id = BUG_PROMOTED;$/;"	v
+status_id	bug.php	/^	$status_id = isset($status_id) && ($may_change_status or $may_manage) ? (int) $status_id : $buginfo['status_id'];$/;"	v
+t	include.php	/^$t = new template();$/;"	v
+t	install.php	/^$t = new template(array($/;"	v
+tables	install.php	/^	$tables = array($/;"	v
+tbl_prefix	install.php	/^		$tbl_prefix = $_POST['tbl_prefix'];$/;"	v
+template	bug.php	/^	$template = $newbug ? "bugemail-newbug.$template_ext" : "bugemail.$template_ext";$/;"	v
+template	include.php	/^	function template() {$/;"	f
+template	include.php	/^class template {$/;"	c
+template	install.php	/^	function template($vars = array()) {$/;"	f
+template	install.php	/^class template {$/;"	c
+template_ext	bug.php	/^	$template_ext = false\/*HTML_EMAIL*\/ ? 'html' : 'txt';$/;"	v
+test_database	install.php	/^function test_database(&$params, $testonly = false) {$/;"	f
+then	report.php	/^	$then = $now - (ONEDAY * $date_range);$/;"	v
+thisvers	upgrade.php	/^			$thisvers = 0;$/;"	v
+thisvers	upgrade.php	/^		$thisvers = $db->getOne($query);$/;"	v
+thisvers	upgrade.php	/^	$thisvers = 0;$/;"	v
+title	bug.php	/^	$title = isset($title) && $may_edit ? $title : $buginfo['title'];$/;"	v
+tmp_log	upgrade.php	/^	$tmp_log = "Using the following information from config.php:<br>\\n";$/;"	v
+tmpfilename	attachment.php	/^	$tmpfilename = $_FILES['attachment']['tmp_name'];$/;"	v
+tmpfilename	bug.php	/^	$tmpfilename = $_FILES['attachment']['tmp_name'];$/;"	v
+to_be_closed_in_version_id	bug.php	/^	$to_be_closed_in_version_id = isset($to_be_closed_in_version_id) && ($may_close or $may_manage) ? (int) $to_be_closed_in_version_id : $buginfo['to_be_closed_in_version_id'];$/;"	v
+totalbugs	index.php	/^	$totalbugs = 0;$/;"	v
+u	bug.php	/^		$u == $buginfo['created_by'] or $perm->have_perm_proj($buginfo['project_id']))) {$/;"	v
+u	editComment.php	/^		$u == $buginfo['created_by'] or $perm->have_perm('Manager'))) {$/;"	v
+u	include.php	/^	$u = isset($_SESSION['uid']) ? $_SESSION['uid'] : 0;$/;"	v
+update_bug	bug.php	/^function update_bug($bugid = 0) {$/;"	f
+update_bugs	bug.php	/^function update_bugs($bugs) {$/;"	f
+updates	user.php	/^	$updates = array();$/;"	v
+upgrade	upgrade.php	/^function upgrade() {$/;"	f
+upgraded	upgrade.php	/^	$upgraded = 0;$/;"	v
+upgrading	upgrade.php	/^$upgrading = true;$/;"	v
+url	bug.php	/^				$url = $v;$/;"	v
+url	bug.php	/^		$url = '';$/;"	v
+url	bug.php	/^	$url = isset($url) && $may_edit ? $url : $buginfo['url'];$/;"	v
+user_id	newaccount.php	/^	$user_id = $db->nextId(TBL_AUTH_USER);$/;"	v
+username	include.php	/^			$username = $_POST['username'];$/;"	v
+username	include.php	/^		$username = $_POST['username'];$/;"	v
+v	bug.php	/^					$v = '';$/;"	v
+v	bug.php	/^					$v = 'http:\/\/'.$v;$/;"	v
+v	bug.php	/^				$v = $buginfo[$k];$/;"	v
+version_id	bug.php	/^	$version_id = isset($version_id) && $may_edit ? (int) $version_id : $buginfo['version_id'];$/;"	v
+versions	bug.php	/^	$versions = array ('to_be_closed_in_version' => 'tobeclosedinversion',$/;"	v
+viewable_projects	include.php	/^		$viewable_projects = $viewable_projects ? $viewable_projects : '0';$/;"	v
+viewable_projects	include.php	/^		$viewable_projects = @join(',',$/;"	v
+vote_bug	bug.php	/^function vote_bug($bug_id) {$/;"	f
+vote_view	bug.php	/^function vote_view($bug_id) {$/;"	f
+workbook	query.php	/^	$workbook = new Spreadsheet_Excel_Writer();$/;"	v
+worksheet	query.php	/^	$worksheet =& $workbook->addworksheet('buglist');$/;"	v
