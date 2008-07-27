@@ -23,6 +23,8 @@ $dsn = array(
 $db = DB::Connect($dsn);
 if (DB::isError($db)) {
     echo 'Failed to connect to the database: '. $db->getMessage() .'<br/>';
+    print_r($dsn);
+    echo '<br/>';
     } else {
     echo 'Database opened OK!<br/>';
 
