@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.49 2007/10/05 06:07:33 brycen Exp $
+// $Id: upgrade.php,v 1.50 2008/07/27 06:12:29 brycen Exp $
 
 define ('NO_AUTH', 1);
 define ('THEME', 'default');
@@ -60,26 +60,25 @@ function upgrade() {
 	$tmp_log .= "DB_TYPE: '".DB_TYPE."'<br>\n";
 	$tmp_log .= "DB_HOST: '".DB_HOST."'<br>\n";
 	$tmp_log .= "DB_DATABASE: '".DB_DATABASE."'<br>\n";
-	$tmp_log .= "DB_USER: '".DB_USER."'<br>\n";
-	$tmp_log .= "DB_PASSWORD: '".DB_PASSWORD."'<br>\n";
+	//$tmp_log .= "DB_USER: '".DB_USER."'<br>\n";
+	//$tmp_log .= "DB_PASSWORD: '".DB_PASSWORD."'<br>\n";
 	$tmp_log .= "<br>\n";
 
 	$db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_upgrade_error");
 
 	$query = 'select count(*) from '.TBL_CONFIGURATION;
-	$tmp_log .= "SQL: ".$query."<br>\n";
+	$tmp_log .= "<p>SQL: ".$query."<br>\n";
 	$count = $db->getOne($query);
 	if (DB::isError($count)) {
 		$tmp_log .= $log_text;
 		$log_text = "";
 		$count = 0;
 	}
-
-	$tmp_log .= "<p>count = ".$count."</p>\n";
+	$tmp_log .= "count = ".$count."</p>\n";
 
 	if ($count > 30) {
 		$query = 'select varvalue from '.TBL_CONFIGURATION.' where varname = \'DB_VERSION\'';
-		$tmp_log .= "SQL: ".$query."<br>\n";
+		$tmp_log .= "<p>SQL: ".$query."<br>\n";
 		$thisvers = $db->getOne($query);
 		if (DB::isError($thisvers)) {
 			$tmp_log .= $log_text;
@@ -88,7 +87,7 @@ function upgrade() {
 		}
 	}
 
-	$tmp_log .= "<p>DB_VERSION = ".$thisvers."</p>\n";
+	$tmp_log .= "DB_VERSION = ".$thisvers."</p>\n";
 
 	$comment_text .= "Current DB version = $thisvers<br>\n";
 	$comment_text .= "Upgrading to version = ".CUR_DB_VERSION."<br>\n";
