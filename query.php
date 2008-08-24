@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.114 2007/10/20 06:42:53 brycen Exp $
+// $Id: query.php,v 1.115 2008/08/24 05:32:38 brycen Exp $
 
 include 'include.php';
 
@@ -316,6 +316,13 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 		'votes' => 'count(distinct vote.user_id) as votes'
 	);
 
+	// New: only add expensive joins if the corresponding field is needed. Much faster.
+	$join_db_fields = array(
+		'attachments'	=> 'left join '.TBL_ATTACHMENT.' attachment on b.bug_id = attachment.bug_id',
+		'comments' 	=> 'left join '.TBL_COMMENT.' comment on b.bug_id = comment.bug_id',
+		'votes'		=> 'left join '.TBL_BUG_VOTE.' vote on b.bug_id = vote.bug_id',
+	);
+
 	$db_headers = array(
 		'bug_id' => 'b.bug_id',
 		'title' => 'title',
@@ -393,6 +400,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 		'severity.severity_color', 'priority.priority_color');
 	foreach ($desired_fields as $field) {
 		$query_fields[] = $query_db_fields[$field];
+		$join_fields[]  = $join_db_fields[$field];
 		$field_titles[] = $all_db_fields[$field];
 		$headers[] = $field;
 	}
@@ -413,22 +421,13 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 			'has_excel' => find_include('Spreadsheet/Excel/Writer.php')
 			));
 
-    // Because syslog() is broken on OS X
-    //$fd = fopen("/tmp/php.log", "a");
-    //fwrite($fd, sprintf($QUERY['query-list-bugs'], join(', ', $query_fields),
-    //                (!empty($_SESSION['queryinfo']['query'])
-    //                                ? "and {$_SESSION['queryinfo']['query']} " : ''),
-    //                                            $db_headers[$order], $sort));
-    //fwrite($fd,"\n");
-    //fclose($fd);
-    // Because syslog() is broken on OS X
-
-		
-		$t->assign('bugs', $db->getAll($db->modifyLimitQuery(
-			sprintf($QUERY['query-list-bugs'], join(', ', $query_fields),
-				(!empty($_SESSION['queryinfo']['query'])
-				? "and {$_SESSION['queryinfo']['query']} " : ''),
-			$db_headers[$order], $sort), $llimit, $selrange)));
+		$sql = sprintf($QUERY['query-list-bugs'],
+				join(', ', $query_fields),
+				join(' ' , $join_db_fields),
+                                (!empty($_SESSION['queryinfo']['query']) ? "and {$_SESSION['queryinfo']['query']} " : ''),
+                        	$db_headers[$order], $sort);
+		#syslog(LOG_DEBUG,$sql);
+		$t->assign('bugs', $db->getAll($db->modifyLimitQuery($sql, $llimit, $selrange)));
 	
 		sorting_headers($me, $headers, $order, $sort, "page=$page".
 			(!empty($paramstr) ? $paramstr : ''));

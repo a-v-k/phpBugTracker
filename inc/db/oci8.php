@@ -476,6 +476,7 @@ $QUERY = array(
 			TBL_COMPONENT.' component, '.
 			TBL_PROJECT.' project, '.
 			TBL_PRIORITY.' priority '.
+		.'%.0s'.
 		'where '.
 			'b.assigned_to = owner.user_id(+) '.
 			'and b.created_by = reporter.user_id(+) '.
