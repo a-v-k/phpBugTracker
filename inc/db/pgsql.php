@@ -21,7 +21,9 @@ $QUERY = array(
 			'c.component_id, '.
 			'c.component_name, '.
 			'c.created_date, '.
-			'c.active',
+			'c.owner, '.
+			'c.active, '.
+			'c.sort_order',
 	'admin-list-databases' =>
 		'select '.
 			'd.database_id, '.
@@ -178,6 +180,7 @@ $QUERY = array(
 			'v.version_id, '.
 			'v.version_name, '.
 			'v.created_date, '.
+			'v.sort_order, '.
 			'v.active',
 	'admin-show-component' =>
 		'select '.
@@ -307,7 +310,7 @@ $QUERY = array(
 			'and b.version_id = v.version_id '.
 			'and b.component_id = c.component_id '.
 			'and b.project_id = p.project_id '.
-			'and b.status_id = st.status_id',
+			'and b.status_id = st.status_id ',
 	'bug-show-bug' =>
 		'select '.
 			'b.*, '.
@@ -330,8 +333,8 @@ $QUERY = array(
 			'and b.project_id not in (%s) '.
 			'and b.site_id = site.site_id '.
 			'and b.severity_id = sv.severity_id '.
-			'and b.status_id = st.status_id'.
-			'and b.priority = prio.priority_id',
+			'and b.status_id = st.status_id '.
+			'and b.priority = prio.priority_id ',
 	'functions-bug-cc' =>
 		'select '.
 			'b.user_id, '.
