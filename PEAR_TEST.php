@@ -3,6 +3,10 @@
 //  A small standalone test file, to check if pear:db is working
 //  Part of php bug tracker
 
+//  If you get "DB Error: extension not found" you are missing the
+//  proper PHP database driver for your database.  Install the driver
+//  and restart Apache.
+
 echo "Your php include path is: \"" . ini_get('include_path') . "\"<br/>";
 
 define('PEAR_PATH', '');
@@ -13,11 +17,12 @@ if (@include_once(PEAR_PATH.'DB.php')) {
     }
 
 $dsn = array(
-'phptype'   => 'mysqli',
+#'phptype'   => 'mysqli',
+'phptype'   => 'pgsql',
 'hostspec'  => 'localhost',
 'database'  => 'bug_tracker',
-'username'  => 'xxxxxxxx',
-'password'  => 'yyyyyyyyy'
+'username'  => 'bryce',
+'password'  => 'fishfish'
 );
 
 $db = DB::Connect($dsn);

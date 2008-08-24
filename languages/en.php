@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: en.php,v 1.44 2008/01/27 23:16:50 brycen Exp $
+// $Id: en.php,v 1.45 2008/08/24 05:30:19 brycen Exp $
 
 $STRING = array(
 	"That attachment does not exist" => "That attachment does not exist",
@@ -246,7 +246,7 @@ $STRING = array(
 	"# bugs" => "# bugs",
 	"phpBugTracker Installation" => "phpBugTracker Installation",
 	"DB Test Failure" => "DB Test Failure",
-	"The installation script could not connect to the database <b>%s</b> on the host <b>%s</b> using the specified username and password.<br>Please check these details are correct and that the database already exists then retry." => "The installation script could not connect to the database <b>%s</b> on the host <b>%s</b> using the specified username and password.<br>Please check these details are correct and that the database already exists then retry.",
+	"The installation script could not connect to the database <b>%s</b> on the host <b>%s</b> using the specified username and password.<br>Please check these details are correct and that the database already exists then retry." => "The installation script could not connect to the database <b>%s</b> on the host <b>%s</b> using the specified username and password.<br>Please check these details are correct and that the database already exists then retry. See PEAR_TEST.php if needed.",
 	"DB Test Success" => "DB Test Success",
 	"The installation script successfully connected to the database <b>%s</b> on the host <b>%s</b> using the specified username and password.<br>Congratulations!" => "The installation script successfully connected to the database <b>%s</b> on the host <b>%s</b> using the specified username and password.<br>Congratulations!",
 	"Close window" => "Close window",
@@ -352,6 +352,7 @@ start reporting bugs!",
 	"Unable to load JPGraph pie class" => "Unable to load JPGraph pie class",
 	"There was a problem when trying to use the JPGraph library. Please fix or disable by setting 'USE_JPGRAPH' to 'NO' on the Configuration page of the Administration Tools." => "There was a problem when trying to use the JPGraph library. Please fix or disable by setting 'USE_JPGRAPH' to 'NO' on the Configuration page of the Administration Tools.",
 	"Edit Comment" => "Edit Comment",
+	"PRETAGS" => "For monospace use &lt;pre>&lt;/pre>",
 	);
 
 ?>
