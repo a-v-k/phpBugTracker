@@ -17,12 +17,12 @@ if (@include_once(PEAR_PATH.'DB.php')) {
     }
 
 $dsn = array(
-#'phptype'   => 'mysqli',
-'phptype'   => 'pgsql',
+'phptype'   => 'mysqli',
+#'phptype'   => 'pgsql',
 'hostspec'  => 'localhost',
 'database'  => 'bug_tracker',
-'username'  => 'bryce',
-'password'  => 'fishfish'
+'username'  => '',
+'password'  => ''
 );
 
 $db = DB::Connect($dsn);
