@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysqli.in,v 1.7 2008/04/09 03:27:14 brycen Exp $
+# $Id: mysqli.in,v 1.8 2008/08/24 05:48:27 brycen Exp $
 
 
 
@@ -523,38 +523,37 @@ INSERT INTO TBL_CONFIGURATION VALUES ('EMAIL_DISABLED', '0', 'Whether to disable
 # -- Initialize the OS table --
 #
 
-INSERT INTO TBL_OS VALUES (1,'All',1,'');
-INSERT INTO TBL_OS VALUES (2,'Windows 3.1',2,'/Mozilla.*\\(Win16.*\\)/');
-INSERT INTO TBL_OS VALUES (3,'Windows 95',3,'/Mozilla.*\\(.*;.*; 32bit.*\\)/');
-INSERT INTO TBL_OS VALUES (4,'Windows 98',4,'/Mozilla.*\\(Win98.*\\)/');
-INSERT INTO TBL_OS VALUES (5,'Windows ME',5,'');
-INSERT INTO TBL_OS VALUES (6,'Windows 2000',6,'/Mozilla.*Windows NT 5.*\\)/');
-INSERT INTO TBL_OS VALUES (7,'Windows NT',7,'/Mozilla.*\\(Windows.*NT/');
-INSERT INTO TBL_OS VALUES (8,'Mac System 7',8,'');
-INSERT INTO TBL_OS VALUES (9,'Mac System 7.5',9,'');
-INSERT INTO TBL_OS VALUES (10,'Mac System 7.6.1',10,'');
-INSERT INTO TBL_OS VALUES (11,'Mac System 8.0',11,'');
-INSERT INTO TBL_OS VALUES (12,'Mac System 8.5',12,'/Mozilla.*\\(.*;.*; 68K.*\\)/');
-INSERT INTO TBL_OS VALUES (13,'Mac System 8.6',13,'/Mozilla.*\\(.*;.*; PPC.*\\)/');
-INSERT INTO TBL_OS VALUES (14,'Mac System 9.0',14,'');
-INSERT INTO TBL_OS VALUES (15,'Mac OS X',15,'');
-INSERT INTO TBL_OS VALUES (16,'Linux',16,'/Mozilla.*\\(.*;.*; Linux.*\\)/');
-INSERT INTO TBL_OS VALUES (17,'BSDI',17,'/Mozilla.*\\(.*;.*; BSD\\/OS.*\\)/');
-INSERT INTO TBL_OS VALUES (18,'FreeBSD',18,'/Mozilla.*\\(.*;.*; FreeBSD.*\\)/');
-INSERT INTO TBL_OS VALUES (19,'NetBSD',19,'');
-INSERT INTO TBL_OS VALUES (20,'OpenBSD',20,'');
-INSERT INTO TBL_OS VALUES (21,'AIX',21,'/Mozilla.*\\(.*;.*; AIX.*\\)/');
-INSERT INTO TBL_OS VALUES (22,'BeOS',22,'');
-INSERT INTO TBL_OS VALUES (23,'HP-UX',23,'/Mozilla.*\\(.*;.*; HP-UX.*\\)/');
-INSERT INTO TBL_OS VALUES (24,'IRIX',24,'/Mozilla.*\\(.*;.*; IRIX.*\\)/');
-INSERT INTO TBL_OS VALUES (25,'Neutrino',25,'');
-INSERT INTO TBL_OS VALUES (26,'OpenVMS',26,'');
-INSERT INTO TBL_OS VALUES (27,'OS/2',27,'');
-INSERT INTO TBL_OS VALUES (28,'OSF/1',28,'/Mozilla.*\\(.*;.*; OSF.*\\)/');
-INSERT INTO TBL_OS VALUES (29,'Solaris',29,'/Mozilla.*\\(.*;.*; SunOS 5.*\\)/');
-INSERT INTO TBL_OS VALUES (30,'SunOS',30,'/Mozilla.*\\(.*;.*; SunOS.*\\)/');
-INSERT INTO TBL_OS VALUES (31,'other',31,'');
-
+INSERT INTO TBL_OS VALUES (1,'N/A',1,'');
+#INSERT INTO TBL_OS VALUES (2,'Windows 3.1',2,'/Mozilla.*\\(Win16.*\\)/');
+#INSERT INTO TBL_OS VALUES (3,'Windows 95',3,'/Mozilla.*\\(.*;.*; 32bit.*\\)/');
+#INSERT INTO TBL_OS VALUES (4,'Windows 98',4,'/Mozilla.*\\(Win98.*\\)/');
+#INSERT INTO TBL_OS VALUES (5,'Windows ME',5,'');
+#INSERT INTO TBL_OS VALUES (6,'Windows 2000',6,'/Mozilla.*Windows NT 5.*\\)/');
+#INSERT INTO TBL_OS VALUES (7,'Windows NT',7,'/Mozilla.*\\(Windows.*NT/');
+#INSERT INTO TBL_OS VALUES (8,'Mac System 7',8,'');
+#INSERT INTO TBL_OS VALUES (9,'Mac System 7.5',9,'');
+#INSERT INTO TBL_OS VALUES (10,'Mac System 7.6.1',10,'');
+#INSERT INTO TBL_OS VALUES (11,'Mac System 8.0',11,'');
+#INSERT INTO TBL_OS VALUES (12,'Mac System 8.5',12,'/Mozilla.*\\(.*;.*; 68K.*\\)/');
+#INSERT INTO TBL_OS VALUES (13,'Mac System 8.6',13,'/Mozilla.*\\(.*;.*; PPC.*\\)/');
+#INSERT INTO TBL_OS VALUES (14,'Mac System 9.0',14,'');
+#INSERT INTO TBL_OS VALUES (15,'Mac OS X',15,'');
+#INSERT INTO TBL_OS VALUES (16,'Linux',16,'/Mozilla.*\\(.*;.*; Linux.*\\)/');
+#INSERT INTO TBL_OS VALUES (17,'BSDI',17,'/Mozilla.*\\(.*;.*; BSD\\/OS.*\\)/');
+#INSERT INTO TBL_OS VALUES (18,'FreeBSD',18,'/Mozilla.*\\(.*;.*; FreeBSD.*\\)/');
+#INSERT INTO TBL_OS VALUES (19,'NetBSD',19,'');
+#INSERT INTO TBL_OS VALUES (20,'OpenBSD',20,'');
+#INSERT INTO TBL_OS VALUES (21,'AIX',21,'/Mozilla.*\\(.*;.*; AIX.*\\)/');
+#INSERT INTO TBL_OS VALUES (22,'BeOS',22,'');
+#INSERT INTO TBL_OS VALUES (23,'HP-UX',23,'/Mozilla.*\\(.*;.*; HP-UX.*\\)/');
+#INSERT INTO TBL_OS VALUES (24,'IRIX',24,'/Mozilla.*\\(.*;.*; IRIX.*\\)/');
+#INSERT INTO TBL_OS VALUES (25,'Neutrino',25,'');
+#INSERT INTO TBL_OS VALUES (26,'OpenVMS',26,'');
+#INSERT INTO TBL_OS VALUES (27,'OS/2',27,'');
+#INSERT INTO TBL_OS VALUES (28,'OSF/1',28,'/Mozilla.*\\(.*;.*; OSF.*\\)/');
+#INSERT INTO TBL_OS VALUES (29,'Solaris',29,'/Mozilla.*\\(.*;.*; SunOS 5.*\\)/');
+#INSERT INTO TBL_OS VALUES (30,'SunOS',30,'/Mozilla.*\\(.*;.*; SunOS.*\\)/');
+#INSERT INTO TBL_OS VALUES (31,'other',31,'');
 CREATE TABLE TBL_OS_seq (
   id int unsigned auto_increment not null primary key);
 INSERT INTO TBL_OS_seq values (31);
@@ -633,7 +632,6 @@ INSERT INTO TBL_STATUS_seq values (7);
 #INSERT INTO TBL_DATABASE VALUES (2,'MySQL 3.23.49',2);
 #INSERT INTO TBL_DATABASE VALUES (3,'PostgreSQL 7.1.3',3);
 #INSERT INTO TBL_DATABASE_seq values (3);
-
 CREATE TABLE TBL_DATABASE_seq (
   id int unsigned auto_increment not null primary key);
 
@@ -648,7 +646,6 @@ CREATE TABLE TBL_DATABASE_seq (
 #INSERT INTO TBL_SITE VALUES (2,'Production - location 2',3);
 #INSERT INTO TBL_SITE VALUES (3,'Test site - location 1',4);
 #INSERT INTO TBL_SITE VALUES (4,'Test site - location 2',5);
-
 CREATE TABLE TBL_SITE_seq (
   id int unsigned auto_increment not null primary key);
 INSERT INTO TBL_SITE_seq values (4);
