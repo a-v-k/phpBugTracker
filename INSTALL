@@ -41,3 +41,4 @@ Install JpGraph for home page graphs (See http://www.aditus.nu/jpgraph/).  If yo
 
 Install Spreadsheet_Excel_Writer for bug list download support ("pear install Spreadsheet_Excel_Writer-beta").
 
+Check your database to ensure the query cache is turned on.  For mysql use "SHOW STATUS LIKE '%qcache%';"

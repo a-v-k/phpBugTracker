@@ -76,11 +76,15 @@
         <b><a href="query.php"><?php echo translate("Return to bug list"); ?></a></b>
 		<?php if (!empty($prevbug)) { ?>
 			<b>&nbsp;|&nbsp;&nbsp;<a href="bug.php?op=show&bugid=<?php echo $prevbug ?>&pos=<?php echo $prevpos ?>"><?php echo translate("Previous bug"); ?></a></b>
+		<?php } else { ?>
+			<b>&nbsp;|&nbsp;&nbsp;<strike><?php echo translate("Previous bug"); ?></strike></b>
 		<?php } ?>
 		<?php if (!empty($nextbug)) { ?>
             <input type="hidden" name="nextbug" value="<?php echo $nextbug ?>">
             <input type="hidden" name="nextpos" value="<?php echo $nextpos ?>">
 			<b>&nbsp;|&nbsp;&nbsp;<a href="bug.php?op=show&bugid=<?php echo $nextbug ?>&pos=<?php echo $nextpos ?>"><?php echo translate("Next bug"); ?></a></b>
+		<?php } else { ?>
+			<b>&nbsp;|&nbsp;&nbsp;<strike><?php echo translate("Next bug"); ?></strike></b>
 		<?php } ?>
 		</td>
 	</tr>

@@ -25,3 +25,9 @@ Here is a list of the requirements to get this running on your server.
 3. A database - Currently MySQL, Oracle and PostgreSQL have been tested,
    though the goal is to be database independent.  The query routine is a 
    notable exception to that goal at the moment. 
+
+Performance Note
+----------------
+phpBugTracker benefits a lot from a query cache.  In mysql, play with:
+	set global query_cache_size=256000;
+	SHOW STATUS LIKE '%qcache%';

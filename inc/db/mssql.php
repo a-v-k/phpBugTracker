@@ -227,51 +227,6 @@ $QUERY = array(
 			'bug_id = %s '.
 		'order by '.
 			'bh.created_date',
-	'bug-prev-next' =>
-		'select '.
-			'b.bug_id, '.
-			'reporter.login as reporter, '.
-			'owner.login as owner, '.
-			'count(distinct comment.comment_id) as comments, '.
-			'count(distinct attachment.attachment_id) as attachments, '.
-			'count(distinct vote.user_id) as votes '.
-		'from '.
-			TBL_BUG.' b '.
-			'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
-			'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
-			'left join '.TBL_AUTH_USER.' lastmodifier on b.last_modified_by = lastmodifier.user_id '.
-			'left join '.TBL_COMMENT.' comment on b.bug_id = comment.bug_id '.
-			'left join '.TBL_ATTACHMENT.' attachment on b.bug_id = attachment.bug_id '.
-			'left join '.TBL_BUG_VOTE.' vote on b.bug_id = vote.bug_id '.
-			'left join '.TBL_BOOKMARK.' bookmark on b.bug_id = bookmark.bug_id '.
-			'left join '.TBL_RESOLUTION.' resolution on b.resolution_id = resolution.resolution_id '.
-			'left join '.TBL_DATABASE.' db on b.database_id = db.database_id '.
-			'left join '.TBL_VERSION.' version2 on b.to_be_closed_in_version_id = version2.version_id '.
-			'left join '.TBL_VERSION.' version3 on b.closed_in_version_id = version3.version_id, '.
-			TBL_SEVERITY.' severity, '.
-			TBL_STATUS.' status, '.
-			TBL_OS.' os, '.
-			TBL_PRIORITY.' priority, '.
-			TBL_VERSION.' version, '.
-			TBL_COMPONENT.' component, '.
-			TBL_PROJECT.' project, '.
-			TBL_SITE.' site '.
-		'where '.
-			'b.severity_id = severity.severity_id '.
-			'and b.priority = priority.priority_id '.
-			'and b.status_id = status.status_id '.
-			'and b.os_id = os.os_id '.
-			'and b.version_id = version.version_id '.
-			'and b.component_id = component.component_id '.
-			'and b.project_id = project.project_id '.
-			'and %s '.
-			'and b.site_id = site.site_id '.
-			'and b.bug_id <> %s '.
-		'group by '.
-			'b.bug_id '.
-		'order by '.
-			'%s %s, '.
-			'b.bug_id asc',
 	'bug-printable' =>
 		'select '.
 			'b.*, '.

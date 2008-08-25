@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.115 2008/08/24 05:32:38 brycen Exp $
+// $Id: query.php,v 1.116 2008/08/25 05:36:33 brycen Exp $
 
 include 'include.php';
 
@@ -426,7 +426,8 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 				join(' ' , $join_db_fields),
                                 (!empty($_SESSION['queryinfo']['query']) ? "and {$_SESSION['queryinfo']['query']} " : ''),
                         	$db_headers[$order], $sort);
-		#syslog(LOG_DEBUG,$sql);
+		#syslog(LOG_DEBUG,"query=$sql");
+		$_SESSION['queryinfo']['full_query_sql'] = $sql;
 		$t->assign('bugs', $db->getAll($db->modifyLimitQuery($sql, $llimit, $selrange)));
 	
 		sorting_headers($me, $headers, $order, $sort, "page=$page".

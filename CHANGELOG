@@ -3,10 +3,9 @@
 : Bug: fix home page error that only shows up if there are no projects in DB
 : Bug: fix bit rot in the postgres sql. Testing against pgsql 8.2.6
 : Feature: support <pre></pre> in bug comments
-: Change: submit & next
+: Change: submit & next now ghost rather than disappear.
 : Change: show most recently CHANGED bugs on home page, not just recently SUBMITTED
 : Performance: don't do expensive query joins unless the column will be shown (e.g. attachment count)
-: TODO: don't show password on install
 : TODO: rename pgsql.php, which is also the name of the PEAR:DB postgres driver
 : TODO: create INDEX bug_id_attachment ON phpbt_attachment (bug_id);
 : TODO: create INDEX bug_id_bookmark   ON phpbt_bookmark   (bug_id);

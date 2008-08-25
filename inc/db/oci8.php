@@ -250,62 +250,6 @@ $QUERY = array(
 			'and bug_id = %s '.
 		'order by '.
 			'bh.created_date',
-	'bug-prev-next' =>
-		'select '.
-			'b.bug_id, '.
-			'reporter.login as reporter, '.
-			'owner.login as owner, '.
-			'count(distinct comment.comment_id) as comments, '.
-			'count(distinct attachment.attachment_id) as attachments, '.
-			'count(distinct vote.user_id) as votes '.
-		'from '.
-			TBL_BUG.' b, '.
-			TBL_AUTH_USER.' owner, '.
-			TBL_AUTH_USER.' reporter, '.
-			TBL_AUTH_USER.' lastmodifier, '.
-			TBL_COMMENT.' comment, '.
-			TBL_ATTACHMENT.' attachment, '.
-			TBL_BUG_VOTE.' vote, '.
-			TBL_BOOKMARK.' bookmark, '.
-			TBL_RESOLUTION.' resolution, '.
-			TBL_DATABASE.' database, '.
-			TBL_VERSION.' version2, '.
-			TBL_VERSION.' version3, '.
-			TBL_SEVERITY.' severity, '.
-			TBL_STATUS.' status, '.
-			TBL_OS.' os, '.
-			TBL_PRIORITY.' priority, '.
-			TBL_VERSION.' version, '.
-			TBL_COMPONENT.' component, '.
-			TBL_PROJECT.' project, '.
-			TBL_SITE.' site '.
-		'where '.
-			'b.assigned_to = owner.user_id(+) '.
-			'and b.created_by = reporter.user_id(+) '.
-			'and b.last_modified_by = lastmodifier.user_id(+) '.
-			'and b.bug_id = comment.bug_id(+) '.
-			'and b.bug_id = attachment.bug_id(+) '.
-			'and b.bug_id = vote.bug_id(+) '.
-			'and b.bug_id = bookmark.bug_id(+) '.
-			'and b.resolution_id = resolution.resolution_id(+) '.
-			'and b.database_id = database.database_id(+) '.
-			'and b.to_be_closed_in_version_id = version2.version_id(+) '.
-			'and b.closed_in_version_id = version3.version_id(+) '.
-			'and b.severity_id = severity.severity_id '.
-			'and b.priority = priority.priority_id '.
-			'and b.status_id = status.status_id '.
-			'and b.os_id = os.os_id '.
-			'and b.version_id = version.version_id '.
-			'and b.component_id = component.component_id '.
-			'and b.project_id = project.project_id '.
-			'and %s '.
-			'and b.site_id = site.site_id '.
-			'and b.bug_id <> %s '.
-		'group by '.
-			'b.bug_id '.
-		'order by '.
-			'%s %s, '.
-			'bug_id asc',
 	'bug-printable' =>
 		'select '.
 			'b.*, '.

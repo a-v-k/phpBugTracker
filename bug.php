@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.163 2008/04/09 03:24:28 brycen Exp $
+// $Id: bug.php,v 1.164 2008/08/25 05:36:33 brycen Exp $
 
 include 'include.php';
 
@@ -843,22 +843,34 @@ function prev_next_links($bugid, $pos) {
 	$db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_db_error");
 
 	if (!isset($_SESSION['queryinfo']['query']) || !$_SESSION['queryinfo']['query']) {
+		#syslog(LOG_DEBUG,"no query in session");
 		return array('', '');
 	}
 
 	if ($pos) {
 		$offset = $pos - 1;
-		$limit = 2;
+		$limit  = 3;
 	} else {
-		$offset = 0;
-		$limit = 1;
+		$offset = 1;
+		$limit  = 1;
 	}
-	$rs = $db->limitQuery(sprintf($QUERY['bug-prev-next'],
-		$_SESSION['queryinfo']['query'], $bugid, $_SESSION['queryinfo']['order'],
-		$_SESSION['queryinfo']['sort']), $offset, $limit);
 
-	list($firstid, $chunks) = $rs->fetchRow();
-	list($secondid, $chunks) = $rs->fetchRow();
+	#old code:
+	#$rs = $db->limitQuery(sprintf($QUERY['bug-prev-next'],
+	#	$_SESSION['queryinfo']['query'], $bugid, $_SESSION['queryinfo']['order'],
+	#	$_SESSION['queryinfo']['sort']), $offset, $limit);
+
+	# Use the exact sql from the query for the next/previous calculation
+	# This helps prevent any errors creeping in, and is way faster with 
+	# the mysql cache.
+	#
+	# syslog(LOG_DEBUG,"prev-next=".$_SESSION['queryinfo']['full_query_sql']);
+	# syslog(LOG_DEBUG,"offset=$offset limit=$limit pos=$pos");
+	$rs = $db->limitQuery($_SESSION['queryinfo']['full_query_sql'], $offset, $limit);
+
+	list($firstid,  $dummy) = $rs->fetchRow();
+	list($myid,     $dummy) = $rs->fetchRow();
+	list($secondid, $dummy) = $rs->fetchRow();
 
 	if ($pos) {
 		if ($firstid) {
