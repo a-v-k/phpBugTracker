@@ -23,10 +23,10 @@ FOR MORE DETAILS CLICK ON THE LINK BELOW
 <?php echo $database_id_stat; ?> Database: <?php echo $database_id."\n"; ?>
 <?php if ($showcomments) { ?>
 
------ Posted by <?php echo $oldpostedby; ?> at <?php echo $oldpostedon; ?> -----
+----- Prior comment by <?php echo $oldpostedby; ?> at <?php echo $oldpostedon; ?> -----
 <?php echo html_entity_decode($oldcomments)."\n"; ?>
 
------ Posted by <?php echo $newpostedby; ?> at <?php echo $newpostedon; ?> -----
+----- New comment by <?php echo $newpostedby; ?> at <?php echo $newpostedon; ?> -----
 <?php echo html_entity_decode($newcomments)."\n"; ?>
 
 <?php } ?>

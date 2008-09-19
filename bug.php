@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.164 2008/08/25 05:36:33 brycen Exp $
+// $Id: bug.php,v 1.165 2008/09/19 22:19:19 brycen Exp $
 
 include 'include.php';
 
@@ -320,7 +320,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 			'newpostedby' => $row['login'],
 			'newpostedon' => date(TIME_FORMAT, $row['created_date']).' on '.
 			date(DATE_FORMAT, $row['created_date']),
-			'newcomments' => textwrap('+ '.$row['comment_text'],72,"\n+ ")
+			'newcomments' => $row['comment_text'] // textwrap('+ '.$row['comment_text'],72,"\n+ ")
 		));
 
 		// If this comment is the first additional comment after the creation of the
@@ -330,7 +330,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 			$t->assign(array(
 			'oldpostedby' => $by,
 			'oldpostedon' => date(TIME_FORMAT,$on).' on '.date(DATE_FORMAT,$on),
-			'oldcomments' => textwrap($comments,72)
+			'oldcomments' => $comments // textwrap($comments,72)
 			));
 		} else {
 			$rs->fetchInto($row);
@@ -338,7 +338,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 			'oldpostedby' => $row['login'],
 			'oldpostedon' => date(TIME_FORMAT,$row['created_date']).' on '.
 				date(DATE_FORMAT,$row['created_date']),
-			'oldcomments' => textwrap($row['comment_text'],72)
+			'oldcomments' => $row['comment_text'] // textwrap($row['comment_text'],72)
 			));
 		}
 		$t->assign('showcomments', true);
@@ -511,7 +511,10 @@ function update_bug($bugid = 0) {
 
 	// Add CC if specified
 	if (isset($add_cc) and $add_cc) {
-		$cc_uid = $db->getOne("select user_id from ".TBL_AUTH_USER." where login = ".$db->quote(stripslashes($add_cc)));
+        // Swap these lines to get a pulldown for Cc:, rather than a free text field
+        $cc_uid = $db->getOne("select user_id from ".TBL_AUTH_USER." where login = ".$db->quote(stripslashes($add_cc)));
+		// $cc_uid = $add_cc;
+		$cc_uid = $add_cc;
 		if ($cc_uid != $u and !$is_admin && !$is_owner && !$may_manage) {
 			return (array('status' => translate("You may only add yourself to the CC list")));
 		}
@@ -974,7 +977,7 @@ function show_bug($bugid = 0, $error = array()) {
 	$t->assign(array('posinfo' => $posinfo));
 
 	$t->assign(array('perm' => $perm));
-	$t->render('bugdisplay.html', translate("View Bug"));
+	$t->render('bugdisplay.html', translate("Bug") . " #" . $bugid . " - " . $row['title'] );
 }
 
 function show_projects() {
