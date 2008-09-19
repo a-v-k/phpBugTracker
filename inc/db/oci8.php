@@ -22,7 +22,9 @@ $QUERY = array(
 			'c.component_id, '.
 			'c.component_name, '.
 			'c.created_date, '.
-			'c.active',
+			'c.owner, '.
+			'c.active, ' .
+			'sort_order',
 	'admin-list-databases' =>
 		'select '.
 			'd.database_id, '.
@@ -196,7 +198,8 @@ $QUERY = array(
 			'v.version_id, '.
 			'v.version_name, '.
 			'v.created_date, '.
-			'v.active',
+			'v.active, '.
+			'sort_order',
 	'admin-show-component' =>
 		'select '.
 			'c.*, '.
@@ -323,9 +326,11 @@ $QUERY = array(
 			'login '.
 		'from '.
 			TBL_BUG_CC.' b, '.
-			TBL_AUTH_USER.' '.
+			TBL_AUTH_USER.' u '.
 		'where '.
-			'phpbt_auth_user.user_id = b.user_id(+) '.
+// 26-Feb-2008 IBS - replace commentted out a line with the one  following it.
+//			'phpbt_auth_user.user_id = b.user_id(+) '.
+			'u.user_id = b.user_id(+) '.
 			'and bug_id = %s',
 	'functions-project-js' =>
 		'select '.
@@ -345,8 +350,11 @@ $QUERY = array(
 			'project_name',
 	'include-template-bookmark' =>
 		"SELECT ".
-			"sum(decode( s.status_id in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )), ".
-			"sum(decode( s.status_id not in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )), ".
+// 26-Feb-2008 IBS - Replace commented 2 line2 with the two  following it.
+//			"sum(decode( s.status_id in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )), ".
+//			"sum(decode( s.status_id not in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )), ".
+			"sum(decode(instr('" .OPEN_BUG_STATUSES."', s.status_id ) , 0, 0, 1 )), ".
+			"sum(decode(instr('" .OPEN_BUG_STATUSES."', s.status_id ) , 0, 1, 0 )) ".
 		"from ".
 			TBL_BUG." b, ".
 			TBL_STATUS." s, ".
@@ -357,8 +365,11 @@ $QUERY = array(
 			"AND w.bug_id = b.bug_id",
 	'include-template-owner' =>
 		"SELECT ".
-			"sum(decode( s.status_id in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )), ".
-			"sum(decode( s.status_id not in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )), ".
+// 26-Feb-2008 IBS - Replace commented 2 line2 with the two  following it.
+//			"sum(decode( s.status_id in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )), ".
+//			"sum(decode( s.status_id not in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )), ".
+			"sum(decode(instr('" .OPEN_BUG_STATUSES."', s.status_id ) , 0, 0, 1 )), ".
+			"sum(decode(instr('" .OPEN_BUG_STATUSES."', s.status_id ) , 0, 1, 0 )) ".
 		'from '.
 			TBL_BUG.' b, '.
 			TBL_STATUS.' s '.
@@ -367,8 +378,11 @@ $QUERY = array(
 			'and b.assigned_to = %s',
 	'include-template-reporter' =>
 		"SELECT ".
-			"sum(decode( s.status_id in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )) , ".
-			"sum(decode( s.status_id not in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )) ".
+// 26-Feb-2008 IBS - Replace commented 2 line2 with the two  following it.
+//			"sum(decode( s.status_id in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )) , ".
+//			"sum(decode( s.status_id not in (".OPEN_BUG_STATUSES.") , 1, 1, 0 )) ".
+			"sum(decode(instr('" .OPEN_BUG_STATUSES."', s.status_id ) , 0, 0, 1 )), ".
+			"sum(decode(instr('" .OPEN_BUG_STATUSES."', s.status_id ) , 0, 1, 0 )) ".
 		'from '.
 			TBL_BUG.' b, '.
 			TBL_STATUS.' s '.
@@ -404,7 +418,9 @@ $QUERY = array(
 			TBL_AUTH_USER.' owner, '.
 			TBL_AUTH_USER.' reporter, '.
 			TBL_AUTH_USER.' lastmodifier, '.
-			TBL_COMMENT.' comment, '.
+// 26-Feb-2008 IBS - Replace commented 2 line2 with the two  following it.
+//			TBL_COMMENT.' comment, '.
+			TBL_COMMENT.' a_comment, '.
 			TBL_ATTACHMENT.' attachment, '.
 			TBL_BUG_VOTE.' vote, '.
 			TBL_BOOKMARK.' bookmark, '.
@@ -420,12 +436,13 @@ $QUERY = array(
 			TBL_COMPONENT.' component, '.
 			TBL_PROJECT.' project, '.
 			TBL_PRIORITY.' priority '.
-		.'%.0s'.
 		'where '.
 			'b.assigned_to = owner.user_id(+) '.
 			'and b.created_by = reporter.user_id(+) '.
 			'and b.last_modified_by = lastmodifier.user_id(+) '.
-			'and b.bug_id = comment.bug_id(+) '.
+// 26-Feb-2008 IBS - Replace commented 2 line2 with the two  following it.
+//			'and b.bug_id = comment.bug_id(+) '.
+			'and b.bug_id = a_comment.bug_id(+) '.
 			'and b.bug_id = attachment.bug_id(+) '.
 			'and b.bug_id = vote.bug_id(+) '.
 			'and b.bug_id = bookmark.bug_id(+) '.			
@@ -441,8 +458,9 @@ $QUERY = array(
 			'and b.version_id = version.version_id '.
 			'and b.component_id = component.component_id '.
 			'and b.project_id = project.project_id %s '.
-		'group by '.
-			'b.bug_id '.
+// 26-Feb-2008	IBS	Comment out the following two links (invlid group by).
+		//'group by '.
+		//	'b.bug_id '.
 		'order by '.
 			'%s %s, '.
 			'b.bug_id asc',
@@ -479,3 +497,4 @@ $QUERY = array(
 	);
 
 ?>
+
