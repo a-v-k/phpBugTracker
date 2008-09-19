@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.50 2008/07/27 06:12:29 brycen Exp $
+// $Id: upgrade.php,v 1.51 2008/09/19 23:17:59 brycen Exp $
 
 define ('NO_AUTH', 1);
 define ('THEME', 'default');
@@ -229,9 +229,9 @@ function upgrade() {
 		}
 
 		if ($thisvers < 5) {
-			log_query("DELETE FROM ".TBL_AUTH_GROUP." WHERE 1");
-			log_query("DELETE FROM ".TBL_AUTH_PERM." WHERE 1");
-			log_query("DELETE FROM ".TBL_GROUP_PERM." WHERE 1");
+			#log_query("DELETE FROM ".TBL_AUTH_GROUP." WHERE 1"); # Note mysqlism
+			#log_query("DELETE FROM ".TBL_AUTH_PERM." WHERE 1");  # Note mysqlism
+			#log_query("DELETE FROM ".TBL_GROUP_PERM." WHERE 1"); # Note mysqlism
 			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, locked) VALUES (1, 'Admin', 1)");
 			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, locked) VALUES (2, 'User', 1)");
 			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, locked) VALUES (3, 'Developer', 1)");
