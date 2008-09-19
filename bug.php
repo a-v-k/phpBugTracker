@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.165 2008/09/19 22:19:19 brycen Exp $
+// $Id: bug.php,v 1.166 2008/09/19 23:06:22 brycen Exp $
 
 include 'include.php';
 
@@ -381,7 +381,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 		$mail->setFrom(ADMIN_EMAIL);
 		$mail->setReturnPath(RETURN_PATH);
 		$mail->setSubject("[Bug {$buginfo['bug_id']}] ".
-			($newbug ? 'New' : 'Changed').' - '.
+			//($newbug ? 'New' : 'Changed').' - '.
 				stripslashes((!empty($cf['title']) ? $cf['title'] : $buginfo['title'])));
 		if (SMTP_EMAIL) {
 			$mail->setSMTPParams(SMTP_HOST, SMTP_PORT, SMTP_HELO, SMTP_AUTH, SMTP_AUTH_USER, SMTP_AUTH_PASS);
@@ -977,7 +977,7 @@ function show_bug($bugid = 0, $error = array()) {
 	$t->assign(array('posinfo' => $posinfo));
 
 	$t->assign(array('perm' => $perm));
-	$t->render('bugdisplay.html', translate("Bug") . " #" . $bugid . " - " . $row['title'] );
+	$t->render('bugdisplay.html', "#" . $bugid . " - " . $row['title'] );
 }
 
 function show_projects() {
