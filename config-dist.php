@@ -1,5 +1,7 @@
 <?php
-// config.php - Set up configuration options
+// config-dist.php - Set up configuration options.  This file is copied
+// to config.php in a normal install.
+//
 // ------------------------------------------------------------------------
 // Copyright (c) 2001 - 2004 The phpBugTracker Group
 // ------------------------------------------------------------------------
@@ -19,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config-dist.php,v 1.40 2008/09/20 21:15:39 brycen Exp $
+// $Id: config-dist.php,v 1.41 2008/09/20 21:22:09 brycen Exp $
 
 // Database Config
 define ('DB_TYPE', '{db_type}');  // using PEAR::DB naming (mysql, pgsql, etc.)
