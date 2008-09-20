@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.73 2007/09/21 23:22:29 brycen Exp $
+// $Id: functions.php,v 1.74 2008/09/20 21:14:00 brycen Exp $
 
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
@@ -481,8 +481,7 @@ function build_project_js($no_all = false) {
 	if ($perm->have_perm('Admin')) {
 		$rs = $db->query("select project_id, project_name from ".TBL_PROJECT." where active = 1 order by project_name");
 	} else {
-		$rs = $db->query(sprintf($QUERY['functions-project-js'],
-			$db->quote(@join(',', $_SESSION['group_ids']))));
+		$rs = $db->query(sprintf($QUERY['functions-project-js'], @join(',', $_SESSION['group_ids'])));
 	}
 	$js = "closedversions['All'] = new Array(new Array('','All'),new Array('0','Not Set'));\n";
 	while (list($pid, $pname) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
