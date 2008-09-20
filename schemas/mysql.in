@@ -1,7 +1,7 @@
 # MySQL database creation template
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: mysql.in,v 1.56 2008/01/27 23:15:00 brycen Exp $
+# $Id: mysql.in,v 1.57 2008/09/20 21:15:39 brycen Exp $
 
 
 
@@ -675,5 +675,9 @@ CREATE TABLE TBL_PROJECT_seq (
 
 CREATE TABLE TBL_VERSION_seq (
   id int unsigned auto_increment not null primary key);
+
+create INDEX bug_id_attachment ON phpbt_attachment (bug_id);
+create INDEX bug_id_bookmark   ON phpbt_bookmark   (bug_id);
+create INDEX bug_id_comment    ON phpbt_comment    (bug_id);
 
 #--

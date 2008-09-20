@@ -1,16 +1,15 @@
--- 1.0.5 2008 - Stability
+-- 1.0.5 2008 October - Stability & Performance
 : Bug: fix BLOB/TEXT default, for compatibility with windows mysql
 : Bug: fix home page error that only shows up if there are no projects in DB
 : Bug: fix bit rot in the postgres sql. Testing against pgsql 8.2.6
+: Bug: fix bit rot for oracle sql, from ibsystems
 : Feature: support <pre></pre> in bug comments
 : Change: submit & next now ghost rather than disappear.
 : Change: show most recently CHANGED bugs on home page, not just recently SUBMITTED
 : Change: gmail friendly subject line on emails.  tab fiendly title on html pages.
 : Performance: don't do expensive query joins unless the column will be shown (e.g. attachment count)
+: Performance: add intelligent indexes for mysql/mysqli
 : TODO: rename pgsql.php, which is also the name of the PEAR:DB postgres driver
-: TODO: create INDEX bug_id_attachment ON phpbt_attachment (bug_id);
-: TODO: create INDEX bug_id_bookmark   ON phpbt_bookmark   (bug_id);
-: TODO: create INDEX bug_id_comment    ON phpbt_comment    (bug_id);
 
 -- 1.0.4 2007 October - Stability
 : Bug 1872351: fix preventing non-admins from attaching attachments

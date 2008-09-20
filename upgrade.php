@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.51 2008/09/19 23:17:59 brycen Exp $
+// $Id: upgrade.php,v 1.52 2008/09/20 21:15:39 brycen Exp $
 
 define ('NO_AUTH', 1);
 define ('THEME', 'default');
@@ -104,12 +104,11 @@ function upgrade() {
 					$comment_text .= "<div class=\"error\">Upgrading of old installs is still unsupported</div>";
 
 					$comment_text .= "<p>An upgrade script has been written, but it is completely UNTESTED! Proceed At Your Own Risk...</p>";
-					$comment_text .= "<p>Don't forget to report your success (or failure) story to <a href=\"mailto:phpbt-dev@lists.sourceforge.net\">phpbt-dev@lists.sourceforge.net</a> if you do proceed. We have interest in detailed error reports and patches from people who use PostgreSQL.</p>";
+					$comment_text .= "<p>Don't forget to report your success (or failure) story to sourceforge. We have interest in detailed error reports and patches from people who use PostgreSQL.</p>";
 					include 'templates/default/upgrade-finished.html';
 					exit;
 				}
 
-				log_query("create table ".TBL_PROJECT_PERM." ( project_id INT4 NOT NULL DEFAULT '0', user_id INT4 NOT NULL DEFAULT '0' )");
 				if ($thisvers < 2) {
 					log_query("alter table ".TBL_AUTH_GROUP." ADD assignable INT2");
 					log_query("alter table ".TBL_AUTH_GROUP." alter assignable set DEFAULT 0");
@@ -144,20 +143,21 @@ function upgrade() {
 					log_query("ALTER TABLE ".TBL_AUTH_GROUP." alter is_role set NOT NULL");
 					log_query("DROP SEQUENCE ".TBL_AUTH_GROUP."_seq");
 					log_query("CREATE SEQUENCE ".TBL_AUTH_GROUP."_seq START 10");
+
+					log_query("create table ".TBL_PROJECT_PERM." ( project_id INT4 NOT NULL DEFAULT '0', user_id INT4 NOT NULL DEFAULT '0' )");
 				}
 				break;
 			case 'mysqli' :
 			case 'mysql' :
 				if (false) {
-					$comment_text .= "<div class=\"error\">Upgrading of old installs is still unsupported</div>";
+					$comment_text .= "<div class=\"error\">Upgrading of old installs is probably available.</div>";
 
-					$comment_text .= "<p>An upgrade script has been written, but it is completely UNTESTED! Proceed At Your Own Risk...</p>";
-					$comment_text .= "<p>Don't forget to report your success (or failure) story to <a href=\"mailto:phpbt-dev@lists.sourceforge.net\">phpbt-dev@lists.sourceforge.net</a> if you do proceed. We have interest in detailed error reports and patches from people who use MySQL.</p>";
+					$comment_text .= "<p>An upgrade script has been written, but it is lightly tested! Proceed At Your Own Risk...</p>";
+					$comment_text .= "<p>Don't forget to report your success (or failure) story to sourceforge.net";
 					include 'templates/default/upgrade-finished.html';
 					exit;
 				}
 
-				log_query("create table if not exists ".TBL_PROJECT_PERM." ( project_id int(11) NOT NULL default '0', user_id int(11) NOT NULL default '0' )");
 				if ($thisvers < 2) {
 					log_query("alter table ".TBL_AUTH_GROUP." ADD assignable TINYINT DEFAULT 0 NOT NULL AFTER locked");
 				}
@@ -178,6 +178,12 @@ function upgrade() {
 					log_query("DROP TABLE ".TBL_AUTH_GROUP."_seq");
 					log_query("CREATE TABLE IF NOT EXISTS ".TBL_AUTH_GROUP."_seq (id int unsigned auto_increment not null primary key)");
 					log_query("INSERT INTO ".TBL_AUTH_GROUP."_seq values (9)");
+					log_query("create table if not exists ".TBL_PROJECT_PERM." ( project_id int(11) NOT NULL default '0', user_id int(11) NOT NULL default '0' )");
+				}
+				if ($thisvers < 6) {
+					log_query("create INDEX bug_id_attachment ON phpbt_attachment (bug_id);");
+					log_query("create INDEX bug_id_bookmark   ON phpbt_bookmark   (bug_id);");
+					log_query("create INDEX bug_id_comment    ON phpbt_comment    (bug_id);");
 				}
 				break;
 			case 'oci8' :
@@ -185,7 +191,7 @@ function upgrade() {
 					$comment_text .= "<div class=\"error\">Upgrading of old installs is still unsupported</div>";
 
 					$comment_text .= "<p>An Oracle upgrade script has been written, but it is completely UNTESTED! Proceed At Your Own Risk...</p>";
-					$comment_text .= "<p>Don't forget to report your success (or failure) story to <a href=\"mailto:phpbt-dev@lists.sourceforge.net\">phpbt-dev@lists.sourceforge.net</a> if you do proceed. We have interest in detailed error reports and patches from people who use Oracle.</p>";
+					$comment_text .= "<p>Don't forget to report your success (or failure) story to sourceforge if you do proceed. We have interest in detailed error reports and patches from people who use Oracle.</p>";
 					include 'templates/default/upgrade-finished.html';
 					exit;
 				}
@@ -284,7 +290,7 @@ function upgrade() {
 			log_query("INSERT INTO ".TBL_PRIORITY." VALUES (4,'Medium High','Fix as soon as possible',4,'#dab0b0')");
 			log_query("INSERT INTO ".TBL_PRIORITY." VALUES (5,'High','Fix immediately',5,'#daaaaa')");
 			log_query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('NEW_ACCOUNTS_GROUP', 'User', 'The group assigned to new user accounts', 'string')");
-			log_query("UPDATE ".TBL_AUTH_USER." SET bug_list_fields=null"); // Incompatible change, blow 'em away
+			log_query("UPDATE ".TBL_AUTH_USER." SET bug_list_fields=null"); // Incompatible change, blow away user settings here
 			log_query("INSERT INTO ".TBL_AUTH_USER." (user_id, login, first_name, last_name, email, password, active, bug_list_fields) values (0, 'Anonymous User', 'Anonymous', 'User', '', '', 0, null)");
 		}
 
@@ -294,7 +300,7 @@ function upgrade() {
 			$comment_text .= "Success!<br>\n";
 		}
 		else {
-			$comment_text .= "Done, but with ".$num_errors." error(s)<br>\n";
+			$comment_text .= "Done, but with ".$num_errors." error(s), which may be ignorable.<br>\n";
 		}
 	}
 	else {
@@ -309,9 +315,8 @@ function upgrade() {
 if (isset($_GET['doit'])) {
 	upgrade();
 } else {
-    $old_db_rev = "1.0.x";
-    $new_db_rev = "5";
-	include('templates/default/upgrade.html');
+    $new_db_rev = CUR_DB_VERSION;
+    include('templates/default/upgrade.html');
 }
 
 ?>

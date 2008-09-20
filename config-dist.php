@@ -19,7 +19,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: config-dist.php,v 1.39 2007/09/16 05:38:28 brycen Exp $
+// $Id: config-dist.php,v 1.40 2008/09/20 21:15:39 brycen Exp $
 
 // Database Config
 define ('DB_TYPE', '{db_type}');  // using PEAR::DB naming (mysql, pgsql, etc.)
@@ -30,7 +30,7 @@ define ('DB_PASSWORD', '{db_pass}'); // password for database connection
 
 // Database Table Config
 // you can change either the prefix of the table names or each table name individually
-define ('CUR_DB_VERSION', 5);  // The version of the database
+define ('CUR_DB_VERSION', 6);  // The version of the database. Copy this to your config.php for upgrades.
 define ('TBL_PREFIX', '{tbl_prefix}');	// the prefix for all tables, leave empty to use the old style
 
 define ('TBL_ACTIVE_SESSIONS', TBL_PREFIX.'active_sessions');
