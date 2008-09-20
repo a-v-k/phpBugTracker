@@ -31,3 +31,4 @@ Performance Note
 phpBugTracker benefits a lot from a query cache.  In mysql, play with:
 	set global query_cache_size=256000;
 	SHOW STATUS LIKE '%qcache%';
+mysql is the most tested database platform, followed by posgres, and then oracle.
