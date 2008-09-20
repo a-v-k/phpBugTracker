@@ -364,9 +364,11 @@ $QUERY = array(
 		'order by project_name',
 	'join-where' =>
 		'where',
+	/* Buggy: modern postgres wants to insist on group by and order by rules */
 	'query-list-bugs' =>
-		'select '.
+		'select distinct '.
 			'%s '.
+			',priority.sort_order '.
 		'from '.
 			TBL_BUG.' b '.
 			'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
@@ -395,8 +397,6 @@ $QUERY = array(
 			'and b.version_id = version.version_id '.
 			'and b.component_id = component.component_id '.
 			'and b.project_id = project.project_id %s '.
-		'group by '.
-			'b.bug_id '.
 		'order by '.
 			'%s %s, '.
 			'b.bug_id asc',
