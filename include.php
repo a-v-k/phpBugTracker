@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.148 2008/09/20 20:31:45 brycen Exp $
+// $Id: include.php,v 1.149 2008/09/25 19:55:00 brycen Exp $
 
 define('RAWERROR', true);
 
@@ -305,5 +305,3 @@ if (!defined('NO_AUTH')) {
 }
 
 ?>
-
- 	  	 
