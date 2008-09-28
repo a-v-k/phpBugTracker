@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.59 2008/01/30 06:01:31 brycen Exp $
+// $Id: install.php,v 1.60 2008/09/28 01:28:33 brycen Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -190,8 +190,8 @@ function test_database(&$params, $testonly = false) {
 
 	// Simple error checking on returned DB object to check connection to db
 	if (DB::isError($db)) {
-		$error_message = isset($db->message) ? $db->message : '';
-		$error_info = isset($db->user_info) ? $db->user_info : '';
+		$error_message = $db->getMessage();	// isset($db->message)   ? $db->message : '';
+		$error_info    = $db->getUserInfo();	//isset($db->user_info) ? $db->user_info : '';
 		include('templates/default/install-dbfailure.html');
 		exit;
 	} else {
