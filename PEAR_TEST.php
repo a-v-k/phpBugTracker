@@ -21,11 +21,11 @@ if (@include_once(PEAR_PATH.'DB.php')) {
     }
 
 $dsn = array(
-'phptype'   => 'mysqli',
-#'phptype'   => 'pgsql',
+#'phptype'   => 'mysqli',
+'phptype'   => 'pgsql',
 'hostspec'  => 'localhost',
 'database'  => 'bug_tracker',
-'username'  => 'root',
+'username'  => 'postgres',
 'password'  => ''
 );
 echo "Connecting to the database with: \n";
@@ -37,7 +37,8 @@ if (DB::isError($db)) {
     echo 'Failed to connect to the database with error code:<br/>\''. $db->getMessage() . '\'<br/>\''. $db->getUserInfo().'\'<br/>';
     echo '<br/>';
 } else {
-    echo 'Database opened OK!<br/>';
+    echo 'Database opened OK:<br/>';
+    echo $db->toString() . '<br/>';
 
     $result =& $db->query("SELECT bug_id,title,created_date FROM phpbt_bug LIMIT 5");
     if (DB::isError($result)) {
