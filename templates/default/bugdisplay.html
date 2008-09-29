@@ -316,7 +316,7 @@
 			<tr>
 			<td colspan="2"><?php echo translate("Attachments"); ?>:</td>
 			<td colspan="3" align="right">
-			<?php if ($may_edit) { ?>
+            <?php if ($may_edit or $may_add_comment) { ?>
 				<a href="attachment.php?bugid=<?php echo $bug_id; ?>" onClick="return popupAtt(<?php echo $bug_id; ?>)"><?php echo translate("Create new attachment"); ?></a>
 			<?php } ?>
 			</td>
