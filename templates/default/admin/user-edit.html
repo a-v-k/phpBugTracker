@@ -52,7 +52,7 @@
                 <?php echo translate("Email"); ?>:
             </td>
             <td>
-                <input type="text" size="20" maxlength="40" name="email" value="<?php echo $email; ?>">
+                <input type="text" size="35" maxlength="40" name="email" value="<?php echo $email; ?>">
             </td>
         </tr>
         <tr>
@@ -81,13 +81,16 @@
         </tr>
         <tr>
             <td align="right" valign="top">
-                <?php echo translate("User Groups"); ?>:
+                <?php echo translate("Group<br>Membership"); ?>:
             </td>
             <td>
                 <select name="fusergroup[]" size="5" multiple onclick="checkAdmin(this)">
                     <?php build_select('group', $user_groups); ?>
                 </select> 
             </td>
+        </tr>
+        <tr>
+            <td></td><td><?php echo translate("A user may gain more<br>permissions based<br>on their bug role."); ?>
         </tr>
         <tr>
             <td align="right" valign="top">
