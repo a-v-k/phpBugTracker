@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: upgrade.php,v 1.53 2008/09/29 03:39:54 brycen Exp $
+// $Id: upgrade.php,v 1.54 2008/09/29 04:12:32 brycen Exp $
 
 define ('NO_AUTH', 1);
 define ('THEME', 'default');
@@ -238,8 +238,8 @@ function upgrade() {
 		  //log_query("DELETE FROM ".TBL_AUTH_GROUP." WHERE 1"); // Note mysqlism
 		  //log_query("DELETE FROM ".TBL_AUTH_PERM."  WHERE 1"); // Note mysqlism
 		  //log_query("DELETE FROM ".TBL_GROUP_PERM." WHERE 1"); // Note mysqlism
-			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, locked) VALUES (1, 'Admin', 0)");
-			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, locked) VALUES (2, 'User', 0)");
+			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, locked) VALUES (1, 'Admin', 1)");
+			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, locked) VALUES (2, 'User', 1)");
 			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, locked) VALUES (3, 'Developer', 0)");
 		  //log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, locked) VALUES (4, 'Manager', 1)");
 			log_query("INSERT INTO ".TBL_AUTH_GROUP." (group_id, group_name, is_role, locked) VALUES (5, 'Guest', 1, 1)");
