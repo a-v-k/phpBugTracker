@@ -20,31 +20,32 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.149 2008/09/25 19:55:00 brycen Exp $
+// $Id: include.php,v 1.150 2008/09/29 03:39:54 brycen Exp $
 
 define('RAWERROR', true);
 
 define('PHPBT_VERSION', '1.0rc6');
-@ini_set("magic_quotes_runtime", 0);
-// 28-Feb-2008 - IBS - comment the line below, and add the following 6.
-// @ini_set("magic_quotes_sybase", 0);
-if (DB_TYPE=='oci8') {
-	@ini_set("magic_quotes_sybase", 1);
-}
-else {
-	@ini_set("magic_quotes_sybase", 0);
-}
 @ini_set("session.save_handler", "files");
 
+// Installation hasn't been completed
 if (file_exists('config.php')) {
 	if (!include_once('config.php')) {
 		header("Location: install.php");
 		exit();
 	}
 }
-if (!defined('DB_HOST')) { // Installation hasn't been completed
+if (!defined('DB_HOST')) {
 	header("Location: install.php");
 	exit();
+}
+
+// Stupid magic quotes stuff
+@ini_set("magic_quotes_runtime", 0);
+if (DB_TYPE=='oci8') {
+	@ini_set("magic_quotes_sybase", 1);
+}
+else {
+	@ini_set("magic_quotes_sybase", 0);
 }
 
 // Grab the global functions
