@@ -1,7 +1,10 @@
 # Oracle database creation script
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: oci8.in,v 1.36 2008/09/29 04:12:32 brycen Exp $
+# $Id: oci8.in,v 1.37 2008/10/03 17:31:58 brycen Exp $
+# 02-Oct-2008	Nitai Fraenkel	Allow no value for TBL_AUTH_USER.email and
+# TBL_AUTH_USER.password (remove the "not" from "not null)
+# Because oracle treats empty string as null, unlike postgres/mysql
 
 
 
@@ -55,8 +58,8 @@ CREATE TABLE TBL_AUTH_USER (
   login varchar2(40)  default '' NOT NULL UNIQUE,
   first_name varchar2(40)  default '' NOT NULL,
   last_name varchar2(40)  default '' NOT NULL,
-  email varchar2(60)  default '' NOT NULL,
-  password varchar2(40)  default '' NOT NULL,
+  email varchar2(60)  default '' NULL,
+  password varchar2(40)  default '' NULL,
   active number(3)   default '1' ,
   bug_list_fields varchar2(4000)  default '' ,
   created_by number(10)   default '0' ,
