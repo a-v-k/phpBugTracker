@@ -1,6 +1,6 @@
 <?php
-
 // oci8.php - Oracle queries
+// Maintained by Nitai Fraenkel 
 
 $QUERY = array(
 	'admin-list-components' =>
@@ -410,6 +410,8 @@ $QUERY = array(
 		'order by p.project_name',
 	'join-where' =>
 		'and',
+// 26-Feb-2008	IBS	Comment out the following two links (invlid group by).
+// 04-Oct-2008  BN  Comment out COMMENT/ATTACHMENT/VOTE which are aggregates
 	'query-list-bugs' =>
 		'select '.
 			'%s '.
@@ -418,11 +420,9 @@ $QUERY = array(
 			TBL_AUTH_USER.' owner, '.
 			TBL_AUTH_USER.' reporter, '.
 			TBL_AUTH_USER.' lastmodifier, '.
-// 26-Feb-2008 IBS - Replace commented 2 line2 with the two  following it.
-//			TBL_COMMENT.' comment, '.
-			TBL_COMMENT.' a_comment, '.
-			TBL_ATTACHMENT.' attachment, '.
-			TBL_BUG_VOTE.' vote, '.
+//			TBL_COMMENT.' a_comment, '.
+//			TBL_ATTACHMENT.' attachment, '.
+//			TBL_BUG_VOTE.' vote, '.
 			TBL_BOOKMARK.' bookmark, '.
 			TBL_RESOLUTION.' resolution, '.
 			TBL_DATABASE.' database, '.
@@ -435,16 +435,15 @@ $QUERY = array(
 			TBL_VERSION.' version, '.
 			TBL_COMPONENT.' component, '.
 			TBL_PROJECT.' project, '.
-			TBL_PRIORITY.' priority '.
+			TBL_PRIORITY.' priority, '.
+            '%s '.     // query.php adds joins here
 		'where '.
 			'b.assigned_to = owner.user_id(+) '.
 			'and b.created_by = reporter.user_id(+) '.
 			'and b.last_modified_by = lastmodifier.user_id(+) '.
-// 26-Feb-2008 IBS - Replace commented 2 line2 with the two  following it.
-//			'and b.bug_id = comment.bug_id(+) '.
-			'and b.bug_id = a_comment.bug_id(+) '.
-			'and b.bug_id = attachment.bug_id(+) '.
-			'and b.bug_id = vote.bug_id(+) '.
+//			'and b.bug_id = a_comment.bug_id(+) '.
+//			'and b.bug_id = attachment.bug_id(+) '.
+//			'and b.bug_id = vote.bug_id(+) '.
 			'and b.bug_id = bookmark.bug_id(+) '.			
 			'and b.resolution_id = resolution.resolution_id(+) '.
 			'and b.database_id = database.database_id(+) '.
@@ -457,10 +456,10 @@ $QUERY = array(
 			'and b.site_id = site.site_id '.
 			'and b.version_id = version.version_id '.
 			'and b.component_id = component.component_id '.
-			'and b.project_id = project.project_id %s '.
-// 26-Feb-2008	IBS	Comment out the following two links (invlid group by).
-		//'group by '.
-		//	'b.bug_id '.
+			'and b.project_id = project.project_id '.
+            '%s '.     // query.php adds where clauses here
+//		'group by '.
+//			'b.bug_id '.
 		'order by '.
 			'%s %s, '.
 			'b.bug_id asc',
@@ -497,4 +496,3 @@ $QUERY = array(
 	);
 
 ?>
-

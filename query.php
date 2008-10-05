@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.117 2008/10/05 04:40:34 brycen Exp $
+// $Id: query.php,v 1.118 2008/10/05 05:02:51 brycen Exp $
 
 include 'include.php';
 
@@ -397,15 +397,15 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 	$desired_fields = !empty($_SESSION['db_fields']) ?
 		$_SESSION['db_fields'] : $default_db_fields;
 
-	$query_fields = array('b.bug_id as bug_link_id', 
+	$in_use_query_fields = array('b.bug_id as bug_link_id', 
 		'severity.severity_color', 'priority.priority_color');
 	foreach ($desired_fields as $field) {
-		$query_fields[] = $query_db_fields[$field];
+		$in_use_query_fields[]     = $query_db_fields[$field];
         if(isset($join_db_fields[$field])) {
-            $join_fields[]  = $join_db_fields[$field];
+            $in_use_join_fields[]  = $join_db_fields[$field];
             }
-		$field_titles[] = $all_db_fields[$field];
-		$headers[] = $field;
+		$field_titles[]            = $all_db_fields[$field];
+		$headers[]                 = $field;
 	}
 
 	if (empty($_GET['xl'])) { // HTML view
@@ -424,11 +424,13 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 			'has_excel' => find_include('Spreadsheet/Excel/Writer.php')
 			));
 
-		$sql = sprintf($QUERY['query-list-bugs'],
-				join(', ', $query_fields),
-				join(' ' , $join_db_fields),
-                                (!empty($_SESSION['queryinfo']['query']) ? "and {$_SESSION['queryinfo']['query']} " : ''),
-                        	$db_headers[$order], $sort);
+		$sql = sprintf(
+                $QUERY['query-list-bugs'],
+				join(', ', $in_use_query_fields),
+				join(' ' , $in_use_join_fields),
+                (!empty($_SESSION['queryinfo']['query']) ? "and {$_SESSION['queryinfo']['query']} " : ''),
+                $db_headers[$order],
+                $sort);
 		syslog(LOG_DEBUG,"query=$sql");
 		$_SESSION['queryinfo']['full_query_sql'] = $sql;
 		$t->assign('bugs', $db->getAll($db->modifyLimitQuery($sql, $llimit, $selrange)));
@@ -438,7 +440,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 		$t->render('buglist.html', translate("Bug List"));
 	} else { // Spreasheet download
 		dump_spreadsheet($desired_fields, $field_titles, $db->getAll(
-			sprintf($QUERY['query-list-bugs'], join(', ', $query_fields),
+			sprintf($QUERY['query-list-bugs'], join(', ', $in_use_query_fields),
 				(!empty($_SESSION['queryinfo']['query'])
 				? "and {$_SESSION['queryinfo']['query']} " : ''),
 			$db_headers[$order], $sort)));
