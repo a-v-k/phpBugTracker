@@ -68,3 +68,8 @@ Note that "You must have magic_quotes_gpc set to On either in php.ini or in .hta
 This has always been true, but you might miss this warning while upgrading.  This avoids
 SQL injection attacks.
 
+Upgrading from 1.0.3/4 to 1.0.5
+-------------------------------
+There is no database update required, sort of.  On mysql upgrading to database version
+6 results in three new indexes (for speed).  There is no schema change.
+This is a very seamless upgrade.

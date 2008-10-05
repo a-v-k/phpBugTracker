@@ -42,3 +42,12 @@ Install JpGraph for home page graphs (See http://www.aditus.nu/jpgraph/).  If yo
 Install Spreadsheet_Excel_Writer for bug list download support ("pear install Spreadsheet_Excel_Writer-beta").
 
 Check your database to ensure the query cache is turned on.  For mysql use "SHOW STATUS LIKE '%qcache%';"
+
+Performance Note:
+phpBugTracker benefits a lot from a query cache.  Most mysql platforms come with one enabled by default. If not, play with:
+    set global query_cache_size=256000;
+    SHOW STATUS LIKE '%qcache%';
+mysql is the most tested database platform, followed by postgres, and then oracle.
+
+Problems?
+The majority of problems reported are with PEAR DB not working.  Edit PEAR_TEST.php to help work out these problems, before attempting the bug tracker.

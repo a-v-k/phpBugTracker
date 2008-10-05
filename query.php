@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.116 2008/08/25 05:36:33 brycen Exp $
+// $Id: query.php,v 1.117 2008/10/05 04:40:34 brycen Exp $
 
 include 'include.php';
 
@@ -316,6 +316,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 		'votes' => 'count(distinct vote.user_id) as votes'
 	);
 
+    // Bug: The aggregates Work for mysql but are missing required "group by" for postgres
 	// New: only add expensive joins if the corresponding field is needed. Much faster.
 	$join_db_fields = array(
 		'attachments'	=> 'left join '.TBL_ATTACHMENT.' attachment on b.bug_id = attachment.bug_id',
@@ -400,7 +401,9 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 		'severity.severity_color', 'priority.priority_color');
 	foreach ($desired_fields as $field) {
 		$query_fields[] = $query_db_fields[$field];
-		$join_fields[]  = $join_db_fields[$field];
+        if(isset($join_db_fields[$field])) {
+            $join_fields[]  = $join_db_fields[$field];
+            }
 		$field_titles[] = $all_db_fields[$field];
 		$headers[] = $field;
 	}
@@ -426,7 +429,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 				join(' ' , $join_db_fields),
                                 (!empty($_SESSION['queryinfo']['query']) ? "and {$_SESSION['queryinfo']['query']} " : ''),
                         	$db_headers[$order], $sort);
-		#syslog(LOG_DEBUG,"query=$sql");
+		syslog(LOG_DEBUG,"query=$sql");
 		$_SESSION['queryinfo']['full_query_sql'] = $sql;
 		$t->assign('bugs', $db->getAll($db->modifyLimitQuery($sql, $llimit, $selrange)));
 	

@@ -1,7 +1,9 @@
 <?php
 
 //  A small standalone test file, to check if pear:db is working
-//  Part of php bug tracker
+//  Part of php bug tracker.
+//  You must edit the connection details for this to work.
+//  Don't leave your password in this script, else it may be visible externally.
 
 //  If you get "DB Error: extension not found" you are missing the
 //  proper PHP database driver for your database.  Install the driver
@@ -28,11 +30,12 @@ $dsn = array(
 'username'  => 'postgres',
 'password'  => ''
 );
-echo "Connecting to the database with: \n";
+echo "Connecting to the database with your supplied information: \n";
 print_r($dsn);
 echo "<br/>\n";
 
 $db = DB::Connect($dsn);
+var_dump($db);
 if (DB::isError($db)) {
     echo 'Failed to connect to the database with error code:<br/>\''. $db->getMessage() . '\'<br/>\''. $db->getUserInfo().'\'<br/>';
     echo '<br/>';

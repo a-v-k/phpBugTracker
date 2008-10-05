@@ -12,8 +12,9 @@ but either way I'm trying to make it a capable bug tracker.  I hope you enjoy
 using phpBugTracker, and that you find it useful. 
 
 Comments and suggestions are always welcome, either at the SourceForge page at
-http://www.sourceforge.net/projects/phpbt or via email at
-bcurtis@users.sourceforge.net.
+http://www.sourceforge.net/projects/phpbt
+
+    -bcurtis
 
 Requirements
 ------------
@@ -25,10 +26,3 @@ Here is a list of the requirements to get this running on your server.
 3. A database - Currently MySQL, Oracle and PostgreSQL have been tested,
    though the goal is to be database independent.  The query routine is a 
    notable exception to that goal at the moment. 
-
-Performance Note
-----------------
-phpBugTracker benefits a lot from a query cache.  In mysql, play with:
-	set global query_cache_size=256000;
-	SHOW STATUS LIKE '%qcache%';
-mysql is the most tested database platform, followed by posgres, and then oracle.
