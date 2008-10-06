@@ -435,7 +435,7 @@ $QUERY = array(
 			TBL_VERSION.' version, '.
 			TBL_COMPONENT.' component, '.
 			TBL_PROJECT.' project, '.
-			TBL_PRIORITY.' priority, '.
+			TBL_PRIORITY.' priority '.
             '%s '.     // query.php adds joins here
 		'where '.
 			'b.assigned_to = owner.user_id(+) '.

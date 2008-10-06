@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.118 2008/10/05 05:02:51 brycen Exp $
+// $Id: query.php,v 1.119 2008/10/06 01:08:59 brycen Exp $
 
 include 'include.php';
 
@@ -399,6 +399,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 
 	$in_use_query_fields = array('b.bug_id as bug_link_id', 
 		'severity.severity_color', 'priority.priority_color');
+    $in_use_join_fields = array();
 	foreach ($desired_fields as $field) {
 		$in_use_query_fields[]     = $query_db_fields[$field];
         if(isset($join_db_fields[$field])) {

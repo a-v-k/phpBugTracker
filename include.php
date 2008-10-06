@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: include.php,v 1.150 2008/09/29 03:39:54 brycen Exp $
+// $Id: include.php,v 1.151 2008/10/06 01:08:59 brycen Exp $
 
 define('RAWERROR', true);
 
@@ -240,8 +240,8 @@ if (isset($_POST['dologin'])) {
 			$username = $_POST['username'];
 		}
         // If good login with saved URL: redirect user
-        if( $url = $_POST['redirect_url'] ) {
-            header("location: $url");
+        if( isset($_POST['redirect_url'])) {
+            header("location: $_POST[redirect_url]");
             exit(0);
         }
 	}
