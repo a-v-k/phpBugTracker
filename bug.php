@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.166 2008/09/19 23:06:22 brycen Exp $
+// $Id: bug.php,v 1.167 2008/10/06 03:50:37 brycen Exp $
 
 include 'include.php';
 
@@ -36,7 +36,7 @@ function vote_view($bug_id) {
 	}
 	$t->assign(array('posinfo' => $posinfo));
 
-	$t->assign('votes', $db->getAll('select login, v.created_date '.'from '.TBL_AUTH_USER.' u, '.TBL_BUG_VOTE." v where u.user_id = v.user_id and bug_id = $bug_id order by v.created_date"));
+	$t->assign('votes', $db->getAll('select login, v.created_date '.'from '.TBL_AUTH_USER.' u, '.TBL_BUG_VOTE." v where u.user_id = v.user_id and bug_id = ".$db->quote($bug_id)." order by v.created_date"));
 	$t->render('bugvotes.html', translate("Bug Votes"));
 }
 
