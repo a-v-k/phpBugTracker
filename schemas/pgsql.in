@@ -1,9 +1,8 @@
 # PostgreSQL database creation script
 # This is a template for install.php -- not for creating the database!
 #
-# $Id: pgsql.in,v 1.56 2008/09/29 04:12:32 brycen Exp $
+# $Id: pgsql.in,v 1.57 2008/10/06 03:41:20 brycen Exp $
 
-BEGIN;
 
 #--
 # TBL_ATTACHMENT
@@ -410,6 +409,10 @@ INSERT INTO TBL_AUTH_GROUP (group_id, group_name, is_role, locked) VALUES (9, 'O
 
 CREATE SEQUENCE TBL_AUTH_GROUP_seq START 10;
 
+#
+# -- Role based permissions --
+#
+
 # ... and fourteen permissions
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (1, 'Admin');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (2, 'AddBug');
@@ -426,44 +429,8 @@ INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (12, 'EditProject');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (13, 'EditComponent');
 INSERT INTO TBL_AUTH_PERM (perm_id, perm_name) VALUES (14, 'ManageBug');
 
-
-# Admins can do all the admin stuff,
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (1, 1);
-
-# users can add and edit bugs,
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (5, 7);
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (6, 2);
-
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (7, 5);
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (7, 10);
-
-# developers can own bugs, and
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 4);
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 5);
-
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (8, 8);
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (8, 9);
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (8, 11);
-
-# managers can assign and close bugs
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 3);
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 6);
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 12);
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 13);
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 14);
-
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 6);
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 7);
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 8);
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 9);
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 10);
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 11);
-INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 13);
-
-
 # Insert user_id 1 into the admin group
 INSERT INTO TBL_USER_GROUP (user_id, group_id) VALUES (1, 1);
-
 
 # Add user's prefs as default values for all users defined so far (only admin)
 INSERT INTO TBL_USER_PREF (user_id) values (1);
@@ -649,4 +616,3 @@ CREATE SEQUENCE TBL_VERSION_seq;
 
 #--
 
-COMMIT;

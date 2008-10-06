@@ -231,7 +231,7 @@
 			<input type="hidden" name="assigned_to" value="<?php echo $assigned_to ?>">
 		</td>
 		<?php } ?>
-		<?php if ($is_user) { ?>
+		<?php if ($may_change_assignment or $may_manage or $may_edit) { ?>
 			<td><?php echo translate("Add CC"); ?>:</td>
 			<td><input type="text" name="add_cc"></td>
 		<?php } ?>
@@ -286,7 +286,7 @@
 		<?php } ?>
 		</td>
 		<td colspan="2" valign="top">
-		<?php if ($is_user) { ?>
+		<?php if ($may_change_assignment or $may_manage or $may_edit) { ?>
 			<?php echo translate("Remove selected CCs"); ?>:<br>
 			<select name="remove_cc[]" size="5" style="width: 15em" multiple><?php build_select('bug_cc', $bug_id, $project_id) ?></select>
 		<?php } ?>
@@ -300,7 +300,8 @@
 		<textarea name="comments" rows="6" cols="79" wrap="virtual"><?php echo isset($_POST['comments']) ? $_POST['comments'] : ''; ?></textarea>
 		<br><br>
 		<div align="right">
-		<?php if ($may_edit or $may_add_comment) { ?>
+		<?php if ($may_change_assignment or $may_manage or $may_edit or
+                  $may_add_comment or $may_close or $may_change_resolution) { ?>
 			<?php echo translate("Supress notification email"); ?> <input type="checkbox" name="suppress_email" value="1">
             <?php if (empty($nextbug)) { ?>
                 <input type="submit" value="Submit">

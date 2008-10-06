@@ -21,7 +21,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: install.php,v 1.61 2008/10/03 17:27:08 brycen Exp $
+// $Id: install.php,v 1.62 2008/10/06 03:41:20 brycen Exp $
 
 include_once('inc/functions.php');
 define('THEME', 'default');
@@ -231,9 +231,10 @@ function create_tables() {
 
 	$db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_install_error");
 
-	$q_temp_ary = file('schemas/'.$_POST['db_type'].'.in');
-	$queries = preg_replace(array_keys($tables), array_values($tables),
-							$q_temp_ary);
+	$q1 = file('schemas/'.$_POST['db_type'].'.in');
+	$q2 = file('schemas/common.in');
+    $q_temp_ary = array_merge($q1,$q2);
+	$queries = preg_replace(array_keys($tables), array_values($tables), $q_temp_ary);
 	$do_query = '';
 	foreach ($queries as $query) {
 		// First, collect multi-line queries into one line, then run the query
@@ -244,6 +245,7 @@ function create_tables() {
 			$do_query = substr($do_query, 0, -1);
 		}
 		log_query(stripslashes($do_query));
+		syslog(LOG_DEBUG,stripslashes($do_query));
 		$do_query = '';
 	}
 	/*!! BAD! Must figure out how to get db_version from config-dist.php... */
