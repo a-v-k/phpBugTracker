@@ -1,0 +1,41 @@
+# Default Capabilities for Groups
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (1, 1);
+
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 2);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 3);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 4);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 5);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 6);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 7);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 8);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 9);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 10);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 11);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 12);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 13);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (3, 14);
+
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 3);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 6);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 7);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 12);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 13);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (4, 14);
+
+# Default Capabilities for Roles
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (7, 5);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (7, 7);
+
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (8, 7);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (8, 8);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (8, 9);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (8, 11);
+
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 6);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 7);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 8);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 9);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 10);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 11);
+INSERT INTO TBL_GROUP_PERM (group_id, perm_id) VALUES (9, 13);
+
