@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.167 2008/10/06 03:50:37 brycen Exp $
+// $Id: bug.php,v 1.168 2009/05/30 05:59:33 brycen Exp $
 
 include 'include.php';
 
@@ -511,10 +511,11 @@ function update_bug($bugid = 0) {
 
 	// Add CC if specified
 	if (isset($add_cc) and $add_cc) {
-        // Swap these lines to get a pulldown for Cc:, rather than a free text field
-        $cc_uid = $db->getOne("select user_id from ".TBL_AUTH_USER." where login = ".$db->quote(stripslashes($add_cc)));
-		// $cc_uid = $add_cc;
 		$cc_uid = $add_cc;
+
+        // This code allows free entry of a cc email address:
+        // $cc_uid = $db->getOne("select user_id from ".TBL_AUTH_USER." where login = ".$db->quote(stripslashes($add_cc)));
+
 		if ($cc_uid != $u and !$is_admin && !$is_owner && !$may_manage) {
 			return (array('status' => translate("You may only add yourself to the CC list")));
 		}

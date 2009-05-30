@@ -183,7 +183,7 @@
 		<td><?php echo translate("Closed in version"); ?></td>
 		<?php if ($may_close or $may_manage) { ?>
 			<td><select name="closed_in_version_id">
-				<option value="0"><?php echo translate("Choose one"); ?></option>
+				<option value="0" selected><?php echo translate("Choose one"); ?></option>
 				<?php build_select('version', $closed_in_version_id, $project_id) ?>
 			</select></td>
 		<?php } else { ?>
@@ -233,7 +233,9 @@
 		<?php } ?>
 		<?php if ($may_change_assignment or $may_manage or $may_edit) { ?>
 			<td><?php echo translate("Add CC"); ?>:</td>
-			<td><input type="text" name="add_cc"></td>
+			<td><select name="add_cc"><option value="0" selected>Choose one</option>
+                <?php build_select('reporter','none') ?></select></td> 
+			<!-- <td><input type="text" name="add_cc"></td> -->
 		<?php } ?>
 	</tr><tr>
 		<td colspan="2" valign="top">
