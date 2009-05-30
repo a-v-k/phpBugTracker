@@ -9,7 +9,7 @@
 : Change: gmail friendly subject line on emails.  tab fiendly title on html pages.
 : Performance: don't do expensive query joins unless the column will be shown (e.g. attachment count)
 : Performance: add intelligent indexes for mysql/mysqli
-: TODO: rename pgsql.php, which is also the name of the PEAR:DB postgres driver
+: TODO: rename pgsql.php, which is also the name of the PEAR:DB postgres driver, and thus confusing
 
 -- 1.0.4 2007 October - Stability
 : Bug 1872351: fix preventing non-admins from attaching attachments

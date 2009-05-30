@@ -1,11 +1,11 @@
 Ok, here's the quick and dirty install instructions:
 
 Required:
-You must have PEAR and Pear::DB installed (See http://pear.php.net/).
+You must have the PEAR library manager and Pear::DB installed (See http://pear.php.net/).
 PEAR usually comes with a command line client called "pear".  Try "pear list"
 to show installed packages:
 
-@buccaneer:~/cvs/tools/phpBugTracker$ pear list
+xxxx> pear list
 Installed packages, channel pear.php.net:
 =========================================
 Package                  Version State
@@ -16,8 +16,6 @@ OLE                      0.5     beta
 PEAR                     1.5.4   stable
 Spreadsheet_Excel_Writer 0.9.1   beta
 Structures_Graph         1.0.2   stable
-
-Or try your distribution's package manager.  If you're not sure if the installation is OK, check for "DB.php" which might typically be found in "/usr/share/php/DB.php".
  
 Then:
 1. Copy the directory tree to a location suitable for serving web pages.
@@ -41,13 +39,14 @@ Install JpGraph for home page graphs (See http://www.aditus.nu/jpgraph/).  If yo
 
 Install Spreadsheet_Excel_Writer for bug list download support ("pear install Spreadsheet_Excel_Writer-beta").
 
-Check your database to ensure the query cache is turned on.  For mysql use "SHOW STATUS LIKE '%qcache%';"
 
 Performance Note:
-phpBugTracker benefits a lot from a query cache.  Most mysql platforms come with one enabled by default. If not, play with:
+phpBugTracker benefits a lot from a query cache, and will be unusable without one.
+Most mysql platforms come with one enabled by default. If not, play with:
     set global query_cache_size=256000;
     SHOW STATUS LIKE '%qcache%';
 mysql is the most tested database platform, followed by postgres, and then oracle.
+
 
 Problems?
 The majority of problems reported are with PEAR DB not working.  Edit PEAR_TEST.php to help work out these problems, before attempting the bug tracker.

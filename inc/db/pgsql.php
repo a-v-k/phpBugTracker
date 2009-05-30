@@ -1,6 +1,6 @@
 <?php
 
-// pgsql.php - PostgreSQL queries
+// pgsql.php - PostgreSQL queries specific to phpBugTracker
 
 $QUERY = array(
 	'admin-list-components' =>
