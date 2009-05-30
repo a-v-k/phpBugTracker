@@ -43,8 +43,11 @@ Install Spreadsheet_Excel_Writer for bug list download support ("pear install Sp
 Performance Note:
 phpBugTracker benefits a lot from a query cache, and will be unusable without one.
 Most mysql platforms come with one enabled by default. If not, play with:
-    set global query_cache_size=256000;
+
+    SHOW VARIABLES LIKE 'query_cache_size';
     SHOW STATUS LIKE '%qcache%';
+    SET  GLOBAL query_cache_size=256000;
+
 mysql is the most tested database platform, followed by postgres, and then oracle.
 
 
