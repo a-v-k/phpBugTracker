@@ -70,6 +70,6 @@ SQL injection attacks.
 
 Upgrading from 1.0.3/4 to 1.0.5
 -------------------------------
-There is no database update required, sort of.  On mysql upgrading to database version
-6 results in three new indexes (for speed).  There is no schema change.
-This is a very seamless upgrade.
+There is no database update required, sort of.  On mysql upgrading
+results in three new indexes (for speed).  Set CUR_DB_VERSION to 6 in the config file.
+There is no schema change. This is a very seamless upgrade.
