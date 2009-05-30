@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: query.php,v 1.119 2008/10/06 01:08:59 brycen Exp $
+// $Id: query.php,v 1.120 2009/05/30 07:25:27 brycen Exp $
 
 include 'include.php';
 
@@ -432,7 +432,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
                 (!empty($_SESSION['queryinfo']['query']) ? "and {$_SESSION['queryinfo']['query']} " : ''),
                 $db_headers[$order],
                 $sort);
-		syslog(LOG_DEBUG,"query=$sql");
+		// syslog(LOG_DEBUG,"query=$sql");
 		$_SESSION['queryinfo']['full_query_sql'] = $sql;
 		$t->assign('bugs', $db->getAll($db->modifyLimitQuery($sql, $llimit, $selrange)));
 	
@@ -440,11 +440,21 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 			(!empty($paramstr) ? $paramstr : ''));
 		$t->render('buglist.html', translate("Bug List"));
 	} else { // Spreasheet download
-		dump_spreadsheet($desired_fields, $field_titles, $db->getAll(
-			sprintf($QUERY['query-list-bugs'], join(', ', $in_use_query_fields),
-				(!empty($_SESSION['queryinfo']['query'])
-				? "and {$_SESSION['queryinfo']['query']} " : ''),
-			$db_headers[$order], $sort)));
+		$sql = sprintf(
+                $QUERY['query-list-bugs'],
+				join(', ', $in_use_query_fields),
+				join(' ' , $in_use_join_fields),
+                (!empty($_SESSION['queryinfo']['query']) ? "and {$_SESSION['queryinfo']['query']} " : ''),
+                $db_headers[$order],
+                $sort);
+		//syslog(LOG_DEBUG,"query=$sql");
+		dump_spreadsheet($desired_fields, $field_titles, $db->getAll($sql) );
+
+        // $db->getAll(
+		// sprintf($QUERY['query-list-bugs'], join(', ', $in_use_query_fields),
+		// 		(!empty($_SESSION['queryinfo']['query'])
+		//	? "and {$_SESSION['queryinfo']['query']} " : ''),
+		// $db_headers[$order], $sort))
 	}
 }
 
