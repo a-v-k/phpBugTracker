@@ -70,6 +70,9 @@ SQL injection attacks.
 
 Upgrading from 1.0.3/4 to 1.0.5
 -------------------------------
-There is no database update required, sort of.  On mysql upgrading
-results in three new indexes (for speed).  Set CUR_DB_VERSION to 6 in the config file.
-There is no schema change. This is a very seamless upgrade.
+This is a seamless upgrade.
+1) Backup your existing directory for safety.
+2) Unzip the new code on top of the old.
+3) Edit CUR_DB_VERSION in your config.php and set it to 6.  For mysql this
+   will trigger creation of three new indexes for speed.
+4) Run "update.php".
