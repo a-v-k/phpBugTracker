@@ -1,3 +1,5 @@
+: Note that phpbt is currently without a maintainer.
+
 -- 1.0.5 2009 Sep - Performance Bug in Mysql.  Misc.
 : Performance: don't do expensive query joins unless the column will be shown (e.g. attachment count)
 : Performance: add intelligent indexes for mysql/mysqli -- this is a HUGE performance win
