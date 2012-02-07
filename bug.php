@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: bug.php,v 1.168 2009/05/30 05:59:33 brycen Exp $
+// $Id: bug.php,v 1.2 2007-02-08 23:25:00 avk Exp $
 
 include 'include.php';
 
@@ -355,6 +355,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 
     // Don't email the person who just made the changes (later, make this
     // behavior toggable by the user)
+    $maillist[] = $reporter;
     if ($userid != $buginfo['created_by'] and !empty($reporter)) {
         $maillist[] = $reporter;
     }
@@ -370,6 +371,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 
     // Later add a watcher (such as QA person) check here
     if (count($maillist)) {
+
         $t->assign(array(
             'bugid' => $buginfo['bug_id'],
             'siteroot' => INSTALL_URL,
@@ -380,18 +382,63 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
             'assignedto_stat' => $assignedtostat
         ));
 
-        require_once('./inc/htmlMimeMail/htmlMimeMail.php');
-        $mail = new htmlMimeMail();
-        $mail->setText($t->fetch($template));
-        $mail->setFrom(ADMIN_EMAIL);
-        $mail->setReturnPath(RETURN_PATH);
-        $mail->setSubject("[Bug {$buginfo['bug_id']}] " .
-                //($newbug ? 'New' : 'Changed').' - '.
-                stripslashes((!empty($cf['title']) ? $cf['title'] : $buginfo['title'])));
-        if (SMTP_EMAIL) {
-            $mail->setSMTPParams(SMTP_HOST, SMTP_PORT, SMTP_HELO, SMTP_AUTH, SMTP_AUTH_USER, SMTP_AUTH_PASS);
-        }
-        $mail->send($maillist, SMTP_EMAIL ? 'smtp' : 'mail');
+        $maillistStr = implode(';', $maillist);
+        mass_mail4($maillistStr, "[Bug {$buginfo['bug_id']}] " . stripslashes((!empty($cf['title']) ? $cf['title'] : $buginfo['title'])), $t->fetch($template));
+
+//            require_once('./inc/class.phpmailer-lite.php');
+//
+//            foreach($maillist as $toitem) {
+//                if (trim($toitem) <> '') {
+//
+//                    $mail = new PHPMailerLite(true); // the true param means it will throw exceptions on errors, which we need to catch
+//                    //$mail->IsSendmail(); // telling the class to use SendMail transport
+//                    $mail->IsMail(); // telling the class to use mail() transport
+//                    $mail->CharSet = 'utf-8';
+//                    try {
+//                        $mail->SetFrom(RETURN_PATH, 'Digicraft Bug Tracker');
+//                        $mail->AddAddress(trim($toitem));
+//                        $mail->Subject = "[Bug {$buginfo['bug_id']}] ".
+//			//($newbug ? 'New' : 'Changed').' - '.
+//				stripslashes((!empty($cf['title']) ? $cf['title'] : $buginfo['title']));
+//                        //$mail->AltBody = 'To view the message, please use an HTML compatible email viewer!'; // optional - MsgHTML will create an alternate automatically
+//                        //$mail->MsgHTML(file_get_contents('contents.html'));
+//                        //$mail->AddAttachment('images/phpmailer.gif');      // attachment
+//                        //$mail->AddAttachment('images/phpmailer_mini.gif'); // attachment
+//                        $mail->Body = $t->fetch($template);
+//                        //$mail->Priority = $priority;
+//                        //if ($attach != null) {
+//                        //    throw new Exception('Attach not supported');
+//                        //}
+//                        $mail->Send();
+//                        //echo "Message Sent OK</p>\n";
+//                    } catch (phpmailerException $e) {
+//                        //echo $e->errorMessage(); //Pretty error messages from PHPMailer
+//                        $res = false;
+//                        error_log($e->errorMessage());
+//                    } catch (Exception $e) {
+//                        //echo $e->getMessage(); //Boring error messages from anything else!
+//                        $res = false;
+//                        error_log($e->errorMessage());
+//                    }
+//                }
+//            }
+//		require_once('./inc/htmlMimeMail/htmlMimeMail.php');
+//		$mail = new htmlMimeMail();
+//
+//    	$mail->setTextCharset('utf-8');
+//    	$mail->setHtmlCharset('utf-8');
+//    	$mail->setHeadCharset('utf-8');
+//
+//		$mail->setText($t->fetch($template));
+//		$mail->setFrom(ADMIN_EMAIL);
+//		$mail->setReturnPath(RETURN_PATH);
+//		$mail->setSubject("[Bug {$buginfo['bug_id']}] ".
+//			//($newbug ? 'New' : 'Changed').' - '.
+//				stripslashes((!empty($cf['title']) ? $cf['title'] : $buginfo['title'])));
+//		if (SMTP_EMAIL) {
+//			$mail->setSMTPParams(SMTP_HOST, SMTP_PORT, SMTP_HELO, SMTP_AUTH, SMTP_AUTH_USER, SMTP_AUTH_PASS);
+//		}
+//		$mail->send($maillist, SMTP_EMAIL ? 'smtp' : 'mail');
     }
 }
 
@@ -1035,12 +1082,12 @@ if (!empty($_REQUEST['op'])) {
             if (!empty($error)) {
                 show_bug(check_id($_POST['bugid']), $error);
             } else {
-                if (isset($_POST['nextbug'])) {
-                    header("Location: bug.php?op=show&bugid=" . $_POST['nextbug'] . "&pos=" . $_POST['nextpos']);
-                } else {
-                    header("Location: bug.php?op=show&bugid=" . $_POST['bugid']);
+                    if (isset($_POST['nextbug'])) {
+                        header("Location: bug.php?op=show&bugid=" . $_POST['nextbug'] . "&pos=" . $_POST['nextpos']);
+                    } else {
+                        header("Location: bug.php?op=show&bugid=" . $_POST['bugid']);
+                    }
                 }
-            }
             break;
         case 'mass_update':
             $bugs = array();
