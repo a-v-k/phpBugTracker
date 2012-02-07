@@ -30,7 +30,7 @@
 		<li><a href="index.php" style="border: none;"><?php echo translate("Home"); ?></a></li>
 		<li><a href="bug.php?op=add"><?php echo translate("Add a New Bug"); ?></a></li>
 		<li><a href="query.php?op=query"><?php echo translate("Basic Query"); ?></a></li>
-		<li><a href="query.php?op=query&form=advanced"><?php echo translate("Advanced Query"); ?></a></li>
+		<li><a href="query.php?op=query&amp;form=advanced"><?php echo translate("Advanced Query"); ?></a></li>
 		<li><a href="report.php"><?php echo translate("View Reports"); ?></a></li>
 		<?php if (!NEW_ACCOUNTS_DISABLED && empty($_SESSION['uid'])) { ?><li><a href="newaccount.php"><?php echo translate("Create a New Account"); ?></a></li><?php } ?>
 		<li><a href="docs/html/userguide.html"><?php echo translate("Read Documentation"); ?></a></li>
@@ -57,10 +57,10 @@
 	<?php } ?>
 <?php } else { ?>
 <?php if (isset($perm) && $perm->have_perm('Assignable') || $owner_open || $owner_closed) { ?>
-	<?php echo translate("Bugs assigned to me"); ?>: <a href="query.php?op=mybugs&assignedto=1&open=1" title="Open"><?php echo $owner_open ?></a> / <a href="query.php?op=mybugs&assignedto=1&open=0" title="Closed"><?php echo $owner_closed ?></a> |
+	<?php echo translate("Bugs assigned to me"); ?>: <a href="query.php?op=mybugs&amp;assignedto=1&amp;open=1" title="Open"><?php echo $owner_open ?></a> / <a href="query.php?op=mybugs&amp;assignedto=1&amp;open=0" title="Closed"><?php echo $owner_closed ?></a> |
 <?php } ?>
-	<?php echo translate("Bugs reported by me"); ?>: <a href="query.php?op=mybugs&reportedby=1&open=1" title="Open"><?php echo $reporter_open ?></a> / <a href="query.php?op=mybugs&reportedby=1&open=0" title="Closed"><?php echo $reporter_closed ?></a>
-	| <?php echo translate("Bookmarked bugs"); ?>: <a href="query.php?op=mybugs&bookmarked=1&open=1" title="Open"><?php echo $bookmarks_open ?></a> / <a href="query.php?op=mybugs&bookmarked=1&open=0" title="Closed"><?php echo $bookmarks_closed ?></a>
+	<?php echo translate("Bugs reported by me"); ?>: <a href="query.php?op=mybugs&amp;reportedby=1&amp;open=1" title="Open"><?php echo $reporter_open ?></a> / <a href="query.php?op=mybugs&amp;reportedby=1&amp;open=0" title="Closed"><?php echo $reporter_closed ?></a>
+	| <?php echo translate("Bookmarked bugs"); ?>: <a href="query.php?op=mybugs&amp;bookmarked=1&amp;open=1" title="Open"><?php echo $bookmarks_open ?></a> / <a href="query.php?op=mybugs&amp;bookmarked=1&amp;open=0" title="Closed"><?php echo $bookmarks_closed ?></a>
 	| <a href="user.php"><?php echo translate("Personal Page"); ?></a>
 	| <a href="logout.php"><?php echo translate("Logout"), " ", $_SESSION["uname"]; ?></a>
 <?php } ?>
