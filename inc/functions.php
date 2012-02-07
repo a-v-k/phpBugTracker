@@ -382,7 +382,7 @@ function sorting_headers($url, $headers, $order, $sort, $urlstr = '') {
     while (list($k, $v) = each($headers)) {
         $theader[$k]['url'] = "$url?order=$v&amp;sort=" .
                 ($order == $v ? ($sort == 'asc' ? 'desc' : 'asc') : 'asc') .
-                ($urlstr ? '&' . $urlstr : '');
+                ($urlstr ? '&amp;' . $urlstr : '');
         $theader[$k]['color'] = $order == $v ? '#bbbbbb' : '#eeeeee';
         $theader[$k]['class'] = $order == $v ? 'selected' : '';
     }

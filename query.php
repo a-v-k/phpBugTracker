@@ -99,10 +99,10 @@ function build_query($assignedto, $reportedby, $open, $bookmarked) {
             continue;
         if (is_array($v)) {
             foreach ($v as $value) {
-                $paramstr .= "&{$k}[]=$value";
+                $paramstr .= "&amp;{$k}[]=$value";
             }
         } else {
-            $paramstr .= "&$k=$v";
+            $paramstr .= "&amp;$k=$v";
         }
     }
 

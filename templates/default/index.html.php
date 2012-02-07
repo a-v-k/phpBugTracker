@@ -6,7 +6,7 @@
             <?php
             if ($count = count($recentbugs)) {
                 for ($i = 0; $i < $count; $i++) {
-                    echo '<a href="bug.php?op=show&bugid=' . $recentbugs[$i]['bug_id'] . '">' . stripslashes($recentbugs[$i]['title']) . '</a> &nbsp;&nbsp;(<i>' . stripslashes($recentbugs[$i]['project_name']) . '</i>)<br>';
+                    echo '<a href="bug.php?op=show&amp;bugid=' . $recentbugs[$i]['bug_id'] . '">' . stripslashes($recentbugs[$i]['title']) . '</a> &nbsp;&nbsp;(<i>' . stripslashes($recentbugs[$i]['project_name']) . '</i>)<br>';
                 }
             } else {
                 echo translate("No bugs found");
@@ -18,7 +18,7 @@
             <?php
             if ($count = count($closedbugs)) {
                 for ($i = 0; $i < $count; $i++) {
-                    echo '<a href="bug.php?op=show&bugid=' . $closedbugs[$i]['bug_id'] . '">' . stripslashes($closedbugs[$i]['title']) . '</a> &nbsp;&nbsp;(<i>' . stripslashes($closedbugs[$i]['project_name']) . '</i>)<br>';
+                    echo '<a href="bug.php?op=show&amp;bugid=' . $closedbugs[$i]['bug_id'] . '">' . stripslashes($closedbugs[$i]['title']) . '</a> &nbsp;&nbsp;(<i>' . stripslashes($closedbugs[$i]['project_name']) . '</i>)<br>';
                 }
             } else {
                 echo translate("No bugs found");
@@ -30,6 +30,12 @@
                 <br>
                 <?php
                 for ($i = 0, $count = count($queries); $i < $count; $i++) {
+
+                    if ((strpos($queries[$i]['saved_query_string'], '&') > 0) &&
+                            (strpos($queries[$i]['saved_query_string'], '&amp;') == false)) {
+                        $queries[$i]['saved_query_string'] = qry_amp($queries[$i]['saved_query_string']);
+                    }
+
                     echo '<a href="query.php?' . $queries[$i]['saved_query_string'] . '">' . $queries[$i]['saved_query_name'] . '</a><br>';
                 }
             }
@@ -55,7 +61,7 @@
                     <?php $stats = grab_data($restricted_projects); ?>
                     <?php foreach ($stats as $statid => $info) { ?>
                         <tr>
-                            <td><a href="query.php?op=doquery&status[]=<?php echo $statid ?>"><?php echo $info['name'] ?></a></td>
+                            <td><a href="query.php?op=doquery&amp;status[]=<?php echo $statid ?>"><?php echo $info['name'] ?></a></td>
                             <td align="center"><?php echo isset($info['count']) && $info['count'] ? $info['count'] : 0 ?></td>
                         </tr>
                     <?php } ?>
