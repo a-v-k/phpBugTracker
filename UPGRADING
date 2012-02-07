@@ -1,3 +1,12 @@
+WARNING!
+Database scheme was updated to utf8 in this fork. 
+You must manually convert you db to utf8 before use this project.
+Automatic upgrade not supported now. 
+
+-------------------------------------------------------------------------------
+Bellow you can read UPGRADING text from original phpBugTracker
+-------------------------------------------------------------------------------
+
 First, backup your database!  This upgrade should go smoothly, but
 if it doesn't, it's better to be safe than sorry.
 
