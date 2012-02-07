@@ -97,14 +97,14 @@
     <table border="0" cellpadding="2" cellspacing="0" width="100%">
         <tr><td><!-- <?php echo translate("Comments"); ?>: --></td></tr>
         <tr class="alt">
-        <td><?php echo translate("Posted by"); ?>: <?php echo maskemail($reporter); ?> <br>
+        <td><?php echo translate("Posted by"); ?>: <?php echo maskemail($reporter); ?> 
             <?php echo translate("Date"); ?>: <?php echo date(TIME_FORMAT.' '.DATE_FORMAT, $created_date); ?></td>
         </tr><tr>
         <td><?php echo format_comments($description); ?> <br><br></td>
         </tr>
         <?php for ($i = 0, $ccount = count($comments); $i < $ccount; $i++) { ?>
             <tr class="alt">
-            <td><?php echo translate("Posted by"); ?>: <?php echo maskemail($comments[$i]['login']); ?> <br>
+            <td><?php echo translate("Posted by"); ?>: <?php echo maskemail($comments[$i]['login']); ?> 
                 <?php echo translate("Date"); ?>: <?php echo date(TIME_FORMAT.' '.DATE_FORMAT, $comments[$i]['created_date']); ?></td>
             </tr><tr>
             <td><?php echo format_comments($comments[$i]['comment_text']); ?> <br><br></td>
@@ -305,11 +305,15 @@
 		<?php if ($may_change_assignment or $may_manage or $may_edit or
                   $may_add_comment or $may_close or $may_change_resolution) { ?>
 			<?php echo translate("Supress notification email"); ?> <input type="checkbox" name="suppress_email" value="1">
+            <?php if (defined('DIGICRAFT_TRACKER')) { // AVK fix start  ?>
+                <input type="submit" value="Submit & return">
+            <?php } else {  // AVK fix end  ?>
             <?php if (empty($nextbug)) { ?>
                 <input type="submit" value="Submit">
             <?php } else { ?>
                 <input type="submit" value="Submit & View Next">
             <?php } ?>
+            <?php } // AVK fix (one line) ?>
 		<?php } else echo translate("You must login to modify this bug"); ?>
 		</div></td>
 	</tr>
