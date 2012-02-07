@@ -1,6 +1,6 @@
 WARNING!
 Database scheme was updated to utf8 in this fork. 
-You must manually convert you db to utf8 before use this project.
+You must manually convert your db to utf8 before use this project.
 Automatic upgrade not supported now. 
 
 -------------------------------------------------------------------------------
