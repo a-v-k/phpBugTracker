@@ -1082,12 +1082,16 @@ if (!empty($_REQUEST['op'])) {
             if (!empty($error)) {
                 show_bug(check_id($_POST['bugid']), $error);
             } else {
+                if (defined('DIGICRAFT_TRACKER')) {
+                    header('Location: query.php');
+                } else {
                     if (isset($_POST['nextbug'])) {
                         header("Location: bug.php?op=show&bugid=" . $_POST['nextbug'] . "&pos=" . $_POST['nextpos']);
                     } else {
                         header("Location: bug.php?op=show&bugid=" . $_POST['bugid']);
                     }
                 }
+            }
             break;
         case 'mass_update':
             $bugs = array();
