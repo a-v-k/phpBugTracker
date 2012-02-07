@@ -1,3 +1,17 @@
+Note
+------------
+
+This project is a fork of phpBugTracker (http://phpbt.sourceforge.net/).
+
+* Why a fork ?
+- Original project is closed by author and has no commit since 2009
+- I need some features that original project doesn't have.
+
+
+-------------------------------------------------------------------------------
+Bellow you can read README text from original phpBugTracker
+-------------------------------------------------------------------------------
+
 Introduction
 ------------
 Thanks for taking a look at phpBugTracker.  This project was started out of the
