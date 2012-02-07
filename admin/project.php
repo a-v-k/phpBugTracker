@@ -314,7 +314,7 @@ function list_projects() {
     global $me, $db, $t, $selrange;
 
     if (!isset($_GET['order'])) {
-        $order = 'created_date';
+        $order = 'default';
         $sort = 'asc';
     } else {
         $order = $_GET['order'];
@@ -326,7 +326,12 @@ function list_projects() {
 
     list($selrange, $llimit) = multipages($nr, $page, "order=$order&sort=$sort");
 
-    $t->assign('projects', $db->getAll($db->modifyLimitQuery("select * from " . TBL_PROJECT . " order by $order $sort", $llimit, $selrange)));
+    $orderSort = $order . ' ' . $sort;
+    if ($order == 'default') {
+        $orderSort = ' active desc, project_name asc, created_date asc  ';
+    }
+
+    $t->assign('projects', $db->getAll($db->modifyLimitQuery("select * from " . TBL_PROJECT . " order by $orderSort", $llimit, $selrange)));
 
     $headers = array(
         'projectid' => 'project_id',
