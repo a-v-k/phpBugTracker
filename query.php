@@ -277,7 +277,7 @@ function format_bug_col($colvalue, $coltype, $bugid, $pos) {
             break;
         case 'bug_id' :
         case 'title' :
-            return "<a href=\"bug.php?op=show&bugid=$bugid&pos=$pos\">$colvalue</a>";
+            return "<a href=\"bug.php?op=show&amp;bugid=$bugid&amp;pos=$pos\">$colvalue</a>";
             break;
         case 'reporter' :
         case 'owner' :
@@ -368,7 +368,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
     // Save the query if requested
     if (!empty($savedqueryname)) {
         $savedquerystring = ereg_replace('&savedqueryname=.*(&?)', '\1', $_SERVER['QUERY_STRING']);
-        $savedquerystring .= '&op=doquery';
+        $savedquerystring .= '&amp;op=doquery';
         if ($savedqueryoverride) { // Updating an existing query
             $db->query("update " . TBL_SAVED_QUERY . " set saved_query_string = " . $db->quote(stripslashes($savedquerystring)) . " where user_id = $u and saved_query_name = " . $db->quote(stripslashes($savedqueryname)));
         } else { // Adding a new saved query

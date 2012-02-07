@@ -360,7 +360,7 @@ function multipages($nr, $page, $urlstr) {
         $pages = 1;
     else {
         for ($i = 1; $i <= $npages; $i++) {
-            $pages .= $i != $page ? " <a href='$me?page=$i&$urlstr'>$i</a> " : " $i ";
+            $pages .= $i != $page ? " <a href='$me?page=$i&amp;" . qry_amp($urlstr) . "'>$i</a> " : " $i ";
             $pages .= $i != $npages ? '|' : '';
         }
     }
@@ -380,7 +380,7 @@ function sorting_headers($url, $headers, $order, $sort, $urlstr = '') {
     global $t;
 
     while (list($k, $v) = each($headers)) {
-        $theader[$k]['url'] = "$url?order=$v&sort=" .
+        $theader[$k]['url'] = "$url?order=$v&amp;sort=" .
                 ($order == $v ? ($sort == 'asc' ? 'desc' : 'asc') : 'asc') .
                 ($urlstr ? '&' . $urlstr : '');
         $theader[$k]['color'] = $order == $v ? '#bbbbbb' : '#eeeeee';
@@ -824,4 +824,8 @@ function find_include($file) {
             return true;
     }
     return false;
+}
+
+function qry_amp($ipReqStr) {
+    return str_replace('&', '&amp;', $ipReqStr);
 }
