@@ -151,16 +151,16 @@ if (SHOW_PROJECT_SUMMARIES) {
 
     // Lastly we will need a list of all statuses so we can exclude 'closed"
     // for the open query
-    $sOpenStatusQuery = '&status%5B%5D=' . @join('&status%5B%5D=', $db->getCol("select status_id from " . TBL_STATUS . " where bug_open = 1"));
+    $sOpenStatusQuery = '&amp;status%5B%5D=' . @join('&amp;status%5B%5D=', $db->getCol("select status_id from " . TBL_STATUS . " where bug_open = 1"));
 
     foreach ($aProjects['projects'] as $iProjectNumberKey => $value1) {
         foreach ($aProjects['projects'][$iProjectNumberKey] as $sResolutionKey => $value2) {
             if ($sResolutionKey != "Project" && $sResolutionKey != "Total" && $sResolutionKey != "Open") {
-                $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] = "<A HREF='query.php?resolution%5B%5D=" . $aResolutionsToIds[$sResolutionKey] . "&projects=" . $aProjectsToIds[$aProjects['projects'][$iProjectNumberKey]["Project"]] . "&op=doquery&form=advanced'>" . $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] . "</A>";
+                $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] = "<a href='query.php?resolution%5B%5D=" . $aResolutionsToIds[$sResolutionKey] . "&amp;projects=" . $aProjectsToIds[$aProjects['projects'][$iProjectNumberKey]["Project"]] . "&amp;op=doquery&amp;form=advanced'>" . $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] . "</a>";
             } elseif ($sResolutionKey == "Open") {
-                $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] = "<A HREF='query.php?projects=" . $aProjectsToIds[$aProjects['projects'][$iProjectNumberKey]["Project"]] . $sOpenStatusQuery . "&op=doquery'>" . $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] . "</A>";
+                $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] = "<a href='query.php?projects=" . $aProjectsToIds[$aProjects['projects'][$iProjectNumberKey]["Project"]] . $sOpenStatusQuery . "&amp;op=doquery'>" . $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] . "</a>";
             } elseif ($sResolutionKey == "Total") {
-                $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] = "<A HREF='query.php?projects=" . $aProjectsToIds[$aProjects['projects'][$iProjectNumberKey]["Project"]] . "&op=doquery'>" . $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] . "</A>";
+                $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] = "<a href='query.php?projects=" . $aProjectsToIds[$aProjects['projects'][$iProjectNumberKey]["Project"]] . "&amp;op=doquery'>" . $aProjects['projects'][$iProjectNumberKey][$sResolutionKey] . "</a>";
             }
         }
     }
