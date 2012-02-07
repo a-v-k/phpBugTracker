@@ -20,7 +20,7 @@
 // along with phpBugTracker; if not, write to the Free Software Foundation,
 // Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 // ------------------------------------------------------------------------
-// $Id: functions.php,v 1.74 2008/09/20 21:14:00 brycen Exp $
+// $Id: functions.php,v 1.2 2007-02-08 23:25:00 avk Exp $
 // Set the domain if gettext is available
 if (false && is_callable('gettext')) {
     define('USE_GETTEXT', true);
@@ -628,12 +628,69 @@ function qp_enc($input, $line_max = 76) {
     return (trim($output));
 }
 
+/**
+ * Send mail to list of recipients. Works with UTF8
+ *
+ * @global <type> $pref_site_email
+ * @global <type> $pref_site_email_name
+ * @param <type> $to list of recipients separated by ;
+ * @param <type> $subject
+ * @param <type> $message
+ * @return <type>
+ */
+function mass_mail4($to, $subject, $message, $from = ADMIN_EMAIL) {
+    //global $pref_site_email, $pref_site_email_name;
+    require_once './inc/class.phpmailer-lite.php';
+    //require_once(CLASSPATH."libmail.php");
+    $toarr = explode(';', $to);
+    $res = true;
+    foreach ($toarr as $toitem) {
+        if (trim($toitem) <> '') {
+
+            $mail = new PHPMailerLite(true); // the true param means it will throw exceptions on errors, which we need to catch
+            //$mail->IsSendmail(); // telling the class to use SendMail transport
+            $mail->IsMail(); // telling the class to use mail() transport
+            $mail->CharSet = 'utf-8';
+            try {
+                $mail->SetFrom($from);
+                $mail->AddAddress(trim($toitem));
+                $mail->Subject = $subject;
+                //$mail->AltBody = 'To view the message, please use an HTML compatible email viewer!'; // optional - MsgHTML will create an alternate automatically
+                //$mail->MsgHTML(file_get_contents('contents.html'));
+                //$mail->AddAttachment('images/phpmailer.gif');      // attachment
+                //$mail->AddAttachment('images/phpmailer_mini.gif'); // attachment
+                $mail->Body = $message;
+                //$mail->Priority = $priority;
+                //if ($attach != null) {
+                //    throw new Exception('Attach not supported');
+                //}
+                $mail->Send();
+                //echo "Message Sent OK</p>\n";
+            } catch (phpmailerException $e) {
+                //echo $e->errorMessage(); //Pretty error messages from PHPMailer
+                $res = false;
+                error_log($e->errorMessage());
+            } catch (Exception $e) {
+                //echo $e->getMessage(); //Boring error messages from anything else!
+                $res = false;
+                error_log($e->errorMessage());
+            }
+        }
+    }
+    return $res;
+}
+
 // mailer with use of quoted-printable encoding (if configured so)
 function qp_mail($to, $subject = 'No subject', $body, $from = ADMIN_EMAIL) {
     global $STRING;
 
     require_once('./inc/htmlMimeMail/htmlMimeMail.php');
     $mail = new htmlMimeMail();
+
+    $mail->setTextCharset('utf-8');
+    $mail->setHtmlCharset('utf-8');
+    $mail->setHeadCharset('utf-8');
+
     $mail->setSubject($subject);
     $mail->setFrom($from);
     $mail->setReturnPath(RETURN_PATH);
