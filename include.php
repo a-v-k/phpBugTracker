@@ -72,6 +72,7 @@ $db = DB::Connect($dsn);
 if (DB::isError($db)) {
     die($db->message . '<br>' . $db->userinfo);
 }
+$db->query("set names utf8");
 /*
   $db = new DB();
   $db = $db->connect($dsn);
