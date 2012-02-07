@@ -25,6 +25,7 @@
 define('RAWERROR', true);
 
 define('PHPBT_VERSION', '1.0rc6');
+define('DIGICRAFT_TRACKER', '1');
 @ini_set("session.save_handler", "files");
 
 // Installation hasn't been completed
