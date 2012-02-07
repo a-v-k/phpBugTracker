@@ -384,6 +384,10 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
         } else {
             $order = 'b.bug_id';
             $sort = 'asc';
+            // fix by avk start
+            $order = 'priority.sort_order';
+            $sort = 'desc';
+            // fix by avk stop
         }
     }
     // Taint checking
@@ -394,8 +398,10 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 
     if (empty($_SESSION['queryinfo']))
         $_SESSION['queryinfo'] = array();
-    $_SESSION['queryinfo']['order'] = $db_headers[$order];
-    ;
+    // fix by avk start
+    //$_SESSION['queryinfo']['order'] = $db_headers[$order];;
+    $_SESSION['queryinfo']['order'] = $order;
+    // fix by avk stop
     $_SESSION['queryinfo']['sort'] = $sort;
     if (empty($_SESSION['queryinfo']['queryparams']) || !empty($_GET)) {
         $_SESSION['queryinfo']['queryparams'] = $_GET;
