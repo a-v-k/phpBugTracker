@@ -186,4 +186,4 @@ if ($u != 'nobody') {
 }
 
 $t->assign('restricted_projects', $restricted_projects);
-$t->render('index.html', translate("Home"));
+$t->render('index.html.php', translate("Home"));
