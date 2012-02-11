@@ -1027,7 +1027,7 @@ function show_bug($bugid = 0, $error = array()) {
     $t->assign(array('posinfo' => $posinfo));
 
     $t->assign(array('perm' => $perm));
-    $t->render('bugdisplay.html', "#" . $bugid . " - " . $row['title']);
+    $t->render('bugdisplay.html.php', "#" . $bugid . " - " . $row['title']);
 }
 
 function show_projects() {
