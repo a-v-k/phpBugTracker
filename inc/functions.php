@@ -830,6 +830,26 @@ function qry_amp($ipReqStr) {
     return str_replace('&', '&amp;', $ipReqStr);
 }
 
+function gen_ref($ipRef, $ipVarArr) {
+    $res = $ipRef;
+    $i = 0;
+    $keys = array_keys($ipVarArr);
+    foreach ($keys as $k) {
+        if ($ipVarArr[$k] != null) {
+            if ($i == 0) {
+                $res .= '?';
+            } else {
+                $res .= '&';
+            }
+            $res .= $k . '=' . $ipVarArr[$k];
+            $i = 1;
+        }
+    }
+    return $res;
+}
+
+/// add parameter to request string
+/// if $ipReqStr == 'r' - its - $_REQUEST['QUERY_STRING']
 function add_param($ipReqStr, $ipParName, $ipParVal) {
     $str = $ipReqStr;
     if ($str == 'r') {
