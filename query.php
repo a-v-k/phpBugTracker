@@ -269,7 +269,7 @@ function format_spreadsheet_col($colvalue, $coltype) {
 }
 
 // Handle the formatting for various types of bug info in the bug list
-function format_bug_col($colvalue, $coltype, $bugid, $pos) {
+function format_bug_col($colvalue, $coltype, $bugid, $pos, $dataRow = null) {
     global $select;
 
     switch ($coltype) {
@@ -292,6 +292,16 @@ function format_bug_col($colvalue, $coltype, $bugid, $pos) {
         case 'lastmodifier' :
             return '<div align="center">' .
                     (!empty($colvalue) ? maskemail($colvalue) : '') . '</div>';
+            break;
+        case 'project_name' :
+
+            $params = $_GET;
+            if (is_array($_SESSION['queryinfo']['queryparams'])) {
+                $params = array_merge($_SESSION['queryinfo']['queryparams'], $params);
+            }
+            $params['projects'] = $dataRow['project_id'];
+            return "<a href=\"" . qry_amp(add_paramsa('r', $params)) . "\">$colvalue</a>";
+            //return "<a href=\"" . qry_amp(add_param('r', 'projects', $dataRow['project_id'])) . "\">$colvalue</a>";
             break;
         default :
             return '<div align="center">' .
@@ -424,6 +434,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
             $_SESSION['db_fields'] : $default_db_fields;
 
     $in_use_query_fields = array('b.bug_id as bug_link_id',
+        'b.project_id',
         'severity.severity_color', 'priority.priority_color');
     $in_use_join_fields = array();
     foreach ($desired_fields as $field) {
@@ -457,7 +468,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 
         sorting_headers($me, $headers, $order, $sort, "page=$page" .
                 (!empty($paramstr) ? $paramstr : ''));
-        $t->render('buglist.html', translate("Bug List"));
+        $t->render('buglist.html.php', translate("Bug List"));
     } else { // Spreasheet download
         $sql = sprintf(
                 $QUERY['query-list-bugs'], join(', ', $in_use_query_fields), join(' ', $in_use_join_fields), (!empty($_SESSION['queryinfo']['query']) ? "and {$_SESSION['queryinfo']['query']} " : ''), $db_headers[$order], $sort);

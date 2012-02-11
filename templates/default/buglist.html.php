@@ -37,12 +37,21 @@ if (!empty($_SESSION['uid']) && isset($perm) && $perm->have_perm_proj($project_i
                     foreach ($bugs[$i] as $var => $val) {
                         if ($var == 'bug_link_id')
                             $bugid = $val;
-                        elseif ($var != 'severity_color' && $var != 'priority_color') {
-                            echo '<td>';
-                            if ($mass_update && $n == 1) {
-                                echo "<input type=\"checkbox\" name=\"bugids[]\" value=\"$bugid\"> &nbsp; ";
+                        elseif ($var == 'severity_color'
+                                || $var == 'project_id'
+                                || $var == 'priority_color') {
+                            //hidden cols - do nothing
+                        } else {
+                            $class = '';
+                            if ($n == 1) {
+                                $class .= ' nowrap';
                             }
-                            echo format_bug_col($val, $var, $bugid, $i);
+
+                            echo "<td class=\"$class\">";
+                            if ($mass_update && $n == 1) {
+                                echo "<input type=\"checkbox\" name=\"bugids[]\" value=\"$bugid\">&nbsp;";
+                            }
+                            echo format_bug_col($val, $var, $bugid, $i, $bugs[$i]);
                             echo '</td>';
                             $n = $n + 1;
                         }

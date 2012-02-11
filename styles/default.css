@@ -202,3 +202,7 @@ a.closed_bug_number {
     border-bottom: 1px solid #000;
 }
 
+.nowrap {
+    white-space: nowrap;
+}
+
