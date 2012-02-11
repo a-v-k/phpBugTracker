@@ -26,6 +26,7 @@ I will work on this problem.
 I need code contributions for:
 ------------------------------
 - check and fix install script for current project state (db converted to utf8)
+- convert localization files to utf8 (non-utf language packs not supported now) 
 
 
 -------------------------------------------------------------------------------
