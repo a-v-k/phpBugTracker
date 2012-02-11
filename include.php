@@ -22,6 +22,9 @@
 // ------------------------------------------------------------------------
 // $Id: include.php,v 1.151 2008/10/06 01:08:59 brycen Exp $
 
+error_reporting(E_ALL);
+ini_set('display_errors', true);
+
 define('RAWERROR', true);
 
 define('PHPBT_VERSION', '1.0rc6');
@@ -52,9 +55,9 @@ if (DB_TYPE == 'oci8') {
 include ('inc/functions.php');
 
 // PEAR::DB
-@ini_set("display_errors", true);
+//@ini_set("display_errors", true);
 require_once(PEAR_PATH . 'DB.php');
-@ini_restore("display_errors");
+//@ini_restore("display_errors");
 $dsn = array(
     'phptype' => DB_TYPE,
     'hostspec' => DB_HOST,
@@ -164,7 +167,7 @@ class template {
     }
 
     function render($content_template, $page_title, $wrap_file = '', $nowrap = false) {
-        error_reporting(E_ALL ^ E_NOTICE); // Clobber notices in template output
+        //error_reporting(E_ALL ^ E_NOTICE); // Clobber notices in template output
         extract($this->vars);
         $path = defined('TEMPLATE_PATH') ? './templates/' . THEME . '/' . TEMPLATE_PATH . '/' : './templates/' . THEME . '/';
         include($nowrap ? $path . $content_template : ($wrap_file ? $path . $wrap_file : $path . 'wrap.html'));
