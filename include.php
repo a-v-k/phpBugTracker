@@ -199,7 +199,8 @@ class template {
     }
 
     function render($content_template, $page_title, $wrap_file = '', $nowrap = false) {
-        //error_reporting(E_ALL ^ E_NOTICE); // Clobber notices in template output
+        //temporary return error hiding for master branch
+        error_reporting(E_ALL ^ E_NOTICE); // Clobber notices in template output
         extract($this->vars);
         $path = defined('TEMPLATE_PATH') ? './templates/' . THEME . '/' . TEMPLATE_PATH . '/' : './templates/' . THEME . '/';
         if ($nowrap) {
