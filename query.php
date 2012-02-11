@@ -89,7 +89,8 @@ function show_query($edit = false) {
     }
 }
 
-function build_query($assignedto, $reportedby, $open, $bookmarked) {
+function build_query($assignedto, $reportedby, $open, $bookmarked, $projects) {
+
     global $db, $perm, $restricted_projects;
 
     $paramstr = '';
@@ -116,6 +117,13 @@ function build_query($assignedto, $reportedby, $open, $bookmarked) {
             $query[] = "b.bug_id = bookmark.bug_id AND bookmark.user_id = {$_SESSION['uid']}";
         } else {
             $query[] = "b.created_by = {$_SESSION['uid']}";
+        }
+
+        if (!empty($projects)) {
+            if (!is_numeric($projects)) {
+                die('"projects" must be number');
+            }
+            $query[] = "b.project_id = $projects";
         }
     } else {
         // Select boxes
@@ -292,7 +300,7 @@ function format_bug_col($colvalue, $coltype, $bugid, $pos) {
     }
 }
 
-function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0) {
+function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0, $projects = 0) {
     global $me, $db, $t, $select, $u, $default_db_fields, $all_db_fields, $QUERY;
 
     $query_db_fields = array(
@@ -409,7 +417,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
 
     if (empty($_SESSION['queryinfo']['query']) or isset($op)) {
         list($_SESSION['queryinfo']['query'], $paramstr) =
-                build_query($assignedto, $reportedby, $open, $bookmarked);
+                build_query($assignedto, $reportedby, $open, $bookmarked, $projects);
     }
 
     $desired_fields = !empty($_SESSION['db_fields']) ?
@@ -490,6 +498,7 @@ $reportedby = !empty($_GET['reportedby']) ? $_GET['reportedby'] : 0;
 $assignedto = !empty($_GET['assignedto']) ? $_GET['assignedto'] : 0;
 $open = !empty($_GET['open']) ? $_GET['open'] : 0;
 $bookmarked = !empty($_GET['bookmarked']) ? $_GET['bookmarked'] : 0;
+$projects = !empty($_GET['projects']) ? $_GET['projects'] : 0;
 
 // Make sure the page variable is numeric, if it's populated
 if (!empty($_GET['page']))
@@ -517,7 +526,7 @@ if (isset($_GET['op']))
             break;
         case 'mybugs' :
             if ($auth->is_authenticated())
-                list_items($assignedto, $reportedby, $open, $bookmarked);
+                list_items($assignedto, $reportedby, $open, $bookmarked, $projects);
             else
                 show_query();
             break;
@@ -527,5 +536,5 @@ if (isset($_GET['op']))
             break;
     }
 else
-    list_items($assignedto, $reportedby, $open, $bookmarked);
+    list_items($assignedto, $reportedby, $open, $bookmarked, $projects);
 
