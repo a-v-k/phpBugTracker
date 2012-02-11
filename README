@@ -23,6 +23,11 @@ Original phpBugTracker has many security bugs. This project inherits it.
 So, don't use this project in open networks.
 I will work on this problem.
 
+I need code contributions for:
+------------------------------
+- check and fix install script for current project state (db converted to utf8)
+
+
 -------------------------------------------------------------------------------
 Bellow you can read README text from original phpBugTracker
 -------------------------------------------------------------------------------
