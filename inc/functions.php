@@ -829,3 +829,37 @@ function find_include($file) {
 function qry_amp($ipReqStr) {
     return str_replace('&', '&amp;', $ipReqStr);
 }
+
+function add_param($ipReqStr, $ipParName, $ipParVal) {
+    $str = $ipReqStr;
+    if ($str == 'r') {
+        //print_r($_SERVER);
+        $str = $_SERVER['REQUEST_URI'];
+    }
+    if (strpos($str, '?') > 0) {
+        $url = substr($str, 0, strpos($str, '?'));
+        $paramstr = substr($str, strpos($str, '?') + 1);
+        $partmp = explode('&', $paramstr);
+        $paramarr = array();
+        foreach ($partmp as $tmp) {
+            $paramarr[substr($tmp, 0, strpos($tmp, '='))] = substr($tmp, strpos($tmp, '=') + 1);
+        }
+        $paramarr[$ipParName] = $ipParVal;
+        $res = gen_ref($url, $paramarr);
+    } else {
+        $res = $str . '?' . $ipParName . '=' . $ipParVal;
+    }
+    return $res;
+}
+
+function add_paramsa($ipReqStr, $ipParams) {
+    if (!is_array($ipParams)) {
+        die('add_paramsa: Second argument must be array');
+    }
+    $keys = array_keys($ipParams);
+    $res = $ipReqStr;
+    foreach ($keys as $key) {
+        $res = add_param($res, $key, $ipParams[$key]);
+    }
+    return $res;
+}
