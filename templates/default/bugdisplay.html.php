@@ -94,7 +94,7 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
     <?php if (!empty($error['add_dep']))
         echo "<div class=\"error\">{$error['add_dep']}</div>"; ?>
     <?php if (!empty($error['vote']))
-        echo "<div class=\"error\">{$error['vote']}</div>" ?>
+        echo "<div class=\"error\">{$error['vote']}</div>"; ?>
 
     <!-- comments (the meat of the bug report) -->
     <table border="0" cellpadding="2" cellspacing="0" width="100%">
@@ -187,14 +187,14 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
             <?php if ($may_close or $may_manage) { ?>
                 <td><select name="closed_in_version_id">
                         <option value="0" selected><?php echo translate("Choose one"); ?></option>
-                        <?php build_select('version', $closed_in_version_id, $project_id) ?>
+                        <?php build_select('version', $closed_in_version_id, $project_id); ?>
                     </select></td>
             <?php } else { ?>
                 <td><?php echo lookup('version', $closed_in_version_id, $project_id); ?></td>
             <?php } ?>
             <td><?php echo translate("Site"); ?></td>
             <?php if ($may_edit) { ?>
-                <td><select name="site_id"><?php build_select('site', $site_id) ?></select></td>
+                <td><select name="site_id"><?php build_select('site', $site_id); ?></select></td>
             <?php } else { ?>
                 <td><?php echo lookup('site', $site_id); ?></td>
             <?php } ?>
@@ -331,7 +331,7 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
                             <?php } ?>
                         </td>
                     </tr><tr>
-                        <td colspan="5" height="2" bgcolor="#ffffff"><spacer type="block" height="2" width="2"></td>
+                        <td colspan="5" height="2" bgcolor="#ffffff"><img src="images/spacer.gif" alt="" height="2" width="2" /></td>
                     </tr><tr>
                     <td bgcolor="#cccccc" align="center"><b><?php echo translate("Name"); ?></b></td>
                     <td width="60" bgcolor="#cccccc" align="center"><b><?php echo translate("Size"); ?></b></td>
@@ -339,69 +339,69 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
                     <td width="80" bgcolor="#cccccc" align="center"><b><?php echo translate("Created"); ?></b></td>
                     <td width="80" bgcolor="#cccccc" align="center">&nbsp;</td>
                 </tr><tr>
-                    <td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-                    <td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-                        <td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-                            <td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-                                <td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-                                    </tr>
-                                    <?php if ($attcount = count($attachments)) { ?>
-                                        <?php for ($i = 0; $i < $attcount; $i++) { ?>
-                                            <tr title="<?php echo stripslashes($attachments[$i]['description']); ?>"<?php if ($i % 2 != 0)
-                                        echo ' class="alt" bgcolor="#dddddd"' ?>>
-                                                <td><?php echo stripslashes($attachments[$i]['file_name']); ?></td>
-                                                <td align="right">
-                                                    <?php
-                                                    echo $attachments[$i]['file_size'] > 1024 ? number_format((round($attachments[$i]['file_size']) / 1024 * 100) / 100) . 'k' : number_format($attachments[$i]['file_size']) . 'b';
-                                                    ?>
-                                                </td>
-                                                <td align="center"><?php echo $attachments[$i]['mime_type']; ?></td>
-                                                <td align="center"><?php echo date(DATE_FORMAT, $attachments[$i]['created_date']); ?></td>
-                                                <td align="center"><a href='attachment.php?attachid=<?php echo $attachments[$i]['attachment_id']; ?>'>View</a>
-                                                    <?php if ($is_admin or $may_manage) { ?>
-                                                        | <a href='attachment.php?del=<?php echo $attachments[$i]['attachment_id']; ?>' onClick="return confirm('<?php echo translate("Are you sure you want to delete this attachment?"); ?>');"><?php echo translate("Delete"); ?></a>
-                                                    <?php } ?>
-                                                </td>
-                                            </tr>
-                                        <?php } ?>
-                                    <?php } else { ?>
-                                        <tr>
-                                            <td colspan="5" align="center"><?php echo translate("No attachments found for this bug"); ?></td>
-                                        </tr>
-                                    <?php } ?>
-                                    <tr>
-                                        <td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-                                        <td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-                                            <td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-                                                <td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-                                                    <td bgcolor="#000000" height="1"><spacer type="block" height="1" width="1"></td>
-                                                    </tr><tr>
-                                                    <td colspan="5" height="2" bgcolor="#ffffff"><spacer type="block" height="2" width="2"></td>
-                                                    </tr>
-                                                    </table></td>
-                                                    </tr>
-                                                    </table>
-                                                    </form>
-                                                    <div align="center" class="bugdisplaylinks">
-                                                        <?php if (isset($_SESSION['uid']) && !empty($_SESSION['uid'])) { ?>
-                                                            <?php if (!$already_bookmarked) { ?>
-                                                                <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=addbookmark&bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("Bookmark this bug"); ?></a></b> |
-                                                            <?php } else { ?>
-                                                                <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=delbookmark&bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("Remove bookmark for this bug"); ?></a></b> |
-                                                            <?php } ?>
-                                                            <?php if (!empty($error['vote']))
-                                                                echo "<div class=\"error\">{$error['vote']}</div>" ?>
-                                                            <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=vote&bugid=<?php echo $bug_id . $posinfo; ?>" onClick="if (<?php echo $already_voted; ?>) { alert ('<?php echo translate("You have already voted for this bug"); ?>'); return false; }"><?php echo translate("Vote for this bug"); ?></a></b> |
-                                                        <?php } ?>
-                                                        <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=viewvotes&bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("View votes"); ?> (<?php echo $num_votes; ?>)</a></b>
-                                                        | <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=history&bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("View bug history"); ?></a></b>
-                                                        | <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=print&bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("Printable View"); ?></a></b>
-                                                        <?php if ($is_admin or $may_manage) { ?>
-                                                            | <b><a href="editComment.php?bugid=<?php echo $bug_id ?>"><?php echo translate("Edit Comment") ?></a></b>
-                                                        <?php } ?>
-                                                        <?php if ($is_admin) { ?>
-                                                            <!--
-                                                            | <b><a href="bug.php?op=del&bugid=<?php echo $bug_id; ?>"><?php echo translate("Delete bug"); ?></a></b>
-                                                            -->
-                                                        <?php } ?>
-                                                    </div>
+                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                </tr>
+                <?php if ($attcount = count($attachments)) { ?>
+                    <?php for ($i = 0; $i < $attcount; $i++) { ?>
+                        <tr title="<?php echo stripslashes($attachments[$i]['description']); ?>"<?php if ($i % 2 != 0)
+                    echo ' class="alt" bgcolor="#dddddd"' ?>>
+                            <td><?php echo stripslashes($attachments[$i]['file_name']); ?></td>
+                            <td align="right">
+                                <?php
+                                echo $attachments[$i]['file_size'] > 1024 ? number_format((round($attachments[$i]['file_size']) / 1024 * 100) / 100) . 'k' : number_format($attachments[$i]['file_size']) . 'b';
+                                ?>
+                            </td>
+                            <td align="center"><?php echo $attachments[$i]['mime_type']; ?></td>
+                            <td align="center"><?php echo date(DATE_FORMAT, $attachments[$i]['created_date']); ?></td>
+                            <td align="center"><a href='attachment.php?attachid=<?php echo $attachments[$i]['attachment_id']; ?>'>View</a>
+                                <?php if ($is_admin or $may_manage) { ?>
+                                    | <a href='attachment.php?del=<?php echo $attachments[$i]['attachment_id']; ?>' onClick="return confirm('<?php echo translate("Are you sure you want to delete this attachment?"); ?>');"><?php echo translate("Delete"); ?></a>
+                                <?php } ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                <?php } else { ?>
+                    <tr>
+                        <td colspan="5" align="center"><?php echo translate("No attachments found for this bug"); ?></td>
+                    </tr>
+                <?php } ?>
+                <tr>
+                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                </tr><tr>
+                    <td colspan="5" height="2" bgcolor="#ffffff"><img src="images/spacer.gif" alt="" height="2" width="2" /></td>
+                </tr>
+        </table></td>
+</tr>
+</table>
+</form>
+<div align="center" class="bugdisplaylinks">
+    <?php if (isset($_SESSION['uid']) && !empty($_SESSION['uid'])) { ?>
+        <?php if (!$already_bookmarked) { ?>
+            <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=addbookmark&amp;bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("Bookmark this bug"); ?></a></b> |
+        <?php } else { ?>
+            <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=delbookmark&amp;bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("Remove bookmark for this bug"); ?></a></b> |
+        <?php } ?>
+        <?php if (!empty($error['vote']))
+            echo "<div class=\"error\">{$error['vote']}</div>" ?>
+        <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=vote&amp;bugid=<?php echo $bug_id . $posinfo; ?>" onClick="if (<?php echo $already_voted; ?>) { alert ('<?php echo translate("You have already voted for this bug"); ?>'); return false; }"><?php echo translate("Vote for this bug"); ?></a></b> |
+    <?php } ?>
+    <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=viewvotes&amp;bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("View votes"); ?> (<?php echo $num_votes; ?>)</a></b>
+    | <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=history&amp;bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("View bug history"); ?></a></b>
+    | <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=print&amp;bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("Printable View"); ?></a></b>
+    <?php if ($is_admin or $may_manage) { ?>
+        | <b><a href="editComment.php?bugid=<?php echo $bug_id ?>"><?php echo translate("Edit Comment") ?></a></b>
+    <?php } ?>
+    <?php if ($is_admin) { ?>
+        <!--
+        | <b><a href="bug.php?op=del&bugid=<?php echo $bug_id; ?>"><?php echo translate("Delete bug"); ?></a></b>
+        -->
+    <?php } ?>
+</div>
