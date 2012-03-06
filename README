@@ -16,6 +16,7 @@ Allow filter bugs by project (in progress)!
 Many of html code fixed (in progress)
 Fixed bug sort order in some places.
 Database switched to UTF-8 codepage. (Autoupdate not supported)
+Removed magic_quotes_gpc dependence!
 
 WARNING!
 --------

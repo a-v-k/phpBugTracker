@@ -85,3 +85,15 @@ This is a seamless upgrade.
 3) Edit CUR_DB_VERSION in your config.php and set it to 6.  For mysql this
    will trigger creation of three new indexes for speed.
 4) Run "update.php".
+
+Upgrading from 1.0.5 to this GitHub a-v-k version
+-------------------------------
+1) Backup your existing directory for safety.
+2) Dump your database.
+3) Convert your database dump file to utf8,
+   then change table definitions for utf8 character set table creation
+    (may be, someone can write detailed instructions for db conversion???)
+4) Restore database from dump
+5) Remove templates/default dir
+6) Unzip the new code on top of the old.
+7) Switch magic_quotes_gpc to OFF (!) in your php.ini or in .htaccess, if it was set.
