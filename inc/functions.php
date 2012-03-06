@@ -51,7 +51,7 @@ function show_text($text, $iserror = false) {
 ///
 /// Build a select box with the item matching $value selected
 function build_select($box, $selected = '', $project = 0, $limit = false) {
-    global $db, $select, $perm, $restricted_projects, $QUERY, $u;
+    global $db, $select, $perm, $restricted_projects, $viewable_projects, $QUERY, $u;
 
     // create hash to map tablenames
     $cfgDatabase = array(
@@ -81,7 +81,8 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
             'resolution' => $querystart . $querymid,
             'project' => $perm->have_perm('Admin') ? $querystart . " where " .
                     ($selected ? "(active > 0 or project_id in (" . $db->quote($selected) . "))" : 'active > 0') .
-                    " order by {$box}_name" : $querystart . " where project_id not in (" . $db->quote($restricted_projects) . ")" .
+                    " order by {$box}_name" :
+                        $querystart . " where project_id in (" . $viewable_projects . ")" .
                     " and " .
                     ($selected ? " (active > 0 or project_id in (" . $db->quote($selected) . "))" : 'active > 0') .
                     " order by {$box}_name",
