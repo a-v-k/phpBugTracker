@@ -31,7 +31,7 @@ Then:
    and start reporting bugs.
 
 Mandantory:
-You must have magic_quotes_gpc set to On either in php.ini or in .htaccess
+You must have magic_quotes_gpc set to OFF (since this version) either in php.ini or in .htaccess
 (see http://www.php.net/manual/en/configuration.php for more info).
 
 Optional:

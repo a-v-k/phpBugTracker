@@ -350,9 +350,9 @@ if (isset($_POST['op'])) {
 } else {
 	$error = '';
 
-	if (!get_magic_quotes_gpc()) {
-		$error .= "<p><hr></p><p>magic_quotes_gpc is OFF!</p>".
-			"<p>You must have magic_quotes_gpc set to On either in php.ini or in ".
+	if (get_magic_quotes_gpc()) {
+		$error .= "<p><hr></p><p>magic_quotes_gpc is ON!</p>".
+			"<p>You must have magic_quotes_gpc set to OFF either in php.ini or in ".
 			".htaccess (see <a href=\"http://php.net/magic_quotes\">http://php.net/magic_quotes</a> for more info).</p><p><hr></p>";
 	}
 
