@@ -943,7 +943,7 @@ function prev_next_links($bugid, $pos) {
 function show_bug($bugid = 0, $error = array()) {
     global $db, $me, $t, $u, $QUERY, $restricted_projects, $auth, $perm;
 
-    if (!ereg('^[0-9]+$', $bugid) or
+    if (!is_numeric($bugid) or
             !$row = $db->getRow(sprintf($QUERY['bug-show-bug'], $bugid, $restricted_projects))) {
         show_text(translate("That bug does not exist, or you don't have permission to view it."), true);
         return;
