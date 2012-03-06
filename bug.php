@@ -454,6 +454,7 @@ function update_bug($bugid = 0) {
             if ($v == -1 && isset($buginfo[$k])) {
                 $v = $buginfo[$k];
             }
+            //TODO: fix it! filter input array!
             $$k = $v;
             if ($k == 'url') {
                 if (($v == 'http://') || ($v == 'https://')) {
@@ -979,7 +980,12 @@ function show_bug($bugid = 0, $error = array()) {
     if (count($error))
         $t->assign($_POST);
 
-    $t->assign(array($is_reporter, $is_assignee, $is_owner, $is_admin));
+    $t->assign(array(
+        'is_reporter' => $is_reporter,
+        'is_assignee' => $is_assignee,
+        'is_owner' => $is_owner,
+        'is_admin' => $is_admin
+    ));
 
     $bug_duplicates = $db->getAll("select b.bug_id, s.bug_open from " . TBL_BUG_DEPENDENCY . " d1, " . TBL_BUG_DEPENDENCY . " d2, " . TBL_BUG . " b, " . TBL_STATUS . " s where d1.bug_id = $bugid and d2.bug_id = b.bug_id and d2.bug_id = d1.depends_on and d2.depends_on = d1.bug_id and b.status_id = s.status_id");
 
