@@ -6,7 +6,7 @@
             <?php
             if ($count = count($recentbugs)) {
                 for ($i = 0; $i < $count; $i++) {
-                    echo '<a href="bug.php?op=show&amp;bugid=' . $recentbugs[$i]['bug_id'] . '">' . stripslashes($recentbugs[$i]['title']) . '</a> &nbsp;&nbsp;(<i>' . stripslashes($recentbugs[$i]['project_name']) . '</i>)<br>';
+                    echo '<a href="bug.php?op=show&amp;bugid=' . $recentbugs[$i]['bug_id'] . '">' . htmlspecialchars($recentbugs[$i]['title']) . '</a> &nbsp;&nbsp;(<i>' . htmlspecialchars($recentbugs[$i]['project_name']) . '</i>)<br>';
                 }
             } else {
                 echo translate("No bugs found");
@@ -18,7 +18,7 @@
             <?php
             if ($count = count($closedbugs)) {
                 for ($i = 0; $i < $count; $i++) {
-                    echo '<a href="bug.php?op=show&amp;bugid=' . $closedbugs[$i]['bug_id'] . '">' . stripslashes($closedbugs[$i]['title']) . '</a> &nbsp;&nbsp;(<i>' . stripslashes($closedbugs[$i]['project_name']) . '</i>)<br>';
+                    echo '<a href="bug.php?op=show&amp;bugid=' . $closedbugs[$i]['bug_id'] . '">' . htmlspecialchars($closedbugs[$i]['title']) . '</a> &nbsp;&nbsp;(<i>' . htmlspecialchars($closedbugs[$i]['project_name']) . '</i>)<br>';
                 }
             } else {
                 echo translate("No bugs found");
@@ -81,7 +81,7 @@
             <tr<?php if ($i % 2 != 0)
             echo ' class="alt"' ?>>
                     <?php foreach ($projects[$i] as $var => $val)
-                        echo '<td' . ($var != 'Project' ? ' align="center"' : '') . '>' . stripslashes($val) . '</td>'; ?>
+                        echo '<td' . ($var != 'Project' ? ' align="center"' : '') . '>' . $val . '</td>'; ?>
             </tr>
         <?php } ?>
     </table>

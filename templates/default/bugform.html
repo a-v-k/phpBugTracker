@@ -27,7 +27,7 @@
 						<?php echo translate("Project"); ?>:
 					</td>
 					<td>
-						<?php echo stripslashes($projectname) ?>
+						<?php echo htmlspecialchars($projectname); ?>
 					</td>
 				</tr>
 				<tr>
@@ -55,7 +55,7 @@
 						<?php echo translate("Summary"); ?>:
 					</td>
 					<td>
-						<input type="text" size="55" maxlength="100" name="title" value="<?php echo htmlspecialchars(stripslashes($title)) ?>">
+						<input type="text" size="55" maxlength="100" name="title" value="<?php echo htmlspecialchars($title); ?>">
 					</td>
 				</tr>
 				<tr>
@@ -63,7 +63,7 @@
 						<?php echo translate("Description"); ?>:
 					</td>
 					<td>
-						<textarea name="description" cols="55" rows="8" wrap="virtual"><?php echo htmlspecialchars(stripslashes($description)) ?></textarea>
+						<textarea name="description" cols="55" rows="8" wrap="virtual"><?php echo htmlspecialchars($description); ?></textarea>
 						<?php echo translate("PRETAGS"); ?>
 					</td>
 				</tr>
@@ -184,6 +184,6 @@
 			</table>
 			<input type="submit" name="submit" value="<?php echo translate("Submit"); ?>"> 
 			<input type="hidden" name="bugid" value="0"> 
-			<input type="hidden" name="project" value="<?php echo $project ?>"> 
+			<input type="hidden" name="project" value="<?php echo htmlspecialchars($project); ?>">
 			<input type="hidden" name="op" value="do">
 		</form>

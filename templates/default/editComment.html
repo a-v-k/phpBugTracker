@@ -10,7 +10,7 @@
 <input type="hidden" name="commentID" 	value="<?php echo $comments[$i]['comment_id']; ?>">
 Comment #<?php echo $comments[$i]['comment_id']; ?>&nbsp;&nbsp;<?php echo date(DATE_FORMAT, $comments[$i]['created_date']); ?><br/>
 <textarea name="newComment" rows="6" cols="55" wrap="virtual" <?php echo $disabled ?>><?php echo isset($_POST['comments']) ? $_POST['comments'] : ''; ?>
-<?php echo stripslashes($comments[$i]['comment_text']); ?>
+<?php echo htmlspecialchars($comments[$i]['comment_text']); ?>
 </textarea>
 <input type="submit" value="<?php echo translate("Edit"); ?>">
 </form>

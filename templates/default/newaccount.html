@@ -11,24 +11,24 @@
 		<tr>
 			<td align="right"><?php echo translate("Login"); ?>: </td>
 			<td>
-				<input type="text" name="login" value="<?php echo stripslashes(htmlspecialchars($_POST['login'])); ?>">
+				<input type="text" name="login" value="<?php echo htmlspecialchars(htmlspecialchars($_POST['login'])); ?>">
 			</td>
 		</tr>
 	<?php } ?>
 	<tr>
 		<td align="right"><?php echo translate("Email"); ?>: </td>
-		<td><input type="text" name="email" value="<?php echo stripslashes(htmlspecialchars($_POST['email'])); ?>"></td>
+		<td><input type="text" name="email" value="<?php echo htmlspecialchars(htmlspecialchars($_POST['email'])); ?>"></td>
 	</tr>
 	<tr>
 		<td align="right"><?php echo translate("First Name"); ?> (<?php echo translate("optional"); ?>):</td>
 		<td>
-			<input type="text" name="firstname" value="<?php echo stripslashes(htmlspecialchars($_POST['firstname'])); ?>">
+			<input type="text" name="firstname" value="<?php echo htmlspecialchars(htmlspecialchars($_POST['firstname'])); ?>">
 		</td>
 	</tr>
 	<tr>
 		<td align="right"><?php echo translate("Last Name"); ?> (<?php echo translate("optional"); ?>):</td>
 		<td>
-			<input type="text" name="lastname" value="<?php echo stripslashes(htmlspecialchars($_POST['lastname'])); ?>">
+			<input type="text" name="lastname" value="<?php echo htmlspecialchars(htmlspecialchars($_POST['lastname'])); ?>">
 		</td>
 	</tr>
 </table>

@@ -119,7 +119,7 @@ function add_attachment($bugid, $description) {
 	}
 
 	@chmod("$filepath/$projectid/$filename", 0766);
-	$db->query("insert into ".TBL_ATTACHMENT." (attachment_id, bug_id, file_name, description, file_size, mime_type, created_by, created_date) values (".join(', ', array($db->nextId(TBL_ATTACHMENT), $db->quote($bugid), $db->quote($_FILES['attachment']['name']), $db->quote(stripslashes($description)), $db->quote($_FILES['attachment']['size']), $db->quote($_FILES['attachment']['type']), $u, $now)).")");
+	$db->query("insert into ".TBL_ATTACHMENT." (attachment_id, bug_id, file_name, description, file_size, mime_type, created_by, created_date) values (".join(', ', array($db->nextId(TBL_ATTACHMENT), $db->quote($bugid), $db->quote($_FILES['attachment']['name']), $db->quote($description), $db->quote($_FILES['attachment']['size']), $db->quote($_FILES['attachment']['type']), $u, $now)).")");
 
 	if ($_POST['use_js']) {
 		$t->render('admin/edit-submit.html');
@@ -146,7 +146,7 @@ function show_attachment_form($bugid, $error = '') {
 		'error' => $error,
 		'bugid' => $bugid,
 		'description' => isset($description)
-			? htmlspecialchars(stripslashes($description)) : '',
+			? htmlspecialchars($description) : '',
 		'max_size' => ini_get('upload_max_filesize') < ATTACHMENT_MAX_SIZE
 			? number_format(ini_get('upload_max_filesize'))
 			: number_format(ATTACHMENT_MAX_SIZE)

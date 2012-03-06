@@ -4,10 +4,10 @@
 	<?php for ($i = 0, $count = count($projects); $i < $count; $i++) { ?>
 	<tr>
 		<td align="right" valign="top">
-			<?php printf('<a href="bug.php?op=add&project=%d">%s</a>:', $projects[$i]['project_id'], stripslashes($projects[$i]['project_name'])); ?>
+			<?php printf('<a href="bug.php?op=add&project=%d">%s</a>:', $projects[$i]['project_id'], htmlspecialchars($projects[$i]['project_name'])); ?>
 		</td>
 		<td valign="top">
-			<?php echo nl2br(stripslashes($projects[$i]['project_desc'])); ?>
+			<?php echo nl2br(htmlspecialchars($projects[$i]['project_desc'])); ?>
 		</td>
 	</tr>
 	<?php } ?>
