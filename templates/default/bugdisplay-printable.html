@@ -43,7 +43,7 @@
 	</tr>
 </table>
 <br>
-<?php echo translate("Summary"); ?>: <?php echo stripslashes($title); ?>
+<?php echo translate("Summary"); ?>: <?php echo htmlspecialchars($title); ?>
 <br>
 <?php echo translate("URL"); ?>: <?php echo $url; ?>
 <br>
@@ -70,13 +70,13 @@
 <hr size="1">
 <i>----- <?php echo translate("Posted by").' '.maskemail($reporter).' ('.date(TIME_FORMAT.' '.DATE_FORMAT, $created_date).')' ?>-----</i>
 <br>
-<?php echo stripslashes(format_comments(nl2br($description))) ?>
+<?php echo htmlspecialchars(format_comments(nl2br($description))) ?>
 <br>
 <br>
 <?php for ($i = 0, $ccount = count($comments); $i < $ccount; $i++) { ?>
 <i>----- <?php echo translate("Posted by").' '.maskemail($comments[$i]['login']).' ('.date(TIME_FORMAT.' '.DATE_FORMAT, $comments[$i]['created_date']).')'; ?>-----</i>
 <br>
-<?php echo stripslashes(format_comments(nl2br($comments[$i]['comment_text']))); ?>
+<?php echo htmlspecialchars(format_comments(nl2br($comments[$i]['comment_text']))); ?>
 <br>
 <br>
 <?php } ?>

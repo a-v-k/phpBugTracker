@@ -134,7 +134,7 @@ function format_comments($comments) {
         '</pre>',
     );
 
-    return preg_replace($patterns, $replacements, stripslashes($comments));
+    return preg_replace($patterns, $replacements, $comments);
 }
 
 ///
@@ -170,14 +170,14 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
     $template = $newbug ? "bugemail-newbug.$template_ext" : "bugemail.$template_ext";
     foreach (array('title', 'url') as $field) {
         if (isset($cf[$field])) {
-            $db->query('insert into ' . TBL_BUG_HISTORY . ' (bug_id, changed_field, old_value, new_value, created_by, created_date) values (' . join(', ', array($buginfo['bug_id'], $db->quote(translate($field)), $db->quote(stripslashes($buginfo[$field])), $db->quote(stripslashes($cf[$field])), $u, $now)) . ")");
+            $db->query('insert into ' . TBL_BUG_HISTORY . ' (bug_id, changed_field, old_value, new_value, created_by, created_date) values (' . join(', ', array($buginfo['bug_id'], $db->quote(translate($field)), $db->quote($buginfo[$field]), $db->quote($cf[$field]), $u, $now)) . ")");
             $t->assign(array(
-                $field => stripslashes($cf[$field]),
+                $field => $cf[$field],
                 $field . '_stat' => '!'
             ));
         } else {
             $t->assign(array(
-                $field => stripslashes($buginfo[$field]),
+                $field => $buginfo[$field],
                 $field . '_stat' => ' '
             ));
         }
@@ -217,14 +217,14 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
             if (empty($newvalue))
                 $newvalue = 'None';
 
-            $db->query('insert into ' . TBL_BUG_HISTORY . ' (bug_id, changed_field, old_value, new_value, created_by, created_date) values (' . join(', ', array($buginfo['bug_id'], $db->quote(translate($field)), $db->quote(stripslashes($oldvalue)), $db->quote(stripslashes($newvalue)), $u, $now)) . ")");
+            $db->query('insert into ' . TBL_BUG_HISTORY . ' (bug_id, changed_field, old_value, new_value, created_by, created_date) values (' . join(', ', array($buginfo['bug_id'], $db->quote(translate($field)), $db->quote($oldvalue), $db->quote($newvalue), $u, $now)) . ")");
             $t->assign(array(
-                $field . '_id' => stripslashes($newvalue),
+                $field . '_id' => $newvalue,
                 $field . '_id_stat' => '!'
             ));
         } else {
             $t->assign(array(
-                $field . '_id' => stripslashes($oldvalue),
+                $field . '_id' => $oldvalue,
                 $field . '_id_stat' => ' '
             ));
         }
@@ -247,15 +247,15 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
                 $newvalue = 'None';
 
             $db->query('insert into ' . TBL_BUG_HISTORY . ' (bug_id, changed_field, old_value, new_value, created_by, created_date) values (' . join(', ', array($buginfo['bug_id'], $db->quote(translate($field_name)),
-                        $db->quote(stripslashes($oldvalue)),
-                        $db->quote(stripslashes($newvalue)), $u, $now)) . ")");
+                        $db->quote($oldvalue),
+                        $db->quote($newvalue), $u, $now)) . ")");
             $t->assign(array(
-                $field . '_id' => stripslashes($newvalue),
+                $field . '_id' => ($newvalue),
                 $field . '_id_stat' => '!'
             ));
         } else {
             $t->assign(array(
-                $field . '_id' => stripslashes($oldvalue),
+                $field . '_id' => ($oldvalue),
                 $field . '_id_stat' => ' '
             ));
         }
@@ -383,7 +383,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
         ));
 
         $maillistStr = implode(';', $maillist);
-        mass_mail4($maillistStr, "[Bug {$buginfo['bug_id']}] " . stripslashes((!empty($cf['title']) ? $cf['title'] : $buginfo['title'])), $t->fetch($template));
+        mass_mail4($maillistStr, "[Bug {$buginfo['bug_id']}] " . ((!empty($cf['title']) ? $cf['title'] : $buginfo['title'])), $t->fetch($template));
 
 //            require_once('./inc/class.phpmailer-lite.php');
 //
@@ -554,7 +554,7 @@ function update_bug($bugid = 0) {
 
     if (isset($_POST)) {
         foreach ($_POST as $k => $v) {
-            if (isset($buginfo[$k]) && stripslashes($buginfo[$k]) != stripslashes($$k)) {
+            if (isset($buginfo[$k]) && ( $buginfo[$k] != $$k)) {
                 $changedfields[$k] = $v;
             }
         }
@@ -678,7 +678,7 @@ function update_bug($bugid = 0) {
 
     if ($comments) {
         // $comments = strip_tags($comments); -- Uncomment this if you want no <> content in the comments
-        $db->query("insert into " . TBL_COMMENT . " (comment_id, bug_id, comment_text, created_by, created_date) values (" . $db->nextId(TBL_COMMENT) . ", $bugid, " . $db->quote(stripslashes($comments)) . ", $u, $now)");
+        $db->query("insert into " . TBL_COMMENT . " (comment_id, bug_id, comment_text, created_by, created_date) values (" . $db->nextId(TBL_COMMENT) . ", $bugid, " . $db->quote($comments) . ", $u, $now)");
     }
 
     if (is_closed($status_id)) {
@@ -686,7 +686,7 @@ function update_bug($bugid = 0) {
     } else {
         $closed_query = '';
     }
-    $db->query("update " . TBL_BUG . " set title = " . $db->quote(stripslashes($title)) . ', url = ' . $db->quote(stripslashes($url)) . ", severity_id = " . (int) $severity_id . ", priority = " . (int) $priority . ", status_id = " . (int) $status_id . ", database_id = " . (int) $database_id . ", to_be_closed_in_version_id = " . (int) $to_be_closed_in_version_id . ", closed_in_version_id = " . (int) $closed_in_version_id . ', site_id =' . (int) $site_id . ", resolution_id = " . (int) $resolution_id . ", assigned_to = " . (int) $assigned_to . ", created_by = $created_by, project_id = $project_id, version_id = $version_id, component_id = " . (int) $component_id . ", os_id = " . (int) $os_id . ", last_modified_by = $u, last_modified_date = $now $closed_query where bug_id = $bugid");
+    $db->query("update " . TBL_BUG . " set title = " . $db->quote($title) . ', url = ' . $db->quote($url) . ", severity_id = " . (int) $severity_id . ", priority = " . (int) $priority . ", status_id = " . (int) $status_id . ", database_id = " . (int) $database_id . ", to_be_closed_in_version_id = " . (int) $to_be_closed_in_version_id . ", closed_in_version_id = " . (int) $closed_in_version_id . ', site_id =' . (int) $site_id . ", resolution_id = " . (int) $resolution_id . ", assigned_to = " . (int) $assigned_to . ", created_by = $created_by, project_id = $project_id, version_id = $version_id, component_id = " . (int) $component_id . ", os_id = " . (int) $os_id . ", last_modified_by = $u, last_modified_date = $now $closed_query where bug_id = $bugid");
 
     // If the project has changed, move any attachments	
     if (!empty($changedfields['project_id'])) {
@@ -758,7 +758,7 @@ function add_attachment($bugid, $description) {
     }
 
     @chmod("$filepath/$projectid/$filename", 0766);
-    $db->query("insert into " . TBL_ATTACHMENT . " (attachment_id, bug_id, file_name, description, file_size, mime_type, created_by, created_date) values (" . join(', ', array($db->nextId(TBL_ATTACHMENT), $bugid, $db->quote($_FILES['attachment']['name']), $db->quote(stripslashes($description)), $_FILES['attachment']['size'], $db->quote($_FILES['attachment']['type']), $u, $now)) . ")");
+    $db->query("insert into " . TBL_ATTACHMENT . " (attachment_id, bug_id, file_name, description, file_size, mime_type, created_by, created_date) values (" . join(', ', array($db->nextId(TBL_ATTACHMENT), $bugid, $db->quote($_FILES['attachment']['name']), $db->quote($description), $_FILES['attachment']['size'], $db->quote($_FILES['attachment']['type']), $u, $now)) . ")");
 }
 
 ///
@@ -813,7 +813,7 @@ function do_form($bugid = 0) {
 
     $bugid = $db->nextId(TBL_BUG);
 
-    $db->query('insert into ' . TBL_BUG . ' (bug_id, title, description, url, severity_id, priority, status_id, assigned_to, created_by, created_date, last_modified_by, last_modified_date, project_id, site_id, database_id, version_id, component_id, os_id, browser_string) values (' . $bugid . ', ' . join(', ', array($db->quote(stripslashes($title)), $db->quote(stripslashes($description)), $db->quote(stripslashes($url)))) . ', ' . (int) $severity . ', ' . (int) $priority . ', ' . (int) $status . ', ' . $owner . ', ' . $reporter . ', ' . $now . ', ' . $u . ', ' . $now . ', ' . $project . ', ' . (int) $site . ', ' . (int) $database . ', ' . (int) $version . ', ' . (int) $component . ', ' . (int) $os . ', ' . $db->quote(stripslashes($_SERVER['HTTP_USER_AGENT'])) . ')');
+    $db->query('insert into ' . TBL_BUG . ' (bug_id, title, description, url, severity_id, priority, status_id, assigned_to, created_by, created_date, last_modified_by, last_modified_date, project_id, site_id, database_id, version_id, component_id, os_id, browser_string) values (' . $bugid . ', ' . join(', ', array($db->quote($title), $db->quote($description), $db->quote($url))) . ', ' . (int) $severity . ', ' . (int) $priority . ', ' . (int) $status . ', ' . $owner . ', ' . $reporter . ', ' . $now . ', ' . $u . ', ' . $now . ', ' . $project . ', ' . (int) $site . ', ' . (int) $database . ', ' . (int) $version . ', ' . (int) $component . ', ' . (int) $os . ', ' . $db->quote($_SERVER['HTTP_USER_AGENT']) . ')');
     $buginfo = $db->getRow('select * from ' . TBL_BUG . " where bug_id = $bugid");
     do_changedfields($u, $buginfo);
 

@@ -71,7 +71,7 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
     <input type="hidden" name="pos" value="<?php echo isset($_REQUEST['pos']) ? $_REQUEST['pos'] : ''; ?>">
     <table border="0" width="100%">
         <tr>
-            <td>Bug <b>#<?php echo $bug_id ?></b> - <?php echo stripslashes($title) ?></td>
+            <td>Bug <b>#<?php echo $bug_id ?></b> - <?php echo htmlspecialchars($title) ?></td>
             <td align="right">
                 <b><a href="query.php"><?php echo translate("Return to bug list"); ?></a></b>
                 <?php if (!empty($prevbug)) { ?>
@@ -201,9 +201,9 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
         </tr><tr>
             <td><?php echo translate("Summary"); ?>:</td>
             <?php if ($may_edit) { ?>
-                <td><input type="text" size="40" maxlength="100" name="title" value="<?php echo stripslashes(htmlspecialchars($title)) ?>"></td>
+                <td><input type="text" size="40" maxlength="100" name="title" value="<?php echo htmlspecialchars($title) ?>"></td>
             <?php } else { ?>
-                <td><?php echo stripslashes(htmlspecialchars($title)); ?></td>
+                <td><?php echo htmlspecialchars($title); ?></td>
             <?php } ?>
             <td><?php echo translate("Status"); ?>:</td>
             <?php if ($may_change_status or $may_manage) { ?>
@@ -347,9 +347,9 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
                 </tr>
                 <?php if ($attcount = count($attachments)) { ?>
                     <?php for ($i = 0; $i < $attcount; $i++) { ?>
-                        <tr title="<?php echo stripslashes($attachments[$i]['description']); ?>"<?php if ($i % 2 != 0)
+                <tr title="<?php echo htmlspecialchars($attachments[$i]['description']); ?>"<?php if ($i % 2 != 0)
                     echo ' class="alt" bgcolor="#dddddd"' ?>>
-                            <td><?php echo stripslashes($attachments[$i]['file_name']); ?></td>
+                            <td><?php echo htmlspecialchars($attachments[$i]['file_name']); ?></td>
                             <td align="right">
                                 <?php
                                 echo $attachments[$i]['file_size'] > 1024 ? number_format((round($attachments[$i]['file_size']) / 1024 * 100) / 100) . 'k' : number_format($attachments[$i]['file_size']) . 'b';
