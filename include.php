@@ -298,5 +298,8 @@ if (!defined('NO_AUTH')) {
         if ($matching_projects) {
             $restricted_projects .= ",$matching_projects";
         }
+    } else {
+        $viewable_projects = @join(',', $db->getCol("select project_id from " . TBL_PROJECT ));
+
     }
 }
