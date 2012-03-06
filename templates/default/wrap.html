@@ -68,7 +68,14 @@
 </form>
 </div>
 <?php } ?>
-
+<?php
+if (get_magic_quotes_gpc() == 1) {
+    echo ("<div style=\"color:red;\">Warning: magic_quotes_gpc is ON </div>");
+}
+if (get_magic_quotes_runtime() == 1) {
+    echo ("<div style=\"color:red;\">Warning: magic_quotes_runtime is ON </div>");
+}
+?>
 <div style="padding: 5px;">
 	<?php include($content_template) ?>
 </div>
