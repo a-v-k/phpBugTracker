@@ -52,8 +52,8 @@
             } else {
                 ?>
                 <b><?php echo translate("Quick Stats"); ?></b>
-                <br><br>
-                <table border="1" cellspacing="0" cellpadding="2">
+                <br>
+                <table class="bordertable">
                     <tr>
                         <th><?php echo translate("Status"); ?></th>
                         <th><?php echo translate('# bugs'); ?></th>
@@ -72,7 +72,7 @@
 </table>
 <br/>
 <?php if (SHOW_PROJECT_SUMMARIES) { ?>
-    <table class="bordertable" align="center">
+    <table class="bordertable" style="width:99%; margin: 0 auto;">
         <tr>
             <?php foreach ($resfields as $field)
                 echo "<th>$field</th>"; ?>

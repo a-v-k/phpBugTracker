@@ -7,20 +7,23 @@
 	<link rel="stylesheet" type="text/css" href="../styles/print.css" media="print">
     <?php if (defined('CHARSET')) echo '<META http-equiv="Content-Type" content="text/html; charset='.CHARSET.'">'; ?>
 </head>
-<body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0">
-<div class="nav">
-    <div class="header_image">
-        <img name="title" src="<?php echo $template_path ?>/../images/title.gif" width="500" height="50" border="0" alt="" hspace="0" vspace="0">
+<body>
+<div class="NavBar">
+<div class="nav FixedWidth">
+    <div class="header_line1">
+        <div class="header_image">
+            <div class="PhpBugTracker">phpBugTracker</div>
+        </div>
+        <div class="header_search">
+            <form action="../bug.php">
+                <input type="hidden" name="op" value="show">
+                <?php echo translate("Find Bug") ?>
+                <input name="bugid" type="text" id="bugid" size="4">
+                &nbsp;
+            </form>
+        </div>
     </div>
-    <div class="header_search">
-        <form action="../bug.php">
-            <input type="hidden" name="op" value="show">
-            <?php echo translate("Find Bug") ?>
-            <input name="bugid" type="text" id="bugid" size="4">
-            &nbsp;
-        </form>
-    </div>
-    <ul id="tabnav">
+    <ul class="tabnav">
         <li><a href="configure.php" class="navlink"><?php echo translate("Configuration"); ?></a></li>
         <li><a href="project.php" class="navlink"><?php echo translate("Projects"); ?></a></li>
         <li><a href="user.php" class="navlink"><?php echo translate("Users"); ?></a></li>
@@ -29,7 +32,7 @@
         <li><a href="../docs/html/userguide.html" class="navlink"><?php echo translate("Documentation"); ?></a></li>
         <li><a href="../index.php" class="navlink"><?php echo translate("User Tools"); ?></a></li>
     </ul>
-    <ul id="tabnav">
+    <ul class="tabnav">
         <li><a href="status.php" class="navlink"><?php echo translate("Statuses"); ?></a></li>
         <li><a href="resolution.php" class="navlink"><?php echo translate("Resolutions"); ?></a></li>
         <li><a href="severity.php" class="navlink"><?php echo translate("Severities"); ?></a></li>
@@ -39,9 +42,12 @@
         <li><a href="site.php" class="navlink"><?php echo translate("Sites"); ?></a></li>
     </ul>
 </div>
+</div>
 
-<div style="padding: 0px 5px;">
+<div class="ContentBar">
+<div class="FixedWidth" style="padding: 0px 5px;">
     <?php include($content_template); ?>
+</div>
 </div>
 
 </body>
