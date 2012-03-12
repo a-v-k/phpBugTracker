@@ -293,6 +293,13 @@ function upgrade() {
 			log_query("UPDATE ".TBL_AUTH_USER." SET bug_list_fields=null"); // Incompatible change, blow away user settings here
 			log_query("INSERT INTO ".TBL_AUTH_USER." (user_id, login, first_name, last_name, email, password, active, bug_list_fields) values (0, 'Anonymous User', 'Anonymous', 'User', '', '', 0, null)");
 		}
+                
+		if ($thisvers < 7) {
+			log_query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('USE_SEVERITY_COLOR_LINE','0','Should the query list use the severity colors as the row background color (like SourceForge)','bool');");
+			log_query("INSERT INTO ".TBL_CONFIGURATION." VALUES ('USE_PRIORITY_COLOR_LINE','0','Should the query list use the priority colors as the row background color','bool');");
+			log_query("update ".TBL_CONFIGURATION." set varvalue = 1, description = 'Should the query list use the severity colors as the field background color' where varname = 'USE_SEVERITY_COLOR'");
+			log_query("update ".TBL_CONFIGURATION." set varvalue = 1, description = 'Should the query list use the priority colors as the field background color' where varname = 'USE_PRIORITY_COLOR'");
+		}
 
 		/* update to current DB_VERSION */
 		log_query("UPDATE ".TBL_CONFIGURATION." SET varvalue = '".CUR_DB_VERSION."' WHERE varname = 'DB_VERSION'");
@@ -318,5 +325,3 @@ if (isset($_GET['doit'])) {
     $new_db_rev = CUR_DB_VERSION;
     include('templates/default/upgrade.html');
 }
-
-?>

@@ -48,7 +48,7 @@ Most mysql platforms come with one enabled by default. If not, play with:
     SHOW STATUS LIKE '%qcache%';
     SET  GLOBAL query_cache_size=256000;
 
-mysql is the most tested database platform, followed by postgres, and then oracle.
+mysql is the most tested database platform. others not supported now.
 
 
 Problems?

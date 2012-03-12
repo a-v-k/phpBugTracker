@@ -97,3 +97,5 @@ Upgrading from 1.0.5 to this GitHub a-v-k version
 5) Remove templates/default dir
 6) Unzip the new code on top of the old.
 7) Switch magic_quotes_gpc to OFF (!) in your php.ini or in .htaccess, if it was set.
+8) Edit CUR_DB_VERSION in your config.php and set it to 7. 
+9) Run "update.php".

@@ -25,9 +25,9 @@ if (!empty($_SESSION['uid']) && isset($perm) && $perm->have_perm_proj($project_i
             </td>
         <?php } else { ?>
             <?php for ($i = 0; $i < $bugcount; $i++) { ?>
-                <?php if (USE_SEVERITY_COLOR) { ?> 
+                <?php if (USE_SEVERITY_COLOR_LINE) { ?>
                     <tr class="bugrow" bgcolor="<?php echo $bugs[$i]['severity_color']; ?>"> 
-                    <?php } else if (USE_PRIORITY_COLOR) { ?>
+                    <?php } else if (USE_PRIORITY_COLOR_LINE) { ?>
                     <tr class="bugrow" bgcolor="<?php echo $bugs[$i]['priority_color']; ?>"> 
                     <?php } else { ?> 
                     <tr class="bugrow<?php echo ($i % 2 != 0) ? ' alt' : ''; ?>">
@@ -47,7 +47,15 @@ if (!empty($_SESSION['uid']) && isset($perm) && $perm->have_perm_proj($project_i
                                 $class .= ' nowrap';
                             }
 
-                            echo "<td class=\"$class\">";
+                $colorStyle = '';
+                if (($var == 'priority_name') && USE_PRIORITY_COLOR) {
+                    $colorStyle = ' color:' . $bugs[$i]['priority_color'] . '; ';
+                }
+                if (($var == 'severity_name') && USE_SEVERITY_COLOR) {
+                    $colorStyle = ' color:' . $bugs[$i]['severity_color'] . '; ';
+                }
+
+                echo "<td class=\"$class\" style=\"$colorStyle\">";
                             if ($mass_update && $n == 1) {
                                 echo "<input type=\"checkbox\" name=\"bugids[]\" value=\"$bugid\">&nbsp;";
                             }

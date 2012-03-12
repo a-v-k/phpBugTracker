@@ -303,6 +303,22 @@ function format_bug_col($colvalue, $coltype, $bugid, $pos, $dataRow = null) {
             return "<a href=\"" . qry_amp(add_paramsa('r', $params)) . "\">$colvalue</a>";
             //return "<a href=\"" . qry_amp(add_param('r', 'projects', $dataRow['project_id'])) . "\">$colvalue</a>";
             break;
+
+//        case 'priority_name' :
+//            $colorStyle = '';
+//            if (USE_PRIORITY_COLOR) {
+//                $colorStyle = ' background-color:' . $dataRow['priority_color'] . '; ';
+//            }
+//            return '<div align="center" style="' . $colorStyle . '">' . (!empty($colvalue) ? $colvalue : '') . '</div>';
+//            break;
+//        case 'severity_name' :
+//            $colorStyle = '';
+//            if (USE_SEVERITY_COLOR) {
+//                $colorStyle = ' background-color:' . $dataRow['severity_color'] . '; ';
+//            }
+//            return '<div align="center" style="' . $colorStyle . '">' . (!empty($colvalue) ? $colvalue : '') . '</div>';
+//            break;
+
         default :
             return '<div align="center">' .
                     (!empty($colvalue) ? $colvalue : '') . '</div>';

@@ -32,7 +32,7 @@ define ('DB_PASSWORD', '{db_pass}'); // password for database connection
 
 // Database Table Config
 // you can change either the prefix of the table names or each table name individually
-define ('CUR_DB_VERSION', 6);  // The version of the database. Copy this to your config.php for upgrades.
+define ('CUR_DB_VERSION', 7);  // The version of the database. Copy this to your config.php for upgrades.
 define ('TBL_PREFIX', '{tbl_prefix}');	// the prefix for all tables, leave empty to use the old style
 
 define ('TBL_ACTIVE_SESSIONS', TBL_PREFIX.'active_sessions');
