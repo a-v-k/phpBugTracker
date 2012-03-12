@@ -13,7 +13,7 @@
 			<?php printf(translate('Before running this script: delete your old config.php file.')); ?>
 			<br>
 			<br>
-			<a href="<?php echo $HTTP_SERVER_VARS['PHP_SELF']; ?>?doit=1"><?php echo translate('Do it!'); ?></a>
+			<a href="<?php echo $_SERVER['PHP_SELF']; ?>?doit=1"><?php echo translate('Do it!'); ?></a>
 		</div>
 	</body>
 </html>
