@@ -62,24 +62,41 @@ function do_form() {
 	$db->query("insert into ".TBL_USER_GROUP." (user_id, group_id, created_by, created_date) select $user_id, group_id, 0, $now from ".TBL_AUTH_GROUP." where group_name = '".NEW_ACCOUNTS_GROUP."'"); 
 	$db->query("insert into ".TBL_USER_PREF." (user_id) values ($user_id)");
 	
-	qp_mail($_POST['email'], 
+	mass_mail4($_POST['email'],
 		translate("phpBugTracker Login"), 
 		sprintf(translate("Your phpBugTracker password is %s"), $password),
 		ADMIN_EMAIL);
+
 
 	$t->render('newaccountsuccess.html', translate("New account created"));
 }
 
 function show_form($error = '') {
-	global $t, $_POST;
-	
-	$t->assign('error', $error);
-	
-	if (NEW_ACCOUNTS_DISABLED) {
-		$t->render('newaccount-disabled.html', translate("Disabled"));
-	} else {
-		$t->render('newaccount.html', translate("Create new account"));
-	}
+    global $t, $_POST;
+
+    $t->assign('error', $error);
+
+    if (NEW_ACCOUNTS_DISABLED) {
+        $t->render('newaccount-disabled.html', translate("Disabled"));
+    } else {
+        $t->assign(array(
+            'txtTitle' => translate("Create a new account"),
+            'txtLogin' => translate("Login"),
+            'txtEmail' => translate("Email"),
+            'txtFirstName' => translate("First Name"),
+            'txtLastName' => translate("Last Name"),
+            'txtOptional' => translate("optional"),
+            'txtCreateNewAccount' => translate("Create new account"),
+            'formAction' => $_SERVER['PHP_SELF'],
+            'EMAIL_IS_LOGIN' => EMAIL_IS_LOGIN,
+            'test' => '<b>html cocode</b>',
+            'login' => htmlspecialchars(get_request_value('login')),
+            'email' => htmlspecialchars(get_request_value('email')),
+            'firstname' => htmlspecialchars(get_request_value('firstname')),
+            'lastname' => htmlspecialchars(get_request_value('lastname')),
+        ));
+        $t->render('newaccount.tpl', translate("Create new account"));
+    }
 }
 
 if (isset($_POST['createaccount'])) do_form();
