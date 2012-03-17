@@ -78,7 +78,8 @@ class uauth {
 		if (ENCRYPT_PASS) {
 			$password = md5($password);
 		}
-		$u = $db->getRow("select * from ".TBL_AUTH_USER." where login = '$username' and password = '$password' and active > 0");
+
+		$u = $db->getRow("select * from ".TBL_AUTH_USER." where login = " . $db->quote($username) . " and password = "  . $db->quote($password) . " and active > 0");
 		if (!$u or DB::isError($u)) {
 			return 0;
 		} else {
