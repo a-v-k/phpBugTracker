@@ -50,7 +50,6 @@ if (!defined('DB_HOST')) {
 //} else {
 //    @ini_set("magic_quotes_sybase", 0);
 //}
-
 // Grab the global functions
 include ('inc/functions.php');
 
@@ -157,6 +156,8 @@ $all_db_fields = array(
 $default_db_fields = array('bug_id', 'title', 'reporter', 'owner',
     'severity_name', 'priority_name', 'status_name', 'resolution_name');
 
+require_once './inc/Smarty/libs/Smarty.class.php';
+
 // Template class
 class template {
 
@@ -170,18 +171,37 @@ class template {
         //error_reporting(E_ALL ^ E_NOTICE); // Clobber notices in template output
         extract($this->vars);
         $path = defined('TEMPLATE_PATH') ? './templates/' . THEME . '/' . TEMPLATE_PATH . '/' : './templates/' . THEME . '/';
-        include($nowrap ? $path . $content_template : ($wrap_file ? $path . $wrap_file : $path . 'wrap.html'));
+        if ($nowrap) {
+            if (substr($content_template, -4) == '.tpl') {
+                $this->smarty->display($content_template);
+            } else {
+                include($this->template_path . '/' . $content_template);
+            }
+        } else {
+            include ($wrap_file ? $this->template_path . '/' . $wrap_file : $this->template_path . '/' . 'wrap.html');
+        }
+
+        //include($nowrap ? $path . $content_template : ($wrap_file ? $path . $wrap_file : $path . 'wrap.html'));
     }
 
     function fetch($content_template) {
-        ob_start();
-        $this->render($content_template, '', '', true);
-        $rettext = ob_get_contents();
-        ob_end_clean();
-        return $rettext;
+        if (substr($content_template, -4) == '.tpl') {
+            return $this->smarty->fetch($content_template);
+        } else {
+            ob_start();
+            $this->render($content_template, '', '', true);
+            $rettext = ob_get_contents();
+            ob_end_clean();
+            return $rettext;
+        }
     }
 
     function assign($var, $value = '') {
+
+        if ($var == 'template_path') {
+            $this->template_path = $value;
+        }
+
         if (is_array($var)) {
             foreach ($var as $k => $v) {
                 $this->vars[$k] = $v;
@@ -189,18 +209,29 @@ class template {
         } else {
             $this->vars[$var] = $value;
         }
+        $this->smarty->assign($var, $value);
     }
 
 }
 
 $t = new template();
+$sm = new Smarty();
+$t->smarty = &$sm;
 $t->assign('STYLE', STYLE);
+$sm->assign('STYLE', STYLE);
+
+
+//$sm->f
 
 if (defined('TEMPLATE_PATH')) {
-    $t->assign('template_path', '../templates/' . THEME . '/' . TEMPLATE_PATH);
+    $t->assign('template_path', './templates/' . THEME . '/' . TEMPLATE_PATH);
+    $sm->template_dir = './templates/' . THEME . '/' . TEMPLATE_PATH;
 } else {
     $t->assign('template_path', 'templates/' . THEME);
+    $sm->template_dir = 'templates/' . THEME;
 }
+
+
 
 // End classes -- Begin page
 
@@ -276,7 +307,7 @@ if (!empty($u)) {
     ));
 }
 
-if (defined('FORCE_LOGIN') and FORCE_LOGIN and !$u and !defined('NO_AUTH')) {
+if (defined('FORCE_LOGIN') and FORCE_LOGIN and empty($u) and !defined('NO_AUTH')) {
     // Save URL for after login
     $incoming_url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     $t->assign('incoming_url', $incoming_url);
@@ -299,7 +330,6 @@ if (!defined('NO_AUTH')) {
             $restricted_projects .= ",$matching_projects";
         }
     } else {
-        $viewable_projects = @join(',', $db->getCol("select project_id from " . TBL_PROJECT ));
-
+        $viewable_projects = @join(',', $db->getCol("select project_id from " . TBL_PROJECT));
     }
 }

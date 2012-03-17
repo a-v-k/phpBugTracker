@@ -81,7 +81,14 @@ if (get_magic_quotes_runtime() == 1) {
 }
 ?>
 <div class="FixedWidth" style="padding: 5px;">
-	<?php include($content_template) ?>
+	<?php 
+        if (substr($content_template, -4) == '.tpl') {
+            $this->smarty->display($content_template);
+        } else {
+            include($content_template);
+        }
+
+        ?>
 </div>
 </div>
 
