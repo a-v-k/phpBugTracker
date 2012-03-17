@@ -884,3 +884,15 @@ function add_paramsa($ipReqStr, $ipParams) {
     }
     return $res;
 }
+
+function get_array_value($ipArray, $ipKeyName, $ipDefault = null) {
+    if (array_key_exists($ipKeyName, $ipArray)) {
+        return $ipArray[$ipKeyName];
+    } else {
+        return $ipDefault;
+    }
+}
+
+function get_request_value($ipKeyName, $ipDefault = null) {
+    return get_array_value($_REQUEST, $ipKeyName, $ipDefault);
+}
