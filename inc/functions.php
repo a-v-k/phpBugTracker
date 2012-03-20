@@ -455,7 +455,7 @@ function delimit_list($delimiter, $ary) {
 /// Check the validity of an email address
 /// (From zend.com user russIndr)
 function bt_valid_email($email) {
-    return eregi('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$', $email);
+    return filter_var($email, FILTER_VALIDATE_EMAIL) == $email;
 }
 
 ///
