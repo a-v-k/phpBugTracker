@@ -37,7 +37,7 @@ Requirements
 ------------
 Here is a list of the requirements to get this running on your server.
 1. A webserver
-2. PHP 5+
+2. PHP 5.2+
 3. A database - Currently MySQL with mysqli. 
 		
 
