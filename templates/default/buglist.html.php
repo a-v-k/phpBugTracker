@@ -115,7 +115,7 @@ if (!empty($_SESSION['uid']) && isset($perm) && $perm->have_perm_proj($project_i
                 </tr>
                 <tr class="noprint">
                     <td valign="top" colspan=2><?php echo translate("Additional comments"); ?>:<br>
-                        <textarea name="comments" rows="6" cols="55" wrap="virtual" <?php echo $disabled ?>><?php echo isset($_POST['comments']) ? $_POST['comments'] : ''; ?></textarea>
+                        <textarea name="comments" rows="6" cols="55" <?php echo $disabled ?>><?php echo isset($_POST['comments']) ? $_POST['comments'] : ''; ?></textarea>
                         <br><br>
                         <div align="left">
                             <?php echo translate("Supress notification email"); ?> <input type="checkbox" name="suppress_email" value="1">

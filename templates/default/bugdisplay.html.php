@@ -301,7 +301,7 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
         <?php if ($may_add_comment) { ?>
             <tr class="noprint">
                 <td valign="top"><br><?php echo translate("Additional comments"); ?>:<br>
-                    <textarea name="comments" rows="6" cols="79" wrap="virtual"><?php echo isset($_POST['comments']) ? $_POST['comments'] : ''; ?></textarea>
+                    <textarea name="comments" rows="6" cols="79"><?php echo isset($_POST['comments']) ? $_POST['comments'] : ''; ?></textarea>
                     <br><br>
                     <div align="right">
                         <?php if ($may_change_assignment or $may_manage or $may_edit or
