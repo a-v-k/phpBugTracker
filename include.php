@@ -226,9 +226,15 @@ $sm->assign('STYLE', STYLE);
 if (defined('TEMPLATE_PATH')) {
     $t->assign('template_path', './templates/' . THEME . '/' . TEMPLATE_PATH);
     $sm->template_dir = './templates/' . THEME . '/' . TEMPLATE_PATH;
+    $sm->setTemplateDir('./templates/' . THEME . '/' . TEMPLATE_PATH)
+            ->setCompileDir('./tmp/templates_c')
+            ->setCacheDir('./tmp/sm_cache');
 } else {
     $t->assign('template_path', 'templates/' . THEME);
     $sm->template_dir = 'templates/' . THEME;
+    $sm->setTemplateDir('templates/' . THEME)
+            ->setCompileDir('tmp/templates_c')
+            ->setCacheDir('tmp/sm_cache');
 }
 
 
