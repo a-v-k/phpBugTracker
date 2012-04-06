@@ -346,7 +346,7 @@ function show_front($error = '') {
     $error = $error;
     $default_email = 'phpbt@' . $_SERVER['SERVER_NAME'];
     $OPTION_INSTALL_URL = 'http://' . $_SERVER['SERVER_NAME'] . dirname($_SERVER['PHP_SELF']);
-    include('templates/default/install.html');
+    include('templates/default/install.html.php');
 }
 
 if (isset($_POST['op'])) {
