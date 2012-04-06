@@ -79,6 +79,9 @@ if (get_magic_quotes_gpc() == 1) {
 if (get_magic_quotes_runtime() == 1) {
     echo ("<div class=\"FixedWidth\" style=\"color:red;\">Warning: magic_quotes_runtime is ON </div>");
 }
+if (!in_array(DB_TYPE, array('mysql','mysqli'))) {
+    echo ("<div class=\"FixedWidth\" style=\"color:red;\">Your Database type (" . DB_TYPE . ") unsupported. Please convert to mysql with utf8 codepage or use older version of phpBugTracker </div>");
+}
 ?>
 <div class="FixedWidth" style="padding: 5px;">
 	<?php 
