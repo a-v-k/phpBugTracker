@@ -459,7 +459,7 @@ INSERT INTO TBL_CONFIGURATION VALUES ('USE_JPGRAPH','','Whether to show some rep
 INSERT INTO TBL_CONFIGURATION VALUES ('MASK_EMAIL','1','Should email addresses have . changed to ''dot'' and @ change to ''at''?','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('HIDE_EMAIL','1','Should email addresses be hidden for those not logged in?','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('USE_SEVERITY_COLOR','1','Should the query list use the severity colors as the field background color','bool');
-INSERT INTO TBL_CONFIGURATION VALUES ('USE_PRIORITY_COLOR','0','Should the query list use the priority colors as the field background color','bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('USE_PRIORITY_COLOR','1','Should the query list use the priority colors as the field background color','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('EMAIL_IS_LOGIN','1','Whether to use email addresses as logins','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('STRICT_UPDATING', '0', 'Only the bug reporter, bug owner, managers, and admins can change a bug', 'bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('NEW_ACCOUNTS_DISABLED', '0', 'Only admins can create new user accounts - newaccount.php is disabled', 'bool');
@@ -482,7 +482,7 @@ INSERT INTO TBL_CONFIGURATION VALUES ('BUG_PROMOTED','2','The status to assign a
 INSERT INTO TBL_CONFIGURATION VALUES ('BUG_ASSIGNED','3','The status to assign a bug when it is assigned.','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('BUG_REOPENED','4','The status to assign a bug when it is reopened.','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('EMAIL_DISABLED', '0', 'Whether to disable all mail sent from the system', 'bool');
-INSERT INTO TBL_CONFIGURATION VALUES ('USE_SEVERITY_COLOR_LINE','1','Should the query list use the severity colors as the row background color (like SourceForge)','bool');
+INSERT INTO TBL_CONFIGURATION VALUES ('USE_SEVERITY_COLOR_LINE','0','Should the query list use the severity colors as the row background color (like SourceForge)','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('USE_PRIORITY_COLOR_LINE','0','Should the query list use the priority colors as the row background color','bool');
 
 
