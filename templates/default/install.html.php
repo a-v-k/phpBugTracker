@@ -120,8 +120,8 @@
                             <tr>
                                 <td width="150"><?php echo translate("Encrypt Passwords in DB"); ?>:</td>
                                 <td>
-                                    <input type="radio" name="encrypt_pass" value="1" /> Yes
-                                    <input type="radio" name="encrypt_pass" value="0" checked="checked" /> No
+                                    <input type="radio" name="encrypt_pass" value="1" checked="checked" /> Yes
+                                    <input type="radio" name="encrypt_pass" value="0" /> No
                                 </td>
                             </tr>
                             <tr>
