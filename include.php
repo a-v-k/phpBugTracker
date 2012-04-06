@@ -57,6 +57,16 @@ include ('inc/functions.php');
 //@ini_set("display_errors", true);
 require_once(PEAR_PATH . 'DB.php');
 //@ini_restore("display_errors");
+
+if (version_compare(PHP_VERSION, '5.2.0') < 0) {
+    echo 'Required PHP version 5.2.0+ .<br /> Your version: ' . PHP_VERSION . "\n";
+    die();
+}
+
+
+
+
+
 $dsn = array(
     'phptype' => DB_TYPE,
     'hostspec' => DB_HOST,
