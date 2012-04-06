@@ -640,8 +640,8 @@ CREATE TABLE TBL_PROJECT_seq (
 CREATE TABLE TBL_VERSION_seq (
   id int unsigned auto_increment not null primary key);
 
-create INDEX bug_id_attachment ON phpbt_attachment (bug_id);
-create INDEX bug_id_bookmark   ON phpbt_bookmark   (bug_id);
-create INDEX bug_id_comment    ON phpbt_comment    (bug_id);
+create INDEX bug_id_attachment ON TBL_ATTACHMENT (bug_id);
+create INDEX bug_id_bookmark   ON TBL_BOOKMARK (bug_id);
+create INDEX bug_id_comment    ON TBL_COMMENT (bug_id);
 
 #--

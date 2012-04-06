@@ -181,9 +181,9 @@ function upgrade() {
 					log_query("create table if not exists ".TBL_PROJECT_PERM." ( project_id int(11) NOT NULL default '0', user_id int(11) NOT NULL default '0' )");
 				}
 				if ($thisvers < 6) {
-					log_query("create INDEX bug_id_attachment ON phpbt_attachment (bug_id);");
-					log_query("create INDEX bug_id_bookmark   ON phpbt_bookmark   (bug_id);");
-					log_query("create INDEX bug_id_comment    ON phpbt_comment    (bug_id);");
+					log_query("create INDEX bug_id_attachment ON " . TBL_ATTACHMENT . " (bug_id);");
+					log_query("create INDEX bug_id_bookmark   ON " . TBL_BOOKMARK . " (bug_id);");
+					log_query("create INDEX bug_id_comment    ON " . TBL_COMMENT . " (bug_id);");
 				}
 				break;
 			case 'oci8' :
