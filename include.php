@@ -74,7 +74,7 @@ $dsn = array(
     'username' => DB_USER,
     'password' => DB_PASSWORD
 );
-if (defined('DB_PORT')) {
+if (defined('DB_PORT') && (DB_PORT != '')) {
     $dsn['port'] = DB_PORT;
 }
 

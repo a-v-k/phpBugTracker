@@ -191,6 +191,11 @@ function test_database(&$params, $testonly = false) {
         'username' => $params['db_user'],
         'password' => $params['db_pass']
     );
+
+    if (!empty($params['db_port'])) {
+        $dsn['port'] = $params['db_port'];
+    }
+
     $db = DB::Connect($dsn);
 
     // Simple error checking on returned DB object to check connection to db

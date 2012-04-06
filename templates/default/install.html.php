@@ -10,9 +10,9 @@
             <!--
             function testDB(frm) {
                 window.open('install.php?op=dbtest&db_type=' + frm.db_type.options[frm.db_type.selectedIndex].value +
-                    '&db_host=' + frm.db_host.value + '&db_database=' + frm.db_database.value +
+                    '&db_host=' + frm.db_host.value + '&db_port=' + frm.db_port.value + '&db_database=' + frm.db_database.value +
                     '&db_user=' + frm.db_user.value + '&db_pass=' + frm.db_pass.value,
-                'iwin', 'dependent=yes,width=450,height=300,scrollbars=1');
+                'iwin', 'dependent=yes,width=550,height=300,scrollbars=1');
             }
             // -->
         </script>
@@ -55,6 +55,10 @@
                             <tr>
                                 <td width="150">Host:</td>
                                 <td><input type="text" name="db_host" value="<?php echo!empty($db_host) ? $db_host : 'localhost'; ?>" /></td>
+                            </tr>
+                            <tr>
+                                <td width="150">Port:</td>
+                                <td><input type="text" name="db_port" value="<?php echo!empty($db_port) ? $db_port : ''; ?>" /></td>
                             </tr>
                             <tr>
                                 <td width="150">
