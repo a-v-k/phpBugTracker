@@ -82,10 +82,10 @@ $t = new template(array(
 
 $db_types = array(
     'mysqli' => 'MySQL >= 4.1',
-    'mysql' => 'MySQL < 4.1',
-    'oci8' => 'Oracle 8.1.x',
-    'pgsql' => 'PostgreSQL',
-    'mssql' => 'Microsoft SQL Server',
+        //'mysql' => 'MySQL < 4.1',
+        //'oci8' => 'Oracle 8.1.x',
+        //'pgsql' => 'PostgreSQL',
+        //'mssql' => 'Microsoft SQL Server',
 );
 
 @ini_set("magic_quotes_runtime", 0); // runtime quotes will kill the included sql
