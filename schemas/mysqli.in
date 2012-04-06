@@ -480,7 +480,7 @@ INSERT INTO TBL_CONFIGURATION VALUES ('SEND_MIME_EMAIL', '1', 'Whether to use MI
 INSERT INTO TBL_CONFIGURATION VALUES ('BUG_UNCONFIRMED','1','The status to assign a bug when it is first submitted.','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('BUG_PROMOTED','2','The status to assign a bug when it is promoted (if enabled).','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('BUG_ASSIGNED','3','The status to assign a bug when it is assigned.','multi');
-INSERT INTO TBL_CONFIGURATION VALUES ('BUG_REOPENED','4','The status to assign a bug when it is reopened.','multi');
+INSERT INTO TBL_CONFIGURATION VALUES ('BUG_REOPENED','6','The status to assign a bug when it is reopened.','multi');
 INSERT INTO TBL_CONFIGURATION VALUES ('EMAIL_DISABLED', '0', 'Whether to disable all mail sent from the system', 'bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('USE_SEVERITY_COLOR_LINE','0','Should the query list use the severity colors as the row background color (like SourceForge)','bool');
 INSERT INTO TBL_CONFIGURATION VALUES ('USE_PRIORITY_COLOR_LINE','0','Should the query list use the priority colors as the row background color','bool');
