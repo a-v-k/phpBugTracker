@@ -23,6 +23,9 @@
 // ------------------------------------------------------------------------
 // $Id: install.php,v 1.62 2008/10/06 03:41:20 brycen Exp $
 
+error_reporting(E_ALL);
+ini_set('display_errors', true);
+
 include_once('inc/functions.php');
 define('THEME', 'default');
 define('RAWERROR', true);
@@ -364,6 +367,12 @@ if (isset($_POST['op'])) {
     if (get_magic_quotes_gpc()) {
         $error .= "<p><hr></p><p>magic_quotes_gpc is ON!</p>" .
                 "<p>You must have magic_quotes_gpc set to OFF either in php.ini or in " .
+                ".htaccess (see <a href=\"http://php.net/magic_quotes\">http://php.net/magic_quotes</a> for more info).</p><p><hr></p>";
+    }
+
+    if (get_magic_quotes_runtime()) {
+        $error .= "<p><hr></p><p>magic_quotes_runtime is ON!</p>" .
+                "<p>You must have magic_quotes_runtime set to OFF either in php.ini or in " .
                 ".htaccess (see <a href=\"http://php.net/magic_quotes\">http://php.net/magic_quotes</a> for more info).</p><p><hr></p>";
     }
 
