@@ -74,6 +74,10 @@ $dsn = array(
     'username' => DB_USER,
     'password' => DB_PASSWORD
 );
+if (defined('DB_PORT')) {
+    $dsn['port'] = DB_PORT;
+}
+
 /*
  * * Note confusing php5 E_STRICT error, which affects JPGraph use:
  * * "Non-static method DB::isError() should not be called statically "

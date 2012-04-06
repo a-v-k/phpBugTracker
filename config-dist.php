@@ -26,6 +26,7 @@
 // Database Config
 define ('DB_TYPE', '{db_type}');  // using PEAR::DB naming (mysql, pgsql, etc.)
 define ('DB_HOST', '{db_host}'); // hostname of database server
+//define ('DB_PORT', '{db_port}'); // hostname of database server
 define ('DB_DATABASE', '{db_database}'); // database name
 define ('DB_USER', '{db_user}'); // username for database connection
 define ('DB_PASSWORD', '{db_pass}'); // password for database connection
