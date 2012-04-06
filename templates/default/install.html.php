@@ -1,5 +1,7 @@
-<?php ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Trasitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<?php ?><!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <head>
         <title>phpBugTracker Installation</title>
         <link rel="StyleSheet" href="styles/default.css" type="text/css" />
@@ -32,7 +34,7 @@
                                         <li><a href="README">README</a></li>
                                         <li><a href="INSTALL">INSTALL</a></li>
                                         <li><a href="UPGRADING">UPGRADING</a></li>
-                                        <li><a href="docs/html/index.html">Documentation</a>
+                                        <li><a href="docs/html/index.html">Documentation</a></li>
                                         <li><a href="COPYING">LICENSE</a></li>
                                     </ul>
                                 </td>
