@@ -1,142 +1,142 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Trasitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?php ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Trasitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-<head>
-	<title>phpBugTracker Installation</title>
-	<link rel="StyleSheet" href="styles/default.css" type="text/css" />
-	<meta http-equiv="Content-type" content="text/html; charset=iso-8859-1" />
-	<script language="JavaScript" type="text/javascript">
-		<!--
-		function testDB(frm) {
-			window.open('install.php?op=dbtest&db_type=' + frm.db_type.options[frm.db_type.selectedIndex].value +
-				'&db_host=' + frm.db_host.value + '&db_database=' + frm.db_database.value +
-				'&db_user=' + frm.db_user.value + '&db_pass=' + frm.db_pass.value,
-				'iwin', 'dependent=yes,width=450,height=300,scrollbars=1');
-		}
-		// -->
-	</script>
-</head>
-<body bgcolor="#ffffff" link="#006699" vlink="#006699" alink="#006699">
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr>
-		<td width="200" valign="top"><br />
-			<table border="0" cellpadding="0" cellspacing="3">
-				<tr>
-					<td>
-						<img src="logo.jpg" alt="phpBugTracker Logo" />
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<ul>
-							<li><a href="README">README</a></li>
-							<li><a href="INSTALL">INSTALL</a></li>
-							<li><a href="UPGRADING">UPGRADING</a></li>
-							<li><a href="docs/html/index.html">Documentation</a>
-							<li><a href="COPYING">LICENSE</a></li>
-						</ul>
-					</td>
-				</tr>
-			</table>
-		</td>
-		<td valign="top" align="center">
-			<div class="banner"><?php echo translate("phpBugTracker Installation"); ?></div>
-			<?php if (!empty($error))  echo "<div class=\"error\">$error</div>"; ?>
-			<table border="0" cellpadding="0" cellspacing="3">
-				<tr>
-					<th colspan="2"><?php echo translate("Database Options"); ?></th>
-				</tr>
-				<tr>
-					<td width="150">Type:</td>
-					<td><select name="db_type"><?php db_type_options(isset($db_type) ? $db_type : null) ?></select></td>
-				</tr>
-				<tr>
-					<td width="150">Host:</td>
-					<td><input type="text" name="db_host" value="<?php echo !empty($db_host) ? $db_host : 'localhost'; ?>" /></td>
-				</tr>
-				<tr>
-					<td width="150">
-						<?php echo translate("Database Name"); ?>:
-					</td>
-					<td valign="top"><input type="text" name="db_database" value="<?php echo !empty($db_database) ? $db_database : 'bug_tracker'; ?>" /></td>
-				</tr>
-				<tr>
-					<td colspan="2" align="center"><b>(<?php echo translate("This database must already exist"); ?>)</b></td>
-				</tr>
-				<tr>
-					<td width="150"><?php echo translate("User"); ?>:</td>
-					<td><input type="text" name="db_user" value="<?php echo !empty($db_user) ? $db_user : 'root'; ?>" /></td>
-				</tr>
-				<tr>
-					<td width="150"><?php echo translate("Password"); ?>:</td>
-					<td><input type="password" name="db_pass" value="<?php echo isset($db_pass) ? $db_pass : ''; ?>" /></td>
-				</tr>
-				<tr>
-					<td width="150"><?php echo translate("Table Prefix"); ?>:</td>
-					<td><input type="text" name="tbl_prefix" value="<?php echo !empty($tbl_prefix) ? $tbl_prefix : 'phpbt_'; ?>" /></td>
-				</tr>
-				<tr>
-					<td colspan="2" align="center">
-						<input type="button" value="<?php echo translate("Test Database Connection"); ?>" onclick="testDB(this.form)" />
-					</td>
-				</tr>
-				<tr>
-					<th colspan="2"><?php echo translate("Configuration"); ?></th>
-				</tr>
-				<tr>
-					<td width="150"><?php echo translate("Base URL"); ?>:</td>
-					<td><?php echo $OPTION_INSTALL_URL ?></td>
-				</tr>
-				<tr>
-					<td width="150">
-						<?php echo translate("phpBT Email"); ?>:
-						<br />
-						(<?php echo translate("The email address used for sending bug updates, etc."); ?>)
-					</td>
-					<td valign="top"><input type="text" name="phpbt_email" value="<?php echo !empty($phpbt_email) ? $phpbt_email : $default_email; ?>" /></td>
-				</tr>
-				<tr>
-					<td width="150">
-						<?php echo translate("Admin Login"); ?>:
-						<br />
-						(<?php echo translate("Must be a valid email address"); ?>)
-					</td>
-					<td valign="top"><input type="text" name="admin_login" value="<?php echo isset($admin_login) ? $admin_login : ''; ?>" /></td>
-				</tr>
-				<tr>
-					<td width="150"><?php echo translate("Admin Password"); ?>:</td>
-					<td><input type="password" name="admin_pass" value="" /></td>
-				</tr>
-				<tr>
-					<td width="150"><?php echo translate("Confirm Password"); ?>:</td>
-					<td><input type="password" name="admin_pass2" value="" /></td>
-				</tr>
-				<tr>
-					<td width="150"><?php echo translate("Encrypt Passwords in DB"); ?>:</td>
-					<td>
-						<input type="radio" name="encrypt_pass" value="1" /> Yes
-						<input type="radio" name="encrypt_pass" value="0" checked="checked" /> No
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2" align="center">
-						<hr size="1" width="220" />
-						<?php if (@is_writeable('config.php')) { ?>
-							<?php echo translate('When you submit the form, the database tables will be created and config.php will be saved to disk.  You will need to login to access admin functions.'); ?>
-							<input type="hidden" name="op" value="save_config_file" />
-						<?php } else { ?>
-							<?php echo translate('Since config.php is not writeable by this script, when you submit this form you will be prompted to save config.php.  Copy 							this file to the location of the bug tracker, and then you will 							be able to <a href="index.php">login to the bug tracker</a>.  From 							the home page you can go to the Admin Tools and customize your 							installation via the Configuration link.  Once you have 							completed the configuration, you will need to login to access admin functions.'); ?>
-							<input type="hidden" name="op" value="dump_config_file" />
-						<?php } ?>
-						<br />
-						<br />
-						<input type="submit" value="<?php echo translate("Save Options"); ?>" />
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
-</form>
-</body>
+    <head>
+        <title>phpBugTracker Installation</title>
+        <link rel="StyleSheet" href="styles/default.css" type="text/css" />
+        <meta http-equiv="Content-type" content="text/html; charset=iso-8859-1" />
+        <script language="JavaScript" type="text/javascript">
+            <!--
+            function testDB(frm) {
+                window.open('install.php?op=dbtest&db_type=' + frm.db_type.options[frm.db_type.selectedIndex].value +
+                    '&db_host=' + frm.db_host.value + '&db_database=' + frm.db_database.value +
+                    '&db_user=' + frm.db_user.value + '&db_pass=' + frm.db_pass.value,
+                'iwin', 'dependent=yes,width=450,height=300,scrollbars=1');
+            }
+            // -->
+        </script>
+    </head>
+    <body bgcolor="#ffffff" link="#006699" vlink="#006699" alink="#006699">
+        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td width="200" valign="top"><br />
+                        <table border="0" cellpadding="0" cellspacing="3">
+                            <tr>
+                                <td>
+                                    <img src="logo.jpg" alt="phpBugTracker Logo" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <ul>
+                                        <li><a href="README">README</a></li>
+                                        <li><a href="INSTALL">INSTALL</a></li>
+                                        <li><a href="UPGRADING">UPGRADING</a></li>
+                                        <li><a href="docs/html/index.html">Documentation</a>
+                                        <li><a href="COPYING">LICENSE</a></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td valign="top" align="center">
+                        <div class="banner"><?php echo translate("phpBugTracker Installation"); ?></div>
+                        <?php if (!empty($error)) echo "<div class=\"error\">$error</div>"; ?>
+                        <table border="0" cellpadding="0" cellspacing="3">
+                            <tr>
+                                <th colspan="2"><?php echo translate("Database Options"); ?></th>
+                            </tr>
+                            <tr>
+                                <td width="150">Type:</td>
+                                <td><select name="db_type"><?php db_type_options(isset($db_type) ? $db_type : null) ?></select></td>
+                            </tr>
+                            <tr>
+                                <td width="150">Host:</td>
+                                <td><input type="text" name="db_host" value="<?php echo!empty($db_host) ? $db_host : 'localhost'; ?>" /></td>
+                            </tr>
+                            <tr>
+                                <td width="150">
+                                    <?php echo translate("Database Name"); ?>:
+                                </td>
+                                <td valign="top"><input type="text" name="db_database" value="<?php echo!empty($db_database) ? $db_database : 'bug_tracker'; ?>" /></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" align="center"><b>(<?php echo translate("This database must already exist"); ?>)</b></td>
+                            </tr>
+                            <tr>
+                                <td width="150"><?php echo translate("User"); ?>:</td>
+                                <td><input type="text" name="db_user" value="<?php echo!empty($db_user) ? $db_user : 'root'; ?>" /></td>
+                            </tr>
+                            <tr>
+                                <td width="150"><?php echo translate("Password"); ?>:</td>
+                                <td><input type="password" name="db_pass" value="<?php echo isset($db_pass) ? $db_pass : ''; ?>" /></td>
+                            </tr>
+                            <tr>
+                                <td width="150"><?php echo translate("Table Prefix"); ?>:</td>
+                                <td><input type="text" name="tbl_prefix" value="<?php echo!empty($tbl_prefix) ? $tbl_prefix : 'phpbt_'; ?>" /></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" align="center">
+                                    <input type="button" value="<?php echo translate("Test Database Connection"); ?>" onclick="testDB(this.form)" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th colspan="2"><?php echo translate("Configuration"); ?></th>
+                            </tr>
+                            <tr>
+                                <td width="150"><?php echo translate("Base URL"); ?>:</td>
+                                <td><?php echo $OPTION_INSTALL_URL ?></td>
+                            </tr>
+                            <tr>
+                                <td width="150">
+                                    <?php echo translate("phpBT Email"); ?>:
+                                    <br />
+                                    (<?php echo translate("The email address used for sending bug updates, etc."); ?>)
+                                </td>
+                                <td valign="top"><input type="text" name="phpbt_email" value="<?php echo!empty($phpbt_email) ? $phpbt_email : $default_email; ?>" /></td>
+                            </tr>
+                            <tr>
+                                <td width="150">
+                                    <?php echo translate("Admin Login"); ?>:
+                                    <br />
+                                    (<?php echo translate("Must be a valid email address"); ?>)
+                                </td>
+                                <td valign="top"><input type="text" name="admin_login" value="<?php echo isset($admin_login) ? $admin_login : ''; ?>" /></td>
+                            </tr>
+                            <tr>
+                                <td width="150"><?php echo translate("Admin Password"); ?>:</td>
+                                <td><input type="password" name="admin_pass" value="" /></td>
+                            </tr>
+                            <tr>
+                                <td width="150"><?php echo translate("Confirm Password"); ?>:</td>
+                                <td><input type="password" name="admin_pass2" value="" /></td>
+                            </tr>
+                            <tr>
+                                <td width="150"><?php echo translate("Encrypt Passwords in DB"); ?>:</td>
+                                <td>
+                                    <input type="radio" name="encrypt_pass" value="1" /> Yes
+                                    <input type="radio" name="encrypt_pass" value="0" checked="checked" /> No
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" align="center">
+                                    <hr size="1" width="220" />
+                                    <?php if (@is_writeable('config.php')) { ?>
+                                        <?php echo translate('When you submit the form, the database tables will be created and config.php will be saved to disk.  You will need to login to access admin functions.'); ?>
+                                        <input type="hidden" name="op" value="save_config_file" />
+                                    <?php } else { ?>
+                                        <?php echo translate('Since config.php is not writeable by this script, when you submit this form you will be prompted to save config.php.  Copy 							this file to the location of the bug tracker, and then you will 							be able to <a href="index.php">login to the bug tracker</a>.  From 							the home page you can go to the Admin Tools and customize your 							installation via the Configuration link.  Once you have 							completed the configuration, you will need to login to access admin functions.'); ?>
+                                        <input type="hidden" name="op" value="dump_config_file" />
+                                    <?php } ?>
+                                    <br />
+                                    <br />
+                                    <input type="submit" value="<?php echo translate("Save Options"); ?>" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
 </html>
