@@ -278,7 +278,7 @@ if (isset($_POST['dologin'])) {
             if (defined('EMAIL_DISABLED') and EMAIL_DISABLED) {
                 $t->assign('loginerror', '<div class="result">' . translate("Your password has not been mailed to you because all system email has been disabled.") . '</div>');
             } else {
-                qp_mail($email, translate("phpBugTracker Login"), sprintf(translate("Your phpBugTracker password is %s"), $password), ADMIN_EMAIL);
+                mass_mail4($email, translate("phpBugTracker Login"), sprintf(translate("Your phpBugTracker password is %s"), $password), ADMIN_EMAIL);
                 $t->assign('loginerror', '<div class="result">' . translate("Your password has been emailed to you") . '</div>');
                 $emailsuccess = true;
             }
