@@ -55,6 +55,13 @@ include ('inc/functions.php');
 
 // PEAR::DB
 //@ini_set("display_errors", true);
+if (defined('PEAR_PATH') && (PEAR_PATH != '')) {
+    //echo get_include_path();
+    //echo set_include_path(get_include_path() . ';' . PEAR_PATH);
+    set_include_path(get_include_path() . ';' . PEAR_PATH);
+    //echo get_include_path();
+}
+
 require_once(PEAR_PATH . 'DB.php');
 //@ini_restore("display_errors");
 
@@ -77,6 +84,11 @@ $dsn = array(
 if (defined('DB_PORT') && (DB_PORT != '')) {
     $dsn['port'] = DB_PORT;
 }
+$options = array();
+if (defined('DB_DEBUG') && (DB_DEBUG != '')) {
+    $dsn['debug'] = DB_DEBUG;
+    $options['debug'] = DB_DEBUG;
+}
 
 /*
  * * Note confusing php5 E_STRICT error, which affects JPGraph use:
@@ -84,7 +96,8 @@ if (defined('DB_PORT') && (DB_PORT != '')) {
  * * It's unclear what solution works for both php4 and php5.
  * * the documentation recommends PEAR::isError($db) which is also non-static
  */
-$db = DB::Connect($dsn);
+
+$db = DB::Connect($dsn, $options);
 if (DB::isError($db)) {
     die($db->message . '<br>' . $db->userinfo);
 }
