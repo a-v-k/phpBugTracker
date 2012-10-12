@@ -72,7 +72,7 @@ define ('TBL_PRIORITY',        TBL_PREFIX.'priority');
 
 // Constants
 define ('ONEDAY', 86400);
-define('PEAR_PATH', ''); // Blank, or path to Pear::DB library directory containing DB.php (See http://pear.php.net/)
+define('PEAR_PATH', 'inc/pear/'); // Blank, or path to Pear::DB library directory containing DB.php (See http://pear.php.net/)
 require_once (dirname(__FILE__).'/inc/auth.php');
 
 // Mail parameters
@@ -85,4 +85,4 @@ define('SMTP_AUTH_USER', "");
 define('SMTP_AUTH_PASS', "");
 define('RETURN_PATH', null);
 
-?>
+date_default_timezone_set('Europe/Moscow');

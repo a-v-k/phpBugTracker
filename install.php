@@ -175,8 +175,8 @@ function grab_config_file() {
 
 function test_database(&$params, $testonly = false) {
     // PEAR::DB
-    define('PEAR_PATH', ''); // Set this to '/some/path/' to not use system-wide PEAR
-    // define('PEAR_PATH', 'inc/pear/'); // use a locally installed Pear (phpBT v0.9.1)
+    //define('PEAR_PATH', ''); // Set this to '/some/path/' to not use system-wide PEAR
+    define('PEAR_PATH', 'inc/pear/'); // use a locally installed Pear
     if (!@include_once(PEAR_PATH . 'DB.php')) {
         $error_message = translate("Failed loading Pear:DB");
         $error_info = translate("Please check your Pear installation and the defined PEAR_PATH in install.php");
