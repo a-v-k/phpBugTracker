@@ -782,9 +782,11 @@ function do_form($bugid = 0) {
 
     $error = '';
     // Validation
-    if (!$_POST['title'] = htmlspecialchars(trim($_POST['title']))) {
+    $_POST['title'] = trim($_POST['title']);
+    $_POST['description'] = trim($_POST['description']);
+    if ($_POST['title'] == '') {
         $error = translate("Please enter a summary");
-    } elseif (!$_POST['description'] = htmlspecialchars(trim($_POST['description']))) {
+    } elseif ($_POST['description'] == '') {
         $error = translate("Please enter a description");
     }
     if ($error) {
