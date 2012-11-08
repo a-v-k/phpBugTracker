@@ -470,7 +470,13 @@ function update_bug($bugid = 0) {
     // Should we allow changes to be made to this bug by this user?
     if (STRICT_UPDATING and !($u == $buginfo['assigned_to'] or
             $u == $buginfo['created_by'] or $perm->have_perm_proj($buginfo['project_id']))) {
-        return (array('status' => translate("You can not change this bug")));
+        if ($perm->have_perm('CommentBug', $buginfo['project_id']) && !empty($comments)) {
+            $db->query("insert into " . TBL_COMMENT . " (comment_id, bug_id, comment_text, created_by, created_date) values (" . $db->nextId(TBL_COMMENT) . ", $bugid, " . $db->quote($comments) . ", $u, $now)");
+            //do_changedfields($u, $buginfo, $changedfields, $comments);
+            return;
+        } else {
+            return (array('status' => translate("You can not change this bug")));
+        }
     }
 
     // Check for more than one person modifying the bug at the same time
