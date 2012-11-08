@@ -33,7 +33,7 @@
 
                     if ((strpos($queries[$i]['saved_query_string'], '&') > 0) &&
                             (strpos($queries[$i]['saved_query_string'], '&amp;') == false)) {
-                        $queries[$i]['saved_query_string'] = qry_amp($queries[$i]['saved_query_string']);
+                        $queries[$i]['saved_query_string'] = htmlspecialchars($queries[$i]['saved_query_string']);
                     }
 
                     echo '<a href="query.php?' . $queries[$i]['saved_query_string'] . '">' . $queries[$i]['saved_query_name'] . '</a><br>';

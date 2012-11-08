@@ -1,3 +1,12 @@
+<?php
+$order = empty($order) ? null : $order;
+$sort = empty($sort) ? null : $sort;
+
+extract(array(
+    'status' => null,
+    'project' => null,
+        ), EXTR_SKIP);
+?>
 <script type="text/JavaScript">
     <!--
     versions = new Array();
@@ -89,7 +98,7 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
             <td valign="top"><b><?php echo translate("Sort by"); ?>:</b></td>
             <td valign="top">
                 <select name="order">
-                    <option <?php if (!$order || $order == 'priority') echo "selected"; ?> value="priority_name">
+                    <option <?php if (empty($order) || $order == 'priority') echo "selected"; ?> value="priority_name">
                         <?php echo translate("Priority"); ?>
                     </option>
                     <option <?php if ($order == 'severity.sort_order') echo "selected"; ?> value="severity_name">
@@ -109,7 +118,7 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
                     </option>
                 </select>
                 <select name="sort">
-                    <option <?php if (!$sort || $sort == 'asc') echo "selected"; ?> value="asc"><?php echo translate("Ascending"); ?></option>
+                    <option <?php if (empty($sort) || $sort == 'asc') echo "selected"; ?> value="asc"><?php echo translate("Ascending"); ?></option>
                     <option <?php if ($sort == 'desc') echo "selected"; ?> value="desc"><?php echo translate("Descending"); ?></option>
                 </select>
             </td>
@@ -140,14 +149,16 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
     <br>
     <?php
     for ($i = 0; $i < $querycount; $i++) {
-        echo '<a href="' . $_SERVER['PHP_SELF'] . '?' .
-        $queries[$i]['saved_query_string'] . '">' .
-        $queries[$i]['saved_query_name'] . '</a> (<a href="' .
-        $_SERVER['PHP_SELF'] . '?op=delquery&queryid=' .
-        $queries[$i]['saved_query_id'] . '&form=simple" onClick="return confirm(\'' . translate("Are you sure you want to delete this saved query?") . '\');">' . translate("Delete") . '</a>)<br>';
+        echo '<a href="'
+        .  htmlspecialchars($_SERVER['PHP_SELF'] . '?'
+                . $queries[$i]['saved_query_string'])
+        . '">' . $queries[$i]['saved_query_name'] . '</a> (<a href="'
+        .  htmlspecialchars($_SERVER['PHP_SELF'] . '?op=delquery&queryid='
+                . $queries[$i]['saved_query_id'] . '&form=simple')
+        . '" onClick="return confirm(\'' . translate("Are you sure you want to delete this saved query?") . '\');">' . translate("Delete") . '</a>)<br>';
     }
     ?>
 
 <?php } ?>
 <br>
-<a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=query&form=advanced"><?php echo translate("Go to the advanced query page"); ?></a>
+<a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=query&amp;form=advanced"><?php echo translate("Go to the advanced query page"); ?></a>

@@ -401,8 +401,8 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
     }
     // Save the query if requested
     if (!empty($savedqueryname)) {
-        $savedquerystring = preg_replace('/&savedqueryname=.*(&?)/', '\1', $_SERVER['QUERY_STRING']);
-        $savedquerystring .= '&amp;op=doquery';
+        $savedquerystring = htmlspecialchars_decode(preg_replace('/&savedqueryname=.*(&?)/', '\1', $_SERVER['QUERY_STRING']));
+        $savedquerystring .= '&op=doquery';
         if ($savedqueryoverride) { // Updating an existing query
             $db->query("update " . TBL_SAVED_QUERY . " set saved_query_string = " . $db->quote(stripslashes($savedquerystring)) . " where user_id = $u and saved_query_name = " . $db->quote(stripslashes($savedqueryname)));
         } else { // Adding a new saved query

@@ -1,3 +1,33 @@
+<?php
+$emailsearch1 = empty($emailsearch1) ? null : $emailsearch1;
+$emailtype1 = empty($emailtype1) ? null : $emailtype1;
+$emailfield1 = empty($emailfield1) ? null : $emailtype1;
+$email1 = empty($email1) ? null : $email1;
+$title = empty($title) ? null : $title;
+$title_type = empty($title_type) ? null : $title_type;
+$description = empty($description) ? null : $description;
+$description_type = empty($description_type) ? null : $description_type;
+$url = empty($url) ? null : $url;
+$url_type = empty($url_type) ? null : $url_type;
+$start_date = empty($start_date) ? null : $start_date;
+$end_date = empty($end_date) ? null : $end_date;
+$closed_start_date = empty($closed_start_date) ? null : $closed_start_date;
+$closed_end_date = empty($closed_end_date) ? null : $closed_end_date;
+
+$order = empty($order) ? null : $order;
+$sort = empty($sort) ? null : $sort;
+
+extract(array(
+    'status' => null,
+    'resolution' => null,
+    'os' => null,
+    'priority' => null,
+    'severity' => null,
+    'database' => null,
+    'site' => null,
+    'project' => null,
+        ), EXTR_SKIP);
+?>
 <script type="text/JavaScript">
     <!--
     versions = new Array();
@@ -275,11 +305,13 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
     <br>
     <?php
     for ($i = 0; $i < $querycount; $i++) {
-        echo '<a href="' . $_SERVER['PHP_SELF'] . '?' .
-        $queries[$i]['saved_query_string'] . '">' .
-        $queries[$i]['saved_query_name'] . '</a> (<a href="' .
-        $_SERVER['PHP_SELF'] . '?op=delquery&queryid=' .
-        $queries[$i]['saved_query_id'] . '&form=simple" onClick="return confirm(\'' . translate("Are you sure you want to delete this saved query?") . '\');">' . translate("Delete") . '</a>)<br>';
+        echo '<a href="'
+        . htmlspecialchars($_SERVER['PHP_SELF'] . '?' . $queries[$i]['saved_query_string']) . '">'
+        . $queries[$i]['saved_query_name']
+        . '</a> (<a href="'
+        . htmlspecialchars($_SERVER['PHP_SELF']
+                . '?op=delquery&queryid=' . $queries[$i]['saved_query_id'] . '&form=simple')
+        . '" onClick="return confirm(\'' . translate("Are you sure you want to delete this saved query?") . '\');">' . translate("Delete") . '</a>)<br>';
     }
     ?>
 
