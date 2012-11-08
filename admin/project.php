@@ -331,7 +331,8 @@ function list_projects() {
         $orderSort = ' active desc, project_name asc, created_date asc  ';
     }
 
-    $t->assign('projects', $db->getAll($db->modifyLimitQuery("select * from " . TBL_PROJECT . " order by $orderSort", $llimit, $selrange)));
+    //$t->assign('projects', $db->getAll($db->modifyLimitQuery("select * from " . TBL_PROJECT . " order by $orderSort", $llimit, $selrange)));
+    $t->assign('projects', $db->getAll("select * from " . TBL_PROJECT . " order by $orderSort", $llimit, $selrange));
 
     $headers = array(
         'projectid' => 'project_id',

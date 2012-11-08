@@ -14,22 +14,24 @@
                     <th class="<?php echo $headers['active']['class']; ?>"><a href="<?php echo $headers['active']['url']; ?>"><?php echo translate("Active"); ?></a></th>
                 </tr>
                 <?php for ($i = 0, $count = count($projects); $i < $count; $i++) { ?>
-                    <tr>
-                        <td>
-                            <?php if (isset($perm) and ($perm->have_perm('Admin') or $perm->have_perm_proj($projects[$i]['project_id']))) { ?>
-                                <a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>?op=edit&id=<?php echo $projects[$i]['project_id']; ?>"><?php echo stripslashes($projects[$i]['project_name']); ?></a>
-                                <?php
-                            } else {
-                                echo stripslashes($projects[$i]['project_name']);
-                            }
-                            ?>
-                        </td>
-                        <td align="center"><?php echo date(DATE_FORMAT, $projects[$i]['created_date']); ?></td>
-                        <td align="center"><?php echo $projects[$i]['active'] ? translate("Yes") : translate("No"); ?></td>
-                    </tr>
+                    <?php if (isset($perm) and ($perm->have_perm('Admin') or $perm->have_perm_proj($projects[$i]['project_id']))) { ?>
+                        <tr>
+                            <td>
+                                <?php if (isset($perm) and ($perm->have_perm('Admin') or $perm->have_perm_proj($projects[$i]['project_id']))) { ?>
+                                    <a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>?op=edit&id=<?php echo $projects[$i]['project_id']; ?>"><?php echo stripslashes($projects[$i]['project_name']); ?></a>
+                                    <?php
+                                } else {
+                                    echo stripslashes($projects[$i]['project_name']);
+                                }
+                                ?>
+                            </td>
+                            <td align="center"><?php echo date(DATE_FORMAT, $projects[$i]['created_date']); ?></td>
+                            <td align="center"><?php echo $projects[$i]['active'] ? translate("Yes") : translate("No"); ?></td>
+                        </tr>
+                    <?php } ?>
                 <?php } ?>
             </table>
-            <?php include('pagination.html'); ?>
+            <?php //include('pagination.html'); ?>
         </td>
     </tr>
 </table>
