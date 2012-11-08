@@ -83,9 +83,9 @@ function show_query($edit = false) {
     // Show the advanced query form
     if (!empty($_GET['form']) and $_GET['form'] == 'advanced' or
             !empty($form) and $form == 'advanced') {
-        $t->render('queryform.html', translate("Query Bugs"));
+        $t->render('queryform.html.php', translate("Query Bugs"));
     } else { // or show the simple one
-        $t->render('queryform-simple.html', translate("Query Bugs"));
+        $t->render('queryform-simple.html.php', translate("Query Bugs"));
     }
 }
 
