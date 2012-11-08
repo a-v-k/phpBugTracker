@@ -285,7 +285,7 @@ function format_bug_col($colvalue, $coltype, $bugid, $pos, $dataRow = null) {
             break;
         case 'bug_id' :
         case 'title' :
-            return "<a href=\"bug.php?op=show&amp;bugid=$bugid&amp;pos=$pos\">$colvalue</a>";
+            return "<a href=\"bug.php?op=show&amp;bugid=$bugid&amp;pos=$pos\">" . htmlspecialchars($colvalue) . "</a>";
             break;
         case 'reporter' :
         case 'owner' :
