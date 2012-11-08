@@ -35,7 +35,7 @@ function grab_data($restricted_projects) {
     }
 
     // Grab the data
-    $rs = $db->query("select status_id, count(status_id) as count from " . TBL_BUG . " where project_id not in ($restricted_projects) group by status_id");
+    $rs = $db->query("select status_id, count(status_id) as count from " . TBL_BUG . " b, " . TBL_PROJECT . " p where p.project_id not in ($restricted_projects) and b.project_id = p.project_id and p.active = 1 group by status_id");
     while ($rs->fetchInto($row)) {
         $stats[$row['status_id']]['count'] = $row['count'];
     }
@@ -106,7 +106,7 @@ if (true) {
     $fastlinks1 = "";
     $fastlinks2 = "";
     if (!empty($viewable_projects)) {
-        $rs = $db->query("select project_id, project_name from " . TBL_PROJECT . " where project_id in ($viewable_projects) ");
+        $rs = $db->query("select project_id, project_name from " . TBL_PROJECT . " where project_id in ($viewable_projects) and active = 1 ");
         while (list($iProject_id, $sProject_name) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
             $fastlinks1 .= "<a href=\"bug.php?op=add&amp;project=$iProject_id\">$sProject_name</a>&nbsp;&nbsp;|&nbsp;&nbsp;";
             $fastlinks2 .= "<a href=\"query.php?op=doquery&amp;projects=$iProject_id&amp;open=1&amp;order=priority_name&amp;sort=desc\">$sProject_name</a>&nbsp;&nbsp;|&nbsp;&nbsp;";

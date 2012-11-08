@@ -316,30 +316,39 @@ $QUERY = array(
 			"sum(CASE WHEN s.status_id in (".OPEN_BUG_STATUSES.") THEN 1 ELSE 0 END ), ".
 			"sum(CASE WHEN s.status_id not in (".OPEN_BUG_STATUSES.") THEN 1 ELSE 0 END ) ".
 		"from ".
+			TBL_PROJECT.' p, '.
 			TBL_BUG." b ".
 			"left join ".TBL_STATUS." s using(status_id), ".
 			TBL_BOOKMARK." w ".
 		"where ".
 			"w.user_id=%s ".
-			"AND w.bug_id = b.bug_id",
+			"AND w.bug_id = b.bug_id ".
+			'and p.project_id = b.project_id '.
+			'and p.active = 1 ',
 	'include-template-owner' =>
 		"SELECT ".
 			"sum(CASE WHEN s.status_id in (".OPEN_BUG_STATUSES.") THEN 1 ELSE 0 END ), ".
 			"sum(CASE WHEN s.status_id not in (".OPEN_BUG_STATUSES.") THEN 1 ELSE 0 END ) ".
 		"from ".
+			TBL_PROJECT.' p, '.
 			TBL_BUG." b ".
 			"left join ".TBL_STATUS." s using(status_id) ".
 		"where ".
-			"assigned_to = %s",
+			'p.project_id = b.project_id '.
+			'and p.active = 1 '.
+			"and assigned_to = %s",
 	'include-template-reporter' =>
 		"SELECT ".
 			"sum(CASE WHEN s.status_id in (".OPEN_BUG_STATUSES.") THEN 1 ELSE 0 END ), ".
 			"sum(CASE WHEN s.status_id not in (".OPEN_BUG_STATUSES.") THEN 1 ELSE 0 END ) ".
 		"from ".
+			TBL_PROJECT.' p, '.
 			TBL_BUG." b ".
 			"left join ".TBL_STATUS." s using(status_id) ".
 		"where ".
-			"created_by = %s",
+			'p.project_id = b.project_id '.
+			'and p.active = 1 '.
+			"and b.created_by = %s",
 	'index-projsummary-1' =>
 		'select project_name as "Project", '.
 		'sum(case when resolution_id = 0 then 1 else 0 end) as "Open"',
@@ -357,6 +366,7 @@ $QUERY = array(
 		'from '.TBL_BUG.' b '.
 		'left join '.TBL_PROJECT.' p using (project_id) '.
 		'where b.project_id not in (%s) '.
+                'and p.active = 1 '.
 		'group by b.project_id, project_name '.
 		'order by project_name',
 	'join-where' =>
@@ -391,6 +401,7 @@ $QUERY = array(
 			'and b.site_id = site.site_id '.
 			'and b.version_id = version.version_id '.
 			'and b.component_id = component.component_id '.
+			'and project.active = 1 '.
 			'and b.project_id = project.project_id %s '.
 		"\ngroup by ".
 			'b.bug_id '.
@@ -401,12 +412,13 @@ $QUERY = array(
 		'select '.
 			'count(*) '.
 		'from '.
+			TBL_PROJECT.' p, '.
 			TBL_BUG.' b '.
 			'left join '.TBL_AUTH_USER.' owner on b.assigned_to = owner.user_id '.
 			'left join '.TBL_AUTH_USER.' reporter on b.created_by = reporter.user_id '.
 			'left join '.TBL_BOOKMARK.' bookmark on b.bug_id = bookmark.bug_id ',
 	'query-list-bugs-count-join' =>
-		'where ',
+		'where b.project_id = p.project_id and p.active = 1 and ',
 	'report-resbyeng-1' =>
 		'select email as "Assigned To", '.
 		'sum(case when resolution_id = 0 then 1 else 0 end) as "Open"',
@@ -425,4 +437,4 @@ $QUERY = array(
 		'group by assigned_to, u.email',
 	);
 
-?>
+
