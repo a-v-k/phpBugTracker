@@ -345,7 +345,7 @@ function list_projects() {
 
     sorting_headers($me, $headers, $order, $sort);
 
-    $t->render('projectlist.html', translate("Project List"));
+    $t->render('projectlist.html.php', translate("Project List"));
 }
 
 // $perm->check('Admin');
