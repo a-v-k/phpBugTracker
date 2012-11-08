@@ -7,8 +7,10 @@ if (!isset($component_error)) $component_error = '';
 if (!isset($component_desc))  $component_desc = '';
 if (!isset($component_name))  $component_name = '';
 if (!isset($owner))           $owner = '';
+if (!isset($version_sortorder)) $version_sortorder = '';
+if (!isset($component_sortorder)) $component_sortorder = '';
 ?>
-<script language="JavaScript">
+<script type="text/javascript" language="JavaScript">
     <!--
     var nameString = '<?php echo translate("Please enter a name"); ?>';
     var descString = '<?php echo translate("Please enter a description"); ?>';
@@ -140,7 +142,7 @@ if (!isset($owner))           $owner = '';
                         <td valign="top">
                             <?php echo translate("Description"); ?>:
                             <br>
-                            <textarea name="component_desc" cols="30"><?php echo stripslashes(htmlspecialchars($component_desc)); ?></textarea>
+                            <textarea name="component_desc" cols="30" rows="3"><?php echo stripslashes(htmlspecialchars($component_desc)); ?></textarea>
                         </td>
                     </tr>
                     <tr>
