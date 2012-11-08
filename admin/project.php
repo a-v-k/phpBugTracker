@@ -161,9 +161,9 @@ function save_project($projectid = 0) {
 
     $error = '';
     // Validation
-    if (!$_POST['project_name'] = htmlspecialchars(trim($_POST['project_name']))) {
+    if (!$_POST['project_name'] = trim($_POST['project_name'])) {
         $error = translate("Please enter a name");
-    } elseif (!$_POST['project_desc'] = htmlspecialchars(trim($_POST['project_desc']))) {
+    } elseif (!$_POST['project_desc'] = trim($_POST['project_desc'])) {
         $error = translate("Please enter a description");
     } elseif (isset($_POST['usergroup']) and is_array($_POST['usergroup']) and
             in_array('all', $_POST['usergroup']) and count($_POST['usergroup']) > 1) {
@@ -177,7 +177,7 @@ function save_project($projectid = 0) {
     $typeOP = 'update';
     if (!$projectid) {
         $typeOP = 'add';
-        if (!$_POST['version_name'] = htmlspecialchars(trim($_POST['version_name']))) {
+        if (!$_POST['version_name'] = trim($_POST['version_name'])) {
             $error['version_error'] = translate("Please enter a version");
         } elseif (!$_POST['component_name'] = trim($_POST['component_name'])) {
             $error['component_error'] = translate("Please enter a name");
@@ -205,8 +205,8 @@ function save_project($projectid = 0) {
         }
         $projectid = $db->nextId(TBL_PROJECT);
         $db->query('insert into ' . TBL_PROJECT . " (project_id, project_name, project_desc, active, created_by, created_date) values ($projectid , " . $db->quote(stripslashes($project_name)) . ", " . $db->quote(stripslashes($project_desc)) . ", $active, $u, $now)");
-        $db->query('insert into ' . TBL_VERSION . " (version_id, project_id, version_name, active, sort_order, created_by, created_date) values (" . $db->nextId(TBL_VERSION) . ", $projectid, " . $db->quote(stripslashes($version_name)) . ", 1, $version_sortorder, $u, $now)");
-        $db->query('insert into ' . TBL_COMPONENT . " (component_id, project_id, component_name, component_desc, owner, active, sort_order, created_by, created_date, last_modified_by, last_modified_date) values (" . $db->nextId(TBL_COMPONENT) . ", $projectid, " . $db->quote(stripslashes($component_name)) . ", " . $db->quote(stripslashes($component_desc)) . ", $owner, 1, $component_sortorder, $u, $now, $u, $now)");
+        $db->query('insert into ' . TBL_VERSION . " (version_id, project_id, version_name, active, sort_order, created_by, created_date) values (" . $db->nextId(TBL_VERSION) . ", $projectid, " . $db->quote(stripslashes($version_name)) . ", 1, " . (int) $version_sortorder . ", $u, $now)");
+        $db->query('insert into ' . TBL_COMPONENT . " (component_id, project_id, component_name, component_desc, owner, active, sort_order, created_by, created_date, last_modified_by, last_modified_date) values (" . $db->nextId(TBL_COMPONENT) . ", $projectid, " . $db->quote(stripslashes($component_name)) . ", " . $db->quote(stripslashes($component_desc)) . ", " . (int) $owner . ", 1, " . (int) $component_sortorder . ", $u, $now, $u, $now)");
     } else {
         $db->query('update ' . TBL_PROJECT . " set project_name = " . $db->quote(stripslashes($project_name)) . ", project_desc = " . $db->quote(stripslashes($project_desc)) . ", active = $active where project_id = $projectid");
     }
