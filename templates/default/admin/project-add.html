@@ -1,160 +1,160 @@
 <?php
-	if (!isset($project_name))    $project_name = '';
-	if (!isset($project_desc))    $project_desc = '';
-	if (!isset($version_error))   $version_error = '';
-	if (!isset($version_name))    $version_name = '';
-	if (!isset($component_error)) $component_error = '';
-	if (!isset($component_desc))  $component_desc = '';
-	if (!isset($component_name))  $component_name = '';
-	if (!isset($owner))           $owner = '';
+if (!isset($project_name))    $project_name = '';
+if (!isset($project_desc))    $project_desc = '';
+if (!isset($version_error))   $version_error = '';
+if (!isset($version_name))    $version_name = '';
+if (!isset($component_error)) $component_error = '';
+if (!isset($component_desc))  $component_desc = '';
+if (!isset($component_name))  $component_name = '';
+if (!isset($owner))           $owner = '';
 ?>
 <script language="JavaScript">
-<!--
-	var nameString = '<?php echo translate("Please enter a name"); ?>';
-	var descString = '<?php echo translate("Please enter a description"); ?>';
-	var versionString = '<?php echo translate("Please enter a version"); ?>';
+    <!--
+    var nameString = '<?php echo translate("Please enter a name"); ?>';
+    var descString = '<?php echo translate("Please enter a description"); ?>';
+    var versionString = '<?php echo translate("Please enter a version"); ?>';
 
-	function checkForm(frm) {
-		if (frm.project_name.value == '') {
-			alert(nameString);
-			frm.project_name.focus();
-			return false;
-		}
-		if (frm.project_desc.value == '') {
-			alert(descString);
-			frm.project_desc.focus();
-			return false;
-		}
-		if (frm.version_name.value == '') {
-			alert(versionString);
-			frm.version_name.focus();
-			return false;
-		}
-		if (frm.component_name.value == '') {
-			alert(nameString);
-			frm.component_name.focus();
-			return false;
-		}
-		if (frm.component_desc.value == '') {
-			alert(descString);
-			frm.component_desc.focus();
-			return false;
-		}
-		return true;
-	}
-// -->
+    function checkForm(frm) {
+        if (frm.project_name.value == '') {
+            alert(nameString);
+            frm.project_name.focus();
+            return false;
+        }
+        if (frm.project_desc.value == '') {
+            alert(descString);
+            frm.project_desc.focus();
+            return false;
+        }
+        if (frm.version_name.value == '') {
+            alert(versionString);
+            frm.version_name.focus();
+            return false;
+        }
+        if (frm.component_name.value == '') {
+            alert(nameString);
+            frm.component_name.focus();
+            return false;
+        }
+        if (frm.component_desc.value == '') {
+            alert(descString);
+            frm.component_desc.focus();
+            return false;
+        }
+        return true;
+    }
+    // -->
 </script>
 <form action="project.php" method="post" onSubmit="return checkForm(this)">
-<table border="0">
-	<tr>
-		<td valign="top" rowspan="2" width="320">
-			<table border="0">
-				<tr>
-					<td>
-						<b><?php echo translate("Project Information"); ?></b>
-						<hr size="1">
-						<?php if ($error) { ?><div class="error"><?php echo $error; ?></div><?php } ?>
-					</td>
-				</tr>
-				<tr>
-        	<td valign="top">
-						<?php echo translate("Name"); ?>:
-						<br>
-						<input type="text" size="30" maxlength="30" name="project_name" value="<?php echo htmlspecialchars(stripslashes($project_name)); ?>">
-					</td>
-				</tr>
-				<tr>
-        	<td valign="top">
-						<?php echo translate("Description"); ?>:
-						<br>
-        		<textarea name="project_desc" cols=40 rows=5 ><?php echo stripslashes(htmlspecialchars($project_desc)); ?></textarea>
-					</td>
-				</tr>
-				<tr>
-        	<td valign="top">
-						<?php echo translate("Active"); ?>:
-						<br>
-        		<input type="checkbox" name="active" value="1" <?php if ($active) echo 'checked'; ?>>
-					</td>
-				</tr>
-			</table>
-		</td>
-		<td width="320">
-			<table border="0">
-				<tr>
-					<td>
-						<b><?php echo translate("Version Information"); ?></b>
-						<hr size="1">
-						<?php if ($version_error) { ?><div class="error"><?php echo $version_error; ?></div><?php } ?>
-					</td>
-				</tr>
-				<tr>
-        	<td valign="top">
-				<table>
-					<tr>
-						<td>
-						<?php echo translate("Initial Version"); ?>:
-						<br>
-        		<input type="text" size="30" maxlength="30" name="version_name" value="<?php echo stripslashes(htmlspecialchars($version_name)); ?>">
-					</td>
-								<td>
-								 <?php echo translate("Sort Order"); ?>:
-									<br>
-									<input type="text" size="3" maxlength="3" name="version_sortorder" value="<?php echo $version_sortorder; ?>">
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<table border="0">
-				<tr>
-					<td>
-						<b><?php echo translate("Component Information"); ?></b>
-						<hr size="1">
-						<?php if ($component_error) { ?><div class="error"><?php echo $component_error; ?></div><?php } ?>
-					</td>
-				</tr>
-				<tr>
-        	<td valign="top">
-				<table>
-					<tr>
-						<td>
-						<?php echo translate("Initial Component Name"); ?>:
-						<br>
-        		<input type="text" size="30" maxlength="30" name="component_name" value="<?php echo stripslashes(htmlspecialchars($component_name)); ?>">
-					</td>
-								<td>
-								 <?php echo translate("Sort Order"); ?>:
-									<br>
-									<input type="text" size="3" maxlength="3" name="component_sortorder" value="<?php echo $component_sortorder; ?>">
-								</td>
-							</tr>
-						</table>
-				</tr>
-				<tr>
-        	<td valign="top">
-						<?php echo translate("Description"); ?>:
-						<br>
-        		<textarea name="component_desc" cols="30"><?php echo stripslashes(htmlspecialchars($component_desc)); ?></textarea>
-					</td>
-				</tr>
-				<tr>
-        	<td valign="top">
-						<?php echo translate("Owner"); ?>:
-						<br>
-        		<select name="owner"><option value="0">None</option><?php build_select('owner', $owner); ?></select>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
-<input type='submit' name='submit' value='<?php echo translate("Submit"); ?>'>
-<input type="hidden" name="id" value="0">
-<input type="hidden" name="op" value="save_project">
+    <table border="0">
+        <tr>
+            <td valign="top" rowspan="2" width="320">
+                <table border="0">
+                    <tr>
+                        <td>
+                            <b><?php echo translate("Project Information"); ?></b>
+                            <hr size="1">
+                            <?php if ($error) { ?><div class="error"><?php echo $error; ?></div><?php } ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            <?php echo translate("Name"); ?>:
+                            <br>
+                            <input type="text" size="30" maxlength="30" name="project_name" value="<?php echo htmlspecialchars(stripslashes($project_name)); ?>">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            <?php echo translate("Description"); ?>:
+                            <br>
+                            <textarea name="project_desc" cols=40 rows=5 ><?php echo stripslashes(htmlspecialchars($project_desc)); ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            <?php echo translate("Active"); ?>:
+                            <br>
+                            <input type="checkbox" name="active" value="1" <?php if ($active) echo 'checked'; ?>>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td width="320">
+                <table border="0">
+                    <tr>
+                        <td>
+                            <b><?php echo translate("Version Information"); ?></b>
+                            <hr size="1">
+                            <?php if ($version_error) { ?><div class="error"><?php echo $version_error; ?></div><?php } ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <?php echo translate("Initial Version"); ?>:
+                                        <br>
+                                        <input type="text" size="30" maxlength="30" name="version_name" value="<?php echo stripslashes(htmlspecialchars($version_name)); ?>">
+                                    </td>
+                                    <td>
+                                        <?php echo translate("Sort Order"); ?>:
+                                        <br>
+                                        <input type="text" size="3" maxlength="3" name="version_sortorder" value="<?php echo $version_sortorder; ?>">
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table border="0">
+                    <tr>
+                        <td>
+                            <b><?php echo translate("Component Information"); ?></b>
+                            <hr size="1">
+                            <?php if ($component_error) { ?><div class="error"><?php echo $component_error; ?></div><?php } ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <?php echo translate("Initial Component Name"); ?>:
+                                        <br>
+                                        <input type="text" size="30" maxlength="30" name="component_name" value="<?php echo stripslashes(htmlspecialchars($component_name)); ?>">
+                                    </td>
+                                    <td>
+                                        <?php echo translate("Sort Order"); ?>:
+                                        <br>
+                                        <input type="text" size="3" maxlength="3" name="component_sortorder" value="<?php echo $component_sortorder; ?>">
+                                    </td>
+                                </tr>
+                            </table>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            <?php echo translate("Description"); ?>:
+                            <br>
+                            <textarea name="component_desc" cols="30"><?php echo stripslashes(htmlspecialchars($component_desc)); ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            <?php echo translate("Owner"); ?>:
+                            <br>
+                            <select name="owner"><option value="0">None</option><?php build_select('owner', $owner); ?></select>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <input type='submit' name='submit' value='<?php echo translate("Submit"); ?>'>
+    <input type="hidden" name="id" value="0">
+    <input type="hidden" name="op" value="save_project">
 </form>
