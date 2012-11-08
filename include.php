@@ -70,6 +70,10 @@ if (version_compare(PHP_VERSION, '5.2.0') < 0) {
     die();
 }
 
+if (DB_TYPE != 'mysqli') {
+    echo 'mysqli db type supported only (from phpBugTracker 1.5) ' . "\n";
+    die();
+}
 
 
 
