@@ -197,7 +197,7 @@ function test_database(&$params, $testonly = false) {
         $dsn['port'] = $params['db_port'];
     }
 
-    $db = DB::Connect($dsn);
+    $db = DB::Connect($dsn, array('debug' => 2));
 
     // Simple error checking on returned DB object to check connection to db
     if (DB::isError($db)) {
