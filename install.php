@@ -25,6 +25,7 @@
 
 error_reporting(E_ALL);
 ini_set('display_errors', true);
+set_include_path('./inc/pear' . PATH_SEPARATOR . get_include_path());
 
 include_once('inc/functions.php');
 define('THEME', 'default');
