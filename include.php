@@ -58,7 +58,7 @@ include ('inc/functions.php');
 if (defined('PEAR_PATH') && (PEAR_PATH != '')) {
     //echo get_include_path();
     //echo set_include_path(get_include_path() . ';' . PEAR_PATH);
-    set_include_path(get_include_path() . ';' . PEAR_PATH);
+    set_include_path(get_include_path() . PATH_SEPARATOR . PEAR_PATH);
     //echo get_include_path();
 }
 
