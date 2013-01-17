@@ -17,7 +17,7 @@ INSTEAD FOLLOW BUG'S URL BELOW IN ORDER TO DETAIL BUG:
       Severity: <?php echo $severity_id."\n"; ?>
     OS/Version: <?php echo $os_id."\n"; ?>
       Database: <?php echo $database_id."\n"; ?>
-      Priority: <?php echo $priority."\n"; ?>
+      Priority: <?php echo $priority_id."\n"; ?>
    Assigned To: <?php echo $assignedto."\n"; ?>
 ============================================================================
 <?php if ($showcomments) { ?>
