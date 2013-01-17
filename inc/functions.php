@@ -821,7 +821,7 @@ function find_include($file) {
     //  foreach (explode(PATH_SEPARATOR, ini_get('include_path')) as $path) { 
     //See http://ru.php.net/get_include_path
     foreach (explode(PATH_SEPARATOR, ini_get('include_path')) as $path) {
-        if (file_exists("$path/$file"))
+        if (@file_exists("$path/$file"))
             return true;
     }
     return false;
