@@ -27,7 +27,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', true);
 set_include_path('./inc/pear' . PATH_SEPARATOR . get_include_path());
 
-include_once('inc/functions.php');
+require_once('inc/functions.php');
 define('THEME', 'default');
 define('RAWERROR', true);
 
@@ -66,7 +66,7 @@ class template {
     function render($content_template, $page_title, $wrap_file = '') {
         extract($this->vars);
         $path = defined('TEMPLATE_PATH') ? './templates/' . THEME . '/' . TEMPLATE_PATH . '/' : './templates/' . THEME . '/';
-        include($wrap_file ? $path . $wrap_file : $path . 'wrap.html');
+        require($wrap_file ? $path . $wrap_file : $path . 'wrap.html');
     }
 
     function assign($var, $value = '') {
@@ -142,7 +142,7 @@ if (!empty($_POST)) {
 }
 
 if (file_exists('config.php')) {
-    include_once('config.php');
+    require_once('config.php');
 }
 if (defined('DB_HOST')) { // Already configured
     header("Location: index.php");
@@ -182,7 +182,7 @@ function test_database(&$params, $testonly = false) {
         $error_message = translate("Failed loading Pear:DB");
         $error_info = translate("Please check your Pear installation and the defined PEAR_PATH in install.php");
         $error_info .= " <a href='http://pear.php.net/'>http://pear.php.net/</a>";
-        include('templates/default/install-dbfailure.html');
+        require('templates/default/install-dbfailure.html');
         exit;
     }
     $dsn = array(
@@ -203,11 +203,11 @@ function test_database(&$params, $testonly = false) {
     if (DB::isError($db)) {
         $error_message = $db->getMessage(); // isset($db->message)   ? $db->message : '';
         $error_info = $db->getUserInfo(); //isset($db->user_info) ? $db->user_info : '';
-        include('templates/default/install-dbfailure.html');
+        require('templates/default/install-dbfailure.html');
         exit;
     } else {
         if ($testonly) {
-            include('templates/default/install-dbsuccess.html');
+            require('templates/default/install-dbsuccess.html');
             exit;
         } else {
             return $db;
@@ -234,7 +234,7 @@ function create_tables() {
         $admin_pass = $_POST['admin_pass'];
         $admin_pass2 = $_POST['admin_pass2'];
         $encrypt_pass = $_POST['encrypt_pass'];
-        include('templates/default/install-question.html');
+        require('templates/default/install-question.html');
         exit;
     }
 
@@ -267,7 +267,7 @@ function create_tables() {
     log_query($query);
 
     if ($num_errors > 0) {
-        include('templates/default/install-failure.html');
+        require('templates/default/install-failure.html');
         exit;
     }
 }
@@ -342,7 +342,7 @@ function show_finished() {
         header("Location: upgrade.php");
         exit;
     }
-    include('templates/default/install-complete.html');
+    require('templates/default/install-complete.html');
 }
 
 function show_front($error = '') {
@@ -352,7 +352,7 @@ function show_front($error = '') {
     $error = $error;
     $default_email = 'phpbt@' . $_SERVER['SERVER_NAME'];
     $OPTION_INSTALL_URL = 'http://' . $_SERVER['SERVER_NAME'] . dirname($_SERVER['PHP_SELF']);
-    include('templates/default/install.html.php');
+    require('templates/default/install.html.php');
 }
 
 if (isset($_POST['op'])) {
