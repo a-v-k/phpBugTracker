@@ -1,23 +1,5 @@
 Ok, here's the quick and dirty install instructions:
 
-Required:
-You must have the PEAR library manager and Pear::DB installed (See http://pear.php.net/).
-PEAR usually comes with a command line client called "pear".  Try "pear list"
-to show installed packages:
-
-xxxx> pear list
-Installed packages, channel pear.php.net:
-=========================================
-Package                  Version State
-Archive_Tar              1.3.2   stable
-Console_Getopt           1.2.2   stable
-DB                       1.7.12  stable
-OLE                      0.5     beta
-PEAR                     1.5.4   stable
-Spreadsheet_Excel_Writer 0.9.1   beta
-Structures_Graph         1.0.2   stable
- 
-Then:
 1. Copy the directory tree to a location suitable for serving web pages.
 	 
 2. With your web browser, go the location where you installed the package. 
