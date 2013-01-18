@@ -1,4 +1,16 @@
-: Note that phpbt is currently without a maintainer.
+-- 1.5.0RC1 2013 Jan
+: Allow filter bugs by project (in progress)!
+: Little visual restyling.
+: PHP 5.2 support
+: Remove PEAR dependency. PEAR DB packages included to distr (separate PEAR instalation not required now)
+: Fixed bug sort order in some places.
+: Database switched to UTF-8 codepage. (Autoupdate not supported)
+: Removed magic_quotes_gpc dependence!
+: Reomved Oracle and PostgreSQL support. MySQL only works now.
+: Added Smarty templates support.
+: Fixed installer
+: Many bug fixes.
+: Many of html code fixed (in progress)
 
 -- 1.0.5 2009 Sep - Performance Bug in Mysql.  Misc.
 : Performance: don't do expensive query joins unless the column will be shown (e.g. attachment count)
