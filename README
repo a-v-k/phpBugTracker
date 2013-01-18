@@ -1,6 +1,8 @@
 Note
 ------------
 
+Current project home - https://github.com/a-v-k/phpBugTracker
+
 This project is a fork of phpBugTracker (http://phpbt.sourceforge.net/).
 
 * Why a fork ?
@@ -21,7 +23,10 @@ Removed magic_quotes_gpc dependence!
 Oracle and PostgreSQL support was stopped since 2009. If you need this - 
 	you can make it self and contribute your code, 
 	or order donation based support. 
-Added Smarty templates support.	
+Added Smarty templates support.
+PHP 5.2 support
+PEAR DB packages included to distr (separate PEAR instalation not required now)
+Fixed installer
 	
 WARNING!
 --------
@@ -31,8 +36,8 @@ I will work on this problem.
 
 I need code contributions for:
 ------------------------------
-- check and fix install script for current project state (db converted to utf8)
-- convert localization files to utf8 (non-utf language packs not supported now) 
+- convert localization files to utf8 (non-utf language packs not supported now)
+- search for and fix security issues
 
 Requirements
 ------------
@@ -59,9 +64,6 @@ Currently phpBugTracker is nowhere near a drop-in replacement for Bugzilla, so
 don't expect it to be.  Maybe it will get to that point one day, maybe it won't,
 but either way I'm trying to make it a capable bug tracker.  I hope you enjoy 
 using phpBugTracker, and that you find it useful. 
-
-Comments and suggestions are always welcome, either at the SourceForge page at
-http://www.sourceforge.net/projects/phpbt
 
     -bcurtis
 
