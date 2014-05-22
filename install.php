@@ -35,7 +35,7 @@ $log_text = "";
 $num_errors = 0;
 
 // Handle a database error
-function handle_install_error(&$obj) {
+function handle_install_error($obj) {
     global $log_text;
 
     $log_text .= "<div class=\"error\">";
