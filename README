@@ -1,13 +1,11 @@
 Note
 ------------
 
+phpBugTracker is a open source bug tracking system.
+
 Current project home - https://github.com/a-v-k/phpBugTracker
 
-This project is a fork of phpBugTracker (http://phpbt.sourceforge.net/).
-
-* Why a fork ?
-- Original project is closed by author and has no commit since 2009
-- I need some features that original project doesn't have.
+This project is a oficial fork of discontinued sourceforge phpBugTracker (http://phpbt.sourceforge.net/).
 
 All contributions (code or bug reports) are welcome! 
 
