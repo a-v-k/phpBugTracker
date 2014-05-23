@@ -209,13 +209,15 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
         if (isset($buginfo[$field . '_id'])) {
             $oldvalue = $db->getOne("select ${field}_name from $table" . " where ${field}_id = {$buginfo[$field . '_id']}");
         }
-        if (empty($oldvalue))
+        if (empty($oldvalue)) {
             $oldvalue = 'None';
+        }
 
         if (isset($cf[$field . '_id'])) {
             $newvalue = $db->getOne("select ${field}_name from $table where ${field}_id = {$cf[$field . '_id']}");
-            if (empty($newvalue))
+            if (empty($newvalue)) {
                 $newvalue = 'None';
+            }
 
             $db->query('insert into ' . TBL_BUG_HISTORY . ' (bug_id, changed_field, old_value, new_value, created_by, created_date) values (' . join(', ', array($buginfo['bug_id'], $db->quote(translate($field)), $db->quote($oldvalue), $db->quote($newvalue), $u, $now)) . ")");
             $t->assign(array(
@@ -238,14 +240,15 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
         if (isset($buginfo[$field . '_id'])) {
             $oldvalue = $db->getOne('select version_name from ' . $cfgDatabase['version'] . ' where version_id = ' . $buginfo[$field . '_id']);
         }
-        if (empty($oldvalue))
+        if (empty($oldvalue)) {
             $oldvalue = 'None';
+        }
 
         if (isset($cf[$field . '_id'])) {
             $newvalue = $db->getOne('select version_name from ' . $cfgDatabase['version'] . ' where version_id = ' . $cf[$field . '_id']);
-            if (empty($newvalue))
+            if (empty($newvalue)) {
                 $newvalue = 'None';
-
+            }
             $db->query('insert into ' . TBL_BUG_HISTORY . ' (bug_id, changed_field, old_value, new_value, created_by, created_date) values (' . join(', ', array($buginfo['bug_id'], $db->quote(translate($field_name)),
                         $db->quote($oldvalue),
                         $db->quote($newvalue), $u, $now)) . ")");
@@ -303,12 +306,12 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
         $reporterstat = ' ';
     }
 
-    if (!empty($_POST['suppress_email']))
+    if (!empty($_POST['suppress_email'])) {
         return; // Don't send email if silent update requested.
-
-    if (defined('EMAIL_DISABLED') and EMAIL_DISABLED)
+    }
+    if (defined('EMAIL_DISABLED') and EMAIL_DISABLED) {
         return;
-
+    }
     if (isset($perm) and $perm->have_perm_proj($project_id) and is_numeric($created_by)) {
         $reporter = $db->getOne('select email from ' . TBL_AUTH_USER . " u, " . TBL_USER_PREF . " p where u.user_id = {$buginfo['created_by']} and u.user_id = p.user_id and email_notices = 1");
         $reporterstat = '!';
@@ -359,8 +362,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
     if ($userid != $buginfo['created_by'] and !empty($reporter)) {
         $maillist[] = $reporter;
     }
-    if ($userid != (!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to'])
-            and !empty($assignedto) and $emailassignedto) {
+    if ($userid != (!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to']) and !empty($assignedto) and $emailassignedto) {
         $maillist[] = $assignedto;
     }
 
@@ -825,13 +827,9 @@ function do_form($bugid = 0) {
     $buginfo = $db->getRow('select * from ' . TBL_BUG . " where bug_id = $bugid");
     do_changedfields($u, $buginfo);
 
-    if (isset($_POST['at_description']))
+    if (isset($_POST['at_description'])) {
         add_attachment($bugid, $_POST['at_description']); //attachment (initial)
-
-
-
-
-        
+    }
 //	if (isset($another)) {
 //		header("Location: $me?op=add&project=$project");
 //	} else {
