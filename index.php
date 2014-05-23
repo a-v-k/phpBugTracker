@@ -132,7 +132,7 @@ if (SHOW_PROJECT_SUMMARIES) {
     }
     $resfields[] = translate("Total");
 
-    $db->setOption('optimize', 'performance'); // For Oracle to do this loop
+    //$db->setOption('optimize', 'performance'); // For Oracle to do this loop  //removed on PDO migration
     $aProjects = array(
         'resfields' => $resfields,
         'projects' => $db->getAll(sprintf($QUERY['index-projsummary-6'], $querystring, $restricted_projects))
@@ -171,7 +171,7 @@ if (SHOW_PROJECT_SUMMARIES) {
 
     $t->assign($aProjects);
     $t->assign('resfields', $resfields);
-    $db->setOption('optimize', 'portability');
+    //$db->setOption('optimize', 'portability'); //removed on PDO migration
 }
 
 // Show the recently added and closed bugs
