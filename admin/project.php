@@ -76,14 +76,20 @@ function save_version($version_id = 0, $projectid = 0) {
 function show_version($versionid = 0, $error = '') {
     global $db, $t, $QUERY;
 
-    extract($_POST);
-    if ($versionid) {
+    // extract($_POST);  WTF?
+    if ($versionid != 0) {
         $t->assign($db->getRow(sprintf($QUERY['admin-show-version'], $versionid)));
     } else {
-        if (!empty($_GET['project_id']))
-            $t->assign('project_id', $_GET['project_id']);
-        $t->assign($_POST);
+        if (filter_input(INPUT_GET, 'project_id', FILTER_SANITIZE_NUMBER_INT)) {
+            $t->assign('project_id', filter_input(INPUT_GET, 'project_id', FILTER_SANITIZE_NUMBER_INT));
+        }
+        $t->assign('version_name', null);
+        $t->assign('active', null);
+        $t->assign('version_id', null);
+        $t->assign('sort_order', null);
+        //$t->assign($_POST);
     }
+    $t->assign('use_js', filter_input(INPUT_GET, 'use_js'));
     $t->assign('error', $error);
     $t->render('version-edit.html', translate("Edit Version"), !empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
 }
@@ -143,13 +149,21 @@ function save_component($component_id = 0, $projectid = 0) {
 function show_component($componentid = 0, $error = '') {
     global $db, $t, $QUERY;
 
-    if ($componentid) {
+    if ($componentid != 0) {
         $t->assign($db->getRow(sprintf($QUERY['admin-show-component'], $componentid)));
     } else {
-        if (!empty($_GET['project_id']))
-            $t->assign('project_id', $_GET['project_id']);
-        $t->assign($_POST);
+        if (filter_input(INPUT_GET, 'project_id', FILTER_SANITIZE_NUMBER_INT)) {
+            $t->assign('project_id', filter_input(INPUT_GET, 'project_id', FILTER_SANITIZE_NUMBER_INT));
+        }
+        $t->assign('component_name', null);
+        $t->assign('component_desc', null);
+        $t->assign('owner', null);
+        $t->assign('active', null);
+        $t->assign('component_id', null);
+        $t->assign('sort_order', null);
+        //$t->assign($_POST);
     }
+    $t->assign('use_js', filter_input(INPUT_GET, 'use_js'));
     $t->assign('error', $error);
     $t->render('component-edit.html', translate("Edit Component"), !empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
 }
