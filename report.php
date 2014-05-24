@@ -51,13 +51,13 @@ function resolution_by_engineer($projectid = 0) {
 		$projectquery = '';
 	}
 	
-	$db->setOption('optimize', 'performance'); // For Oracle to do this loop
+	// $db->setOption('optimize', 'performance'); // For Oracle to do this loop //removed on PDO migration
 	$t->assign(array(
 		'resfields' => $resfields,
 		'developers' => $db->getAll(sprintf($QUERY['report-resbyeng-6'], 
 			$querystring, $projectquery))
 		));
-	$db->setOption('optimize', 'portability'); 
+	// $db->setOption('optimize', 'portability');  //removed on PDO migration
 
 	$t->render('report.html', translate("Reporting"));
 }

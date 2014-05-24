@@ -209,13 +209,15 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
         if (isset($buginfo[$field . '_id'])) {
             $oldvalue = $db->getOne("select ${field}_name from $table" . " where ${field}_id = {$buginfo[$field . '_id']}");
         }
-        if (empty($oldvalue))
+        if (empty($oldvalue)) {
             $oldvalue = 'None';
+        }
 
         if (isset($cf[$field . '_id'])) {
             $newvalue = $db->getOne("select ${field}_name from $table where ${field}_id = {$cf[$field . '_id']}");
-            if (empty($newvalue))
+            if (empty($newvalue)) {
                 $newvalue = 'None';
+            }
 
             $db->query('insert into ' . TBL_BUG_HISTORY . ' (bug_id, changed_field, old_value, new_value, created_by, created_date) values (' . join(', ', array($buginfo['bug_id'], $db->quote(translate($field)), $db->quote($oldvalue), $db->quote($newvalue), $u, $now)) . ")");
             $t->assign(array(
@@ -238,14 +240,15 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
         if (isset($buginfo[$field . '_id'])) {
             $oldvalue = $db->getOne('select version_name from ' . $cfgDatabase['version'] . ' where version_id = ' . $buginfo[$field . '_id']);
         }
-        if (empty($oldvalue))
+        if (empty($oldvalue)) {
             $oldvalue = 'None';
+        }
 
         if (isset($cf[$field . '_id'])) {
             $newvalue = $db->getOne('select version_name from ' . $cfgDatabase['version'] . ' where version_id = ' . $cf[$field . '_id']);
-            if (empty($newvalue))
+            if (empty($newvalue)) {
                 $newvalue = 'None';
-
+            }
             $db->query('insert into ' . TBL_BUG_HISTORY . ' (bug_id, changed_field, old_value, new_value, created_by, created_date) values (' . join(', ', array($buginfo['bug_id'], $db->quote(translate($field_name)),
                         $db->quote($oldvalue),
                         $db->quote($newvalue), $u, $now)) . ")");
@@ -262,7 +265,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
     }
 
     // See if the assignment has changed -- grab the email for notifications either way
-    list($assignedto, $emailassignedto) = $db->getRow('select email, email_notices from ' . TBL_AUTH_USER . " u, " . TBL_USER_PREF . ' p where u.user_id = ' . (!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to']) . " and u.user_id = p.user_id", DB_FETCHMODE_ORDERED);
+    list($assignedto, $emailassignedto) = $db->getRow('select email, email_notices from ' . TBL_AUTH_USER . " u, " . TBL_USER_PREF . ' p where u.user_id = ' . (!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to']) . " and u.user_id = p.user_id", null, DB_FETCHMODE_ORDERED);
 
     if (!empty($cf['assigned_to'])) {
         $assignedtostat = '!';
@@ -303,12 +306,12 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
         $reporterstat = ' ';
     }
 
-    if (!empty($_POST['suppress_email']))
+    if (!empty($_POST['suppress_email'])) {
         return; // Don't send email if silent update requested.
-
-    if (defined('EMAIL_DISABLED') and EMAIL_DISABLED)
+    }
+    if (defined('EMAIL_DISABLED') and EMAIL_DISABLED) {
         return;
-
+    }
     if (isset($perm) and $perm->have_perm_proj($project_id) and is_numeric($created_by)) {
         $reporter = $db->getOne('select email from ' . TBL_AUTH_USER . " u, " . TBL_USER_PREF . " p where u.user_id = {$buginfo['created_by']} and u.user_id = p.user_id and email_notices = 1");
         $reporterstat = '!';
@@ -319,18 +322,23 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
 
     // If there are new comments grab the comments immediately before the latest
     if ($comments or $newbug) {
+        $TBL_COMMENT = TBL_COMMENT;
+        $commentCount = $db->getOne("select count(*) cou from $TBL_COMMENT c where bug_id = {$buginfo['bug_id']}");
         $rs = $db->limitQuery('select u.login, c.comment_text, c.created_date from ' . TBL_COMMENT . ' c, ' . TBL_AUTH_USER . " u where bug_id = {$buginfo['bug_id']} and c.created_by = u.user_id order by created_date desc", 0, 2);
         $rs->fetchInto($row);
-        $t->assign(array(
-            'newpostedby' => $row['login'],
-            'newpostedon' => date(TIME_FORMAT, $row['created_date']) . ' on ' .
-            date(DATE_FORMAT, $row['created_date']),
-            'newcomments' => $row['comment_text'] // textwrap('+ '.$row['comment_text'],72,"\n+ ")
-        ));
+        //var_dump($row);
+        if (!newbug) {
+            $t->assign(array(
+                'newpostedby' => $row['login'],
+                'newpostedon' => date(TIME_FORMAT, $row['created_date']) . ' on ' .
+                date(DATE_FORMAT, $row['created_date']),
+                'newcomments' => $row['comment_text'] // textwrap('+ '.$row['comment_text'],72,"\n+ ")
+            ));
+        }
 
         // If this comment is the first additional comment after the creation of the
         // bug then we need to grab the bug's description as the previous comment
-        if ($rs->numRows() < 2) {
+        if ($commentCount < 2) {
             list($by, $on, $comments) = $db->getRow('select u.login, b.created_date, b.description from ' . TBL_BUG . ' b, ' . TBL_AUTH_USER . " u where b.created_by = u.user_id and bug_id = {$buginfo['bug_id']}", null, DB_FETCHMODE_ORDERED);
             $t->assign(array(
                 'oldpostedby' => $by,
@@ -359,8 +367,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
     if ($userid != $buginfo['created_by'] and !empty($reporter)) {
         $maillist[] = $reporter;
     }
-    if ($userid != (!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to'])
-            and !empty($assignedto) and $emailassignedto) {
+    if ($userid != (!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to']) and !empty($assignedto) and $emailassignedto) {
         $maillist[] = $assignedto;
     }
 
@@ -807,7 +814,7 @@ function do_form($bugid = 0) {
     }
 
     // Use the selected reporter, if specified
-    $reporter = ($reporter and is_numeric($reporter)) ? $reporter : $u;
+    $reporter = (isset($reporter) and is_numeric($reporter)) ? $reporter : $u;
 
     // Check to see if this bug's component has an owner and should be assigned
     // If we aren't using voting to promote, then auto-promote to New
@@ -825,13 +832,9 @@ function do_form($bugid = 0) {
     $buginfo = $db->getRow('select * from ' . TBL_BUG . " where bug_id = $bugid");
     do_changedfields($u, $buginfo);
 
-    if (isset($_POST['at_description']))
+    if (isset($_POST['at_description'])) {
         add_attachment($bugid, $_POST['at_description']); //attachment (initial)
-
-
-
-
-        
+    }
 //	if (isset($another)) {
 //		header("Location: $me?op=add&project=$project");
 //	} else {
@@ -895,15 +898,15 @@ function show_bug_printable($bugid) {
 ///
 /// Grab the links for the previous and next bugs in the list
 function prev_next_links($bugid, $pos) {
-    global $dsn, $QUERY, $t;
+    global $t, $db;
 
-    // Create a new db connection because of the limit query affecting later queries
-    $db = DB::Connect($dsn);
-    if (DB::isError($db)) {
-        die($db->message . '<br>' . $db->userinfo);
-    }
-    $db->setOption('optimize', 'portability');
-    $db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_db_error");
+//    // Create a new db connection because of the limit query affecting later queries
+//    $db = DB::Connect($dsn);
+//    if (DB::isError($db)) {
+//        die($db->message . '<br>' . $db->userinfo);
+//    }
+//    $db->setOption('optimize', 'portability');
+//    $db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_db_error");
 
     if (!isset($_SESSION['queryinfo']['query']) || !$_SESSION['queryinfo']['query']) {
         #syslog(LOG_DEBUG,"no query in session");
@@ -930,19 +933,27 @@ function prev_next_links($bugid, $pos) {
     # syslog(LOG_DEBUG,"offset=$offset limit=$limit pos=$pos");
     $rs = $db->limitQuery($_SESSION['queryinfo']['full_query_sql'], $offset, $limit);
 
-    list($firstid, $dummy) = $rs->fetchRow();
-    list($myid, $dummy) = $rs->fetchRow();
-    list($secondid, $dummy) = $rs->fetchRow();
+    $fRow = $rs->fetchRow(DB_FETCHMODE_ORDERED);
+    if ($fRow !== false) {
+        //var_dump($fRow);
+        $firstid = $fRow[0];
+    }
+    $rs->fetchRow();  // skip one
+    $nRow = $rs->fetchRow(DB_FETCHMODE_ORDERED);
+    if ($nRow !== false) {
+        //var_dump($nRow);
+        $secondid = $nRow[0];
+    }
 
     if ($pos) {
-        if ($firstid) {
+        if (isset($firstid)) {
             $t->assign(array('prevbug' => $firstid, 'prevpos' => $pos - 1));
         }
-        if ($secondid) {
+        if (isset($secondid)) {
             $t->assign(array('nextbug' => $secondid, 'nextpos' => $pos + 1));
         }
     } else {
-        if ($firstid) {
+        if (isset($firstid)) {
             $t->assign(array('nextbug' => $firstid, 'nextpos' => $pos + 1));
         }
     }
@@ -1019,11 +1030,9 @@ function show_bug($bugid = 0, $error = array()) {
     // Show the attachments
     $attachments = array();
     $rs = $db->query("select * from " . TBL_ATTACHMENT . " where bug_id = $bugid");
-    if ($rs->numRows()) {
-        while ($rs->fetchInto($att)) {
-            if (@is_readable(ATTACHMENT_PATH . "/{$row['project_id']}/$bugid-{$att['file_name']}")) {
-                $attachments[] = $att;
-            }
+    while ($rs->fetchInto($att)) {
+        if (@is_readable(ATTACHMENT_PATH . "/{$row['project_id']}/$bugid-{$att['file_name']}")) {
+            $attachments[] = $att;
         }
     }
 

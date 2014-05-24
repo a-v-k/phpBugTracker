@@ -62,7 +62,7 @@ if (defined('PEAR_PATH') && (PEAR_PATH != '')) {
     //echo get_include_path();
 }
 
-require_once(PEAR_PATH . 'DB.php');
+//require_once(PEAR_PATH . 'DB.php');
 //@ini_restore("display_errors");
 
 if (version_compare(PHP_VERSION, '5.2.0') < 0) {
@@ -101,10 +101,15 @@ if (defined('DB_DEBUG') && (DB_DEBUG != '')) {
  * * the documentation recommends PEAR::isError($db) which is also non-static
  */
 
-$db = DB::Connect($dsn, $options);
-if (DB::isError($db)) {
-    die($db->message . '<br>' . $db->userinfo);
-}
+//$db = DB::Connect($dsn, $options);
+//if (DB::isError($db)) {
+//    die($db->message . '<br>' . $db->userinfo);
+//}
+
+require_once 'inc/pdo_adapter.php';
+$db = new PdoAdapter();
+$db->connect($dsn);
+
 $db->query("set names utf8");
 /*
   $db = new DB();
@@ -119,16 +124,18 @@ $db->query("set names utf8");
   die($db->message.'<br>'.$db->userinfo);
   }
  */
-$db->setOption('optimize', 'portability');
-$db->setFetchMode(DB_FETCHMODE_ASSOC);
-$db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_db_error");
+
+//$db->setOption('optimize', 'portability');
+//$db->setFetchMode(DB_FETCHMODE_ASSOC);
+//$db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_db_error");
 
 if (empty($upgrading)) {
     // Set up the configuration variables
     $rs = $db->query('select varname, varvalue from ' . TBL_CONFIGURATION);
     while (list($k, $v) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
-        if (!defined($k))
+        if (!defined($k)) {
             define($k, $v);
+        }
     }
     define('OPEN_BUG_STATUSES', join(', ', $db->getCol("select status_id from " . TBL_STATUS . " where bug_open = 1")));
 
@@ -328,12 +335,9 @@ if (isset($_POST['dologin'])) {
 if (!empty($u)) {
 //	echo "<h1>I'm here too</h1>"; //test
 //	var_dump($QUERY['include-template-owner']);
-    list($owner_open, $owner_closed) =
-            $db->getRow(sprintf($QUERY['include-template-owner'], $u), DB_FETCHMODE_ORDERED);
-    list($reporter_open, $reporter_closed) =
-            $db->getRow(sprintf($QUERY['include-template-reporter'], $u), DB_FETCHMODE_ORDERED);
-    list($bookmarks_open, $bookmarks_closed) =
-            $db->getRow(sprintf($QUERY['include-template-bookmark'], $u), DB_FETCHMODE_ORDERED);
+    list($owner_open, $owner_closed) = $db->getRow(sprintf($QUERY['include-template-owner'], $u), null, DB_FETCHMODE_ORDERED);
+    list($reporter_open, $reporter_closed) = $db->getRow(sprintf($QUERY['include-template-reporter'], $u), null, DB_FETCHMODE_ORDERED);
+    list($bookmarks_open, $bookmarks_closed) = $db->getRow(sprintf($QUERY['include-template-bookmark'], $u), null, DB_FETCHMODE_ORDERED);
     $t->assign(array(
         'owner_open' => $owner_open ? $owner_open : 0,
         'owner_closed' => $owner_closed ? $owner_closed : 0,

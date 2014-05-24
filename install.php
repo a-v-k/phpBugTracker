@@ -34,22 +34,26 @@ define('RAWERROR', true);
 $log_text = "";
 $num_errors = 0;
 
-// Handle a database error
-function handle_install_error($obj) {
-    global $log_text;
-
-    $log_text .= "<div class=\"error\">";
-    $log_text .= htmlentities($obj->message) . '<br>' . htmlentities($obj->userinfo);
-    $log_text .= "</div>\n";
-}
+//// Handle a database error
+//function handle_install_error($obj) {
+//    global $log_text;
+//
+//    $log_text .= "<div class=\"error\">";
+//    $log_text .= htmlentities($obj->message) . '<br>' . htmlentities($obj->userinfo);
+//    $log_text .= "</div>\n";
+//}
 
 function log_query($str) {
     global $db, $log_text, $num_errors;
 
     $log_text .= "SQL: " . $str . "<br>\n";
-    $result = $db->query($str);
-    if (DB::isError($result)) {
+    try {
+        $db->query($str);
+    } catch (Exception $exc) {
         $num_errors = $num_errors + 1;
+        $log_text .= "<div class=\"error\">";
+        $log_text .= htmlentities(get_class($exc) . ':' . $exc->getCode() . ' ' . $exc->getMessage());
+        $log_text .= "</div>\n";
     }
     $log_text .= "<br>\n";
 }
@@ -82,7 +86,7 @@ class template {
 }
 
 $t = new template(array(
-            'template_path' => 'templates/default'));
+    'template_path' => 'templates/default'));
 
 $db_types = array(
     'mysqli' => 'MySQL >= 4.1',
@@ -168,7 +172,7 @@ function grab_config_file() {
         $replacements[] = $val;
     }
     $patterns[] = '{PEAR_PATH}';
-    $replacements[] = PEAR_PATH;
+    $replacements[] = defined('PEAR_PATH') ? PEAR_PATH : '';
 
     $contents = join('', file('config-dist.php'));
     return str_replace($patterns, $replacements, $contents);
@@ -177,14 +181,14 @@ function grab_config_file() {
 function test_database(&$params, $testonly = false) {
     // PEAR::DB
     //define('PEAR_PATH', ''); // Set this to '/some/path/' to not use system-wide PEAR
-    define('PEAR_PATH', 'inc/pear/'); // use a locally installed Pear
-    if (!@include_once(PEAR_PATH . 'DB.php')) {
-        $error_message = translate("Failed loading Pear:DB");
-        $error_info = translate("Please check your Pear installation and the defined PEAR_PATH in install.php");
-        $error_info .= " <a href='http://pear.php.net/'>http://pear.php.net/</a>";
-        require('templates/default/install-dbfailure.html');
-        exit;
-    }
+    //define('PEAR_PATH', 'inc/pear/'); // use a locally installed Pear
+    //if (!@include_once(PEAR_PATH . 'DB.php')) {
+    //    $error_message = translate("Failed loading Pear:DB");
+    //    $error_info = translate("Please check your Pear installation and the defined PEAR_PATH in install.php");
+    //    $error_info .= " <a href='http://pear.php.net/'>http://pear.php.net/</a>";
+    //    require('templates/default/install-dbfailure.html');
+    //    exit;
+    //}
     $dsn = array(
         'phptype' => $params['db_type'],
         'hostspec' => $params['db_host'],
@@ -197,21 +201,24 @@ function test_database(&$params, $testonly = false) {
         $dsn['port'] = $params['db_port'];
     }
 
-    $db = DB::Connect($dsn, array('debug' => 2));
-
-    // Simple error checking on returned DB object to check connection to db
-    if (DB::isError($db)) {
-        $error_message = $db->getMessage(); // isset($db->message)   ? $db->message : '';
-        $error_info = $db->getUserInfo(); //isset($db->user_info) ? $db->user_info : '';
-        require('templates/default/install-dbfailure.html');
+    //$db = DB::Connect($dsn, array('debug' => 2));
+    require_once 'inc/pdo_adapter.php';
+    $db = new PdoAdapter();
+    try {
+        $db->connect($dsn);
+        $db->query("set names utf8");
+    } catch (Exception $exc) {
+        $trace = $exc->getTraceAsString();
+        $error_message = get_class($exc) . ':' . $exc->getCode() . ' ' . $exc->getMessage();
+        $error_info = '';
+        require('templates/default/install-dbfailure.html.php');
+        exit;
+    }
+    if ($testonly) {
+        require('templates/default/install-dbsuccess.html');
         exit;
     } else {
-        if ($testonly) {
-            require('templates/default/install-dbsuccess.html');
-            exit;
-        } else {
-            return $db;
-        }
+        return $db;
     }
 }
 
@@ -219,9 +226,14 @@ function create_tables() {
     global $_POST, $tables;
     global $db, $log_text, $num_errors;
 
-    $query = 'select count(*) from ' . $_POST['tbl_prefix'] . 'configuration';
-    $count = $db->getOne($query);
-    if (!DB::isError($count) && empty($_POST['force_install'])) {
+    $tableExist = true;
+    try {
+        $query = 'select count(*) from ' . $_POST['tbl_prefix'] . 'configuration';
+        $db->getOne($query);
+    } catch (Exception $e) {
+        $tableExist = false;
+    }
+    if ($tableExist && empty($_POST['force_install'])) {
         $op = $_POST['op'];
         $db_type = $_POST['db_type'];
         $db_host = $_POST['db_host'];
@@ -238,9 +250,8 @@ function create_tables() {
         exit;
     }
 
-    $db->setOption('optimize', 'portability');
-
-    $db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_install_error");
+    //$db->setOption('optimize', 'portability');
+    //$db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_install_error");
 
     $q1 = file('schemas/' . $_POST['db_type'] . '.in');
     $q2 = file('schemas/common.in');
@@ -249,11 +260,13 @@ function create_tables() {
     $do_query = '';
     foreach ($queries as $query) {
         // First, collect multi-line queries into one line, then run the query
-        if ($query{0} == '#')
+        if ($query{0} == '#') {
             continue;
+        }
         $do_query .= chop($query);
-        if (empty($do_query) or substr($do_query, -1) != ';')
+        if (empty($do_query) or substr($do_query, -1) != ';') {
             continue;
+        }
         if ($_POST['db_type'] == 'oci8') {
             $do_query = substr($do_query, 0, -1);
         }

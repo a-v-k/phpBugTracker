@@ -80,7 +80,7 @@ class uauth {
 		}
 
 		$u = $db->getRow("select * from ".TBL_AUTH_USER." where login = " . $db->quote($username) . " and password = "  . $db->quote($password) . " and active > 0");
-		if (!$u or DB::isError($u)) {
+		if (($u === false) || (!isset($u['login']))) {
 			return 0;
 		} else {
 			$_SESSION['db_fields'] = @unserialize($u['bug_list_fields']);
@@ -230,7 +230,7 @@ class uperm {
 		global $db;
 
 		$perms = $db->getCol("select perm_name from ".TBL_AUTH_PERM." ap, ".TBL_GROUP_PERM." gp, ".TBL_AUTH_GROUP." ag where ag.group_name='$arole' and ag.group_id=gp.group_id and gp.perm_id = ap.perm_id");
-		if ($perms && !DB::isError($perms)) {
+		if ($perms !== false) {
 			foreach ($perms as $p) {
 				$this->permissions[$p] = true;
 			}
