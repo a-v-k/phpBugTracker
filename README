@@ -5,13 +5,15 @@ phpBugTracker is a open source bug tracking system.
 
 Current project home - https://github.com/a-v-k/phpBugTracker
 
-This project is a official fork of discontinued sourceforge phpBugTracker (http://phpbt.sourceforge.net/).
+This project is a official fork of discontinued sourceforge phpBugTracker (https://sourceforge.net/projects/phpbt/).
 
 All contributions (code or bug reports) are welcome! 
 
-History of changes since forked from phpBugTracker
---------------------------------------------------
+History of changes since old sourceforge phpBugTracker v.1.0.5
+----------------------------------------------------------------------
 
+Migrate to PDO data access 
+Full remove PEAR:DB
 Allow filter bugs by project (in progress)!
 Little visual restyling.
 Many of html code fixed (in progress)
@@ -23,8 +25,9 @@ Oracle and PostgreSQL support was stopped since 2009. If you need this -
 	or order donation based support. 
 Added Smarty templates support.
 PHP 5.2 support
-PEAR DB packages included to distr (separate PEAR instalation not required now)
 Fixed installer
+
+To detailed changelog check CHANGELOG file
 	
 WARNING!
 --------
@@ -41,8 +44,8 @@ Requirements
 ------------
 Here is a list of the requirements to get this running on your server.
 1. A webserver
-2. PHP 5.2+
-3. A database - Currently MySQL with mysqli. 
+2. PHP 5.2+ (with PDO and MySQL driver)
+3. A database - Currently MySQL only. 
 		
 
 
