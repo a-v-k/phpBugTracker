@@ -10,7 +10,7 @@
         </div>
         <br>
         <div align="center">
-            <?php printf(translate("<br>The installation script could not connect to the database <b>%s</b> on the host <b>%s</b> using the specified username and password.<br><br>Please check these details are correct and that the database already exists then retry. You can also try the supplied <a href=\"PEAR_TEST.php\">PEAR_TEST.php</a> script."), $params['db_database'], $params['db_host']); ?>
+            <?php printf(translate("<br>The installation script could not connect to the database <b>%s</b> on the host <b>%s</b> using the specified username and password.<br><br>Please check these details are correct and that the database already exists then retry. "), $params['db_database'], $params['db_host']); ?>
             <br>
             <br>
             <?php
@@ -20,5 +20,10 @@
             }
             ?>
         </div>
+        <!--
+
+        <?php echo htmlspecialchars($trace) ?>
+
+        -->
     </body>
 </html>
