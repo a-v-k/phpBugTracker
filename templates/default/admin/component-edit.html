@@ -1,9 +1,4 @@
 <?php
-	if (!isset($component_name)) $component_name = '';
-	if (!isset($component_desc)) $component_desc = '';
-	if (!isset($owner))          $owner = '';
-	if (!isset($active))         $active = '';
-	if (!isset($component_id))   $component_id = '';
 ?>
 <script language="JavaScript">
 	var nameString = '<?php echo translate("Please enter a name"); ?>';
@@ -76,7 +71,7 @@
             <input type="submit" value="<?php echo translate("Submit"); ?>">
             <input type="hidden" name="component_id" value="<?php echo $component_id; ?>">
             <input type="hidden" name="project_id" value="<?php echo $project_id; ?>">
-            <input type="hidden" name="use_js" value="<?php echo $_REQUEST['use_js']; ?>">
+            <input type="hidden" name="use_js" value="<?php echo $use_js; ?>">
             <input type="hidden" name="op" value="save_component">
         </td>
     </tr>

@@ -1,7 +1,4 @@
 <?php
-	if (!isset($version_name)) $version_name = '';
-	if (!isset($active))       $active = '';
-	if (!isset($version_id))   $version_id = '';
 ?>
 <script language="JavaScript">
 	var nameString = '<?php echo translate("Please enter a version"); ?>';
@@ -49,10 +46,10 @@
             &nbsp;
         </td>
         <td>
-            <input type="submit" value="<?php echo translate("Submit"); ?>">
+            <input type="submit" value="<?php echo translate('Submit'); ?>">
             <input type="hidden" name="version_id" value="<?php echo $version_id; ?>">
             <input type="hidden" name="project_id" value="<?php echo $project_id; ?>">
-            <input type="hidden" name="use_js" value="<?php echo $_REQUEST['use_js']; ?>">
+            <input type="hidden" name="use_js" value="<?php echo $use_js; ?>">
             <input type="hidden" name="op" value="save_version">
         </td>
     </tr>
