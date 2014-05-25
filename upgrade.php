@@ -31,22 +31,26 @@ $comment_text = "";
 $log_text = "";
 $num_errors = 0;
 
-// Handle a database error
-function handle_upgrade_error(&$obj) {
-    global $log_text;
-
-    $log_text .= "<div class=\"error\">";
-    $log_text .= htmlentities($obj->message) . '<br>' . htmlentities($obj->userinfo);
-    $log_text .= "</div>\n";
-}
+//// Handle a database error
+//function handle_upgrade_error(&$obj) {
+//    global $log_text;
+//
+//    $log_text .= "<div class=\"error\">";
+//    $log_text .= htmlentities($obj->message) . '<br>' . htmlentities($obj->userinfo);
+//    $log_text .= "</div>\n";
+//}
 
 function log_query($str) {
     global $db, $log_text, $num_errors;
 
     $log_text .= "SQL: " . $str . "<br>\n";
-    $result = $db->query($str);
-    if (DB::isError($result)) { // DB::isError() should not be called statically
+    try {
+        $db->query($str);
+    } catch (Exception $exc) {
         $num_errors = $num_errors + 1;
+        $log_text .= "<div class=\"error\">";
+        $log_text .= htmlentities(get_class($exc) . ':' . $exc->getCode() . ' ' . $exc->getMessage());
+        $log_text .= "</div>\n";
     }
     $log_text .= "<br>\n";
 }
@@ -64,28 +68,31 @@ function upgrade() {
     //$tmp_log .= "DB_PASSWORD: '".DB_PASSWORD."'<br>\n";
     $tmp_log .= "<br>\n";
 
-    $db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_upgrade_error");
+    //$db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_upgrade_error");
 
-    $query = 'select count(*) from ' . TBL_CONFIGURATION;
+//    $query = 'select count(*) from ' . TBL_CONFIGURATION;
+//    $tmp_log .= "<p>SQL: " . $query . "<br>\n";
+//    $count = $db->getOne($query);
+//    if (DB::isError($count)) {
+//        $tmp_log .= $log_text;
+//        $log_text = "";
+//        $count = 0;
+//    }
+//    $tmp_log .= "count = " . $count . "</p>\n";
+
+    //if ($count > 30) {
+    $query = 'select varvalue from ' . TBL_CONFIGURATION . ' where varname = \'DB_VERSION\'';
     $tmp_log .= "<p>SQL: " . $query . "<br>\n";
-    $count = $db->getOne($query);
-    if (DB::isError($count)) {
-        $tmp_log .= $log_text;
-        $log_text = "";
-        $count = 0;
-    }
-    $tmp_log .= "count = " . $count . "</p>\n";
-
-    if ($count > 30) {
-        $query = 'select varvalue from ' . TBL_CONFIGURATION . ' where varname = \'DB_VERSION\'';
-        $tmp_log .= "<p>SQL: " . $query . "<br>\n";
+    try {
         $thisvers = $db->getOne($query);
-        if (DB::isError($thisvers)) {
-            $tmp_log .= $log_text;
-            $log_text = "";
-            $thisvers = 0;
-        }
+    } catch (Exception $exc) {
+        $tmp_log .= "<div class=\"error\">";
+        $tmp_log .= "Error while getting current DB version from DB: ";
+        $tmp_log .= htmlentities(get_class($exc) . ':' . $exc->getCode() . ' ' . $exc->getMessage());
+        $tmp_log .= "</div>\n";
     }
+    //}
+
 
     $tmp_log .= "DB_VERSION = " . $thisvers . "</p>\n";
 
@@ -96,8 +103,9 @@ function upgrade() {
     $log_text = $tmp_log;
 
     $upgraded = 0;
-    if ($thisvers == CUR_DB_VERSION)
+    if ($thisvers == CUR_DB_VERSION) {
         $upgraded = 1;
+    }
     if (!$upgraded) {
         switch (DB_TYPE) {
             case 'pgsql' :
