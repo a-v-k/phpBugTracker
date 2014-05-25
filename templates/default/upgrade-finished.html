@@ -15,10 +15,11 @@
 			<?php echo $log_text; ?>
 			</p>
 			<hr>
-		<?php } ?>
+		<?php } else { ?>
 		<p>
 		<?php echo translate("Your database has been updated."); ?>
 		</p>
+		<?php } ?>
 		<a href="index.php"><?php echo translate("phpBugTracker home"); ?></a>
 	</body>
 </html>
