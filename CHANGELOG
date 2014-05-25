@@ -1,3 +1,8 @@
+-- 1.5.1.1 2014 May
+: upgrade.php works with PDO now
+: Added STRICT_ERROR_MODE constant. If ==1 system will throw ErrorException on any error. Hard recommended for developers. Default is 0.
+: Many bug fixes.
+
 -- 1.5.1 2014 May
 : Migrate to PDO data access method
 : Full remove PEAR:DB
