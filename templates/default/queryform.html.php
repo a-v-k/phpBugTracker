@@ -1,7 +1,7 @@
 <?php
 $emailsearch1 = empty($emailsearch1) ? null : $emailsearch1;
 $emailtype1 = empty($emailtype1) ? null : $emailtype1;
-$emailfield1 = empty($emailfield1) ? null : $emailtype1;
+$emailfield1 = empty($emailfield1) ? null : $emailfield1;
 $email1 = empty($email1) ? null : $email1;
 $title = empty($title) ? null : $title;
 $title_type = empty($title_type) ? null : $title_type;
