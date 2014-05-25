@@ -1,4 +1,8 @@
 <?php
+if (!defined('PHPBT_VERSION')) {
+    die('not in phpbt');
+}
+
 $order = empty($order) ? null : $order;
 $sort = empty($sort) ? null : $sort;
 

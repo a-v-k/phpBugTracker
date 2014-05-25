@@ -1,3 +1,8 @@
+<?php
+if (!defined('PHPBT_VERSION')) {
+    die('not in phpbt');
+}
+?>
 <table border="0" width="100%">
     <tr>
         <td valign="top">

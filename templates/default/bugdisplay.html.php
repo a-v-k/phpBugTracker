@@ -1,3 +1,8 @@
+<?php
+if (!defined('PHPBT_VERSION')) {
+    die('not in phpbt');
+}
+?>
 <script type="text/javascript">
     <!--
     warningString = '<?php echo translate("You must login to modify this bug"); ?>';

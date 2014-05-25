@@ -1,4 +1,7 @@
 <?php
+if (!defined('PHPBT_VERSION')) {
+    die('not in phpbt');
+}
 $emailsearch1 = empty($emailsearch1) ? null : $emailsearch1;
 $emailtype1 = empty($emailtype1) ? null : $emailtype1;
 $emailfield1 = empty($emailfield1) ? null : $emailfield1;

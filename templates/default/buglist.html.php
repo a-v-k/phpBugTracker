@@ -1,4 +1,8 @@
 <?php
+if (!defined('PHPBT_VERSION')) {
+    die('not in phpbt');
+}
+
 $project_id = 0;
 if (isset($_GET['projects']) && is_numeric($_GET['projects'])) {
     $project_id = (int) $_GET['projects'];
