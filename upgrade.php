@@ -103,7 +103,7 @@ function upgrade() {
     $log_text = $tmp_log;
 
     $upgraded = 0;
-    if ($thisvers == CUR_DB_VERSION) {
+    if ($thisvers >= CUR_DB_VERSION) {
         $upgraded = 1;
     }
     if (!$upgraded) {
