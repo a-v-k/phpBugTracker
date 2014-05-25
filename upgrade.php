@@ -310,12 +310,13 @@ function upgrade() {
             log_query("update " . TBL_CONFIGURATION . " set varvalue = 1, description = 'Should the query list use the priority colors as the field background color' where varname = 'USE_PRIORITY_COLOR'");
         }
 
-        /* update to current DB_VERSION */
-        log_query("UPDATE " . TBL_CONFIGURATION . " SET varvalue = '" . CUR_DB_VERSION . "' WHERE varname = 'DB_VERSION'");
         if ($num_errors == 0) {
+            /* update to current DB_VERSION */
+            log_query("UPDATE " . TBL_CONFIGURATION . " SET varvalue = '" . CUR_DB_VERSION . "' WHERE varname = 'DB_VERSION'");
             $comment_text .= "Success!<br>\n";
         } else {
-            $comment_text .= "Done, but with " . $num_errors . " error(s), which may be ignorable.<br>\n";
+            $comment_text .= "Done, but with " . $num_errors . " error(s) <br>\n";
+            $comment_text .= "You need check upgrade.php script and your db to resolve errors <br>\n";
         }
     } else {
         $comment_text .= "Nothing to do...<br>\n";
