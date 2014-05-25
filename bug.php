@@ -327,7 +327,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
         $rs = $db->limitQuery('select u.login, c.comment_text, c.created_date from ' . TBL_COMMENT . ' c, ' . TBL_AUTH_USER . " u where bug_id = {$buginfo['bug_id']} and c.created_by = u.user_id order by created_date desc", 0, 2);
         $rs->fetchInto($row);
         //var_dump($row);
-        if (!newbug) {
+        if (!$newbug) {
             $t->assign(array(
                 'newpostedby' => $row['login'],
                 'newpostedon' => date(TIME_FORMAT, $row['created_date']) . ' on ' .
