@@ -23,11 +23,10 @@
 // $Id: include.php,v 1.151 2008/10/06 01:08:59 brycen Exp $
 
 error_reporting(E_ALL);
-ini_set('display_errors', true);
-
+ini_set('display_errors', 1);
 define('RAWERROR', true);
 
-define('PHPBT_VERSION', '1.0rc6');
+define('PHPBT_VERSION', '1.5.1.1');
 define('DIGICRAFT_TRACKER', '1');
 @ini_set("session.save_handler", "files");
 
@@ -41,6 +40,20 @@ if (file_exists('config.php')) {
 if (!defined('DB_HOST')) {
     header("Location: install.php");
     exit();
+}
+
+if (!defined('STRICT_ERROR_MODE')) {
+    define('STRICT_ERROR_MODE', 0);
+}
+
+if (STRICT_ERROR_MODE != 0) {
+    error_reporting(E_ALL | E_STRICT);
+
+    function exception_error_handler($errno, $errstr, $errfile, $errline) {
+        throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+    }
+
+    set_error_handler("exception_error_handler");
 }
 
 // Stupid magic quotes stuff
