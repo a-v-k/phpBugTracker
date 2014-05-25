@@ -674,7 +674,7 @@ function mass_mail4($to, $subject, $message, $from = ADMIN_EMAIL) {
             } catch (Exception $e) {
                 //echo $e->getMessage(); //Boring error messages from anything else!
                 $res = false;
-                error_log($e->errorMessage());
+                error_log($e->getMessage());
             }
         }
     }
