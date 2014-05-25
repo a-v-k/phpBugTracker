@@ -28,7 +28,7 @@ extract(array(
     'project' => null,
         ), EXTR_SKIP);
 ?>
-<script type="text/JavaScript">
+<script type="text/javascript">
     <!--
     versions = new Array();
     closedversions = new Array();
@@ -36,15 +36,17 @@ extract(array(
     versions['All'] = new Array(new Array('','All'));
     closedversions['All'] = new Array(new Array('','All'));
     components['All'] = new Array(new Array('','All'));
-<?php build_project_js(); ?>
+    <?php
+    build_project_js();
+    ?>
 
     // Saved queries
     savedQueries = new Array();
-<?php
-for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
-    echo "savedQueries[$i] = '{$queries[$i]['saved_query_name']}'; ";
-}
-?>
+    <?php
+    for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
+        echo "savedQueries[$i] = '{$queries[$i]['saved_query_name']}'; ";
+    }
+    ?>
 
     function updateMenus(f) {
         sel = f.projects[f.projects.selectedIndex].text;
