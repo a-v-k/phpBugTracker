@@ -27,97 +27,104 @@ define('TEMPLATE_PATH', 'admin');
 include 'include.php';
 
 function del_item($osid = 0) {
-	global $db, $me;
-	
-	if ($osid) {
-		// Make sure we are going after a valid record
-		$itemexists = $db->getOne('select count(*) from '.TBL_OS." where os_id = $osid");
-		// Are there any bugs tied to this one?
-		$bugcount = $db->getOne('select count(*) from '.TBL_BUG." where os_id = $osid");
-		if ($itemexists and !$bugcount) {
-			$db->query('delete from '.TBL_OS." where os_id = $osid");
-		}
-	}
-	header("Location: $me?");
+    global $db, $me;
+
+    if ($osid) {
+        // Make sure we are going after a valid record
+        $itemexists = $db->getOne('select count(*) from ' . TBL_OS . " where os_id = $osid");
+        // Are there any bugs tied to this one?
+        $bugcount = $db->getOne('select count(*) from ' . TBL_BUG . " where os_id = $osid");
+        if ($itemexists and !$bugcount) {
+            $db->query('delete from ' . TBL_OS . " where os_id = $osid");
+        }
+    }
+    header("Location: $me?");
 }
 
 function do_form($osid = 0) {
-	global $db, $me, $t;
+    global $db, $me, $t;
 
-	extract($_POST);
-	$error = '';
-	// Validation
-	if (!$os_name = trim($os_name))
-		$error = translate("Please enter a name");
-	if ($error) { show_form($osid, $error); return; }
+    extract($_POST);
+    $error = '';
+    // Validation
+    if (!$os_name = trim($os_name))
+        $error = translate("Please enter a name");
+    if ($error) {
+        show_form($osid, $error);
+        return;
+    }
 
-	if (empty($sort_order)) $sort_order = 0;
-	if (!$osid) {
-		$db->query("insert into ".TBL_OS." (os_id, os_name, regex, sort_order) values (".$db->nextId(TBL_OS).", ".$db->quote(stripslashes($os_name)).", '$regex', '$sort_order')");
-	} else {
-		$db->query("update ".TBL_OS." set os_name = ".$db->quote(stripslashes($os_name)).", regex = '$regex', sort_order = '$sort_order' where os_id = '$os_id'");
-	}
-	if ($use_js) {
-		$t->render('edit-submit.html', '', 'wrap-popup.html');
-	} else {
-		header("Location: $me?");
-	}
+    if (empty($sort_order))
+        $sort_order = 0;
+    if (!$osid) {
+        $db->query("insert into " . TBL_OS . " (os_id, os_name, regex, sort_order) values (" . $db->nextId(TBL_OS) . ", " . $db->quote(stripslashes($os_name)) . ", '$regex', '$sort_order')");
+    } else {
+        $db->query("update " . TBL_OS . " set os_name = " . $db->quote(stripslashes($os_name)) . ", regex = '$regex', sort_order = '$sort_order' where os_id = '$os_id'");
+    }
+    if ($use_js) {
+        $t->render('edit-submit.html', '', 'wrap-popup.html');
+    } else {
+        header("Location: $me?");
+    }
 }
 
 function show_form($osid = 0, $error = '') {
-	global $db, $me, $t;
+    global $db, $me, $t;
 
-	extract($_POST);
-	if ($osid && !$error) {
-		$t->assign($db->getRow("select * from ".TBL_OS." where os_id = '$osid'"));
-	} else {
-		$t->assign($_POST);
-	}
-	$t->assign('error', $error);
-	$t->render('os-edit.html', translate("Edit Operating System"), 
-		!empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
+    extract($_POST);
+    if ($osid && !$error) {
+        $t->assign($db->getRow("select * from " . TBL_OS . " where os_id = '$osid'"));
+    } else {
+        $t->assign($_POST);
+    }
+    $t->assign('error', $error);
+    $t->render('os-edit.html', translate("Edit Operating System"), !empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
 }
 
-
 function list_items($osid = 0, $error = '') {
-	global $db, $me, $t, $QUERY;
+    global $db, $me, $t, $QUERY;
 
-	if (empty($_GET['order'])) { 
-		$order = 'sort_order'; 
-		$sort = 'asc'; 
-	} else {
-		$order = $_GET['order']; 
-		$sort = $_GET['sort']; 
-	}
-	
-	$page = isset($_GET['page']) ? $_GET['page'] : 0;
-	
-	$nr = $db->getOne("select count(*) from ".TBL_OS);
+    if (empty($_GET['order'])) {
+        $order = 'sort_order';
+        $sort = 'asc';
+    } else {
+        $order = $_GET['order'];
+        $sort = $_GET['sort'];
+    }
 
-	list($selrange, $llimit) = multipages($nr, $page, "order=$order&sort=$sort");
+    $page = isset($_GET['page']) ? $_GET['page'] : 0;
 
-	$t->assign('oses', $db->getAll($db->modifyLimitQuery(
-		sprintf($QUERY['admin-list-oses'], $order, $sort), $llimit, $selrange)));
+    $nr = $db->getOne("select count(*) from " . TBL_OS);
 
-	$headers = array(
-		'osid' => 'os_id',
-		'name' => 'os_name',
-		'regex' => 'regex',
-		'sortorder' => 'sort_order');
+    list($selrange, $llimit) = multipages($nr, $page, "order=$order&sort=$sort");
 
-	sorting_headers($me, $headers, $order, $sort, "page=$page");
+    $t->assign('oses', $db->getAll($db->modifyLimitQuery(
+                            sprintf($QUERY['admin-list-oses'], $order, $sort), $llimit, $selrange)));
 
-	$t->render('oslist.html', translate("Operating System List"));
+    $headers = array(
+        'osid' => 'os_id',
+        'name' => 'os_name',
+        'regex' => 'regex',
+        'sortorder' => 'sort_order');
+
+    sorting_headers($me, $headers, $order, $sort, "page=$page");
+
+    $t->render('oslist.html', translate("Operating System List"));
 }
 
 $perm->check('Admin');
 
 if (isset($_REQUEST['op'])) {
-	switch($_REQUEST['op']) {
-		case 'save' : do_form($_POST['os_id']); break;
-		case 'edit' : show_form($_GET['os_id']); break;
-		case 'del' : del_item($_GET['os_id']); break;
-	}
-} else list_items();
+    switch ($_REQUEST['op']) {
+        case 'save' : do_form($_POST['os_id']);
+            break;
+        case 'edit' : show_form($_GET['os_id']);
+            break;
+        case 'del' : del_item($_GET['os_id']);
+            break;
+    }
+} else {
+    list_items();
+}
 
-?>
+//
