@@ -10,8 +10,10 @@
 			<br>
 			<?php printf(translate('Please back up your database before running this script.')); ?>
 			<br>
-			<?php printf(translate('Before running this script: delete your old config.php file.')); ?>
-			<br>
+                        <!--  WTF?????
+			**  <?php printf(translate('Before running this script: delete your old config.php file.')); ?>
+			**  <br>
+                        -->
 			<br>
 			<a href="<?php echo $_SERVER['PHP_SELF']; ?>?doit=1"><?php echo translate('Do it!'); ?></a>
 		</div>
