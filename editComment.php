@@ -27,41 +27,41 @@ include 'include.php';
 $projectid = isset($_GET['projectid']) ? $_GET['projectid'] : 0;
 global $db, $t, $restricted_projects, $perm, $QUERY;
 
-if (! $perm->have_perm('Manager')) {
-	$t->assign('status', "You do not have permission to edit comments."); 
-	$t->render('editComment.html', translate("Edit Comment"));
-	return;
+if (!$perm->have_perm('Manager')) {
+    $t->assign('status', "You do not have permission to edit comments.");
+    $t->render('editComment.html', translate("Edit Comment"));
+    return;
 }
 
 //	Edit a specific comment
 $bug_id = check_id($_GET['bugid']);
 if (isset($_GET['newComment'])) {
-	$new_comment = $_GET['newComment'];
-	$new_comment = $db->quoteSmart($new_comment);
-	$comment_id  = $_GET['commentID'];
-	$comment_id  = $db->escapeSimple($comment_id);
+    $new_comment = $_GET['newComment'];
+    $new_comment = $db->quoteSmart($new_comment);
+    $comment_id = $_GET['commentID'];
+    $comment_id = $db->escapeSimple($comment_id);
 
-	// Should we allow changes to be made to this bug by this user?
-	/*
-	if (STRICT_UPDATING and !($u == $buginfo['assigned_to'] or
-		$u == $buginfo['created_by'] or $perm->have_perm('Manager'))) {
-		show_bug($bugid,array('status' => translate("You can not change this bug")));
-		return;
-	}
-	*/
+    // Should we allow changes to be made to this bug by this user?
+    /*
+      if (STRICT_UPDATING and !($u == $buginfo['assigned_to'] or
+      $u == $buginfo['created_by'] or $perm->have_perm('Manager'))) {
+      show_bug($bugid,array('status' => translate("You can not change this bug")));
+      return;
+      }
+     */
 
-	// Update database.
-	// TODO: create a "revised_on" date column in the database
-	$db->query("update ".TBL_COMMENT." set comment_text=".$new_comment." where comment_id=$comment_id");
-	$t->assign('status', "Comment #$comment_id updated"); 
+    // Update database.
+    // TODO: create a "revised_on" date column in the database
+    $db->query("update " . TBL_COMMENT . " set comment_text=" . $new_comment . " where comment_id=$comment_id");
+    $t->assign('status', "Comment #$comment_id updated");
     header("Location: bug.php?op=show&bugid=$bug_id");
 }
 
 //	List all comments
 //	In the case of an edit, this counts as the confirmation page.
 if (is_numeric($bug_id)) {
-	$t->assign('comments', $db->getAll('select c.* from '.TBL_COMMENT." c where bug_id=$bug_id order by c.created_date"));
-	$t->render('editComment.html', translate("Edit Comment"));
-	}
+    $t->assign('comments', $db->getAll('select c.* from ' . TBL_COMMENT . " c where bug_id=$bug_id order by c.created_date"));
+    $t->render('editComment.html', translate("Edit Comment"));
+}
 
-?>
+//
