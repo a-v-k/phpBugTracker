@@ -32,4 +32,4 @@ $t->clear_all_cache();
 $t->clear_compiled_tpl();
 include 'templates/default/base/removetemplates.html';
 
-?>
+//
