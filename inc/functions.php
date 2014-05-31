@@ -82,7 +82,7 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
             'project' => $perm->have_perm('Admin') ? $querystart . " where " .
                     ($selected ? "(active > 0 or project_id in (" . $db->quote($selected) . "))" : 'active > 0') .
                     " order by {$box}_name" :
-                        $querystart . " where project_id in (" . $viewable_projects . ")" .
+                    $querystart . " where project_id in (" . $viewable_projects . ")" .
                     " and " .
                     ($selected ? " (active > 0 or project_id in (" . $db->quote($selected) . "))" : 'active > 0') .
                     " order by {$box}_name",
@@ -413,7 +413,7 @@ function genpassword($length) {
 
 ///
 /// Wrap text - Picked up somewhere on the net - probably zend.com
-function textwrap($text, $wrap=72, $break="\n") {
+function textwrap($text, $wrap = 72, $break = "\n") {
     $len = strlen($text);
     if ($len > $wrap) {
         $h = '';
@@ -433,9 +433,9 @@ function textwrap($text, $wrap=72, $break="\n") {
             $lastChar = $lastChar + 1;
         }
         $h .= substr($text, $lastBreak);
-    }
-    else
+    } else {
         $h = $text;
+    }
     return $h;
 }
 
@@ -783,7 +783,7 @@ function delete_bug($bug_id) {
             " where a.bug_id = b.bug_id and b.bug_id = " . $db->quote($bug_id));
     foreach ($attary as $att) {
         @unlink(join('/', array(ATTACHMENT_PATH,
-                            $att['project_id'], "$bug_id-{$att['file_name']}")));
+                    $att['project_id'], "$bug_id-{$att['file_name']}")));
     }
     $db->query("delete from " . TBL_ATTACHMENT . " where bug_id = " . $db->quote($bug_id));
 
