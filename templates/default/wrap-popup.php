@@ -12,7 +12,15 @@ if (!defined('PHPBT_VERSION')) {
     <body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0">
         <table width="100%" cellspacing="0" cellpadding="0">
             <tr>
-                <td class="maincontent"><?php include($content_template) ?></td>
+                <td class="maincontent">
+                    <?php
+                    if (substr($content_template, -4) == '.tpl') {
+                        $this->smarty->display($content_template);
+                    } else {
+                        include($content_template);
+                    }
+                    ?>
+                </td>
             </tr>
         </table>
     </body>
