@@ -147,7 +147,7 @@ function show_attachment_form($bugid, $error = '') {
         'description' => isset($description) ? htmlspecialchars($description) : '',
         'max_size' => ini_get('upload_max_filesize') < ATTACHMENT_MAX_SIZE ? number_format(ini_get('upload_max_filesize')) : number_format(ATTACHMENT_MAX_SIZE)
     ));
-    $t->render('bugattachmentform.html', translate("Add Attachment"), !empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
+    $t->render('bugattachmentform.html', translate("Add Attachment"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
 }
 
 if (isset($_GET['del'])) {

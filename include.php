@@ -229,10 +229,10 @@ class template {
                 include($this->template_path . '/' . $content_template);
             }
         } else {
-            include ($wrap_file ? $this->template_path . '/' . $wrap_file : $this->template_path . '/' . 'wrap.html');
+            include ($wrap_file ? $this->template_path . '/' . $wrap_file : $this->template_path . '/' . 'wrap.php');
         }
 
-        //include($nowrap ? $path . $content_template : ($wrap_file ? $path . $wrap_file : $path . 'wrap.html'));
+        //include($nowrap ? $path . $content_template : ($wrap_file ? $path . $wrap_file : $path . 'wrap.php'));
     }
 
     function fetch($content_template) {

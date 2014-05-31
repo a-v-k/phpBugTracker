@@ -79,7 +79,7 @@ function show_form($siteid = 0, $error = '') {
         $t->assign($_POST);
     }
     $t->assign('error', $error);
-    $t->render('site-edit.html', translate("Edit Site"), !empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
+    $t->render('site-edit.html', translate("Edit Site"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
 }
 
 function list_items($siteid = 0, $error = '') {

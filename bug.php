@@ -892,7 +892,7 @@ function show_bug_printable($bugid) {
 
     // Show the comments
     $t->assign('comments', $db->getAll('select comment_text, c.created_date, login from ' . TBL_COMMENT . ' c, ' . TBL_AUTH_USER . " where bug_id = $bugid and c.created_by = user_id order by c.created_date"));
-    $t->render('bugdisplay-printable.html', translate("View Bug"), 'wrap-popup.html');
+    $t->render('bugdisplay-printable.html', translate("View Bug"), 'wrap-popup.php');
 }
 
 ///

@@ -82,7 +82,7 @@ function show_form($resolutionid = 0, $error = '') {
         $t->assign($_POST);
     }
     $t->assign('error', $error);
-    $t->render('resolution-edit.html', translate("Edit Resolution"), !empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
+    $t->render('resolution-edit.html', translate("Edit Resolution"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
 }
 
 function list_items($resolutionid = 0, $error = '') {

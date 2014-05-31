@@ -65,7 +65,7 @@ function do_form($groupid = 0) {
     }
 
     if ($use_js) {
-        $t->render('edit-submit.html', '', 'wrap-popup.html');
+        $t->render('edit-submit.html', '', 'wrap-popup.php');
     } else {
         header("Location: $me?");
     }
@@ -84,7 +84,7 @@ function show_form($groupid = 0, $error = '') {
     $t->assign('perms', $db->getAll("select * from " . TBL_AUTH_PERM));
     $t->assign('group_perms', $group_perms);
     $t->assign('error', $error);
-    $t->render('group-edit.html', translate("Edit Group"), (!empty($_GET['use_js']) ? 'wrap-popup.html' : 'wrap.html'));
+    $t->render('group-edit.html', translate("Edit Group"), (!empty($_GET['use_js']) ? 'wrap-popup.php' : 'wrap.php'));
 }
 
 function list_items($do_group = true, $groupid = 0, $error = '') {

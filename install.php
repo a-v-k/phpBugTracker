@@ -70,7 +70,7 @@ class template {
     function render($content_template, $page_title, $wrap_file = '') {
         extract($this->vars);
         $path = defined('TEMPLATE_PATH') ? './templates/' . THEME . '/' . TEMPLATE_PATH . '/' : './templates/' . THEME . '/';
-        require($wrap_file ? $path . $wrap_file : $path . 'wrap.html');
+        require($wrap_file ? $path . $wrap_file : $path . 'wrap.php');
     }
 
     function assign($var, $value = '') {

@@ -76,7 +76,7 @@ function show_form($severityid = 0, $error = '') {
 	}
 	$t->assign('error', $error);
 	$t->render('severity-edit.html', translate("Edit Severity"),
-		!empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
+		!empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
 }
 
 

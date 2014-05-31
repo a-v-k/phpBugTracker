@@ -79,7 +79,7 @@ function show_form($databaseid = 0, $error = '') {
         $t->assign($_POST);
     }
     $t->assign('error', $error);
-    $t->render('database-edit.html', translate("Edit Database"), !empty($_GET['use_js']) ? 'wrap-popup.html' : '');
+    $t->render('database-edit.html', translate("Edit Database"), !empty($_GET['use_js']) ? 'wrap-popup.php' : '');
 }
 
 function list_items($databaseid = 0, $error = '') {

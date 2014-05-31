@@ -78,7 +78,7 @@ function show_form($priorityid = 0, $error = '') {
         $t->assign($_POST);
     }
     $t->assign('error', $error);
-    $t->render('priority-edit.html', translate("Edit Priority"), !empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
+    $t->render('priority-edit.html', translate("Edit Priority"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
 }
 
 function list_items($priorityid = 0, $error = '') {

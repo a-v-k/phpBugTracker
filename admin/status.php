@@ -82,7 +82,7 @@ function show_form($statusid = 0, $error = '') {
             $t->assign('bug_open', 1); // new bugs def. open :)
     }
     $t->assign('error', $error);
-    $t->render('status-edit.html', translate("Edit Status"), !empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
+    $t->render('status-edit.html', translate("Edit Status"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
 }
 
 function list_items($statusid = 0, $error = '') {

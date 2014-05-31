@@ -62,7 +62,7 @@ function do_form($osid = 0) {
         $db->query("update " . TBL_OS . " set os_name = " . $db->quote(stripslashes($os_name)) . ", regex = '$regex', sort_order = '$sort_order' where os_id = '$os_id'");
     }
     if ($use_js) {
-        $t->render('edit-submit.html', '', 'wrap-popup.html');
+        $t->render('edit-submit.html', '', 'wrap-popup.php');
     } else {
         header("Location: $me?");
     }
@@ -78,7 +78,7 @@ function show_form($osid = 0, $error = '') {
         $t->assign($_POST);
     }
     $t->assign('error', $error);
-    $t->render('os-edit.html', translate("Edit Operating System"), !empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
+    $t->render('os-edit.html', translate("Edit Operating System"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
 }
 
 function list_items($osid = 0, $error = '') {

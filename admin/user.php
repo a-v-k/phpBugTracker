@@ -145,7 +145,7 @@ function show_form($userid = 0, $error = '') {
     }
     // The number of admins in the system
     $t->assign('numadmins', $db->getOne('select count(*) from ' . TBL_USER_GROUP . ' where group_id = 1'));
-    $t->render('user-edit.html', translate("Edit User"), !empty($_REQUEST['use_js']) ? 'wrap-popup.html' : 'wrap.html');
+    $t->render('user-edit.html', translate("Edit User"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
 }
 
 function list_items($userid = 0, $error = '') {
