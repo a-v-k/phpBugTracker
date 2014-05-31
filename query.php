@@ -425,13 +425,16 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
         }
     }
     // Taint checking
-    if (empty($db_headers[$order]))
+    if (empty($db_headers[$order])) {
         $order = 'bug_id';
-    if (!in_array($sort, array('asc', 'desc')))
+    }
+    if (!in_array($sort, array('asc', 'desc'))) {
         $sort = 'asc';
+    }
 
-    if (empty($_SESSION['queryinfo']))
+    if (empty($_SESSION['queryinfo'])) {
         $_SESSION['queryinfo'] = array();
+    }
     // fix by avk start
     //$_SESSION['queryinfo']['order'] = $db_headers[$order];;
     $_SESSION['queryinfo']['order'] = $order;
@@ -442,8 +445,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
     }
 
     if (empty($_SESSION['queryinfo']['query']) or isset($op)) {
-        list($_SESSION['queryinfo']['query'], $paramstr) =
-                build_query($assignedto, $reportedby, $open, $bookmarked, $projects);
+        list($_SESSION['queryinfo']['query'], $paramstr) = build_query($assignedto, $reportedby, $open, $bookmarked, $projects);
     }
 
     $desired_fields = !empty($_SESSION['db_fields']) ?
@@ -538,7 +540,7 @@ if (!empty($_GET['projects']) && isset($restricted_projects) &&
     exit;
 }
 
-if (isset($_GET['op']))
+if (isset($_GET['op'])) {
     switch ($_GET['op']) {
         case 'query' : show_query();
             break;
@@ -562,6 +564,6 @@ if (isset($_GET['op']))
         default : show_query();
             break;
     }
-else
+} else {
     list_items($assignedto, $reportedby, $open, $bookmarked, $projects);
-
+}
