@@ -104,7 +104,7 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
             break;
         case 'group':
             if ($project) { // If we are building for project admin page
-                if (!is_array($selected) or !count($selected) or (count($selected) && in_array(0, $selected))) {
+                if (!is_array($selected) or ! count($selected) or ( count($selected) && in_array(0, $selected))) {
                     $sel = ' selected';
                 } else {
                     $sel = '';
@@ -490,9 +490,9 @@ function build_project_js($no_all = false) {
         $pname = addslashes($pname);
         // Version arrays
         $js .= "versions['$pname'] = new Array(" .
-                ((!isset($no_all) or !$no_all) ? "new Array('','All')," : '');
+                ((!isset($no_all) or ! $no_all) ? "new Array('','All')," : '');
         $js2 = "closedversions['$pname'] = new Array(" .
-                ((!isset($no_all) or !$no_all) ? "new Array('','All'),new Array('0','Not Set')," : "new Array(0, 'Choose One'),");
+                ((!isset($no_all) or ! $no_all) ? "new Array('','All'),new Array('0','Not Set')," : "new Array(0, 'Choose One'),");
         $rs2 = $db->query("select version_name, version_id from " . TBL_VERSION . " where project_id = " . $db->quote($pid) . " and active = 1");
         while (list($version, $vid) = $rs2->fetchRow(DB_FETCHMODE_ORDERED)) {
             $version = addslashes($version);
