@@ -26,11 +26,13 @@ include 'include.php';
 
 function del_attachment($attachid) {
     global $db;
-
-    if (list($filename, $mimetype) = grab_attachment($attachid)) {
+    $att = grab_attachment($attachid);
+    if (is_array($att)) {
+        $filename = $att[0];
         $db->query("delete from " . TBL_ATTACHMENT . " where attachment_id = " . $db->quote($attachid));
         unlink($filename);
-        header("Location: {$_SERVER['HTTP_REFERER']}");
+        $referer = filter_input(INPUT_SERVER, 'HTTP_REFERER');
+        header("Location: {$referer}");
     }
 }
 
@@ -87,6 +89,7 @@ function add_attachment($bugid, $description) {
 
     // Check for a previously-uploaded attachment with the same name, bug, and project
     $rs = $db->query("select a.bug_id, project_id from " . TBL_ATTACHMENT . " a, " . TBL_BUG . " b where file_name = " . $db->quote($_FILES['attachment']['name']) . " and a.bug_id = b.bug_id");
+    $ainfo = array();
     while ($rs->fetchInto($ainfo)) {
         if ($bugid == $ainfo['bug_id'] && $projectid == $ainfo['project_id']) {
             show_attachment_form($bugid, translate("That attachment already exists for this bug"));
