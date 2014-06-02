@@ -35,7 +35,7 @@ function do_form() {
 
     if (!EMAIL_IS_LOGIN && !$_POST['login'] = trim($_POST['login']))
         $error = translate("Please enter a login");
-    elseif (!$_POST['email'] or !bt_valid_email($_POST['email']))
+    elseif (!$_POST['email'] or ! bt_valid_email($_POST['email']))
         $error = translate("Please enter a valid email");
     elseif ($db->getOne("select user_id from " . TBL_AUTH_USER . " where email = '{$_POST['email']}' " . (!empty($_POST['login']) ? "or login = '{$_POST['login']}'" : '')))
         $error = translate("That login has already been used");
