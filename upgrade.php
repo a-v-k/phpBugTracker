@@ -69,7 +69,6 @@ function upgrade() {
     $tmp_log .= "<br>\n";
 
     //$db->setErrorHandling(PEAR_ERROR_CALLBACK, "handle_upgrade_error");
-
 //    $query = 'select count(*) from ' . TBL_CONFIGURATION;
 //    $tmp_log .= "<p>SQL: " . $query . "<br>\n";
 //    $count = $db->getOne($query);
@@ -79,7 +78,6 @@ function upgrade() {
 //        $count = 0;
 //    }
 //    $tmp_log .= "count = " . $count . "</p>\n";
-
     //if ($count > 30) {
     $query = 'select varvalue from ' . TBL_CONFIGURATION . ' where varname = \'DB_VERSION\'';
     $tmp_log .= "<p>SQL: " . $query . "<br>\n";
