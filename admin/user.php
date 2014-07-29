@@ -93,11 +93,10 @@ function do_form($userid = 0) {
         $user_groups = $db->getCol(sprintf($QUERY['admin-user-groups'], $userid));
 
         // Compute differences between old and new
-        if (!isset($user_groups) or !is_array($user_groups)) {
+        if (!isset($user_groups) or ! is_array($user_groups)) {
             $user_groups = array();
         }
-        if (!isset($_POST['fusergroup']) or !is_array($_POST['fusergroup']) or
-                !$_POST['fusergroup'][0]) {
+        if (!isset($_POST['fusergroup']) or ! is_array($_POST['fusergroup']) or ! $_POST['fusergroup'][0]) {
             $_POST['fusergroup'] = array();
         }
 
