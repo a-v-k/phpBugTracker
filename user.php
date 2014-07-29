@@ -78,9 +78,10 @@ function change_preferences($prefs) {
     array_shift($old_prefs); // Drop the user_id field
     $updates = array();
     foreach ($old_prefs as $pref => $val) {
-        if ($pref == 'def_results')
+        if ($pref == 'def_results') {
             continue;
-        if (in_array($pref, $prefs) and !$val) {
+        }
+        if (in_array($pref, $prefs) and ! $val) {
             $updates[] = "$pref = 1";
         } elseif (!in_array($pref, $prefs) and $val) {
             $updates[] = "$pref = 0";
