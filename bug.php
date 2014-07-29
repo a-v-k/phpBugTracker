@@ -164,7 +164,7 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
     global $db, $t, $u, $select, $now, $QUERY;
 
     // It's a new bug if the changedfields array is empty and there are no comments
-    $newbug = (!count($cf) and !$comments);
+    $newbug = (!count($cf) and ! $comments);
 
     $template_ext = false/* HTML_EMAIL */ ? 'html' : 'txt';
     $template = $newbug ? "bugemail-newbug.$template_ext" : "bugemail.$template_ext";
@@ -364,10 +364,10 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
     // Don't email the person who just made the changes (later, make this
     // behavior toggable by the user)
     $maillist[] = $reporter;
-    if ($userid != $buginfo['created_by'] and !empty($reporter)) {
+    if ($userid != $buginfo['created_by'] and ! empty($reporter)) {
         $maillist[] = $reporter;
     }
-    if ($userid != (!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to']) and !empty($assignedto) and $emailassignedto) {
+    if ($userid != (!empty($cf['assigned_to']) ? $cf['assigned_to'] : $buginfo['assigned_to']) and ! empty($assignedto) and $emailassignedto) {
         $maillist[] = $assignedto;
     }
 
@@ -475,7 +475,7 @@ function update_bug($bugid = 0) {
     }
 
     // Should we allow changes to be made to this bug by this user?
-    if (STRICT_UPDATING and !($u == $buginfo['assigned_to'] or
+    if (STRICT_UPDATING and ! ($u == $buginfo['assigned_to'] or
             $u == $buginfo['created_by'] or $perm->have_perm_proj($buginfo['project_id']))) {
         if ($perm->have_perm('CommentBug', $buginfo['project_id']) && !empty($comments)) {
             $db->query("insert into " . TBL_COMMENT . " (comment_id, bug_id, comment_text, created_by, created_date) values (" . $db->nextId(TBL_COMMENT) . ", $bugid, " . $db->quote($comments) . ", $u, $now)");
@@ -529,7 +529,7 @@ function update_bug($bugid = 0) {
     $priority = isset($priority) && ($may_change_priority or $may_manage) ? (int) $priority : $buginfo['priority'];
     $resolution_id = isset($resolution_id) && ($may_close or $may_change_resolution or $may_manage) ? (int) $resolution_id : $buginfo['resolution_id'];
     $status_id = isset($status_id) && ($may_change_status or $may_manage) ? (int) $status_id : $buginfo['status_id'];
-    if (!$may_close and !$may_manage) {
+    if (!$may_close && !$may_manage) {
         if (is_closed($status_id)) {
             $status_id = $buginfo['status_id'];
         } else if (is_closed($buginfo['status_id'])) {
@@ -580,7 +580,7 @@ function update_bug($bugid = 0) {
         // This code allows free entry of a cc email address:
         // $cc_uid = $db->getOne("select user_id from ".TBL_AUTH_USER." where login = ".$db->quote(stripslashes($add_cc)));
 
-        if ($cc_uid != $u and !$is_admin && !$is_owner && !$may_manage) {
+        if ($cc_uid != $u and ! $is_admin && !$is_owner && !$may_manage) {
             return (array('status' => translate("You may only add yourself to the CC list")));
         }
         if (!$cc_uid) {
@@ -706,7 +706,7 @@ function update_bug($bugid = 0) {
         move_attachments($bugid, $buginfo['project_id'], $project_id);
     }
 
-    if (count($changedfields) or !empty($comments)) {
+    if (count($changedfields) && !empty($comments)) {
         do_changedfields($u, $buginfo, $changedfields, $comments);
     }
 }
@@ -865,8 +865,7 @@ function show_form($bugid = 0, $error = '') {
 function show_bug_printable($bugid) {
     global $db, $me, $t, $QUERY, $restricted_projects;
 
-    if (!is_numeric($bugid) or
-            !$row = $db->getRow(sprintf($QUERY['bug-printable'], $bugid, $restricted_projects))) {
+    if (!is_numeric($bugid) or ! $row = $db->getRow(sprintf($QUERY['bug-printable'], $bugid, $restricted_projects))) {
         show_text(translate("That bug does not exist, or you don't have permission to view it."), true);
         exit;
     }
@@ -962,8 +961,7 @@ function prev_next_links($bugid, $pos) {
 function show_bug($bugid = 0, $error = array()) {
     global $db, $me, $t, $u, $QUERY, $restricted_projects, $auth, $perm;
 
-    if (!is_numeric($bugid) or
-            !$row = $db->getRow(sprintf($QUERY['bug-show-bug'], $bugid, $restricted_projects))) {
+    if (!is_numeric($bugid) or ! $row = $db->getRow(sprintf($QUERY['bug-show-bug'], $bugid, $restricted_projects))) {
         show_text(translate("That bug does not exist, or you don't have permission to view it."), true);
         return;
     }
@@ -1147,3 +1145,4 @@ if (!empty($_REQUEST['op'])) {
 }
 
 
+//
