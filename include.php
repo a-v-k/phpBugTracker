@@ -50,6 +50,12 @@ if (STRICT_ERROR_MODE != 0) {
     error_reporting(E_ALL | E_STRICT);
 
     function exception_error_handler($errno, $errstr, $errfile, $errline) {
+
+        if (0 === error_reporting()) {
+            // error was suppressed with the @-operator
+            return false;
+        }
+
         throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
     }
 
