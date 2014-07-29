@@ -162,12 +162,15 @@ if (empty($upgrading)) {
         }
     }
 } else {
-    if (!defined('OPEN_BUG_STATUSES'))
+    if (!defined('OPEN_BUG_STATUSES')) {
         define('OPEN_BUG_STATUSES', '0');
-    if (!defined('CHARSET'))
+    }
+    if (!defined('CHARSET')) {
         define('CHARSET', 'utf-8');
-    if (!defined('STYLE'))
+    }
+    if (!defined('STYLE')) {
         define('STYLE', 'default');
+    }
 }
 require_once ('inc/db/' . DB_TYPE . '.php');
 
