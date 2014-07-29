@@ -361,7 +361,7 @@ if (!empty($u)) {
     ));
 }
 
-if (defined('FORCE_LOGIN') and FORCE_LOGIN and empty($u) and !defined('NO_AUTH')) {
+if (defined('FORCE_LOGIN') && FORCE_LOGIN && empty($u) && !defined('NO_AUTH')) {
     // Save URL for after login
     $incoming_url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     $t->assign('incoming_url', $incoming_url);
