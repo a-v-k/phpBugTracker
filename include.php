@@ -226,10 +226,10 @@ class template {
             if (substr($content_template, -4) == '.tpl') {
                 $this->smarty->display($content_template);
             } else {
-                include($this->template_path . '/' . $content_template);
+                require($this->template_path . '/' . $content_template);
             }
         } else {
-            include ($wrap_file ? $this->template_path . '/' . $wrap_file : $this->template_path . '/' . 'wrap.php');
+            require($wrap_file ? $this->template_path . '/' . $wrap_file : $this->template_path . '/' . 'wrap.php');
         }
 
         //include($nowrap ? $path . $content_template : ($wrap_file ? $path . $wrap_file : $path . 'wrap.php'));
