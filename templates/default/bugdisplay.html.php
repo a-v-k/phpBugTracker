@@ -11,9 +11,9 @@ if (!defined('PHPBT_VERSION')) {
     versions = new Array();
     closedversions = new Array();
     components = new Array();
-    versions['All'] = new Array(new Array('','All'));
-    closedversions['All'] = new Array(new Array('','All'));
-    components['All'] = new Array(new Array('','All'));
+    versions['All'] = new Array(new Array('', 'All'));
+    closedversions['All'] = new Array(new Array('', 'All'));
+    components['All'] = new Array(new Array('', 'All'));
 <?php build_project_js(true); ?>
 
     function updateMenus(f) {
@@ -48,7 +48,7 @@ if (!defined('PHPBT_VERSION')) {
     }
 
     function popupAtt(id) {
-        window.open('attachment.php?use_js=1&bugid='+id, 'ewin', 'dependent=yes,width=350,height=200,scrollbars=1');
+        window.open('attachment.php?use_js=1&bugid=' + id, 'ewin', 'dependent=yes,width=350,height=200,scrollbars=1');
         return false;
     }
     //-->
@@ -93,13 +93,22 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
                 <?php } ?>
             </td>
         </tr>
-        <?php if (!empty($error['status']))
-            echo "<tr><td class=\"error\">{$error['status']}</td></tr>"; ?>
+        <?php
+        if (!empty($error['status'])) {
+            echo "<tr><td class=\"error\">{$error['status']}</td></tr>";
+        }
+        ?>
     </table>
-    <?php if (!empty($error['add_dep']))
-        echo "<div class=\"error\">{$error['add_dep']}</div>"; ?>
-    <?php if (!empty($error['vote']))
-        echo "<div class=\"error\">{$error['vote']}</div>"; ?>
+    <?php
+    if (!empty($error['add_dep'])) {
+        echo "<div class=\"error\">{$error['add_dep']}</div>";
+    }
+    ?>
+    <?php
+    if (!empty($error['vote'])) {
+        echo "<div class=\"error\">{$error['vote']}</div>";
+    }
+    ?>
 
     <!-- comments (the meat of the bug report) -->
     <table border="0" cellpadding="2" cellspacing="0" width="100%">
@@ -112,7 +121,7 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
         </tr>
         <?php for ($i = 0, $ccount = count($comments); $i < $ccount; $i++) { ?>
             <tr class="alt">
-                <td><?php echo translate("Posted by"); ?>: <?php echo maskemail($comments[$i]['login']); ?> 
+                <td><?php echo translate("Posted by"); ?>: <?php echo maskemail($comments[$i]['login']); ?>
                     <?php echo translate("Date"); ?>: <?php echo date(TIME_FORMAT . ' ' . DATE_FORMAT, $comments[$i]['created_date']); ?></td>
             </tr><tr>
                 <td><?php echo format_comments($comments[$i]['comment_text']); ?> <br><br></td>
@@ -218,10 +227,12 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
             <?php } ?>
         </tr><tr>
             <td><?php
-            if ($url)
-                echo "<a href=\"$url\" rel=\"nofollow\">" . translate("URL") . "</a>"; else
-                echo translate("URL");
-            ?>:</td>
+                if ($url) {
+                    echo "<a href=\"$url\" rel=\"nofollow\">" . translate("URL") . "</a>";
+                } else {
+                    echo translate("URL");
+                }
+                ?>:</td>
             <?php if ($may_edit) { ?>
                 <td><input type="text" size="35" maxlength="255" name="url" value="<?php echo $url ?>"></td>
             <?php } else { ?>
@@ -246,16 +257,19 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
             <?php if ($may_change_assignment or $may_manage or $may_edit) { ?>
                 <td><?php echo translate("Add CC"); ?>:</td>
                 <td><select name="add_cc"><option value="0" selected>Choose one</option>
-                        <?php build_select('reporter', 'none') ?></select></td> 
+                        <?php build_select('reporter', 'none') ?></select></td>
                 <!-- <td><input type="text" name="add_cc"></td> -->
             <?php } ?>
         </tr><tr>
             <td colspan="2" valign="top">
                 <br>
-                <?php if (!empty($error['add_dep']))
-                    echo "<div class=\"error\">{$error['add_dep']}</div>"; ?>
+                <?php
+                if (!empty($error['add_dep'])) {
+                    echo "<div class=\"error\">{$error['add_dep']}</div>";
+                }
+                ?>
                 <?php if (!empty($bug_dependencies)) { ?>
-                    <?php echo translate("Depends on bugs"); ?>: 
+                    <?php echo translate("Depends on bugs"); ?>:
                     <?php
                     for ($i = 0, $count = count($bug_dependencies); $i < $count; $i++) {
                         printf('<a href="bug.php?op=show&bugid=%d" class="%s">#%d</a>%s', $bug_dependencies[$i]['bug_id'], ($bug_dependencies[$i]['bug_open'] ? 'open_bug_number' : 'closed_bug_number'), $bug_dependencies[$i]['bug_id'], ($i < $count - 1 ? ', ' : ''));
@@ -264,7 +278,7 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
                     <br>
                 <?php } ?>
                 <?php if (!empty($bug_blocks)) { ?>
-                    <?php echo translate("Blocks bugs"); ?>:  
+                    <?php echo translate("Blocks bugs"); ?>:
                     <?php
                     for ($i = 0, $count = count($bug_blocks); $i < $count; $i++) {
                         printf('<a href="bug.php?op=show&bugid=%d" class="%s">#%d</a>%s', $bug_blocks[$i]['bug_id'], ($bug_blocks[$i]['bug_open'] ? 'open_bug_number' : 'closed_bug_number'), $bug_blocks[$i]['bug_id'], ($i < $count - 1 ? ', ' : ''));
@@ -273,7 +287,7 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
                     <br>
                 <?php } ?>
                 <?php if (!empty($bug_duplicates)) { ?>
-                    <?php echo translate("Duplicates"); ?>: 
+                    <?php echo translate("Duplicates"); ?>:
                     <?php
                     for ($i = 0, $count = count($bug_duplicates); $i < $count; $i++) {
                         if (isset($bug_duplicates[$i])) {
@@ -309,10 +323,12 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
                     <textarea name="comments" rows="6" cols="79"><?php echo isset($_POST['comments']) ? $_POST['comments'] : ''; ?></textarea>
                     <br><br>
                     <div align="right">
-                        <?php if ($may_change_assignment or $may_manage or $may_edit or
-                                $may_add_comment or $may_close or $may_change_resolution) { ?>
+                        <?php
+                        if ($may_change_assignment or $may_manage or $may_edit or
+                                $may_add_comment or $may_close or $may_change_resolution) {
+                            ?>
                             <?php echo translate("Supress notification email"); ?> <input type="checkbox" name="suppress_email" value="1">
-                            <?php if (defined('DIGICRAFT_TRACKER')) { // AVK fix start  ?>
+                            <?php if (defined('DIGICRAFT_TRACKER')) { // AVK fix start      ?>
                                 <input type="submit" value="Submit & return">
                             <?php } else {  // AVK fix end   ?>
                                 <?php if (empty($nextbug)) { ?>
@@ -320,9 +336,12 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
                                 <?php } else { ?>
                                     <input type="submit" value="Submit & View Next">
                                 <?php } ?>
-                            <?php } // AVK fix (one line) ?>
-                        <?php } else
-                            echo translate("You must login to modify this bug"); ?>
+                            <?php } // AVK fix (one line)   ?>
+                            <?php
+                        } else {
+                            echo translate("You must login to modify this bug");
+                        }
+                        ?>
                     </div></td>
             </tr>
         <?php } ?>
@@ -338,54 +357,59 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
                     </tr><tr>
                         <td colspan="5" height="2" bgcolor="#ffffff"><img src="images/spacer.gif" alt="" height="2" width="2" /></td>
                     </tr><tr>
-                    <td bgcolor="#cccccc" align="center"><b><?php echo translate("Name"); ?></b></td>
-                    <td width="60" bgcolor="#cccccc" align="center"><b><?php echo translate("Size"); ?></b></td>
-                    <td width="150" bgcolor="#cccccc" align="center"><b><?php echo translate("Type"); ?></b></td>
-                    <td width="80" bgcolor="#cccccc" align="center"><b><?php echo translate("Created"); ?></b></td>
-                    <td width="80" bgcolor="#cccccc" align="center">&nbsp;</td>
-                </tr><tr>
-                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
-                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
-                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
-                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
-                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
-                </tr>
-                <?php if ($attcount = count($attachments)) { ?>
-                    <?php for ($i = 0; $i < $attcount; $i++) { ?>
-                <tr title="<?php echo htmlspecialchars($attachments[$i]['description']); ?>"<?php if ($i % 2 != 0)
-                    echo ' class="alt" bgcolor="#dddddd"' ?>>
-                            <td><?php echo htmlspecialchars($attachments[$i]['file_name']); ?></td>
-                            <td align="right">
-                                <?php
-                                echo $attachments[$i]['file_size'] > 1024 ? number_format((round($attachments[$i]['file_size']) / 1024 * 100) / 100) . 'k' : number_format($attachments[$i]['file_size']) . 'b';
-                                ?>
-                            </td>
-                            <td align="center"><?php echo $attachments[$i]['mime_type']; ?></td>
-                            <td align="center"><?php echo date(DATE_FORMAT, $attachments[$i]['created_date']); ?></td>
-                            <td align="center"><a href='attachment.php?attachid=<?php echo $attachments[$i]['attachment_id']; ?>'>View</a>
-                                <?php if ($is_admin or $may_manage) { ?>
-                                    | <a href='attachment.php?del=<?php echo $attachments[$i]['attachment_id']; ?>' onClick="return confirm('<?php echo translate("Are you sure you want to delete this attachment?"); ?>');"><?php echo translate("Delete"); ?></a>
-                                <?php } ?>
-                            </td>
+                        <td bgcolor="#cccccc" align="center"><b><?php echo translate("Name"); ?></b></td>
+                        <td width="60" bgcolor="#cccccc" align="center"><b><?php echo translate("Size"); ?></b></td>
+                        <td width="150" bgcolor="#cccccc" align="center"><b><?php echo translate("Type"); ?></b></td>
+                        <td width="80" bgcolor="#cccccc" align="center"><b><?php echo translate("Created"); ?></b></td>
+                        <td width="80" bgcolor="#cccccc" align="center">&nbsp;</td>
+                    </tr><tr>
+                        <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                        <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                        <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                        <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                        <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                    </tr>
+                    <?php if ($attcount = count($attachments)) { ?>
+                        <?php
+                        for ($i = 0; $i < $attcount; $i++) {
+                            $trAttr = 'title="' . htmlspecialchars($attachments[$i]['description']) . '"';
+                            if ($i % 2 != 0) {
+                                $trAttr .= ' class="alt" bgcolor="#dddddd" ';
+                            }
+                            ?>
+                            <tr <?php echo $trAttr ?> >
+                                <td><?php echo htmlspecialchars($attachments[$i]['file_name']); ?></td>
+                                <td align="right">
+                                    <?php
+                                    echo $attachments[$i]['file_size'] > 1024 ? number_format((round($attachments[$i]['file_size']) / 1024 * 100) / 100) . 'k' : number_format($attachments[$i]['file_size']) . 'b';
+                                    ?>
+                                </td>
+                                <td align="center"><?php echo $attachments[$i]['mime_type']; ?></td>
+                                <td align="center"><?php echo date(DATE_FORMAT, $attachments[$i]['created_date']); ?></td>
+                                <td align="center"><a href='attachment.php?attachid=<?php echo $attachments[$i]['attachment_id']; ?>'>View</a>
+                                    <?php if ($is_admin or $may_manage) { ?>
+                                        | <a href='attachment.php?del=<?php echo $attachments[$i]['attachment_id']; ?>' onClick="return confirm('<?php echo translate("Are you sure you want to delete this attachment?"); ?>');"><?php echo translate("Delete"); ?></a>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    <?php } else { ?>
+                        <tr>
+                            <td colspan="5" align="center"><?php echo translate("No attachments found for this bug"); ?></td>
                         </tr>
                     <?php } ?>
-                <?php } else { ?>
                     <tr>
-                        <td colspan="5" align="center"><?php echo translate("No attachments found for this bug"); ?></td>
+                        <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                        <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                        <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                        <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                        <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
+                    </tr><tr>
+                        <td colspan="5" height="2" bgcolor="#ffffff"><img src="images/spacer.gif" alt="" height="2" width="2" /></td>
                     </tr>
-                <?php } ?>
-                <tr>
-                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
-                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
-                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
-                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
-                    <td bgcolor="#000000" height="1"><img src="images/spacer.gif" alt="" height="1" width="1" /></td>
-                </tr><tr>
-                    <td colspan="5" height="2" bgcolor="#ffffff"><img src="images/spacer.gif" alt="" height="2" width="2" /></td>
-                </tr>
-        </table></td>
-</tr>
-</table>
+                </table></td>
+        </tr>
+    </table>
 </form>
 <div align="center" class="bugdisplaylinks">
     <?php if (isset($_SESSION['uid']) && !empty($_SESSION['uid'])) { ?>
@@ -394,10 +418,17 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
         <?php } else { ?>
             <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=delbookmark&amp;bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("Remove bookmark for this bug"); ?></a></b> |
         <?php } ?>
-        <?php if (!empty($error['vote']))
-            echo "<div class=\"error\">{$error['vote']}</div>" ?>
-        <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=vote&amp;bugid=<?php echo $bug_id . $posinfo; ?>" onClick="if (<?php echo $already_voted; ?>) { alert ('<?php echo translate("You have already voted for this bug"); ?>'); return false; }"><?php echo translate("Vote for this bug"); ?></a></b> |
-    <?php } ?>
+        <?php
+        if (!empty($error['vote'])) {
+            echo "<div class=\"error\">{$error['vote']}</div>";
+        }
+        ?>
+        <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=vote&amp;bugid=<?php echo $bug_id . $posinfo; ?>" onClick="if (<?php echo $already_voted; ?>) {
+                        alert('<?php echo translate("You have already voted for this bug"); ?>');
+                        return false;
+
+                    }"><?php echo translate("Vote for this bug"); ?></a></b> |
+        <?php } ?>
     <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=viewvotes&amp;bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("View votes"); ?> (<?php echo $num_votes; ?>)</a></b>
     | <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=history&amp;bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("View bug history"); ?></a></b>
     | <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=print&amp;bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("Printable View"); ?></a></b>
