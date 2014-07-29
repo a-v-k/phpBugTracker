@@ -859,7 +859,7 @@ function show_form($bugid = 0, $error = '') {
             'projectname' => $projectname
         ));
     }
-    $t->render('bugform.html', translate("Create Bug"));
+    $t->render('bugform.html.php', translate("Create Bug"));
 }
 
 function show_bug_printable($bugid) {
