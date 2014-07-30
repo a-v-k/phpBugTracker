@@ -23,22 +23,26 @@
 // $Id: newaccount.php,v 1.37 2008/01/28 00:10:40 brycen Exp $
 
 define('NO_AUTH', 1);
-include 'include.php';
+require 'include.php';
 
 function do_form() {
-    global $db, $t, $now, $u;
+    global $db, $t, $now;
 
     if (NEW_ACCOUNTS_DISABLED) {
         $t->render('newaccount-disabled.html');
         return;
     }
 
-    if (!EMAIL_IS_LOGIN && !$_POST['login'] = trim($_POST['login']))
+    $rLogin = trim(filter_input(INPUT_POST, 'login'));
+    $rEmail = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+
+    if (!EMAIL_IS_LOGIN && ($rLogin == '')) {
         $error = translate("Please enter a login");
-    elseif (!$_POST['email'] or ! bt_valid_email($_POST['email']))
+    } elseif (!$rEmail || !bt_valid_email($rEmail)) {
         $error = translate("Please enter a valid email");
-    elseif ($db->getOne("select user_id from " . TBL_AUTH_USER . " where email = '{$_POST['email']}' " . (!empty($_POST['login']) ? "or login = '{$_POST['login']}'" : '')))
+    } elseif ($db->getOne("select user_id from " . TBL_AUTH_USER . " where email = '{$rEmail}' " . (!empty($rLogin) ? "or login = '{$rLogin}'" : ''))) {
         $error = translate("That login has already been used");
+    }
     if (!empty($error)) {
         show_form($error);
         return;
@@ -52,24 +56,24 @@ function do_form() {
         $mpassword = $db->quote(stripslashes($password));
     }
     if (EMAIL_IS_LOGIN) {
-        $login = $_POST['email'];
+        $login = $rEmail;
     } else {
-        $login = $_POST['login'];
+        $login = $rLogin;
     }
     $user_id = $db->nextId(TBL_AUTH_USER);
     // Change this line to make new member-created accounts inactive.
-    $db->query("insert into " . TBL_AUTH_USER . " (user_id, login, first_name, last_name, email, password, active, created_date, last_modified_date) values (" . join(', ', array($user_id, $db->quote(stripslashes($login)), $db->quote(stripslashes($firstname)), $db->quote(stripslashes($lastname)), $db->quote($_POST['email']), $mpassword, 1, $now, $now)) . ")");
+    $db->query("insert into " . TBL_AUTH_USER . " (user_id, login, first_name, last_name, email, password, active, created_date, last_modified_date) values (" . join(', ', array($user_id, $db->quote(stripslashes($login)), $db->quote(stripslashes($firstname)), $db->quote(stripslashes($lastname)), $db->quote($rEmail), $mpassword, 1, $now, $now)) . ")");
     $db->query("insert into " . TBL_USER_GROUP . " (user_id, group_id, created_by, created_date) select $user_id, group_id, 0, $now from " . TBL_AUTH_GROUP . " where group_name = '" . NEW_ACCOUNTS_GROUP . "'");
     $db->query("insert into " . TBL_USER_PREF . " (user_id) values ($user_id)");
 
-    mass_mail4($_POST['email'], translate("phpBugTracker Login"), sprintf(translate("Your phpBugTracker password is %s"), $password), ADMIN_EMAIL);
+    mass_mail4($rEmail, translate("phpBugTracker Login"), sprintf(translate("Your phpBugTracker password is %s"), $password), ADMIN_EMAIL);
 
 
     $t->render('newaccountsuccess.html', translate("New account created"));
 }
 
 function show_form($error = '') {
-    global $t, $_POST;
+    global $t;
 
     $t->assign('error', $error);
 
@@ -84,7 +88,7 @@ function show_form($error = '') {
             'txtLastName' => translate("Last Name"),
             'txtOptional' => translate("optional"),
             'txtCreateNewAccount' => translate("Create new account"),
-            'formAction' => $_SERVER['PHP_SELF'],
+            'formAction' => filter_input(INPUT_SERVER, 'PHP_SELF'),
             'EMAIL_IS_LOGIN' => EMAIL_IS_LOGIN,
             'test' => '<b>html cocode</b>',
             'login' => htmlspecialchars(get_request_value('login')),
@@ -96,7 +100,7 @@ function show_form($error = '') {
     }
 }
 
-if (isset($_POST['createaccount'])) {
+if (filter_input(INPUT_POST, 'createaccount') == 1) {
     do_form();
 } else {
     show_form();
