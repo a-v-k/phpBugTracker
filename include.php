@@ -28,7 +28,7 @@ define('RAWERROR', true);
 
 define('PHPBT_VERSION', '1.5.1.1');
 define('DIGICRAFT_TRACKER', '1');
-@ini_set("session.save_handler", "files");
+ini_set("session.save_handler", "files");
 
 // Installation hasn't been completed
 if (file_exists('config.php')) {
@@ -324,8 +324,11 @@ if (isset($_POST['dologin'])) {
             if (defined('EMAIL_DISABLED') and EMAIL_DISABLED) {
                 $t->assign('loginerror', '<div class="result">' . translate("Your password has not been mailed to you because all system email has been disabled.") . '</div>');
             } else {
-                mass_mail4($email, translate("phpBugTracker Login"), sprintf(translate("Your phpBugTracker password is %s"), $password), ADMIN_EMAIL);
-                $t->assign('loginerror', '<div class="result">' . translate("Your password has been emailed to you") . '</div>');
+                if (mass_mail4($email, translate("phpBugTracker Login"), sprintf(translate("Your phpBugTracker password is %s"), $password), ADMIN_EMAIL)) {
+                    $t->assign('loginerror', '<div class="result">' . translate("Your password has been emailed to you") . '</div>');
+                } else {
+                    $t->assign('loginerror', '<div class="result">' . translate("Error while sending password to you. Show system log.") . '</div>');
+                }
                 $emailsuccess = true;
             }
         }
