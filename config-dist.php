@@ -33,11 +33,10 @@ define ('DB_PASSWORD', '{db_pass}'); // password for database connection
 
 // Database Table Config
 // you can change either the prefix of the table names or each table name individually
-define ('CUR_DB_VERSION', 7);  // The version of the database. Copy this to your config.php for upgrades.
 define ('TBL_PREFIX', '{tbl_prefix}');	// the prefix for all tables, leave empty to use the old style
 
-define ('TBL_ACTIVE_SESSIONS', TBL_PREFIX.'active_sessions');
-define ('TBL_DB_SEQUENCE',     TBL_PREFIX.'db_sequence');
+define ('TBL_ACTIVE_SESSIONS', TBL_PREFIX.'active_sessions');  // not exists???
+define ('TBL_DB_SEQUENCE',     TBL_PREFIX.'db_sequence');      // not exists???
 define ('TBL_ATTACHMENT',      TBL_PREFIX.'attachment');
 define ('TBL_AUTH_GROUP',      TBL_PREFIX.'auth_group');
 define ('TBL_AUTH_PERM',       TBL_PREFIX.'auth_perm');

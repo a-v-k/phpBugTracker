@@ -58,7 +58,7 @@ function log_query($str) {
 function upgrade() {
     global $db, $comment_text, $log_text, $num_errors;
 
-    $thisvers = 0;
+    $thisvers = false;
 
     $tmp_log = "Using the following information from config.php:<br>\n";
     $tmp_log .= "DB_TYPE: '" . DB_TYPE . "'<br>\n";
@@ -91,11 +91,17 @@ function upgrade() {
     }
     //}
 
-
+    if (!is_numeric($thisvers)) {
+        die('failed to detect current database version');
+    }
     $tmp_log .= "DB_VERSION = " . $thisvers . "</p>\n";
 
+    $upgradeTo = $thisvers + 1;
     $comment_text .= "Current DB version = $thisvers<br>\n";
-    $comment_text .= "Upgrading to version = " . CUR_DB_VERSION . "<br>\n";
+    $comment_text .= "Release DB version = " . CUR_DB_VERSION . "<br>\n";
+    if ($thisvers < CUR_DB_VERSION) {
+        $comment_text .= "Upgrading to version = " . $upgradeTo . "<br>\n";
+    }
     $comment_text .= "<br>\n";
 
     $log_text = $tmp_log;
@@ -192,6 +198,63 @@ function upgrade() {
                     log_query("create INDEX bug_id_bookmark   ON " . TBL_BOOKMARK . " (bug_id);");
                     log_query("create INDEX bug_id_comment    ON " . TBL_COMMENT . " (bug_id);");
                 }
+                if ($upgradeTo == 8) {
+                    log_query("alter table " . TBL_ATTACHMENT . " engine=InnoDB;");
+                }
+                if ($upgradeTo == 9) {
+                    log_query("alter table " . TBL_ATTACHMENT . " add column bytes longblob after file_name;");
+                }
+                if ($upgradeTo == 10) {
+                    log_query("alter table " . TBL_BUG . " engine=InnoDB;");
+                }
+                if ($upgradeTo == 11) {
+                    log_query("alter table " . TBL_COMMENT . " engine=InnoDB;");
+                }
+                if ($upgradeTo == 12) {
+                    log_query("alter table " . TBL_BOOKMARK . " engine=InnoDB;");
+                }
+                if ($upgradeTo == 13) {
+                    //log_query("alter table " . TBL_ACTIVE_SESSIONS . " engine=InnoDB;");
+                    //log_query("alter table " . TBL_DB_SEQUENCE . " engine=InnoDB;");
+                    log_query("alter table " . TBL_AUTH_GROUP . " engine=InnoDB;");
+                    log_query("alter table " . TBL_AUTH_PERM . " engine=InnoDB;");
+                    log_query("alter table " . TBL_AUTH_USER . " engine=InnoDB;");
+                }
+                if ($upgradeTo == 14) {
+                    log_query("alter table " . TBL_BUG_CC . " engine=InnoDB;");
+                    log_query("alter table " . TBL_BUG_DEPENDENCY . " engine=InnoDB;");
+                    log_query("alter table " . TBL_BUG_GROUP . " engine=InnoDB;");
+                    log_query("alter table " . TBL_BUG_HISTORY . " engine=InnoDB;");
+                    log_query("alter table " . TBL_BUG_VOTE . " engine=InnoDB;");
+                }
+                if ($upgradeTo == 15) {
+                    log_query("alter table " . TBL_COMPONENT . " engine=InnoDB;");
+                    log_query("alter table " . TBL_CONFIGURATION . " engine=InnoDB;");
+                    log_query("alter table " . TBL_GROUP_PERM . " engine=InnoDB;");
+                    log_query("alter table " . TBL_OS . " engine=InnoDB;");
+                    log_query("alter table " . TBL_PROJECT . " engine=InnoDB;");
+                    log_query("alter table " . TBL_RESOLUTION . " engine=InnoDB;");
+                }
+                if ($upgradeTo == 16) {
+                    log_query("alter table " . TBL_SAVED_QUERY . " engine=InnoDB;");
+                    log_query("alter table " . TBL_SEVERITY . " engine=InnoDB;");
+                    log_query("alter table " . TBL_STATUS . " engine=InnoDB;");
+                    log_query("alter table " . TBL_USER_GROUP . " engine=InnoDB;");
+                    log_query("alter table " . TBL_USER_PERM . " engine=InnoDB;");
+                    log_query("alter table " . TBL_USER_PREF . " engine=InnoDB;");
+                }
+                if ($upgradeTo == 17) {
+                    log_query("alter table " . TBL_VERSION . " engine=InnoDB;");
+                    log_query("alter table " . TBL_PROJECT_GROUP . " engine=InnoDB;");
+                    log_query("alter table " . TBL_PROJECT_PERM . " engine=InnoDB;");
+                    log_query("alter table " . TBL_DATABASE . " engine=InnoDB;");
+                    log_query("alter table " . TBL_SITE . " engine=InnoDB;");
+                    log_query("alter table " . TBL_PRIORITY . " engine=InnoDB;");
+                }
+                if ($upgradeTo == 19) {
+                    log_query("alter table " . TBL_VERSION . " engine=InnoDB;"); // just for upgrade testing
+                }
+
                 break;
             case 'oci8' :
                 if (true) {
@@ -310,7 +373,7 @@ function upgrade() {
 
         if ($num_errors == 0) {
             /* update to current DB_VERSION */
-            log_query("UPDATE " . TBL_CONFIGURATION . " SET varvalue = '" . CUR_DB_VERSION . "' WHERE varname = 'DB_VERSION'");
+            log_query("UPDATE " . TBL_CONFIGURATION . " SET varvalue = '" . $upgradeTo . "' WHERE varname = 'DB_VERSION'");
             $comment_text .= "Success!<br>\n";
         } else {
             $comment_text .= "Done, but with " . $num_errors . " error(s) <br>\n";
@@ -322,12 +385,12 @@ function upgrade() {
 
     $comment_text .= "<br/><br/><font size='-1'>$log_text</font>";
 
-    include 'templates/default/upgrade-finished.html';
+    require('templates/default/upgrade-finished.html.php');
 }
 
-if (isset($_GET['doit'])) {
+if (filter_input(INPUT_GET, 'doit') == 1) {
     upgrade();
 } else {
     $new_db_rev = CUR_DB_VERSION;
-    include('templates/default/upgrade.html');
+    require('templates/default/upgrade.html');
 }

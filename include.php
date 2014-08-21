@@ -41,6 +41,10 @@ if (!defined('DB_HOST')) {
     header("Location: install.php");
     exit();
 }
+if (defined('CUR_DB_VERSION')) {
+    die('please, remove CUR_DB_VERSION definition from your config.php');
+}
+define ('CUR_DB_VERSION', 19);
 
 if (!defined('STRICT_ERROR_MODE')) {
     define('STRICT_ERROR_MODE', 0);
