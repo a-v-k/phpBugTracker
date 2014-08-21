@@ -11,13 +11,14 @@ CREATE TABLE TBL_ATTACHMENT (
   attachment_id int(10) unsigned NOT NULL default '0',
   bug_id int(10) unsigned NOT NULL default '0',
   file_name char(255) NOT NULL default '',
+  bytes longblob default null,
   description char(255) NOT NULL default '',
   file_size bigint(20) unsigned NOT NULL default '0',
   mime_type char(30) NOT NULL default '',
   created_by int(10) unsigned NOT NULL default '0',
   created_date bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (attachment_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -32,7 +33,7 @@ CREATE TABLE TBL_AUTH_GROUP (
   last_modified_date bigint(20) unsigned NOT NULL default '0',
   is_role tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (group_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -45,7 +46,7 @@ CREATE TABLE TBL_AUTH_PERM (
   last_modified_by int(10) unsigned NOT NULL default '0',
   last_modified_date bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (perm_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -65,7 +66,7 @@ CREATE TABLE TBL_AUTH_USER (
   last_modified_date bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (user_id),
   UNIQUE KEY login (login)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -73,7 +74,7 @@ CREATE TABLE TBL_AUTH_USER (
 CREATE TABLE TBL_BOOKMARK (
   user_id int(10) unsigned NOT NULL default '0',
   bug_id int(10) unsigned NOT NULL default '0'
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -103,7 +104,7 @@ CREATE TABLE TBL_BUG (
   closed_in_version_id int(10) unsigned NOT NULL default '0',
   to_be_closed_in_version_id int(10) unsigned NOT NULL default '0',
   PRIMARY KEY (bug_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -114,7 +115,7 @@ CREATE TABLE TBL_BUG_CC (
   created_by int(10) unsigned NOT NULL default '0',
   created_date bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (bug_id,user_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -123,7 +124,7 @@ CREATE TABLE TBL_BUG_DEPENDENCY (
   bug_id int(10) unsigned NOT NULL default '0',
   depends_on int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (bug_id,depends_on)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -133,7 +134,7 @@ CREATE TABLE TBL_BUG_GROUP (
   group_id int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (bug_id,group_id),
   KEY group_id (group_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -145,7 +146,7 @@ CREATE TABLE TBL_BUG_HISTORY (
   new_value varchar(255) NOT NULL default '',
   created_by int(10) unsigned NOT NULL default '0',
   created_date bigint(20) unsigned NOT NULL default '0'
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -156,7 +157,7 @@ CREATE TABLE TBL_BUG_VOTE (
   created_date bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (user_id, bug_id),
   KEY bug_id (bug_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -168,7 +169,7 @@ CREATE TABLE TBL_COMMENT (
   created_by int(10) unsigned NOT NULL default '0',
   created_date bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (comment_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -186,7 +187,7 @@ CREATE TABLE TBL_COMPONENT (
   last_modified_by int(10) unsigned NOT NULL default '0',
   last_modified_date bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (component_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -197,7 +198,7 @@ CREATE TABLE TBL_CONFIGURATION (
   description char(255) NOT NULL default '',
   vartype char(20) NOT NULL default '',
   PRIMARY KEY  (varname)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -207,7 +208,7 @@ CREATE TABLE TBL_DATABASE (
   database_name varchar(40) NOT NULL default '',
   sort_order tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY (database_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -217,7 +218,7 @@ CREATE TABLE TBL_GROUP_PERM (
   perm_id int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (group_id,perm_id),
   KEY perm_id (perm_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -228,7 +229,7 @@ CREATE TABLE TBL_OS (
   sort_order tinyint(3) unsigned NOT NULL default '0',
   regex char(40) NOT NULL default '',
   PRIMARY KEY  (os_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -240,7 +241,7 @@ CREATE TABLE TBL_PRIORITY (
   sort_order tinyint(3) unsigned NOT NULL default '0',
   priority_color varchar(10) NOT NULL default '#FFFFFF',
   PRIMARY KEY  (priority_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -255,7 +256,7 @@ CREATE TABLE TBL_PROJECT (
   last_modified_by int(10) unsigned NOT NULL default '0',
   last_modified_date bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (project_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -267,7 +268,7 @@ CREATE TABLE TBL_PROJECT_GROUP (
   created_date bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (project_id,group_id),
   KEY group_id (group_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -275,7 +276,7 @@ CREATE TABLE TBL_PROJECT_GROUP (
 CREATE TABLE TBL_PROJECT_PERM (
   project_id int(11) NOT NULL default '0',
   user_id int(11) NOT NULL default '0'
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -286,7 +287,7 @@ CREATE TABLE TBL_RESOLUTION (
   resolution_desc text NOT NULL,
   sort_order tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (resolution_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -297,7 +298,7 @@ CREATE TABLE TBL_SAVED_QUERY (
   saved_query_name varchar(40) NOT NULL default '',
   saved_query_string text NOT NULL,
   PRIMARY KEY  (saved_query_id,user_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -309,7 +310,7 @@ CREATE TABLE TBL_SEVERITY (
   sort_order tinyint(3) unsigned NOT NULL default '0',
   severity_color varchar(10) NOT NULL default '#FFFFFF',
   PRIMARY KEY  (severity_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -319,7 +320,7 @@ CREATE TABLE TBL_SITE (
   site_name varchar(50) NOT NULL default '',
   sort_order tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY (site_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -331,7 +332,7 @@ CREATE TABLE TBL_STATUS (
   sort_order tinyint(3) unsigned NOT NULL default '0',
   bug_open tinyint(1) unsigned NOT NULL default '1',
   PRIMARY KEY  (status_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -343,7 +344,7 @@ CREATE TABLE TBL_USER_GROUP (
   created_date bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (user_id,group_id),
   KEY group_id (group_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -355,7 +356,7 @@ CREATE TABLE TBL_USER_PERM (
   created_date bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (user_id,perm_id),
   KEY perm_id (perm_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -366,7 +367,7 @@ CREATE TABLE TBL_USER_PREF (
   saved_queries tinyint(1) NOT NULL default '1',
   def_results int(11) NOT NULL default '20',
   PRIMARY KEY (user_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #--
@@ -382,7 +383,7 @@ CREATE TABLE TBL_VERSION (
   last_modified_by int(10) unsigned NOT NULL default '0',
   last_modified_date bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (version_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 #
