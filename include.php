@@ -312,7 +312,7 @@ if (!defined('NO_AUTH')) {
 if (isset($_POST['dologin'])) {
     if (!empty($_POST['sendpass'])) {
         $username = $_POST['username'];
-        list($email, $password) = $db->getRow("select email, password from " . TBL_AUTH_USER . " where login = '{$_POST['username']}' and active > 0", null, DB_FETCHMODE_ORDERED);
+        list($email, $password) = $db->getRow("select email, password from " . TBL_AUTH_USER . " where login = :username and active > 0", array(':username' => $username), DB_FETCHMODE_ORDERED);
         if (!$email) {
             $t->assign('loginerror', '<div class="error">' . translate("Invalid login") . '</div>');
         } else {
