@@ -70,7 +70,7 @@ define ('TBL_BOOKMARK',	       TBL_PREFIX.'bookmark');
 define ('TBL_PRIORITY',        TBL_PREFIX.'priority');
 
 // Constants
-define('STRICT_ERROR_MODE', 0);
+define('STRICT_ERROR_MODE', 1);
 define ('ONEDAY', 86400);
 define('PEAR_PATH', 'inc/pear/'); // Blank, or path to Pear::DB library directory containing DB.php (See http://pear.php.net/)
 require_once (dirname(__FILE__).'/inc/auth.php');
