@@ -115,6 +115,9 @@ class PdoAdapter {
         return $this->pdo->lastInsertId();
     }
 
+    function getPdo() {
+        return $this->pdo;
+    }
 }
 
 class PdoStatementAdapter {
