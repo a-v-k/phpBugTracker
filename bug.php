@@ -994,8 +994,9 @@ function show_bug($bugid = 0, $error = array()) {
 
     $t->assign($row);
     // Override the database values with posted values if there were errors
-    if (count($error))
+    if (count($error)) {
         $t->assign($_POST);
+    }
 
     $t->assign(array(
         'is_reporter' => $is_reporter,
@@ -1027,11 +1028,12 @@ function show_bug($bugid = 0, $error = array()) {
 
     // Show the attachments
     $attachments = array();
+    $att = array();
     $rs = $db->query("select * from " . TBL_ATTACHMENT . " where bug_id = $bugid");
     while ($rs->fetchInto($att)) {
-        if (@is_readable(ATTACHMENT_PATH . "/{$row['project_id']}/$bugid-{$att['file_name']}")) {
+        //if (@is_readable(ATTACHMENT_PATH . "/{$row['project_id']}/$bugid-{$att['file_name']}")) {
             $attachments[] = $att;
-        }
+        //}
     }
 
     // Show the comments
@@ -1060,7 +1062,7 @@ function show_projects() {
     } else { // Filter out projects that can't be seen by this user
         $p_query = " and p.project_id not in ($restricted_projects)";
     }
-    $projects = array();
+    //$projects = array();
     $projects = $db->getAll('select p.project_id, p.project_name, p.project_desc, p.created_date from ' . TBL_PROJECT . ' p, ' . TBL_COMPONENT . ' c where p.active = 1 and p.project_id = c.project_id' . $p_query . ' group by p.project_id, p.project_name, p.project_desc, p.created_date order by project_name');
 
     switch (count($projects)) {

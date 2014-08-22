@@ -26,11 +26,13 @@ include 'include.php';
 
 function del_attachment($attachid) {
     global $db;
-    $att = grab_attachment($attachid);
-    if (is_array($att)) {
-        $filename = $att[0];
+    $ainfo = grab_attachment($attachid);
+    if (is_array($ainfo)) {
+        if (isset($ainfo['fullFileName'])) { // old filesystem attach
+            unlink($ainfo['fullFileName']);
+        }
         $db->query("delete from " . TBL_ATTACHMENT . " where attachment_id = " . $db->quote($attachid));
-        unlink($filename);
+
         $referer = filter_input(INPUT_SERVER, 'HTTP_REFERER');
         header("Location: {$referer}");
     }
@@ -43,18 +45,41 @@ function grab_attachment($attachid) {
         show_text(translate("That attachment does not exist"), true);
         return false;
     }
-    $ainfo = $db->getRow("select a.bug_id, file_name, mime_type, project_id" . " from " . TBL_ATTACHMENT . " a, " . TBL_BUG . " b" . " where attachment_id = $attachid and a.bug_id = b.bug_id");
+    $ainfo = $db->getRow("select a.attachment_id, a.bug_id, file_name, length(bytes) bytes_length, mime_type, project_id" . " from " . TBL_ATTACHMENT . " a, " . TBL_BUG . " b" . " where attachment_id = $attachid and a.bug_id = b.bug_id");
     if (empty($ainfo)) {
         show_text(translate("That attachment does not exist"), true);
         return false;
     }
-    $filename = join('/', array(ATTACHMENT_PATH,
-        $ainfo['project_id'], "{$ainfo['bug_id']}-{$ainfo['file_name']}"));
-    if (!is_readable($filename)) {
-        show_text(translate("That attachment does not exist"), true);
-        return false;
+    if ($ainfo['bytes_length'] == 0) { // old attach in filesystem
+        $filename = join('/', array(ATTACHMENT_PATH,
+            $ainfo['project_id'], "{$ainfo['bug_id']}-{$ainfo['file_name']}"));
+        if (!is_readable($filename)) {
+            show_text(translate("That attachment does not exist"), true);
+            return false;
+        }
+        $ainfo['fullFileName'] = $filename;
     }
-    return array($filename, $ainfo['mime_type']);
+    return $ainfo;
+}
+
+function send_db_attachment($ainfo) {
+    global $db;
+    $id = $lob = 'null';
+    $stmt = $db->getPdo()->prepare("select attachment_id, bytes from " . TBL_ATTACHMENT . " where attachment_id = ? ");
+    $stmt->execute(array($ainfo['attachment_id']));
+    $stmt->bindColumn(1, $id, PDO::PARAM_INT);
+    $stmt->bindColumn(2, $lob, PDO::PARAM_LOB);
+    $stmt->fetch(PDO::FETCH_BOUND);
+    //$stmt->fetch();
+    header("Content-Disposition: attachment; filename=\"$ainfo[file_name]\"");
+    header("Content-Type: " . $ainfo['mime_type']);
+
+    //header("Content-Type: " . $mimeType);
+    header("Content-Length: " . $ainfo['bytes_length']);
+
+    //fpassthru($lob);
+    echo $lob;
+    exit();
 }
 
 function add_attachment($bugid, $description) {
@@ -98,8 +123,8 @@ function add_attachment($bugid, $description) {
     }
 
     $filepath = ATTACHMENT_PATH;
-    $tmpfilename = $_FILES['attachment']['tmp_name'];
-    $filename = "$bugid-{$_FILES['attachment']['name']}";
+    //$tmpfilename = $_FILES['attachment']['tmp_name'];
+    //$filename = "$bugid-{$_FILES['attachment']['name']}";
 
     if (!is_dir($filepath)) {
         show_attachment_form($bugid, translate("Couldn't find where to save the file!" . " (" . $filepath . ")"));
@@ -111,22 +136,113 @@ function add_attachment($bugid, $description) {
         return;
     }
 
-    if (!is_dir("$filepath/$projectid")) {
-        @mkdir("$filepath/$projectid", 0775);
+    if (isset($_FILES['attachment']) && $_FILES['attachment']['size'] > 0) {
+        $tmpName = $_FILES['attachment']['tmp_name'];
+        $fp = fopen($tmpName, 'rb'); // read binary
+
+        try {
+            $stmt = $db->getPdo()->prepare(
+                    "insert into " . TBL_ATTACHMENT . " (attachment_id, bug_id, file_name, bytes, description, file_size, mime_type, created_by, created_date) values "
+                    . "(:attachment_id, :bug_id, :file_name, :bytes, :description, :file_size, :mime_type, :created_by, :created_date)");
+            $nextId = $db->nextId(TBL_ATTACHMENT);
+            $stmt->bindParam(':attachment_id', $nextId, PDO::PARAM_INT);
+            $stmt->bindParam(':bug_id', $bugid, PDO::PARAM_INT);
+            $stmt->bindParam(':file_name', $_FILES['attachment']['name'], PDO::PARAM_STR);
+            $stmt->bindParam(':bytes', $fp, PDO::PARAM_LOB);
+            $stmt->bindParam(':description', $description, PDO::PARAM_STR);
+            $stmt->bindParam(':file_size', $_FILES['attachment']['size'], PDO::PARAM_INT);
+            $stmt->bindParam(':mime_type', $_FILES['attachment']['type'], PDO::PARAM_STR);
+            $stmt->bindParam(':created_by', $u, PDO::PARAM_STR);
+            $stmt->bindParam(':created_date', $now, PDO::PARAM_STR);
+            $db->getPdo()->errorInfo();
+            $stmt->execute();
+        } catch (PDOException $e) {
+            //'Error : ' . $e->getMessage();
+            throw $e;
+        }
+        fclose($fp);
     }
 
-    if (!@move_uploaded_file($_FILES['attachment']['tmp_name'], "$filepath/$projectid/$filename")) {
-        show_attachment_form($bugid, translate("There was an error moving the uploaded file"));
-        return;
-    }
-
-    @chmod("$filepath/$projectid/$filename", 0766);
-    $db->query("insert into " . TBL_ATTACHMENT . " (attachment_id, bug_id, file_name, description, file_size, mime_type, created_by, created_date) values (" . join(', ', array($db->nextId(TBL_ATTACHMENT), $db->quote($bugid), $db->quote($_FILES['attachment']['name']), $db->quote($description), $db->quote($_FILES['attachment']['size']), $db->quote($_FILES['attachment']['type']), $u, $now)) . ")");
+//    if (!is_dir("$filepath/$projectid")) {
+//        @mkdir("$filepath/$projectid", 0775);
+//    }
+//
+//    if (!@move_uploaded_file($_FILES['attachment']['tmp_name'], "$filepath/$projectid/$filename")) {
+//        show_attachment_form($bugid, translate("There was an error moving the uploaded file"));
+//        return;
+//    }
+//
+//    @chmod("$filepath/$projectid/$filename", 0766);
+//    $db->query("insert into " . TBL_ATTACHMENT . " (attachment_id, bug_id, file_name, description, file_size, mime_type, created_by, created_date) values (" . join(', ', array($db->nextId(TBL_ATTACHMENT), $db->quote($bugid), $db->quote($_FILES['attachment']['name']), $db->quote($description), $db->quote($_FILES['attachment']['size']), $db->quote($_FILES['attachment']['type']), $u, $now)) . ")");
 
     if ($_POST['use_js']) {
         $t->render('admin/edit-submit.html');
     } else {
         header("Location: bug.php?op=show&bugid=$bugid");
+    }
+}
+
+function get_mime_content_type($fileName) {
+
+    $mime_types = array(
+        'txt' => 'text/plain',
+        'htm' => 'text/html',
+        'html' => 'text/html',
+        'php' => 'text/html',
+        'css' => 'text/css',
+        'js' => 'application/javascript',
+        'json' => 'application/json',
+        'xml' => 'application/xml',
+        'swf' => 'application/x-shockwave-flash',
+        'flv' => 'video/x-flv',
+        // images
+        'png' => 'image/png',
+        'jpe' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'jpg' => 'image/jpeg',
+        'gif' => 'image/gif',
+        'bmp' => 'image/bmp',
+        'ico' => 'image/vnd.microsoft.icon',
+        'tiff' => 'image/tiff',
+        'tif' => 'image/tiff',
+        'svg' => 'image/svg+xml',
+        'svgz' => 'image/svg+xml',
+        // archives
+        'zip' => 'application/x-zip-compressed',
+        'rar' => 'application/x-rar-compressed',
+        'exe' => 'application/x-msdownload',
+        'msi' => 'application/x-msdownload',
+        'cab' => 'application/vnd.ms-cab-compressed',
+        // audio/video
+        'mp3' => 'audio/mpeg',
+        'qt' => 'video/quicktime',
+        'mov' => 'video/quicktime',
+        // adobe
+        'pdf' => 'application/pdf',
+        'psd' => 'image/vnd.adobe.photoshop',
+        'ai' => 'application/postscript',
+        'eps' => 'application/postscript',
+        'ps' => 'application/postscript',
+        // ms office
+        'doc' => 'application/msword',
+        'rtf' => 'application/rtf',
+        'xls' => 'application/vnd.ms-excel',
+        'ppt' => 'application/vnd.ms-powerpoint',
+        // open office
+        'odt' => 'application/vnd.oasis.opendocument.text',
+        'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+    );
+
+    $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+    if (array_key_exists($ext, $mime_types)) {
+        return $mime_types[$ext];
+    } elseif (function_exists('finfo_open')) {
+        $finfo = finfo_open(FILEINFO_MIME);
+        $mimetype = finfo_file($finfo, $fileName);
+        finfo_close($finfo);
+        return $mimetype;
+    } else {
+        return 'application/octet-stream';
     }
 }
 
@@ -163,16 +279,22 @@ if (isset($_GET['del'])) {
     $perm->check('EditBug');
     add_attachment($_POST['bugid'], $_POST['description']);
 } elseif (isset($_GET['attachid'])) {
-    if (list($filename, $mimetype) = grab_attachment($_GET['attachid'])) {
-        $base = basename($filename);
-        header("Content-Disposition: attachment; filename=\"$base\"");
-        header("Content-Type: $mimetype");
-        header("Connection: close");
+
+    $ainfo = grab_attachment($_GET['attachid']);
+    if (is_array($ainfo)) {
+        if (isset($ainfo['fullFileName'])) { // old filesystem attach
+            $base = basename($ainfo['fullFileName']);
+            header("Content-Disposition: attachment; filename=\"$ainfo[file_name]\"");
+            header("Content-Type: " . $ainfo['mime_type']);
+            header("Connection: close");
 //		header("Pragma: nocache");
 //		header("Expires: 0 ");
-        header("Cache-Control: max-age=60");
-        @readfile($filename);
-        exit;
+            header("Cache-Control: max-age=60");
+            @readfile($ainfo['fullFileName']);
+            exit;
+        } else {
+            send_db_attachment($ainfo);
+        }
     }
 } elseif (isset($_GET['bugid'])) {
     $perm->check('EditBug');
