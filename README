@@ -14,8 +14,12 @@ History of changes since old sourceforge phpBugTracker v.1.0.5
 
 Migrate to PDO data access 
 Full remove PEAR:DB
+Database migrated to InnoDB
 Allow filter bugs by project (in progress)!
 Little visual restyling.
+Fixed old security issues in attachment system.
+Attachments now stored in DB.
+Automatic update check.
 Many of html code fixed (in progress)
 Fixed bug sort order in some places.
 Database switched to UTF-8 codepage. (Autoupdate not supported)
@@ -47,7 +51,8 @@ Here is a list of the requirements to get this running on your server.
 2. PHP 5.2+ (with PDO and MySQL driver)
 3. A database - Currently MySQL only. 
 		
-
+Prevous versions:
+https://github.com/a-v-k/phpBugTracker/archive/phpbt-1_5_1_1.zip
 
 -------------------------------------------------------------------------------
 Bellow you can read README text from original phpBugTracker
