@@ -114,6 +114,11 @@ div.PhpBugTracker {
     color: #444;
     text-shadow: 0px 1px 2px #a8a8a8;
 }
+.UpdateNotifier {
+    background-color: #ffc;
+    text-align: center;
+    padding: 4px;
+}
 
 .nav {
     vertical-align: middle;

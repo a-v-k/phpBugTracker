@@ -27,6 +27,7 @@ ini_set('display_errors', 1);
 define('RAWERROR', true);
 
 define('PHPBT_VERSION', '1.5.3');
+define('PHPBT_RELEASE_NUM', 1000);
 define('DIGICRAFT_TRACKER', '1');
 ini_set("session.save_handler", "files");
 
@@ -295,9 +296,6 @@ $t->smarty = &$sm;
 $t->assign('STYLE', STYLE);
 $sm->assign('STYLE', STYLE);
 
-
-//$sm->f
-
 if (defined('TEMPLATE_PATH')) {
     $t->assign('template_path', './templates/' . THEME . '/' . TEMPLATE_PATH);
     $sm->template_dir = './templates/' . THEME . '/' . TEMPLATE_PATH;
@@ -316,8 +314,30 @@ if (defined('TEMPLATE_PATH')) {
 
 // End classes -- Begin page
 
+session_start();
+$updateMessage = '';
+if ((!isset($upgrading)) || (!$upgrading)) {
+    require_once 'inc/UpdateChecker.php';
+    $updateChecker = new UpdateChecker();
+    $updateChecker->setUrl('http://www.digicraft.ru/phpbt_version.php');
+    $installId = sha1(filter_input(INPUT_SERVER, 'HTTP_HOST') .
+            filter_input(INPUT_SERVER, 'SERVER_NAME') .
+            filter_input(INPUT_SERVER, 'SERVER_ADMIN') .
+            DB_HOST . DB_DATABASE . ADMIN_EMAIL);
+
+    $updateChecker->setInstallId($installId);
+    $updateChecker->setCurrentReleaseNum(PHPBT_RELEASE_NUM);
+    $updateChecker->check();
+
+    if ($updateChecker->getLastReleaseNum() > PHPBT_RELEASE_NUM) {
+        $updateMessage = sprintf(translate('New version (%1$s) of phpBugTracker released. Please download it at <a href="%2$s">%2$s</a>'), $updateChecker->getLastVertion(), 'https://github.com/a-v-k/phpBugTracker');
+    }
+}
+$t->assign('updateMessage', $updateMessage);
+
+//die('num:' . $updateChecker->getLastReleaseNum());
+
 if (!defined('NO_AUTH')) {
-    session_start();
     $auth = new uauth;
     $perm = new uperm;
     $u = isset($_SESSION['uid']) ? $_SESSION['uid'] : 0;

@@ -22,6 +22,9 @@ if (!defined('PHPBT_VERSION')) {
         ?>
     </head>
     <body>
+        <?php if ($updateMessage != '') { ?>
+            <div class="UpdateNotifier"><?= $updateMessage ?></div>
+        <?php } ?>
         <div class="NavBar">
             <div class="nav FixedWidth">
                 <div class="header_line1">
