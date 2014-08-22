@@ -1,3 +1,10 @@
+-- 1.6.0 - 2014 August (development version)
+: automatic update checking (no autoupdate)
+: upgrade.php now updates database in multiple steps
+: Improved attachment system. Attachments stored in DB now
+: DB converted to InnoDB
+: fix many bugs and security issues
+
 -- 1.5.1.1 2014 May
 : upgrade.php works with PDO now
 : Added STRICT_ERROR_MODE constant. If ==1 system will throw ErrorException on any error. Hard recommended for developers. Default is 0.
