@@ -15,11 +15,21 @@
                 <?php echo $log_text; ?>
             </p>
             <hr>
-        <?php } else { ?>
-            <p>
-                <?php echo translate("Your database has been updated to version ") . $upgradeTo; ?>
-            </p>
             <?php
+        } else {
+            if ($needUpdate == 1) { // update was ran
+                ?>
+                <p>
+                    <?php echo translate("Your database has been updated to version ") . $upgradeTo; ?>
+                </p>
+                <?php
+            } else {
+                ?>
+                <p>
+                    <?php echo translate("Your database do not need to update "); ?>
+                </p>
+                <?php
+            }
             if ($upgradeTo < CUR_DB_VERSION) {
                 ?>
                 <p>

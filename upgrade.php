@@ -106,11 +106,11 @@ function upgrade() {
 
     $log_text = $tmp_log;
 
-    $upgraded = 0;
+    $needUpdate = 1;
     if ($thisvers >= CUR_DB_VERSION) {
-        $upgraded = 1;
+        $needUpdate = 0;
     }
-    if (!$upgraded) {
+    if ($needUpdate == 1) {
         switch (DB_TYPE) {
             case 'pgsql' :
                 if (false) {
@@ -251,7 +251,7 @@ function upgrade() {
                     log_query("alter table " . TBL_SITE . " engine=InnoDB;");
                     log_query("alter table " . TBL_PRIORITY . " engine=InnoDB;");
                 }
-                if ($upgradeTo == 19) {
+                if ($upgradeTo == 20) {
                     log_query("alter table " . TBL_VERSION . " engine=InnoDB;"); // just for upgrade testing
                 }
 
