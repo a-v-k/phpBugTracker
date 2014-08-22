@@ -44,7 +44,8 @@ if (!defined('DB_HOST')) {
 if (defined('CUR_DB_VERSION')) {
     die('please, remove CUR_DB_VERSION definition from your config.php');
 }
-define ('CUR_DB_VERSION', 19);
+define('CUR_DB_VERSION', 20);
+define('DB_VERSION_COMPATIBLE', 9); // stop working if db version lower
 
 if (!defined('STRICT_ERROR_MODE')) {
     define('STRICT_ERROR_MODE', 0);
@@ -94,7 +95,7 @@ if (version_compare(PHP_VERSION, '5.2.0') < 0) {
 }
 
 if (DB_TYPE != 'mysqli') {
-    echo 'mysqli db type supported only (from phpBugTracker 1.5) ' . "\n";
+    echo 'mysqli db type supported only (since phpBugTracker 1.5) ' . "\n";
     die();
 }
 
@@ -160,6 +161,16 @@ if (empty($upgrading)) {
             define($k, $v);
         }
     }
+
+    if (DB_VERSION < DB_VERSION_COMPATIBLE) {
+        $mess = 'Your database schema version too low. '
+                . 'Your DB version: ' . DB_VERSION
+                . '. Minimal compatible version: ' . DB_VERSION_COMPATIBLE
+                . '. Please go to <a href="upgrade.php">upgrade.php</a> to update database schema';
+        // it's not need to translate because non-english will displayed incorrectly
+        die($mess);
+    }
+
     define('OPEN_BUG_STATUSES', join(', ', $db->getCol("select status_id from " . TBL_STATUS . " where bug_open = 1")));
 
     // Set up translation and character set
