@@ -26,7 +26,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 define('RAWERROR', true);
 
-define('PHPBT_VERSION', '1.5.1.1');
+define('PHPBT_VERSION', '1.5.3');
 define('DIGICRAFT_TRACKER', '1');
 ini_set("session.save_handler", "files");
 
