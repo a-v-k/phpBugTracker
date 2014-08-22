@@ -1,19 +1,24 @@
 Ok, here's the quick and dirty install instructions:
 
-1. Copy the directory tree to a location suitable for serving web pages.
+1. Create database.
+
+        create database phpbt default character set utf8;
+        grant all on phpbt.* to 'phpbt'@'%' identified by 'yourpassword' ;
+
+2. Copy the directory tree to a location suitable for serving web pages.
 	 
-2. With your web browser, go the location where you installed the package. 
+3. With your web browser, go the location where you installed the package.
    You will be presented with a web page that will help you configure and 
    install the application.  You may need to download and copy a
    new "config.php" into the installation location.
 
-3. If you get a blank page, check your web server's error logs for php errors.
+4. If you get a blank page, check your web server's error logs for php errors.
 
-4. After completing the installation, login, set up a project,
+5. After completing the installation, login, set up a project,
    and start reporting bugs.
 
 Mandantory:
-You must have magic_quotes_gpc set to OFF (since this version) either in php.ini or in .htaccess
+You must have magic_quotes_gpc set to OFF (since 1.5 version) either in php.ini or in .htaccess
 (see http://www.php.net/manual/en/configuration.php for more info).
 
 Optional:
