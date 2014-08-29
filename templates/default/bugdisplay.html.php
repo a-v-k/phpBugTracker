@@ -228,15 +228,15 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
         </tr><tr>
             <td><?php
                 if ($url) {
-                    echo "<a href=\"$url\" rel=\"nofollow\">" . translate("URL") . "</a>";
+                    echo "<a href=\"" . htmlspecialchars($url) . "\" rel=\"nofollow\">" . translate("URL") . "</a>";
                 } else {
                     echo translate("URL");
                 }
                 ?>:</td>
             <?php if ($may_edit) { ?>
-                <td><input type="text" size="35" maxlength="255" name="url" value="<?php echo $url ?>"></td>
+                <td><input type="text" size="35" maxlength="255" name="url" value="<?php echo htmlspecialchars($url) ?>"></td>
             <?php } else { ?>
-                <td><?php echo $url; ?></td>
+                <td><?php echo htmlspecialchars($url) ?></td>
             <?php } ?>
             <td><?php echo translate("Resolution"); ?>:</td>
             <?php if ($may_close or $may_change_resolution or $may_manage) { ?>
@@ -424,10 +424,10 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
         }
         ?>
         <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=vote&amp;bugid=<?php echo $bug_id . $posinfo; ?>" onClick="if (<?php echo $already_voted; ?>) {
-                        alert('<?php echo translate("You have already voted for this bug"); ?>');
-                        return false;
+                    alert('<?php echo translate("You have already voted for this bug"); ?>');
+                    return false;
 
-                    }"><?php echo translate("Vote for this bug"); ?></a></b> |
+                }"><?php echo translate("Vote for this bug"); ?></a></b> |
         <?php } ?>
     <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=viewvotes&amp;bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("View votes"); ?> (<?php echo $num_votes; ?>)</a></b>
     | <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=history&amp;bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("View bug history"); ?></a></b>
