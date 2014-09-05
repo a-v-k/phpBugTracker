@@ -22,14 +22,15 @@
 // ------------------------------------------------------------------------
 // $Id: index.php,v 1.48 2008/04/09 03:12:47 brycen Exp $
 
-include 'include.php';
+require 'include.php';
 
 function grab_data($restricted_projects) {
     global $db;
-
+    $stats = array();
+    $row = array();
     // Grab the legend
-    $rs = $db->query("select status_id, status_name, bug_open from " . TBL_STATUS . " order by sort_order");
-    while ($rs->fetchInto($row)) {
+    $rsStatus = $db->query("select status_id, status_name, bug_open from " . TBL_STATUS . " order by sort_order");
+    while ($rsStatus->fetchInto($row)) {
         $stats[$row['status_id']]['name'] = $row['status_name'];
         $stats[$row['status_id']]['open'] = $row['bug_open'];
     }
