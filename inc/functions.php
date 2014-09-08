@@ -326,13 +326,10 @@ function lookup($var, $val, $project = 0) {
         case 'reporter' :
         case 'assigned_to' :
             return maskemail($db->getOne("select login from " . TBL_AUTH_USER . " where user_id = " . $db->quote($val)));
-            break;
         case 'version' :
             return $db->getOne("select {$var}_name from " . $cfgDatabase[$var] . " where project_id = " . $db->quote($project) . " and {$var}_id = " . $db->quote($val));
-            break;
         default:
             return $db->getOne("select {$var}_name from " . $cfgDatabase[$var] . " where {$var}_id = " . $db->quote($val));
-            break;
     }
 }
 
@@ -342,24 +339,27 @@ function multipages($nr, $page, $urlstr) {
     global $me, $selrange, $t, $u, $db, $perm, $auth;
 
     $pages = '';
-    if (!$page)
+    if (!$page) {
         $page = 1;
+    }
     if ($page == 'all') {
         $selrange = $nr;
         $llimit = 0;
         $page = 0;
     } else {
-        if ($auth->is_authenticated())
+        if ($auth->is_authenticated()) {
             $selrange = $db->getOne('select def_results from ' . TBL_USER_PREF . ' where user_id = ' . $db->quote($u));
+        }
         $llimit = ($page - 1) * $selrange;
     }
-    if ($nr)
+    if ($nr) {
         $npages = ceil($nr / $selrange);
-    else
+    } else {
         $npages = 0;
-    if ($npages == 1)
+    }
+    if ($npages == 1) {
         $pages = 1;
-    else {
+    } else {
         for ($i = 1; $i <= $npages; $i++) {
             $pages .= $i != $page ? " <a href='$me?page=$i&amp;" . qry_amp($urlstr) . "'>$i</a> " : " $i ";
             $pages .= $i != $npages ? '|' : '';
@@ -379,7 +379,7 @@ function multipages($nr, $page, $urlstr) {
 /// Sets variables in the templates for the column headers to sort database results
 function sorting_headers($url, $headers, $order, $sort, $urlstr = '') {
     global $t;
-
+    $theader = array();
     while (list($k, $v) = each($headers)) {
         $theader[$k]['url'] = "$url?order=$v&amp;sort=" .
                 ($order == $v ? ($sort == 'asc' ? 'desc' : 'asc') : 'asc') .
@@ -428,8 +428,9 @@ function textwrap($text, $wrap = 72, $break = "\n") {
                 $lastBreak = $lastChar;
             }
             /* You may wish to include other characters as  valid whitespace... */
-            if ($char == ' ' || $char == chr(13) || $char == chr(10))
+            if ($char == ' ' || $char == chr(13) || $char == chr(10)) {
                 $lastWhite = $lastChar;
+            }
             $lastChar = $lastChar + 1;
         }
         $h .= substr($text, $lastBreak);
@@ -443,12 +444,13 @@ function textwrap($text, $wrap = 72, $break = "\n") {
 /// Return a delimited list if there is more than one element in $ary, otherwise
 /// return the lone element as the list
 function delimit_list($delimiter, $ary) {
-    if (isset($ary[1]))
+    if (isset($ary[1])) {
         return join($delimiter, $ary);
-    elseif (isset($ary[0]))
+    } elseif (isset($ary[0])) {
         return ($ary[0]);
-    else
+    } else {
         return '';
+    }
 }
 
 ///
@@ -499,11 +501,13 @@ function build_project_js($no_all = false) {
             $js .= "new Array($vid,'$version'),";
             $js2 .= "new Array($vid,'$version'),";
         }
-        if (substr($js, -1) == ',')
+        if (substr($js, -1) == ',') {
             $js = substr($js, 0, -1);
+        }
         $js .= ");\n";
-        if (substr($js2, -1) == ',')
+        if (substr($js2, -1) == ',') {
             $js2 = substr($js2, 0, -1);
+        }
         $js2 .= ");\n";
         $js .= $js2;
 
@@ -682,7 +686,7 @@ function mass_mail4($to, $subject, $message, $from = ADMIN_EMAIL) {
 }
 
 // mailer with use of quoted-printable encoding (if configured so)
-function qp_mail($to, $subject = 'No subject', $body, $from = ADMIN_EMAIL) {
+function qp_mail($to, $subject = 'No subject', $body = '', $from = ADMIN_EMAIL) {
     global $STRING;
 
     require_once('./inc/htmlMimeMail/htmlMimeMail.php');
@@ -727,10 +731,11 @@ function translate($string, $plural = false) {
     if (USE_GETTEXT) {
         return $plural ? ngettext($string) : gettext($string);
     } else {
-        if (!empty($STRING[$string]))
+        if (!empty($STRING[$string])) {
             return $STRING[$string];
-        else
+        } else {
             return $string;
+        }
     }
 }
 
@@ -821,8 +826,9 @@ function find_include($file) {
     //  foreach (explode(PATH_SEPARATOR, ini_get('include_path')) as $path) { 
     //See http://ru.php.net/get_include_path
     foreach (explode(PATH_SEPARATOR, ini_get('include_path')) as $path) {
-        if (@file_exists("$path/$file"))
+        if (@file_exists("$path/$file")) {
             return true;
+        }
     }
     return false;
 }
