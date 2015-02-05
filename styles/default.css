@@ -1,6 +1,6 @@
 /* Validated with http://jigsaw.w3.org/css-validator/ */
 body { 
-    font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
+    font-family: "Arial", "Helvetica", "MS Sans Serif", sans-serif;
     font-size: 13px;
     line-height: 1.4;
     color: #222222;
@@ -44,29 +44,40 @@ th.selected {
 }
 
 select {
-    font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
     font-size: 12px;
+    border: 1px solid #dddddd;
+    padding: 2px 4px;
 }
 
 input {
     font-size: 12px;
+    border: 1px solid #dddddd;
+    padding: 2px 4px;
+}
+
+input[type="button"], input[type="submit"], input[type="reset"], input[type="file"] {
+    -moz-appearance: button;  /* ? */
+    padding: 3px 5px;
+    margin: 2px;
+    -webkit-border-radius: 2px 2px;
+    border: solid 1px rgb(153, 153, 153);
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(255, 255, 255)), to(rgb(221, 221, 221)));
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    text-shadow: 0px 1px 1px rgba(255,255,255,1);
+    line-height: 1;
 }
 
 input[type="file"] {
-    font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
     font-size: 12px;
-}
-
-input[type="submit"] {
-    font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
-}
-
-input[type="reset"] {
-    font-family: "Arial","Helvetica","MS Sans Serif","Sans-Serif"; 
 }
 
 textarea {
     font-size: 12px;
+    border: 1px solid #dddddd;
 }
 
 div.FixedWidth {
@@ -165,7 +176,7 @@ div.PhpBugTracker {
 */
 
 .bordertable, .bordertable td {
-    border: 1px solid #999999;
+    border: 1px solid #dddddd;
     border-collapse: collapse;
 }
 
