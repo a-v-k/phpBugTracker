@@ -844,18 +844,19 @@ function do_form($bugid = 0) {
     header("Location: bug.php?op=show&bugid=$bugid");
 }
 
-function show_form($bugid = 0, $error = '') {
+function show_form($bugId = 0, $error = '') {
     global $db, $t, $u;
-
-    $projectname = $db->getOne("select project_name from " . TBL_PROJECT . " where project_id = '{$_GET['project']}'");
-    if ($bugid && !$error) {
-        $t->assign($db->getRow("select * from " . TBL_BUG . " where bug_id = '$bugid'"));
-    } else {
+    $projectId = check_numeric_die(get_request_value('project'));
+    $projectname = $db->getOne(
+            "select project_name from " . TBL_PROJECT . " where project_id = :project_id", array(':project_id' => $projectId));
+    if ($bugId && !$error) { 
+        $t->assign($db->getRow("select * from " . TBL_BUG . " where bug_id = :bug_id", array(':bug_id' => $bugId)));
+    } else { 
         $t->assign($_POST);
         $t->assign(array(
             'u' => $u,
             'error' => $error,
-            'project' => $_GET['project'],
+            'project' => $projectId,
             'projectname' => $projectname
         ));
     }
@@ -1032,7 +1033,7 @@ function show_bug($bugid = 0, $error = array()) {
     $rs = $db->query("select * from " . TBL_ATTACHMENT . " where bug_id = $bugid");
     while ($rs->fetchInto($att)) {
         //if (@is_readable(ATTACHMENT_PATH . "/{$row['project_id']}/$bugid-{$att['file_name']}")) {
-            $attachments[] = $att;
+        $attachments[] = $att;
         //}
     }
 
