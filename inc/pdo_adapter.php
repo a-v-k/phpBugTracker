@@ -69,8 +69,8 @@ class PdoAdapter {
         return $stAd->fetchRow($fetchStyle);
     }
 
-    function getOne($sqlString) {
-        $row = $this->getRow($sqlString, null, PDO::FETCH_NUM);
+    function getOne($sqlString, $params = null) {
+        $row = $this->getRow($sqlString, $params, PDO::FETCH_NUM);
         return $row[0];
     }
 
