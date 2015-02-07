@@ -1,6 +1,10 @@
 <?php
-	if (!isset($group_name)) $group_name = '';
-	if (!isset($group_id))   $group_id = '';
+if (!isset($group_name)) {
+    $group_name = '';
+}
+if (!isset($group_id)) {
+    $group_id = '';
+}
 ?>
 <script type="text/javascript" language="JavaScript">
     var nameString = '<?php echo translate("Please enter a name"); ?>';
@@ -19,11 +23,11 @@
 <form method="post" onsubmit="return checkForm(this)">
     <table border='0'>
         <?php if (!empty($error)) { ?>
-        <tr>
-            <td colspan="2" class="error">
-                <?php echo $error; ?>
-            </td>
-        </tr>
+            <tr>
+                <td colspan="2" class="error">
+                    <?php echo $error; ?>
+                </td>
+            </tr>
         <?php } ?>
         <tr>
             <td align="right" valign="top">
@@ -38,16 +42,16 @@
                 Permissions:
             </td>
         </tr>
-        <?php foreach($perms as $p) { ?>
-        <tr>
-            <td align="right" valign="top">
-                <input type="checkbox" name="perms[]" value="<?php echo $p['perm_id']; ?>"
-                <?php if (is_array($group_perms) && in_array($p['perm_id'], $group_perms)) echo "checked"; ?>>
-            </td>
-            <td>
-                <?php echo $p['perm_name']; ?>
-            </td>
-        </tr>
+        <?php foreach ($perms as $p) { ?>
+            <tr>
+                <td align="right" valign="top">
+                    <input type="checkbox" name="perms[]" value="<?php echo $p['perm_id']; ?>"
+                           <?php if (is_array($group_perms) && in_array($p['perm_id'], $group_perms)) echo "checked"; ?>>
+                </td>
+                <td>
+                    <?php echo $p['perm_name']; ?>
+                </td>
+            </tr>
         <?php } ?>
         <tr>
             <td align="right" valign="top">
