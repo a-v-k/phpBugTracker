@@ -1,7 +1,13 @@
 <?php
-	if (!isset($site_name))  $site_name = '';
-	if (!isset($sort_order)) $sort_order = '';
-	if (!isset($site_id))    $site_id = '';
+if (!isset($site_name)) {
+    $site_name = '';
+}
+if (!isset($sort_order)) {
+    $sort_order = '';
+}
+if (!isset($site_id)) {
+    $site_id = '';
+}
 ?>
 <script type="text/javascript" language="JavaScript">
     var nameString = '<?php echo translate("Please enter a name"); ?>';
@@ -19,12 +25,12 @@
 <hr size="1">
 <form method="post" onsubmit="return checkForm(this)">
     <table border='0'>
-        <?php if($error) { ?>
-        <tr>
-            <td colspan="2" class="error">
-                <?php echo $error; ?>
-            </td>
-        </tr>
+        <?php if ($error) { ?>
+            <tr>
+                <td colspan="2" class="error">
+                    <?php echo $error; ?>
+                </td>
+            </tr>
         <?php } ?>
         <tr>
             <td align="right" valign="top">
