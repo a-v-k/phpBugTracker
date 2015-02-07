@@ -553,16 +553,18 @@ if (isset($_GET['op'])) {
             list_items(0, 0, $open, 0);
             break;
         case 'delquery' :
-            if ($auth->is_authenticated())
+            if ($auth->is_authenticated()) {
                 delete_saved_query(check_id($_GET['queryid']));
-            else
+            } else {
                 show_query();
+            }
             break;
         case 'mybugs' :
-            if ($auth->is_authenticated())
+            if ($auth->is_authenticated()) {
                 list_items($assignedto, $reportedby, $open, $bookmarked, $projects);
-            else
+            } else {
                 show_query();
+            }
             break;
         case 'edit' : show_query(true);
             break;
