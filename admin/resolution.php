@@ -47,17 +47,19 @@ function do_form($resolutionid = 0) {
     extract($_POST);
     $error = '';
     // Validation
-    if (!$resolution_name = trim($resolution_name))
+    if (!$resolution_name = trim($resolution_name)) {
         $error = translate("Please enter a name");
-    elseif (!$resolution_desc = trim($resolution_desc))
+    } elseif (!$resolution_desc = trim($resolution_desc)) {
         $error = translate("Please enter a description");
+    }
     if ($error) {
         show_form($resolutionid, $error);
         return;
     }
 
-    if (empty($sort_order))
+    if (empty($sort_order)) {
         $sort_order = 0;
+    }
     if (!$resolutionid) {
         $db->query("insert into " . TBL_RESOLUTION .
                 " (resolution_id, resolution_name, resolution_desc, sort_order) values (" . $db->nextId(TBL_RESOLUTION) . ", " . $db->quote(stripslashes($resolution_name)) . ', ' . $db->quote(stripslashes($resolution_desc)) . ', ' . $sort_order . ')');
@@ -127,7 +129,8 @@ if (isset($_REQUEST['op'])) {
         case 'save' : do_form($_POST['resolution_id']);
             break;
     }
-} else
+} else {
     list_items();
+}
 
 //
