@@ -34,7 +34,7 @@ function del_item($statusid = 0) {
         $itemexists = $db->getOne('select count(*) from ' . TBL_STATUS . " where status_id = $statusid");
         // Are there any bugs tied to this one?
         $bugcount = $db->getOne('select count(*) from ' . TBL_BUG . " where status_id = $statusid");
-        if ($itemexists and !$bugcount) {
+        if ($itemexists and ! $bugcount) {
             $db->query('delete from ' . TBL_STATUS . " where status_id = $statusid");
         }
     }
@@ -47,17 +47,19 @@ function do_form($statusid = 0) {
     extract($_POST);
     $error = '';
     // Validation
-    if (!$status_name = trim($status_name))
+    if (!$status_name = trim($status_name)) {
         $error = translate("Please enter a name");
-    elseif (!$status_desc = trim($status_desc))
+    } elseif (!$status_desc = trim($status_desc)) {
         $error = translate("Please enter a description");
+    }
     if ($error) {
         show_form($statusid, $error);
         return;
     }
 
-    if (empty($sort_order))
+    if (empty($sort_order)) {
         $sort_order = 0;
+    }
     if (!$statusid) {
         $db->query("insert into " . TBL_STATUS . " (status_id, status_name, status_desc, bug_open, sort_order) values (" . $db->nextId(TBL_STATUS) . ', ' . $db->quote(stripslashes($status_name)) . ', ' . $db->quote(stripslashes($status_desc)) . ', ' . (int) $bug_open . ", '$sort_order')");
     } else {
@@ -78,8 +80,9 @@ function show_form($statusid = 0, $error = '') {
         $t->assign($db->getRow("select * from " . TBL_STATUS . " where status_id = '$statusid'"));
     } else {
         $t->assign($_POST);
-        if (empty($_POST))
-            $t->assign('bug_open', 1); // new bugs def. open :)
+        if (empty($_POST)) {
+            $t->assign('bug_open', 1);
+        } // new bugs def. open :)
     }
     $t->assign('error', $error);
     $t->render('status-edit.html', translate("Edit Status"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
