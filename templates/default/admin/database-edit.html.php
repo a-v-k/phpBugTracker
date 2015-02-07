@@ -1,7 +1,13 @@
 <?php
-	if (!isset($database_name)) $database_name = '';
-	if (!isset($sort_order))    $sort_order = '';
-	if (!isset($database_id))   $database_id = '';
+if (!isset($database_name)) {
+    $database_name = '';
+}
+if (!isset($sort_order)) {
+    $sort_order = '';
+}
+if (!isset($database_id)) {
+    $database_id = '';
+}
 ?>
 <script type="text/javascript" language="JavaScript">
     var nameString = '<?php echo translate("Please enter a name"); ?>';
@@ -21,11 +27,11 @@
 <form method="post" onsubmit="return checkForm(this)">
     <table border='0'>
         <?php if ($error) { ?>
-        <tr>
-            <td colspan="2" class="error">
-                <?php echo $error; ?>
-            </td>
-        </tr>
+            <tr>
+                <td colspan="2" class="error">
+                    <?php echo $error; ?>
+                </td>
+            </tr>
         <?php } ?>
         <tr>
             <td align="right" valign="top">
@@ -50,7 +56,7 @@
             <td>
                 <input type='submit' name='submit' value='<?php echo translate("Submit"); ?>'>
                 <input type="hidden" name="database_id" value="<?php echo $database_id; ?>"> 
-                <input type="hidden" name="use_js" value="<?php echo $_REQUEST['use_js']; ?>"> 
+                <input type="hidden" name="use_js" value="<?php echo $useJs; ?>">
                 <input type="hidden" name="op" value="save">
             </td>
         </tr>
