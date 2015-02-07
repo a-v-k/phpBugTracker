@@ -1,9 +1,19 @@
 <?php
-	if (!isset($severity_name))  $severity_name = '';
-	if (!isset($severity_desc))  $severity_desc = '';
-	if (!isset($sort_order))     $sort_order = '';
-	if (!isset($severity_color)) $severity_color = '';
-	if (!isset($severity_id))    $severity_id = '';
+if (!isset($severity_name)) {
+    $severity_name = '';
+}
+if (!isset($severity_desc)) {
+    $severity_desc = '';
+}
+if (!isset($sort_order)) {
+    $sort_order = '';
+}
+if (!isset($severity_color)) {
+    $severity_color = '';
+}
+if (!isset($severity_id)) {
+    $severity_id = '';
+}
 ?>
 <script type="text/javascript" language="JavaScript">
     var nameString = '<?php echo translate("Please enter a name"); ?>';
@@ -27,12 +37,12 @@
 <hr size="1">
 <form method="post" onsubmit="return checkForm(this)">
     <table border='0'>
-        <?php if($error) { ?>
-        <tr>
-            <td colspan="2" class="error">
-                <?php echo $error; ?>
-            </td>
-        </tr>
+        <?php if ($error) { ?>
+            <tr>
+                <td colspan="2" class="error">
+                    <?php echo $error; ?>
+                </td>
+            </tr>
         <?php } ?>
         <tr>
             <td align="right" valign="top">
