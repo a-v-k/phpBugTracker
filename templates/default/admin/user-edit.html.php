@@ -1,10 +1,22 @@
 <?php
-        if (!isset($email))         $email = '';
-        if (!isset($first_name))    $first_name = '';
-        if (!isset($last_name))     $last_name = '';
-        if (!isset($active))        $active = '';
-        if (!isset($email_notices)) $email_notices = '';
-        if (!isset($user_id))       $user_id = '';
+if (!isset($email)) {
+    $email = '';
+}
+if (!isset($first_name)) {
+    $first_name = '';
+}
+if (!isset($last_name)) {
+    $last_name = '';
+}
+if (!isset($active)) {
+    $active = '';
+}
+if (!isset($email_notices)) {
+    $email_notices = '';
+}
+if (!isset($user_id)) {
+    $user_id = '';
+}
 ?>
 <script type="text/javascript" language="JavaScript">
 <!--
@@ -15,7 +27,7 @@
         var adminSelected = false;
 
         if (hadAdmin && numAdmins == 1) {
-            for (current = 0; current < slct.options.length; current++ ) {
+            for (current = 0; current < slct.options.length; current++) {
                 if (slct.options[current].selected && slct.options[current].value == 1) {
                     adminSelected = true;
                 }
@@ -31,21 +43,21 @@
 <hr size="1">
 <form action="user.php" method="post">
     <table border='0'>
-        <?php if(isset($error)) { ?>
-        <tr>
-            <td colspan="2" class="error">
-                <?php echo $error; ?>
-            </td>
-        </tr>
-        <?php } ?><?php if(!EMAIL_IS_LOGIN) { ?>
-        <tr>
-            <td align="right" valign="top">
-                <?php echo translate("Login"); ?>:
-            </td>
-            <td>
-                <input type="text" size="20" maxlength="40" name="login" value="<?php echo stripslashes(htmlspecialchars($login)); ?>">
-            </td>
-        </tr>
+        <?php if (isset($error)) { ?>
+            <tr>
+                <td colspan="2" class="error">
+                    <?php echo $error; ?>
+                </td>
+            </tr>
+        <?php } ?><?php if (!EMAIL_IS_LOGIN) { ?>
+            <tr>
+                <td align="right" valign="top">
+                    <?php echo translate("Login"); ?>:
+                </td>
+                <td>
+                    <input type="text" size="20" maxlength="40" name="login" value="<?php echo stripslashes(htmlspecialchars($login)); ?>">
+                </td>
+            </tr>
         <?php } ?>
         <tr>
             <td align="right" valign="top">
