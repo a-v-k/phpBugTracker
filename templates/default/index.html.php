@@ -79,14 +79,23 @@ if (!defined('PHPBT_VERSION')) {
 <?php if (SHOW_PROJECT_SUMMARIES) { ?>
     <table class="bordertable" style="width:99%; margin: 0 auto;">
         <tr>
-            <?php foreach ($resfields as $field)
-                echo "<th>$field</th>"; ?>
+            <?php
+            foreach ($resfields as $field) {
+                echo "<th>$field</th>";
+            }
+            ?>
         </tr>
         <?php for ($i = 0, $count = count($projects); $i < $count; $i++) { ?>
-            <tr<?php if ($i % 2 != 0)
-            echo ' class="alt"' ?>>
-                    <?php foreach ($projects[$i] as $var => $val)
-                        echo '<td' . ($var != 'Project' ? ' align="center"' : '') . '>' . $val . '</td>'; ?>
+            <tr<?php
+            if ($i % 2 != 0) {
+                echo ' class="alt"';
+            }
+            ?>>
+                    <?php
+                    foreach ($projects[$i] as $var => $val) {
+                        echo '<td' . ($var != 'Project' ? ' align="center"' : '') . '>' . $val . '</td>';
+                    }
+                    ?>
             </tr>
         <?php } ?>
     </table>
@@ -95,4 +104,5 @@ if (!defined('PHPBT_VERSION')) {
     <b><?php echo translate("Add a new bug"); ?></b><br/><?php echo $fastlinks1 ?><br/>
     <br/>
     <b><?php echo translate("Basic Query"); ?></b><br/><?php echo $fastlinks2 ?><br/>
-<?php } ?>
+    <?php
+} 
