@@ -142,9 +142,11 @@ function show_form($userid = 0, $error = '') {
             'hadadmin' => 0
         ));
     }
+    $useJs = get_request_int('use_js', 0);
+    $t->assign('useJs', $useJs);
     // The number of admins in the system
     $t->assign('numadmins', $db->getOne('select count(*) from ' . TBL_USER_GROUP . ' where group_id = 1'));
-    $t->render('user-edit.html', translate("Edit User"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
+    $t->render('user-edit.html.php', translate("Edit User"), $useJs == 1 ? 'wrap-popup.php' : 'wrap.php');
 }
 
 function list_items($userid = 0, $error = '') {
@@ -214,9 +216,9 @@ if (isset($_REQUEST['op'])) {
     switch ($_REQUEST['op']) {
         case 'add' : list_items();
             break;
-        case 'edit' : show_form($_REQUEST['user_id']);
+        case 'edit' : show_form(get_request_int('user_id', null));
             break;
-        case 'save' : do_form($_POST['user_id']);
+        case 'save' : do_form(get_post_int('user_id', null));
             break;
     }
 } else {

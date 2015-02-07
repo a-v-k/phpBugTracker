@@ -126,9 +126,12 @@ if (!isset($user_id)) {
             </td>
             <td>
                 <input type='submit' name='submit' value='<?php echo translate("Submit"); ?>'>
-                <input type="hidden" name="user_id" value="<?php echo $user_id; ?>"> 
-                <input type="hidden" name="filter" value="<?php echo (isset($_REQUEST['filter']) ? $_REQUEST['filter'] : ''); ?>"> 
-                <input type="hidden" name="use_js" value="<?php echo (isset($_REQUEST['use_js']) ? $_REQUEST['use_js'] : ''); ?>"> 
+                <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                <?php
+                // WTF ???
+                //<input type="hidden" name="filter" value="< ?php echo (isset($_REQUEST['filter']) ? $_REQUEST['filter'] : ''); ? >">
+                ?>
+                <input type="hidden" name="use_js" value="<?php echo $useJs; ?>">
                 <input type="hidden" name="op" value="save"> 
             </td>
         </tr>
