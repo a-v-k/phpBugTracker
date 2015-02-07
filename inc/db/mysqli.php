@@ -179,7 +179,7 @@ $QUERY = array(
 			'v.version_name, '.
 			'v.created_date, '.
 			'v.active',
-	'admin-show-component' =>
+	'admin-show-component' => /* deprecated */
 		'select '.
 			'c.*, '.
 			'p.project_name as project_name '.
@@ -188,6 +188,15 @@ $QUERY = array(
 			'left join '.TBL_PROJECT.' p using (project_id) '.
 		'where '.
 			'component_id = \'%s\'',
+	'admin-show-component-2' =>
+		'select '.
+			'c.*, '.
+			'p.project_name as project_name '.
+		'from '.
+			TBL_COMPONENT.' c '.
+			'left join '.TBL_PROJECT.' p using (project_id) '.
+		'where '.
+			'component_id = :component_id',
 	'admin-show-version' =>
 		'select '.
 			'v.*, '.
