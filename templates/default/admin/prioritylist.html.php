@@ -22,7 +22,7 @@
                     <tr <?php if ($priorities[$i]['priority_color']) echo 'style="background-color: ', $priorities[$i]['priority_color'], ' ;"' ?>>
                         <td><a href="priority.php?op=edit&priority_id=<?php echo $priorities[$i]['priority_id']; ?>" onClick="popupPriority(<?php echo $priorities[$i]['priority_id']; ?>);
                                     return false;"><?php echo stripslashes(htmlspecialchars($priorities[$i]['priority_name'])); ?></a></td>
-                        <td>&nbsp;<?php echo $priorities[$i]['priority_desc']; ?></td>
+                        <td>&nbsp;<?php echo htmlspecialchars($priorities[$i]['priority_desc']); ?></td>
                         <td align="center"><?php echo $priorities[$i]['sort_order']; ?></td>
                         <td align="center">
                             <?php if (!$priorities[$i]['bug_count']) { ?>

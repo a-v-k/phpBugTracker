@@ -57,7 +57,7 @@
                 <?php echo translate("Row Color"); ?>:
             </td>
             <td>
-                <input type="text" size="11" maxlength="10" name="priority_color" value="<?php echo $priority_color; ?>">
+                <input type="text" size="11" maxlength="10" name="priority_color" value="<?php echo htmlspecialchars($priority_color); ?>">
             </td>
         </tr>
         <tr>

@@ -25,62 +25,83 @@ chdir('..');
 define('TEMPLATE_PATH', 'admin');
 include 'include.php';
 
-function del_item($priorityid = 0) {
+function del_item($priorityId = 0) {
     global $db, $me;
 
-    if ($priorityid) {
+    if ($priorityId) {
         // Make sure we are going after a valid record
-        $itemexists = $db->getOne('select count(*) from ' . TBL_PRIORITY . " where priority_id = $priorityid");
+        $itemexists = $db->getOne('select count(*) from ' . TBL_PRIORITY . " where priority_id = $priorityId");
         // Are there any bugs tied to this one?
-        $bugcount = $db->getOne('select count(*) from ' . TBL_BUG . " where priority_id = $priorityid");
+        //var_dump($db->getAll('desc ' . TBL_BUG));
+        $bugcount = $db->getOne('select count(*) from ' . TBL_BUG . " where priority = $priorityId");
         if ($itemexists and ! $bugcount) {
-            $db->query('delete from ' . TBL_PRIORITY . " where priority_id = $priorityid");
+            $db->query('delete from ' . TBL_PRIORITY . " where priority_id = $priorityId");
         }
     }
     header("Location: $me?");
 }
 
-function do_form($priorityid = 0) {
+function do_form($priorityId = 0) {
     global $db, $me, $t;
 
-    extract($_POST);
+
+//    var_dump($_POST);
+//    die();
+//    extract($_POST);
+//    array (size=8)
+//      'priority_name' => string 'dfdf' (length=4)
+//      'priority_desc' => string '              fdfs  ' (length=20)
+//      'sort_order' => string '222' (length=3)
+//      'priority_color' => string '' (length=0)
+//      'submit' => string 'Submit' (length=6)
+//      'priority_id' => string '0' (length=1)
+//      'use_js' => string '1' (length=1)
+//      'op' => string 'save' (length=4)
+
     $error = '';
+    $priorityName = trim(get_post_str('priority_name', null));
+    $priorityDesc = trim(get_post_str('priority_desc', null));
+    $priorityColor = trim(get_post_str('priority_color', null));
+    $sortOrder = get_post_int('sort_order', 0);
+    $useJs = get_request_int('use_js', 0);
     // Validation
-    if (!$priority_name = trim($priority_name)) {
+    if ($priorityName == '') {
         $error = translate("Please enter a name");
-    } elseif (!$priority_desc = trim($priority_desc)) {
+    } elseif ($priorityDesc == '') {
         $error = translate("Please enter a description");
     }
     if ($error) {
-        show_form($priorityid, $error);
+        show_form($priorityId, $error);
         return;
     }
 
-    if (empty($sort_order)) {
-        $sort_order = 0;
-    }
-    if (!$priorityid) {
-        $db->query("insert into " . TBL_PRIORITY . " (priority_id, priority_name, priority_desc, sort_order, priority_color)  values (" . $db->nextId(TBL_PRIORITY) . ', ' . $db->quote(stripslashes($priority_name)) . ', ' . $db->quote(stripslashes($priority_desc)) . ", $sort_order, " . $db->quote(stripslashes($priority_color)) . ')');
+    if (!$priorityId) {
+        $db->query("insert into " . TBL_PRIORITY . " (priority_id, priority_name, priority_desc, sort_order, priority_color)  values (" . $db->nextId(TBL_PRIORITY) . ', ' . $db->quote(stripslashes($priorityName)) . ', ' . $db->quote(stripslashes($priorityDesc)) . ", $sortOrder, " . $db->quote(stripslashes($priorityColor)) . ')');
     } else {
-        $db->query("update " . TBL_PRIORITY . " set priority_name = " . $db->quote(stripslashes($priority_name)) . ', priority_desc = ' . $db->quote(stripslashes($priority_desc)) . ", sort_order = $sort_order, priority_color = " . $db->quote(stripslashes($priority_color)) . " where priority_id = $priority_id");
+        $db->query("update " . TBL_PRIORITY . " set priority_name = " . $db->quote(stripslashes($priorityName)) . ', priority_desc = ' . $db->quote(stripslashes($priorityDesc)) . ", sort_order = $sortOrder, priority_color = " . $db->quote(stripslashes($priorityColor)) . " where priority_id = $priorityId");
     }
-    if ($use_js) {
+    if ($useJs) {
         $t->render('edit-submit.html');
     } else {
         header("Location: $me?");
     }
 }
 
-function show_form($priorityid = 0, $error = '') {
+function show_form($priorityId = 0, $error = '') {
     global $db, $me, $t;
 
-    if ($priorityid && !$error) {
-        $t->assign($db->getRow("select * from " . TBL_PRIORITY . " where priority_id = '$priorityid'"));
+    if ($priorityId && !$error) {
+        $t->assign($db->getRow("select * from " . TBL_PRIORITY . " where priority_id = '$priorityId'"));
     } else {
-        $t->assign($_POST);
+        //$t->assign($_POST);
+        $t->assign('priority_id', $priorityId);
+        $t->assign('priority_name', get_post_val('priority_name', null));
+        $t->assign('priority_desc', get_post_val('priority_desc', null));
+        $t->assign('priority_color', get_post_val('priority_color', null));
+        $t->assign('sort_order', get_post_val('sort_order', null));
     }
     $t->assign('error', $error);
-    $t->render('priority-edit.html', translate("Edit Priority"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
+    $t->render('priority-edit.html.php', translate("Edit Priority"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
 }
 
 function list_items($priorityid = 0, $error = '') {
@@ -113,7 +134,7 @@ function list_items($priorityid = 0, $error = '') {
 
     sorting_headers($me, $headers, $order, $sort);
 
-    $t->render('prioritylist.html', translate("Priority List"));
+    $t->render('prioritylist.html.php', translate("Priority List"));
 }
 
 $perm->check('Admin');
@@ -122,11 +143,11 @@ if (isset($_REQUEST['op'])) {
     switch ($_REQUEST['op']) {
         case 'add' : list_items();
             break;
-        case 'edit' : show_form($_GET['priority_id']);
+        case 'edit' : show_form(get_get_int('priority_id', null));
             break;
-        case 'del' : del_item($_GET['priority_id']);
+        case 'del' : del_item(get_get_int('priority_id'));
             break;
-        case 'save' : do_form($_POST['priority_id']);
+        case 'save' : do_form(get_post_int('priority_id', null));
     }
 } else {
     list_items();
