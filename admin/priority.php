@@ -33,7 +33,7 @@ function del_item($priorityid = 0) {
         $itemexists = $db->getOne('select count(*) from ' . TBL_PRIORITY . " where priority_id = $priorityid");
         // Are there any bugs tied to this one?
         $bugcount = $db->getOne('select count(*) from ' . TBL_BUG . " where priority_id = $priorityid");
-        if ($itemexists and !$bugcount) {
+        if ($itemexists and ! $bugcount) {
             $db->query('delete from ' . TBL_PRIORITY . " where priority_id = $priorityid");
         }
     }
@@ -46,17 +46,19 @@ function do_form($priorityid = 0) {
     extract($_POST);
     $error = '';
     // Validation
-    if (!$priority_name = trim($priority_name))
+    if (!$priority_name = trim($priority_name)) {
         $error = translate("Please enter a name");
-    elseif (!$priority_desc = trim($priority_desc))
+    } elseif (!$priority_desc = trim($priority_desc)) {
         $error = translate("Please enter a description");
+    }
     if ($error) {
         show_form($priorityid, $error);
         return;
     }
 
-    if (empty($sort_order))
+    if (empty($sort_order)) {
         $sort_order = 0;
+    }
     if (!$priorityid) {
         $db->query("insert into " . TBL_PRIORITY . " (priority_id, priority_name, priority_desc, sort_order, priority_color)  values (" . $db->nextId(TBL_PRIORITY) . ', ' . $db->quote(stripslashes($priority_name)) . ', ' . $db->quote(stripslashes($priority_desc)) . ", $sort_order, " . $db->quote(stripslashes($priority_color)) . ')');
     } else {
@@ -126,7 +128,8 @@ if (isset($_REQUEST['op'])) {
             break;
         case 'save' : do_form($_POST['priority_id']);
     }
-} else
+} else {
     list_items();
+}
 
 //
