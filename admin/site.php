@@ -36,7 +36,7 @@ function del_item($siteid = 0) {
         // Are there any bugs tied to this one?
         $bugcount = $db->getOne('select count(*) from ' . TBL_BUG .
                 " where site_id = $siteid");
-        if ($itemexists and !$bugcount) {
+        if ($itemexists and ! $bugcount) {
             $db->query('delete from ' . TBL_SITE . " where site_id = $siteid");
         }
     }
