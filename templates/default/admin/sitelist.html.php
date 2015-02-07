@@ -22,9 +22,9 @@
                         <td>
                             <?php if ($sites[$i]['site_id']) { ?>
                                 <a href="site.php?op=edit&site_id=<?php echo $sites[$i]['site_id']; ?>" onClick="popupSite(<?php echo $sites[$i]['site_id']; ?>);
-                                                return false;"><?php echo stripslashes(htmlspecialchars($sites[$i]['site_name'])); ?></a>
+                                                return false;"><?php echo htmlspecialchars($sites[$i]['site_name']); ?></a>
                                <?php } else { ?>
-                                   <?php echo stripslashes(htmlspecialchars($sites[$i]['site_name'])); ?>
+                                   <?php echo htmlspecialchars($sites[$i]['site_name']); ?>
                                <?php } ?>
                         </td>
                         <td align="center"><?php echo $sites[$i]['sort_order']; ?></td>

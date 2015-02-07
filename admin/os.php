@@ -34,51 +34,67 @@ function del_item($osid = 0) {
         $itemexists = $db->getOne('select count(*) from ' . TBL_OS . " where os_id = $osid");
         // Are there any bugs tied to this one?
         $bugcount = $db->getOne('select count(*) from ' . TBL_BUG . " where os_id = $osid");
-        if ($itemexists and !$bugcount) {
+        if ($itemexists and ! $bugcount) {
             $db->query('delete from ' . TBL_OS . " where os_id = $osid");
         }
     }
     header("Location: $me?");
 }
 
-function do_form($osid = 0) {
+function do_form($osId = 0) {
     global $db, $me, $t;
 
-    extract($_POST);
+//    var_dump($_POST);
+//    die();
+//    extract($_POST);
+//    array (size=7)
+//      'os_name' => string 'dfdf' (length=4)
+//      'regex' => string 'dfddf' (length=5)
+//      'sort_order' => string '33' (length=2)
+//      'submit' => string 'Submit' (length=6)
+//      'op' => string 'save' (length=4)
+//      'os_id' => string '' (length=0)
+//      'use_js' => string '1' (length=1)
+
     $error = '';
+    $osName = trim(get_post_str('os_name', null));
+    $regex = trim(get_post_str('regex', null));
+    $sortOrder = get_post_int('sort_order', 0);
+    $useJs = get_request_int('use_js', 0);
     // Validation
-    if (!$os_name = trim($os_name))
+    if ($osName == '') {
         $error = translate("Please enter a name");
+    }
     if ($error) {
-        show_form($osid, $error);
+        show_form($osId, $error);
         return;
     }
 
-    if (empty($sort_order))
-        $sort_order = 0;
-    if (!$osid) {
-        $db->query("insert into " . TBL_OS . " (os_id, os_name, regex, sort_order) values (" . $db->nextId(TBL_OS) . ", " . $db->quote(stripslashes($os_name)) . ", '$regex', '$sort_order')");
+    if (!$osId) {
+        $db->query("insert into " . TBL_OS . " (os_id, os_name, regex, sort_order) values (" . $db->nextId(TBL_OS) . ", " . $db->quote(stripslashes($osName)) . ", '$regex', '$sortOrder')");
     } else {
-        $db->query("update " . TBL_OS . " set os_name = " . $db->quote(stripslashes($os_name)) . ", regex = '$regex', sort_order = '$sort_order' where os_id = '$os_id'");
+        $db->query("update " . TBL_OS . " set os_name = " . $db->quote(stripslashes($osName)) . ", regex = '$regex', sort_order = '$sortOrder' where os_id = '$osId'");
     }
-    if ($use_js) {
+    if ($useJs) {
         $t->render('edit-submit.html', '', 'wrap-popup.php');
     } else {
         header("Location: $me?");
     }
 }
 
-function show_form($osid = 0, $error = '') {
+function show_form($osId = 0, $error = '') {
     global $db, $me, $t;
+    $useJs = get_request_int('use_js', 0);
 
-    extract($_POST);
-    if ($osid && !$error) {
-        $t->assign($db->getRow("select * from " . TBL_OS . " where os_id = '$osid'"));
+    //extract($_POST);
+    if ($osId && !$error) {
+        $t->assign($db->getRow("select * from " . TBL_OS . " where os_id = '$osId'"));
     } else {
         $t->assign($_POST);
     }
     $t->assign('error', $error);
-    $t->render('os-edit.html', translate("Edit Operating System"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
+    $t->assign('useJs', $useJs);
+    $t->render('os-edit.html.php', translate("Edit Operating System"), ($useJs == 1) ? 'wrap-popup.php' : 'wrap.php');
 }
 
 function list_items($osid = 0, $error = '') {
@@ -109,18 +125,18 @@ function list_items($osid = 0, $error = '') {
 
     sorting_headers($me, $headers, $order, $sort, "page=$page");
 
-    $t->render('oslist.html', translate("Operating System List"));
+    $t->render('oslist.html.php', translate("Operating System List"));
 }
 
 $perm->check('Admin');
 
 if (isset($_REQUEST['op'])) {
     switch ($_REQUEST['op']) {
-        case 'save' : do_form($_POST['os_id']);
+        case 'edit' : show_form(get_get_int('os_id', null));
             break;
-        case 'edit' : show_form($_GET['os_id']);
+        case 'del' : del_item(get_get_int('os_id'));
             break;
-        case 'del' : del_item($_GET['os_id']);
+        case 'save' : do_form(get_post_int('os_id', null));
             break;
     }
 } else {

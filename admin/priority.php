@@ -89,6 +89,7 @@ function do_form($priorityId = 0) {
 
 function show_form($priorityId = 0, $error = '') {
     global $db, $me, $t;
+    $useJs = get_request_int('use_js', 0);
 
     if ($priorityId && !$error) {
         $t->assign($db->getRow("select * from " . TBL_PRIORITY . " where priority_id = '$priorityId'"));
@@ -101,7 +102,8 @@ function show_form($priorityId = 0, $error = '') {
         $t->assign('sort_order', get_post_val('sort_order', null));
     }
     $t->assign('error', $error);
-    $t->render('priority-edit.html.php', translate("Edit Priority"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
+    $t->assign('useJs', $useJs);
+    $t->render('priority-edit.html.php', translate("Edit Priority"), ($useJs == 1) ? 'wrap-popup.php' : 'wrap.php');
 }
 
 function list_items($priorityid = 0, $error = '') {
