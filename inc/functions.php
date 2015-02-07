@@ -982,6 +982,14 @@ if (!function_exists('http_response_code')) {
 
 }
 
+function die_ex($msg) {
+    if (defined('DEBUG_FL') && (DEBUG_FL == 1)) {
+        throw new Exception($msg);
+    } else {
+        die($msg);
+    }
+}
+
 function qry_amp($ipReqStr) {
     return str_replace('&', '&amp;', $ipReqStr);
 }
@@ -1052,6 +1060,30 @@ function get_request_value($ipKeyName, $ipDefault = null) {
     return get_array_value($_REQUEST, $ipKeyName, $ipDefault);
 }
 
+function get_post_str($ipKeyName, $ipDefault = null) {
+    $val = filter_input(INPUT_POST, $ipKeyName, FILTER_SANITIZE_STRING);
+    if ($val === null) { // not set
+        if (($ipDefault === false)) {
+            die_ex('Required value not defined for: ' . htmlspecialchars($ipKeyName));
+        } else {
+            $val = $ipDefault;
+        }
+    }
+    return $val;
+}
+
+function get_post_val($ipKeyName, $ipDefault = null) {
+    $val = filter_input(INPUT_POST, $ipKeyName);
+    if ($val === null) { // not set
+        if (($ipDefault === false)) {
+            die_ex('Required value not defined for: ' . htmlspecialchars($ipKeyName));
+        } else {
+            $val = $ipDefault;
+        }
+    }
+    return $val;
+}
+
 function check_numeric_die($ipValue) {
     if (!is_numeric($ipValue)) {
         if (!headers_sent()) {
@@ -1062,24 +1094,46 @@ function check_numeric_die($ipValue) {
     return $ipValue;
 }
 
+function get_request_int($ipKeyName, $ipDefault = false) {
+    $val = get_request_value($ipKeyName, $ipDefault);
+    if (($val == '') && ($ipDefault !== false)) {
+        return $ipDefault;
+    }
+    if (($val === false) || (!is_numeric($val)) || (!is_int(0 + $val))) {
+        if (!headers_sent()) {
+            http_response_code(400);
+        }
+        die_ex('Invalid parameter value for: ' . htmlspecialchars($ipKeyName));
+    }
+    return $val;
+}
+
 function get_get_int($ipKeyName, $ipDefault = false) {
     return get_input_int(INPUT_GET, $ipKeyName, $ipDefault);
 }
 
+function get_post_int($ipKeyName, $ipDefault = false) {
+    return get_input_int(INPUT_POST, $ipKeyName, $ipDefault);
+}
+
 function get_input_int($ipInputType, $ipKeyName, $ipDefault = false) {
     if (($ipInputType == INPUT_GET) || ($ipInputType == INPUT_POST)) {
+        $valNull = filter_input($ipInputType, $ipKeyName);
+        if (($valNull == '') && ($ipDefault !== false)) {
+            return $ipDefault;
+        }
         $val = filter_input($ipInputType, $ipKeyName, FILTER_VALIDATE_INT);
         if ($val === false) {
             if (!headers_sent()) {
                 http_response_code(400);
             }
-            die('Invalid parameter value for: ' . htmlspecialchars($ipKeyName));
+            die_ex('Invalid parameter value for: ' . htmlspecialchars($ipKeyName));
         } else if ($val === null) {
             if ($ipDefault === false) {
                 if (!headers_sent()) {
                     http_response_code(400);
                 }
-                die('Invalid parameter value for: ' . htmlspecialchars($ipKeyName));
+                die_ex('Invalid parameter value for: ' . htmlspecialchars($ipKeyName));
             } else {
                 $val = $ipDefault;
             }
