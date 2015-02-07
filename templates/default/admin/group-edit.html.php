@@ -46,7 +46,7 @@ if (!isset($group_id)) {
             <tr>
                 <td align="right" valign="top">
                     <input type="checkbox" name="perms[]" value="<?php echo $p['perm_id']; ?>"
-                           <?php if (is_array($group_perms) && in_array($p['perm_id'], $group_perms)) echo "checked"; ?>>
+                           <?php echo (is_array($group_perms) && in_array($p['perm_id'], $group_perms)) ? "checked" : ''; ?>>
                 </td>
                 <td>
                     <?php echo $p['perm_name']; ?>
@@ -61,7 +61,7 @@ if (!isset($group_id)) {
                 <input type='submit' value='<?php echo translate("Submit"); ?>'> 
                 <input type="hidden" name="op" value="save">
                 <input type="hidden" name="group_id" value="<?php echo $group_id; ?>"> 
-                <input type="hidden" name="use_js" value="<?php echo $_REQUEST['use_js']; ?>">             
+                <input type="hidden" name="use_js" value="<?php echo $useJs ?>">
             </td>
         </tr>
     </table>

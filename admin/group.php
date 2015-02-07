@@ -39,52 +39,77 @@ function del_group($groupid = 0) {
     $db->query("delete from " . TBL_AUTH_GROUP . " where group_id = $groupid");
 }
 
-function do_form($groupid = 0) {
+function do_form() {
     global $db, $me, $u, $now, $t;
 
-    extract($_POST);
+    $groupId = get_request_int('group_id', null);
+    $perms = filter_input(INPUT_POST, 'perms', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY);
+
+//    var_dump($_POST); die();
+//    array (size=5)
+//      'group_name' => string 'ssdfsf sf sdfs s' (length=16)
+//      'perms' => 
+//        array (size=6)
+//          0 => string '5' (length=1)
+//          1 => string '8' (length=1)
+//          2 => string '9' (length=1)
+//          3 => string '10' (length=2)
+//          4 => string '11' (length=2)
+//          5 => string '12' (length=2)
+//      'op' => string 'save' (length=4)
+//      'group_id' => string '0' (length=1)
+//      'use_js' => string '1' (length=1)
+
     $error = '';
+    $groupName = trim(get_post_val('group_name'));
     // Validation
-    if (!$group_name = trim($group_name))
+    if ($groupName == '') {
         $error = translate("Please enter a name");
+    }
     if ($error) {
-        show_form($groupid, $error);
+        show_form($groupId, $error);
         return;
     }
 
-    if (!$groupid) {
-        $groupid = $db->nextId(TBL_AUTH_GROUP);
-        $db->query("insert into " . TBL_AUTH_GROUP . " (group_id, group_name, created_by, created_date, last_modified_by, last_modified_date) values (" . $groupid . ", " . $db->quote(stripslashes($group_name)) . ", $u, $now, $u, $now)");
+    if (!$groupId) {
+        $groupId = $db->nextId(TBL_AUTH_GROUP);
+        $db->query("insert into " . TBL_AUTH_GROUP . " (group_id, group_name, created_by, created_date, last_modified_by, last_modified_date) values (" . $groupId . ", " . $db->quote(stripslashes($groupName)) . ", $u, $now, $u, $now)");
     } else {
-        $db->query("update " . TBL_AUTH_GROUP . " set group_name = " . $db->quote(stripslashes($group_name)) . ", last_modified_by = $u, last_modified_date = $now where group_id = '$groupid'");
+        $db->query("update " . TBL_AUTH_GROUP . " set group_name = " . $db->quote(stripslashes($groupName)) . ", last_modified_by = $u, last_modified_date = $now where group_id = '$groupId'");
     }
 
-    $db->query("delete from " . TBL_GROUP_PERM . " where group_id = '$groupid'");
+    $db->query("delete from " . TBL_GROUP_PERM . " where group_id = '$groupId'");
     foreach ($perms as $permid) {
-        $db->query("insert into " . TBL_GROUP_PERM . " (group_id, perm_id) values ($groupid, $permid)");
+        $intPerm = (int)$permid;
+        $db->query("insert into " . TBL_GROUP_PERM . " (group_id, perm_id) values ($groupId, $intPerm)");
     }
 
-    if ($use_js) {
+    $useJs = get_request_int('use_js', 0);
+    $t->assign('useJs', $useJs);
+    if ($useJs) {
         $t->render('edit-submit.html', '', 'wrap-popup.php');
     } else {
         header("Location: $me?");
     }
 }
 
-function show_form($groupid = 0, $error = '') {
+function show_form($groupId = 0, $error = '') {
     global $db, $me, $t;
 
     $group_perms = array();
-    if ($groupid && !$error) {
-        $t->assign($db->getRow("select * from " . TBL_AUTH_GROUP . " where group_id = '$groupid'"));
-        $group_perms = $db->getCol("select distinct perm_id from " . TBL_GROUP_PERM . " where group_id = $groupid");
+    if ($groupId && !$error) {
+        $t->assign($db->getRow("select * from " . TBL_AUTH_GROUP . " where group_id = '$groupId'"));
+        $group_perms = $db->getCol("select distinct perm_id from " . TBL_GROUP_PERM . " where group_id = $groupId");
     } else {
         $t->assign($_POST);
+        $t->assign('group_id', $groupId);
     }
+    $useJs = get_request_int('use_js', 0);
+    $t->assign('useJs', $useJs);
     $t->assign('perms', $db->getAll("select * from " . TBL_AUTH_PERM));
     $t->assign('group_perms', $group_perms);
     $t->assign('error', $error);
-    $t->render('group-edit.html', translate("Edit Group"), (!empty($_GET['use_js']) ? 'wrap-popup.php' : 'wrap.php'));
+    $t->render('group-edit.html.php', translate("Edit Group"), ($useJs == 1 ? 'wrap-popup.php' : 'wrap.php'));
 }
 
 function list_items($do_group = true, $groupid = 0, $error = '') {
@@ -124,27 +149,27 @@ $perm->check('Admin');
 
 if (isset($_REQUEST['op'])) {
     switch ($_REQUEST['op']) {
-        case 'save' : do_form($_POST['group_id']);
+        case 'save' : do_form(get_post_int('group_id', null));
             break;
-        case 'edit' : show_form($_GET['group_id']);
+        case 'edit' : show_form(get_get_int('group_id', null));
             break;
-        case 'del' : del_group($_GET['group_id']);
-            list_items(true, $_GET['group_id']);
+        case 'del' : del_group(get_get_int('group_id'));
+            list_items(true, get_get_int('group_id'));
             break;
-        case 'purge' : purge_group($_GET['group_id']);
-            list_items(true, $_GET['group_id']);
+        case 'purge' : purge_group(get_get_int('group_id'));
+            list_items(true, get_get_int('group_id'));
             break;
         case 'list-roles' : list_items(false);
             break;
-        case 'save-role' : do_form($_POST['group_id']);
+        case 'save-role' : do_form(get_post_int('group_id', null));
             break;
-        case 'edit-role' : show_form($_GET['group_id']);
+        case 'edit-role' : show_form(get_get_int('group_id', null));
             break;
-        case 'del-role' : del_group($_GET['group_id']);
-            list_items(false, $_GET['group_id']);
+        case 'del-role' : del_group(get_get_int('group_id'));
+            list_items(false, get_get_int('group_id', null));
             break;
-        case 'purge-role' : purge_group($_GET['group_id']);
-            list_items(false, $_GET['group_id']);
+        case 'purge-role' : purge_group(get_get_int('group_id'));
+            list_items(false, get_get_int('group_id', null));
             break;
     }
 } else {
