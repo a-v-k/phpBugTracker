@@ -22,7 +22,7 @@
                     <tr <?php if ($severities[$i]['severity_color']) echo 'style="background-color: ', $severities[$i]['severity_color'], ' ;"' ?>>
                         <td><a href="severity.php?op=edit&severity_id=<?php echo $severities[$i]['severity_id']; ?>" onClick="popupSeverity(<?php echo $severities[$i]['severity_id']; ?>);
                                     return false;"><?php echo stripslashes(htmlspecialchars($severities[$i]['severity_name'])); ?></a></td>
-                        <td>&nbsp;<?php echo $severities[$i]['severity_desc']; ?></td>
+                        <td>&nbsp;<?php echo htmlspecialchars($severities[$i]['severity_desc']); ?></td>
                         <td align="center"><?php echo $severities[$i]['sort_order']; ?></td>
                         <td align="center">
                             <?php if (!$severities[$i]['bug_count']) { ?>

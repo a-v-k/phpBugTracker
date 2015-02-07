@@ -41,31 +41,46 @@ function del_item($severityid = 0) {
     header("Location: $me?");
 }
 
-function do_form($severityid = 0) {
+function do_form($severityId = 0) {
     global $db, $me, $t;
 
-    extract($_POST);
+//    var_dump($_POST);
+//    die();
+//    extract($_POST);
+//    array (size=8)
+//      'severity_name' => string 'aaa' (length=3)
+//      'severity_desc' => string 'sss' (length=3)
+//      'sort_order' => string '44' (length=2)
+//      'severity_color' => string '33' (length=2)
+//      'submit' => string 'Submit' (length=6)
+//      'severity_id' => string '' (length=0)
+//      'use_js' => string '1' (length=1)
+//      'op' => string 'save' (length=4)
+
+
     $error = '';
+    $severityName = trim(get_post_str('severity_name', null));
+    $severityDesc = trim(get_post_str('severity_desc', null));
+    $severityColor = trim(get_post_str('severity_color', null));
+    $sortOrder = get_post_int('sort_order', 0);
+    $useJs = get_request_int('use_js', 0);
     // Validation
-    if (!$severity_name = trim($severity_name)) {
+    if ($severityName == '') {
         $error = translate("Please enter a name");
-    } elseif (!$severity_desc = trim($severity_desc)) {
+    } elseif ($severityDesc == '') {
         $error = translate("Please enter a description");
     }
     if ($error) {
-        show_form($severityid, $error);
+        show_form($severityId, $error);
         return;
     }
 
-    if (empty($sort_order)) {
-        $sort_order = 0;
-    }
-    if (!$severityid) {
-        $db->query("insert into " . TBL_SEVERITY . " (severity_id, severity_name, severity_desc, sort_order, severity_color)  values (" . $db->nextId(TBL_SEVERITY) . ', ' . $db->quote(stripslashes($severity_name)) . ', ' . $db->quote(stripslashes($severity_desc)) . ", $sort_order, " . $db->quote(stripslashes($severity_color)) . ')');
+    if (!$severityId) {
+        $db->query("insert into " . TBL_SEVERITY . " (severity_id, severity_name, severity_desc, sort_order, severity_color)  values (" . $db->nextId(TBL_SEVERITY) . ', ' . $db->quote(stripslashes($severityName)) . ', ' . $db->quote(stripslashes($severityDesc)) . ", $sortOrder, " . $db->quote(stripslashes($severityColor)) . ')');
     } else {
-        $db->query("update " . TBL_SEVERITY . " set severity_name = " . $db->quote(stripslashes($severity_name)) . ', severity_desc = ' . $db->quote(stripslashes($severity_desc)) . ", sort_order = $sort_order, severity_color = " . $db->quote(stripslashes($severity_color)) . " where severity_id = $severity_id");
+        $db->query("update " . TBL_SEVERITY . " set severity_name = " . $db->quote(stripslashes($severityName)) . ', severity_desc = ' . $db->quote(stripslashes($severityDesc)) . ", sort_order = $sortOrder, severity_color = " . $db->quote(stripslashes($severityColor)) . " where severity_id = $severityId");
     }
-    if ($use_js) {
+    if ($useJs) {
         $t->render('edit-submit.html');
     } else {
         header("Location: $me?");
@@ -74,6 +89,8 @@ function do_form($severityid = 0) {
 
 function show_form($severityid = 0, $error = '') {
     global $db, $me, $t;
+    
+    $useJs = get_request_int('use_js', 0);
 
     if ($severityid && !$error) {
         $t->assign($db->getRow("select * from " . TBL_SEVERITY . " where severity_id = '$severityid'"));
@@ -81,7 +98,8 @@ function show_form($severityid = 0, $error = '') {
         $t->assign($_POST);
     }
     $t->assign('error', $error);
-    $t->render('severity-edit.html', translate("Edit Severity"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
+    $t->assign('useJs', $useJs);
+    $t->render('severity-edit.html.php', translate("Edit Severity"), ($useJs == 1) ? 'wrap-popup.php' : 'wrap.php');
 }
 
 function list_items($severityid = 0, $error = '') {
@@ -114,7 +132,7 @@ function list_items($severityid = 0, $error = '') {
 
     sorting_headers($me, $headers, $order, $sort);
 
-    $t->render('severitylist.html', translate("Severity List"));
+    $t->render('severitylist.html.php', translate("Severity List"));
 }
 
 $perm->check('Admin');
@@ -123,11 +141,11 @@ if (isset($_REQUEST['op'])) {
     switch ($_REQUEST['op']) {
         case 'add' : list_items();
             break;
-        case 'edit' : show_form($_GET['severity_id']);
+        case 'edit' : show_form(get_get_int('severity_id', null));
             break;
-        case 'del' : del_item($_GET['severity_id']);
+        case 'del' : del_item(get_get_int('severity_id'));
             break;
-        case 'save' : do_form($_POST['severity_id']);
+        case 'save' : do_form(get_post_int('severity_id', null));
     }
 } else {
     list_items();
