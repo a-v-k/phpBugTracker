@@ -44,12 +44,32 @@ function del_item($statusid = 0) {
 function do_form($statusid = 0) {
     global $db, $me, $t;
 
-    extract($_POST);
+//    var_dump($_POST);
+//    die();
+//    extract($_POST);
+
+//array (size=8)
+//  'status_name' => string 'dfdfd' (length=5)
+//  'status_desc' => string 'ffddf' (length=5)
+//  'sort_order' => string '' (length=0)
+//  'bug_open' => string '1' (length=1)
+//  'submit' => string 'Submit' (length=6)
+//  'status_id' => string '' (length=0)
+//  'use_js' => string '1' (length=1)
+//  'op' => string 'save' (length=4
+
+
     $error = '';
+    $statusName = trim(get_post_str('status_name', null));
+    $statusDesc = trim(get_post_str('status_desc', null));
+    $sortOrder = get_post_int('sort_order', 0);
+    $bugOpen = get_post_int('bug_open', 1);
+    $useJs = get_request_int('use_js', 0);
+
     // Validation
-    if (!$status_name = trim($status_name)) {
+    if ($statusName == '') {
         $error = translate("Please enter a name");
-    } elseif (!$status_desc = trim($status_desc)) {
+    } elseif ($statusDesc == '') {
         $error = translate("Please enter a description");
     }
     if ($error) {
@@ -57,15 +77,12 @@ function do_form($statusid = 0) {
         return;
     }
 
-    if (empty($sort_order)) {
-        $sort_order = 0;
-    }
     if (!$statusid) {
-        $db->query("insert into " . TBL_STATUS . " (status_id, status_name, status_desc, bug_open, sort_order) values (" . $db->nextId(TBL_STATUS) . ', ' . $db->quote(stripslashes($status_name)) . ', ' . $db->quote(stripslashes($status_desc)) . ', ' . (int) $bug_open . ", '$sort_order')");
+        $db->query("insert into " . TBL_STATUS . " (status_id, status_name, status_desc, bug_open, sort_order) values (" . $db->nextId(TBL_STATUS) . ', ' . $db->quote(stripslashes($statusName)) . ', ' . $db->quote(stripslashes($statusDesc)) . ', ' . (int) $bugOpen . ", '$sortOrder')");
     } else {
-        $db->query("update " . TBL_STATUS . " set status_name = " . $db->quote(stripslashes($status_name)) . ', status_desc = ' . $db->quote(stripslashes($status_desc)) . ', bug_open = ' . (int) $bug_open . ", sort_order = $sort_order where status_id = $statusid");
+        $db->query("update " . TBL_STATUS . " set status_name = " . $db->quote(stripslashes($statusName)) . ', status_desc = ' . $db->quote(stripslashes($statusDesc)) . ', bug_open = ' . (int) $bugOpen . ", sort_order = $sortOrder where status_id = $statusid");
     }
-    if ($use_js) {
+    if ($useJs) {
         $t->render('edit-submit.html');
     } else {
         header("Location: $me?");
@@ -75,7 +92,8 @@ function do_form($statusid = 0) {
 function show_form($statusid = 0, $error = '') {
     global $db, $me, $t;
 
-    extract($_POST);
+    $useJs = get_request_int('use_js', 0);
+    //extract($_POST);
     if ($statusid && !$error) {
         $t->assign($db->getRow("select * from " . TBL_STATUS . " where status_id = '$statusid'"));
     } else {
@@ -85,7 +103,8 @@ function show_form($statusid = 0, $error = '') {
         } // new bugs def. open :)
     }
     $t->assign('error', $error);
-    $t->render('status-edit.html', translate("Edit Status"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
+    $t->assign('useJs', $useJs);
+    $t->render('status-edit.html.php', translate("Edit Status"), $useJs == 1 ? 'wrap-popup.php' : 'wrap.php');
 }
 
 function list_items($statusid = 0, $error = '') {
@@ -116,7 +135,7 @@ function list_items($statusid = 0, $error = '') {
 
     sorting_headers($me, $headers, $order, $sort);
 
-    $t->render('statuslist.html', translate("Status List"));
+    $t->render('statuslist.html.php', translate("Status List"));
 }
 
 $perm->check('Admin');
@@ -125,11 +144,11 @@ if (isset($_REQUEST['op'])) {
     switch ($_REQUEST['op']) {
         case 'add' : list_items();
             break;
-        case 'edit' : show_form($_REQUEST['status_id']);
+        case 'edit' : show_form(get_request_int('status_id', null));
             break;
-        case 'del' : del_item($_REQUEST['status_id']);
+        case 'del' : del_item(get_get_int('status_id'));
             break;
-        case 'save' : do_form($_POST['status_id']);
+        case 'save' : do_form(get_post_int('status_id', null));
             break;
     }
 } else {
