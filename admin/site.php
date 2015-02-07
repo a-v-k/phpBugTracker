@@ -49,15 +49,17 @@ function do_form($siteid = 0) {
     extract($_POST);
     $error = '';
     // Validation
-    if (!$site_name = trim($site_name))
+    if (!$site_name = trim($site_name)) {
         $error = translate("Please enter a name");
+    }
     if ($error) {
         show_form($siteid, $error);
         return;
     }
 
-    if (empty($sort_order))
+    if (empty($sort_order)) {
         $sort_order = 0;
+    }
     if (!$siteid) {
         $db->query('insert into ' . TBL_SITE . ' (site_id, site_name, sort_order) values (' . $db->nextId(TBL_SITE) . ', ' . $db->quote(stripslashes($site_name)) . ', ' . $sort_order . ')');
     } else {
