@@ -34,40 +34,53 @@ function del_item($resolutionid = 0) {
         $itemexists = $db->getOne('select count(*) from ' . TBL_RESOLUTION . " where resolution_id = $resolutionid");
         // Are there any bugs tied to this one?
         $bugcount = $db->getOne('select count(*) from ' . TBL_BUG . " where resolution_id = $resolutionid");
-        if ($itemexists and !$bugcount) {
+        if ($itemexists and ! $bugcount) {
             $db->query('delete from ' . TBL_RESOLUTION . " where resolution_id = $resolutionid");
         }
     }
     header("Location: $me?");
 }
 
-function do_form($resolutionid = 0) {
+function do_form($resolutionId = 0) {
     global $db, $me, $t;
 
-    extract($_POST);
+//    var_dump($_POST);
+//    die();
+//    extract($_POST);
+//    array (size=7)
+//      'resolution_name' => string 'sdfsdf' (length=6)
+//      'resolution_desc' => string '                  sdfsf                  ' (length=41)
+//      'sort_order' => string '' (length=0)
+//      'submit' => string 'Submit' (length=6)
+//      'resolution_id' => string '' (length=0)
+//      'use_js' => string '0' (length=1)
+//      'op' => string 'save' (length=4)
+
+
     $error = '';
+    $resolutionName = trim(get_post_str('resolution_name', null));
+    $resolutionDesc = trim(get_post_str('resolution_desc', null));
+    $sortOrder = get_post_int('sort_order', 0);
+    $useJs = get_request_int('use_js', 0);
     // Validation
-    if (!$resolution_name = trim($resolution_name)) {
+    if ($resolutionName == '') {
         $error = translate("Please enter a name");
-    } elseif (!$resolution_desc = trim($resolution_desc)) {
+    } elseif ($resolutionDesc == '') {
         $error = translate("Please enter a description");
     }
     if ($error) {
-        show_form($resolutionid, $error);
+        show_form($resolutionId, $error);
         return;
     }
 
-    if (empty($sort_order)) {
-        $sort_order = 0;
-    }
-    if (!$resolutionid) {
+    if (!$resolutionId) {
         $db->query("insert into " . TBL_RESOLUTION .
-                " (resolution_id, resolution_name, resolution_desc, sort_order) values (" . $db->nextId(TBL_RESOLUTION) . ", " . $db->quote(stripslashes($resolution_name)) . ', ' . $db->quote(stripslashes($resolution_desc)) . ', ' . $sort_order . ')');
+                " (resolution_id, resolution_name, resolution_desc, sort_order) values (" . $db->nextId(TBL_RESOLUTION) . ", " . $db->quote(stripslashes($resolutionName)) . ', ' . $db->quote(stripslashes($resolutionDesc)) . ', ' . $sortOrder . ')');
     } else {
         $db->query("update " . TBL_RESOLUTION .
-                ' set resolution_name = ' . $db->quote(stripslashes($resolution_name)) . ', resolution_desc = ' . $db->quote(stripslashes($resolution_desc)) . ", sort_order = $sort_order where resolution_id = $resolutionid");
+                ' set resolution_name = ' . $db->quote(stripslashes($resolutionName)) . ', resolution_desc = ' . $db->quote(stripslashes($resolutionDesc)) . ", sort_order = $sortOrder where resolution_id = $resolutionId");
     }
-    if ($use_js) {
+    if ($useJs) {
         $t->render('edit-submit.html');
     } else {
         header("Location: $me?");
@@ -77,14 +90,17 @@ function do_form($resolutionid = 0) {
 function show_form($resolutionid = 0, $error = '') {
     global $db, $me, $t;
 
-    extract($_POST);
+    //extract($_POST);
+    $useJs = get_request_int('use_js', 0);
+
     if ($resolutionid && !$error) {
         $t->assign($db->getRow("select * from " . TBL_RESOLUTION . " where resolution_id = '$resolutionid'"));
     } else {
         $t->assign($_POST);
     }
     $t->assign('error', $error);
-    $t->render('resolution-edit.html', translate("Edit Resolution"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
+    $t->assign('useJs', $useJs);
+    $t->render('resolution-edit.html.php', translate("Edit Resolution"), ($useJs == 1) ? 'wrap-popup.php' : 'wrap.php');
 }
 
 function list_items($resolutionid = 0, $error = '') {
@@ -122,11 +138,11 @@ $perm->check('Admin');
 
 if (isset($_REQUEST['op'])) {
     switch ($_REQUEST['op']) {
-        case 'edit' : show_form($_GET['resolution_id']);
+        case 'edit' : show_form(get_get_int('resolution_id', null));
             break;
-        case 'del' : del_item($_GET['resolution_id']);
+        case 'del' : del_item(get_get_int('resolution_id'));
             break;
-        case 'save' : do_form($_POST['resolution_id']);
+        case 'save' : do_form(get_post_int('resolution_id', null));
             break;
     }
 } else {

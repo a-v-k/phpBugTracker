@@ -74,7 +74,7 @@ if (!isset($resolution_id)) {
             <td>
                 <input type='submit' name='submit' value='<?php echo translate("Submit"); ?>'>
                 <input type="hidden" name="resolution_id" value="<?php echo $resolution_id; ?>"> 
-                <input type="hidden" name="use_js" value="<?php echo $_REQUEST['use_js']; ?>">  
+                <input type="hidden" name="use_js" value="<?php echo $useJs; ?>">
                 <input type="hidden" name="op" value="save"> 
             </td>
         </tr>
