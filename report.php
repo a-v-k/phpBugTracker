@@ -57,7 +57,7 @@ function resolution_by_engineer($projectid = 0) {
     ));
     // $db->setOption('optimize', 'portability');  //removed on PDO migration
 
-    $t->render('report.html', translate("Reporting"));
+    $t->render('report.html.php', translate("Reporting"));
 }
 
 // @deprecated

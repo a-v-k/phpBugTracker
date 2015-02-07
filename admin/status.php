@@ -60,8 +60,8 @@ function do_form($statusid = 0) {
 
 
     $error = '';
-    $statusName = trim(get_post_str('status_name', null));
-    $statusDesc = trim(get_post_str('status_desc', null));
+    $statusName = trim(get_post_val('status_name', null));
+    $statusDesc = trim(get_post_val('status_desc', null));
     $sortOrder = get_post_int('sort_order', 0);
     $bugOpen = get_post_int('bug_open', 1);
     $useJs = get_request_int('use_js', 0);

@@ -59,9 +59,9 @@ function do_form($severityId = 0) {
 
 
     $error = '';
-    $severityName = trim(get_post_str('severity_name', null));
-    $severityDesc = trim(get_post_str('severity_desc', null));
-    $severityColor = trim(get_post_str('severity_color', null));
+    $severityName = trim(get_post_val('severity_name', null));
+    $severityDesc = trim(get_post_val('severity_desc', null));
+    $severityColor = preg_replace("/[^a-zA-Z0-9#]+/", "", trim(get_post_val('severity_color', null)));
     $sortOrder = get_post_int('sort_order', 0);
     $useJs = get_request_int('use_js', 0);
     // Validation
@@ -89,7 +89,7 @@ function do_form($severityId = 0) {
 
 function show_form($severityid = 0, $error = '') {
     global $db, $me, $t;
-    
+
     $useJs = get_request_int('use_js', 0);
 
     if ($severityid && !$error) {

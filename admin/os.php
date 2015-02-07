@@ -57,8 +57,8 @@ function do_form($osId = 0) {
 //      'use_js' => string '1' (length=1)
 
     $error = '';
-    $osName = trim(get_post_str('os_name', null));
-    $regex = trim(get_post_str('regex', null));
+    $osName = trim(get_post_val('os_name', null));
+    $regex = trim(get_post_val('regex', null));
     $sortOrder = get_post_int('sort_order', 0);
     $useJs = get_request_int('use_js', 0);
     // Validation
@@ -71,9 +71,16 @@ function do_form($osId = 0) {
     }
 
     if (!$osId) {
-        $db->query("insert into " . TBL_OS . " (os_id, os_name, regex, sort_order) values (" . $db->nextId(TBL_OS) . ", " . $db->quote(stripslashes($osName)) . ", '$regex', '$sortOrder')");
+        //$db->query("insert into " . TBL_OS . " (os_id, os_name, regex, sort_order) values (" . $db->nextId(TBL_OS) . ", " . $db->quote(stripslashes($osName)) . ", '$regex', '$sortOrder')");
+        $db->query(
+                "insert into " . TBL_OS . " (os_id, os_name, regex, sort_order) values (:next_id, :os_name, :regex, :sort_order) ", array(':next_id' => $db->nextId(TBL_OS), ':os_name' => $osName,
+            ':regex' => $regex, ':sort_order' => $sortOrder)
+        );
     } else {
-        $db->query("update " . TBL_OS . " set os_name = " . $db->quote(stripslashes($osName)) . ", regex = '$regex', sort_order = '$sortOrder' where os_id = '$osId'");
+        //$db->query("update " . TBL_OS . " set os_name = " . $db->quote(stripslashes($osName)) . ", regex = '$regex', sort_order = '$sortOrder' where os_id = '$osId'");
+        $db->query("update " . TBL_OS . " set os_name = :os_name, regex = :regex, sort_order = :sort_order where os_id = :os_id ", array(':os_name' => $osName,
+            ':regex' => $regex, ':sort_order' => $sortOrder, ':os_id' => $osId)
+        );
     }
     if ($useJs) {
         $t->render('edit-submit.html', '', 'wrap-popup.php');

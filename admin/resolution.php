@@ -58,8 +58,8 @@ function do_form($resolutionId = 0) {
 
 
     $error = '';
-    $resolutionName = trim(get_post_str('resolution_name', null));
-    $resolutionDesc = trim(get_post_str('resolution_desc', null));
+    $resolutionName = trim(get_post_val('resolution_name', null));
+    $resolutionDesc = trim(get_post_val('resolution_desc', null));
     $sortOrder = get_post_int('sort_order', 0);
     $useJs = get_request_int('use_js', 0);
     // Validation
@@ -131,7 +131,7 @@ function list_items($resolutionid = 0, $error = '') {
 
     sorting_headers($me, $headers, $order, $sort, "page=$page");
 
-    $t->render('resolutionlist.html', translate("Resolution List"));
+    $t->render('resolutionlist.html.php', translate("Resolution List"));
 }
 
 $perm->check('Admin');

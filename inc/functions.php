@@ -99,7 +99,7 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
                 1 => translate("Active Users"),
                 2 => translate("Inactive Users"));
             foreach ($options as $k => $v) {
-                $text .= sprintf("<option value=\"%d\"%s>%s</option>", $k, ($k == $selected ? ' selected' : ''), $v);
+                $text .= sprintf("<option value=\"%d\"%s>%s</option>", $k, ($k == $selected ? ' selected' : ''), htmlspecialchars($v));
             }
             break;
         case 'group':
@@ -120,7 +120,7 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
                     $sel = '';
                 }
                 $text .= '<option value="' .
-                        $row[$box . '_id'] . "\"$sel>" . $row[$box . '_name'] . '</option>';
+                        $row[$box . '_id'] . "\"$sel>" . htmlspecialchars($row[$box . '_name']) . '</option>';
             }
             break;
         case 'database': $text = '<option value="0">None</option>';
@@ -142,7 +142,7 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
                     $sel = '';
                 }
                 $text .= '<option value="' .
-                        $row[$box . '_id'] . "\"$sel>" . $row[$box . '_name'] . '</option>';
+                        $row[$box . '_id'] . "\"$sel>" . htmlspecialchars($row[$box . '_name']) . '</option>';
             }
             break;
         case 'os':
@@ -158,7 +158,7 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
                 } else {
                     $sel = '';
                 }
-                $text .= '<option value="' . $row[$box . '_id'] . "\"$sel>" . $row[$box . '_name'] . "</option>";
+                $text .= '<option value="' . $row[$box . '_id'] . "\"$sel>" . htmlspecialchars($row[$box . '_name']) . "</option>";
             }
             break;
         case 'owner':
@@ -172,7 +172,7 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
                     $sel = '';
                 }
                 $text .= "<option value=\"{$row['user_id']}\"$sel>" .
-                        maskemail($row['login']) . "</option>";
+                        htmlspecialchars(maskemail($row['login'])) . "</option>";
             }
             break;
         case 'reporter':
@@ -187,7 +187,7 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
                     $sel = '';
                 }
                 $text .= "<option value=\"{$row['user_id']}\"$sel>" .
-                        maskemail($row['login']) . "</option>";
+                        htmlspecialchars(maskemail($row['login'])) . "</option>";
             }
             break;
         case 'bug_cc':
@@ -195,7 +195,7 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
             $rs = $db->query(sprintf($QUERY['functions-bug-cc'], $db->quote($selected)));
             while (list($uid, $user) = $rs->fetchRow(DB_FETCHMODE_ORDERED)) {
                 if ($may_edit or $uid == $u) {
-                    $text .= "<option value=\"$uid\">" . maskemail($user) . '</option>';
+                    $text .= "<option value=\"$uid\">" . htmlspecialchars(maskemail($user)) . '</option>';
                 }
             }
             // Pad the sucker
@@ -220,7 +220,7 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
                 } else {
                     $sel = '';
                 }
-                $text .= "<option value=\"$file\"$sel>$file</option>";
+                $text .= "<option value=\"$file\"$sel>" . htmlspecialchars($file) . "</option>";
             }
             break;
         case 'THEME' :
@@ -238,7 +238,7 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
                 } else {
                     $sel = '';
                 }
-                $text .= "<option value=\"$file\"$sel>$file</option>";
+                $text .= "<option value=\"$file\"$sel>" . htmlspecialchars($file) . "</option>";
             }
             break;
         case 'STYLE' :
@@ -256,7 +256,7 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
                 } else {
                     $sel = '';
                 }
-                $text .= "<option value=\"$file\"$sel>$file</option>";
+                $text .= "<option value=\"$file\"$sel>" . htmlspecialchars($file) . "</option>";
             }
             break;
         case 'BUG_UNCONFIRMED' :
@@ -271,7 +271,7 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
             }
             foreach ($bug_status_list as $id => $name) {
                 $sel = $id == $selected ? ' selected' : '';
-                $text .= "<option value=\"$id\"$sel>$name</option>";
+                $text .= "<option value=\"$id\"$sel>" . htmlspecialchars($name) . "</option>";
             }
             break;
         case 'GROUP_ASSIGN_TO' :
@@ -282,7 +282,7 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
             }
             foreach ($group_list as $id => $name) {
                 $sel = $id == $selected ? ' selected' : '';
-                $text .= "<option value=\"$id\"$sel>$name</option>";
+                $text .= "<option value=\"$id\"$sel>" . htmlspecialchars($name) . "</option>";
             }
             break;
         default :
@@ -295,7 +295,7 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
                 } else {
                     $sel = '';
                 }
-                $text .= "<option value=\"$val\"$sel>$item</option>";
+                $text .= "<option value=\"$val\"$sel>" . htmlspecialchars($item) . "</option>";
             }
             break;
     }

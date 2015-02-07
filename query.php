@@ -95,8 +95,9 @@ function build_query($assignedto, $reportedby, $open, $bookmarked, $projects) {
     $paramstr = '';
     foreach ($_GET as $k => $v) {
         $$k = $v;
-        if ($k == 'order' or $k == 'sort')
+        if ($k == 'order' or $k == 'sort') {
             continue;
+        }
         if (is_array($v)) {
             foreach ($v as $value) {
                 $paramstr .= "&amp;{$k}[]=$value";
@@ -213,20 +214,25 @@ function build_query($assignedto, $reportedby, $open, $bookmarked, $projects) {
                         ($searchfield == 'description' ? ' or b.bug_id in (' . @join(', ', $bugs_with_comment) . ')' : '');
             }
         }
-        if (!empty($fields))
+        if (!empty($fields)) {
             $query[] = '(' . @join(' and ', $fields) . ')';
+        }
 
         // Project/Version/Component
         if (!empty($projects)) {
             $proj[] = "b.project_id = '$projects'";
-            if (!empty($versions) and $versions != 'All')
+            if (!empty($versions) and $versions != 'All') {
                 $proj[] = "b.version_id = '$versions'";
-            if (isset($closedinversion) and $closedinversion != '' and $closedinversion != 'All')
+            }
+            if (isset($closedinversion) and $closedinversion != '' and $closedinversion != 'All') {
                 $proj[] = "b.closed_in_version_id = '$closedinversion'";
-            if (isset($tobeclosedinversion) and $tobeclosedinversion != '' and $tobeclosedinversion != 'All')
+            }
+            if (isset($tobeclosedinversion) and $tobeclosedinversion != '' and $tobeclosedinversion != 'All') {
                 $proj[] = "b.to_be_closed_in_version_id = '$tobeclosedinversion'";
-            if (!empty($components) and $components != 'All')
+            }
+            if (!empty($components) and $components != 'All') {
                 $proj[] = "b.component_id = '$components'";
+            }
             $query[] = '(' . @join(' and ', $proj) . ')';
         } elseif (!$perm->have_perm('Admin')) { // Filter results from hidden projects
             $query[] = "b.project_id not in ($restricted_projects)";
@@ -290,7 +296,7 @@ function format_bug_col($colvalue, $coltype, $bugid, $pos, $dataRow = null) {
         case 'owner' :
         case 'lastmodifier' :
             return '<div align="center">' .
-                    (!empty($colvalue) ? maskemail($colvalue) : '') . '</div>';
+                    (!empty($colvalue) ? htmlspecialchars(maskemail($colvalue)) : '') . '</div>';
             break;
         case 'project_name' :
 
@@ -299,7 +305,7 @@ function format_bug_col($colvalue, $coltype, $bugid, $pos, $dataRow = null) {
                 $params = array_merge($_SESSION['queryinfo']['queryparams'], $params);
             }
             $params['projects'] = $dataRow['project_id'];
-            return "<a href=\"" . qry_amp(add_paramsa('r', $params)) . "\">$colvalue</a>";
+            return "<a href=\"" . qry_amp(add_paramsa('r', $params)) . "\">" . htmlspecialchars($colvalue) . "</a>";
             //return "<a href=\"" . qry_amp(add_param('r', 'projects', $dataRow['project_id'])) . "\">$colvalue</a>";
             break;
 
@@ -320,7 +326,7 @@ function format_bug_col($colvalue, $coltype, $bugid, $pos, $dataRow = null) {
 
         default :
             return '<div align="center">' .
-                    (!empty($colvalue) ? $colvalue : '') . '</div>';
+                    (!empty($colvalue) ? htmlspecialchars($colvalue) : '') . '</div>';
             break;
     }
 }

@@ -21,8 +21,8 @@
                 <?php for ($i = 0, $count = count($resolutions); $i < $count; $i++) { ?>
                     <tr>
                         <td><a href="resolution.php?op=edit&resolution_id=<?php echo $resolutions[$i]['resolution_id']; ?>" onClick="popupResolution(<?php echo $resolutions[$i]['resolution_id']; ?>);
-                                    return false;"><?php echo stripslashes($resolutions[$i]['resolution_name']); ?></a></td>
-                        <td>&nbsp;<?php echo $resolutions[$i]['resolution_desc']; ?></td>
+                                    return false;"><?php echo htmlspecialchars($resolutions[$i]['resolution_name']); ?></a></td>
+                        <td>&nbsp;<?php echo htmlspecialchars($resolutions[$i]['resolution_desc']); ?></td>
                         <td align="center"><?php echo $resolutions[$i]['sort_order']; ?></td>
                         <td align="center">
                             <?php if (!$resolutions[$i]['bug_count']) { ?>

@@ -58,7 +58,7 @@ function do_form($siteId = 0) {
 //      'op' => string 'save' (length=4)
 
     $error = '';
-    $siteName = trim(get_post_str('site_name', null));
+    $siteName = trim(get_post_val('site_name', null)); // <script>alert('q');</script>
     $sortOrder = get_post_int('sort_order', 0);
     $useJs = get_request_int('use_js', 0);
     // Validation

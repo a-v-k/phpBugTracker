@@ -59,9 +59,9 @@ function do_form($priorityId = 0) {
 //      'op' => string 'save' (length=4)
 
     $error = '';
-    $priorityName = trim(get_post_str('priority_name', null));
-    $priorityDesc = trim(get_post_str('priority_desc', null));
-    $priorityColor = trim(get_post_str('priority_color', null));
+    $priorityName = trim(get_post_val('priority_name', null));
+    $priorityDesc = trim(get_post_val('priority_desc', null));
+    $priorityColor = preg_replace("/[^a-zA-Z0-9#]+/", "", trim(get_post_val('priority_color', null)));
     $sortOrder = get_post_int('sort_order', 0);
     $useJs = get_request_int('use_js', 0);
     // Validation

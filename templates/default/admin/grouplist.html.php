@@ -25,7 +25,7 @@
                 <?php for ($i = 0, $count = count($groups); $i < $count; $i++) { ?>
                     <tr>
                         <td><a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>?op=edit<?php echo $do_group ? '' : '-role' ?>&group_id=<?php echo $groups[$i]['group_id']; ?>" onClick="popupGroup(<?php echo $groups[$i]['group_id']; ?>);
-                                    return false;"><?php echo stripslashes($groups[$i]['group_name']); ?></a></td>
+                                    return false;"><?php echo htmlspecialchars($groups[$i]['group_name']); ?></a></td>
                         <td align="center"><?php echo $groups[$i]['count']; ?></td>
                         <td align="center">
                             <?php
@@ -33,8 +33,8 @@
                                 echo translate("Locked");
                             } else {
                                 ?>
-                                <a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>?op=del<?php echo $do_group ? '' : '-role' ?>&group_id=<?php echo $groups[$i]['group_id']; ?>" onClick="return confirm('<?php echo translate("This will remove all user assignments to this group and the group itself.  Continue?"); ?>')"><?php echo translate("Delete"); ?></a> |
-                                <a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>?op=purge<?php echo $do_group ? '' : '-role' ?>&group_id=<?php echo $groups[$i]['group_id']; ?>" onClick="return confirm('<?php echo translate("This will remove all user assignments to this group.  Continue?"); ?>')"><?php echo translate("Purge"); ?></a>
+                                <a href="<?php echo filter_input(INPUT_SERVER, 'SCRIPT_NAME'); ?>?op=del<?php echo $do_group ? '' : '-role' ?>&group_id=<?php echo $groups[$i]['group_id']; ?>" onClick="return confirm('<?php echo translate("This will remove all user assignments to this group and the group itself.  Continue?"); ?>')"><?php echo translate("Delete"); ?></a> |
+                                <a href="<?php echo filter_input(INPUT_SERVER, 'SCRIPT_NAME'); ?>?op=purge<?php echo $do_group ? '' : '-role' ?>&group_id=<?php echo $groups[$i]['group_id']; ?>" onClick="return confirm('<?php echo translate("This will remove all user assignments to this group.  Continue?"); ?>')"><?php echo translate("Purge"); ?></a>
                             <?php } ?>
                         </td>
                     </tr>

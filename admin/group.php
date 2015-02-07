@@ -44,6 +44,9 @@ function do_form() {
 
     $groupId = get_request_int('group_id', null);
     $perms = filter_input(INPUT_POST, 'perms', FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY);
+    if ($perms == null) {
+        $perms = array();
+    }
 
 //    var_dump($_POST); die();
 //    array (size=5)
@@ -142,7 +145,7 @@ function list_items($do_group = true, $groupid = 0, $error = '') {
     sorting_headers($me, $headers, $order, $sort, "page=$page");
 
     $t->assign('do_group', $do_group);
-    $t->render('grouplist.html', $do_group ? translate("Group List") : translate("Role List"));
+    $t->render('grouplist.html.php', $do_group ? translate("Group List") : translate("Role List"));
 }
 
 $perm->check('Admin');

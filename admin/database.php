@@ -56,7 +56,7 @@ function do_form($databaseId = 0) {
 //      'op' => string 'save' (length=4)
 
     $error = '';
-    $databaseName = trim(get_post_str('database_name', null));
+    $databaseName = trim(get_post_val('database_name', null));
     $sortOrder = get_post_int('sort_order', 0);
     $useJs = get_request_int('use_js', 0);
     // Validation

@@ -66,7 +66,7 @@ if (!defined('PHPBT_VERSION')) {
                     <?php $stats = grab_data($restricted_projects); ?>
                     <?php foreach ($stats as $statid => $info) { ?>
                         <tr>
-                            <td><a href="query.php?op=doquery&amp;status[]=<?php echo $statid ?>"><?php echo $info['name'] ?></a></td>
+                            <td><a href="query.php?op=doquery&amp;status[]=<?php echo $statid ?>"><?php echo htmlspecialchars($info['name']) ?></a></td>
                             <td align="center"><?php echo isset($info['count']) && $info['count'] ? $info['count'] : 0 ?></td>
                         </tr>
                     <?php } ?>
@@ -81,7 +81,7 @@ if (!defined('PHPBT_VERSION')) {
         <tr>
             <?php
             foreach ($resfields as $field) {
-                echo "<th>$field</th>";
+                echo "<th>" . htmlspecialchars($field) . "</th>";
             }
             ?>
         </tr>

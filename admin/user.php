@@ -207,7 +207,7 @@ function list_items($userid = 0, $error = '') {
 
     $t->assign('userfilter', $user_filter);
     $t->assign('groupfilter', $group_filter);
-    $t->render('userlist.html', translate("User List"));
+    $t->render('userlist.html.php', translate("User List"));
 }
 
 $perm->check('Admin');
