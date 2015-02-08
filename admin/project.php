@@ -89,9 +89,10 @@ function show_version($versionid = 0, $error = '') {
         $t->assign('sort_order', null);
         //$t->assign($_POST);
     }
-    $t->assign('use_js', filter_input(INPUT_GET, 'use_js'));
+    $useJs = get_request_int('use_js', 0);
+    $t->assign('use_js', $useJs);
     $t->assign('error', $error);
-    $t->render('version-edit.html', translate("Edit Version"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
+    $t->render('version-edit.html', translate("Edit Version"), ($useJs == 1) ? 'wrap-popup.php' : 'wrap.php');
 }
 
 function del_component($componentid, $projectid = 0) {
@@ -170,9 +171,10 @@ function show_component($componentId = 0, $error = '') {
         $t->assign('sort_order', null);
         //$t->assign($_POST);
     }
-    $t->assign('use_js', filter_input(INPUT_GET, 'use_js'));
+    $useJs = get_request_int('use_js', 0);
+    $t->assign('use_js', $useJs);
     $t->assign('error', $error);
-    $t->render('component-edit.html', translate("Edit Component"), !empty($_REQUEST['use_js']) ? 'wrap-popup.php' : 'wrap.php');
+    $t->render('component-edit.html', translate("Edit Component"), ($useJs == 1) ? 'wrap-popup.php' : 'wrap.php');
 }
 
 function save_project($projectid = 0) {
