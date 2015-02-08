@@ -29,8 +29,8 @@ class uauth {
     var $classname = 'uauth';
 
     function uauth() {
-        global $group_ids, $uname, $db_fields, $group, $perms,
-        $uid, $exp;
+        //global $group_ids, $uname, $db_fields, $group, $perms,
+        //$uid, $exp;
 
         if (!isset($_SESSION['group_ids'])) {
             $_SESSION['group_ids'] = array(0);
@@ -60,7 +60,7 @@ class uauth {
     }
 
     function auth_validatelogin() {
-        global $db, $select, $emailpass, $emailsuccess, $uid;
+        global $db; //, $select, $emailpass, $emailsuccess, $uid;
 
         $role = array();
         $roles = $db->getAll("select group_id, group_name from " . TBL_AUTH_GROUP . " ag where ag.is_role=1");
@@ -72,11 +72,21 @@ class uauth {
         $_SESSION['group'] = array();
         $_SESSION['group_ids'] = array(0);
         $_SESSION['perms'] = array();
+        $_SESSION['uname'] = null;
 
-        extract($_POST);
-        if (!$username)
+        //extract($_POST);
+        //generate_inputs_die($_POST);
+        //array (size=3)
+        //  'username' => string 'login' (length=16)
+        //  'password' => string 'pass' (length=8)
+        //  'dologin' => string '1' (length=1)
+        $username = trim(get_post_val('username', null));
+        $password = trim(get_post_val('password', null));
+        //$dologin = get_post_int('dologin', null);
+
+        if ($username == '') {
             return 0;
-        $_SESSION['uname'] = $username;
+        }
         if (ENCRYPT_PASS) {
             $password = md5($password);
         }
@@ -85,6 +95,7 @@ class uauth {
         if (($u === false) || (!isset($u['login']))) {
             return 0;
         } else {
+            $_SESSION['uname'] = $username;
             $_SESSION['db_fields'] = @unserialize($u['bug_list_fields']);
 
             // Grab group assignments and permissions based on groups
@@ -141,7 +152,7 @@ class uperm {
     }
 
     function check_proj($project_id = -1) {
-        global $db;
+        //global $db;
 
         if ($this->have_perm_proj($project_id)) {
             return true;
@@ -152,7 +163,7 @@ class uperm {
     }
 
     function have_perm_proj($project_id = -1) {
-        global $db;
+        //global $db;
 
         if ($this->have_perm('Admin')) {
             return true;
@@ -176,7 +187,7 @@ class uperm {
     function check_auth($auth_var, $reqs, $proj = 0) {
 
         // Administrators always pass
-        if (@isset($_SESSION[$auth_var]['Admin'])) {
+        if (isset($_SESSION[$auth_var]['Admin'])) {
             return true;
         }
 
@@ -186,14 +197,14 @@ class uperm {
 
         if (is_array($reqs)) {
             foreach ($reqs as $req) {
-                if (!@isset($_SESSION[$auth_var][$req]) &&
-                        ($auth_var != 'perms' || !@isset($this->permissions[$req]))) {
+                if (!isset($_SESSION[$auth_var][$req]) &&
+                        ($auth_var != 'perms' || !isset($this->permissions[$req]))) {
                     return false;
                 }
             }
         } else {
-            if (!@isset($_SESSION[$auth_var][$reqs]) &&
-                    ($auth_var != 'perms' || !@isset($this->permissions[$reqs]))) {
+            if (!isset($_SESSION[$auth_var][$reqs]) &&
+                    ($auth_var != 'perms' || !isset($this->permissions[$reqs]))) {
                 return false;
             }
         }
