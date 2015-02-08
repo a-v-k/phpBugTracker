@@ -1,6 +1,6 @@
 <form enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <input type="hidden" name="bugid" value="<?php echo $bugid; ?>">
-<input type="hidden" name="use_js" value="<?php echo $_REQUEST['use_js']; ?>">
+<input type="hidden" name="use_js" value="<?php echo get_request_int('use_js',0); ?>">
 <table border="0" align="center">
 	<tr>
 		<td colspan="2" align="center">
