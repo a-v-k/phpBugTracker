@@ -1143,3 +1143,47 @@ function get_input_int($ipInputType, $ipKeyName, $ipDefault = false) {
     }
     return $val;
 }
+
+function underScoreToCamelCase($string, $capitalizeFirstCharacter = false) {
+    $str = str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
+    if (!$capitalizeFirstCharacter) {
+        $str[0] = strtolower($str[0]);
+    }
+    return $str;
+}
+
+/*
+ *
+ *
+ *
+ *
+ */
+function generate_inputs($array) {
+    $ra = array();
+    $ra[] = "//  for post  //";
+    foreach ($array as $key => $value) {
+        $varName = '$' . underScoreToCamelCase($key);
+        if (is_numeric($value)) {
+            $ra[] = "$varName = get_post_int('$key', null);";
+        } else {
+            $ra[] = "$varName = trim(get_post_val('$key', null));";
+        }
+    }
+    $ra[] = "";
+    $ra[] = "//  for get  //";
+    foreach ($array as $key => $value) {
+        if (is_numeric($value)) {
+            $ra[] = "$varName = get_get_int('$key', null);";
+        } else {
+            $ra[] = "$varName = trim(get_get_val('$key', null));";
+        }
+    }
+    return implode("\n", $ra);
+}
+
+function generate_inputs_die($array) {
+    var_dump($array);
+    echo "\n\n";
+    echo "<pre>\n" . generate_inputs($array) ."\n</pre>";
+    die();
+}
