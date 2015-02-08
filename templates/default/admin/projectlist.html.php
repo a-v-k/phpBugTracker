@@ -23,10 +23,10 @@ if (!defined('PHPBT_VERSION')) {
                         <tr>
                             <td>
                                 <?php if (isset($perm) and ($perm->have_perm('Admin') or $perm->have_perm_proj($projects[$i]['project_id']))) { ?>
-                                    <a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>?op=edit&id=<?php echo $projects[$i]['project_id']; ?>"><?php echo stripslashes($projects[$i]['project_name']); ?></a>
+                                <a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>?op=edit&id=<?php echo $projects[$i]['project_id']; ?>"><?php echo htmlspecialchars($projects[$i]['project_name']); ?></a>
                                     <?php
                                 } else {
-                                    echo stripslashes($projects[$i]['project_name']);
+                                    echo htmlspecialchars($projects[$i]['project_name']);
                                 }
                                 ?>
                             </td>
