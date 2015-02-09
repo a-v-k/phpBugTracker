@@ -414,16 +414,16 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
 <div align="center" class="bugdisplaylinks">
     <?php if (isset($_SESSION['uid']) && !empty($_SESSION['uid'])) { ?>
         <?php if (!$already_bookmarked) { ?>
-            <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=addbookmark&amp;bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("Bookmark this bug"); ?></a></b> |
+            <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=addbookmark&amp;bugid=<?php echo $bug_id . $posinfo; ?>&ak=<?php echo make_action_key(); ?>"><?php echo translate("Bookmark this bug"); ?></a></b> |
         <?php } else { ?>
-            <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=delbookmark&amp;bugid=<?php echo $bug_id . $posinfo; ?>"><?php echo translate("Remove bookmark for this bug"); ?></a></b> |
+            <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=delbookmark&amp;bugid=<?php echo $bug_id . $posinfo; ?>&ak=<?php echo make_action_key(); ?>"><?php echo translate("Remove bookmark for this bug"); ?></a></b> |
         <?php } ?>
         <?php
         if (!empty($error['vote'])) {
             echo "<div class=\"error\">{$error['vote']}</div>";
         }
         ?>
-        <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=vote&amp;bugid=<?php echo $bug_id . $posinfo; ?>" onClick="if (<?php echo $already_voted; ?>) {
+        <b><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=vote&amp;bugid=<?php echo $bug_id . $posinfo; ?>&ak=<?php echo make_action_key(); ?>" onClick="if (<?php echo $already_voted; ?>) {
                     alert('<?php echo translate("You have already voted for this bug"); ?>');
                     return false;
 
@@ -437,7 +437,7 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
     <?php } ?>
     <?php if ($is_admin) { ?>
         <!--
-        | <b><a href="bug.php?op=del&bugid=<?php echo $bug_id; ?>"><?php echo translate("Delete bug"); ?></a></b>
+        | <b><a href="bug.php?op=del&bugid=<?php echo $bug_id; ?>&ak=<?php echo make_action_key(); ?>"><?php echo translate("Delete bug"); ?></a></b>
         -->
     <?php } ?>
 </div>

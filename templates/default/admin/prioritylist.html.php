@@ -26,7 +26,7 @@
                         <td align="center"><?php echo $priorities[$i]['sort_order']; ?></td>
                         <td align="center">
                             <?php if (!$priorities[$i]['bug_count']) { ?>
-                                <a href="priority.php?op=del&priority_id=<?php echo $priorities[$i]['priority_id']; ?>" onClick="return confirm('<?php echo translate("Are you sure you want to delete this priority?"); ?>')"><?php echo translate("Delete"); ?></a>
+                                <a href="priority.php?op=del&priority_id=<?php echo $priorities[$i]['priority_id']; ?>&ak=<?php echo make_action_key(); ?>" onClick="return confirm('<?php echo translate("Are you sure you want to delete this priority?"); ?>')"><?php echo translate("Delete"); ?></a>
                             <?php } ?>
                         </td>
                     </tr>

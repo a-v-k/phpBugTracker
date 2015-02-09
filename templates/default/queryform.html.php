@@ -36,20 +36,20 @@ extract(array(
     versions = new Array();
     closedversions = new Array();
     components = new Array();
-    versions['All'] = new Array(new Array('','All'));
-    closedversions['All'] = new Array(new Array('','All'));
-    components['All'] = new Array(new Array('','All'));
-    <?php
-    build_project_js();
-    ?>
+    versions['All'] = new Array(new Array('', 'All'));
+    closedversions['All'] = new Array(new Array('', 'All'));
+    components['All'] = new Array(new Array('', 'All'));
+<?php
+build_project_js();
+?>
 
     // Saved queries
     savedQueries = new Array();
-    <?php
-    for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
-        echo "savedQueries[$i] = '{$queries[$i]['saved_query_name']}'; ";
-    }
-    ?>
+<?php
+for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
+    echo "savedQueries[$i] = '{$queries[$i]['saved_query_name']}'; ";
+}
+?>
 
     function updateMenus(f) {
         sel = f.projects[f.projects.selectedIndex].text;
@@ -315,7 +315,7 @@ extract(array(
         . $queries[$i]['saved_query_name']
         . '</a> (<a href="'
         . htmlspecialchars($_SERVER['PHP_SELF']
-                . '?op=delquery&queryid=' . $queries[$i]['saved_query_id'] . '&form=simple')
+                . '?op=delquery&queryid=' . $queries[$i]['saved_query_id'] . '&form=simple&ak=' . make_action_key())
         . '" onClick="return confirm(\'' . translate("Are you sure you want to delete this saved query?") . '\');">' . translate("Delete") . '</a>)<br>';
     }
     ?>

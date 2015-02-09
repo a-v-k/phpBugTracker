@@ -30,7 +30,7 @@
                         <td align="center"><?php echo $sites[$i]['sort_order']; ?></td>
                         <td align="center">
                             <?php if (!$sites[$i]['bug_count'] && $sites[$i]['site_id']) { ?>
-                                <a href="site.php?op=del&site_id=<?php echo $sites[$i]['site_id']; ?>" onClick="return confirm('<?php echo translate("Are you sure you want to delete this item?"); ?>')"><?php echo translate("Delete"); ?></a>
+                                <a href="site.php?op=del&site_id=<?php echo $sites[$i]['site_id']; ?>&ak=<?php echo make_action_key(); ?>" onClick="return confirm('<?php echo translate("Are you sure you want to delete this item?"); ?>')"><?php echo translate("Delete"); ?></a>
                             <?php } ?>
                         </td>
                     </tr>

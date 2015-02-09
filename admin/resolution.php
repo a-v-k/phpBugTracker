@@ -140,7 +140,10 @@ if (isset($_REQUEST['op'])) {
     switch ($_REQUEST['op']) {
         case 'edit' : show_form(get_get_int('resolution_id', null));
             break;
-        case 'del' : del_item(get_get_int('resolution_id'));
+        case 'del' :
+            if (check_action_key_die()) {
+                del_item(get_get_int('resolution_id'));
+            }
             break;
         case 'save' : do_form(get_post_int('resolution_id', null));
             break;

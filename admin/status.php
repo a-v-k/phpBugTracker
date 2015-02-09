@@ -47,7 +47,6 @@ function do_form($statusid = 0) {
 //    var_dump($_POST);
 //    die();
 //    extract($_POST);
-
 //array (size=8)
 //  'status_name' => string 'dfdfd' (length=5)
 //  'status_desc' => string 'ffddf' (length=5)
@@ -146,7 +145,10 @@ if (isset($_REQUEST['op'])) {
             break;
         case 'edit' : show_form(get_request_int('status_id', null));
             break;
-        case 'del' : del_item(get_get_int('status_id'));
+        case 'del' :
+            if (check_action_key_die()) {
+                del_item(get_get_int('status_id'));
+            }
             break;
         case 'save' : do_form(get_post_int('status_id', null));
             break;

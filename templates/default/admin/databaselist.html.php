@@ -26,7 +26,7 @@
                         <td align="center"><?php echo $databases[$i]['sort_order']; ?></td>
                         <td align="center">
                             <?php if (!$databases[$i]['bug_count']) { ?>
-                                <a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>?op=del&database_id=<?php echo $databases[$i]['database_id']; ?>" onClick="return confirm('<?php echo translate("Are you sure you want to delete this item?"); ?>')"><?php echo translate("Delete"); ?></a>
+                                <a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>?op=del&database_id=<?php echo $databases[$i]['database_id']; ?>&ak=<?php echo make_action_key(); ?>" onClick="return confirm('<?php echo translate("Are you sure you want to delete this item?"); ?>')"><?php echo translate("Delete"); ?></a>
                             <?php } ?>
                         </td>
                     </tr>

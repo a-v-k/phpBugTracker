@@ -849,9 +849,9 @@ function show_form($bugId = 0, $error = '') {
     $projectId = check_numeric_die(get_request_value('project'));
     $projectname = $db->getOne(
             "select project_name from " . TBL_PROJECT . " where project_id = :project_id", array(':project_id' => $projectId));
-    if ($bugId && !$error) { 
+    if ($bugId && !$error) {
         $t->assign($db->getRow("select * from " . TBL_BUG . " where bug_id = :bug_id", array(':bug_id' => $bugId)));
-    } else { 
+    } else {
         $t->assign($_POST);
         $t->assign(array(
             'u' => $u,
@@ -1094,9 +1094,11 @@ if (!empty($_REQUEST['op'])) {
             }
             break;
         case 'del':
-            $perm->check_proj();
-            delete_bug(check_id($_GET['bugid']));
-            header("Location: query.php");
+            if (check_action_key_die()) {
+                $perm->check_proj();
+                delete_bug(check_id($_GET['bugid']));
+                header("Location: query.php");
+            }
             break;
         case 'show':
             show_bug(check_id($_GET['bugid']));
@@ -1131,16 +1133,22 @@ if (!empty($_REQUEST['op'])) {
             show_bug_printable(check_id($_GET['bugid']));
             break;
         case 'vote':
-            vote_bug(check_id($_GET['bugid']));
+            if (check_action_key_die()) {
+                vote_bug(check_id($_GET['bugid']));
+            }
             break;
         case 'viewvotes':
             vote_view(check_id($_GET['bugid']));
             break;
         case 'addbookmark':
-            bookmark_bug(check_id($_GET['bugid']), true);
+            if (check_action_key_die()) {
+                bookmark_bug(check_id($_GET['bugid']), true);
+            }
             break;
         case 'delbookmark':
-            bookmark_bug(check_id($_GET['bugid']), false);
+            if (check_action_key_die()) {
+                bookmark_bug(check_id($_GET['bugid']), false);
+            }
             break;
     }
 } else {

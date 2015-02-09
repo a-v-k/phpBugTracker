@@ -129,7 +129,7 @@ function show_preferences_form($error = '') {
         'def_results' => $def_results
     ));
 
-    $t->render('user.html', translate("User preferences"));
+    $t->render('user.html.php', translate("User preferences"));
 }
 
 $auth->force_auth();
@@ -137,7 +137,9 @@ $auth->force_auth();
 if (isset($_GET['op'])) {
     switch ($_GET['op']) {
         case 'delvote':
-            delete_vote(check_id($_GET['bugid']));
+            if (check_action_key_die()) {
+                delete_vote(check_id($_GET['bugid']));
+            }
             break;
     }
 } elseif (isset($_POST['do'])) {

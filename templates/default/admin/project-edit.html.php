@@ -113,7 +113,7 @@
                                     return false;"><?php echo stripslashes(htmlspecialchars($versions[$i]['version_name'])); ?></a></td>
                         <td align="center"><?php echo $versions[$i]['active'] ? translate("Yes") : translate("No"); ?></td>
                         <td align="center"><?php echo $versions[$i]['sort_order']; ?></td>
-                        <td align="center"><?php if (!$versions[$i]['bug_count']) { ?><a href="project.php?op=del_version&id=<?php echo $versions[$i]['version_id']; ?>&project_id=<?php echo $project_id; ?>"><?php echo translate("Delete"); ?></a><?php } ?></td>
+                        <td align="center"><?php if (!$versions[$i]['bug_count']) { ?><a href="project.php?op=del_version&id=<?php echo $versions[$i]['version_id']; ?>&project_id=<?php echo $project_id; ?>&ak=<?php echo make_action_key(); ?>"><?php echo translate("Delete"); ?></a><?php } ?></td>
                     </tr>
                 <?php } ?>
                 <?php if (!$count) { ?>
@@ -142,7 +142,7 @@
                         <td align="center"><?php echo lookup('assigned_to', $components[$i]['owner']); ?></td>
                         <td align="center"><?php echo $components[$i]['active'] ? translate("Yes") : translate("No"); ?></td>
                         <td align="center"><?php echo $components[$i]['sort_order']; ?></td>
-                        <td align="center"><?php if (!$components[$i]['bug_count']) { ?><a href="project.php?op=del_component&id=<?php echo $components[$i]['component_id']; ?>&project_id=<?php echo $project_id; ?>"><?php echo translate("Delete"); ?></a><?php } ?></td>
+                        <td align="center"><?php if (!$components[$i]['bug_count']) { ?><a href="project.php?op=del_component&id=<?php echo $components[$i]['component_id']; ?>&project_id=<?php echo $project_id; ?>&ak=<?php echo make_action_key(); ?>"><?php echo translate("Delete"); ?></a><?php } ?></td>
                     </tr>
                 <?php } ?>
                 <?php if (!$count) { ?>

@@ -158,7 +158,7 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
                 . $queries[$i]['saved_query_string'])
         . '">' . $queries[$i]['saved_query_name'] . '</a> (<a href="'
         .  htmlspecialchars($_SERVER['PHP_SELF'] . '?op=delquery&queryid='
-                . $queries[$i]['saved_query_id'] . '&form=simple')
+                . $queries[$i]['saved_query_id'] . '&form=simple&ak=' . make_action_key() )
         . '" onClick="return confirm(\'' . translate("Are you sure you want to delete this saved query?") . '\');">' . translate("Delete") . '</a>)<br>';
     }
     ?>

@@ -132,7 +132,10 @@ if (isset($_REQUEST['op'])) {
             break;
         case 'edit' : show_form(get_get_int('database_id', null));
             break;
-        case 'del' : del_item(get_get_int('database_id'));
+        case 'del' :
+            if (check_action_key_die()) {
+                del_item(get_get_int('database_id'));
+            }
             break;
         case 'save' : do_form(get_post_int('database_id', null));
             break;

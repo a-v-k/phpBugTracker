@@ -33,8 +33,8 @@
                                 echo translate("Locked");
                             } else {
                                 ?>
-                                <a href="<?php echo filter_input(INPUT_SERVER, 'SCRIPT_NAME'); ?>?op=del<?php echo $do_group ? '' : '-role' ?>&group_id=<?php echo $groups[$i]['group_id']; ?>" onClick="return confirm('<?php echo translate("This will remove all user assignments to this group and the group itself.  Continue?"); ?>')"><?php echo translate("Delete"); ?></a> |
-                                <a href="<?php echo filter_input(INPUT_SERVER, 'SCRIPT_NAME'); ?>?op=purge<?php echo $do_group ? '' : '-role' ?>&group_id=<?php echo $groups[$i]['group_id']; ?>" onClick="return confirm('<?php echo translate("This will remove all user assignments to this group.  Continue?"); ?>')"><?php echo translate("Purge"); ?></a>
+                                <a href="<?php echo filter_input(INPUT_SERVER, 'SCRIPT_NAME'); ?>?op=del<?php echo $do_group ? '' : '-role' ?>&group_id=<?php echo $groups[$i]['group_id']; ?>&ak=<?php echo make_action_key(); ?>" onClick="return confirm('<?php echo translate("This will remove all user assignments to this group and the group itself.  Continue?"); ?>')"><?php echo translate("Delete"); ?></a> |
+                                <a href="<?php echo filter_input(INPUT_SERVER, 'SCRIPT_NAME'); ?>?op=purge<?php echo $do_group ? '' : '-role' ?>&group_id=<?php echo $groups[$i]['group_id']; ?>&ak=<?php echo make_action_key(); ?>" onClick="return confirm('<?php echo translate("This will remove all user assignments to this group.  Continue?"); ?>')"><?php echo translate("Purge"); ?></a>
                             <?php } ?>
                         </td>
                     </tr>

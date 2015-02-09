@@ -83,7 +83,7 @@ function do_form() {
 
     $db->query("delete from " . TBL_GROUP_PERM . " where group_id = '$groupId'");
     foreach ($perms as $permid) {
-        $intPerm = (int)$permid;
+        $intPerm = (int) $permid;
         $db->query("insert into " . TBL_GROUP_PERM . " (group_id, perm_id) values ($groupId, $intPerm)");
     }
 
@@ -156,11 +156,17 @@ if (isset($_REQUEST['op'])) {
             break;
         case 'edit' : show_form(get_get_int('group_id', null));
             break;
-        case 'del' : del_group(get_get_int('group_id'));
-            list_items(true, get_get_int('group_id'));
+        case 'del' :
+            if (check_action_key_die()) {
+                del_group(get_get_int('group_id'));
+                list_items(true, get_get_int('group_id'));
+            }
             break;
-        case 'purge' : purge_group(get_get_int('group_id'));
-            list_items(true, get_get_int('group_id'));
+        case 'purge' :
+            if (check_action_key_die()) {
+                purge_group(get_get_int('group_id'));
+                list_items(true, get_get_int('group_id'));
+            }
             break;
         case 'list-roles' : list_items(false);
             break;
@@ -168,11 +174,17 @@ if (isset($_REQUEST['op'])) {
             break;
         case 'edit-role' : show_form(get_get_int('group_id', null));
             break;
-        case 'del-role' : del_group(get_get_int('group_id'));
-            list_items(false, get_get_int('group_id', null));
+        case 'del-role' :
+            if (check_action_key_die()) {
+                del_group(get_get_int('group_id'));
+                list_items(false, get_get_int('group_id', null));
+            }
             break;
-        case 'purge-role' : purge_group(get_get_int('group_id'));
-            list_items(false, get_get_int('group_id', null));
+        case 'purge-role' :
+            if (check_action_key_die()) {
+                purge_group(get_get_int('group_id'));
+                list_items(false, get_get_int('group_id', null));
+            }
             break;
     }
 } else {

@@ -1158,6 +1158,7 @@ function underScoreToCamelCase($string, $capitalizeFirstCharacter = false) {
  *
  *
  */
+
 function generate_inputs($array) {
     $ra = array();
     $ra[] = "//  for post  //";
@@ -1184,6 +1185,27 @@ function generate_inputs($array) {
 function generate_inputs_die($array) {
     var_dump($array);
     echo "\n\n";
-    echo "<pre>\n" . generate_inputs($array) ."\n</pre>";
+    echo "<pre>\n" . generate_inputs($array) . "\n</pre>";
     die();
+}
+
+function make_action_key() {
+    $salt = ('defaultsalt8-0-8-08n-089n782n');
+    if (defined('ACTION_KEY_SALT')) {
+        $salt = ACTION_KEY_SALT;
+    }
+    $sid = session_id();
+    return sha1($sid . sha1($salt . $sid));
+}
+
+function check_action_key_die() {
+    if (isset($_REQUEST['ak'])) {
+        if ($_REQUEST['ak'] == make_action_key()) {
+            return true;
+        } else {
+            die_ex('Invalid ActionKey');
+        }
+    } else {
+        die_ex('ActionKey not defined');
+    }
 }

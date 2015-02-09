@@ -28,7 +28,7 @@
                         <td align="center"><?php echo $oses[$i]['sort_order']; ?></td>
                         <td align="center">
                             <?php if (!$oses[$i]['bug_count']) { ?>
-                                <a href="os.php?op=del&os_id=<?php echo $oses[$i]['os_id']; ?>" onClick="return confirm('<?php echo translate("Are you sure you want to delete this OS"); ?>?')"><?php echo translate("Delete"); ?></a>
+                                <a href="os.php?op=del&os_id=<?php echo $oses[$i]['os_id']; ?>&ak=<?php echo make_action_key(); ?>" onClick="return confirm('<?php echo translate("Are you sure you want to delete this OS"); ?>?')"><?php echo translate("Delete"); ?></a>
                             <?php } ?>
                         </td>
                     </tr>

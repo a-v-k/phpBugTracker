@@ -393,7 +393,7 @@ function show_project($projectid = 0, $error = null) {
             'versions' => $db->getAll(sprintf($QUERY['admin-list-versions'], $projectid))
         ));
 
-        $t->render('project-edit.html', translate("Edit Project"));
+        $t->render('project-edit.html.php', translate("Edit Project"));
     } else {
         if (!empty($_POST)) {
             $t->assign($_POST);
@@ -455,9 +455,15 @@ if (isset($_REQUEST['op'])) {
             break;
         case 'edit_version' : show_version(get_request_int('id'));
             break;
-        case 'del_component' : del_component(get_request_int('id'), get_request_int('project_id'));
+        case 'del_component' :
+            if (check_action_key_die()) {
+                del_component(get_request_int('id'), get_request_int('project_id'));
+            }
             break;
-        case 'del_version' : del_version(get_request_int('id'), get_request_int('project_id'));
+        case 'del_version' :
+            if (check_action_key_die()) {
+                del_version(get_request_int('id'), get_request_int('project_id'));
+            }
             break;
         case 'save_project' : save_project();
             break;

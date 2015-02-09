@@ -26,7 +26,7 @@
                         <td align="center"><?php echo $severities[$i]['sort_order']; ?></td>
                         <td align="center">
                             <?php if (!$severities[$i]['bug_count']) { ?>
-                                <a href="severity.php?op=del&severity_id=<?php echo $severities[$i]['severity_id']; ?>" onClick="return confirm('<?php echo translate("Are you sure you want to delete this severity?"); ?>')"><?php echo translate("Delete"); ?></a>
+                                <a href="severity.php?op=del&severity_id=<?php echo $severities[$i]['severity_id']; ?>&ak=<?php echo make_action_key(); ?>" onClick="return confirm('<?php echo translate("Are you sure you want to delete this severity?"); ?>')"><?php echo translate("Delete"); ?></a>
                             <?php } ?>
                         </td>
                     </tr>

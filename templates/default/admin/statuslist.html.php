@@ -31,7 +31,7 @@
                         </td>
                         <td align="center">
                             <?php if (!$statuses[$i]['bug_count'] and $statuses[$i]['status_id'] != BUG_UNCONFIRMED) { ?>
-                                <a href="status.php?op=del&status_id=<?php echo $statuses[$i]['status_id']; ?>" onClick="return confirm('<?php echo translate("Are you sure you want to delete this item?"); ?>')"><?php echo translate("Delete"); ?></a>
+                                <a href="status.php?op=del&status_id=<?php echo $statuses[$i]['status_id']; ?>&ak=<?php echo make_action_key(); ?>" onClick="return confirm('<?php echo translate("Are you sure you want to delete this item?"); ?>')"><?php echo translate("Delete"); ?></a>
                             <?php } ?>
                         </td>
                     </tr>

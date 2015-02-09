@@ -85,7 +85,7 @@
                             <tr<?php if ($i % 2) echo ' class="alt"'; ?>>
                                 <td align="center"><a href="bug.php?op=show&bugid=<?php echo $votes[$i]['bug_id']; ?>">#<?php echo $votes[$i]['bug_id']; ?></a></td>
                                 <td align="center"><?php echo date(DATE_FORMAT, $votes[$i]['created_date']); ?></td>
-                                <td align="center"><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=delvote&bugid=<?php echo $votes[$i]['bug_id']; ?>" onClick="return confirm('<?php echo translate("Are you sure you want to delete this vote?"); ?>');"><?php echo translate("Delete"); ?></a></td>
+                                <td align="center"><a href="<?php echo $_SERVER['PHP_SELF']; ?>?op=delvote&bugid=<?php echo $votes[$i]['bug_id']; ?>&ak=<?php echo make_action_key(); ?>" onClick="return confirm('<?php echo translate("Are you sure you want to delete this vote?"); ?>');"><?php echo translate("Delete"); ?></a></td>
                             </tr>
                         <?php } ?>
                     </table>
