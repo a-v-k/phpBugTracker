@@ -1,4 +1,7 @@
--- 1.6.0 - 2014 August (development version)
+-- 1.7.0 - 2015 January
+: fixed a lot of security vulnerabilities. 
+
+-- 1.6.0 - 2014 August
 : automatic update checking (no autoupdate)
 : upgrade.php now updates database in multiple steps
 : Improved attachment system. Attachments stored in DB now

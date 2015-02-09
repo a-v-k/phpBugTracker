@@ -9,9 +9,23 @@ This project is a official fork of discontinued sourceforge phpBugTracker (https
 
 All contributions (code or bug reports) are welcome! 
 
+Features
+--------
+
+Easy install
+Multiple project support
+Email notifications
+Public or private bugs visibility
+Customizable role-based and group-based access control
+Simple and detailed bug queries
+Customizable bug statuses
+Attachments
+Issue Change History
+
 History of changes since old sourceforge phpBugTracker v.1.0.5
 ----------------------------------------------------------------------
 
+Fix all detected security vulnerabilities (on 01.2015)
 Migrate to PDO data access 
 Full remove PEAR:DB
 Database migrated to InnoDB
@@ -33,11 +47,11 @@ Fixed installer
 
 To detailed changelog check CHANGELOG file
 	
-WARNING!
---------
+Note about security
+-------------------
 Original phpBugTracker has many security bugs. This project inherits it.
-So, don't use this project in open networks.
-I will work on this problem.
+At version 1.7.0 I was fixed all security vulnerabilities, detected on that moment.
+And I still working on it.
 
 I need code contributions for:
 ------------------------------
@@ -52,8 +66,9 @@ Here is a list of the requirements to get this running on your server.
 3. A database - Currently MySQL only. 
 		
 Prevous versions:
-https://github.com/a-v-k/phpBugTracker/archive/phpbt-1_6_0.zip
-https://github.com/a-v-k/phpBugTracker/archive/phpbt-1_5_1_1.zip
+https://github.com/a-v-k/phpBugTracker/archive/phpbt-1_7_0.zip
+https://github.com/a-v-k/phpBugTracker/archive/phpbt-1_6_0.zip (not recommended)
+https://github.com/a-v-k/phpBugTracker/archive/phpbt-1_5_1_1.zip (not recommended)
 
 -------------------------------------------------------------------------------
 Bellow you can read README text from original phpBugTracker
