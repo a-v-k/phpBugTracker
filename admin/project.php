@@ -407,14 +407,22 @@ function show_project($projectid = 0, $error = null) {
 function list_projects() {
     global $me, $db, $t, $selrange;
 
-    if (!isset($_GET['order'])) {
-        $order = 'default';
+//    if (!isset($_GET['order'])) {
+//        $order = 'default';
+//        $sort = 'asc';
+//    } else {
+//        $order = $_GET['order'];
+//        $sort = $_GET['sort'];
+//    }
+    $rOrder = get_request_value('order', 'default');
+    $order = preg_replace("/[^a-zA-Z0-9_]+/", "", $rOrder);
+    $sort = get_request_value('sort', 'asc');
+    if (!in_array($sort, array('asc', 'desc'))){
         $sort = 'asc';
-    } else {
-        $order = $_GET['order'];
-        $sort = $_GET['sort'];
     }
-    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+
+    //$page = isset($_GET['page']) ? $_GET['page'] : 1;
+    $page = get_get_int('page', 1);
 
     $nr = $db->getOne("select count(*) from " . TBL_PROJECT);
 

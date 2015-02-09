@@ -105,15 +105,13 @@ function show_form($severityid = 0, $error = '') {
 function list_items($severityid = 0, $error = '') {
     global $me, $db, $t, $QUERY;
 
-    if (empty($_GET['order'])) {
-        $order = 'sort_order';
+    $rOrder = get_request_value('order', 'sort_order');
+    $order = preg_replace("/[^a-zA-Z0-9_]+/", "", $rOrder);
+    $sort = get_request_value('sort', 'asc');
+    if (!in_array($sort, array('asc', 'desc'))){
         $sort = 'asc';
-    } else {
-        $order = $_GET['order'];
-        $sort = $_GET['sort'];
     }
-
-    $page = isset($_GET['page']) ? $_GET['page'] : 0;
+    $page = get_get_int('page', 1);
 
     $nr = $db->getOne("select count(*) from " . TBL_SEVERITY);
 

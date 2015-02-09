@@ -118,15 +118,13 @@ function show_form($groupId = 0, $error = '') {
 function list_items($do_group = true, $groupid = 0, $error = '') {
     global $me, $db, $t, $QUERY;
 
-    if (empty($_GET['order'])) {
-        $order = 'group_name';
+    $rOrder = get_request_value('order', 'group_name');
+    $order = preg_replace("/[^a-zA-Z0-9_]+/", "", $rOrder);
+    $sort = get_request_value('sort', 'asc');
+    if (!in_array($sort, array('asc', 'desc'))){
         $sort = 'asc';
-    } else {
-        $order = $_GET['order'];
-        $sort = $_GET['sort'];
     }
-
-    $page = isset($_GET['page']) ? $_GET['page'] : 0;
+    $page = get_get_int('page', 1);
 
     $match = $do_group ? "is_role=0" : "is_role=1";
 

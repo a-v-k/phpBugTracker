@@ -152,15 +152,14 @@ function show_form($userid = 0, $error = '') {
 function list_items($userid = 0, $error = '') {
     global $me, $db, $t;
 
-    if (empty($_GET['order'])) {
-        $order = 'login';
+    $rOrder = get_request_value('order', 'login');
+    $order = preg_replace("/[^a-zA-Z0-9_]+/", "", $rOrder);
+    $sort = get_request_value('sort', 'asc');
+    if (!in_array($sort, array('asc', 'desc'))){
         $sort = 'asc';
-    } else {
-        $order = $_GET['order'];
-        $sort = $_GET['sort'];
     }
+    $page = get_get_int('page', 1);
 
-    $page = isset($_GET['page']) ? $_GET['page'] : 1;
     $user_filter = isset($_GET['userfilter']) ? $_GET['userfilter'] : 0;
     $group_filter = isset($_GET['groupfilter']) ? $_GET['groupfilter'] : 0;
 
