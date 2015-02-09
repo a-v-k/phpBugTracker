@@ -846,7 +846,7 @@ function do_form($bugid = 0) {
 
 function show_form($bugId = 0, $error = '') {
     global $db, $t, $u;
-    $projectId = check_numeric_die(get_request_value('project'));
+    $projectId = get_get_int('project');
     $projectname = $db->getOne(
             "select project_name from " . TBL_PROJECT . " where project_id = :project_id", array(':project_id' => $projectId));
     if ($bugId && !$error) {
@@ -1087,7 +1087,7 @@ if (!empty($_REQUEST['op'])) {
             break;
         case 'add':
             $perm->check('AddBug');
-            if (isset($_GET['project'])) {
+            if (get_get_int('project', null) != null) {
                 show_form();
             } else {
                 show_projects();
