@@ -146,39 +146,39 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
             <?php if ($may_change_project) { ?>
                 <td><select name="project_id" onChange="updateMenus(this.form)"><?php build_select('project', $project_id) ?></select></td>
             <?php } else { ?>
-                <td><?php echo lookup('project', $project_id); ?></td>
+                <td><?php echo htmlspecialchars(lookup('project', $project_id)); ?></td>
             <?php } ?>
             <td><?php echo translate("Priority"); ?>:</td>
             <?php if ($may_change_priority or $may_manage) { ?>
                 <td><select name="priority"><?php build_select('priority', $priority) ?></select></td>
             <?php } else { ?>
-                <td><?php echo lookup('priority', $priority); ?></td>
+                <td><?php echo htmlspecialchars(lookup('priority', $priority)); ?></td>
             <?php } ?>
         </tr><tr>
             <td><?php echo translate("Component"); ?>:</td>
             <?php if ($may_change_component) { ?>
                 <td><select name="component_id"><?php build_select('component', $component_id, $project_id) ?></select></td>
             <?php } else { ?>
-                <td><?php echo lookup('component', $component_id); ?></td>
+                <td><?php echo htmlspecialchars(lookup('component', $component_id)); ?></td>
             <?php } ?>
             <td><?php echo translate("Severity"); ?>:</td>
             <?php if ($may_change_severity or $may_manage) { ?>
                 <td><select name="severity_id"><?php build_select('severity', $severity_id) ?></select></td>
             <?php } else { ?>
-                <td><?php echo lookup('severity', $severity_id); ?></td>
+                <td><?php echo htmlspecialchars(lookup('severity', $severity_id)); ?></td>
             <?php } ?>
         </tr><tr>
             <td><?php echo translate("Version"); ?>:</td>
             <?php if ($may_edit) { ?>
                 <td><select name="version_id"><?php build_select('version', $version_id, $project_id) ?></select></td>
             <?php } else { ?>
-                <td><?php echo lookup('version', $version_id); ?></td>
+                <td><?php echo htmlspecialchars(lookup('version', $version_id)); ?></td>
             <?php } ?>
             <td><?php echo translate("Operating System"); ?>:</td>
             <?php if ($may_edit) { ?>
                 <td><select name="os_id"><?php build_select('os', $os_id) ?></select></td>
             <?php } else { ?>
-                <td><?php echo lookup('os', $os_id); ?></td>
+                <td><?php echo htmlspecialchars(lookup('os', $os_id)); ?></td>
             <?php } ?>
         </tr><tr>
             <td><?php echo translate("To be closed in version"); ?></td>
@@ -188,13 +188,13 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
                         <?php build_select('version', $to_be_closed_in_version_id, $project_id) ?>
                     </select></td>
             <?php } else { ?>
-                <td><?php echo lookup('version', $to_be_closed_in_version_id, $project_id); ?></td>
+                <td><?php echo htmlspecialchars(lookup('version', $to_be_closed_in_version_id, $project_id)); ?></td>
             <?php } ?>
             <td><?php echo translate("Database"); ?>:</td>
             <?php if ($may_edit) { ?>
                 <td><select name="database_id"><?php build_select('database', $database_id) ?></select></td>
             <?php } else { ?>
-                <td><?php echo lookup('database', $database_id); ?></td>
+                <td><?php echo htmlspecialchars(lookup('database', $database_id)); ?></td>
             <?php } ?>
         </tr><tr>
             <td><?php echo translate("Closed in version"); ?></td>
@@ -204,13 +204,13 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
                         <?php build_select('version', $closed_in_version_id, $project_id); ?>
                     </select></td>
             <?php } else { ?>
-                <td><?php echo lookup('version', $closed_in_version_id, $project_id); ?></td>
+                <td><?php echo htmlspecialchars(lookup('version', $closed_in_version_id, $project_id)); ?></td>
             <?php } ?>
             <td><?php echo translate("Site"); ?></td>
             <?php if ($may_edit) { ?>
                 <td><select name="site_id"><?php build_select('site', $site_id); ?></select></td>
             <?php } else { ?>
-                <td><?php echo lookup('site', $site_id); ?></td>
+                <td><?php echo htmlspecialchars(lookup('site', $site_id)); ?></td>
             <?php } ?>
         </tr><tr>
             <td><?php echo translate("Summary"); ?>:</td>
@@ -223,7 +223,7 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
             <?php if ($may_change_status or $may_manage) { ?>
                 <td><select name="status_id"><?php build_select('status', $status_id, $project_id, true); ?></select></td>
             <?php } else { ?>
-                <td><?php echo lookup('status', $status_id); ?></td>
+                <td><?php echo htmlspecialchars(lookup('status', $status_id)); ?></td>
             <?php } ?>
         </tr><tr>
             <td><?php
@@ -242,7 +242,7 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
             <?php if ($may_close or $may_change_resolution or $may_manage) { ?>
                 <td><select name="resolution_id"><option value="0"><?php echo translate("None"); ?></option><?php build_select('resolution', $resolution_id) ?></select></td>
             <?php } else { ?>
-                <td><?php echo lookup('resolution', $resolution_id); ?></td>
+                <td><?php echo htmlspecialchars(lookup('resolution', $resolution_id)); ?></td>
             <?php } ?>
         </tr><tr>
             <td><?php echo translate("Assigned to"); ?>:</td>
@@ -250,7 +250,7 @@ $may_add_comment = (isset($perm) && $perm->have_perm('CommentBug', $project_id))
                 <td><select name="assigned_to"><option value="0"><?php echo translate("None"); ?></option><?php build_select('owner', $assigned_to) ?></select></td>
             <?php } else { ?>
                 <td>
-                    <?php echo $assigned_to ? lookup('assigned_to', $assigned_to) : ""; ?>
+                    <?php echo !empty($assigned_to) ? htmlspecialchars(lookup('assigned_to', $assigned_to)) : ""; ?>
                     <input type="hidden" name="assigned_to" value="<?php echo $assigned_to; ?>">
                 </td>
             <?php } ?>
