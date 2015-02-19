@@ -316,7 +316,7 @@ if (defined('TEMPLATE_PATH')) {
 
 session_start();
 $updateMessage = '';
-if ((!isset($upgrading)) || (!$upgrading)) {
+if (((!isset($upgrading)) || (!$upgrading)) && (isset($_SESSION['phpbt-second-hit']) && (filter_input(INPUT_POST, 'dologin') != 1))) {
     require_once 'inc/UpdateChecker.php';
     $updateChecker = new UpdateChecker();
     $updateChecker->setUrl('http://www.digicraft.ru/phpbt_version.php');
@@ -334,7 +334,7 @@ if ((!isset($upgrading)) || (!$upgrading)) {
     }
 }
 $t->assign('updateMessage', $updateMessage);
-
+$_SESSION['phpbt-second-hit'] = 1;
 //die('num:' . $updateChecker->getLastReleaseNum());
 
 if (!defined('NO_AUTH')) {
