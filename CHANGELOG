@@ -1,5 +1,8 @@
+-- 1.7.2 - 2015 February
+: fixed another one xss vulnerability.
+
 -- 1.7.0 - 2015 January
-: fixed a lot of security vulnerabilities. 
+: fixed a lot of security vulnerabilities.
 
 -- 1.6.0 - 2014 August
 : automatic update checking (no autoupdate)

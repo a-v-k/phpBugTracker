@@ -50,7 +50,7 @@ To detailed changelog check CHANGELOG file
 Note about security
 -------------------
 Original phpBugTracker has many security bugs. This project inherits it.
-At version 1.7.0 I was fixed all security vulnerabilities, detected on that moment.
+At version 1.7.2 I was fixed all security vulnerabilities, detected on that moment.
 And I still working on it.
 
 I need code contributions for:
@@ -66,7 +66,8 @@ Here is a list of the requirements to get this running on your server.
 3. A database - Currently MySQL only. 
 		
 Prevous versions:
-https://github.com/a-v-k/phpBugTracker/archive/phpbt-1_7_0.zip
+https://github.com/a-v-k/phpBugTracker/archive/phpbt-1_7_2.zip
+https://github.com/a-v-k/phpBugTracker/archive/phpbt-1_7_0.zip (not recommended)
 https://github.com/a-v-k/phpBugTracker/archive/phpbt-1_6_0.zip (not recommended)
 https://github.com/a-v-k/phpBugTracker/archive/phpbt-1_5_1_1.zip (not recommended)
 
