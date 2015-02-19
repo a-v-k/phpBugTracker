@@ -93,7 +93,11 @@ if (!defined('PHPBT_VERSION')) {
             ?>>
                     <?php
                     foreach ($projects[$i] as $var => $val) {
-                        echo '<td' . ($var != 'Project' ? ' align="center"' : '') . '>' . $val . '</td>';
+                        if ($var == 'Project') {
+                            echo '<td>' . htmlspecialchars($val) . '</td>';
+                        } else {
+                            echo '<td align="center">' . $val . '</td>';
+                        }
                     }
                     ?>
             </tr>
