@@ -1071,8 +1071,10 @@ function show_projects() {
             show_text(translate("No projects found"), true);
             return;
         case 1 :
-            $_GET['project'] = $projects[0]['project_id'];
-            show_form();
+            // $_GET['project'] = $projects[0]['project_id']; fsdfs
+            // show_form();
+            header("Location: bug.php?op=add&project=" . $projects[0]['project_id']);
+            die();
             break;
         default :
             $t->assign('projects', $projects);
