@@ -13,7 +13,7 @@
 //
 // phpBugTracker is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
@@ -26,8 +26,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 define('RAWERROR', true);
 
-define('PHPBT_VERSION', '1.7.2');
-define('PHPBT_RELEASE_NUM', 1030);
+define('PHPBT_VERSION', '1.7.4');
+define('PHPBT_RELEASE_NUM', 1040);
 define('DIGICRAFT_TRACKER', '1');
 ini_set("session.save_handler", "files");
 
