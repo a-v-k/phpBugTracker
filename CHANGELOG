@@ -1,3 +1,7 @@
+-- 1.7.4 - 2015 February
+: fixed critical bug (unable to create bug on single-project instances).
+: minor improvements
+
 -- 1.7.2 - 2015 February
 : fixed another one xss vulnerability.
 
