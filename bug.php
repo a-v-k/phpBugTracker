@@ -790,7 +790,7 @@ function move_attachments($bug_id, $old_project, $new_project) {
     }
 }
 
-function do_form($bugid = 0) {
+function do_form($bugId = 0) {
     global $db, $me, $u, $now;
 
     $error = '';
@@ -803,8 +803,9 @@ function do_form($bugid = 0) {
         $error = translate("Please enter a description");
     }
     if ($error) {
-        $_GET['project'] = $_POST['project'];
-        show_form($bugid, $error);
+        //$_GET['project'] = $_POST['project'];
+        $projectId = filter_input(INPUT_POST, 'project');
+        show_bug_form($projectId, $bugId, $error);
         return;
     }
 
@@ -826,14 +827,14 @@ function do_form($bugid = 0) {
         $status = PROMOTE_VOTES ? BUG_UNCONFIRMED : BUG_PROMOTED;
     }
 
-    $bugid = $db->nextId(TBL_BUG);
+    $bugId = $db->nextId(TBL_BUG);
 
-    $db->query('insert into ' . TBL_BUG . ' (bug_id, title, description, url, severity_id, priority, status_id, assigned_to, created_by, created_date, last_modified_by, last_modified_date, project_id, site_id, database_id, version_id, component_id, os_id, browser_string) values (' . $bugid . ', ' . join(', ', array($db->quote($title), $db->quote($description), $db->quote($url))) . ', ' . (int) $severity . ', ' . (int) $priority . ', ' . (int) $status . ', ' . $owner . ', ' . $reporter . ', ' . $now . ', ' . $u . ', ' . $now . ', ' . $project . ', ' . (int) $site . ', ' . (int) $database . ', ' . (int) $version . ', ' . (int) $component . ', ' . (int) $os . ', ' . $db->quote($_SERVER['HTTP_USER_AGENT']) . ')');
-    $buginfo = $db->getRow('select * from ' . TBL_BUG . " where bug_id = $bugid");
+    $db->query('insert into ' . TBL_BUG . ' (bug_id, title, description, url, severity_id, priority, status_id, assigned_to, created_by, created_date, last_modified_by, last_modified_date, project_id, site_id, database_id, version_id, component_id, os_id, browser_string) values (' . $bugId . ', ' . join(', ', array($db->quote($title), $db->quote($description), $db->quote($url))) . ', ' . (int) $severity . ', ' . (int) $priority . ', ' . (int) $status . ', ' . $owner . ', ' . $reporter . ', ' . $now . ', ' . $u . ', ' . $now . ', ' . $project . ', ' . (int) $site . ', ' . (int) $database . ', ' . (int) $version . ', ' . (int) $component . ', ' . (int) $os . ', ' . $db->quote($_SERVER['HTTP_USER_AGENT']) . ')');
+    $buginfo = $db->getRow('select * from ' . TBL_BUG . " where bug_id = $bugId");
     do_changedfields($u, $buginfo);
 
     if (isset($_POST['at_description'])) {
-        add_attachment($bugid, $_POST['at_description']); //attachment (initial)
+        add_attachment($bugId, $_POST['at_description']); //attachment (initial)
     }
 //	if (isset($another)) {
 //		header("Location: $me?op=add&project=$project");
@@ -841,12 +842,12 @@ function do_form($bugid = 0) {
 //		header("Location: query.php");
 //	}
     //  Go directly to view the bug we just submitted
-    header("Location: bug.php?op=show&bugid=$bugid");
+    header("Location: bug.php?op=show&bugid=$bugId");
 }
 
-function show_form($bugId = 0, $error = '') {
+function show_bug_form($projectId, $bugId = 0, $error = '') {
     global $db, $t, $u;
-    $projectId = get_get_int('project');
+    //$projectId = get_get_int('project');
     $projectname = $db->getOne(
             "select project_name from " . TBL_PROJECT . " where project_id = :project_id", array(':project_id' => $projectId));
     if ($bugId && !$error) {
@@ -1082,15 +1083,16 @@ function show_projects() {
     }
 }
 
-if (!empty($_REQUEST['op'])) {
-    switch ($_REQUEST['op']) {
+$op = get_request_value('op');
+if (!empty($op)) {
+    switch ($op) {
         case 'history':
             show_history(check_id($_GET['bugid']));
             break;
         case 'add':
             $perm->check('AddBug');
             if (get_get_int('project', null) != null) {
-                show_form();
+                show_bug_form(get_get_int('project', null), 0);
             } else {
                 show_projects();
             }
