@@ -706,7 +706,7 @@ function update_bug($bugid = 0) {
         move_attachments($bugid, $buginfo['project_id'], $project_id);
     }
 
-    if (count($changedfields) && !empty($comments)) {
+    if (count($changedfields) || !empty($comments)) {
         do_changedfields($u, $buginfo, $changedfields, $comments);
     }
 }
