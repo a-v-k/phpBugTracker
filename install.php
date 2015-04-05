@@ -276,7 +276,8 @@ function create_tables() {
     }
     /* !! BAD! Must figure out how to get db_version from config-dist.php... */
     /* !! Must manually be updated when DB_VERSION changes !! */
-    $query = preg_replace(array_keys($tables), array_values($tables), 'INSERT INTO TBL_CONFIGURATION (varname,varvalue,description,vartype) VALUES (\'DB_VERSION\', ' . /* !!! */ 20 /* !!! */ . ', \'Database Version <b>Warning:</b> Changing this might make things go horribly wrong, so do not change it.\', \'mixed\')');
+    $dbVersion = 21; // DB_VERSION
+    $query = preg_replace(array_keys($tables), array_values($tables), 'INSERT INTO TBL_CONFIGURATION (varname,varvalue,description,vartype) VALUES (\'DB_VERSION\', ' . /* !!! */ $dbVersion /* !!! */ . ', \'Database Version <b>Warning:</b> Changing this might make things go horribly wrong, so do not change it.\', \'mixed\')');
     log_query($query);
 
     if ($num_errors > 0) {

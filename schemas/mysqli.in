@@ -57,7 +57,7 @@ CREATE TABLE TBL_AUTH_USER (
   first_name char(40) NOT NULL default '',
   last_name char(40) NOT NULL default '',
   email char(60) NOT NULL default '',
-  password char(40) NOT NULL default '',
+  password char(60) NOT NULL default '',
   active tinyint(3) unsigned NOT NULL default '1',
   bug_list_fields text null,
   created_by int(10) unsigned NOT NULL default '0',

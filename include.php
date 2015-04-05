@@ -45,8 +45,8 @@ if (!defined('DB_HOST')) {
 if (defined('CUR_DB_VERSION')) {
     die('please, remove CUR_DB_VERSION definition from your config.php');
 }
-define('CUR_DB_VERSION', 20);
-define('DB_VERSION_COMPATIBLE', 9); // stop working if db version lower
+define('CUR_DB_VERSION', 21);
+define('DB_VERSION_COMPATIBLE', 21); // stop working if db version lower
 
 if (!defined('STRICT_ERROR_MODE')) {
     define('STRICT_ERROR_MODE', 0);
