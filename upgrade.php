@@ -254,6 +254,9 @@ function upgrade() {
                 if ($upgradeTo == 20) {
                     log_query("alter table " . TBL_VERSION . " engine=InnoDB;"); // just for upgrade testing
                 }
+                if ($upgradeTo == 21) {
+                    log_query("alter table " . TBL_AUTH_USER . " modify column password char(60) not null default '';"); // for future use password_hash
+                }
 
                 break;
             case 'oci8' :

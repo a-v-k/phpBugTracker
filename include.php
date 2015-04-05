@@ -26,8 +26,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 define('RAWERROR', true);
 
-define('PHPBT_VERSION', '1.7.4');
-define('PHPBT_RELEASE_NUM', 1040);
+define('PHPBT_VERSION', '1.7.5');
+define('PHPBT_RELEASE_NUM', 1050);
 define('DIGICRAFT_TRACKER', '1');
 ini_set("session.save_handler", "files");
 
@@ -45,8 +45,8 @@ if (!defined('DB_HOST')) {
 if (defined('CUR_DB_VERSION')) {
     die('please, remove CUR_DB_VERSION definition from your config.php');
 }
-define('CUR_DB_VERSION', 20);
-define('DB_VERSION_COMPATIBLE', 9); // stop working if db version lower
+define('CUR_DB_VERSION', 21);
+define('DB_VERSION_COMPATIBLE', 21); // stop working if db version lower
 
 if (!defined('STRICT_ERROR_MODE')) {
     define('STRICT_ERROR_MODE', 0);
