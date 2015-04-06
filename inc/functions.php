@@ -1209,3 +1209,42 @@ function check_action_key_die() {
         die_ex('ActionKey not defined');
     }
 }
+
+
+/**
+ * Decodes human-frendly symbols to int. 2K => 2048, 1M => 1024*1024, 1G => ...  
+ * @param string $value - values like 22K, 12M, 2G etc...
+ * @return int
+ */
+function decode_gmk($value) {
+    if (is_numeric($value)) {
+        return $value;
+    }
+    $low = strtolower($value);
+    $res = $value;
+    if (strlen($low) > 1) {
+        
+        $modifier = 0;
+        if (substr($low, -1) == 'g') {
+            $modifier = 1024 * 1024 * 1024;
+        } else if (substr($low, -1) == 'm') {
+            $modifier = 1024 * 1024;
+        } else if (substr($low, -1) == 'k') {
+            $modifier = 1024;
+        } 
+                
+        if ($modifier > 0) {
+            $cut = substr($low, 0, -1);
+            
+            if (is_numeric($cut)) {
+                $cut *= $modifier;
+                $res = $cut;
+            }        
+        }
+    }
+    return $res;    
+}
+
+
+
+//
