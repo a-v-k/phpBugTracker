@@ -149,19 +149,20 @@
 					</td>
 					<td>
 						<table border="0" align="center">
-							<tr>
-								<td colspan="2" align="center">
-									If you wish to attach a file to this report, please choose a file to upload and enter a one-line description.
-									<br>
-                                    <!--
-									 Maximum file size: <?php echo ini_get('upload_max_filesize') < ATTACHMENT_MAX_SIZE
-										? number_format(ini_get('upload_max_filesize'))
-										: number_format(ATTACHMENT_MAX_SIZE) ?> bytes
-									<br>
-									<br>
-                                    -->
-								</td>
-							</tr>
+                                                    <tr>
+                                                        <td colspan="2" align="center">
+                                                            If you wish to attach a file to this report, please choose a file to upload and enter a one-line description.
+                                                            <br>
+                                                            <?php
+                                                            //								 Maximum file size: < ? php echo ini_get('upload_max_filesize') < ATTACHMENT_MAX_SIZE
+                                                            //									? number_format(ini_get('upload_max_filesize'))
+                                                            //									: number_format(ATTACHMENT_MAX_SIZE) ? > bytes
+                                                            //								<br>
+                                                            //								<br>
+                                                            ?>
+
+                                                        </td>
+                                                    </tr>
 							<tr>
 								<td>
 									File:
