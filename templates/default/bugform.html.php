@@ -154,13 +154,14 @@
                                                             If you wish to attach a file to this report, please choose a file to upload and enter a one-line description.
                                                             <br>
                                                             <?php
-                                                            //								 Maximum file size: < ? php echo ini_get('upload_max_filesize') < ATTACHMENT_MAX_SIZE
-                                                            //									? number_format(ini_get('upload_max_filesize'))
-                                                            //									: number_format(ATTACHMENT_MAX_SIZE) ? > bytes
-                                                            //								<br>
-                                                            //								<br>
+                                                            if (isset($uploadMaxFileSize)) {
+                                                                ?>
+                                                                Maximum file size: <?php echo number_format($uploadMaxFileSize) ?> bytes
+                                                                <br />
+                                                                <br />
+                                                                <?php
+                                                            }
                                                             ?>
-
                                                         </td>
                                                     </tr>
 							<tr>

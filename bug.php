@@ -861,6 +861,16 @@ function show_bug_form($projectId, $bugId = 0, $error = '') {
             'projectname' => $projectname
         ));
     }
+
+    $uploadMaxFileSize = decode_gmk(ini_get('upload_max_filesize'));
+
+    if (is_numeric($uploadMaxFileSize) && is_numeric(ATTACHMENT_MAX_SIZE) && (0 + $uploadMaxFileSize > 0 + ATTACHMENT_MAX_SIZE)) {
+        $uploadMaxFileSize = ATTACHMENT_MAX_SIZE;
+    }
+    if (is_numeric($uploadMaxFileSize)) {
+        $t->assign('uploadMaxFileSize', $uploadMaxFileSize);
+    }
+
     $t->render('bugform.html.php', translate("Create Bug"));
 }
 
