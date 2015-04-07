@@ -1,3 +1,7 @@
+-- 1.7.5 - 2015 April
+: fixed critical bug (unable to create bug when max_file_upload misconfigured).
+: minor improvements
+
 -- 1.7.4 - 2015 February
 : fixed critical bug (unable to create bug on single-project instances).
 : minor improvements
