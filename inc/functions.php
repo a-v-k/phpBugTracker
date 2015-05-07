@@ -1005,7 +1005,7 @@ function gen_ref($ipRef, $ipVarArr) {
             } else {
                 $res .= '&';
             }
-            $res .= $k . '=' . $ipVarArr[$k];
+            $res .= http_build_query(array($k => $ipVarArr[$k]));
             $i = 1;
         }
     }
