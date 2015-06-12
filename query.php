@@ -93,8 +93,10 @@ function build_query($assignedto, $reportedby, $open, $bookmarked, $projects) {
     global $db, $perm, $restricted_projects;
 
     $paramstr = '';
-    foreach ($_GET as $k => $v) {
-        $$k = $v;
+    $query = array();
+    $input = filter_input_array(INPUT_GET);
+    foreach ($input as $k => $v) {
+        //$$k = $v;
         if ($k == 'order' or $k == 'sort') {
             continue;
         }
@@ -131,70 +133,73 @@ function build_query($assignedto, $reportedby, $open, $bookmarked, $projects) {
         if ($open) {
             $flags[] = 'b.status_id ' . ($open ? '' : 'not ') . 'in (' . OPEN_BUG_STATUSES . ')';
         }
-        // Need to check $array[0] for Opera --
-        // it passes non-empty arrays for every multi-choice select box
-        if (!empty($status) and $status[0]) {
-            $flags[] = 'b.status_id in (' . @join(',', $status) . ')';
+        //var_dump($input);
+        if (!empty($input['status'])) {
+            $flags[] = 'b.status_id in (' . $db->quote($input['status']) . ')';
         }
         // If $resolution[0] == 0 then 'None' was selected
-        if (!empty($resolution) or isset($resolution[0])) {
-            $flags[] = 'b.resolution_id in (' . @join(',', $resolution) . ')';
+        if (isset($input['resolution']) && isset($input['resolution'][0])) {
+            $flags[] = 'b.resolution_id in (' . $db->quote($input['resolution']) . ')';
         }
-        if (!empty($os) and $os[0]) {
-            $flags[] = 'b.os_id in (' . @join(',', $os) . ')';
+        if (!empty($input['os'])) {
+            $flags[] = 'b.os_id in (' . $db->quote($input['os']) . ')';
         }
-        if (!empty($priority) and $priority[0]) {
-            $flags[] = 'b.priority in (' . @join(',', $priority) . ')';
+        if (!empty($input['priority'])) {
+            $flags[] = 'b.priority in (' . $db->quote($input['priority']) . ')';
         }
-        if (!empty($severity) and $severity[0]) {
-            $flags[] = 'b.severity_id in (' . @join(',', $severity) . ')';
+        if (!empty($input['severity'])) {
+            $flags[] = 'b.severity_id in (' . $db->quote($input['severity']) . ')';
         }
-        if (!empty($database) and isset($database[0])) {
+        if (isset($input['database'][0])) {
             // $database[0] can be 0, which stands for no database reported
-            $flags[] = 'b.database_id in (' . @join(',', $database) . ')';
+            $flags[] = 'b.database_id in (' . $db->quote($input['database']) . ')';
         }
-        if (!empty($site) and $site[0]) {
-            $flags[] = 'b.site_id in (' . @join(',', $site) . ')';
+        if (!empty($input['site'])) {
+            $flags[] = 'b.site_id in (' . $db->quote($input['site']) . ')';
         }
         if (!empty($flags)) {
-            $query[] = '(' . @join(' and ', $flags) . ')';
+            $query[] = '(' . join(' and ', $flags) . ')';
         }
-        if (!empty($start_date)) {
-            $query[] = 'b.created_date > ' . strtotime($start_date);
+
+        // next lines will never work and cause SQL errors.
+        //    i dont know, why it here...
+        if (!empty($input['start_date'])) {
+            $query[] = 'b.created_date > ' . strtotime($input['start_date']);
         }
-        if (!empty($end_date)) {
-            $query[] = 'b.created_date < ' . strtotime($end_date);
+        if (!empty($input['end_date'])) {
+            $query[] = 'b.created_date < ' . strtotime($input['end_date']);
         }
-        if (!empty($closed_start_date)) {
-            $query[] = 'b.close_date > ' . strtotime($closed_start_date);
+        if (!empty($input['closed_start_date'])) {
+            $query[] = 'b.close_date > ' . strtotime($input['closed_start_date']);
         }
-        if (!empty($closed_end_date)) {
-            $query[] = 'b.close_date < ' . strtotime($closed_end_date);
+        if (!empty($input['closed_end_date'])) {
+            $query[] = 'b.close_date < ' . strtotime($input['closed_end_date']);
         }
-        if (!empty($unassigned)) {
+        if (!empty($input['unassigned'])) {
             $query[] = 'b.assigned_to = 0';
         }
 
         // Email field(s)
-        if (!empty($email1) && !empty($emailfield1)) {
-            switch ($emailtype1) {
-                case 'like' : $econd = "like '%$email1%'";
+        if (!empty($input['email1']) && !empty($input['emailfield1'])) {
+            switch ($input['emailtype1']) {
+                case 'like' : $econd = "like '%" . $db->quote($input['email1']) . "%'";
                     break;
                 case 'rlike' :
                 case 'not rlike' :
-                case '=' : $econd = "$emailtype1 '$email1'";
+                case '=' : $econd = $db->quote($input['emailtype1']) . " '" . $db->quote($input['email1']) . "'";
                     break;
             }
-            foreach ($emailfield1 as $field)
-                $equery[] = "$field.$emailsearch1 $econd";
-            $query[] = '(' . @join(' and ', $equery) . ')';
+            foreach ($input['emailfield1'] as $field) {
+                $equery[] = "$field.$input[emailsearch1] $econd";
+            }
+            $query[] = '(' . join(' and ', $equery) . ')';
         }
 
         // Search for additional comments with 'description'
         // TODO: Change this to match the condition selected (see below for rlike, not rlike, etc.)
         $bugs_with_comment = array(0);
-        if (!empty($description)) {
-            foreach ($db->getAll('SELECT bug_id FROM ' . TBL_COMMENT . ' WHERE comment_text LIKE \'%' . $description . '%\'') as $row) {
+        if (!empty($input['description'])) {
+            foreach ($db->getAll('SELECT bug_id FROM ' . TBL_COMMENT . ' WHERE comment_text LIKE \'%' . $db->quote($input['description']) . '%\'') as $row) {
                 $bugs_with_comment[] = $row['bug_id'];
             }
         }
@@ -211,29 +216,29 @@ function build_query($assignedto, $reportedby, $open, $bookmarked, $projects) {
                         break;
                 }
                 $fields[] = "b.$searchfield $cond" .
-                        ($searchfield == 'description' ? ' or b.bug_id in (' . @join(', ', $bugs_with_comment) . ')' : '');
+                        ($searchfield == 'description' ? ' or b.bug_id in (' . $db->quote($bugs_with_comment) . ')' : '');
             }
         }
         if (!empty($fields)) {
-            $query[] = '(' . @join(' and ', $fields) . ')';
+            $query[] = '(' . join(' and ', $fields) . ')';
         }
 
         // Project/Version/Component
         if (!empty($projects)) {
             $proj[] = "b.project_id = '$projects'";
-            if (!empty($versions) and $versions != 'All') {
-                $proj[] = "b.version_id = '$versions'";
+            if (!empty($input['versions']) and $input['versions'] != 'All') {
+                $proj[] = "b.version_id = '" . $db->quote($input['versions']) . "'";
             }
-            if (isset($closedinversion) and $closedinversion != '' and $closedinversion != 'All') {
-                $proj[] = "b.closed_in_version_id = '$closedinversion'";
+            if (!empty($input['closedinversion']) and $input['closedinversion'] != 'All') {
+                $proj[] = "b.closed_in_version_id = '" . $db->quote($input['closedinversion']) . "'";
             }
-            if (isset($tobeclosedinversion) and $tobeclosedinversion != '' and $tobeclosedinversion != 'All') {
-                $proj[] = "b.to_be_closed_in_version_id = '$tobeclosedinversion'";
+            if (!empty($input['tobeclosedinversion']) and $input['tobeclosedinversion'] != 'All') {
+                $proj[] = "b.to_be_closed_in_version_id = '" . $db->quote($input['tobeclosedinversion']) . "'";
             }
-            if (!empty($components) and $components != 'All') {
-                $proj[] = "b.component_id = '$components'";
+            if (!empty($input['components']) and $input['components'] != 'All') {
+                $proj[] = "b.component_id = '" . $db->quote($input['components']) . "'";
             }
-            $query[] = '(' . @join(' and ', $proj) . ')';
+            $query[] = '(' . join(' and ', $proj) . ')';
         } elseif (!$perm->have_perm('Admin')) { // Filter results from hidden projects
             $query[] = "b.project_id not in ($restricted_projects)";
         }
@@ -247,7 +252,7 @@ function build_query($assignedto, $reportedby, $open, $bookmarked, $projects) {
 
 
     if (!empty($query)) {
-        return array(@join(' and ', $query), $paramstr);
+        return array(join(' and ', $query), $paramstr);
     } else {
         return array('', '');
     }
