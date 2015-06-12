@@ -26,25 +26,28 @@ chdir('..');
 define('TEMPLATE_PATH', 'admin');
 include 'include.php';
 
-$perm->check('Admin');
+if ($perm->isAdmin()) {
 
-if (isset($_POST['submit'])) {
-    foreach ($_POST as $k => $v) {
-        // Check the jpgraph path to make sure it has a trailing /
-        if ($k == 'JPGRAPH_PATH' and strlen($v) and substr($v, -1) != '/') {
-            $v .= '/';
-        }
-        $db->query('update ' . TBL_CONFIGURATION . " set varvalue = '$v' where varname = '$k'");
+    if (isset($_POST['submit'])) {
+        foreach ($_POST as $k => $v) {
+            // Check the jpgraph path to make sure it has a trailing /
+            if ($k == 'JPGRAPH_PATH' and strlen($v) and substr($v, -1) != '/') {
+                $v .= '/';
+            }
+            $db->query('update ' . TBL_CONFIGURATION . " set varvalue = '$v' where varname = '$k'");
 
-        // Refresh the template variable now instead of waiting for the next page load.
-        if ($k == 'STYLE') {
-            $t->assign('STYLE', $v);
+            // Refresh the template variable now instead of waiting for the next page load.
+            if ($k == 'STYLE') {
+                $t->assign('STYLE', $v);
+            }
         }
     }
-}
 
-$t->assign('vars', $db->getAll('select * from ' . TBL_CONFIGURATION . ' order by varname'));
-$t->assign('has_excel', find_include('Spreadsheet/Excel/Writer.php'));
-$t->render('configure.html', translate("Configuration"));
+    $t->assign('vars', $db->getAll('select * from ' . TBL_CONFIGURATION . ' order by varname'));
+    $t->assign('has_excel', find_include('Spreadsheet/Excel/Writer.php'));
+    $t->render('configure.html', translate("Configuration"));
+} else {
+    $t->render('badperm.html', '');
+}
 
 //
