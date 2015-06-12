@@ -421,6 +421,7 @@ function list_items($assignedto = 0, $reportedby = 0, $open = 0, $bookmarked = 0
             $db->query("insert into " . TBL_SAVED_QUERY . " (saved_query_id, user_id, saved_query_name, saved_query_string) values (" . join(', ', array($nextid, $u, $db->quote(stripslashes($savedqueryname)), $db->quote(stripslashes($savedquerystring)))) . ")");
         }
     }
+    $sort = 'ask';
     if (!isset($order)) {
         if (isset($_SESSION['queryinfo']['order'])) {
             $order = $_SESSION['queryinfo']['order'];

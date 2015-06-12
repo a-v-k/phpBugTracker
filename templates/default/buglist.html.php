@@ -19,7 +19,7 @@ if (!empty($_SESSION['uid']) && isset($perm) && $perm->have_perm_proj($project_i
         <tr>
             <?php
             for ($i = 0, $colcount = count($db_fields); $i < $colcount; $i++) {
-                echo "<th class='{$headers[$i]['class']}' bgcolor='{$headers[$i]['color']}'><a  href='{$headers[$i]['url']}'>{$field_titles[$i]}</a></th>";
+                echo "<th class='{$headers[$i]['class']}' bgcolor='{$headers[$i]['color']}'><a  href='" . htmlspecialchars($headers[$i]['url']) . "'>{$field_titles[$i]}</a></th>";
             }
             ?>
         </tr>

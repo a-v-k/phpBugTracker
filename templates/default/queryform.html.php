@@ -178,7 +178,7 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
     <table border="0">
         <tr>
             <td align="right"><?php echo translate("Summary"); ?>:</td>
-            <td><input name="title" size="30" value="<?php echo $title; ?>"></td>
+            <td><input name="title" size="30" value="<?php echo htmlspecialchars($title); ?>"></td>
             <td><select name="title_type">
                     <option value="like" <?php if (!$title_type || $title_type == 'like') echo "selected"; ?>><?php echo translate("substring"); ?></option>
                     <option value="rlike" <?php if ($title_type == 'rlike') echo "selected"; ?>><?php echo translate("regexp"); ?></option>
@@ -186,7 +186,7 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
                 </select></td>
         </tr><tr>
             <td align="right"><?php echo translate("A description entry"); ?>:</td>
-            <td><input name="description" size="30" value="<?php echo $description; ?>"></td>
+            <td><input name="description" size="30" value="<?php echo htmlspecialchars($description); ?>"></td>
             <td><select name="description_type">
                     <option value="like" <?php if (!$description_type || $description_type == 'like') echo "selected"; ?>><?php echo translate("substring"); ?></option>
                     <option value="rlike" <?php if ($description_type == 'rlike') echo "selected"; ?>><?php echo translate("regexp"); ?></option>
@@ -205,18 +205,18 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
                 <?php echo translate("Created Date Range"); ?>:
             </td>
             <td colspan="2">
-                <input type="text" name="start_date" size="11" value="<?php echo $start_date; ?>">
+                <input type="text" name="start_date" size="11" value="<?php echo htmlspecialchars($start_date); ?>">
                 <?php echo translate("to"); ?>
-                <input type="text" name="end_date" size="11" value="<?php echo $end_date; ?>">
+                <input type="text" name="end_date" size="11" value="<?php echo htmlspecialchars($end_date); ?>">
             </td>
         </tr><tr>
             <td align="right">
                 <?php echo translate("Closed Date Range"); ?>:
             </td>
             <td colspan="2">
-                <input type="text" name="closed_start_date" size="11" value="<?php echo $closed_start_date; ?>">
+                <input type="text" name="closed_start_date" size="11" value="<?php echo htmlspecialchars($closed_start_date); ?>">
                 <?php echo translate("to"); ?>
-                <input type="text" name="closed_end_date" size="11" value="<?php echo $closed_end_date; ?>">
+                <input type="text" name="closed_end_date" size="11" value="<?php echo htmlspecialchars($closed_end_date); ?>">
             </td>
         </tr>
     </table>
