@@ -287,7 +287,7 @@ function build_select($box, $selected = '', $project = 0, $limit = false) {
             break;
         default :
             $deadarray = $select[$box];
-            while (list($val, $item) = each($deadarray)) {
+            foreach ($deadarray as $val => $item) {
                 if (is_array($selected) && count($selected) && in_array($val, $selected)) {
                     $sel = ' selected';
                 } elseif ($selected == $val and $selected != '') {
@@ -380,7 +380,7 @@ function multipages($nr, $page, $urlstr) {
 function sorting_headers($url, $headers, $order, $sort, $urlstr = '') {
     global $t;
     $theader = array();
-    while (list($k, $v) = each($headers)) {
+    foreach ($headers as $k => $v) {
         $theader[$k]['url'] = "$url?order=$v&amp;sort=" .
                 ($order == $v ? ($sort == 'asc' ? 'desc' : 'asc') : 'asc') .
                 ($urlstr ? '&amp;' . $urlstr : '');
@@ -592,7 +592,7 @@ function qp_enc($input, $line_max = 76) {
     // Do "dos2unix" and split $input into $lines by end of line
     $lines = split("\n", str_replace("\r\n", "\n", $input));
     // Loop throught $lines
-    while (list(, $line) = each($lines)) {
+    foreach ($lines as $line) {
         // Trim each line from right side
         $line = rtrim($line);
         // Place line length to $linlen

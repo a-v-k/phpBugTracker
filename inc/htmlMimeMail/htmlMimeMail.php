@@ -332,7 +332,8 @@ class htmlMimeMail
 	function _findHtmlImages($images_dir)
 	{
 		// Build the list of image extensions
-		while (list($key,) = each($this->image_types)) {
+        $extensions = array();
+        foreach ($this->image_types as $key => $value) {
 			$extensions[] = $key;
 		}
 
@@ -503,7 +504,7 @@ class htmlMimeMail
 	function buildMessage($params = array())
 	{
 		if (!empty($params)) {
-			while (list($key, $value) = each($params)) {
+            foreach ($params as $key => $value) {
 				$this->build_params[$key] = $value;
 			}
 		}
@@ -774,5 +775,6 @@ class htmlMimeMail
 
 		return implode(CRLF, $headers) . CRLF . CRLF . $this->output;
 	}
-} // End of class.
-?>
+}
+
+//

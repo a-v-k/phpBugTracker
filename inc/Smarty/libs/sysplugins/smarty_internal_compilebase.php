@@ -94,7 +94,6 @@ abstract class Smarty_Internal_CompileBase
                     }
                     // must be named attribute
                 } else {
-                    reset($mixed);
                     $_indexed_attr[key($mixed)] = $mixed[key($mixed)];
                 }
             }

@@ -300,7 +300,7 @@ class Mail_mimePart {
         $escape = '=';
         $output = '';
 
-        while(list(, $line) = each($lines)){
+        foreach ($lines as $line) {
 
             $linlen     = strlen($line);
             $newline = '';
@@ -329,5 +329,6 @@ class Mail_mimePart {
         $output = substr($output, 0, -1 * strlen($eol)); // Don't want last crlf
         return $output;
     }
-} // End of class
-?>
+}
+
+//
