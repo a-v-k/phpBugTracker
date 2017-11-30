@@ -28,7 +28,7 @@ class uauth {
     var $lifetime = 0; // In minutes -- 0 for no expiration until browser closed
     var $classname = 'uauth';
 
-    function uauth() {
+    function __construct() {
         //global $group_ids, $uname, $db_fields, $group, $perms,
         //$uid, $exp;
 
