@@ -72,7 +72,8 @@ function smarty_function_html_options($params)
                             if (method_exists($_sel, "__toString")) {
                                 $_sel = smarty_function_escape_special_chars((string) $_sel->__toString());
                             } else {
-                                trigger_error("html_options: selected attribute contains an object of class '" . get_class($_sel) . "' without __toString() method", E_USER_NOTICE);
+                                trigger_error("html_options: selected attribute contains an object of class '" .
+                                    get_class($_sel) . "' without __toString() method", E_USER_NOTICE);
                                 continue;
                             }
                         } else {
@@ -84,7 +85,8 @@ function smarty_function_html_options($params)
                     if (method_exists($_val, "__toString")) {
                         $selected = smarty_function_escape_special_chars((string) $_val->__toString());
                     } else {
-                        trigger_error("html_options: selected attribute is an object of class '" . get_class($_val) . "' without __toString() method", E_USER_NOTICE);
+                        trigger_error("html_options: selected attribute is an object of class '" . get_class($_val) .
+                            "' without __toString() method", E_USER_NOTICE);
                     }
                 } else {
                     $selected = smarty_function_escape_special_chars((string) $_val);
@@ -98,7 +100,8 @@ function smarty_function_html_options($params)
             case 'readonly':
                 if (!empty($params['strict'])) {
                     if (!is_scalar($_val)) {
-                        trigger_error("html_options: $_key attribute must be a scalar, only boolean true or string '$_key' will actually add the attribute", E_USER_NOTICE);
+                        trigger_error("html_options: $_key attribute must be a scalar, only boolean true or string '$_key' will actually add the attribute",
+                            E_USER_NOTICE);
                     }
 
                     if ($_val === true || $_val === $_key) {
@@ -142,7 +145,9 @@ function smarty_function_html_options($params)
     if (!empty($name)) {
         $_html_class = !empty($class) ? ' class="' . $class . '"' : '';
         $_html_id = !empty($id) ? ' id="' . $id . '"' : '';
-        $_html_result = '<select name="' . $name . '"' . $_html_class . $_html_id . $extra . '>' . "\n" . $_html_result . '</select>' . "\n";
+        $_html_result =
+            '<select name="' . $name . '"' . $_html_class . $_html_id . $extra . '>' . "\n" . $_html_result .
+            '</select>' . "\n";
     }
 
     return $_html_result;
@@ -166,7 +171,8 @@ function smarty_function_html_options_optoutput($key, $value, $selected, $id, $c
             if (method_exists($value, "__toString")) {
                 $value = smarty_function_escape_special_chars((string) $value->__toString());
             } else {
-                trigger_error("html_options: value is an object of class '" . get_class($value) . "' without __toString() method", E_USER_NOTICE);
+                trigger_error("html_options: value is an object of class '" . get_class($value) .
+                    "' without __toString() method", E_USER_NOTICE);
 
                 return '';
             }
@@ -177,7 +183,9 @@ function smarty_function_html_options_optoutput($key, $value, $selected, $id, $c
         $idx ++;
     } else {
         $_idx = 0;
-        $_html_result = smarty_function_html_options_optgroup($key, $value, $selected, !empty($id) ? ($id . '-' . $idx) : null, $class, $_idx);
+        $_html_result =
+            smarty_function_html_options_optgroup($key, $value, $selected, !empty($id) ? ($id . '-' . $idx) : null,
+                $class, $_idx);
         $idx ++;
     }
 

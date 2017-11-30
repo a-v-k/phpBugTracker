@@ -12,7 +12,7 @@
  * Name:     escape<br>
  * Purpose:  escape string for output
  *
- * @link   http://www.smarty.net/manual/en/language.modifier.count.characters.php count_characters (Smarty online manual)
+ * @link   http://www.smarty.net/docs/en/language.modifier.escape
  * @author Monte Ohrt <monte at ohrt dot com>
  *
  * @param string  $string        input string
@@ -66,7 +66,8 @@ function smarty_modifier_escape($string, $esc_type = 'html', $char_set = null, $
                         // php <5.2.3 - prevent double encoding
                         $string = preg_replace('!&(#?\w+);!', '%%%SMARTY_START%%%\\1%%%SMARTY_END%%%', $string);
                         $string = htmlspecialchars($string, ENT_QUOTES, $char_set);
-                        $string = str_replace(array('%%%SMARTY_START%%%', '%%%SMARTY_END%%%'), array('&', ';'), $string);
+                        $string =
+                            str_replace(array('%%%SMARTY_START%%%', '%%%SMARTY_END%%%'), array('&', ';'), $string);
 
                         return $string;
                     }
@@ -152,7 +153,8 @@ function smarty_modifier_escape($string, $esc_type = 'html', $char_set = null, $
 
         case 'javascript':
             // escape quotes and backslashes, newlines, etc.
-            return strtr($string, array('\\' => '\\\\', "'" => "\\'", '"' => '\\"', "\r" => '\\r', "\n" => '\\n', '</' => '<\/'));
+            return strtr($string, array('\\' => '\\\\', "'" => "\\'", '"' => '\\"', "\r" => '\\r', "\n" => '\\n',
+                '</' => '<\/'));
 
         case 'mail':
             if (Smarty::$_MBSTRING) {
