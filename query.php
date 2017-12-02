@@ -267,8 +267,6 @@ function format_spreadsheet_col($colvalue, $coltype) {
         case 'last_modified_date' :
         case 'close_date' :
             return ($colvalue ? date(DATE_FORMAT, $colvalue) : '');
-        case 'lastmodifier' :
-            return (!empty($colvalue) ? maskemail($colvalue) : '');
         case 'reporter' :
         case 'owner' :
         case 'lastmodifier' :
