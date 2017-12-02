@@ -13,7 +13,8 @@
             <hr size="1">
             <form>
                 <div align="center">
-                    <select name="groupfilter" onChange="document.location.href = 'user.php?groupfilter=' + this.options[this.selectedIndex].value<?php echo " + '&userfilter=" . $userfilter . "'"; ?>">
+                    <select name="groupfilter"
+                            onChange="document.location.href = 'user.php?groupfilter=' + this.options[this.selectedIndex].value<?php echo(" + '&userfilter=" . $userfilter . "'"); ?>">
                         <?php build_select('group', $groupfilter, 1); ?></select>
                     <select name="userfilter" onChange="document.location.href = 'user.php?<?php echo 'groupfilter=' . $groupfilter; ?>&userfilter=' + this.options[this.selectedIndex].value">
                         <?php build_select('user_filter', $userfilter); ?></select>
