@@ -590,7 +590,7 @@ function qp_enc($input, $line_max = 76) {
     $escape = "=";
     $output = "";
     // Do "dos2unix" and split $input into $lines by end of line
-    $lines = split("\n", str_replace("\r\n", "\n", $input));
+    $lines = explode("\n", str_replace("\r\n", "\n", $input));
     // Loop throught $lines
     foreach ($lines as $line) {
         // Trim each line from right side
