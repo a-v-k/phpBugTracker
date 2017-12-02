@@ -2,9 +2,9 @@
 if (!defined('PHPBT_VERSION')) {
     die('not in phpbt');
 }
-$emailsearch1 = empty($emailsearch1) ? null : $emailsearch1;
-$emailtype1 = empty($emailtype1) ? null : $emailtype1;
-$emailfield1 = empty($emailfield1) ? null : $emailfield1;
+$emailSearch1 = empty($emailsearch1) ? null : $emailsearch1;
+$emailType1 = empty($emailtype1) ? null : $emailtype1;
+$emailField1 = empty($emailfield1) ? null : $emailfield1;
 $email1 = empty($email1) ? null : $email1;
 $title = empty($title) ? null : $title;
 $title_type = empty($title_type) ? null : $title_type;
@@ -153,31 +153,31 @@ extract(array(
                                 <tr>
                                     <td rowspan="2" valign="top">
                                         <select name="emailsearch1">
-                                            <option <?php if (!$emailsearch1 || $emailsearch1 == 'email') echo "selected"; ?>
+                                            <option <?php if (!$emailSearch1 || $emailSearch1 == 'email') echo "selected"; ?>
                                                     value="email"><?php echo translate("Email"); ?></option>
-                                            <option <?php if ($emailsearch1 == 'login') echo "selected"; ?>
+                                            <option <?php if ($emailSearch1 == 'login') echo "selected"; ?>
                                                     value="login"><?php echo translate("Login"); ?></option>
                                         </select>:
                                         + <input name="email1" size="30"
                                                  value="<?php echo $email1; ?>">&nbsp;<?php echo translate("matching as"); ?>
                                         &nbsp;
                                         <select name="emailtype1">
-                                            <option <?php if ($emailtype1 == 'rlike') echo "selected"; ?>
+                                            <option <?php if ($emailType1 == 'rlike') echo "selected"; ?>
                                                     value="rlike"><?php echo translate("regexp"); ?></option>
-                                            <option <?php if ($emailtype1 == 'not rlike') echo "selected"; ?>
+                                            <option <?php if ($emailType1 == 'not rlike') echo "selected"; ?>
                                                     value="not rlike"><?php echo translate("not regexp"); ?></option>
-                                            <option <?php if (!$emailtype1 || $emailtype1 == 'like') echo "selected"; ?>
+                                            <option <?php if (!$emailType1 || $emailType1 == 'like') echo "selected"; ?>
                                                     value="like"><?php echo translate("substring"); ?></option>
-                                            <option <?php if ($emailtype1 == '=') echo "selected"; ?>
+                                            <option <?php if ($emailType1 == '=') echo "selected"; ?>
                                                     value="="><?php echo translate("exact"); ?></option>
                                         </select></td>
                                     <td><input type="checkbox" name="emailfield1[]" value="owner"
-                                            <?php if (empty($emailfield1) || (is_array($emailfield1) && in_array("owner", $emailfield1))) echo "checked"; ?>>
+                                            <?php if (empty($emailField1) || (is_array($emailField1) && in_array("owner", $emailField1))) echo "checked"; ?>>
                                         <?php echo translate("Assigned To"); ?></td>
                                 </tr>
                                 <tr>
                                     <td><input type="checkbox" name="emailfield1[]" value="reporter"
-                                            <?php if (is_array($emailfield1) && in_array("reporter", $emailfield1)) echo "checked"; ?>>
+                                            <?php if (is_array($emailField1) && in_array("reporter", $emailField1)) echo "checked"; ?>>
                                         <?php echo translate("Reporter"); ?></td>
                                 </tr>
                             </table>
