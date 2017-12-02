@@ -40,6 +40,11 @@ class UpdateChecker {
                     $fullUrl .= '&install_id=' . $this->installId;
                 }
                 $fullUrl .= '&rn=' . $this->currentReleaseNum;
+                if (defined('PHP_VERSION_ID')) {
+                    $fullUrl .= '&pv=' . PHP_VERSION_ID;
+                } else {
+                    $fullUrl .= '&pv=' . 'undef';
+                }
 
                 $file = file_get_contents($fullUrl, false, $context);
             } catch (Exception $exc) {
