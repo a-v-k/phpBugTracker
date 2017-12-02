@@ -59,11 +59,11 @@ function log_query($str) {
 }
 
 // Template class
-class template {
+class InstallTemplate {
 
     var $vars;
 
-    function template($vars = array()) {
+    function __construct($vars = array()) {
         $this->vars = $vars;
     }
 
@@ -85,7 +85,7 @@ class template {
 
 }
 
-$t = new template(array(
+$t = new InstallTemplate(array(
     'template_path' => 'templates/default'));
 
 $db_types = array(
