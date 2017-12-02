@@ -55,22 +55,23 @@ extract(array(
     function updateMenus(f) {
         var sel = f.projects[f.projects.selectedIndex].text;
         f.versions.length = versions[sel].length;
-        for (var x = 0; x < versions[sel].length; x++) {
+        var x;
+        for (x = 0; x < versions[sel].length; x++) {
             f.versions.options[x].value = versions[sel][x][0];
             f.versions.options[x].text = versions[sel][x][1];
         }
         f.closedinversion.length = closedversions[sel].length;
-        for (var x = 0; x < closedversions[sel].length; x++) {
+        for (x = 0; x < closedversions[sel].length; x++) {
             f.closedinversion.options[x].value = closedversions[sel][x][0];
             f.closedinversion.options[x].text = closedversions[sel][x][1];
         }
         f.tobeclosedinversion.length = closedversions[sel].length;
-        for (var x = 0; x < closedversions[sel].length; x++) {
+        for (x = 0; x < closedversions[sel].length; x++) {
             f.tobeclosedinversion.options[x].value = closedversions[sel][x][0];
             f.tobeclosedinversion.options[x].text = closedversions[sel][x][1];
         }
         f.components.length = components[sel].length;
-        for (var x = 0; x < components[sel].length; x++) {
+        for (x = 0; x < components[sel].length; x++) {
             f.components.options[x].value = components[sel][x][0];
             f.components.options[x].text = components[sel][x][1];
         }
