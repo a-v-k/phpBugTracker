@@ -31,6 +31,7 @@ extract(array(
     'project' => null,
 ), EXTR_SKIP);
 ?>
+<!--suppress HtmlFormInputWithoutLabel -->
 <script type="text/javascript">
     <!--
     versions = new Array();
@@ -171,12 +172,12 @@ extract(array(
                                                     value="="><?php echo translate("exact"); ?></option>
                                         </select></td>
                                     <td><input type="checkbox" name="emailfield1[]" value="owner"
-                                            <?php if (!$emailfield1 || (count($emailfield1) && in_array("owner", $emailfield1))) echo "checked"; ?>>
+                                            <?php if (empty($emailfield1) || (is_array($emailfield1) && in_array("owner", $emailfield1))) echo "checked"; ?>>
                                         <?php echo translate("Assigned To"); ?></td>
                                 </tr>
                                 <tr>
                                     <td><input type="checkbox" name="emailfield1[]" value="reporter"
-                                            <?php if (count($emailfield1) && in_array("reporter", $emailfield1)) echo "checked"; ?>>
+                                            <?php if (is_array($emailfield1) && in_array("reporter", $emailfield1)) echo "checked"; ?>>
                                         <?php echo translate("Reporter"); ?></td>
                                 </tr>
                             </table>
