@@ -1797,7 +1797,6 @@ class PHPMailerLite {
     $mimes = array(
       'hqx'   =>  'application/mac-binhex40',
       'cpt'   =>  'application/mac-compactpro',
-      'doc'   =>  'application/msword',
       'bin'   =>  'application/macbinary',
       'dms'   =>  'application/octet-stream',
       'lha'   =>  'application/octet-stream',

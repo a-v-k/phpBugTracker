@@ -189,7 +189,6 @@ function do_changedfields($userid, &$buginfo, $cf = array(), $comments = '') {
         'component' => TBL_COMPONENT,
         'status' => TBL_STATUS,
         'resolution' => TBL_RESOLUTION,
-        'database' => TBL_DATABASE,
         'severity' => TBL_SEVERITY,
         'priority' => TBL_PRIORITY,
         'os' => TBL_OS,

@@ -121,7 +121,6 @@ if (!empty($_POST)) {
         '/TBL_GROUP_PERM/' => $_POST['tbl_prefix'] . 'group_perm',
         '/TBL_OS/' => $_POST['tbl_prefix'] . 'os',
         '/TBL_PROJECT_GROUP/' => $_POST['tbl_prefix'] . 'project_group',
-        '/TBL_PROJECT_PERM/' => $_POST['tbl_prefix'] . 'project_perm',
         '/TBL_PROJECT/' => $_POST['tbl_prefix'] . 'project',
         '/TBL_RESOLUTION/' => $_POST['tbl_prefix'] . 'resolution',
         '/TBL_SAVED_QUERY/' => $_POST['tbl_prefix'] . 'saved_query',
