@@ -42,7 +42,7 @@ Oracle and PostgreSQL support was stopped since 2009. If you need this -
 	you can make it self and contribute your code, 
 	or order donation based support. 
 Added Smarty templates support.
-PHP 5.2 support
+PHP 7.2 support
 Fixed installer
 
 To detailed changelog check CHANGELOG file
@@ -67,7 +67,7 @@ Here is a list of the requirements to get this running on your server.
 		
 Download
 --------
-https://github.com/a-v-k/phpBugTracker/archive/phpbt-1_7_5.zip
+https://github.com/a-v-k/phpBugTracker/archive/phpbt-1_7_9.zip
 
 -------------------------------------------------------------------------------
 Bellow you can read README text from original phpBugTracker
