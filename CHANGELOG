@@ -1,3 +1,8 @@
+-- 1.7.9 - 2017 December
+: php 7.2 compatibility
+: minor fixes
+: removed some deprecated code
+
 -- 1.7.5 - 2015 April
 : fixed critical bug (unable to create bug when max_file_upload misconfigured).
 : minor improvements
