@@ -105,15 +105,18 @@ if (!empty($_SESSION['uid']) && isset($perm) && $perm->have_perm_proj($project_i
                     <td><?php echo translate("Resolution"); ?>:
                         <select name="resolution_id"><option value="-1" selected>No Change</option><option value="0"><?php echo translate("None"); ?></option><?php build_select('resolution', -1) ?></select></td>
                 </tr><tr>
-                    <td><?php echo translate("Assigned to"); ?>:
+                    <td>
+                        <?php echo translate("Assigned to"); ?>:
                         <?php if (isset($perm) && ($perm->have_perm('EditAssignment') or $perm->have_perm_proj($project_id))) { ?>
-                            <select name="assigned_to"><option value="-1" selected>No Change</option><option value="0"><?php echo translate("None"); ?></option><?php build_select('owner', -1) ?></select></td>
-                    <?php } else { ?>
-
-                        <?php echo lookup('assigned_to', $assigned_to); ?>
-                    <input type="hidden" name="assigned_to" value="<?php echo $assigned_to ?>">
+                            <select name="assigned_to">
+                                <option value="-1" selected>No Change</option>
+                                <option value="0"><?php echo translate("None"); ?></option><?php build_select('owner', -1) ?>
+                            </select>
+                        <?php } else { ?>
+                            <?php echo lookup('assigned_to', $assigned_to); ?>
+                            <input type="hidden" name="assigned_to" value="<?php echo $assigned_to ?>"/>
+                        <?php } ?>
                     </td>
-                <?php } ?>
                 </tr>
                 <tr class="noprint">
                     <td valign="top" colspan=2><?php echo translate("Additional comments"); ?>:<br>
