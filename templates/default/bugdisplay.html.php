@@ -17,7 +17,7 @@ if (!defined('PHPBT_VERSION')) {
 <?php build_project_js(true); ?>
 
     function updateMenus(f) {
-        sel = f.project_id[f.project_id.selectedIndex].text;
+        var sel = f.project_id[f.project_id.selectedIndex].text;
         f.version_id.length = versions[sel].length;
         for (var x = 0; x < versions[sel].length; x++) {
             f.version_id.options[x].value = versions[sel][x][0];

@@ -27,7 +27,7 @@ if (!isset($user_id)) {
         var adminSelected = false;
 
         if (hadAdmin && numAdmins == 1) {
-            for (current = 0; current < slct.options.length; current++) {
+            for (var current = 0; current < slct.options.length; current++) {
                 if (slct.options[current].selected && slct.options[current].value == 1) {
                     adminSelected = true;
                 }

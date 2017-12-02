@@ -30,7 +30,7 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
 ?>
 	
     function updateMenus(f) {
-        sel = f.projects[f.projects.selectedIndex].text;
+        var sel = f.projects[f.projects.selectedIndex].text;
         f.versions.length = versions[sel].length;
         for (var x = 0; x < versions[sel].length; x++) {
             f.versions.options[x].value = versions[sel][x][0];
@@ -45,7 +45,7 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
 
     function checkSavedQueries(frm) {
         if (frm.savedqueryname.value != '') {
-            for (i = 0; i < savedQueries.length; i++) {
+            for (var i = 0; i < savedQueries.length; i++) {
                 if (frm.savedqueryname.value == savedQueries[i]) {
                     if (confirm('Are you sure you want to override the saved query named "' + frm.savedqueryname.value + '"?')) {
                         frm.savedqueryoverride.value = 1;
