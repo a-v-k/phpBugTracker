@@ -19,28 +19,29 @@ if (!defined('PHPBT_VERSION')) {
     function updateMenus(f) {
         var sel = f.project_id[f.project_id.selectedIndex].text;
         f.version_id.length = versions[sel].length;
-        for (var x = 0; x < versions[sel].length; x++) {
+        var x;
+        for (x = 0; x < versions[sel].length; x++) {
             f.version_id.options[x].value = versions[sel][x][0];
             f.version_id.options[x].text = versions[sel][x][1];
             f.version_id.selectedIndex = 0;
         }
 
         f.to_be_closed_in_version_id.length = closedversions[sel].length;
-        for (var x = 0; x < closedversions[sel].length; x++) {
+        for (x = 0; x < closedversions[sel].length; x++) {
             f.to_be_closed_in_version_id.options[x].value = closedversions[sel][x][0];
             f.to_be_closed_in_version_id.options[x].text = closedversions[sel][x][1];
             f.to_be_closed_in_version_id.selectedIndex = 0;
         }
 
         f.closed_in_version_id.length = closedversions[sel].length;
-        for (var x = 0; x < closedversions[sel].length; x++) {
+        for (x = 0; x < closedversions[sel].length; x++) {
             f.closed_in_version_id.options[x].value = closedversions[sel][x][0];
             f.closed_in_version_id.options[x].text = closedversions[sel][x][1];
             f.closed_in_version_id.selectedIndex = 0;
         }
 
         f.component_id.length = components[sel].length;
-        for (var x = 0; x < components[sel].length; x++) {
+        for (x = 0; x < components[sel].length; x++) {
             f.component_id.options[x].value = components[sel][x][0];
             f.component_id.options[x].text = components[sel][x][1];
             f.component_id.selectedIndex = 0;
