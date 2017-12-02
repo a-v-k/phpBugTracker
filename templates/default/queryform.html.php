@@ -29,7 +29,7 @@ extract(array(
     'database' => null,
     'site' => null,
     'project' => null,
-        ), EXTR_SKIP);
+), EXTR_SKIP);
 ?>
 <script type="text/javascript">
     <!--
@@ -39,17 +39,17 @@ extract(array(
     versions['All'] = new Array(new Array('', 'All'));
     closedversions['All'] = new Array(new Array('', 'All'));
     components['All'] = new Array(new Array('', 'All'));
-<?php
-build_project_js();
-?>
+    <?php
+    build_project_js();
+    ?>
 
     // Saved queries
     savedQueries = new Array();
-<?php
-for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
-    echo "savedQueries[$i] = '{$queries[$i]['saved_query_name']}'; ";
-}
-?>
+    <?php
+    for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
+        echo "savedQueries[$i] = '{$queries[$i]['saved_query_name']}'; ";
+    }
+    ?>
 
     function updateMenus(f) {
         sel = f.projects[f.projects.selectedIndex].text;
@@ -103,7 +103,8 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
             <th align="left"><?php echo translate("Severity"); ?>:</th>
             <th align="left"><?php echo translate("Database"); ?>:</th>
             <th align="left"><?php echo translate("Reported on Site"); ?>:</th>
-        </tr><tr>
+        </tr>
+        <tr>
             <td align="left" valign="top">
                 <select name="status[]" multiple size="7">
                     <?php echo build_select('status', $status); ?>
@@ -138,41 +139,56 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
                 </select></td>
         </tr>
     </table>
-    <br><br>
+    <br>
+
+
     <table>
         <tr>
-            <td><table border="1" cellspacing="0" cellpadding="0">
+            <td>
+                <table border="1" cellspacing="0" cellpadding="0">
                     <tr>
-                        <td><table cellspacing="0" cellpadding="0" border="0">
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0">
                                 <tr>
                                     <td rowspan="2" valign="top">
                                         <select name="emailsearch1">
-                                            <option <?php if (!$emailsearch1 || $emailsearch1 == 'email') echo "selected"; ?> value="email"><?php echo translate("Email"); ?></option>
-                                            <option <?php if ($emailsearch1 == 'login') echo "selected"; ?> value="login"><?php echo translate("Login"); ?></option>
+                                            <option <?php if (!$emailsearch1 || $emailsearch1 == 'email') echo "selected"; ?>
+                                                    value="email"><?php echo translate("Email"); ?></option>
+                                            <option <?php if ($emailsearch1 == 'login') echo "selected"; ?>
+                                                    value="login"><?php echo translate("Login"); ?></option>
                                         </select>:
-                                        +					<input name="email1" size="30" value="<?php echo $email1; ?>">&nbsp;<?php echo translate("matching as"); ?>&nbsp;
+                                        + <input name="email1" size="30"
+                                                 value="<?php echo $email1; ?>">&nbsp;<?php echo translate("matching as"); ?>
+                                        &nbsp;
                                         <select name="emailtype1">
-                                            <option <?php if ($emailtype1 == 'rlike') echo "selected"; ?> value="rlike"><?php echo translate("regexp"); ?></option>
-                                            <option <?php if ($emailtype1 == 'not rlike') echo "selected"; ?> value="not rlike"><?php echo translate("not regexp"); ?></option>
-                                            <option <?php if (!$emailtype1 || $emailtype1 == 'like') echo "selected"; ?> value="like"><?php echo translate("substring"); ?></option>
-                                            <option <?php if ($emailtype1 == '=') echo "selected"; ?> value="="><?php echo translate("exact"); ?></option>
+                                            <option <?php if ($emailtype1 == 'rlike') echo "selected"; ?>
+                                                    value="rlike"><?php echo translate("regexp"); ?></option>
+                                            <option <?php if ($emailtype1 == 'not rlike') echo "selected"; ?>
+                                                    value="not rlike"><?php echo translate("not regexp"); ?></option>
+                                            <option <?php if (!$emailtype1 || $emailtype1 == 'like') echo "selected"; ?>
+                                                    value="like"><?php echo translate("substring"); ?></option>
+                                            <option <?php if ($emailtype1 == '=') echo "selected"; ?>
+                                                    value="="><?php echo translate("exact"); ?></option>
                                         </select></td>
                                     <td><input type="checkbox" name="emailfield1[]" value="owner"
-                                               <?php if (!$emailfield1 || (count($emailfield1) && in_array("owner", $emailfield1))) echo "checked"; ?>>
+                                            <?php if (!$emailfield1 || (count($emailfield1) && in_array("owner", $emailfield1))) echo "checked"; ?>>
                                         <?php echo translate("Assigned To"); ?></td>
-                                </tr><tr>
+                                </tr>
+                                <tr>
                                     <td><input type="checkbox" name="emailfield1[]" value="reporter"
-                                               <?php if (count($emailfield1) && in_array("reporter", $emailfield1)) echo "checked"; ?>>
+                                            <?php if (count($emailfield1) && in_array("reporter", $emailfield1)) echo "checked"; ?>>
                                         <?php echo translate("Reporter"); ?></td>
                                 </tr>
-                            </table></td>
+                            </table>
+                        </td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" name="unassigned" value="1"
-                                   <?php if (!empty($unassigned)) echo "checked"; ?>>
+                                <?php if (!empty($unassigned)) echo "checked"; ?>>
                             <?php echo translate("Unassigned"); ?></td>
                     </tr>
-                </table></td>
+                </table>
+            </td>
         </tr>
     </table>
     <table border="0">
@@ -184,7 +200,8 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
                     <option value="rlike" <?php if ($title_type == 'rlike') echo "selected"; ?>><?php echo translate("regexp"); ?></option>
                     <option value="not rlike" <?php if ($title_type == 'not rlike') echo "selected"; ?>><?php echo translate("not regexp"); ?></option>
                 </select></td>
-        </tr><tr>
+        </tr>
+        <tr>
             <td align="right"><?php echo translate("A description entry"); ?>:</td>
             <td><input name="description" size="30" value="<?php echo htmlspecialchars($description); ?>"></td>
             <td><select name="description_type">
@@ -192,7 +209,8 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
                     <option value="rlike" <?php if ($description_type == 'rlike') echo "selected"; ?>><?php echo translate("regexp"); ?></option>
                     <option value="not rlike" <?php if ($description_type == 'not rlike') echo "selected"; ?>><?php echo translate("not regexp"); ?></option>
                 </select></td>
-        </tr><tr>
+        </tr>
+        <tr>
             <td align="right"><?php echo translate("URL"); ?>:</td>
             <td><input name="url" size="30" value="<?php echo $url; ?>"></td>
             <td><select name="url_type">
@@ -200,7 +218,8 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
                     <option value="rlike" <?php if ($url_type == 'rlike') echo "selected"; ?>><?php echo translate("regexp"); ?></option>
                     <option value="not rlike" <?php if ($url_type == 'not rlike') echo "selected"; ?>><?php echo translate("not regexp"); ?></option>
                 </select></td>
-        </tr><tr>
+        </tr>
+        <tr>
             <td align="right">
                 <?php echo translate("Created Date Range"); ?>:
             </td>
@@ -209,14 +228,17 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
                 <?php echo translate("to"); ?>
                 <input type="text" name="end_date" size="11" value="<?php echo htmlspecialchars($end_date); ?>">
             </td>
-        </tr><tr>
+        </tr>
+        <tr>
             <td align="right">
                 <?php echo translate("Closed Date Range"); ?>:
             </td>
             <td colspan="2">
-                <input type="text" name="closed_start_date" size="11" value="<?php echo htmlspecialchars($closed_start_date); ?>">
+                <input type="text" name="closed_start_date" size="11"
+                       value="<?php echo htmlspecialchars($closed_start_date); ?>">
                 <?php echo translate("to"); ?>
-                <input type="text" name="closed_end_date" size="11" value="<?php echo htmlspecialchars($closed_end_date); ?>">
+                <input type="text" name="closed_end_date" size="11"
+                       value="<?php echo htmlspecialchars($closed_end_date); ?>">
             </td>
         </tr>
     </table>
@@ -229,14 +251,16 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
                     <?php build_select('project', $project); ?>
                 </select>
             </td>
-        </tr><tr>
+        </tr>
+        <tr>
             <td><b><?php echo translate("Version"); ?>:</b></td>
             <td><select name="versions">
                     <option value=''><?php echo translate("All"); ?></option>
                     <?php if ($project) build_select('version', $version, $project); ?>
                 </select>
             </td>
-        </tr><tr>
+        </tr>
+        <tr>
             <td><b><?php echo translate("Closed in Version"); ?>:</b></td>
             <td><select name="closedinversion">
                     <option value=''><?php echo translate("All"); ?></option>
@@ -244,7 +268,8 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
                     <?php if ($project) build_select('version', $closedinversion, $project); ?>
                 </select>
             </td>
-        </tr><tr>
+        </tr>
+        <tr>
             <td><b><?php echo translate("To be Closed in Version"); ?>:</b></td>
             <td><select name="tobeclosedinversion">
                     <option value=''><?php echo translate("All"); ?></option>
@@ -252,7 +277,8 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
                     <?php if ($project) build_select('version', $tobeclosedinversion, $project); ?>
                 </select>
             </td>
-        </tr><tr>
+        </tr>
+        <tr>
             <td><b><?php echo translate("Component"); ?>:</b></td>
             <td><select name="components">
                     <option value=''><?php echo translate("All"); ?></option>
@@ -284,15 +310,17 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
         </option>
     </select>
     <select name="sort">
-        <option <?php if (!$sort || $sort == 'asc') echo "selected"; ?> value="asc"><?php echo translate("Ascending"); ?></option>
-        <option <?php if ($sort == 'desc') echo "selected"; ?> value="desc"><?php echo translate("Descending"); ?></option>
+        <option <?php if (!$sort || $sort == 'asc') echo "selected"; ?>
+                value="asc"><?php echo translate("Ascending"); ?></option>
+        <option <?php if ($sort == 'desc') echo "selected"; ?>
+                value="desc"><?php echo translate("Descending"); ?></option>
     </select>
     <br><br>
     <?php if (!empty($_SESSION['uid'])) { ?>
         <?php echo translate("Save this query as"); ?>: <input maxlength="40" type="text" name="savedqueryname">
         <br><br>
     <?php } else { ?>
-        <input type="hidden" name="savedqueryname" value="" />
+        <input type="hidden" name="savedqueryname" value=""/>
     <?php } ?>
     <input type="reset" value="<?php echo translate("Reset to default query"); ?>">
     <input type="submit">
@@ -311,12 +339,12 @@ for ($i = 0, $querycount = count($queries); $i < $querycount; $i++) {
     <?php
     for ($i = 0; $i < $querycount; $i++) {
         echo '<a href="'
-        . htmlspecialchars($_SERVER['PHP_SELF'] . '?' . $queries[$i]['saved_query_string']) . '">'
-        . $queries[$i]['saved_query_name']
-        . '</a> (<a href="'
-        . htmlspecialchars($_SERVER['PHP_SELF']
+            . htmlspecialchars($_SERVER['PHP_SELF'] . '?' . $queries[$i]['saved_query_string']) . '">'
+            . $queries[$i]['saved_query_name']
+            . '</a> (<a href="'
+            . htmlspecialchars($_SERVER['PHP_SELF']
                 . '?op=delquery&queryid=' . $queries[$i]['saved_query_id'] . '&form=simple&ak=' . make_action_key())
-        . '" onClick="return confirm(\'' . translate("Are you sure you want to delete this saved query?") . '\');">' . translate("Delete") . '</a>)<br>';
+            . '" onClick="return confirm(\'' . translate("Are you sure you want to delete this saved query?") . '\');">' . translate("Delete") . '</a>)<br>';
     }
     ?>
 
